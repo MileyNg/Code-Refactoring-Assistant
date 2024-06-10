@@ -1,0 +1,94 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,n) for(i=a,i<n;++i)
+#define rep(i,n) reep(i,0,n)
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp male_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<double,double> pdd;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+double Add(double a,double b){
+	//double EPS = 1e-10;
+	if(abs(a+b)<1e-10*(abs(a)+abs(b))) return 0;
+	return a+b;
+}
+
+struct P{
+	double x,y;
+	P(){}
+	P(double x,double y) :x(x),y(y){
+	}
+	P operator + (P p){
+		return P(Add(x,p.x),Add(y,p.y));
+	}
+	P operator - (P p){
+		return P(Add(x,-p.x),Add(y,-p.y));
+	}
+	P operator * (double d){
+		return P(x*d,y*d);
+	}
+	double dot(P p){ //内積
+		return Add(x*p.x,y*p.y);
+	}
+	double det(P p){
+		return Add(x*p.y,-y*p.x);
+	}
+};
+
+bool cmp_x(const P& p,const P& q){
+	if(p.x!=q.x) return p.x<q.x;
+	return p.y<q.y;
+}
+
+#define DEBUG
+
+int main(){
+	int n;
+	while(cin>>n,n!=0){
+		//cout<<n<<endl;
+		#ifdef DEBUG
+		vector<P> ps(n);
+		for(int i=0;i<n;i++){
+			char t;
+			cin>>ps[i].x>>t>>ps[i].y;
+			//cout<<ps[i].x<<" "<<ps[i].y<<endl;
+		}
+		sort(ps.begin(),ps.end(),cmp_x);
+		vector<P> qs(n*2);
+		int k=0;
+		for(int i=0;i<n;i++){
+			while(k>1&&(qs[k-1]-qs[k-2]).det(ps[i]-qs[k-1])<=0)k--;
+			qs[k++]=ps[i];
+		}
+		for(int i=n-2,t=k;i>=0;i--){
+			while(k>t&&(qs[k-1]-qs[k-2]).det(ps[i]-qs[k-1])<=0) k--;
+			qs[k++]=ps[i];
+		}
+		qs.resize(k-1);
+		cout<<n-qs.size()<<endl;
+		#endif
+	}
+	return 0;
+}

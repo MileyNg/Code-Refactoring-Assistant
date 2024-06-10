@@ -1,0 +1,36 @@
+n = gets.chomp.to_i
+
+n.times do
+  sc = 0
+  out = 0
+  bases = [false, false, false]
+
+  while out < 3
+    event = gets.chomp
+
+    case event
+      when "HIT"
+      2.downto(0).each do |i|
+        if bases[i]
+          bases[i + 1] = true
+          bases[i] = false
+        end
+      end
+      if bases[3]
+        sc += 1
+        bases.delete_at(3)
+      end
+      bases[0] = true
+
+      when "HOMERUN"
+      sc += 1
+      bases.each{|b| sc += b ? 1 : 0}
+      bases = [false, false, false]
+
+      when "OUT"
+      out += 1
+    end
+  end
+
+  puts sc
+end

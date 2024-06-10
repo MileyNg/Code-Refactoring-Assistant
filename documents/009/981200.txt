@@ -1,0 +1,21 @@
+#include<iostream>
+#include<map>
+
+using namespace std;
+
+int main(){
+  int n;
+  cin>>n;
+  long long s=0;
+  map<int,long long> m;
+  m[0]=0;
+  while(n--){
+    int x;
+    cin>>x;
+    s+=x;
+    auto c=(--m.lower_bound(x))->second+x;
+    for(auto it=m.upper_bound(x);it!=end(m)&&it->second<=c;it=m.erase(it));
+    m[x]=c;
+  }
+  cout<<s-m.rbegin()->second<<endl;
+}

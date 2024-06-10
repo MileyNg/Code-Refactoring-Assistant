@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n, m, s;
+  while(scanf("%d%d", &n, &m) && n && m){
+    vector<int>t(n); 
+    vector<int>h(m);
+    bool f = false;
+    int sum = 0, taro = 0, hanako = 0;
+    rep(i, n) scanf("%d", &s), t[i] = s, taro += s,sum += s;
+    rep(i, m) scanf("%d", &s), h[i] = s, hanako += s,sum += s;
+    //    printf("%d %d %d\n", taro, hanako, sum);
+    //    rep(i, n) printf("%d ", t[i]); puts("");
+    //    rep(i, m) printf("%d ", h[i]); puts("");
+    taro -= (sum / 2);
+    int res[2] = {99999, 99999};
+    rep(i, n) rep(j, m){
+      if(t[i] - h[j] == taro && res[0]+res[1] > t[i]+h[j]){
+	res[0] = t[i], res[1] = h[j];
+	f = true;
+	//	printf("%d %d\n", t[i], h[j]);
+      }
+    }
+    if(sum % 2) f = false;    
+    printf(f?"%d %d\n":"-1\n", res[0], res[1]);
+  }
+  return 0;
+}

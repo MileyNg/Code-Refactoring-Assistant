@@ -1,0 +1,69 @@
+#include <cstdio>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <queue>
+using namespace std;
+
+const int INF = 100000000;
+vector<pair<string, bool> > vec;
+vector<int> jump;
+int n;
+
+int calc(int l, vector<bool> &rem, vector<bool> &used) {
+	if (l >= n) return 0;
+	if (used[l]) return INF;
+	if (vec[l].second) {
+		if (rem[l]) {
+			return calc(l+1, rem, used);
+		}
+		int res = 0;
+		used[l] = true;
+		res = calc(jump[l], rem, used);
+		used[l] = false;
+		rem[l] = true;
+		res = min(res, calc(l+1, rem, used)+1);
+		rem[l] = false;
+		return res;
+	} else {
+		used[l] = true;
+		int res = calc(l+1, rem, used);
+		used[l] = false;
+		return res;
+	}
+}
+
+int main() {
+	cin >> n;
+	vector<bool> rem(n);
+	vector<bool> used(n);
+	for (int i = 0; i < n; i++) {
+		string s;
+		cin >> s;
+		if (s != "goto") {
+			vec.push_back(make_pair(s.substr(0, s.size()-1), false));
+		} else {
+			string t;
+			cin >> t;
+			vec.push_back(make_pair(t.substr(0, t.size()-1), true));
+		}
+	}
+	jump = vector<int>(n);
+	for (int i = 0; i < n; i++) {
+		if (vec[i].second) {
+			for (int j = 0; j < n; j++) {
+				if (vec[i].first == vec[j].first and i != j) {
+					jump[i] = j;
+					break;
+				}
+			}
+		}
+	}
+	cout << calc(0, rem, used) << endl;
+}

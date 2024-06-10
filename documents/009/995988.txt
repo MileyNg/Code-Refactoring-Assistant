@@ -1,0 +1,20 @@
+#include <iostream>
+
+using namespace std;
+
+inline int calc(int y, int m, int d){
+    return 21 - d - (y % 3 && ~m & 1) +
+           (10 - m) * 20 - (y%3? (5 - m / 2): 0) +
+           (999 - y) * 200 - (999 - y - (333 - y / 3)) * 5;
+}
+
+int main(){
+    int n;
+    cin >> n;
+    while(n--){
+        int y, m, d;
+        cin >> y >> m >> d;
+        cout << calc(y, m, d) << '\n';
+    }
+    return 0;
+}

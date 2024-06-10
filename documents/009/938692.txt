@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string.h>
+#include <string>
+#include <cstdio>
+
+using namespace std;
+
+const int MAXN = 500 + 10;
+
+string str[MAXN];
+string temp[MAXN];
+int c[30][30];
+
+void input()
+{
+    int n;
+
+    while (scanf("%d", &n) != EOF)
+    {
+        if (n == 0) break;
+        memset(c, 0, sizeof(c));
+
+        for (int i = 0; i < n; i++)
+        {
+            cin >> str[i];
+        }
+
+        bool flag = true;
+
+        for (int i = 0; i < n - 1; i++)
+        {
+            int len1 = str[i].length(), len2 = str[i + 1].length();
+
+            if (flag == false) break;
+
+
+            int k;
+            for (k = 0; k < len1 && k < len2; k++)
+            {
+                if (str[i][k] != str[i + 1][k])
+                {
+                    if (c[str[i + 1][k] - 'a'][str[i][k] - 'a'])
+                    {
+                        flag = false;
+                        break;
+                    }
+                    c[str[i][k] - 'a'][str[i + 1][k] - 'a'] = 1;
+                    break;
+                }
+            }
+            if (k == len2 && k < len1)
+            {
+                flag = 0;
+                break;
+            }
+            //cout << (str[i][k] - 'a') << ' ' << (str[i + 1][k] - 'a') << endl;
+        }
+
+        printf("%s\n", flag ? "yes" : "no");
+    }
+}
+
+int main()
+{
+    input();
+    return 0;
+}

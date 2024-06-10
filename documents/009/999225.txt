@@ -1,0 +1,19 @@
+YES, NO = 0, 1
+@memo = Hash.new
+def dfs(subset, last = nil)
+  return @memo[[subset, last]] = YES if subset.empty?
+  return @memo[[subset, last]] if @memo[[subset, last]]
+
+  subset.each do |domino|
+    if !last || last == domino[0]
+      return @memo[[subset, last]] = YES if dfs(subset - [domino], domino[1]) == YES
+    end
+    if !last || last == domino[1]
+      return @memo[[subset, last]] = YES if dfs(subset - [domino], domino[0]) == YES
+    end
+  end
+
+  @memo[[subset, last]] = NO
+end
+
+puts dfs(gets.split.sort) == YES ? "Yes" : "No" while gets

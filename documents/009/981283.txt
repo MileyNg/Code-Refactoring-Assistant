@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+#define rreps(v, f, l) for (int v = (l), v##_ = (f); v >= v##_; --v)
+#define rrep(v, n) rreps(v, 0, n - 1)
+#define rlep(v, n) rreps(v, 1, n)
+#define show_a(a, size) rep(show_it, size) std::cout << a[show_it] << " \n"[show_it == show_it_ - 1];
+#define show_v(v) show_a(v, v.size())
+#define debug(x) std::cerr << #x << " = " << (x) << "\n";
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+int main()
+{
+  const int MOD = 10007;
+  int table[255] = {};
+  table['J'] = 1;
+  table['O'] = 2;
+  table['I'] = 4;
+
+  int N;
+  string s;
+
+  cin >> N >> s;
+  vector<vector<int> > dp(N + 1, vector<int>(8, 0));
+  // dp[日数][出席状況のビット] == その状況になる通り数
+  // dp[D][B if B & Sd != 0] += dp[D - 1][Bn if Bn & B != 0]
+  dp[0][1] = 1;
+  lep(d, N){
+    rep(b, 8){
+      if ((b & table[s[d - 1]]) == 0) continue;
+      rep(pb, 8){
+        if ((b & pb) == 0) continue;
+        dp[d][b] += dp[d - 1][pb];
+        dp[d][b] %= MOD;
+      }
+    }
+  }
+  int count = 0;
+  rep(b, 8){
+    count += dp[N][b];
+    count %= MOD;
+  }
+  cout << count << endl;
+  return 0;
+}

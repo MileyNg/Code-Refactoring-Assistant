@@ -1,0 +1,221 @@
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <limits>
+#include <iostream>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+namespace libcomp {
+namespace geometry {
+static const double EPS = 1e-9;
+inline double abs(double x){ return std::abs(x); }
+inline bool tolerant_eq(double a, double b){ return abs(a - b) < EPS; }
+}
+}
+namespace libcomp {
+namespace geometry {
+struct Point {
+	double x;
+	double y;
+	explicit Point(const double &x = 0.0, const double &y = 0.0) :
+		x(x), y(y)
+	{ }
+	static Point invalid(){
+		double qnan = numeric_limits<double>::quiet_NaN();
+		return Point(qnan, qnan);
+	}
+	bool is_valid() const { return !(std::isnan(x) || std::isnan(y)); }
+	Point operator+(const Point &p) const { return Point(x + p.x, y + p.y); }
+	Point &operator+=(const Point &p){ return *this = *this + p; }
+	Point operator-(const Point &p) const { return Point(x - p.x, y - p.y); }
+	Point &operator-=(const Point &p){ return *this = *this - p; }
+	Point operator*(double s) const { return Point(x * s, y * s); }
+	Point &operator*=(double s){ return *this = *this * s; }
+	Point operator*(const Point &p) const {
+		return Point(x * p.x - y * p.y, x * p.y + y * p.x);
+	}
+	Point &operator*=(const Point &p){ return *this = *this * p; }
+	Point operator/(double s) const { return Point(x / s, y / s); }
+	Point &operator/=(double s){ return *this = *this / s; }
+	bool operator==(const Point &p) const { return x == p.x && y == p.y; }
+	bool operator!=(const Point &p) const { return x != p.x || y != p.y; }
+	bool operator<(const Point &p) const {
+		return (x == p.x) ? (y < p.y) : (x < p.x);
+	}
+	double abs() const { return sqrt(x * x + y * y); }
+	double norm() const { return x * x + y * y; }
+	Point unit() const { return *this / abs(); }
+	Point ortho() const { return Point(-y, x); }
+};
+inline Point operator*(double s, const Point &p){ return p * s; }
+inline bool tolerant_eq(const Point &a, const Point &b){
+	return tolerant_eq(a.x, b.x) && tolerant_eq(a.y, b.y);
+}
+inline double cross(const Point &a, const Point &b){
+	return a.x * b.y - a.y * b.x;
+}
+inline double dot(const Point &a, const Point &b){
+	return a.x * b.x + a.y * b.y;
+}
+inline int ccw(const Point &a, const Point &b, const Point &c){
+	Point d = b - a, e = c - a;
+	if(cross(d, e) > 0.0){ return 1; }
+	if(cross(d, e) < 0.0){ return -1; }
+	if(dot(d, e) < 0.0){ return 2; }
+	if(d.abs() < e.abs()){ return -2; }
+	return 0;
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+struct Line {
+	Point a;
+	Point b;
+	explicit Line(const Point &a = Point(), const Point &b = Point()) :
+		a(a), b(b)
+	{ }
+	static Line invalid(){
+		Point inv = Point::invalid();
+		return Line(inv, inv);
+	}
+	bool is_valid() const { return a.is_valid() && b.is_valid(); }
+	bool operator<(const Line &l) const {
+		return (a == l.a) ? (b < l.b) : (a < l.a);
+	}
+	Point projection(const Point &p) const {
+		double t = dot(p - a, b - a) / (b - a).norm();
+		return a + t * (b - a);
+	}
+	Point reflection(const Point &p) const {
+		return p + 2.0 * (projection(p) - p);
+	}
+};
+inline bool tolerant_eq(const Line &a, const Line &b){
+	const double x = abs(cross(a.b - a.a, b.b - b.a));
+	const double y = abs(cross(a.b - a.a, a.b - b.a));
+	return x < EPS && y < EPS;
+}
+inline bool directed_tolerant_eq(const Line &a, const Line &b){
+	if(!tolerant_eq(a, b)){ return false; }
+	return tolerant_eq((a.a - a.b).unit(), (b.a - b.b).unit());
+}
+inline bool is_parallel(const Line &a, const Line &b){
+	return abs(cross(a.b - a.a, b.b - b.a)) < EPS;
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+struct Segment {
+	Point a;
+	Point b;
+	explicit Segment(const Point &a = Point(), const Point &b = Point()) :
+		a(a), b(b)
+	{ }
+	static Segment invalid(){
+		Point inv = Point::invalid();
+		return Segment(inv, inv);
+	}
+	bool is_valid() const { return a.is_valid() && b.is_valid(); }
+	bool operator<(const Segment &s) const {
+		return (a == s.a) ? (b < s.b) : (a < s.a);
+	}
+};
+inline bool tolerant_eq(const Segment &a, const Segment &b){
+	if(tolerant_eq(a.a, b.a) && tolerant_eq(a.b, b.b)){ return true; }
+	if(tolerant_eq(a.a, b.b) && tolerant_eq(a.b, b.a)){ return true; }
+	return false;
+}
+inline bool directed_tolerant_eq(const Segment &a, const Segment &b){
+	return tolerant_eq(a.a, b.a) && tolerant_eq(a.b, b.b);
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+inline bool intersect(const Point &a, const Point &b){
+	return tolerant_eq(a, b);
+}
+inline bool intersect(const Point &a, const Line &b){
+	return abs(cross(b.b - a, b.a - a)) < EPS;
+}
+inline bool intersect(const Line &a, const Point &b){
+	return intersect(b, a);
+}
+inline bool intersect(const Point &a, const Segment &b){
+	return (b.a - a).abs() + (b.b - a).abs() - (b.b - b.a).abs() < EPS;
+}
+inline bool intersect(const Segment &a, const Point &b){
+	return intersect(b, a);
+}
+inline bool intersect(const Line &a, const Line &b){
+	if(abs(cross(a.b - a.a, b.b - b.a)) > EPS){ return true; }
+	return tolerant_eq(a, b);
+}
+inline bool intersect(const Line &a, const Segment &b){
+	return cross(a.b - a.a, b.a - a.a) * cross(a.b - a.a, b.b - a.a) < EPS;
+}
+inline bool intersect(const Segment &a, const Line &b){
+	return intersect(b, a);
+}
+inline bool intersect(const Segment &a, const Segment &b){
+	if(ccw(a.a, a.b, b.a) * ccw(a.a, a.b, b.b) > 0){ return false; }
+	if(ccw(b.a, b.b, a.a) * ccw(b.a, b.b, a.b) > 0){ return false; }
+	return true;
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+inline double distance(const Point &a, const Point &b){
+	return (a - b).abs();
+}
+inline double distance(const Point &a, const Line &b){
+	return (a - b.projection(a)).abs();
+}
+inline double distance(const Line &a, const Point &b){
+	return distance(b, a);
+}
+inline double distance(const Point &a, const Segment &b){
+	const Point r = Line(b.a, b.b).projection(a);
+	if(intersect(b, r)){ return (r - a).abs(); }
+	return min((b.a - a).abs(), (b.b - a).abs());
+}
+inline double distance(const Segment &a, const Point &b){
+	return distance(b, a);
+}
+inline double distance(const Line &a, const Line &b){
+	return intersect(a, b) ? 0.0 : distance(a, b.a);
+}
+inline double distance(const Line &a, const Segment &b){
+	if(intersect(a, b)){ return 0.0; }
+	return min(distance(a, b.a), distance(a, b.b));
+}
+inline double distance(const Segment &a, const Line &b){
+	return distance(b, a);
+}
+inline double distance(const Segment &a, const Segment &b){
+	if(intersect(a, b)){ return 0.0; }
+	const double x = min(distance(a.a, b), distance(a.b, b));
+	const double y = min(distance(b.a, a), distance(b.b, a));
+	return min(x, y);
+}
+}
+}
+namespace geom = libcomp::geometry;
+int main(){
+	ios_base::sync_with_stdio(false);
+	cout << setiosflags(ios::fixed) << setprecision(10);
+	int T;
+	cin >> T;
+	while(T--){
+		geom::Segment a, b;
+		cin >> a.a.x >> a.a.y >> a.b.x >> a.b.y;
+		cin >> b.a.x >> b.a.y >> b.b.x >> b.b.y;
+		cout << geom::distance(a, b) << endl;
+	}
+	return 0;
+}

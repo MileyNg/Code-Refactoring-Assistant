@@ -1,0 +1,31 @@
+import math,cmath
+e=1e-6
+def f(m):
+  c=1j*math.acos(a/2)
+  def g(c):
+    return cmath.exp(b+c)+p0
+  p1,p2=g(c),g(-c)
+  s1,s2=0,0
+  for k in N:
+    if k==i or k==j:continue
+    if abs(p1-X[k])<1+e:s1+=1
+    if abs(p2-X[k])<1+e:s2+=1
+  return max(m,s1,s2)
+
+while 1:
+  n=input()
+  if n==0:break
+  N=range(n)
+  X=[]
+  for i in N:
+    x,y=map(float,input())
+    X+=[x+1j*y]
+  m=0
+  for i in N:
+    p0=X[i]
+    for j in N:
+      if i==j:continue
+      a,b=cmath.polar(X[j]-p0)
+      b*=1j
+      if a<2+e:m=f(m)
+  print m+2

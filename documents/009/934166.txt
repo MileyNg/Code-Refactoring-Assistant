@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+
+using namespace std;
+
+int main(){
+
+	int n;
+	string er, ge;
+	char tmp;
+	int mid;
+
+	cin >> n;
+
+	while (n--){
+		cin >> er;
+		cin >> ge;
+
+		for (int i = er.size() - 1; i >= 0; i--){
+			if (er[i] == 'J'){
+				tmp = ge[ge.size() - 1];
+				for (int j = ge.size() - 1; j > 0; j--){
+					ge[j] = ge[j - 1];
+				}
+				ge[0] = tmp;
+			}
+			else if (er[i] == 'C'){
+				tmp = ge[0];
+				for (int j = 0; j < ge.size()-1; j++){
+					ge[j] = ge[j + 1];
+				}
+				ge[ge.size()-1] = tmp;
+			}
+			else if (er[i] == 'E'){
+				mid = ge.size() / 2 + ge.size() % 2;
+				for (int i = 0; i < ge.size() / 2; i++){
+					swap(ge[i], ge[i + mid]);
+				}
+			}
+			else if (er[i] == 'A'){
+				for (int i = 0; i < ge.size() / 2; i++){
+					swap(ge[i], ge[ge.size()-1-i]);
+				}
+			}
+			else if (er[i] == 'P'){
+				for (int i = 0; i < ge.size(); i++){
+					if ('0' <= ge[i] && ge[i] <= '9'){
+						if (ge[i] == '0') ge[i] = '9';
+						else ge[i]--;
+					}
+				}
+			}
+			else if (er[i] == 'M'){
+				for (int i = 0; i < ge.size(); i++){
+					if ('0' <= ge[i] && ge[i] <= '9'){
+						if (ge[i] == '9') ge[i] = '0';
+						else ge[i]++;
+					}
+				}
+			}
+		}
+		cout << ge << endl;
+	}
+
+	return 0;
+}

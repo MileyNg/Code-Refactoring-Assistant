@@ -1,0 +1,86 @@
+#include<stdio.h>
+#define MAX 100005
+
+typedef struct { 
+    int p;
+    int l;
+    int r;
+} Node;
+
+Node np[MAX]; 
+int i;
+
+void Preorder(int i){
+
+    printf(" %d",i);
+    if(i != -1){
+        if(np[i].l != -1) {
+            Preorder(np[i].l);
+        }
+        if(np[i].r != -1){
+            Preorder(np[i].r);
+        }
+    }
+}
+
+void Inorder(int i){
+
+    if(i != -1){
+        if(np[i].l != -1){
+            Inorder(np[i].l);
+        }
+        printf(" %d",i);
+
+        if(np[i].r != -1){
+            Inorder(np[i].r);
+        }
+    }
+}
+
+void Postorder(int i){
+
+    if(i != -1){
+        if(np[i].l != -1) Postorder(np[i].l);
+        if(np[i].r != -1) Postorder(np[i].r);
+    }
+    printf(" %d",i);
+}
+
+int main(){
+
+    int n;
+    int key, c1, c2;
+
+    scanf("%d", &n);
+
+    for(i = 0; i < n; i++){
+        np[i].p = np[i].l = np[i].r = -1;
+    }
+
+    for(i = 0; i < n; i++){
+        scanf("%d%d%d", &key, &c1, &c2);
+
+        np[c1].p = key;
+        np[c2].p = key;
+        np[key].l = c1;
+        np[key].r = c2;
+    }
+
+    for(i = 0; i < n; i++){
+        if(np[i].p == -1) break;
+    }
+
+    printf("Preorder\n");
+    Preorder(i);
+    printf("\n");
+
+    printf("Inorder\n");
+    Inorder(i);
+    printf("\n");
+
+    printf("Postorder\n");
+    Postorder(i);
+    printf("\n");
+
+    return 0;
+}

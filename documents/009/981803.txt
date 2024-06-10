@@ -1,0 +1,63 @@
+#include<stdio.h>
+
+char key[9][5]={{'.',',','!','?',' '}
+	        ,{'a','b','c'}
+	        ,{'d','e','f'}
+	        ,{'g','h','i'}
+		,{'j','k','l'}
+		,{'m','n','o'}
+		,{'p','q','r','s'}
+		,{'t','u','v'}
+		,{'w','x','y','z'}};
+
+int ctoi(char c){
+  return ((int)c)-48;
+}
+
+void mbl(char *s){
+  int i=0;
+  int bc=0;
+  int pc=0;
+  while(s[i]!='\0'){
+    int bt=ctoi(s[i]);
+    if(bt==0){
+      if(bc!=0){
+	int pb;
+	if(bc==1){
+	  pb=5;
+	}
+	else if((bc==7)||(bc==9)){
+	  pb=4;
+	}
+	else{
+	  pb=3;
+	}
+	printf("%c",key[bc-1][(pc-1)%pb]);
+	bc=0;
+	pc=0;
+      }
+    }
+    else{
+      bc=bt;
+      pc++;
+    }
+    i++;
+  }
+  printf("\n");
+}
+
+void doit(int n){
+  char s[1025];
+  int i;
+  for(i=0;i<n;i++){
+    scanf("%s",s);
+    mbl(s);
+  }
+}
+
+int main(){
+  int n;
+  scanf("%d",&n);
+  doit(n);
+  return 0;
+}

@@ -1,0 +1,88 @@
+#include<iostream>
+#include<cmath>
+#include<cassert>
+using namespace std;
+ 
+int calc(int);
+long long cnt;
+int X;
+void insertionSort(int A[],int n,int g){
+  int v,j;
+  for(int i=g;i<n;i++){
+    v=A[i];
+    j=i-g;
+    while(j>=0&&A[j]>v){
+      A[j+g]=A[j];
+      j=j-g;
+      cnt++;
+    }
+    A[j+g]=v;
+  }
+}
+   int Gt[1000000],gt=0;
+  int  G[1000000], g=0;
+
+void shellSort(int A[],int n){
+ 
+
+  int Z =pow(n,1.5),flg;
+  X=n;
+  cnt=0;
+
+  for(int i=n;i>=1;i--){
+    if(n%i==0){
+      Gt[gt++]=i;
+      //cout<<i<<" - "<<endl;
+    }
+  }
+  
+  for(int i=0;i<gt;i++){
+    if(i%2==0){
+   
+      G[g++]=Gt[i];
+    }
+  }
+  G[g++]=1;
+  
+  for(int i=0;i<g;i++){
+    insertionSort(A, n,G[i]);
+  }
+  
+  cout<<g<<endl;
+  for(int i=0;i<g;i++){
+    if(i)cout<<' ';
+    cout<<G[i];
+  }
+  cout<<endl;
+  cout<<cnt<<endl;
+  
+  assert(cnt<Z);
+  //cout<<cnt<<" cnt"<<endl;
+  //cout<<Z<<" Z"<<endl;
+  //cout<<(int)pow(n,1.5)<<endl;
+}
+ 
+ 
+int main(){
+ 
+  int n;
+  int A[1000000];
+ 
+  cin>>n;
+  for(int i=0;i<n;i++)cin>>A[i];
+   
+   
+  shellSort(A,n);
+ 
+  for(int i=0;i<n;i++){
+    cout<<A[i]<<endl;
+  }
+ 
+  return 0;
+}
+ 
+int calc(int n){
+  for(int i=sqrt(n);i>=0;i--){
+    if(n%i==0)return n/i;
+  }
+}

@@ -1,0 +1,147 @@
+#include<bits/stdc++.h>
+ 
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+ 
+using namespace std;
+ 
+typedef long long ll;
+typedef pair<long long,long long> ll2;
+const ll LLINF = LLONG_MAX;
+const ll MOD = 1000000007;
+ 
+enum Symbol { EXPS,EXPE,TERMS,TERME,FACTOR };
+ 
+int exp(string &s,int &cur){
+ 
+  stack<Symbol> sstack;
+  stack<ll2> vstack;
+  stack<char> ostack;
+  sstack.push(EXPS);
+  ostack.push('@'); // dammy;
+  while( !sstack.empty() ){
+    Symbol syb = sstack.top();
+    char opr;
+    int itmp;
+    ll2 v1,v2,value,tmp;
+ 
+    switch(syb){
+    case EXPS:
+      sstack.pop();
+      sstack.push(EXPE);
+      sstack.push(TERMS);
+      break;
+ 
+    case EXPE:
+      opr = ostack.top();
+      if( opr == '|' ) {
+        ostack.pop();
+        v1 = vstack.top(); vstack.pop();
+        v2 = vstack.top(); vstack.pop();
+        tmp = ll2(0,0);
+        ( tmp.first  = v1.first  * v2.first  ) %= MOD;
+        ( tmp.first += v1.first  * v2.second ) %= MOD;
+        ( tmp.first += v1.second * v2.first  ) %= MOD;
+        ( tmp.second = v1.second * v2.second ) %= MOD;
+        /*
+        itmp = 0;
+        while( !ostack.empty() && ostack.top() == '~' ){
+          ostack.pop();
+          itmp++;
+        }
+        if( itmp & 1 ) swap(tmp.first,tmp.second);
+        */
+        vstack.push(tmp);
+      }
+      if( s[cur] == '|' ){
+        sstack.push(TERMS);
+        ostack.push(s[cur++]);
+      } else {
+        sstack.pop();
+      }
+      break;
+ 
+    case TERMS:
+      sstack.pop();
+      sstack.push(TERME);
+      sstack.push(FACTOR);
+      break;
+ 
+    case TERME:
+      opr = ostack.top();
+
+      if( opr == '&' ) {
+        ostack.pop();
+        v1 = vstack.top(); vstack.pop();
+        v2 = vstack.top(); vstack.pop();
+        tmp = ll2(0,0);
+        ( tmp.first   = v1.first  * v2.first  ) %= MOD;
+        ( tmp.second  = v1.first  * v2.second ) %= MOD;
+        ( tmp.second += v1.second * v2.first  ) %= MOD;
+        ( tmp.second += v1.second * v2.second ) %= MOD;
+        /*
+        itmp = 0;
+        while( !ostack.empty() && ostack.top() == '~' ){
+          ostack.pop();
+          itmp++;
+        }
+        if( itmp & 1 ) swap(tmp.first,tmp.second);
+        */
+        vstack.push(tmp);
+      }
+ 
+      if( s[cur] == '&' ) {
+        sstack.push(FACTOR);
+        ostack.push(s[cur++]);
+      } else {
+        sstack.pop();
+      }
+      break;
+ 
+    case FACTOR:
+      if( s[cur] == '(' ){
+        ++cur;
+        sstack.push(EXPS);
+        ostack.push('(');
+      } else if( s[cur] == ')' ){
+        sstack.pop();
+        ostack.pop();
+
+        itmp = 0;
+        while( !ostack.empty() && ostack.top() == '~' ){
+          ostack.pop();
+          itmp++;
+        }
+        tmp = vstack.top(); vstack.pop();
+        if( itmp & 1 ) swap(tmp.first,tmp.second);
+        vstack.push(tmp);
+        ++cur;
+      } else if( s[cur] == 'x' ) {
+        cur++;
+        while( '0' <= s[cur] && s[cur] <= '9' )cur++;
+        while( !ostack.empty() && ostack.top() == '~' ) ostack.pop();
+        vstack.push(ll2(1,1));
+        sstack.pop();
+      } else if( s[cur] == '~' ) {
+        ++cur;
+        ostack.push('~');
+      } else assert(false); // invalid form
+
+      break;
+ 
+    default:
+      break;
+    }
+ 
+  }
+  assert(vstack.size() == 1);
+  return vstack.top().first;
+}
+ 
+int main(){
+  string s;
+  int cur = 0;
+  getline(cin,s);
+  cout << exp(s,cur) << endl;
+  return 0;
+}

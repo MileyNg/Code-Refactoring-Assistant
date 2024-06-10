@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int solve(int,int); //yes->1
+int A[2000],M[2000],n;
+
+main(){
+  int q,i;
+
+  scanf("%d",&n);
+  for(i=0 ; i<n ; i++) scanf("%d",&A[i]);
+
+  scanf("%d",&q);
+  for(i=0 ; i<q ; i++) scanf("%d",&M[i]);
+
+  for(i=0 ; i<q ; i++){
+    if(solve(0,M[i]) == 1) printf("yes\n");
+    else printf("no\n");
+  }
+  return 0;
+}
+
+int solve(int i,int M){
+  if(M-A[i]==0) return 1;
+  if(i+1>n) return 0;
+  if(solve(i+1,M-A[i]) ||  solve(i+1,M)) return 1;
+  return 0;
+}

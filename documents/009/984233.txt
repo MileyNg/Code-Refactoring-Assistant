@@ -1,0 +1,225 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+struct UnionFind{
+    vector<int> par; // 親
+    vector<int> rank; // 木の深さ
+    vector<int> ss;//xの属する集合のサイズ
+    int size;//集合の個数
+    UnionFind(int n){
+        REP(i,n) par.push_back(i);
+        rank = vector<int>(n);
+        ss=vector<int>(n,1);
+        size=n;
+    }
+    int root(int x){
+        if(par[x] == x)return x;
+        return par[x] = root(par[x]);
+    }
+    bool same(int x,int y){
+        return root(x) == root(y);
+    }
+    void unite(int x,int y){
+        x = root(x);y = root(y);
+        if(x==y)return;
+        if(rank[x] < rank[y]){
+            par[x] = y;
+            ss[y]+=ss[x];
+        }else{
+            par[y] = x;
+            ss[x]+=ss[y];
+        }
+        if(rank[x] == rank[y]) rank[x]++;
+        size--;
+    }
+    int getS(int x){
+        return ss[root(x)];
+    }
+};
+
+int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+int INF=1<<28;
+class Main{
+	public:
+
+	int w,h;
+
+	int enc(int y,int x){
+		return y*w+x;
+	}
+
+	void run(){
+		// ifstream cin("D2");
+//		ofstream cout( "D2.out" );
+		
+		while(true){
+			cin >> w  >> h;if(w==0 && h==0)break;
+			vector<string> board(h);REP(y,h) cin >> board[y];
+
+			UnionFind uf(w*h);//ブロックグループ
+			REP(y,h)REP(x,w){
+				REP(d,4){
+					int ny=y+dy[d],nx=x+dx[d];
+					if(!IN(0,ny,h) || !IN(0,nx,w))continue;
+					if(board[ny][nx]==board[y][x])
+						uf.unite(enc(y,x),enc(ny,nx));
+				}
+			}
+
+			//ルート
+			REP(x,w)if(board[h-1][x]!='.'){
+				root=uf.root(enc(h-1,x));
+			}
+
+			//木の生成
+			chs=vector<vector<int>>(w*h);
+			lx=vector<int>(w*h,INF);rx=vector<int>(w*h,-INF);
+			bs=vector<vector<int>>(w*h,vector<int>(w));
+			
+			REP(y,h)REP(x,w){
+				int cy=y+dy[3],cx=x+dx[3];
+				if(!IN(0,cy,h) || !IN(0,cx,w))continue;
+				if(board[y][x]!=board[cy][cx] && board[y][x]!='.' && board[cy][cx]!='.'){
+					chs[uf.root(enc(y,x))].push_back(uf.root(enc(cy,cx)));
+					lx[uf.root(enc(cy,cx))]=min(lx[uf.root(enc(cy,cx))],x);rx[uf.root(enc(cy,cx))]=max(rx[uf.root(enc(cy,cx))],x+1);
+				}
+			}
+			REP(y,h)REP(x,w){
+				sort(ALL(chs[uf.root(enc(y,x))]));
+				chs[uf.root(enc(y,x))].erase(unique(ALL(chs[uf.root(enc(y,x))])),chs[uf.root(enc(y,x))].end());
+			}
+	
+			REP(y,h)REP(x,w)if(board[y][x]!='.')bs[uf.root(enc(y,x))][x]++;
+
+			cout <<(dfs(root)?"STABLE":"UNSTABLE")<<endl;
+		}
+	}
+	int root;		
+	vector<int> lx,rx; 
+	vector<vector<int>> bs; 
+	vector<vector<int>> chs;
+
+	bool dfs(int p){
+		//check chd
+		REP(i,chs[p].size()){
+			if(!dfs(chs[p][i]))return false;
+			lx[p]=min(lx[p],lx[chs[p][i]]);rx[p]=max(rx[p],rx[chs[p][i]]);
+			REP(x,w)bs[p][x]+=bs[chs[p][i]][x];
+		}
+	//DUMP(p);DUMP(lx[p]);DUMP(rx[p]);DUMP(BR);
+
+		//check ok
+		double m=0;int sum=0;
+		REP(x,w){
+			m+=(x+0.5)*bs[p][x];sum+=bs[p][x];
+		}
+		m/=sum;
+	//	DUMP(m);DUMP(BR);
+		if(lx[p]<m && m<rx[p])return true;
+		return false;
+	}
+
+};
+int main(){
+	cout <<fixed<<setprecision(15);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

@@ -1,0 +1,95 @@
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <deque>
+#include <iostream>
+#include <iterator>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+
+using namespace std;
+typedef vector<int> veci;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+
+#define foreach(i, n) for (typeof(n) i = 0; i < (n); ++i)
+#define foreach_eq(i, n) for (typeof(n) i = 0; i <= (n); ++i)
+#define foreach_from(i, m, n) for (typeof(n) i = m; i < (n); ++i)
+#define foreach_eq_from(i, m, n) for (typeof(n) i = m; i <= (n); ++i)
+
+inline bool between(int lower, int upper, int x) { return lower <= x && x < upper; }
+inline bool between(pii lower, pii upper, pii x) {
+    return between(lower.first, upper.first, x.first)
+        && between(lower.second, upper.second, x.second);
+}
+pii dirctions[4] = { pii(0,-1), pii(0,1), pii(-1,0), pii(1,0) };
+template <typename S, typename T> inline
+pair<S,T> pair_plus(const pair<S,T> & p, const pair<S,T> & q) {
+    return pair<S,T>(p.first + q.first, p.second + q.second);
+}
+
+#define MAX_H 1000
+#define MAX_W 1000
+#define MAX_N 9
+
+int H, W, N;
+bool orig_map[MAX_H][MAX_W];
+pii factories[MAX_N + 1];
+queue<pair<pii, int> > que;
+
+int main() {
+    cin >> H >> W >> N;
+    foreach (i, H) foreach (j, W) {
+        char c;
+        cin >> c;
+        orig_map[i][j] = true;
+        if (c == '.') {
+        } else if ('0' <= c && c <= '9') {
+            factories[(int)c - (int)'0'] = pii(i,j);
+        } else if (c == 'S') {
+            factories[0] = pii(i,j);
+        } else {
+            assert(c == 'X');
+            orig_map[i][j] = false;
+        }
+    }
+
+    int result = 0;
+    foreach (n, N) {
+        bool data[MAX_H][MAX_W];
+        foreach (i, MAX_H) foreach (j, MAX_W) data[i][j] = orig_map[i][j];
+        data[factories[n].first][factories[n].second] = false;
+        que.push(pair<pii,int>(factories[n], 0));
+        int found = 0;
+        while (not found) {
+            pii pos = que.front().first;
+            int cnt = que.front().second;
+            que.pop();
+            foreach (d, 4) {
+                pii nxt = pair_plus(pos, dirctions[d]);
+                if (not between(pii(0,0), pii(H,W), nxt)) continue;
+                if (nxt == factories[n+1]) {
+                    found = cnt + 1;
+                } else if (data[nxt.first][nxt.second]) {
+                    data[nxt.first][nxt.second] = false;
+                    que.push(pair<pii,int>(nxt, cnt + 1));
+                }
+            }
+        }
+        result += found;
+        que = queue<pair<pii,int> >();
+    }
+
+    cout << result << endl;
+}

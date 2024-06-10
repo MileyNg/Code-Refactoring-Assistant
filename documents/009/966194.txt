@@ -1,0 +1,16 @@
+import std.stdio;
+import std.conv;
+import std.string;
+
+void main(string[] args){
+	int n = to!int(readln().chomp());
+	for(int i = 0; i < n; i ++){
+		string[] cs = readln().chomp().split(" ");
+		// x1 y1 x2 y2 x3 y3 x4 y4
+		double dx1 = to!double(cs[0]) - to!double(cs[2]);
+		double dx2 = to!double(cs[4]) - to!double(cs[6]);
+		double dy1 = to!double(cs[1]) - to!double(cs[3]);
+		double dy2 = to!double(cs[5]) - to!double(cs[7]);
+		if(dx1 * dy2 - dx2 * dy1 < 0.00000000001 && dx1 * dy2 - dx2 * dy1 > -0.00000000001) writeln("YES"); else writeln("NO");
+		}
+	}

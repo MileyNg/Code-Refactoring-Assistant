@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+
+long long func(long long k) {
+        if (k <= 1) return 1;
+        return k * func(k-1);
+}
+
+long long solver(string str) {
+        int n = (int)str.size();
+        vector<int> cnt(26, 0);
+        for (int i=0; i<n; i++) cnt[ (str[i] - 'a') ]++;
+int ecnt = 0;
+for (int i = 0; i<26; i++) if (cnt[i]%2==1) ecnt++;
+
+if (n%2 == 0 && ecnt > 0) return 0;
+if (n%2 == 1 && ecnt != 1) return 0;
+
+for (int i=0; i<26; i++) cnt[i]/=2;
+
+int sum = 0;
+for (int i=0; i<26; i++) sum += cnt[i];
+long long ans = func(sum);
+
+for (int i=0; i<26; i++) {
+        ans /= func(cnt[i]);
+}
+
+return ans;
+}
+
+int main() {
+        string str;
+
+        cin >> str;
+
+        cout << solver(str) << endl;
+
+        return 0;
+        
+}

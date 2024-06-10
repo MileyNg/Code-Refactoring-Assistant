@@ -1,0 +1,62 @@
+
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+
+using namespace std;
+
+#define MAXN 10012
+#define INF 1e+9
+
+int SwapDim1Array(int **a,int **b);
+
+typedef struct{
+	int exist;
+	int none;
+} dint;
+dint origin[MAXN];
+dint buffer[MAXN];
+dint *dp = origin;
+dint *dpbuf = buffer;
+int field[MAXN] = {0};
+int length = 0;
+
+int main (void){
+	scanf("%d",&length);
+	for(int i=0;i<=length;i++){
+			dp[i].exist = INF;
+			dp[i].none = INF;
+	}
+	dp[0].none = 0;
+	for(int i=1;i<length;i++){
+		scanf("%d",&field[i]);
+	}
+
+
+	for(int i=0;i<length;i++){		//くばるDP
+		for(int j=0;j<=i;j++){
+			dpbuf[j+1].exist = min(min(dp[j].exist + field[i+1] - field[i] , dp[j].none + field[i] + field[i+1]) , dpbuf[j+1].exist);
+			dpbuf[j].none = min(min(dp[j].exist , dp[j].none) , dpbuf[j].none);
+			SwapDim1Array(dp,dpbuf);
+		}
+	}
+
+	int answer = 0;
+	answer = min(dp[length/2].exist,dp[length/2].none);
+	printf("%d\n",answer);
+	/*puts("field");
+	for(int i=1;i<length;i++){
+		printf("%d\t",field[i]);
+	}puts("");
+	printf("###%d###%d\n",dp[1][1].exist,dp[1][1].none);*/
+
+	return 0;
+}
+
+int SwapDim1Array(int **a,int **b){
+	int *c;
+	c = *a;
+	*a = *b;
+	*b = c;
+	return 0;
+}

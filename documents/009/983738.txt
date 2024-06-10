@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+
+int main(){
+    int H,W;
+    char input;
+    //入力開始
+    while(cin>>H>>W){
+        if(H==0&&W==0)break;
+        int data[600][600]={0};
+        for(int i=0; i<H; i++){
+            for(int j=0; j<W; j++){
+                cin>>input;
+                if(input=='.')data[i+1][j+1]=1;
+            }
+        }
+        //入力終了
+        //処理開始
+        int width[600][600]={0};
+        for(int i=1; i<=H; i++){
+            for(int j=1; j<=W; j++){
+                if(data[i][j]==1)width[i][j]=width[i][j-1]+1;
+            }
+        }
+        
+        int max_rectangula=0;
+        for(int j=1; j<=W; j++){
+            for(int i=1; i<=H; i++){
+                if(data[i][j]==1){
+                    int height_max=1;
+                    int width_min=width[i][j];
+                    int rectangula = width[i][j];
+                    while(data[i+height_max][j]==1){
+                        width_min=min(width_min,width[i+height_max][j]);
+                        height_max++;
+                        int temp_rectangula = width_min*height_max;
+                        if(rectangula<temp_rectangula)rectangula=temp_rectangula;
+                        else break;
+                    }
+                    max_rectangula = max(max_rectangula, rectangula);
+                }
+                
+                
+            }
+        }
+        
+        
+        cout<<max_rectangula<<endl;
+    }
+    
+    
+}

@@ -1,0 +1,77 @@
+#include<iostream>
+#include<iomanip>
+#include<complex>
+#include<vector>
+#include<algorithm>
+#include<cmath>
+
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+#define fs first
+#define sc second
+
+using namespace std;
+typedef long double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+typedef pair<P,D> C;
+
+const double EPS = 1e-9;
+const double PI = acos(-1);
+
+D arg(D a,D b,D c){return acos( (b*b+c*c-a*a)/(2*b*c) );}
+
+D area_cir(C c){return PI * c.sc * c.sc;}
+
+D intersection_area(C a, C b){
+  D d = abs(a.fs-b.fs);
+  D ar = a.sc, br = b.sc;
+  if(a.sc + b.sc < d + EPS)return 0;
+  if(a.sc < b.sc)swap(a,b);
+  if(b.sc + d  < a.sc + EPS || b.sc < EPS)return area_cir(b);
+
+  D t1 = arg(b.sc,a.sc,d), t2 = arg(a.sc,b.sc,d);
+  D tri = ( a.sc*a.sc*sin(t1*2) + b.sc*b.sc*sin(t2*2) )/2.0;
+  return a.sc*a.sc*t1 + b.sc*b.sc*t2 - tri;
+}
+
+int main(){
+  D Uh,Uw,a,b,ab;
+ 
+  while(cin >> Uw >> Uh >> a >> b >> ab, Uh!=0){
+    D rA = sqrt(a/PI), rB = sqrt(b/PI);
+
+    D minlen = min(Uh,Uw);
+    if(minlen+EPS<2*rA || minlen+EPS<2*rB){
+      cout << "impossible" << endl;
+      continue;
+    }
+
+    P l = P(rA,rA), r = P(Uw-rB,Uh-rB);
+    if(rA < rB){
+      l = P(rB,rB); r = P(Uw-rA,Uh-rA);
+    }
+
+    C A = C(l,max(rA,rB));
+    
+    for(int i=0;i<10000;i++){
+      P mid = l+r; mid/=2;
+      if(intersection_area(A,C(mid,min(rA,rB))) < ab)r = mid;
+      else l = mid;
+    }
+
+    if(!EQ(intersection_area(A,C(l,min(rA,rB))),ab)){
+      cout << "impossible" << endl;
+      continue;
+    }
+
+    D xA = rA, yA = rA, xB = rB, yB = rB;
+    if(rA<rB){
+      xA = l.real(); yA = l.imag();
+    }else{
+      xB = l.real(); yB = l.imag();
+    }
+
+    cout << fixed << setprecision(9) << xA << " " << yA << " " << rA << " "
+	 << xB << " " << yB << " " << rB << endl;
+  }
+}

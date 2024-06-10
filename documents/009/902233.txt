@@ -1,0 +1,80 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+#define INF 1000000000
+#define EPS 0.000001
+
+int n;
+struct date{
+	int num;
+	ll total;
+	bool flag;
+}D[4000];
+ 
+int main(){
+ 
+	while(true){
+	
+		cin >> n;
+		if(n == 0)
+			break;
+		int count = 0;
+		bool flag = false;
+		for(int i = 0; i < n; i++){
+			int kari;
+			cin >> kari;
+			for(int j = 0; j < count; j++){
+				if(D[j].num == kari){
+					flag = true;
+					int kari1, kari2;
+					cin >> kari1 >> kari2;
+					if(D[j].total + kari1*kari2 >= 1000000){
+						D[j].flag = true;
+					}
+				}
+			}
+			if(!flag){
+				D[count].num = kari;
+				int kari1, kari2;
+				cin >> kari1 >> kari2;
+				D[count].total = kari1*kari2;
+				D[count].flag = false;
+				if(D[count].total >= 1000000)
+					D[count].flag = true;
+				count++;
+			}
+		}
+
+		bool flag2 = false;
+		for(int i = 0; i < count; i++){
+			if(D[i].flag){
+				flag2 = true;
+				printf("%d\n", D[i].num);
+			}
+		}
+		if(!flag2){
+			printf("NA\n");
+		}
+
+	}
+
+	
+
+
+	return 0;
+ 
+}
+ 

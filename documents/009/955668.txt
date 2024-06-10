@@ -1,0 +1,177 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+char tmp[1000];
+#define nextInt(n) scanf("%d",&n)
+#define nextLong(n) scanf("%lld",&n)//I64d
+#define nextDouble(n) scanf("%lf",&n)  
+#define nextChar(n) scanf("%c",&n)
+#define nextString(n) scanf("%s",tmp);n=tmp
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+
+ll MOD=1000000007;
+
+namespace SyntaxAnalysis{
+	typedef string::const_iterator Cursor;
+	
+	class ParseError{};
+	
+	class Syntax{
+	public:
+		const string& s;Cursor& c;
+		Syntax(const string& s,Cursor& c):s(s),c(c){}
+
+		ll expression(bool blacket){
+			ll l=term();int opc=0;
+			while(*c=='+' || *c=='-'){
+				opc++;
+				if(*c=='+'){
+					c++;l+=term();
+				}else{
+					c++;l-=term();
+				}
+				if(!IN(0,l,1<<10)) throw ParseError();
+			}
+			if(blacket && opc==0)throw ParseError();
+			return l;
+		}
+
+		ll term(){
+			ll l=factor();
+			while(*c=='*'){
+				c++;l*=factor();
+			    if(!IN(0,l,1<<10)) throw ParseError();
+			}
+			return l;
+		}
+		ll factor(){
+			if(*c=='('){
+				c++;
+				ll v=expression(true);
+				if(*c!=')') throw ParseError();
+				c++;
+				return v;
+			}else if(isdigit(*c)){
+				return number();
+			}else{
+				throw ParseError();
+			}
+		}
+
+		ll number(){
+		    stringstream ss;
+		    while(isdigit(*c)){
+				ss << *c;c++;
+		    }
+		    string str;ss>>str;
+		    ll res=0;
+		    REP(i,str.size()){
+				res*=2;
+				if(str[i]=='1')res++;
+		    }
+		    if(!IN(0,res,1<<10)) throw ParseError();
+			return res;
+		}
+	};
+}
+using namespace SyntaxAnalysis;
+
+
+char symb[7]={'0','1','+','-','*','(',')'};
+
+class Main{
+public:
+	string s;		
+	bool input(){
+		getline(cin,s);
+		s.erase(remove(ALL(s), ' '), s.end());//空白除去
+		return true;
+	}
+
+	ll dfs(int i){
+		ll Mv=-1;
+		if(i==s.size()){
+			try{
+				Cursor c=s.begin();
+				Syntax sy(s,c);
+				ll res=sy.expression(false);
+				if(c!=s.end())throw ParseError();
+				return res;
+			}catch(ParseError e){return -1;}
+		}
+		if(s[i]=='.'){
+			REP(j,7){
+				s[i]=symb[j];
+				Mv=max(Mv,dfs(i+1));
+				s[i]='.';
+			}
+		}else{
+			Mv=max(Mv,dfs(i+1));
+		}
+		return Mv;
+	}
+
+	void run(){
+		input();
+		cout << dfs(0)<<endl;
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

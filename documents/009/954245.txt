@@ -1,0 +1,82 @@
+#include<stdio.h>
+int main(void){
+    int c[5];
+    while(scanf("%d",&c[0])!=EOF){
+        int i,j,work,count,flag;
+        
+        for(i=1;i<5;i++)scanf(",%d",&c[i]);
+        for(i=0;i<4;i++){
+            for(j=i+1;j<5;j++){
+                if(c[i]>c[j]){
+                    work=c[i];
+                    c[i]=c[j];
+                    c[j]=work;
+                }
+            }
+        }
+      
+        (c[0]==c[1])?i=0:i=1;
+        count=0;
+        for(j=1;j<4;j++){
+            if(c[i]==c[i+j])count++;
+        }
+        if(count==3){
+            puts("four card");
+            continue;
+        }
+        count=0;
+        if(c[0]==c[1])count++;
+        if(c[0]==c[2])count++;
+        for(i=count+1;i<4;i++){
+            if(c[i]==c[i+1])count++;
+        }
+        if(count==3){
+            puts("full house");
+            continue;
+        }
+
+        
+        count=flag=0;
+        if(c[0]==1 &&c[1]==10){
+            flag=1;
+            c[0]=9;
+        }
+        for(i=0;i<4;i++){
+            if(c[i]==c[i+1]-1)count++;
+        }
+        if(count==4){
+            puts("straight");
+            continue;
+        }
+        if(flag==1)c[0]=1;
+      
+        count=flag=0;
+        for(i=0;i<4;i++){
+            if(c[i]==c[i+1])count++;
+            else count=0;
+            if(count==2){
+                puts("three card");
+                flag=1;
+            }
+        }
+        if(flag==1)continue;
+      
+        count=0;
+        for(i=0;i<4;i++){
+            if(c[i]==c[i+1])count++;
+        }
+        switch(count){
+            case 2:
+                puts("two pair");
+                break;
+            case 1:
+                puts("one pair");
+                break;
+            default:
+                puts("null");
+                break;
+        }
+
+    }
+    return 0;
+}

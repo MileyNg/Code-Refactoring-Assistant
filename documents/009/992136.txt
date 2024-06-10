@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+#define PRIME_MAX 250000	//9,223,372,036,854,775,807までの値に対応
+
+class PrimeNumber
+{
+private:
+	bool ary[PRIME_MAX];	//ary[i]がtrueならiは素数
+public:
+	//コンストラクタ
+	PrimeNumber(){
+		for(long long i=0;i<PRIME_MAX;i++){
+			ary[i]=1;
+		}
+		ary[0]=0;ary[1]=0;
+		for(long long i=2;(i*i)<PRIME_MAX;i++)
+			if(ary[i])
+				for(long long j=(i<<1);j<PRIME_MAX;j+=i)
+					if(ary[j])
+						ary[j]=0;
+	};
+	//sからeまでの素数を数える
+	long long count(long long s,long long e){
+		long long count=0;
+		for(long long i=s;i<=e;i++){
+			if(ary[i])count++;
+		}
+		return count;
+	};
+	//iが素数なら1を返す
+	bool get(long long i){
+		return ary[i];
+	};
+};
+
+int main(void){
+
+	PrimeNumber prime;
+	long long n;
+
+	while(1){
+
+		cin >>n;
+		if(!n)
+			break;
+
+		cout<<prime.count(n+1,2*n)<<endl;
+	}
+
+	return 0;
+}

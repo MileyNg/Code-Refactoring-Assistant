@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+#define rreps(v, f, l) for (int v = (l), v##_ = (f); v >= v##_; --v)
+#define rrep(v, n) rreps(v, 0, n - 1)
+#define rlep(v, n) rreps(v, 1, n)
+#define show_a(a, size) rep(a##_it, size) std::cout << a[a##_it] << " \n"[a##_it == a##_it_ - 1];
+#define show_v(v) show_a(v, v.size())
+#define debug(x) std::cerr << #x << " = " << (x) << "\n";
+
+using namespace std;
+
+typedef long long int lint;
+typedef complex<double> P;
+
+const double EPS = 1e-15;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+int main()
+{
+  rep(i, in()){
+    int res;
+    double r1, r2;
+    P p1, p2;
+    cin >> p1.imag() >> p1.real() >> r1 >> p2.imag() >> p2.real() >> r2;
+    if (abs(p1 - p2) >= r1 + r2 + EPS){
+      res = 0;
+    }
+    else if (2 * abs(p1 - p2) < r1 + EPS){
+      res = 2;
+    }
+    else if (2 * abs(p1 - p2) < r2 + EPS){
+      res = -2;
+    }
+    else {
+      res = 1;
+    }
+    cout << res << endl;
+  }
+  return 0;
+}

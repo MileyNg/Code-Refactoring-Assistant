@@ -1,0 +1,28 @@
+#include<iostream>
+#include<cmath>
+
+using namespace std;
+
+int main(){
+  char wday[9],time[9];
+  for(int s,n,t,p,m;cin>>s>>n>>t>>wday>>time>>p>>m,s;){
+    int hod=24*60;
+    double fp=1;
+    int cm=0;
+    int md=(wday[0]=='A')?7:1;
+    int mt=(time[0]=='A')?hod:hod/2;
+    while(m--){
+      auto f=[&](int x){
+	return cm%hod<mt&&cm/hod%7<md;
+      };
+      if(f(cm)&&f(cm+s)){
+	fp*=pow(1-1./p,n);
+      }
+      cm+=t;
+    }
+    cout.precision(9);
+    cout<<fixed<<1-fp<<endl;
+  }
+}
+
+      

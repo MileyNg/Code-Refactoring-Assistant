@@ -1,0 +1,38 @@
+#include<iostream>
+#include<numeric>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int n;
+  cin>>n;
+  vector<int> v(n);
+  while(n--){
+    cin>>v[n];
+  }
+  sort(v.rbegin(),v.rend());
+  long long a=1;
+  auto it=begin(v)+min<int>(4,v.size());
+  a+=accumulate(begin(v),it,0LL);
+  v.erase(begin(v),it);
+  while(!v.empty()){
+    vector<int> nv;
+    int n2=0;
+    for(auto e:v){
+      n2+=e>=2;
+      if(e-2>0){
+	nv.push_back(e-2);
+      }
+    }
+    a+=min(4,n2);
+    auto it=begin(nv)+min<int>(8,nv.size());
+    a+=accumulate(begin(nv),it,0LL);
+    nv.erase(begin(nv),it);
+    v=nv;
+  }
+  cout<<a<<endl;
+}
+
+    

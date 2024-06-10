@@ -1,0 +1,73 @@
+### constant
+
+MAX_TIME = 1.0e20
+MAX_N = 15
+MAX_BITS = (1 << MAX_N) - 1
+
+### global variables
+
+$edges = []
+$pathhash = {}
+
+### subroutines
+
+def check_path(src, k, n, bits, strs)
+  #p "check_path(#{src}, #{strs})"
+
+  return [0.0, 0.0, [strs[src][0]]] if k == 1
+
+  return $pathhash[src][bits] if ! $pathhash[src][bits].nil?
+
+  stsrc = strs[src]
+  bits0 = (bits | (1 << src))
+
+  min_time = MAX_TIME
+  min_dist = 0.0
+  min_ids = []
+
+  for nxt in (0...n)
+    next if ((bits0 >> nxt) & 1) == 1
+
+    #p "(#{stsrc[0]})src=#{src}, stsrc[3]=#{stsrc[3]}"
+    #p "(#{strs[nxt][0]})nxt=#{nxt}, strs[nxt][3]=#{strs[nxt][3]}"
+
+    ntime, ndist, nids = check_path(nxt, k - 1, n, bits0, strs)
+    dist = $edges[src][nxt] + ndist
+    time = ntime + dist * (70 + 20 * stsrc[2]) / 2000
+
+    if min_time > time
+      min_time = time
+      min_dist = dist
+      min_ids = [stsrc[0]] + nids
+    end
+  end
+
+  $pathhash[src][bits] = [min_time, min_dist, min_ids]
+end
+
+### main
+
+n = gets.strip.to_i
+strs = (0...n).map{|i| gets.strip.split(' ').map{|s| s.to_i}}
+
+$edges = (0...n).map{(0...n).map{nil}}
+for i in (0...n)
+  for j in ((i + 1)...n)
+    $edges[i][j] = $edges[j][i] = (strs[i][1] - strs[j][1]).abs.to_f
+  end
+end
+
+$pathhash = (0...n).map{Array.new(MAX_BITS){nil}}
+
+min_time = MAX_TIME
+min_ids = []
+
+for src in (0...n)
+  time, dist, ids = check_path(src, n, n, 0, strs)
+  if min_time > time
+    min_time = time
+    min_ids = ids
+  end
+end
+
+puts min_ids.join(' ')

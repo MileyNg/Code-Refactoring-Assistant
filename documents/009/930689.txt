@@ -1,0 +1,156 @@
+#include <iostream>
+#include <cstdlib>
+#include <queue>
+#include <set>
+
+using namespace std;
+const static int HEIGHT = 2;
+const static int WIDTH  = 4;
+void swap( int &a, int &b ) {
+  int k = a;
+  a = b;
+  b = k;
+}
+enum direction {
+  LEFT, RIGHT, UP, DOWN
+};
+
+struct pos_t {
+  int r, c;
+};
+
+struct board_t {
+  int m[ HEIGHT ][ WIDTH ];
+  int move_num;
+  pos_t get_zero_pos() {
+    for( int r = 0; r < HEIGHT; r++ ) {
+      for( int c = 0; c < WIDTH; c++ ) {
+        if( this->m[ r ][ c ] == 0 ) {
+          pos_t pos;
+          pos.r = r;
+          pos.c = c;
+          return pos;
+        }
+      }
+    }
+    pos_t pos;
+    pos.r = -1;
+    pos.c = -1;
+    return pos;
+  }
+  board_t move( direction dir ) {
+    board_t self = *this;
+    board_t dest;
+    pos_t zero_pos = this->get_zero_pos();
+    switch( dir ) {
+      case LEFT:
+        if( zero_pos.c == WIDTH - 1 ) { return self; }
+        swap( this->m[ zero_pos.r ][ zero_pos.c ], this->m[ zero_pos.r ][ zero_pos.c + 1 ] );
+        this->move_num++;
+        dest = *this;
+        *this = self;
+        return dest;
+      case RIGHT:
+        if( zero_pos.c == 0 ) { return self; }
+        swap( this->m[ zero_pos.r ][ zero_pos.c ], this->m[ zero_pos.r ][ zero_pos.c - 1 ] );
+        this->move_num++;
+        dest = *this;
+        *this = self;
+        return dest;
+      case UP:
+        if( zero_pos.r == HEIGHT - 1 ) { return self; }
+        swap( this->m[ zero_pos.r ][ zero_pos.c ], this->m[ zero_pos.r + 1 ][ zero_pos.c ] );
+        this->move_num++;
+        dest = *this;
+        *this = self;
+        return dest;
+      case DOWN:
+        if( zero_pos.r == 0 ) { return self; }
+        swap( this->m[ zero_pos.r ][ zero_pos.c ], this->m[ zero_pos.r - 1 ][ zero_pos.c ] );
+        this->move_num++;
+        dest = *this;
+        *this = self;
+        return dest;
+    }
+    return self;
+  }
+  bool can_move( direction dir ) {
+    pos_t zero_pos = this->get_zero_pos();
+    switch( dir ) {
+      case LEFT:
+        if( zero_pos.c == WIDTH - 1 ) { return false; }
+        return true;
+      case RIGHT:
+        if( zero_pos.c == 0 ) { return false; }
+        return true;
+      case UP:
+        if( zero_pos.r == HEIGHT - 1 ) { return false; }
+        return true;
+      case DOWN:
+        if( zero_pos.r == 0 ) { return false; }
+        return true;
+    }
+    return false;
+  }
+  bool is_regular() {
+    int counter = 0;
+    for( int r = 0; r < HEIGHT; r++ ) {
+      for( int c = 0; c < WIDTH; c++ ) {
+        if( counter++ != this->m[ r ][ c ] ) { return false; }
+      }
+    }
+    return true;
+  }
+  int get_serial() {
+    int sum = 0;
+    for( int r = 0; r < HEIGHT; r++ ) {
+      for( int c = 0; c < WIDTH; c++ ) {
+        sum += ( this->m[ r ][ c ] == 0 ? 8 : this->m[ r ][ c ] );
+        sum *= 10;
+      }
+    }
+    return sum / 10;
+  }
+};
+
+bool enqueue( queue<board_t> &qb, board_t board, set<int> &history, direction dir ) {
+  if( board.can_move( dir ) ) {
+    board_t bd = board.move( dir );
+    int serial = bd.get_serial();
+    if( history.find( serial ) == history.end() ) {
+      history.insert( serial );
+      qb.push( bd );
+    }
+    return true;
+  }
+  return false;
+}
+
+int main() {
+  while( 1 ) {
+    board_t board;
+    for( int r = 0; r < HEIGHT; r++ ) {
+      for( int c = 0; c < WIDTH; c++ ) {
+        int n;
+        if( !( cin >> n ) ) { return EXIT_SUCCESS; }
+        board.m[ r ][ c ] = n;
+      }
+    }
+    board.move_num = 0;
+    queue<board_t> qb;
+    set<int> history;
+    qb.push( board );
+    while( 1 ) {
+      board = qb.front();
+      qb.pop();
+      if( board.is_regular() ) {
+        cout << board.move_num << endl;
+        break;
+      }
+      enqueue( qb, board, history, LEFT  );
+      enqueue( qb, board, history, RIGHT );
+      enqueue( qb, board, history, UP    );
+      enqueue( qb, board, history, DOWN  );
+    }
+  }
+}

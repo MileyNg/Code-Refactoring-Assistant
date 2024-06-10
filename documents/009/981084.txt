@@ -1,0 +1,49 @@
+#include<stdio.h>
+
+int eray[4]={1868,1912,1926,1989};
+int eram[4]={9,7,12,1};
+int erad[4]={8,30,25,8};
+char *era[5]={"pre-meiji","meiji","taisho","showa","heisei"};
+
+void prans(int i,int y,int m,int d){
+  printf("%s",era[i]);
+  if(i!=0){
+    printf(" %d %d %d",y-eray[i-1]+1,m,d);
+  }
+  printf("\n");
+}
+
+void doit(int y,int m,int d){
+  int i=0;
+  int f=0;
+  while((i<4)&&(f==0)){
+    if(y<eray[i]){
+      prans(i,y,m,d);
+      f=1;
+    }
+    else if(y==eray[i]){
+      if(m<eram[i]){
+	prans(i,y,m,d);
+	f=1;
+      }
+      else if(m==eram[i]){
+	if(d<erad[i]){
+	  prans(i,y,m,d);
+	  f=1;
+	}
+      }
+    }
+    i++;
+  }
+  if(f==0){
+    prans(4,y,m,d);
+  }
+}
+
+int main(){
+  int y,m,d;
+  while(scanf("%d %d %d",&y,&m,&d)!=EOF){
+    doit(y,m,d);
+  }
+  return 0;
+}

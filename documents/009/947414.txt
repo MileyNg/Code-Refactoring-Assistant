@@ -1,0 +1,83 @@
+/* UnionFindの練習問題の項にあったのでそれっぽくやってみた
+ * ぶっちゃけ愚直に実装したほうがいい
+ */
+#include <cstdio>
+#include <cassert>
+#include <cstring>
+#include <iomanip>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+#include <stack>
+
+using namespace std;
+
+typedef long long Long;
+
+#define MN 100000
+#define MQ 100000
+int N, Q;
+int parent[MN + 1];
+bool marked[MN + 1];
+pair<int, int> queries[MQ];
+int group[MN + 1];
+
+int root(int x) {
+    if (marked[x]) return x;
+    return parent[x] = root(parent[x]);
+}
+void merge(int x, int y) {
+    x = root(x); y = root(y);
+    if (x == y) return;
+    parent[x] = y;
+}
+
+bool input() {
+    scanf("%d %d", &N, &Q);
+    if (N == 0 && Q == 0) return false;
+    for (int i = 2; i <= N; i++) {
+        int p;
+        scanf("%d", &p);
+        parent[i] = p;
+    }
+    memset(marked, false, N + 1);
+    marked[1] = true;
+    for (int i = 0; i < Q; i++) {
+        char t; int n;
+        scanf("%*[ \t\r\n]%c %d", &t, &n);
+        if (t == 'M') {
+            if (marked[n]) {
+                queries[i] = make_pair('X', 0);
+                continue;
+            }
+            marked[n] = true;
+        }
+        queries[i] = make_pair(t, n);
+    }
+    return true;
+}
+
+void solve() {
+    Long ans = 0;
+    for (int q = Q - 1; q >= 0; q--) {
+        pair<int, int> query = queries[q];
+        if (query.first == 'Q') {
+            ans += root(query.second);
+        } else if (query.first == 'M') {
+            marked[query.second] = false;
+        }
+    }
+    printf("%lld\n", ans);
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

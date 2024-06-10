@@ -1,0 +1,16 @@
+n = gets.strip.to_i
+
+n.times.each do
+  h, m = gets.strip.split(':').map{|s| s.to_i}
+
+  dd = (30.0 * h + 0.5 * m - 6 * m).abs
+  dd = 360 - dd if dd > 180
+
+  if dd < 30
+    puts "alert"
+  elsif dd >= 90
+    puts "safe"
+  else
+    puts "warning"
+  end
+end

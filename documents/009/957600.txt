@@ -1,0 +1,110 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define pb(a) push_back(a)
+#define mp(a,b) make_pair(a,b)
+#define ALL(a) (a).begin(),(a).end()
+#define SZ(a) ((int)(a).size())
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+int m,n;
+
+PI app[5100000];
+int nu[2000][2000];
+
+bool ispr(int n){
+  if(n<2) return false;
+  for(int i=2;i*i<= n;++i)
+    if(n%i==0) return false;
+  return true;
+}
+
+bool isp[5000000];
+
+PI vis[2000][2000];
+
+void solve(){
+  queue<PI> q;
+  q.push(app[n]);//nu,-tu
+  memset(vis,0,sizeof(vis));
+  int a=0,b=0;
+
+  if(isp[n])
+    vis[app[n].F][app[n].S]=mp(1,n);
+  
+  while(!q.empty()){
+    int cx = q.front().F;
+    int cy = q.front().S;
+    q.pop();
+    if(nu[cx][cy]>m) continue;
+    if(vis[cx][cy]!=mp(0,0) && !q.empty()) continue;
+    
+    if(nu[cx-1][cy-1]<=m){
+      vis[cx][cy]=max(vis[cx][cy],
+                      mp(vis[cx-1][cy-1].F+isp[nu[cx][cy]],
+                         isp[nu[cx][cy]]?nu[cx][cy]:vis[cx-1][cy-1].S));
+    }
+    
+    if(nu[cx-1][cy]<=m){
+      vis[cx][cy]=max(vis[cx][cy],
+                      mp(vis[cx-1][cy].F+isp[nu[cx][cy]],
+                         isp[nu[cx][cy]]?nu[cx][cy]:vis[cx-1][cy].S));
+    }
+    
+    if(nu[cx-1][cy+1]<=m){
+      vis[cx][cy]=max(vis[cx][cy],
+                      mp(vis[cx-1][cy+1].F+isp[nu[cx][cy]],
+                         isp[nu[cx][cy]]?nu[cx][cy]:vis[cx-1][cy+1].S));
+    }    
+    
+    
+    //cout << cx << " " << cy << " " << num << " " << last << endl;    
+    //vis[cx][cy] = mp(num,last);
+    if(mp(a,b) < vis[cx][cy]){
+      a=vis[cx][cy].F;
+      b=vis[cx][cy].S;
+    }
+    
+    q.push(mp(cx+1,cy+1));
+    q.push(mp(cx+1,cy));
+    q.push(mp(cx+1,cy-1));
+    
+  }
+
+  
+  cout << a << " " << b << endl;
+}
+
+int dx[]={0,-1,0,1,0};
+int dy[]={1,0,-1,0,1};
+
+int main(){
+  // rep(i,100) cout << i << ispr(i) << endl;
+  // return 0;
+  int cx=1000,cy=1000;
+  int dir = 0;
+  rep(i,2100000){
+    nu[cx][cy]=i+1;
+    isp[i+1]=ispr(i+1);
+    //cout << cx << " " << cy << endl;
+    app[i+1]=mp(cx,cy);
+    cx += dx[dir];
+    cy += dy[dir];
+    if(!nu[cx+dx[dir+1]][cy+dy[dir+1]])
+      dir=(dir+1)%4;
+  }
+  
+  rep(i,10){
+    rep(j,10){
+      //printf("%5d %d",nu[1000+i-5][1000+j-5],isp[nu[1000+i-5][1000+j-5]]);
+      //cout << nu[1000+i-5][1000+j-5] << " ";
+    }
+    //cout << endl;
+  }
+  
+  //return 0;
+  
+  while(cin >> m >> n && n) solve();
+}

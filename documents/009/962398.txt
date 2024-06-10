@@ -1,0 +1,53 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <map>
+//#include <fstream>
+
+int count_course(const u_int a, const u_int b, const std::map<u_int, std::vector<u_int>> &point)
+{
+    auto it = point.find(a);
+    if(it != point.end()){
+        std::vector<u_int> vec = it -> second;
+        if((std::find(vec.begin(), vec.end(), b)) != vec.end()){
+            return 0;
+        }
+    }
+    if(a == 1 && b == 1){
+        return 1;
+    }
+    else if(a == 1){
+        return count_course(a, b - 1, point);
+    }
+    else if(b == 1){
+        return count_course(a - 1, b, point);
+    }
+    else{
+        return count_course(a - 1, b, point) + count_course(a, b - 1, point);
+    }
+}
+
+int main()
+{
+    u_int a, b, n, x, y;
+    //std::ifstream ifs("--.txt");
+    while(1){
+        u_int m = 0;
+        std::cin /*ifs*/ >> a >> b;
+        if(a == 0 && b == 0)
+            break;
+        
+        std::map<u_int, std::vector<u_int>> point;
+        std::cin /*ifs*/ >> n;
+        for(u_int i = 0; i < n; ++i){
+            std::cin /*ifs*/ >> x >> y;
+            point[x].push_back(y);
+        }
+  
+        m += count_course(a, b, point);
+        std::cout << m << std::endl;    
+    }
+    //ifs.close();
+
+    return 0;
+}

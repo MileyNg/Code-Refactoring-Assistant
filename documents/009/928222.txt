@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int pop(void);
+void push(int);
+int stack[100];
+int i=0;
+
+int main(){
+  int x;
+  char s[100]; 
+  int a=0,b=0;
+  
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      a=pop();
+      b=pop();
+      push(a+b);
+    } else if ( s[0] == '-' ){
+      b=pop();
+      a=pop();
+      push(a-b);
+    } else if ( s[0] == '*' ){
+      a=pop();
+      b=pop();
+      push(a*b);
+    } else { 
+      x = atoi(s);
+      push(x); 
+    }
+  }
+  printf("%d\n",stack[i]);
+  return 0;
+}
+
+void push(int x){
+  i++;
+  stack[i]=x;
+}
+
+int pop(){
+  i--;
+  return stack[i+1];
+}

@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
+/*
+int bubbleSort(int A[], int n) {
+	int i, j, t, s;
+	int cnt = 0; // 反転数
+	for(i=0;i<n-1;i++) {
+		for(j=n-1,s=i+1;j>=s;j--) {
+	    	if(A[j] < A[j-1]) {
+	    		t = A[j];
+	    		A[j] = A[j-1];
+	    		A[j-1] = A[j];
+				cnt++;
+	    	}
+		}
+	}
+  
+	return cnt;
+}
+*/
+
+
+typedef struct _element{
+	int i, rank, val;
+} element;
+
+int element_sort(void * a ,void * b ) {
+	return (*(element*)a).val - (*(element*)b).val;
+}
+
+int index_sort(void * a ,void * b ) {
+	return (*(element*)a).i - (*(element*)b).i;
+}
+
+int B[200005];
+int element_cnt(int i){
+	int ret = 0;
+	int j;
+	for(j = i; j >= 0; j = ((j & (j+1)) - 1)) {
+//		printf("cnt= %d %d, ", j, B[j]);
+		ret += B[j];
+	}
+//	printf("\n");
+	return ret;
+}
+
+void element_push(int i, int a, int n){
+	int j;
+	for(j = i; j < n; j |= (j+1)) {
+//		printf("push=%d %d, ", j, B[j]);
+		B[j] += a;
+	}
+//	printf("\n");
+}
+
+int reverse_count(element A[], int n) {
+	int i, cnt = 0, ret;
+	for(i=0;i<n;i++) {
+		element_cnt(A[i].rank);
+//		printf("ret=%d\n", ret);
+		element_push(i, 1, n);
+	}
+	for(i=0;i<n;i++) {
+		if(B[i] > 1) {
+			cnt += B[i];
+		}
+	}
+	
+	return cnt;
+}
+
+int main(void) {
+	element A[200005];
+	int i, n;
+	scanf("%d\n", &n);
+	
+	for(i=0;i<n;i++) {
+		A[i].i = i;
+		scanf("%d", &A[i].val);
+	}
+	
+	memset((void*)B, 0x00, sizeof(B));
+	qsort((void*)A, n, sizeof(element), element_sort);
+	for(i=0;i<n;i++) A[i].rank = i;
+	qsort((void*)A, n, sizeof(element), index_sort);
+
+	printf("%d\n", reverse_count(A, n));
+
+	return 0;
+}

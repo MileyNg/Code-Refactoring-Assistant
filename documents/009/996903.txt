@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a[10];
+	int v[2];
+	int sum;
+	float t;
+	int i;
+	float len;
+
+	while (scanf("%d,", &a[0]) != EOF){
+		sum = a[0];
+		for (i = 1; i < 10; i++){
+			scanf("%d,", &a[i]);
+			sum += a[i];
+		}
+		scanf("%d,%d", &v[0], &v[1]);
+
+		t = (float)sum / (v[0] + v[1]);
+		len = v[0] * t;
+
+		i = 0;
+		while (len > 0){
+			len -= a[i];
+			i++;
+		}
+
+		printf("%d\n", i);
+	}
+
+	return (0);
+}

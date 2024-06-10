@@ -1,0 +1,129 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+struct P {
+    int x, y;
+    P(int x, int y) : x(x), y(y) {}
+};
+bool operator<(const P& a ,const P& b) {
+    return a.x == b.x ? a.y < b.y : a.x < b.x;
+}
+bool operator==(const P& a, const P& b) {
+    return a.x == b.x && a.y == b.y;
+}
+ostream& operator<<(ostream& os, const P& p) {
+    os << "P(" << p.x << "," << p.y << ")";
+    return os;
+}
+struct L {
+    P a, b;
+    L(P a, P b) : a(a), b(b) {}
+};
+
+int N;
+map<P, int> M;
+map<P, int> U;
+vector<L> F;
+#define UNDEF 0
+#define HEAD 1
+#define FEET 2
+bool input() {
+    cin >> N; if (N == 0) return false;
+    M.clear(); U.clear(); F.clear();
+    for (int i = 0; i < N; i++) {
+        int x, y; char d;
+        cin >> x >> y >> d;
+        if (d == 'x') {
+            M[P(x, y)] = i;
+            M[P(x + 1, y)] = i;
+            F.push_back(L(P(x, y), P(x + 1, y)));
+        } else {
+            M[P(x, y)] = i;
+            M[P(x, y + 1)] = i;
+            F.push_back(L(P(x, y), P(x, y + 1)));
+        }
+    }
+    return true;
+}
+
+int R(int s) {
+    if (s == HEAD) return FEET;
+    if (s == FEET) return HEAD;
+    assert(0);
+}
+
+const int dy[] = {0, 1, 0, -1},
+          dx[] = {1, 0, -1, 0};
+bool Set(const P& a, int s) {
+    //cout << a << " " << s << endl;
+    int index = M[a];
+    const P& b = (F[index].a == a ? F[index].b : F[index].a);
+    for (int i = 0; i < 4; i++) {
+        P n(a.x + dx[i], a.y + dy[i]);
+        if (n == b) continue;
+        if (M.count(n) == 0) continue;
+        if (U[n] == R(s)) return false;
+    }
+    for (int i = 0; i < 4; i++) {
+        P n(b.x + dx[i], b.y + dy[i]);
+        if (n == a) continue;
+        if (M.count(n) == 0) continue;
+        if (U[n] == s) return false;
+    }
+    U[a] = s;
+    U[b] = R(s);
+    for (int i = 0; i < 4; i++) {
+        P n(a.x + dx[i], a.y + dy[i]);
+        if (n == b) continue;
+        if (M.count(n) == 0) continue;
+        //cout << n << endl;
+        if (U[n] == UNDEF) {
+            if (!Set(n, s)) {
+                U[a] = UNDEF;
+                U[b] = UNDEF;
+                return false;
+            }
+        }
+    }
+    for (int i = 0; i < 4; i++) {
+        P n(b.x + dx[i], b.y + dy[i]);
+        if (n == a) continue;
+        if (M.count(n) == 0) continue;
+        if (U[n] == UNDEF) {
+            if (!Set(n, R(s))) {
+                U[a] = UNDEF;
+                U[b] = UNDEF;
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void solve() {
+    for (int i = 0; i < N; i++) {
+        if (U[F[i].a] != UNDEF) continue;
+        if (Set(F[i].a, HEAD)) continue;
+        if (Set(F[i].a, FEET)) continue;
+        cout << "No" << endl;
+        return;
+    }
+    cout << "Yes" << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

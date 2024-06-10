@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+constexpr int SIZE = 12;
+constexpr int dx[4] = {1, -1, 0, 0};
+constexpr int dy[4] = {0, 0, 1, -1};
+
+inline bool out(int x, int y) {
+	return x < 0 || y < 0 || x >= SIZE || y >= SIZE;
+}
+
+void dfs(int x, int y, array<string, SIZE> &field) {
+	field[y][x] = '0';
+
+	for(int d = 0; d < 4; ++d) {
+		const int nx = x + dx[d];
+		const int ny = y + dy[d];
+
+		if(out(nx, ny)) continue;
+		if(field[ny][nx] == '1') dfs(nx, ny, field);
+	}
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	array<string, SIZE> field;
+
+	while(cin >> field[0]) {
+		for(int i = 1; i < SIZE; ++i) {
+			cin >> field[i];
+		}
+
+		int cnt = 0;
+		for(int y = 0; y < SIZE; ++y) {
+			for(int x = 0; x < SIZE; ++x) {
+				if(field[y][x] == '1') {
+					++cnt;
+					dfs(x, y, field);
+				}
+			}
+		}
+
+		cout << cnt << "\n";
+	}
+
+	return 0;
+}

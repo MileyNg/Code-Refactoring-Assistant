@@ -1,0 +1,122 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cmath>
+
+#define all(c) (c).begin(),(c).end()
+#define MAX_N 500000
+
+using namespace std;
+
+struct point{
+  int x,y;
+  point(){}
+  point(int x,int y):x(x),y(y){}
+
+  bool operator < (const point &p) const {
+    if(p.x != x)return p.x<x;
+    return p.y < y;
+  }
+
+  bool operator > (const point &p) const {
+    if(p.y != y)return p.y<y;
+    return p.x < x;
+  }
+};
+
+struct tree_node{
+  int id;
+  point location;
+  tree_node(){}
+};
+
+typedef pair<point,int>ppi;
+
+int N,K; //点の数、次元数
+ppi pointList[MAX_N];
+tree_node *tree[MAX_N*2];
+
+//点のリスト、リストのサイズ、現在の深さ,medianのid
+void kdtree(ppi *pList,int n,int depth,int i){
+  //深さに応じて軸を選択し、軸が順次選択されるようにする
+  int axis = depth % K;
+  int mid = n/2;
+  
+  if(n<=0)return;
+  if(axis==0)sort(pList,pList+n);
+  if(axis==1)sort(pList,pList+n,greater<ppi>());
+
+  tree[i]=new tree_node;
+  tree[i]->id=pList[mid].second;
+  tree[i]->location=pList[mid].first;
+  //cout << pList[mid].first.x << " " << pList[mid].first.y << endl;
+  if(n==1)return;
+
+  kdtree(pList,mid,depth+1,i*2+1);
+  kdtree(pList+mid+1,n-mid-1,depth+1,i*2+2);
+}
+
+/*
+左下、右上、現在のノード、深さ
+長方形領域に含まれる点のidを列挙する
+*/
+void kdtree_search(int x1,int y1,int x2,int y2,int i,int depth,vector<int> &res){
+ 
+  if(!tree[i])return;
+  //cout << tree[i]->location.x << " " << tree[i]->location.y << endl; 
+  //if(depth%2==1 && (tree[i]->location.x<x1 || x2<tree[i]->location.x))return;
+ //if(depth%2==0 && (tree[i]->location.y<y1 || y2<tree[i]->location.y))return;
+
+  int axis = depth % K;
+  bool fgleft=true,fgright=true;
+  if(axis==0){
+    if(tree[i]->location.y<y1)fgright=false;
+    if(y2<tree[i]->location.y)fgleft=false;
+  }
+
+  if(axis==1){
+    if(tree[i]->location.x<x1)fgright=false;
+    if(x2<tree[i]->location.x)fgleft=false;
+  }
+
+  if(fgleft)kdtree_search(x1,y1,x2,y2,i*2+1,depth+1,res);
+  if(fgright)kdtree_search(x1,y1,x2,y2,i*2+2,depth+1,res);
+  //  cout << tree[i]->location.x << " " << tree[i]->location.y << endl;
+  if(tree[i]->location.x<x1 || x2<tree[i]->location.x)return;
+  if(tree[i]->location.y<y1 || y2<tree[i]->location.y)return;
+  res.push_back(tree[i]->id);
+
+}
+
+
+int main(void){
+
+  fill(tree,tree+MAX_N,(tree_node *)0);
+
+  K=2;
+  cin >> N;
+  for(int i=0;i<N;i++){
+    cin >> pointList[i].first.x >> pointList[i].first.y;
+    pointList[i].second=i;
+  }
+
+  sort(pointList,pointList+N);
+  sort(pointList,pointList+N,greater<ppi>());
+
+  kdtree(pointList,N,0,0);
+  int q;
+  cin >> q;
+  for(int i=0;i<q;i++){
+    int x1,y1,x2,y2;
+    cin >> x1 >> x2 >> y1 >> y2;
+    vector<int>res;
+    kdtree_search(x1,y1,x2,y2,0,0,res);
+    sort(all(res));
+    for(int j=0;j<res.size();j++){
+      cout << res[j] << endl;
+    }
+    cout << endl;
+  }
+
+  return 0;
+}

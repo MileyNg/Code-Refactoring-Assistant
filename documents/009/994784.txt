@@ -1,0 +1,167 @@
+#include<iostream>
+using namespace std;
+
+typedef struct tagListNode{
+  struct tagListNode *next;
+  int data; //何個目までがr以下か
+  int num; //データ数
+} Talon;
+
+
+int main(){
+  int n, m, p, q, r;
+  int x, y;
+  int i;
+  Talon *firstnode, *lastnode, *thisnode, *newnode, *nextnode,*xnode, *ynode, *point,  *pnode, *qnode;
+  firstnode = lastnode = NULL;
+  while(1){
+    cin >> n;
+    if(n==0) break;
+    else{
+      cin  >> m >> p >> q >>r;
+      newnode = new Talon;
+      newnode->data = r;
+      newnode->num = n;
+      newnode->next = NULL;
+      firstnode = lastnode = newnode;
+      
+      for(i=0; i<m; i++){
+	cin >> x >> y;
+	//xによる分割
+	int numcount= 0;
+	thisnode = firstnode;
+	while(1){
+	  if (numcount + thisnode->num >= x) break;
+	  else {
+	    numcount += thisnode->num;
+	    thisnode = thisnode->next;
+	  }
+	}
+	
+	if(x-numcount == thisnode->num){
+	  xnode = thisnode;
+	}else if(x - numcount > thisnode->data){
+	  newnode = new Talon;
+	  newnode ->data = 0;
+	  newnode ->num = thisnode->num - (x- numcount);
+	  newnode ->next = thisnode ->next;
+
+	  thisnode->num = x - numcount;
+	  xnode = thisnode;
+	  thisnode-> next = newnode;
+	  if (thisnode == lastnode) lastnode = thisnode->next;
+	}else{
+	  newnode = new Talon;
+	  newnode->data = thisnode->data-(x - numcount);
+	  newnode->num = thisnode -> num - (x- numcount);
+	  newnode->next = thisnode->next;
+	  
+	  thisnode->data = x - numcount;
+	  thisnode->num = x - numcount;
+	  xnode = thisnode;
+	  thisnode->next = newnode;
+	  if (thisnode == lastnode) lastnode = thisnode->next;
+	}
+	//yにおける分割
+	numcount= 0;
+	thisnode = firstnode;
+	while(1){
+	  if (numcount + thisnode->num >=y) break;
+	  else {
+	    numcount += thisnode->num;
+	    thisnode = thisnode->next;
+	  }
+	}
+	if(y - numcount == thisnode->num) {
+	  ynode = thisnode;
+	}else if(y - numcount > thisnode->data){
+	  nextnode = thisnode->next;
+	  thisnode->next = new Talon;
+	  thisnode->next->data = 0;
+	  thisnode->next->num = thisnode->num - (y- numcount);
+	  thisnode->next->next = nextnode;
+
+	  ynode = thisnode;
+	  thisnode->num = y - numcount;
+	  if (thisnode == lastnode) lastnode = thisnode->next;
+	}
+	else{
+	  nextnode = thisnode->next;
+	  thisnode->next = new Talon;
+	  thisnode->next->data = thisnode->data - (y - numcount);
+	  thisnode->next->num = thisnode->num - (y- numcount);
+	  thisnode->next->next = nextnode;
+	  
+	  ynode = thisnode;
+	  thisnode->data = y - numcount;
+	  thisnode->num = y - numcount;
+	  if (thisnode == lastnode) lastnode = thisnode->next;
+	}
+      
+      //shuffleする
+	
+	point = ynode->next;
+	lastnode->next = xnode->next;
+	ynode->next = firstnode;
+	xnode->next = NULL;
+	firstnode = point;
+	lastnode = xnode;
+	
+      }
+  
+      //m以下の数の数を数える
+      int numm = 0;
+      int numcountp = 0;
+      
+      thisnode = firstnode;
+      
+      while(1){
+	if (numcountp + thisnode->num >= p) break;
+	else {
+	  numcountp += thisnode->num;
+	  thisnode = thisnode->next;
+	}
+      }
+      pnode = thisnode;
+
+      int numcountq = numcountp;
+      while(1){
+	if (numcountq + thisnode->num >= q) break;
+	else {
+	  numcountq += thisnode->num;
+	  thisnode = thisnode->next;
+	}
+      }
+      qnode = thisnode;
+      
+      thisnode = pnode;
+      if (pnode != qnode){
+	if (numcountp + thisnode->data >=p) {
+	  numm += thisnode->data - (p - numcountp)+1;
+	}
+	numcountp += thisnode -> num;
+	thisnode = thisnode-> next;
+	while(1){
+	  if( thisnode == qnode) break;
+	  numm += thisnode->data;
+	  numcountp += thisnode ->num;
+	  thisnode = thisnode->next;
+	}
+	
+	if ( q-numcountp > thisnode->data) numm += thisnode->data;
+	else numm += q- numcountp;
+      } else {
+	if(p <= numcountp +pnode->data){
+	  if(q <= numcountp + pnode->data){
+	    numm = q-p+1;
+	  } else {
+	    numm = thisnode->data -(p - numcountp);
+	  }
+	} 
+      }
+      
+      cout << numm << endl;
+    }
+  }
+  return 0;
+}

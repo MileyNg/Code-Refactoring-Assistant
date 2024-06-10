@@ -1,0 +1,36 @@
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+typedef pair<string, int> P;
+/** Problem0183 : Black-and-White **/
+int main()
+{
+	string board;
+	while (cin>>board, board!="0") {
+		string s; cin>>s;
+		board+=s;
+		cin >>s; board+=s;
+		for (int i=0; i<3; i++) {
+			if (board[i*3] != '+' && board[i*3] == board[i*3+1] && board[i*3] == board[i*3+2]) {
+				cout << board[i*3] << endl;
+				goto end;
+			}
+			else if (board[i] != '+' && board[i] == board[i+3] && board[i] == board[i+6]) {
+				cout << board[i] << endl;
+				goto end;
+			}
+		}
+		
+		if (board[0] != '+' && board[0] == board[4] && board[0] == board[8])
+			cout << board[0] << endl;
+		else if (board[2] != '+' && board[2] == board[4] && board[2] == board[6])
+			cout << board[2] << endl;
+		else
+			cout << "NA" << endl;
+		
+	end: ;
+	}
+	return 0;
+}

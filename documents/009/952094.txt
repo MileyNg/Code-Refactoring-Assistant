@@ -1,0 +1,60 @@
+#include<iostream>
+#include<queue>
+#include<cstring>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+typedef vector<int> Dice;
+enum {TOP, FRONT, RIGHT, LEFT, BACK, BOTTOM};
+#define rotate_swap(x, a, b, c, d) swap(x[a], x[b]); swap(x[b], x[c]); swap(x[c], x[d]);
+
+void rotate_r(Dice &dice) {rotate_swap(dice, TOP, LEFT, BOTTOM, RIGHT);}
+void rotate_l(Dice &dice) {rotate_swap(dice, TOP, RIGHT, BOTTOM, LEFT);}
+void rotate_f(Dice &dice) {rotate_swap(dice, TOP, BACK, BOTTOM, FRONT);}
+void rotate_b(Dice &dice) {rotate_swap(dice, TOP, FRONT, BOTTOM, BACK);}
+
+struct Status {
+  int x, y, cost;
+  Dice d;
+  bool operator<(const Status &s) const {return cost > s.cost;}
+};
+
+int main() {
+  while (true) {
+    int h, w;
+    cin >> h >> w;
+    if (h == 0) break;
+    int board[h][w];
+    rep (i, h) rep (j, w) cin >> board[i][j];
+    int x1, y1, x2, y2;
+    cin >> y1 >> x1 >> y2 >> x2;
+    int dis[h][w][6][6][6];
+    memset(dis, -1, sizeof(dis));
+    priority_queue<Status> que;
+    Dice d(6);
+    rep (i, 6) d[i] = i + 1;
+    que.push((Status){x1, y1, 0, d});
+    while (!que.empty()) {
+      Status now = que.top();
+      que.pop();
+      if (now.y == y2 && now.x == x2) {
+	cout << now.cost << endl;
+	break;
+      }
+      if (now.x < 0 || w <= now.x || now.y < 0 || h <= now.y) continue;
+      if (dis[now.y][now.x][now.d[TOP]][now.d[FRONT]][now.d[RIGHT]] != -1) continue;
+      dis[now.y][now.x][now.d[TOP]][now.d[FRONT]][now.d[RIGHT]] = now.cost;
+      Dice d1 = now.d, d2 = now.d, d3 = now.d, d4 = now.d;
+      rotate_r(d1);
+      rotate_l(d2);
+      rotate_f(d3);
+      rotate_b(d4);
+      if (now.x < w - 1) que.push((Status){now.x + 1, now.y, now.cost + d1[BOTTOM] * board[now.y][now.x + 1], d1});
+      if (0 < now.x) que.push((Status){now.x - 1, now.y, now.cost + d2[BOTTOM] * board[now.y][now.x - 1], d2});
+      if (now.y < h - 1) que.push((Status){now.x, now.y + 1, now.cost + d3[BOTTOM] * board[now.y + 1][now.x], d3});
+      if (0 < now.y) que.push((Status){now.x, now.y - 1, now.cost + d4[BOTTOM] * board[now.y - 1][now.x], d4});
+    }
+  }
+}

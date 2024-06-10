@@ -1,0 +1,19 @@
+i = 1j
+while True:
+    inp = None
+    try:
+        inp = raw_input()
+    except EOFError:
+        break 
+    z = eval(inp)
+    res = ""
+    if abs(z.real) > 10000 or abs(z.imag) > 10000:
+        print "overflow"
+    else:
+        if z.real != 0: res += str(int(z.real))
+        if z.imag != 0:
+            if z.imag > 0 and res != "":
+                res += "+"
+            res += str(int(z.imag))+"i"
+        if z == 0: res += "0"
+        print res

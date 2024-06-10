@@ -1,0 +1,24 @@
+str = gets.chomp
+
+fs = ["apple", "peach"]
+idxs = {}
+
+for f in fs
+  idxs[f] = []
+  k = -1
+
+  while ! (k = str.index(f, k + 1)).nil?
+    idxs[f].push k
+  end
+end
+
+for i in (0..1)
+  f0 = fs[i]
+  f1 = fs[1 - i]
+
+  for idx in idxs[f0]
+    str[idx, f0.length] = f1
+  end
+end
+
+puts str

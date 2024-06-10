@@ -1,0 +1,98 @@
+#include <array>
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class interpreter {
+private:
+	static constexpr int NUM = 128;
+	array<int, NUM> length;
+	array<unordered_map<int, int>, NUM> value;
+	string::const_iterator it;
+
+	void declaration(char array_name, int len) {
+		length[array_name] = len;
+	}
+
+	void assignment(char array_name, int index) {
+		if(index >= length[array_name]) throw "out of bounds";
+		++it; // "="
+		const int right_value = expression();
+		value[array_name][index] = right_value;
+	}
+
+	int expression() {
+		if(isdigit(*it)) return number();
+
+		const char array_name = *it;
+		it += 2; // "<array_name>["
+		const int index = expression();
+		++it; // "]"
+
+		if(index >= length[array_name]) throw "out of bounds";
+		if(!value[array_name].count(index)) throw "undefined value";
+
+		return value[array_name].at(index);
+	}
+
+	int number() {
+		int res = 0;
+		while(isdigit(*it)) {
+			res = res * 10 + (*it - '0');
+			++it;
+		}
+		return res;
+	}
+
+public:
+
+	bool evaluate(const string &s) {
+		try {
+			it = s.cbegin();
+			const char array_name = *it;
+			it += 2; // "<array_name>["
+			const int tmp = expression();
+			++it; // "]"
+
+			if(it == s.cend()) {
+				declaration(array_name, tmp);
+			}
+			else {
+				assignment(array_name, tmp);
+			}
+		}
+		catch(const char *c) {
+			return false;
+		}
+
+		return true;
+	}
+};
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(string statement; cin >> statement && statement != ".";) {
+		vector<string> program(1, statement);
+		while(cin >> statement && statement != ".") {
+			program.emplace_back(statement);
+		}
+
+		interpreter ipt;
+		int first_bug = 0;
+		for(unsigned i = 0; i < program.size(); ++i) {
+			if(!ipt.evaluate(program[i])) {
+				first_bug = i + 1;
+				break;
+			}
+		}
+
+		cout << first_bug << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

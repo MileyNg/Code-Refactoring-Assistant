@@ -1,0 +1,17 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+int main(){
+	int n;
+	vector<pair<int,int> > rank(101);
+	for(int i=0; i<101; i++ ) rank[i] = make_pair(0,i);
+	while( cin >> n ){
+		rank[n].first++;
+	}
+	sort(rank.begin(), rank.end(),greater<pair<int,int> >());
+	cout << rank[0].second << endl;
+	for(int i=1; rank[i-1].second>rank[i].second; i++) cout << rank[i].second << endl;
+}

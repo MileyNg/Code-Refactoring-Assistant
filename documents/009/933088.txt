@@ -1,0 +1,79 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <utility>
+#include <cctype>
+#include <numeric>
+using namespace std;
+
+#define rep(i,n) for(int (i)=0; (i)<(int)(n); ++(i))
+#define foreach(c,i) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++)
+#define all(a) (a).begin(),(a).end()
+
+int p[10];
+int h[10];
+const int base[] = {4, 1, 4, 1, 2, 1, 2, 1};
+
+string f() {
+  int num = 0;
+  rep(i,8) {
+    num *= 10;
+    num += h[i];
+  }
+  stringstream ss;
+  ss << num;
+  return ss.str();
+}
+
+void solve() {
+  rep(i,8) h[i] = base[i];
+
+  int mnCnt = 1 << 28;
+  string mnH;
+  
+  rep(i,8) {
+    rotate(h, h+1, h+8);
+    int cnt = 0;
+    rep(j,8) if (p[j] > h[j]) cnt += p[j] - h[j];
+    string temp = f();
+    
+    // printf("value:%d, order:%s\n", cnt, temp.c_str());
+    
+    if (mnCnt > cnt) {
+      mnCnt = cnt;
+      mnH = temp;
+    }
+    else if (mnCnt == cnt) {
+      if (mnH < temp) {
+        mnH = temp;
+      }
+    }
+
+  }
+
+  rep(i,8) {
+    if (i) putchar(' ');
+    printf("%c", mnH[i]);
+  }
+  puts("");
+}
+
+int main() {
+  while (cin >> p[0]) {
+    for (int i = 1; i <= 8; i++)
+      cin >> p[i];
+    solve();
+  }
+  return 0;
+}

@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <queue>
+
+using namespace std;
+
+const int INF = 10000000;
+char maze[1005][1005];
+int d[1005][1005];
+int w, h;
+
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+
+struct Coor {
+	int x, y;
+	Coor(int x, int y) : x(x), y(y) {}
+};
+
+queue<Coor> Q;
+
+int bfs(int sx, int sy, int gx, int gy)
+{
+	int i, j;
+	int nx, ny;
+	
+	while (Q.size() != 0){
+		Q.pop();
+	}
+	
+	for (i = 0; i < h; i++){
+		for (j = 0; j < w; j++){
+			d[i][j] = INF;
+		}
+	}
+	
+	d[sy][sx] = 0;
+	
+	Q.push(Coor(sx, sy));
+	
+	while (Q.size() != 0){
+		
+		Coor p = Q.front();
+		Q.pop();
+		
+		if (p.x == gx && p.y == gy){
+			break;
+		}
+		
+		for (i = 0; i < 4; i++){
+			
+			nx = p.x + dx[i];
+			ny = p.y + dy[i];
+			
+			if (nx >= 0 && ny >= 0 && nx < w && ny < h && maze[ny][nx] != 'X' && d[ny][nx] == INF){
+				
+				Q.push(Coor(nx, ny));
+				d[ny][nx] = d[p.y][p.x] + 1;
+			}
+		}
+	}
+	return (d[gy][gx]);
+}
+			
+
+int main(void)
+{
+	int n, ans = 0;
+	int sx, sy;
+	int x, y;
+	int i, j;
+	int gx[9], gy[9];
+	
+	scanf("%d %d %d", &h, &w, &n);
+	
+	for (i = 0; i < h; i++){
+		for (j = 0; j < w; j++){
+			scanf(" %c", &maze[i][j]);
+			
+			if (maze[i][j] == 'S'){
+				sx = j;
+				sy = i;
+			}
+			else if (maze[i][j] == '1'){
+				gx[0] = j;
+				gy[0] = i;
+			}
+			else if (maze[i][j] == '2'){
+				gx[1] = j;
+				gy[1] = i;
+			}
+			else if (maze[i][j] == '3'){
+				gx[2] = j;
+				gy[2] = i;
+			}
+			else if (maze[i][j] == '4'){
+				gx[3] = j;
+				gy[3] = i;
+			}
+			else if (maze[i][j] == '5'){
+				gx[4] = j;
+				gy[4] = i;
+			}
+			else if (maze[i][j] == '6'){
+				gx[5] = j;
+				gy[5] = i;
+			}
+			else if (maze[i][j] == '7'){
+				gx[6] = j;
+				gy[6] = i;
+			}
+			else if (maze[i][j] == '8'){
+				gx[7] = j;
+				gy[7] = i;
+			}
+			else if (maze[i][j] == '9'){
+				gx[8] = j;
+				gy[8] = i;
+			}
+		}
+	}
+	
+	ans += bfs(sx, sy, gx[0], gy[0]);
+	
+	for (i = 1; i < n; i++){
+		ans += bfs(gx[i - 1], gy[i -  1], gx[i], gy[i]);
+	}
+	
+	printf("%d\n", ans);
+	
+	return (0);
+}

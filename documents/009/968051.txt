@@ -1,0 +1,56 @@
+#include<iostream>
+using namespace std;
+
+int main (){
+
+  int cards[4][13],k,l,r,p,num,g;
+  char pat;
+
+  cin >>r ;
+  for(k =0;k <=r;k++){
+
+    cin >>pat >>num ;
+
+    switch(pat){
+    case 'S':
+      p = 0;
+      break;
+    case 'H':
+      p = 1;
+      break;
+    case 'C':
+      p = 2;
+      break;
+    case 'D':
+      p = 3;
+      break;
+    }
+    cards[p][num] = 1;
+  }
+  
+  for(k=0;k<=3;k++){
+    
+    for(l=1;l<=13;l++){ 
+      g = cards[k][l];
+	
+	switch(k){
+	case 0:
+	  printf("S %d\n",l);
+	  break;
+	case 1:
+	  printf("H %d\n",l);
+	  break;
+	case 2:
+	  printf("C %d\n",l);
+	  break;
+	case 3:
+	  printf("D %d\n",l);
+	  break;
+	}
+	
+	
+    }
+  }
+  
+  return 0;
+}

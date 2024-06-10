@@ -1,0 +1,48 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<sstream>
+using namespace std;
+
+int string_to_int(const string& s){
+  int n;
+  istringstream iss(s);
+  iss>>n;
+  return n;
+}
+
+int main()
+{
+  string num;
+  int work=0,a,b;
+
+
+  cin>>num;
+  a=string_to_int(num);
+  work=a;
+  while(1){
+    cin>>num;
+    if(num=="=") break;
+    if(num=="+"){ 
+      cin>>b;
+      work+=b;
+      a=0;
+    }
+    else if(num=="-"){
+      cin>>b;
+      work-=b;
+      a=0;
+    }
+    else if(num=="*"){
+      cin>>b;
+      work*=b;
+    }
+    else if(num=="/"){
+      cin>>b;
+      work/=b;
+    }
+  }
+  cout<<work<<endl;  
+  return 0;
+}

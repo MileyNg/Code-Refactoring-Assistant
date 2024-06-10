@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(x,a,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+vector< pair<int, int> >grid;
+int main(){
+  int n, m, x, y;
+  scanf("%d%d", &n, &m);
+  grid.resize(n);
+  rep(i, n){
+    scanf("%d%d", &x, &y);
+    grid[i] = make_pair(x,y);
+  }
+  int x1, y1, x2, y2;
+  rep(i, m){
+    int res = 0;
+    scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+    rep(j, n)
+      if(between(grid[j].first, x1, x2) && between(grid[j].second, y1, y2)){
+
+	res++;
+      }
+    printf("%d\n", res);
+  }
+  return 0;
+}

@@ -1,0 +1,41 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+struct node{
+  string name;
+  double prime;
+  node(string s,double d):name(s),prime(d){}
+  bool operator >(const node &e) const{
+    if(prime==e.prime)
+      return name>e.name;
+    return prime<e.prime;
+  }
+};
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      priority_queue<node,vector<node>, greater<node> > qu;
+      for(int i=0;i<n;i++)
+	{
+	  int p,a,b,c,d,e,f,s,m;
+	  string l;
+	  cin>>l>>p>>a>>b>>c>>d>>e>>f>>s>>m;
+	  int time=a+b+c+(d*m)+(e*m);
+	  int prime=(m*f*s)-p;
+	  qu.push(node(l,prime/time));
+	}
+      while(!qu.empty())
+	{
+	  node tmp=qu.top();
+	  qu.pop();
+	  cout<<tmp.name<<endl;
+	}
+	  cout<<"#"<<endl;
+    }
+
+}

@@ -1,0 +1,109 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long lli;
+
+const lli mod = 1000000007LL;
+
+string s;
+int p;
+
+lli All[2][1000006], F[2][1000006];
+pair<lli,lli> X[3][1000006];
+
+pair<lli,lli> exp();
+pair<lli,lli> term();
+pair<lli,lli> fact();
+
+pair<lli,lli> exp() {
+  int k = p;
+  X[0][k] = term();
+  All[0][k] = (X[0][k].first + X[0][k].second) % mod;
+  F[0][k] = X[0][k].second;
+  while(s[p] == '|') {
+    ++p;
+    X[0][k] = term();
+    All[0][k] = (All[0][k] * (X[0][k].first+X[0][k].second)) % mod;
+    F[0][k] = (F[0][k] * (X[0][k].second)) % mod;
+  }
+  return make_pair(((All[0][k] - F[0][k]) % mod + mod) % mod, F[0][k]);
+}
+
+pair<lli,lli> term() {
+  int k = p;
+  X[1][k] = fact();
+  All[1][k] = (X[1][k].first + X[1][k].second) % mod;
+  F[1][k] = X[1][k].first;
+  while(s[p] == '&') {
+    ++p;
+    X[1][k] = fact();
+    All[1][k] = (All[1][k] * (X[1][k].first+X[1][k].second)) % mod;
+    F[1][k] = (F[1][k] * (X[1][k].first)) % mod;
+  }
+  return make_pair(F[1][k], ((All[1][k] - F[1][k]) % mod + mod) % mod);
+}
+
+pair<lli,lli> fact() {
+  int k = p;
+  if(s[p] == '(') {
+    ++p;
+    X[2][k] = exp();
+    ++p;
+    return X[2][k];
+  } else if(s[p] == '~') {
+    int cnt = 0;
+    while(s[p] == '~') {
+      ++cnt;
+      ++p;
+    }
+    X[2][k] = fact();
+    if(cnt & 1) swap(X[2][k].first, X[2][k].second);
+    return X[2][k];
+  } else if(s[p] == 'x') {
+    ++p;
+    while(isdigit(s[p])) ++p;
+    return make_pair(1LL, 1LL);
+  } else {
+    //assert(false);
+  }
+}
+
+string erase(string s) {
+  int n = s.size();
+  vector<int> use(n, 1);
+  stack<pair<int,vector<int> > > pos;
+  for(int i = 0; i < n; ++i) {
+    if(s[i] == '(') {
+      vector<int> v(3,0);
+      pos.push(make_pair(i, v));
+    } else if(s[i] == ')') {
+      int k = pos.top().first;
+      vector<int> v = pos.top().second;
+      pos.pop();
+      if(v[0] == 0 && k && s[k-1] != '~' || (k && s[k-1] != '&' && i+1 < n && s[i+1] != '&')) {
+	use[i] = use[k] = 0;
+      }
+    } else {
+      if(!pos.empty()) {
+	pos.top().second[0] += s[i] == '|';
+	pos.top().second[1] += s[i] == '&';
+	pos.top().second[2] += s[i] == '~';
+      }
+    }
+  }
+  string t;
+  for(int i = 0; i < n; ++i) {
+    if(use[i]) t += s[i];
+  }
+  return t;
+}
+
+int main() {
+  cin >> s;
+  s = erase(s);
+  cout << s << endl;
+  s += "$";
+  p = 0;
+  cout << exp().first << endl;
+  return 0;
+}

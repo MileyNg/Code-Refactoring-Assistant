@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define NIL NULL
+
+typedef struct node{
+  struct node *left;
+  struct node *right;
+  struct node *parent;
+  int key;
+}*Node;
+
+Node root;
+
+Node treeMinimum(Node x){
+  while(x->left!=NIL){
+    x = x->left;
+  }
+}
+
+Node treeSearch(Node u, int k){
+     if (u == NIL){return NIL;}
+    if (u->key == k){ return u; }
+    else if (u->key > k){
+        return treeSearch(u->left, k);
+    }
+    else{
+        return treeSearch(u->right, k);
+    }
+}
+
+    
+Node treeSuccessor(Node x){
+  Node y;
+  if(x->right != NIL){
+    return treeMinimum(x->right);
+  }
+  y=x->parent;
+  while(y != NIL && x==y->right){
+    x=y;
+    y=y->parent;
+  }
+  return y;
+
+}
+
+void treeDelete(Node z){
+  Node y; // node to be deleted
+  Node x; // child of y
+  if(z->left == NIL || z->right == NIL){
+    y=z;
+  }
+  else y=(Node)treeSuccessor(z);
+  
+  if(y->left!=NIL){
+    x=y->left;
+  }
+  else x =y->right;
+
+  if(x!=NIL){
+    x->parent = y->parent; 
+  }
+  if(y->parent==NIL){
+    root = x;
+  }
+  else if(y==y->parent->left){
+    y->parent->left = x;
+  }
+  else y->parent->right = x;
+
+  if(y!=z){
+    z->key = y->key;
+  }
+}
+
+void insert(int k){
+  Node y = NIL;

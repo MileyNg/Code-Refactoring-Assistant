@@ -1,0 +1,59 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int dx[] = {0, 1, 0,-1};	//上下左右進む方向
+int dy[] = {-1,0, 1, 0};
+
+// void dfs(int x, int y, int field[100][100]){
+// 	if(field[x][y] == 0) return;	//行けなかったら終わり
+
+// 	field[x][y] = 0;
+// 	for(int k = 0; k < 4; k++){
+// 		dfs(x + dx[k], y + dy[k], field);
+// 	}
+// }
+
+//深さ優先探索
+int dfs(int x, int y, int field[100][100]){	//引数は座標と今まで通ってきたフィールド
+	int d = field[x][y];			//今の場所の距離
+	for(int k = 0; k < 4; k++){		//上下左右進む
+		int nextX = x + dx[k];		//次に進む方向
+		int nextY = y + dy[k];
+		if(field[nextX][nextY] == 1){	//もし次に進めたら
+			field[nextX][nextY] = field[x][y]+1;	//行った印,スタートからの距離
+			d = max(d, dfs(nextX, nextY, field));	//今の距離(今まで行った距離)と比較
+			field[nextX][nextY] = 1;	//もとに戻しておく
+		}
+	}
+
+	return d; //その位置から行けるスタートからの最大距離を返す
+}
+
+int main(){
+	int m, n;
+	while(cin >> m >> n, m != 0 && n != 0){
+		/*入力*/
+		int ice[100][100] = {{0}};			//与えられる配列(外壁あり)
+		for(int i = 1; i <= n; i++){
+			for(int j = 1; j <= m; j++){
+				cin >> ice[i][j];
+			}
+		}
+
+		/*計算*/
+		int ans = 0;
+		for(int i = 1; i <= m; i++){		//始めの位置
+			for(int j = 1; j <= n; j++){
+				if(ice[i][j] == 1){			//氷があったら
+					ice[i][j] = 2;			//行った印,スタートからの距離(0,1が使われているから2)
+					ans = max(ans, dfs(i, j, ice));	//調べ終わった距離と、その位置からの行ける最大距離を比べる
+					ice[i][j] = 1;			//氷を戻しておく
+				}
+			}
+		}
+
+		/*出力*/
+		cout << ans-1 << endl;	//2から始まっていたので-1する
+	}
+}

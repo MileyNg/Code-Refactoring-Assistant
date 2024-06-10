@@ -1,0 +1,119 @@
+#include<stdio.h>
+#include<stdlib.h>
+  
+#define NIL NULL
+  
+struct node{
+  struct node *right;
+  struct node *left;
+  struct node *parent;
+  int key;
+};
+  
+typedef struct node * Node;
+  
+Node root;
+  
+Node tS(Node,int);
+void ins(int);
+void pre(Node);
+void ino(Node);
+ int main(){
+  
+  int n,i,a;
+  char c[20];
+  
+  scanf("%d", &n);
+  
+  for(i = 0;i < n;i++){
+  
+    scanf("%s",c);
+  
+    if(c[0] == 'f'){
+  
+      scanf("%d",&a);
+  
+      if(tS(root,a) != NIL) {
+        printf("yes\n");
+      }
+      else{
+        printf("no\n");
+      }
+    }
+  
+    else if (c[0] == 'i' ){
+      scanf("%d",&a);
+      ins(a);
+    }
+else if (c[0] == 'p' ){
+      ino(root);
+      printf("\n");
+      pre(root);
+      printf("\n");
+    }
+  
+  }
+  return 0;
+}
+  
+void ino(Node n){
+  if(n->left != NIL){
+    ino(n->left);
+  }
+  printf(" %d", n->key);
+  if(n->right != NIL){
+    ino(n->right);
+  }
+}
+  
+void pre(Node n){
+  printf(" %d", n->key);
+  if(n->left != NIL){
+    pre(n->left);
+  }
+  if(n->right != NIL){
+    pre(n->right);
+  }
+}
+void ins(int n){
+  Node y = NIL;
+  Node x = root;
+  Node z;
+  
+  z = malloc(sizeof(struct node));
+  z->key = n;
+  z->left = NIL;
+  z->right = NIL;
+  
+  while(x != NIL){
+    y = x;
+    if(z->key < x->key){
+      x = x->left;
+    }
+    else{
+      x = x->right;
+    }
+  }
+  z->parent = y;
+  if(y == NIL){
+    root = z;
+  }
+  else if(z->key < y->key){
+    y->left = z;
+  }
+  else{
+    y->right = z;
+  }
+}
+  
+Node tS(Node u, int k){
+  while(u != NIL && k != u->key){
+    if(k < u->key){
+      u = u->left;
+    }
+    else{
+      u = u->right;
+    }
+  }
+  return u;
+}

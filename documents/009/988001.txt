@@ -1,0 +1,105 @@
+#include<stdio.h>
+#define MAX 100005
+
+typedef struct{
+    int p;
+    int l;
+    int r;
+    int depth;
+}Node;
+
+Node np[MAX];
+int n,i;
+
+void print(int i){
+    int l;
+
+    printf("node %d: parent = %d, depth = %d, ",i,np[i].p,np[i].depth);
+    if(np[i].p == -1){
+        if(np[i].l == -1){
+            printf("root, []\n");
+        }
+        else{   
+            l = np[i].l;
+            printf("root, [");
+            printf("%d",l);
+            while(1){
+                if(np[l].r == -1){
+                    break;
+                }
+                printf(", %d",np[l].r);
+                l = np[l].r;
+            }
+            printf("]\n");
+        }
+    }
+    else if(np[i].p != -1 && np[i].l != -1){
+        l = np[i].l;
+        printf("internal node, [");
+        printf("%d",l);
+        while(1){
+            if(np[l].r == -1){
+                break;
+            }
+            printf(", %d",np[l].r);
+            l = np[l].r;
+        }
+        printf("]\n");
+    }
+    else{
+        printf("leaf, []\n");
+    }
+}
+
+void get_depth(){
+    int i,p;
+
+    for(i = 0; i < n; i++){
+        p = np[i].p;
+        while(1){
+            if(p == -1){
+                break;
+            }
+            p = np[p].p;
+            np[i].depth++;
+        }
+    }
+}
+
+
+int main(){
+    int k,j;
+    int rank,c,d;
+    int m;
+
+    scanf("%d",&n);
+
+    for(i = 0; i < n; i++){
+        np[i].p = np[i].l = np[i].r = -1;
+    }
+
+    for(i = 0; i < n; i++){
+        scanf("%d%d",&rank ,&k);
+        for(j = 0; j < k; j++){
+            scanf("%d", &c);
+
+            if(j == 0){
+                np[rank].l = c;
+                np[c].p = rank;
+                m = c;
+            }else{
+                np[m].r = c;
+                np[c].p = rank;
+                m = c;
+            }
+        }
+    }
+
+    get_depth();
+
+    for(i = 0; i < n; i++){
+        print(i);
+    }
+
+    return 0;
+}

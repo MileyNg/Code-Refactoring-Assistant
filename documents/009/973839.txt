@@ -1,0 +1,142 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+	int p, q, a, n, m[8], left, right;
+	while (cin >> p >> q >> a >> n, p || q || a || n){
+		for (int i = min(p, q); i > 0; i--){
+			if (p % i == 0 && q % i == 0){
+				p = p / i;
+				q = q / i;
+			}
+		}
+		int counter = 0;
+
+		for (int i0 = 1; i0 <= a; i0++){
+			m[0] = i0;
+			int total0 = m[0];
+			if (p == 1){
+				int s = q * m[0];
+				if (s * p / q == s / m[0]){
+					counter++;
+					continue;
+				}
+			}
+			bool flag1 = true;
+			for (int i1 = 1; i1 <= i0; i1++){
+				m[1] = i1;
+				int total1 = total0 * m[1];
+				if (total1 > a || n < 2){
+					break;
+				}
+				else{
+					int s = q * total1;
+					if (flag1 && (left = s * p / q) == (right = s / m[0] + s / m[1])){
+						counter++;
+						continue;
+					}
+					else if (flag1 && left <= right){
+						continue;
+					}
+					flag1 = false;
+				}
+				bool flag2 = true;
+				for (int i2 = 1; i2 <= i1; i2++){
+					m[2] = i2;
+					int total2 = total1 * m[2];
+					if (total2 > a || n < 3){
+						break;
+					}
+					else{
+						int s = q * total2;
+						if (flag2 && (left = s * p / q) == (right = s / m[0] + s / m[1] + s / m[2])){
+							counter++;
+							continue;
+						}
+						else if (flag2 && left <= right){
+							continue;
+						}
+						flag2 = false;
+					}
+					bool flag3 = true;
+					for (int i3 = 1; i3 <= i2; i3++){
+						m[3] = i3;
+						int total3 = total2 * m[3];
+						if (total3 > a || n < 4){
+							break;
+						}
+						else {
+							int s = q * total3;
+							if (flag3 && (left = s * p / q) == (right = s / m[0] + s / m[1] + s / m[2] + s / m[3])){
+								counter++;
+								continue;
+							}
+							else if (flag3 && left <= right){
+								continue;
+							}
+							flag3 = false;
+						}
+						bool flag4 = true;
+						for (int i4 = 1; i4 <= i3; i4++){
+							m[4] = i4;
+							int total4 = total3 * m[4];
+							if (total4 > a || n < 5){
+								break;
+							}
+							else {
+								int s = q * total4;
+								if (flag4 && (left = s * p / q) == (right = s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4])){
+									counter++;
+									continue;
+								}
+								else if (flag4 && left <= right){
+									continue;
+								}
+								flag4 = false;
+							}
+							bool flag5 = true;
+							for (int i5 = 1; i5 <= i4; i5++){
+								m[5] = i5;
+								int total5 = total4 * m[5];
+								if (total5 > a || n < 6){
+									break;
+								}
+								else{
+									int s = q * total5;
+									int preright = s / m[0] + s / m[1];
+									if (flag5 && (left = s * p / q) == (right = s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4] + s / m[5])){
+										counter++;
+										continue;
+									}
+									else if (flag5 && left <= right){
+										continue;
+									}
+									flag5 = false;
+								}
+								for (int i6 = 1; i6 <= i5; i6++){
+									m[6] = i6;
+									int total6 = total5 * m[6];
+									if (total6 > a || n < 7){
+										break;
+									}
+									else{
+										int s = q * total6;
+										if (s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4] + s / m[5] + s / m[6]){
+											counter++;
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

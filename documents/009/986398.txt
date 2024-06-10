@@ -1,0 +1,55 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <map>
+#include <set>
+
+using namespace std;
+
+map<string,string> m;
+set<string> parsed;
+set<string> result;
+
+void dfs(string s){
+  if(parsed.count(s))
+    return;
+  parsed.insert(s);
+  string tbp = m[s]; //to be parsed
+  for(int i=0; i<tbp.size(); i++)
+    if(tbp[i] == ',' || tbp[i] == '.')
+      tbp[i] = ' ';
+  
+  stringstream ss(tbp);
+  for(string st; ss>>st;){
+    if(m.count(st))
+      dfs(st);
+    else
+      result.insert(st);
+  }
+}
+
+
+int main(){
+  int n;
+  while(true){
+    string g1;
+    cin >> n;
+    if(n==0)
+      break;
+    m.clear();
+    parsed.clear();
+    result.clear();
+    for(int i=0; i<n; i++){
+      string s, s1, s2;
+      cin >> s;
+      s1 = s.substr(0,s.find(':'));
+      s2 = s.substr(s.find(':')+1);
+      m[s1] = s2;      
+      if(i==0)
+	g1 = s1;
+    }
+    dfs(g1);
+    cout << result.size() << endl;
+  }
+  return 0;
+}

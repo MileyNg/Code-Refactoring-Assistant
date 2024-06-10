@@ -1,0 +1,65 @@
+#include<iostream>
+#include<queue>
+#include<cstring>
+using namespace std;
+
+
+int main()
+{
+  int h,w,n;
+  cin>>h>>w>>n;
+  char map[h][w];
+  bool closed[h][w];
+  int sx,sy;
+  for(int i=0;i<h;i++)
+    for(int j=0;j<w;j++)
+      {
+	cin>>map[i][j];
+	if(map[i][j]=='S')
+	  {
+	    sx=i;
+	    sy=j;
+	  }
+      }
+  int ans=0;
+  int dx[]={1,-1,0,0};
+  int dy[]={0,0,-1,1};
+  for(int i=1;i<=n;i++)
+    {
+      queue<pair<pair<int,int>,int> >qu;
+      while(!qu.empty())
+	qu.pop();
+      qu.push(make_pair(make_pair(sx,sy),0));
+      memset(closed,false,sizeof(closed));
+      while(true)
+	{
+	  pair<pair<int,int> ,int> tmp=qu.front();
+	  qu.pop();
+	  int x=tmp.first.first;
+	  int y=tmp.first.second;
+	  int step=tmp.second;
+	  //	  cout<<x<<" "<<y<<" "<<step<<endl;
+	  if(map[x][y]=='0'+i)
+	    {
+	      ans+=step;
+	      //cout<<"fin :"<<i<<" step;"<<step<<endl;
+	      sx=x;
+	      sy=y;
+	      break;
+	    }
+	  if(closed[x][y])
+	    continue;
+	  closed[x][y]=true;
+	  for(int xx=0;xx<4;xx++)
+	    {
+	      if(x+dx[xx]>=0 && x+dx[xx]<h &&
+		 y+dy[xx]>=0 && y+dy[xx]<w &&
+		 !closed[x+dx[xx]][y+dy[xx]] &&
+		 map[x+dx[xx]][y+dy[xx]]!='X'
+		 )
+		qu.push(make_pair(make_pair(x+dx[xx],y+dy[xx]),step+1));
+	    }
+	}
+    }
+  cout<<ans<<endl;
+}

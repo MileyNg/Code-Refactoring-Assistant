@@ -1,0 +1,33 @@
+objects = []
+
+max_n = 123456*2
+
+sosu_arr = []
+sosu_set = {}
+
+max_n.times.each do |ii|
+  i = ii + 1
+  next if i == 1
+  next if sosu_set.key?(i)
+  sosu_arr.push i
+  sosu_set[i] = true
+  (max_n/i).to_i.times.each do |j|
+    next if j == 0
+    sosu_set[i * (j+1)] = false
+  end
+end
+
+lines = []
+while num = gets
+  num = num.to_i
+  break if num == 0
+  if num == 1
+    puts 1
+    next
+  end
+  sum = 0
+  ((num+1)..(num*2)).each do |i|
+    sum = sum + 1 if sosu_set[i]
+  end
+  puts sum
+end

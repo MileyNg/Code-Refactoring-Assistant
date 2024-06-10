@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  long long int t, n, m, in_v;
+
+  cin >> t;
+
+  double ans = 0.00;
+  double in_r;
+
+  for ( long long int i = 0; i < t+1; i++ ) {
+
+    cin >> n >> m;
+
+    double cnt = 0.00;
+    double a = 0.00;
+
+    for ( long long int j = 0; j < m; j++ ) {
+
+      cin >> in_v >> in_r;
+      cnt += in_v * in_r;
+      a += in_r;
+
+    }
+    cnt /= a;
+    if ( i < t ) {
+      ans = max( ans, cnt );
+    }else {
+      if ( ans - cnt > 0.0000001 ) {
+	cout << "YES" << endl;
+      }else {
+	cout << "NO" << endl;
+      }
+    }
+
+  }
+
+  return 0;
+
+}

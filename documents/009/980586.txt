@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+int main()
+{
+	int w, n, num[32];
+	string s;
+	cin >> w;
+	fill(num, num + 32, 0);
+	for (int i = 1; i < w + 1; i++){
+		num[i] = i;
+	}
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		cin >> s;
+		string l, r;
+		int commapos;
+
+		//カンマの左
+		for (int i = 0;; i++){
+			if (s[i] == ','){
+				commapos = i;
+				break;
+			}
+			else{
+				l += s[i];
+			}
+		}
+
+		//カンマの右
+		for (int i = commapos + 1; i < (signed)s.length(); i++){
+			r += s[i];
+		}
+		int left = stoi(l);
+		int right = stoi(r);
+		int temp = num[left];
+		num[left] = num[right];
+		num[right] = temp;
+	}
+	for (int i = 1; i < w + 1; i++){
+		cout << num[i] << endl;
+	}
+	return 0;
+}

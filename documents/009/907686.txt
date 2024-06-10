@@ -1,0 +1,16 @@
+while 1:
+	n=input()
+	if n==0: break
+	ini,end={},{}
+	for	i in range(n):
+		word=raw_input()
+		try:ini[word[0]]+=1
+		except:ini[word[0]]=1
+		try:end[word[-1]]+=1
+		except:end[word[-1]]=1
+	for	k,v in ini.items():
+		if k not in end or end[k]!=v:
+			print "NG"
+			break
+	else:
+		print "OK"

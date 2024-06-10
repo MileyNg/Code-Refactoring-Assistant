@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+
+void display(const std::vector<std::vector<int>>& vec);
+
+int main(void) {
+    u_int a, b, n;
+    const int NOT_ASSIGNED = -1;
+
+    std::cin >> a >> b;
+    for (; a != 0 && b != 0; std::cin >> a >> b) {
+        /*
+         * 初期化
+         */
+        std::vector<std::vector<int>> matrix(a);
+        for (u_int x = 0; x < a; ++x) {
+            if (x == 0) {
+                // x = 0 上はそれぞれ1通り
+                matrix[x].resize(b, 1);
+            } else {
+                matrix[x].resize(b, NOT_ASSIGNED);
+            }
+            matrix[x][0] = 1;  // y = 0 上はそれぞれ1通り
+        }
+        // 原点
+        matrix[0][0] = 0;
+
+        /*
+         * 行き止まりを反映する
+         */
+        std::cin >> n;
+        for (u_int i = 0, x, y; i < n; ++i) {
+            std::cin >> x >> y;
+            matrix[--x][--y] = 0;  // 行き止まり
+
+            // x = 0 上に行き止まりがあるとき、y 以降は通ることができない
+            if (x == 0) {
+                auto it = matrix[0].begin();
+                for (std::advance(it, y + 1); it != matrix[0].end(); ++it) {
+                    *it = 0;
+                }
+            }
+            // y = 0 上に行き止まりがあるとき、x 以降は通ることができない
+            if (y == 0) {
+                for (u_int j = x + 1; j < a; ++j) {
+                    matrix[j][0] = 0;
+                }
+            }
+        }
+
+        /*
+         * 経路の計算
+         */
+        for (u_int x = 1; x < a; ++x) {
+            for (u_int y = 1; y < b; ++y) {
+                if (matrix[x][y] == NOT_ASSIGNED) {
+                    matrix[x][y] = matrix[x][y-1] + matrix[x-1][y];
+                }
+            }
+        }
+
+        std::cout << matrix[a-1][b-1] << std::endl;
+    }
+
+    return 0;
+}

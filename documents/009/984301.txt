@@ -1,0 +1,181 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+namespace Ps{
+	const double EPS = 1e-8;
+	const double INF = 1e12;
+
+	typedef complex<double> P;
+	#define X(a) (real(a))
+	#define Y(a) (imag(a))
+	
+	// a×b
+	double cross(const P& a,const P& b){
+		return imag(conj(a)*b);
+	}
+	// a・b
+	double dot(const P&a,const P& b) {
+		return real(conj(a)*b);
+	}
+
+	 int ccw(const P& a,P b,P c){
+		b -= a; c -= a;
+		  if (cross(b,c) > 0)   return +1;       // counter clockwise
+		  if (cross(b,c) < 0)   return -1;       // clockwise
+		  if (dot(b,c) < 0)     return +2;       // c--a--b on line
+		  if (norm(b) < norm(c)) return -2;       // a--b--c on line
+		  return 0;
+	  }
+
+	  double pfmod(double v,double MOD){
+		return fmod(fmod(v,MOD)+MOD,MOD);
+	 }
+	  double AbsArg(double a){
+	  	double ret=pfmod(max(a,-a),2*M_PI);
+	  	return min(ret,2*M_PI-ret);
+	 }
+
+}
+using namespace Ps;
+
+
+
+class Main{
+	public:
+
+	int N;
+	vector<P> ps;
+	void run(){
+		// ifstream cin("D2");
+//		ofstream cout( "D2.out" );
+		
+		while(true){
+			cin >> N;if(N==0)break;
+			ps=vector<P>(N);
+			REP(i,N){
+				double x,y;cin >> x >> y;
+				ps[i]=P(x,y);
+			} 
+			int Mv=1;
+			REP(i,N)REP(j,N)if(i!=j){//二点選んで距離1の点を取る
+				P dir=(ps[i]-ps[j])*0.5;
+				dir*=P(cos(M_PI/2),sin(M_PI/2));
+				if(abs(dir)>1)continue;
+				P m=(ps[i]+ps[j])*0.5;
+				P o=m+dir*(sqrt(1-pow(abs(dir),2))/abs(dir));
+				
+				int v=0;
+				REP(k,N)if(abs(ps[k]-o)<=1+EPS)v++;
+				
+
+				Mv=max(Mv,v);
+			}
+			cout << Mv <<endl;
+		}
+	}
+
+
+};
+int main(){
+	cout <<fixed<<setprecision(15);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

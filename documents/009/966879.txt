@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+void figure(char **a)
+{
+ int i,j;
+ for(i=0;i<8;i++)
+   for(j=0;j<8;j++)
+     if(a[i][j]=='1'){
+if(a[i][j+1]=='1'){
+ if(a[i+1][j]=='1' && a[i+1][j+1]=='1') printf("A\n");
+ else if(a[i][j+2]=='1' && a[i][j+3]=='1') printf("C\n");
+ else if(a[i+1][j+1]=='1' && a[i+1][j+2]=='1') printf("E\n");
+ else if(a[i+1][j]=='1' && a[i+1][j-1]=='1' ) printf("G\n");
+}
+else{
+ if(a[i+1][j]=='1'){
+   if(a[i+2][j]=='1' && a[i+3][j]=='1') printf("B\n");
+   else if(a[i+1][j-1]=='1' && a[i+2][j-1]=='1') printf("D\n");
+   else if(a[i+1][j+1]=='1' && a[i+2][j+1]=='1') printf("F\n");
+ }
+}
+return ;
+ }
+}
+
+int main()
+{
+ char **a,*buf,tmp;
+ int i,j;
+ a=malloc(sizeof(char*)*8);
+ for(i=0;i<8;i++)
+   a[i]=malloc(sizeof(char)*12);
+while(fgets(a[0],sizeof(char)*12,stdin)!=NULL){
+ for(i=1;i<8;i++){
+    fgets(a[i],sizeof(char)*12,stdin);
+    //fflush(stdin);
+ }
+ scanf("%c",&tmp);
+ figure(a);  
+}
+ return 0;
+ 
+}

@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+int N;
+vector< vector<int> > F;
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    F.clear();
+    F.resize(31);
+    for (int i = 0; i < N; i++) {
+        int f; cin >> f;
+        for (int j = 0; j < f; j++) {
+            int d; cin >> d;
+            F[d].push_back(i);
+        }
+    }
+    return true;
+}
+
+template <class T>
+ostream& operator<<(ostream& os, const vector<T>& v) {
+    os << "{ ";
+    for (int i = 0; i < v.size(); i++) {
+        os << v[i] << ' ';
+    }
+    os << "}";
+    return os;
+}
+
+struct UnionFind {
+    vector<int> parent;
+    int groupCount;
+    UnionFind(int size) {
+        parent = vector<int>(size, -1);
+        groupCount = size;
+    }
+    void merge(int x, int y) {
+        x = root(x);
+        y = root(y);
+        if (x == y) return;
+        parent[x] = y;
+        groupCount--;
+    }
+    int root(int x) {
+        if (parent[x] == -1) return x;
+        return parent[x] = root(parent[x]);
+    }
+};
+
+int main() {
+    while (input()) {
+        UnionFind uf(N);
+        int ans = -1;
+        for (int d = 0; d <= 30; d++) {
+            for (int i = 1; i < F[d].size(); i++) {
+                uf.merge(F[d][i - 1], F[d][i]);
+                if (uf.groupCount == 1) {
+                    ans = d;
+                    goto last;
+                }
+            }
+        }
+last:   cout << ans << endl;
+    }
+    return 0;
+}

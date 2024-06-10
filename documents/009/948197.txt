@@ -1,0 +1,62 @@
+#include<stdio.h>
+#include<string.h>
+
+#define MAX 100
+
+main(){
+  char input[MAX], output[MAX];
+  int i, j, k, input_max;
+  int res, flag = 0;
+  int inputnum;
+
+
+  while(1){
+    /* read */
+    for(i = 0 ; i < MAX ; i++){
+      res = scanf("%c", &input[i]);
+
+      if(res == EOF){
+	flag = 1;
+        break;
+      }
+
+      if(input[i] == '\n'){
+        input[i] = '\0';
+        input_max = i;
+        break;
+      }
+    }
+
+    if (flag == 1)break;
+
+    /* analyze */
+    j = 0;
+    k = 0;
+    for(i = 0 ; i < input_max ; i++){
+      if(input[i] == '@'){
+	inputnum = input[i+1];
+	while(k < atoi(&inputnum)){
+	  output[j] = input[i + 2];
+	  j++;
+	  k++;
+	}
+	k = 0;
+	i += 2;
+      }
+      else{
+	output[j] = input[i];
+	j++;
+      }
+    }
+    
+    output[j] = '\0';
+    
+    /* output */
+    for(i = 0 ; output[i] != '\0' ; i++){
+      printf("%c", output[i]);
+    }
+    printf("\n");
+  }
+
+  return 0;
+}

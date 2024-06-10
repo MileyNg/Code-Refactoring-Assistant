@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const double inf = 1e10;
+
+int main() {
+  for(int n; cin >> n, n;) {
+    string f[n];
+    int w[n], s[n];
+    for(int i = 0; i < n; ++i) {
+      cin >> f[i] >> w[i] >> s[i];
+    }
+    vector<int> t(n), ans;
+    for(int i = 0; i < n; ++i) t[i] = i;
+    double minG = inf;
+    do {
+      try {
+        for(int i = n-1, sumw = 0; i >= 0; --i) {
+          if(s[t[i]] >= sumw); else throw 0;
+          sumw += w[t[i]];
+        }
+        double G = 0;
+        int a = 0, b = 0;
+        for(int i = 0; i < n; ++i) {
+          a += (i+1) * w[t[i]];
+          b += w[t[i]];
+        }
+        G = (double)a/(double)b;
+        if(G < minG) {
+          ans = t;
+          minG = G;
+        }
+      } catch(...) {}
+    } while(next_permutation(t.begin(),t.end()));
+
+    for(int i = 0; i < n; ++i) {
+      cout << f[ans[i]] << endl;
+    }
+  }
+  return 0;
+}

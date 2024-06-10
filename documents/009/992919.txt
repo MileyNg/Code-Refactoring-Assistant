@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+int main()
+{
+  rep(i, in()){
+    int c, a, n;
+    int maxi = 0;
+    c = in();
+    a = in();
+    n = in();
+    rep(can, 1001){
+      if (c < can || a < can || n < can) break;
+      int nc, na;
+      nc = c - can;
+      na = a - can;
+      rep(cca, 1001){
+        if (nc < cca + cca || na < cca) break;
+        int nnc = nc - (cca + cca);
+        maxi = max(can + cca + nnc / 3, maxi);
+      }
+    }
+    printf("%d\n", maxi);
+  }
+  return 0;
+}

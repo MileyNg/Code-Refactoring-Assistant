@@ -1,0 +1,81 @@
+#include <cassert>
+#include <cctype>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+
+#include <algorithm>
+#include <bitset>
+#include <deque>
+#include <functional>
+#include <iterator>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+#include <iomanip>
+
+using namespace std;
+
+typedef pair<int, int> pint;
+typedef vector<int> vint;
+typedef long long ll;
+
+#define ALL(c) (c).begin(),(c).end()
+#define RALL(c) (c).rbegin(),(c).rend()
+#define SORT(c) sort(ALL(c))
+
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n)  for(int i=0;i<(n);++i)
+
+#define NEXTP(c) next_permutation(ALL(c))
+#define SUM(c) accumulate(ALL(c),0)
+#define MP( a, b ) make_pair( ( a ), ( b ) )
+
+#define DUMP(x)  cerr << #x << " = " << (x) << endl;
+
+#define INF 1000000000 // 10^9
+const double EPS = 1e-10;
+vector<int> ball;
+
+bool dfs(int i,int left,int right){
+    if (i==10) return true;
+    
+    if (ball[i]>left&&ball[i]>right) {
+        return dfs(i+1, ball[i], right)||dfs(i+1, left, ball[i]);
+    }else if(ball[i]>left&&ball[i]<right){
+        return dfs(i+1, ball[i], right);
+    }else if(ball[i]<left&&ball[i]>right){
+        return dfs(i+1, left, ball[i]);
+    }else{
+        return false;
+    }
+    
+}
+
+int main(){
+    int N;
+    cin>>N;
+    REP(i, N){
+        ball.clear();
+        ball.resize(10);
+    
+        REP(j, 10)cin>>ball[j];
+        
+        cout<<(dfs(0,0,0)?"YES":"NO")<<endl;
+    }
+    return 0;
+}

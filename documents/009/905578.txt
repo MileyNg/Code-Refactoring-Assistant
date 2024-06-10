@@ -1,0 +1,67 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+#define WH 100
+
+int dx[6]={ 1, 1, 0,-1,-1, 0};
+int dy[6]={ 1, 0,-1,-1, 0, 1};
+
+int main(int argc, char const *argv[])
+{
+	int t,n;
+	int x,y;
+	int sx,sy;
+
+	int f[WH][WH];
+	int cnt;
+
+	while(1){
+		cin>>t>>n;
+		if(t+n==0) break;
+
+		for(int i1=0;i1<WH;i1++){
+			for(int i2=0;i2<WH;i2++){
+				f[i1][i2]=0;
+			}
+		}
+
+		for(int i1=0;i1<n;i1++){
+			cin>>x>>y;
+			f[y+50][x+50]=-1;
+		}
+
+		cin>>sx>>sy;
+
+		queue<pair<int,int> > q;
+		q.push(make_pair(sx+50,sy+50));
+
+		while(!q.empty()){
+			x=q.front().first;
+			y=q.front().second;
+			q.pop();
+
+			for(int i1=0;i1<6;i1++){
+				if(f[y+dy[i1]][x+dx[i1]]==0 && f[y][x]<t){
+					if(x+dx[i1]==sx+50 && y+dy[i1]==sy+50){}
+					else {
+						f[y+dy[i1]][x+dx[i1]]=f[y][x]+1;
+						q.push(make_pair(x+dx[i1],y+dy[i1]));
+					}
+				}
+			}
+		}
+
+		cnt=1;
+		for(int i1=0;i1<WH;i1++){
+			for(int i2=0;i2<WH;i2++){
+				if(f[i1][i2]>0)cnt++;
+			}
+		}
+
+		cout<<cnt<<endl;
+	}
+
+	return 0;
+}

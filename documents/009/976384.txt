@@ -1,0 +1,124 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+#include <ctime>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+int dx[] = { 0, 1, 0, -1 };
+int dy[] = { -1, 0, 1, 0 };
+
+vector<vector<int>> field;
+
+int w, h;
+void bfs(int r, int c){
+
+	queue<P> q;
+	q.push(MP(r, c));
+	field[r][c] = 1;
+	while (!q.empty()){
+		int y = q.front().first;
+		int x = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; ++i){
+			int nx = x + dx[i], ny = y + dy[i];
+			if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+			if (field[ny][nx]) continue;
+			field[ny][nx] = 1;
+			q.push(MP(ny, nx));
+		}
+	}
+}
+
+int main(){
+	while (cin >> w >> h, w|h){
+		int n;
+		cin >> n;
+		vector<int> x(n * 2), y(n * 2);
+		rep(i, n * 2){
+			cin >> x[i] >> y[i];
+		}
+		vector<int> vx = x, vy = y;
+		vx.emplace_back(0), vx.emplace_back(w);
+		vy.emplace_back(0), vy.emplace_back(h);
+		sort(ALL(vx));
+		vx.erase(unique(ALL(vx)), vx.end());
+		sort(ALL(vy));
+		vy.erase(unique(ALL(vy)), vy.end());
+
+		for (auto &e : x) e = lower_bound(ALL(vx), e) - vx.begin();
+		for (auto &e : y) e = lower_bound(ALL(vy), e) - vy.begin();
+
+		w = vx.size() - 1, h = vy.size() - 1;
+
+		field = vector<vector<int>>(h + 1, vector<int>(w + 1, 0));
+
+		rep(i, n){
+			++field[y[i * 2]][x[i * 2]];
+			--field[y[i * 2 + 1]][x[i * 2]];
+			--field[y[i * 2]][x[i * 2 + 1]];
+			++field[y[i * 2 + 1]][x[i * 2 + 1]];
+		}
+
+		rep(i, h) rep(j, w){
+			field[i + 1][j] += field[i][j];
+			field[i][j + 1] += field[i][j];
+			field[i + 1][j + 1] -= field[i][j];
+		}
+
+		//rep(i, h){
+		//	rep(j, w) cout << field[i][j];
+		//	cout << '\n';
+		//} cout << '\n';
+		int ans = 0;
+		rep(i, h) rep(j, w){
+			if (field[i][j]) continue;
+			bfs(i, j);
+			++ans;
+		}
+		cout << ans << endl;
+	}
+
+
+	return 0;
+}

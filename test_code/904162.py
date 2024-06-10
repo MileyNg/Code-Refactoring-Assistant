@@ -1,0 +1,11 @@
+for i in range(input()):
+
+    ary = map(int,raw_input().split())
+    c = max(ary)
+    ary.remove(c)
+    a,b = ary
+
+    if a**2 + b**2 == c**2:
+        print "YES"
+    else:
+        print "NO"

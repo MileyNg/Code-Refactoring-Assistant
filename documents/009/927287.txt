@@ -1,0 +1,11 @@
+import itertools
+while 1:
+	n = input()
+	if n == 0: break
+	m = (n-1)/2
+	a = sorted(list(set([i**2%n for i in range(1,(n+1)/2)])))
+	h = [0]*(m+1)
+	for i,j in itertools.combinations(a,2):
+		h[min(j - i,n - j + i)] += 2
+	for i in range(1,m+1):
+		print h[i]

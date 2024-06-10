@@ -1,0 +1,36 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+int main()
+{
+	int number[];
+	number.length = 5;
+	string s[] = readln.chomp.split();	
+
+	foreach(i;0..5)
+	{
+		number[i] = to!int(s[i]);
+	}
+
+	foreach(i;0..5)
+	{
+		for(int j=4;j>i;j--)
+		{
+			if(number[j] > number[j-1])
+			{
+				auto temp = number[j];
+				number[j] = number[j-1];
+				number[j-1] = temp;
+			}
+		}
+	}
+
+	foreach(i;0..4)
+	{
+		write(number[i]," ");
+	}
+	writeln(number[4]);
+
+	return 0;
+}

@@ -1,0 +1,100 @@
+# -*- coding: utf-8 -*-
+# Starship UAX Advance
+
+=begin
+UAZの座標と敵の座標は異なる
+ビームとバリアは同一平面上にはない
+
+UAZとバリアが重なっているとき
+敵とバリアが重なっているとき  MISS
+
+(ある点と平面との距離) = (その点から平面上の点へのベクトル) dot (平面の単位法線ベクトル)
+=end
+
+EPS = 1e-9
+
+class Point
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_f)
+  end
+  def +(p)
+    Point.new(@x + p.x, @y + p.y, @z + p.z)
+  end
+  def -(p)
+    Point.new(@x - p.x, @y - p.y, @z - p.z)
+  end
+  def ==(p)
+    (@x - p.x).abs < EPS && (@y - p.y).abs < EPS && (@z - p.z).abs < EPS
+  end
+  def dot(p)
+    @x * p.x + @y * p.y + @z * p.z
+  end
+  def cross(p)
+    Point.new(@y * p.z - @z * p.y, @z * p.x - @x * p.z, @x * p.y - @y * p.x)
+  end
+  def distance(p)
+    (self - p).abs
+  end
+  def abs
+    Math::sqrt(@x * @x + @y * @y + @z * @z)
+  end
+  def normalize
+    Point.new(@x / abs, @y / abs, @z / abs)
+  end
+end
+
+def solve
+  me = Point.new(*gets.split)
+  enemy = Point.new(*gets.split)
+  barrier = 3.times.map{Point.new(*gets.split)}
+  beam = enemy - me
+
+  # UAZと敵が、バリアが作る平面の片側に集まっているときtrue（境界を含まない）
+  pa = me - barrier[0]
+  pb = enemy - barrier[0]
+  n = (barrier[1] - barrier[0]).cross((barrier[2] - barrier[0])).normalize
+  pa_dot_n = pa.dot(n)
+  pb_dot_n = pb.dot(n)
+  pa_dot_n = 0.0 if pa_dot_n.abs < EPS
+  pb_dot_n = 0.0 if pb_dot_n.abs < EPS
+#  return false if pb_dot_n == 0.0 # 平面上に敵がいるパターン。これを入れると6突破。後の部分でこの辺が漏れてる？
+  return true if (pa.dot(n) * pb.dot(n) > 0.0)
+
+  # バリアとビームが接するときはfalse
+  #  == 線分(me, enemy)と線分(barrier[i], barrier[i+1])が交点を持つときはfalse
+  #  == 直線(me, enemy)と直線(barrier[i], barrier[i+1])との最近点対が一致
+  #     かつ その点が線分(me, enemy)上にある
+  #     かつ その点が線分(barrier[i], barrier[i+1])上にあるときはfalse
+  ok = true
+  [*barrier, barrier.first].each_cons(2) do |b1, b2|
+    ab = enemy - me
+    cd = b2 - b1
+    n1 = ab.normalize
+    n2 = cd.normalize
+    work1 = n1.dot(n2)
+    work2 = 1.0 - work1 * work1
+    ac = b1 - me
+    d1 = (ac.dot(n1) - work1 * ac.dot(n2)) / work2
+    d2 = (work1 * ac.dot(n1) - ac.dot(n2)) / work2
+    p1 = me + Point.new(d1 * n1.x, d1 * n1.y, d1 * n1.z)
+    p2 = b1 + Point.new(d2 * n2.x, d2 * n2.y, d2 * n2.z)
+    ok = false if (p1 == p2) && ((me.distance(p1) + enemy.distance(p1) - me.distance(enemy)).abs < EPS) && ((b1.distance(p2) + b2.distance(p2) - b1.distance(b2)).abs < EPS)
+#      !(p1 == me) # UAZとバリアが接していてもOK
+  end
+  return false unless ok
+
+  # バリアの内部をビームが通るとき
+  #  == バリアの各辺eについて、{e, ビーム, e cross ビーム}がすべて同じ系ならfalse
+  ok = true
+  sign = nil
+  edge = [*0...3, 0].each_cons(2).map{|i, j| barrier[j] - barrier[i]}
+  [*edge, edge.first].each_cons(2) do |e1, e2|
+    v = beam.dot((e1 - me).cross(e2 - me)) > 0.0 ? 1 : -1
+    sign = v unless sign
+    ok = false if sign != v
+  end
+  return ok
+end
+
+puts (solve ? "HIT" : "MISS")

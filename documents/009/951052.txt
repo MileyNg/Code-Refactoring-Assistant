@@ -1,0 +1,134 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct node *NodePointer;
+struct node
+{
+  int key;
+  NodePointer next;
+};
+
+NodePointer insert(int);
+NodePointer finditem(int);
+void listprint(void);
+NodePointer make_1node(int, NodePointer);
+NodePointer delete(int);
+void deleteFirst();
+void deleteLast();
+
+NodePointer head;
+
+int main(void)
+{
+  int i, n, input2;
+  char input1[12];
+  head = make_1node(-1, NULL);
+  
+  printf("Input: ");
+  scanf("%d", &n);
+
+  for(i = 0; i < n; i++)
+    {
+      scanf("%s", input1);
+      if(strcmp(input1, "deleteFirst") == 0)
+	{
+	  deleteFirst();
+	  continue;
+	}
+      else if(strcmp(input1, "deleteLast") == 0)
+	{
+	  deleteLast();
+	  continue;
+	}
+      
+      scanf("%d", &input2);
+      if(strcmp(input1, "insert") == 0) insert(input2);
+      else if(strcmp(input1, "delete") == 0) delete(input2);
+    }
+  
+  printf("Output: ");
+  listprint();
+}
+
+NodePointer insert(int key)
+{
+  NodePointer newnode;
+  
+  if(finditem(key) == NULL)
+    {
+      newnode = make_1node(key, head->next);
+      head->next = newnode;
+      
+      return newnode;
+    }
+  
+  else return NULL;
+}
+
+void listprint(void)
+{
+  NodePointer n;
+
+  for(n = head->next; n != NULL; n = n->next) printf("%d ", n->key);
+  printf("\n");
+}
+
+NodePointer finditem(int key)
+{
+  NodePointer n;
+  
+  for(n = head; n->next != NULL; n = n->next) if(n->next->key == key) return n;
+  return NULL;
+}
+
+NodePointer make_1node(int key, NodePointer p)
+{
+  NodePointer newnode;
+  
+  newnode = malloc(sizeof (struct node));
+  if(newnode == NULL)
+    {
+      printf("Cannot allocate memory.\n");
+      exit(EXIT_FAILURE);
+    }
+  
+  newnode->key = key;
+  newnode->next = p;
+  
+  return newnode;
+}
+
+NodePointer delete(int key)
+{
+  NodePointer n, delnode;
+
+  if((n = finditem(key)) != NULL)
+    {
+      delnode = n->next;
+      n->next = delnode->next;
+      free(delnode);
+      return n;
+    }
+
+  else return NULL;
+}
+
+void deleteFirst()
+{
+  NodePointer delnode;
+
+  delnode = head->next;
+  head->next = head->next->next;
+  free(delnode);
+}
+
+void deleteLast()
+{
+  NodePointer delnode, n;
+
+  for(n = head; n->next->next != NULL; n = n->next);
+  delnode = n->next;
+  n->next = NULL;
+  free(delnode);
+}

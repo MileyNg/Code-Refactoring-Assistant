@@ -1,0 +1,18 @@
+while 1:
+	n = input()
+	if n == 0: break
+	item = {}
+	for i in range(n):
+		name,cost = raw_input().split()
+		item[name] = int(cost)
+	m = input()
+	recipes = [raw_input().split() for i in range(m)]
+	recipes = sorted(recipes, key = lambda x: item[x[0]] if x[0] in item else 2<<31)
+	for recipe in recipes:
+		name = recipe[0]
+		needs = recipe[2:]
+		cost = 0
+		for need in needs:
+			cost += item[need]
+		item[name] = min(cost, item[name]) if name in item else cost
+	print item[raw_input()]

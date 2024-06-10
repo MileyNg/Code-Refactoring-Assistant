@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<math.h>
+int n;
+void koch(double p1x, double p1y, double p2x, double p2y, int c){
+  double sx, sy, tx, ty, ux, uy;
+  if(c != 0){
+    sx = (2 * p1x + p2x) / 3;
+    sy = (2 * p1y + p2y) / 3;
+    tx = (p1x + 2 * p2x) / 3;
+    ty = (p1y + 2 * p2y) / 3;
+    ux = sx + (tx - sx) * cos(M_PI/3) - (ty - sy) * sin(M_PI/3);
+    uy = sy + (tx - sx) * sin(M_PI/3) + (ty - sy) * cos(M_PI/3);
+
+    koch(p1x, p1y, sx, sy, c - 1);
+    printf("%f %f\n", sx, sy);
+    koch(sx, sy, ux, uy, c - 1);
+    printf("%f %f\n", ux, uy);
+    koch(ux, uy, tx, ty, c - 1);
+    printf("%f %f\n", tx, ty);
+    koch(tx, ty, p2x, p2y, c - 1);
+  }
+}
+
+int main(){
+  scanf("%d", &n);
+  printf("%f %f\n", 0.0, 0.0);
+  koch(0.0, 0.0, 100.0, 0.0, n);
+  printf("%f %f\n", 100.0, 0.0);
+  return 0;
+}

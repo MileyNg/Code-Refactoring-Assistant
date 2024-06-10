@@ -1,0 +1,47 @@
+#include<iostream>
+using namespace std ;
+
+int w , h , count ;
+char map[21][21] = {} ;
+int dx[] = { -1,0,1,0 } ;
+int dy[] = { 0,1,0,-1 } ;
+
+void move( int ny , int nx ){
+	map[ny][nx] = '0' ;
+	
+	for( int i=0 ; i<4 ; i++ ){
+		if( ny+dy[i] >= 0 && ny+dy[i] < h &&
+			nx+dx[i] >= 0 && nx+dx[i] < w &&
+			map[ny+dy[i]][nx+dx[i]] == '.' ){
+				count++;
+				move( ny+dy[i] , nx+dx[i] ) ;
+		}
+	}
+}
+
+int main(){
+	
+	int sx , sy ;
+	
+	while(1){
+		cin >> w >> h ;
+		if( w==0 && h==0 ) break ;
+		
+		count = 1 ;
+		for( int i=0 ; i<h ; i++ ){
+			for( int j=0 ; j<w ; j++ ){
+				cin >> map[i][j] ;
+				if( map[i][j] == '@' ){
+					sx = j ;
+					sy = i ;
+				}
+			}
+		}
+		
+		move(sy,sx) ;
+		
+		cout << count << endl ;
+	}
+	
+return 0 ;
+}

@@ -1,0 +1,48 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int p[1000] = {};
+  p[0] = p[1] = 1;
+  for(int i = 2; i <= 1000 / 2; i++)
+    if(!p[i])
+      for(int j = i+i; j <= 1000; j+=i) p[j] = 1;
+
+  vector<int>sp;
+  rep(i, 1000) if(!p[i]) sp.push_back(i);
+
+  int n;
+  while(scanf("%d", &n) && n){
+    int res = 0;
+
+    rep(i, sp.size()){
+      int s = 0;
+      for(int j = i; j < sp.size() || s <= n; j++){
+	s += sp[j];
+	if(s == n) res++;
+	if(s >= n) break;
+      }
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

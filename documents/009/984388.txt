@@ -1,0 +1,79 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <set>
+#include <numeric>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <complex>
+#include <cassert>
+#include <tuple>
+using namespace std;
+typedef long long LL;
+typedef pair<int,int> P;
+
+int N;
+double x[300];
+double y[300];
+inline double dist2(double a, double b)
+{
+	return a*a+b*b;
+}
+void exec()
+{
+	cin >> N;
+	if(N==0){
+		exit(0);
+	}
+	for(int i=0;i<N;i++){
+		cin >> x[i] >> y[i];
+	}
+	int ret=1;
+	for(int i=0;i<N;i++){
+		for(int j=i+1;j<N;j++){
+			double dx=(x[i]-x[j])/2;
+			double dy=(y[i]-y[j])/2;
+			double r2=dx*dx+dy*dy;
+			if(r2>1){
+				continue;
+			}
+			double R=sqrt(1/r2-1);
+			double px=x[j]+dx-R*dy;
+			double py=y[j]+dy+R*dx;
+			double qx=x[j]+dx+R*dy;
+			double qy=y[j]+dy-R*dx;
+			int sp=0,sq=0;
+			for(int k=0;k<N;k++){
+				if(k==i||k==j){
+					sp++;sq++;
+					continue;
+				}
+				if(dist2(x[k]-px,y[k]-py)<=1){
+					sp++;
+				}
+				if(dist2(x[k]-qx,y[k]-qy)<=1){
+					sq++;
+				}
+			}
+			ret=max(ret,sp);
+			ret=max(ret,sq);
+		}
+	}
+	cout << ret << endl;
+}
+int main() {
+	while(1)
+		exec();
+}

@@ -1,0 +1,61 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+#define whole(xs) xs.begin(), xs.end()
+#define MOD 1000000007
+
+string A, B, C;
+bool input() {
+    cin >> A; 
+    if (A == "0") return false;
+    cin >> B >> C;
+    return true;
+}
+
+int Cache[51][2];
+int dfs(int index, int x) {
+    int Ans = 0;
+    if (index == A.size()) return x == 0;
+    if (Cache[index][x] >= 0) return Cache[index][x];
+    for (int a = 0; a <= 9; a++) {
+        if (index == A.size() - 1 && a == 0) continue;
+        if (A[index] != '?' && A[index] != a + '0') continue;
+        for (int b = 0; b <= 9; b++) {
+            if (index == A.size() - 1 && b == 0) continue;
+            if (B[index] != '?' && B[index] != b + '0') continue;
+            int c1 = a + b + x;
+            int x1 = c1 >= 10;
+            int c = c1 % 10;
+            if (index == A.size() - 1 && c == 0) continue;
+            if (C[index] != '?' && C[index] != c + '0') continue;
+            Ans = (Ans + dfs(index + 1, x1)) % MOD;
+        }
+    }
+    return Cache[index][x] = Ans;
+}
+
+void solve() {
+    memset(Cache, -1, sizeof(Cache));
+    reverse(whole(A));
+    reverse(whole(B));
+    reverse(whole(C));
+    cout << dfs(0, 0) << endl;
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

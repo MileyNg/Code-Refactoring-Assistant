@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+#define MAX 100000
+
+typedef pair<int, int> P;
+
+int main(){
+	vector <P> city[20];
+	int n;
+	int m;
+	int a, b, c, d;
+	char e;
+	cin >> n;
+	cin >> m;
+	for (int i = 0; i < m; i++) {
+		cin >> a >> e >> b >> e >> c >> e >> d;
+		city[a].push_back(P(c, b));
+		city[b].push_back(P(d, a));
+	}
+	int citty[20];
+	for (int i = 0; i < 20; i++) {
+		citty[i] = MAX;
+	}
+	int x1, x2, y1, y2;
+	cin >> x1 >> e >> x2 >> e >> y1 >> e >> y2;
+
+	citty[x1] = 0;
+	priority_queue< P, vector<P>, greater<P> > pq;
+	pq.push(P(0, x1));
+
+	while (!pq.empty()) {
+		P p = pq.top();
+		pq.pop();
+		int v = p.second;
+		if (citty[v] < p.first) {
+			continue;
+		}
+		for (int i = 0; i < city[v].size(); i++) {
+			P pp = city[v][i];
+			if (citty[pp.second] > citty[v] + pp.first) {
+				citty[pp.second] = citty[v] + pp.first;
+				pq.push(P(citty[pp.second], pp.second));
+			}
+		}
+	}
+	int ouro = citty[x2];
+
+	for (int i = 0; i < 20; i++) {
+		citty[i] = MAX;
+	}
+	citty[x2] = 0;
+	pq.push(P(0, x2));
+	while (!pq.empty()) {
+		P p = pq.top();
+		pq.pop();
+		int v = p.second;
+		if (citty[v] < p.first) {
+			continue;
+		}
+		for (int i = 0; i < city[v].size(); i++) {
+			P pp = city[v][i];
+			if (citty[pp.second] > citty[v] + pp.first) {
+				citty[pp.second] = citty[v] + pp.first;
+				pq.push(P(citty[pp.second], pp.second));
+			}
+		}
+	}
+	int fukuro = citty[x1];
+	cout << y1-y2-ouro-fukuro << endl;
+	return 0;
+}

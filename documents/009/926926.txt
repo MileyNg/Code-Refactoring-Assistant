@@ -1,0 +1,17 @@
+r = 5001
+wc = [[1500,2244],[1000,1520],[1200,1870],[500,850],[300,550],[200,380]]
+dp = [0]*r
+for w,c in wc:
+	i = 1
+	while w * i < 5001:
+		if dp[w * i] == 0:
+			dp[w * i] = c * i
+		i += 1
+	for i in range(5001 - w):
+		if dp[i] > 0 and dp[i + w] == 0:
+			dp[i + w] = dp[i] + c
+
+while 1:
+	n = input()
+	if n == 0: break
+	print dp[n]

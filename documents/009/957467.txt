@@ -1,0 +1,114 @@
+#include <iostream>
+#include <cstdio>
+#include <sstream>
+#include <cctype>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+
+char const op='[';
+char const cl=']';
+typedef vector<int> vi;
+#define isd isdigit
+
+namespace std {
+  ostream& operator<<(ostream& os, const vi& v){
+    rep(i,v.size()){
+      os << v[i] << " ";
+    }
+    return os;
+  }
+}
+
+
+int get(int & i, string s){
+  int res = 0;
+  while(isd(s[i])){
+    res*=10;
+    res+=s[i]-'0';
+    i++;
+  }
+  return res;
+}
+
+string tos(int i){
+  stringstream ss;
+  ss << i;
+  return ss.str();
+}
+
+vi parse(string s){
+  vi res;
+  int n = s.size();
+  for(int i=0; i<s.size();i++){
+    if(isdigit(s[i])){
+      int t=get(i,s);
+      res.push_back(t);
+    }	
+  }
+  // rep(i,res.size()){
+  //   cout << res[i] << " ";
+  // }  cout << endl;
+  return res;
+}
+
+int solve(string s){
+  int n =s.size();
+    bool begin = true;
+  while(1){
+    for(int i=0; i+2<s.size(); i++){
+      string sss = "[";
+      if(s[i]==op && s[i+1]==op && isdigit(s[i+2])){
+	int j=0;
+	while(!(isd(s[i+2+j]) && s[i+2+j+1]==cl && s[i+2+j+2]==cl)){
+	  j++;
+	}
+
+	vi c = parse(s.substr(i+1,j+3));
+	sort(all(c));
+	int k=0;
+	if(begin){
+	  rep(x,(c.size()+1)/2){
+	    if(c[x]%2 == 0) k+=c[x]/2+1;
+	    else k+=(c[x]+1)/2;
+	  }
+	} else {
+	  rep(x,(c.size()+1)/2){
+	    k+=c[x];
+	  }
+	}
+	sss+= tos(k);
+	s.replace(i, j+4, sss);
+      }
+    }
+    begin = false;
+    // cout << s << endl;
+    if(s[2]!=op){
+      int ans = 0;
+      vi v = parse(s);
+      sort(all(v));
+      rep(i,v.size()/2+1){
+	ans += v[i];
+      }
+      return ans;
+    }
+  }
+  int i=1;
+  return get(i,s);
+
+}
+
+int main(){
+  int n;
+  cin>>n;
+  rep(i,n){
+    string s; cin>>s;
+    cout << solve(s) << endl;
+  }
+}

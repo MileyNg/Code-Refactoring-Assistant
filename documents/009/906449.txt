@@ -1,0 +1,25 @@
+#pragma warning (disable:4996)
+#include <stdio.h>
+#include <ctype.h>
+
+void inputstr(int *alpha){
+	int num;
+	char ch;
+	while (scanf("%c", &ch) != EOF){
+		ch = tolower(ch);
+		num = ch - 'a';
+		if (0<=num&&num<=26)++alpha[num];
+	}
+}
+void output(int *alpha){
+	unsigned short int i;
+	for (i = 0; i < 26; i++){
+		printf("%c : %d\n", 'a' + i, alpha[i]);
+	}
+}
+int main(void){
+	int alpha[26] = { 0 };
+	inputstr(alpha);
+	output(alpha);
+	return 0;
+}

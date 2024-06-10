@@ -1,0 +1,17 @@
+#include<iostream>
+#include<cstdio>
+
+using namespace std;
+
+double round(double d){
+	int k = (int)(d*10000)%10;
+	return (k>=5)? d-((double)k/10000)+0.001: d- ((double)k/10000);
+}
+
+int main(){
+	int a, b, c, d, e, f;
+	while(cin >> a >> b >> c >> d >> e >> f){
+		double del = 1.0/(a*e - d*b);
+		printf("%0.3f %0.3f\n", round(del*(e*c-b*f)), round(del*(a*f-d*c)));
+	}
+}

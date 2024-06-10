@@ -1,0 +1,73 @@
+/**********************
+aoj_0535
+Crossing Black Ice
+***********************/
+#include <stack>
+#include <cstring>
+#include <cstdio>
+using namespace std;
+
+struct pos{
+	int x;						//座標
+	int y;
+	int count;					//進んだ数
+	int field[100][100];	//今まで進んだ配列を記憶する
+};
+
+int main(){
+	while(1){
+		int m, n;
+		scanf("%d %d", &m, &n);
+		if(m == 0 || n == 0) break;
+
+		/*入力*/
+		int ice[100][100] = {{0}};			//与えられる配列(外壁あり)
+
+		for(int i = 1; i <= n; i++){
+			for(int j = 1; j <= m; j++){
+				scanf("%d", &ice[i][j]);
+			}
+		}
+
+		/*最大移動数を数える(深さ優先探索)*/
+		stack<pos> sta;		//スタック
+		int ans = 0;		//回答する移動数の数
+		for(int i = 1; i <= n; i++){	//与えられた配列分まわす
+			for(int j = 1; j <= m; j++){
+				/*深さ優先探索*/
+				if(ice[i][j]){		//氷だったらそこをスタート地点にする
+					pos p;			//スタックに入れるpを作りスタート地点の情報を入れていく
+					p.x = j; p.y = i; p.count = 1;
+					memcpy(p.field, ice, sizeof(p.field));
+					p.field[i][j] = 0;	//スタート地点の氷を割っておく
+					sta.push(p);
+					/*全パターン探す*/
+					while(!sta.empty()){	//stackが空になったら終了
+						int x1[] = {-1, 0, 1, 0}, y1[] = {0, 1, 0, -1};	//移動先
+						p = sta.top(); 		//スタックを取り出す
+						sta.pop();	//スタックの先頭を削除
+						ans = max(ans, p.count);	//進んだ数が最大なら記憶する
+						for(int k = 0; k < 4; k++){	//上下左右の４カ所分まわす
+							pos p1 = p;		//移動
+							p1.x += x1[k]; p1.y += y1[k];	//移動先
+							if(p1.field[p1.y][p1.x]){	//異動先が氷なら
+								p1.field[p1.y][p1.x] = 0;	//氷を割る
+								p1.count++;					//進んだ数を増やす
+								sta.push(p1);				//スタックにいれる
+							}
+						}
+
+					}
+				}
+			}
+		}
+
+		/*出力*/
+		printf("%d\n", ans);
+		//cout << ans << endl;
+
+
+	}
+	return 0;
+
+}

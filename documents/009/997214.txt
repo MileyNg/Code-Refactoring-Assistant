@@ -1,0 +1,66 @@
+#include <stdio.h>
+
+struct point {
+  float x;
+  float y;
+};
+
+struct point sub(struct point a, struct point b)
+{
+  struct point ret;
+  ret.x = a.x - b.x;
+  ret.y = a.y - b.y;
+  return ret;
+}
+
+int is_in(struct point a, struct point b, struct point c, struct point p)
+{
+  struct point ab, bp, bc, cp, ca, ap;
+  float c1, c2, c3;
+
+  ab = sub(a, b);
+  bp = sub(p, b);
+
+  bc = sub(c, b);
+  cp = sub(p, c);
+
+  ca = sub(a, c);
+  ap = sub(p, a);
+
+  c1 = ab.x * bp.y - ab.y * bp.x;
+  c2 = bc.x * cp.y - bc.y * cp.x;
+  c3 = ca.x * ap.y - ca.y * ap.x;
+
+  if ((c1 > 0 && c2 > 0 && c3 > 0) ||
+        (c1 < 0 && c2 < 0 && c3 < 0)) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+int main(void)
+{
+  float x1, y1, x2, y2, x3, y3, xp, xy;
+  struct point p1, p2, p3, p4;
+
+  while (scanf("%f %f %f %f %f %f %f %f",
+        &x1, &y1, &x2, &y2, &x3, &y3, &xp, &xy) != EOF) {
+    p1.x = x1;
+    p1.y = y1;
+    p2.x = x2;
+    p2.y = y2;
+    p3.x = x3;
+    p3.y = y3;
+    p4.x = xp;
+    p4.y = xy;
+
+    if (is_in(p1, p2, p3, p4)) {
+      printf("YES\n");
+    } else {
+      printf("NO\n");
+    }
+  }
+
+  return 0;
+}

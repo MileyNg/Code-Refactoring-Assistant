@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+
+int main(void) {
+    int N, M, A[1000], B[1000], bg[1001] = {};
+    int v[1001] = {};
+    int i, j, max_vote, game, b_upper;
+
+    scanf("%d%d", &N, &M);
+    for (i = 0; i < N; i++) {
+        scanf("%d", &A[i]);
+    }
+    for (i = 0, b_upper = 0; i < M; i++) {
+        scanf("%d", &B[i]);
+        if (b_upper < B[i]) b_upper = B[i];
+    }
+    for (i = 0; i < N; i++) {
+        for (j = A[i]; j <= b_upper; j++) {
+            if (bg[j] > 0) break;
+            bg[j] = i + 1;
+        }
+    }
+
+    for (i = 0; i < M; i++) {
+        v[bg[B[i]]]++;
+    }
+
+    for (i = 1, max_vote = 0; i <= N; i++) {
+        if (max_vote < v[i]) {
+            max_vote = v[i];
+            game = i;
+        }
+    }
+
+    printf("%d\n", game);
+    return 0;
+}

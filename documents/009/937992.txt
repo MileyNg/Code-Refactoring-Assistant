@@ -1,0 +1,11 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+lines.shift();
+var S = lines.shift().split(' ').filter(function(val, i, arr) {
+	return arr.indexOf(val) === i;
+});
+lines.shift();
+var T = lines.shift().split(' ');
+
+console.log(S.filter(function(i) {return T.indexOf(i) != -1;}).length);

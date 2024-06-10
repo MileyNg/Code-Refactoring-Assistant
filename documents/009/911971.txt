@@ -1,0 +1,56 @@
+input = raw_input
+
+def init():
+    table = [True] * 1000001
+    table[0] = False
+    table[1] = False
+    n = len(table)
+    for i in range(2, n):
+        for j in range(i + i, n, i):
+            table[j] = False
+    return table
+    
+def is_prime(p):
+    if p == 0 or p == 1:
+        return False
+    for i in range(2, p - 1):
+        if p % i == 0:
+            return False
+    return True
+
+def solve(price, ps, is_prime):
+    dp = []
+    for i in range(len(ps)):
+        dp.append([False] * (price + 1))
+
+    dp[0][ps[0]] = True
+    dp[0][0]     = True
+
+    for i in range(1, len(ps)):
+        for p in range(price + 1):
+            if p >= ps[i]:
+                dp[i][p] = dp[i - 1][p] or dp[i][p - ps[i]]
+            else:
+                dp[i][p] = dp[i - 1][p]
+
+    p = -1
+    for i in range(0, price + 1):
+        if is_prime[i] and dp[len(ps) - 1][i]:
+            p = i
+    if p == -1:
+        print("NA")
+    else:
+        print(p)
+    
+def main():
+    table = init()
+    while True:
+        n, price = map(int,input().split())
+        if n == 0 and price == 0:
+            return
+        ps = []
+        for i in range(n):
+            ps.append(int(input()))
+        solve(price, ps, table)
+
+main()

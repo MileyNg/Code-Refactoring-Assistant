@@ -1,0 +1,23 @@
+#include <stdio.h>
+int main() {
+	
+	int n,i,h,m,a,b,c,d;
+	
+	for(scanf("%d",&n),i=n;i--;){
+		scanf("%d:%d",&h,&m);
+		
+		a = 6 * m;
+		b = 30 * h + m / 2;
+		
+		c = (b-a);
+		d = (b-360)-a;
+		
+		c=c<0?-c:c;
+		d=d<0?-d:d;
+		
+		if(c<30 || d<30)puts("alert");
+		else if((c>=90 && c<=180) || (d>=90 && d<=180))puts("safe");
+		else puts("warning");
+	}
+	return 0;
+}

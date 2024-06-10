@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+  int n;
+
+  for(;cin>>n,n;)
+    {
+      long long int sk[31];
+      memset(sk,0,sizeof(sk));
+      for(int i=0;i<n;i++)
+	{
+	  int f;
+	  cin>>f;
+	  //cout<<"input :"<<i<<endl;
+	  for(int j=0;j<f;j++)
+	    {
+	      int tmp;
+	      cin>>tmp;
+	      sk[tmp]=sk[tmp]|(long long int)1<<i;
+
+	    }
+	  
+	}
+      int ans=-1;
+      for(int i=1;i<31;i++)
+	{
+	  long long int tmp=sk[i];
+	  //   cout<<"sk["<<i<<"] = "<<sk[i]<<endl;
+	  if(tmp==0)
+	    continue;
+	  for(int j=i-1;j>0;j--)
+	    {
+	      //  cout<<"i:j="<<i<<" "<<j<<endl;
+	      // cout<<tmp<<" "<<sk[j]<<endl;
+	      // cout<<"AND:"<<(sk[j]&tmp)<<endl;
+	      if((sk[j]&tmp)!=0)
+		tmp|=sk[j];
+	    }
+	  sk[i]=tmp;
+	  // cout<<i<<": "<<tmp<<endl;
+	  if(tmp==(((long long int)1<<n)-1))
+	    {
+	      ans=i;
+	      break;
+	    }
+	}
+
+      cout<<ans<<endl;
+
+    }
+}

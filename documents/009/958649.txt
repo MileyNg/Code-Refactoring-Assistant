@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+
+const int N = 110;
+const int T = 610;
+
+int cost[4][N*T];
+
+inline int f(int n, int t){
+	return n*T + t;
+}
+
+vector<P> G[N*T], rev[N*T];
+
+void dijk(int start, int t, int *opt, vector<P> *graph){
+	opt[f(start, t)] = 0;
+	priority_queue<P, vector<P>, greater<P>> q;
+	q.push(MP(0, f(start, t)));
+
+	while (!q.empty()){
+		int d = q.top().first;
+		int pos = q.top().second;
+
+		q.pop();
+
+		if (opt[pos] < d) continue;
+
+		for (auto &e : graph[pos]){
+			if (opt[e.first] <= d + e.second)continue;
+			opt[e.first] = d + e.second;
+			q.push(MP(d + e.second, e.first));
+		}
+	}
+}
+
+void pp(int i, int pos, int t){
+	cout << (i % 2 ? "to" : "from") << " " << (i / 2 ? "Hakodate" : "Tokyo") << endl;
+	cout << cost[i][f(pos, t)] << endl;
+}
+
+int main(){
+	int n;
+	while (cin >> n, n){
+		rep(i, N*T) G[i].clear();
+		rep(i, N*T) rev[i].clear();
+
+		rep(i, n) rep(j, 601){
+			if (j + 1 <= 600) G[f(i, j)].push_back(MP(f(i, j + 1), 0));
+			if (j - 1 >= 0) rev[f(i, j)].push_back(MP(f(i, j - 1), 0));
+		}
+
+		map<string, int> m;
+		int idx = 0;
+		m["Tokyo"] = idx++;
+		m["Hakodate"] = idx++;
+		rep(i, n){
+			string s, t;
+			int h1, m1, h2, m2, cost;
+			char c;
+			cin >> s >> h1 >> c >> m1 >> t >> h2 >> c >> m2 >> cost;
+			int t1 = h1 * 60 + m1 - 480, t2 = h2 * 60 + m2 - 480;
+			if (0 <= t1 && t1 <= 600 && 0 <= t2 && t2 <= 600){
+				if (!m.count(s)) m[s] = idx++;
+				if (!m.count(t)) m[t] = idx++;
+				int from = f(m[s], t1), to = f(m[t], t2);
+				G[from].push_back(MP(to, cost));
+				rev[to].push_back(MP(from, cost));
+			}
+		}
+
+		rep(i, 4){
+			MEMSET(cost[i], 0x7f);
+			// Tokyo -> x, x -> Tokyo, Hakodate -> x, x -> Hakodate
+			dijk(i / 2, i % 2 ? 600 : 0, cost[i], i % 2 ? rev : G);
+		}
+
+		int ans = 1e9;
+		rep(i, n) for (int j = 0; j <= 600 - 30; ++j){
+			//pp(0, i, j);
+			//pp(1, i, j+30);
+			//pp(2, i, j);
+			//pp(3, i, j+30);
+			int a = f(i, j), b = f(i, j + 30);
+			if ((cost[0][a] | cost[1][b] | cost[2][a] | cost[3][b]) >= ans) continue;
+			ans = min(ans, cost[0][a] + cost[1][b] + cost[2][a] + cost[3][b]);
+		}
+		cout << (ans < 1e9 ? ans : 0) << endl;
+	}
+
+
+
+	return 0;
+}

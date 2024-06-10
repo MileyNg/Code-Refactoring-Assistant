@@ -1,0 +1,1 @@
+a,i,j,n,q,S[100],T[100];main(){scanf("%d",&n);for(;i<n;)scanf("%d",S+i++);scanf("%d",&q);for(;j<q;)scanf("%d",T+j++);for(i=0;i<q;++i)for(j=0;j<n;++j)if(T[i]==S[j]){++a;break;}printf("%d\n",a);exit(0);}

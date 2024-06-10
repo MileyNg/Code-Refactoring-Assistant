@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <array>
+#include <vector>
+
+using namespace std;
+
+const int WALL = -1;
+
+int main() {
+  while ( true ) {
+	int n;
+	cin >> n;
+	if ( n == 0 ) break;
+	char s, t, b;
+	cin >> s >> t >> b;
+	int is = s - 'A', it = t - 'A', ib = b - 'A';
+
+	array<double, 9> table;
+	fill( table.begin(), table.end(), 0.0 );
+	table[ is ] = 1.0;
+
+	array<int, 4> dx = { -1, 0, 1, 0 };
+	array<int, 4> dy = { 0, -1, 0, 1 };
+	array<double, 9> before;
+	
+	for ( int i = 0; i < n; i++ ) {
+	  before = table;
+	  fill( table.begin(), table.end(), 0 );
+	  for ( int y = 0; y < 3; y++ ) {
+		for ( int x = 0; x < 3; x++ ) {
+		  for ( int j = 0; j < 4; j++ ) {
+			int nx = x + dx[ j ];
+			int ny = y + dy[ j ];
+			
+			if ( 0 <= nx and nx < 3 and
+				 0 <= ny and ny < 3 and
+				 ny * 3 + nx != ib ) {
+			  
+			  table[ ny * 3 + nx ] += before[ y * 3 + x ] / 4;
+			} else {
+			  table[ y * 3 + x ] += before[ y * 3 + x ] / 4;
+			}
+		  }
+		}
+	  }
+	}
+	cout << table[ it ] << endl;
+  }
+}

@@ -1,0 +1,51 @@
+#include <cstdio>
+#include <iostream>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+#define INF (1<<29)
+#define mp make_pair
+#define pb push_back
+
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef pair<int,int> pii;
+
+int main(){
+	int W;
+	for( int n = 1; cin >> W; n++ ){
+		if( W == 0 ) break;
+		int N;
+		cin >> N;
+		vi v(N), w(N);
+		for( int i = 0; i < N; i++ ){
+			//cin >> v[i] >> "," >> w[i];
+			scanf("%d,%d", &v[i], &w[i]);
+		}
+		// DP
+		pii ans = mp(0,INF);
+		vector<vector<pii> > dp(N+1, vector<pii>(W+1,mp(0,0)));
+		for( int i = 1; i <= N; i++ ){
+			for( int j = 1; j <= W; j++ ){
+				if( j-w[i-1] < 0 ){
+					dp[i][j].first = dp[i-1][j].first;
+					dp[i][j].second = dp[i-1][j].second;
+				}else{
+					if( dp[i-1][j].first <= dp[i-1][j-w[i-1]].first+v[i-1] ){
+						dp[i][j] = mp(dp[i-1][j-w[i-1]].first+v[i-1], dp[i-1][j-w[i-1]].second+w[i-1]);
+					}else{
+						dp[i-1][j] = mp(dp[i-1][j].first, dp[i-1][j].second);
+					}
+				}
+				if( (ans.first == dp[i][j].first && ans.second> dp[i][j].second) || ans.first < dp[i][j].first ){
+					ans = dp[i][j];
+				}
+			}
+		}
+		cout << "Case " << n << ":" << endl;
+		cout << ans.first << endl;
+		cout << ans.second << endl;
+	}
+}

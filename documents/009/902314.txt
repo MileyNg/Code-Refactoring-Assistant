@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define EPS (1e-5)
+
+double conv(double dosu) {
+  return dosu*M_PI/180.0;
+}
+
+int main() {
+  int M;
+  
+  while(cin >> M && M) {
+    int sum = 0;
+    double S = 0.0;
+    for(int i=0; i<M-1; i++) {
+      int arg; cin >> arg;
+      S += sin(conv(arg));
+      sum += arg;
+    }
+    
+    S += sin(conv(360-sum));
+    cin >> M;
+    sum = 0;
+    double T = 0.0;
+    for(int i=0; i<M-1; i++) {
+      int arg; cin >> arg;
+      T += sin(conv(arg));
+      sum += arg;
+    }
+    
+    T += sin(conv(360-sum));
+    
+    if(abs(S-T) < EPS) cout << 0 << endl;
+    else if(S < T) cout << 2 << endl;
+    else cout << 1 << endl;
+  }
+  
+  return 0;
+}

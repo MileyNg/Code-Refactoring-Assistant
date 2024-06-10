@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int a, b;
+  cin >> a >> b;
+  if(max(a,b) % min(a,b) == 0) {
+    cout << min(a,b) << endl;
+    return 0;
+  }
+  for(int j = 2; j <= min(a,b); ++j) {
+    int i = min(a,b)/j;
+    if(a % i == 0 && b % i == 0) {
+      cout << i << endl;
+      return 0;
+    }
+  }
+  return 0;
+}

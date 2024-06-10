@@ -1,0 +1,178 @@
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <iostream>
+using namespace std;
+const int nmax = 24 + 18, cmax = 4, kmax = 6, emax = nmax * nmax;
+
+int x[nmax], y[nmax], c[nmax], r[nmax];
+int fst[nmax], pnt[emax], nxt[emax], tot;
+int p[nmax], ind[nmax], cnt[nmax];
+int ed[nmax], yes[nmax], gbt;
+int n;
+int ans;
+bool del[nmax];
+
+int gcd(int a, int b)
+{
+  return !b ? a : gcd(b, a % b);
+}
+
+int max(int a, int b)
+{
+  return a > b ? a : b;
+}
+
+int min(int a, int b)
+{
+  return a > b ? b : a;
+}
+
+void add(int s, int t)
+{
+  pnt[++tot] = t;
+  nxt[tot] = fst[s];
+  fst[s] = tot;
+}
+
+int sqr(int x)
+{
+  return x * x;
+}
+
+bool inter(int i, int j)
+{
+  return sqr(x[i] - x[j]) + sqr(y[i] - y[j]) < sqr(r[i] + r[j]);
+}
+
+void prepare()
+{
+  for (int i = 1; i <= n; ++i)
+    for (int j = i + 1; j <= n; ++j)
+      if (inter(i, j)) {
+	bool flag = 1;
+	for (int k = i + 1; k < j; ++k)
+	  if (inter(i, k) && inter(k, j)) {
+	    flag = 0;
+	    break;
+	  }
+	if (flag)
+	  add(i, j);
+      }
+}
+
+// void dfs(int x)
+// {
+//   if (ed[x] == gbt) return;
+//   ed[x] = gbt;
+//   for (int i = fst[x]; i; i = nxt[i]) {
+//     dfs(pnt[i]);
+//     if (yes[pnt[i]] != gbt) 
+//       return;
+//   }
+//   yes[x] = gbt;
+// }
+
+int check()
+{
+  // printf(".\n");
+  int rnt = 0;
+  ++gbt;
+  memset(ind, 0, sizeof(ind));
+  for (int i = 1; i <= n; ++i)
+    for (int j = fst[i]; j; j = nxt[j])
+      ++ind[pnt[j]];
+  for (int i = 1; i <= n; ++i) 
+    if (ind[i] == 0)
+      yes[i] = gbt;
+  // qt = 0;
+  // for (int i = 1; i <= n; ++i)
+  //   if (ind[i] == 0) {
+  //     q[++qt] = i;
+  //     yes[i] = gbt;
+  //   }
+  for (bool flag = 1; flag; ) {
+    flag = 0;
+    for (int i = 1; i <= n; ++i)
+      if (ed[i] != gbt && yes[i] == gbt && yes[p[i]] == gbt) {
+	flag = 1;
+	ed[i] = ed[p[i]] = gbt;
+	rnt += 2;
+	for (int j = fst[i]; j; j = nxt[j])
+	  if ((--ind[pnt[j]]) == 0) {
+	    yes[pnt[j]] = gbt;
+	  }
+	for (int j = fst[p[i]]; j; j = nxt[j])
+	  if ((--ind[pnt[j]]) == 0) {
+	    yes[pnt[j]] = gbt;
+	  }
+      }
+    // for (int i = 1; i <= qt; ++i)
+    //   if (yes[p[q[i]]]
+  }
+  return rnt;
+}
+
+void search(int k)
+{
+  if (k == 0) {
+    search(1);
+    return;
+  }
+  if (k < 0) {
+    k = -k;
+    if (cnt[k] & 1) {
+      for (int i = 1; i <= n; ++i)
+	if (c[i] == k) {
+	  del[i] = 1;
+	  search(-(k - 1));
+	  del[i] = 0;
+	}
+    }
+    else
+      search(-(k - 1));
+    return;
+  }
+  if (k * 2 > n) {
+    int tmp = check();
+    if (tmp > ans) {
+      // printf("~~~~~~~~~~\n");
+      // for (int i = 1; i <= n; ++i) printf("(%d %d)\n", i, p[i]);
+      ans = tmp;
+    }
+    return;
+  }
+  for (int i = 1; i <= n; ++i)
+    if (!p[i] && !del[i]) {
+      for (int j = i + 1; j <= n; ++j)
+	if (!del[j] && c[i] == c[j]) {
+	  // printf("(%d, %d)\n", i, j);
+	  p[i] = j;
+	  p[j] = i;
+	  search(k + 1);
+	  p[i] = p[j] = 0;
+	}
+      return;
+    }
+}
+
+int main()
+{
+  while (1) {
+    scanf("%d", &n);
+    if (!n) break;
+    tot = 0;
+    memset(fst, 0, sizeof(fst));
+    memset(cnt, 0, sizeof(cnt));
+    for (int i = 1; i <= n; ++i) scanf("%d%d%d%d", x + i, y + i, r + i, c + i), ++cnt[c[i]];
+    prepare();
+    memset(p, 0, sizeof(p));
+    ans = 0;
+    // continue;
+    search(-4);
+    printf("%d\n", ans);
+  }
+  return 0;
+}

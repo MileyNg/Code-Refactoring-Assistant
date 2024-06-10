@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+const int inf = 1 << 28;
+
+struct unionFind{
+    vector<int> par, rank;
+    unionFind(size_t n):par(n), rank(n, 0){
+        iota(par.begin(), par.end(), 0);
+    }
+    int findRoot(int x){
+        return x == par[x]? x: par[x] = findRoot(par[x]);
+    }
+    bool unite(int x, int y){
+        x = findRoot(x); y = findRoot(y);
+        if(x == y)return false;
+        if(rank[x] == rank[y])rank[x]++;
+        if(rank[x] < rank[y])par[x] = y; else par[y] = x;
+        return true;
+    }
+};
+
+struct edge{int src, dst, wt;};
+
+int n, m;
+vector<edge> es;
+
+int solve(){
+    sort(all(es), [](const edge &e, const edge &d){return e.wt < d.wt;});
+    int res = inf;
+    rep(i, m){
+        unionFind uf(n);
+        int V = 1;
+        for(int j=i; j<m; ++j){
+            if(res <= es[j].wt - es[i].wt)break;
+            if(!uf.unite(es[j].src, es[j].dst))continue;
+            if(++V == n)res = min(res, es[j].wt - es[i].wt);
+        }
+    }
+    return res == inf? -1: res;
+}
+
+int main(){
+    while(cin >> n >> m, n|m){
+        es.clear();
+        rep(i, m){
+            int a, b, w;
+            cin >> a >> b >> w;
+            es.push_back((edge){a-1, b-1, w});
+        }
+        cout << solve() << '\n';
+    }
+    return 0;
+}

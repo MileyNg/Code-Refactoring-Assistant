@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+#define SQ(x)	((x) * (x))
+
+int main(void)
+{
+	int a, b, c, i, n;
+	int sub1, sub2, max;
+	
+	scanf("%d", &n);
+#if 1
+	for (i = 0; i < n; i++){
+		scanf("%d %d %d", &a, &b, &c);
+		if (a >= b && a >= c){
+			max = a * a;
+			sub1 = b * b;
+			sub2 = c * c;
+		}
+		else if (b >= c){
+			max = b * b;
+			sub1 = a * a;
+			sub2 = c * c;
+		}
+		else {
+			max = c * c;
+			sub1 = b * b;
+			sub2 = a * a;
+		}
+		
+		if (sub1 + sub2 == max){
+			printf("YES\n");
+		}
+		else {
+			printf("NO\n");
+		}
+	}
+#else
+	for (i = 0; i < n; i++){
+		int ps[3];
+		int j;
+		for (j = 0; j < 3; j++){
+			scanf("%d", &ps[j]);
+		}
+		for (j = 1; j < 3; j++){
+			if (ps[0] < ps[j]){
+				int t = ps[0];
+				ps[0] = ps[j];
+				ps[j] = t;
+			}
+		}
+		if (SQ(ps[0]) == SQ(ps[1]) + SQ(ps[2])){
+			puts("YES");
+		}
+		else {
+			puts("NO");
+		}
+	}
+#endif
+	return (0);
+}

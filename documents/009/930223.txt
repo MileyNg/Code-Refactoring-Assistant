@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+using namespace std;
+
+int main() {
+	
+	string table = "abcdefghijklmnopqrstuvwxyz.?! ",s,t;
+	int i,l;
+	
+	while(cin>>s){
+		l=s.length();
+		t="";
+		
+		if(l%2)
+			cout<<"NA";
+		else{
+			for(i=0;i<l;i+=2){
+				if(s[i]<=54 && s[i]>=49 && s[i+1]<=53 && s[i+1]>=49)
+					t += table[(s[i]-49)*5+s[i+1]-49];
+				else{
+					t="NA";break;
+				}
+			}
+			cout<<t;
+		}
+			
+		cout<<endl;
+	}
+	return 0;
+}

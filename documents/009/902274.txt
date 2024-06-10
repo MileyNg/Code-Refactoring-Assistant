@@ -1,0 +1,93 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <string>
+#include <cmath>
+#include <cassert>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<b?(a=b,1):0)
+#define chmin(a,b) (a>b?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+
+int b[300];
+int dist[300];
+vector<int> pv[300];
+
+int main() {
+  int m;
+  cin >> m;
+  int a[6];
+  REP(i,6) cin >> a[i];
+  int s,g;
+  cin >> s >> g;
+  s--;g--;
+  REP(i,m) {
+    cin >> b[i];
+    pv[i].push_back(i);
+    pv[i+b[i]].push_back(i);
+  }
+  deque<int> Q;
+  Q.push_back(g);
+  memset(dist,0x3f,sizeof(dist));
+  dist[g] = 0;
+  while(!Q.empty()) {
+    int p = Q.front(); Q.pop_front();
+    FOR(it, pv[p]) {
+      REP(i,6) {
+        REP(j,2) {
+          int d = a[i]*(j?1:-1);
+          int np = *it+d;
+          if (np<0||np>=m) continue;
+          if (dist[np] > dist[p]+1) {
+            dist[np] = dist[p] + 1;
+            Q.push_back(np);
+          }
+        }
+      }
+    }
+  }
+  REP(i,m) cout << dist[i] << " "; cout << endl;
+  int cur = s;
+  while(1) {
+    int dice;
+    cin >> dice;
+    dice--;
+
+    int f = 0;
+
+    REP(j,2) {
+      int d = a[dice]*(j?1:-1);
+      int nc = cur+d;
+      nc = nc + b[nc];
+      if (nc<0||nc>=m) continue;
+      if (dist[nc] < dist[cur]) {
+        f = (j?1:-1);
+        cur = nc;
+        break;
+      }
+    }
+    printf("%d\n", f); fflush(stdout);
+    if (cur == g) break;
+  }
+}

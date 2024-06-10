@@ -1,0 +1,52 @@
+//	Combinatorial - 0-1 Knapsack Problem
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <cstring>
+
+#define MAX_GOODS 100
+
+using namespace std;
+
+int hmGoods,DestWeight;
+
+int Value[MAX_GOODS],Weight[MAX_GOODS];
+int memo[MAX_GOODS + 1][10001];
+
+const int INF = -999999;
+
+int dfs(int LeftGoods,int LeftWeight)
+{
+	if(LeftGoods == -1)
+		return 0;
+
+	if(memo[LeftGoods][LeftWeight] != INF - 1)
+		return memo[LeftGoods][LeftWeight];
+
+	if(LeftWeight < 0){
+		return memo[LeftGoods][LeftWeight] = INF;
+	}else{
+		return memo[LeftGoods][LeftWeight] = max(dfs(LeftGoods - 1,LeftWeight - Weight[LeftGoods]) + Value[LeftGoods],dfs(LeftGoods - 1,LeftWeight));
+	}
+}
+
+int main(){
+
+	for(int i = 0;i < MAX_GOODS + 1;i++){
+		for(int j = 0;j < 10001;j++){
+			memo[i][j] = INF - 1;
+		}
+	}
+
+	cin >> hmGoods >> DestWeight;
+
+	for(int i = 0;i < hmGoods;i++){
+		cin >> Value[i] >> Weight[i];
+	}
+
+	cout << dfs(hmGoods - 1,DestWeight) << endl;
+
+	return 0;
+}

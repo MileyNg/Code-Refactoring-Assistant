@@ -1,0 +1,207 @@
+#define _USE_MATH_DEFINES
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <cassert>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <numeric>
+#include <list>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> Pii;
+typedef pair<ll, ll> Pll;
+
+#define FOR(i,n) for(int i = 0; i < (n); i++)
+#define sz(c) ((int)(c).size())
+#define ten(x) ((int)1e##x)
+#define tenll(x) ((ll)1e##x)
+
+class LCA {
+public:
+	const vector<vector<int>>& e;
+	int V, logV;
+	vector<int> depth;
+	vector<vector<int> > parent;
+
+	LCA(const vector<vector<int>>& e) : e(e) {
+		this->V = sz(e);
+		logV = 0;
+		while (V > (1LL << logV)) logV++;
+		this->depth = vector<int>(V);
+		this->parent = vector<vector<int> >(logV, vector<int>(V));
+
+		dfs(0, -1, 0);
+		build();
+	}
+
+	void dfs(int v, int par, int d) {
+		depth[v] = d;
+		parent[0][v] = par;
+		for (auto to : e[v]) {
+			if (par == to) continue;
+			dfs(to, v, d + 1);
+		}
+	}
+
+	void build() {
+		for (int k = 0; k + 1 < logV; k++) {
+			for (int v = 0; v < V; v++) {
+				if (parent[k][v] < 0) parent[k + 1][v] = -1;
+				else parent[k + 1][v] = parent[k][parent[k][v]];
+			}
+		}
+	}
+
+	int query(int u, int v) {
+		if (depth[u] > depth[v]) swap(u, v);
+		for (int k = 0; k < logV; k++) {
+			if ((depth[v] - depth[u]) >> k & 1)
+				v = parent[k][v];
+		}
+		if (u == v) return u;
+
+		for (int k = logV - 1; k >= 0; k--) {
+			if (parent[k][u] != parent[k][v]) {
+				u = parent[k][u];
+				v = parent[k][v];
+			}
+		}
+		return parent[0][u];
+	}
+};
+
+
+tuple<vector<int>, vector<int>, vector<int>> parents3(vector<vector<int>>& e, int v) {
+	const int n = sz(e);
+	vector<int> depth(n), par(n), ord(n);
+
+	depth[v] = 0;
+	par[v] = -1;
+	ord[0] = v; //ordをキューとして使い、bfsする
+	for (int p = 0, r = 1; p < r; p++) {
+		int cur = ord[p];
+		for (int nv : e[cur]) {
+			if (nv == par[cur]) continue;
+			ord[r++] = nv;
+			par[nv] = cur;
+			depth[nv] = depth[cur] + 1;
+		}
+	}
+	return make_tuple(depth, par, ord);
+}
+
+struct Node {
+	int l, r;
+	Node* nl, *nr;
+	int count;
+	Node() {}
+	Node(int l, int r, int count) : l(l), r(r), count(count) ,nl(NULL),nr(NULL) {}
+	bool is_leaf() const { return nl == NULL; }
+};
+
+//永続セグメントツリー
+//L番目の数字 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2270 
+class PersistentSegmentTree {
+public:
+	const vector<vector<int>>& e;
+	int n;
+	Node* basic_root;
+	vector<Node*> enodes;
+	vector<int> par, ord;
+	LCA* lca;
+	PersistentSegmentTree(vector<vector<int>>& e, int size, vector<int>& a) : e(e), lca(new LCA(e)) {
+		n = 1;
+		enodes.resize(sz(e));
+		std::tie(std::ignore, par, ord) = parents3(e, 0);
+		while (n < size) n <<= 1;
+		basic_root = build_basic_tree(0, n);
+		FOR(i, sz(e)) {
+			int v = ord[i];
+			Node* par_root = par[v] != -1 ? enodes[par[v]] : basic_root;
+			enodes[v] = add_value(par_root, a[v]);
+		}
+	}
+
+	Node* build_basic_tree(int l,int r) {
+		Node* node = new Node(l, r, 0);
+		if (r - l != 1) {
+			node->nl = build_basic_tree(l, (l + r) / 2);
+			node->nr = build_basic_tree((l + r) / 2, r);
+		}
+		return node;
+	}
+
+	Node* add_value(Node* node, int val) {
+		Node* cur = new Node(*node);
+		int md = (cur->l + cur->r) / 2;
+		if (cur->l <= val && val < md) cur->count++;
+		if (!cur->is_leaf()) {
+			if (cur->l <= val && val < md) cur->nl = add_value(cur->nl, val);
+			else                           cur->nr = add_value(cur->nr, val);
+		}
+		return cur;
+	}
+
+	int search(int index,int node1,int node2) {
+		int p = lca->query(node1, node2);
+		int q = par[p];
+		Node *qn = q != -1 ? enodes[q] : basic_root;
+		return search(index, enodes[node1], enodes[node2], enodes[p], qn);
+	}
+
+	int search(int index,Node* a, Node* b, Node* c, Node* d) {
+		if (a->is_leaf()) return a->l;
+		int count = a->count + b->count - c->count - d->count;
+		if (count >= index) {
+			return search(index, a->nl, b->nl, c->nl, d->nl);
+		} else {
+			return search(index - count, a->nr, b->nr, c->nr, d->nr);
+		}
+	}
+};
+
+
+int main() {
+	int n, q; cin >> n >> q;
+	vector<int> a(n);
+	vector<vector<int>> e(n);
+	FOR(i, n) cin >> a[i];
+	FOR(i, n - 1) {
+		int a, b; cin >> a >> b;
+		a--; b--;
+		e[a].push_back(b);
+		e[b].push_back(a);
+	}
+
+	vector<int> compress = a;
+	sort(compress.begin(), compress.end());
+	compress.erase(unique(compress.begin(), compress.end()), compress.end());
+	FOR(i, n) a[i] = lower_bound(compress.begin(), compress.end(), a[i]) - compress.begin();
+
+	PersistentSegmentTree pst(e, sz(compress), a);
+
+	FOR(i, q) {
+		int u, v, t; cin >> u >> v >> t;
+		u--; v--;
+		int id = pst.search(t, u, v);
+		cout << compress[id] << endl;
+	}
+}

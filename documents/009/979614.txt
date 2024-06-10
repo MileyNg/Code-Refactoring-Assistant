@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<string.h>
+main(){
+  int a[1000],n,i,j,k,kazu;
+  char moji[1000],tmp[1000];
+  while(1){
+    scanf("%s",moji);
+    if(moji[0]=='-')break;
+    scanf("%d",&n);
+    kazu=strlen(moji);
+    for(i=0;i<n;i++){
+      scanf("%d",&a[i]);
+      for(j=0;j<a[i];j++){
+	strcpy(tmp,moji);
+	for(k=kazu-1;k>=0;k--){
+	  if(k==0){
+	    moji[kazu-1]=tmp[0];
+	  }else{
+	    moji[k-1]=tmp[k];
+	  }
+	}
+      }
+    }
+    printf("%s",moji);
+    kazu=0;
+  }
+  return 0;
+}

@@ -1,0 +1,85 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+struct Matrix2x2{
+	int a,b,c,d;
+};
+Matrix2x2 mult(Matrix2x2 A,Matrix2x2 B){
+Matrix2x2 C={0};
+	C.a=((A.a*B.a)%1001+(A.b*B.c)%1001)%1001;
+	C.b=((A.a*B.b)%1001+(A.b*B.d)%1001)%1001;
+	C.c=((A.c*B.a)%1001+(A.d*B.c)%1001)%1001;
+	C.d=((A.c*B.b)%1001+(A.d*B.d)%1001)%1001;
+	return C;
+}
+
+Matrix2x2 expt(Matrix2x2 A, int p){
+	if(p==1){
+		return A;
+	}
+	else if(p%2==1){
+		Matrix2x2 T=expt(A,p-1);
+		return mult(A,T);
+	}
+	else{
+		Matrix2x2 T=expt(A,p/2);
+		return mult(T,T);
+	}
+}
+
+int p[1010];
+void init(int nn){
+	for (int ii=0;ii<nn+1;ii++){
+		p[ii]=ii;
+	}
+}
+int root(int a){
+	if(p[a]==a) return a;
+	else return (p[a]=root(p[a]));
+}
+
+bool is_same (int a,int b){
+	return root(a)==root(b);
+}
+void unite (int a,int b){
+	p[root(a)]=root(b);
+}
+
+
+int main() {
+int f[1010];
+for(int k=0;k<1010;k++){
+if(k==0){
+	f[k]=1;
+}
+
+else if(k==1){
+	f[k]=2;
+}
+else{
+Matrix2x2 A={1,1,1,0};
+Matrix2x2 G=expt(A,k-1);
+f[k-2]=G.a;
+}
+}
+int v,d;
+while(cin>>v>>d){
+	int j=0;
+	init (v);
+	for(int i=1; i<=v;i++){
+		for(int j=i+1;j<=v;j++){
+			if(abs(f[i]-f[j])<d){
+				unite(i,j);
+			}
+		}
+	}
+for (int r=1;r<=v;r++){
+	if(p[r]==r){
+		j=j+1;
+	}
+}
+cout<<j<<endl;
+}
+	return 0;
+}

@@ -1,0 +1,75 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+struct Cat{
+    int id, x, width;
+};
+
+int W, Q;
+int cats[110];
+
+int whereCatSleeps(int width){
+    for(int i=0,j=0;i<W;){
+        for(;j<W&&cats[j]==-1;j++);
+        if(j-i >= width){return i;}
+        j += 1;
+        i = j;
+    }
+    return -1;
+}
+
+int main(){
+    while(std::cin >> W >> Q, W || Q){
+        std::fill(cats, cats+110, -1);
+
+        REP(i, Q){
+            char c;
+            std::cin >> c;
+
+            if(c == 's'){
+                int id, width;
+                std::cin >> id >> width;
+
+                int pos = whereCatSleeps(width);
+                if(pos >= 0){
+                    std::cout << pos << std::endl;
+                    for(int i=pos;i<pos+width;i++){cats[i] = id;}
+                }else{
+                    std::cout << "impossible" << std::endl;
+                }
+            }else{
+                int id;
+                std::cin >> id;
+
+                for(int i=0;i<W;i++){
+                    if(cats[i] == id){
+                        while(i<W&&cats[i]==id){cats[i] = -1; i += 1;}
+                    }
+                }
+            }
+        }
+
+        std::cout << "END" << std::endl;
+    }
+}

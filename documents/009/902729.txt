@@ -1,0 +1,60 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+#include<cmath>
+#include<stack>
+using namespace std;
+#define INF 1e10
+#define EPS 1e-10
+#define EQ(a,b) (fabs((a)-(b))<EPS)
+
+double dist[1000][1000];
+int id[1000],x[1000],y[1000];
+
+double Distance(int i,int j){
+	return sqrt((double)(x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j]));
+}
+
+
+int main(){
+	int n;
+	while(cin>>n&&n){
+		for(int i=0;i<n;i++)cin>>id[i]>>x[i]>>y[i];
+		for(int i=0;i<n;i++)for(int j=0;j<n;j++){
+			double d=Distance(i,j);
+			dist[i][j]=(d<50+EPS?d:INF);
+		}
+		for(int k=0;k<n;k++)for(int i=0;i<n;i++)for(int j=0;j<n;j++)
+			dist[i][j]=min(dist[i][j],dist[i][k]+dist[k][j]);
+		int m;
+		cin>>m;
+		for(int i=0;i<m;i++){
+			int s,g;
+			cin>>s>>g;
+			s--;g--;
+			if(dist[s][g]==INF){
+				cout<<"NA\n";
+				continue;
+			}
+			stack<int> st;
+			int v=g;
+			while(v!=s){
+				for(int i=0;i<n;i++){
+					if(i==v)continue;
+					if(EQ(dist[s][v],dist[s][i]+Distance(i,v))){
+						st.push(v);
+						v=i;
+						break;
+					}
+				}
+			}
+			cout<<id[s];
+			while(!st.empty()){
+				cout<<' '<<id[st.top()];
+				st.pop();
+			}
+			cout<<endl;
+		}
+	}
+	return 0;
+}

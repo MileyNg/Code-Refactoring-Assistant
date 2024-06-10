@@ -1,0 +1,59 @@
+def action_north(pos)
+	pos[:top], pos[:down], pos[:north], pos[:south] =
+		pos[:south], pos[:north], pos[:top], pos[:down]
+end
+
+def action_south(pos)
+	pos[:top], pos[:down], pos[:north], pos[:south] =
+		pos[:north], pos[:south], pos[:down], pos[:top]
+end
+
+def action_east(pos)
+	pos[:top], pos[:down], pos[:east], pos[:west] =
+		pos[:west], pos[:east], pos[:top], pos[:down]
+end
+
+def action_west(pos)
+	pos[:top], pos[:down], pos[:east], pos[:west] =
+		pos[:east], pos[:west], pos[:down], pos[:top]
+end
+
+def action_right(pos)
+	pos[:north], pos[:south], pos[:east], pos[:west] =
+		pos[:west], pos[:east], pos[:north], pos[:south]
+end
+
+def action_left(pos)
+	pos[:north], pos[:south], pos[:east], pos[:west] =
+		pos[:east], pos[:west], pos[:south], pos[:north]
+end
+
+
+pos = Hash.new
+while num = gets.to_i do
+	exit if num == 0
+
+	pos = {
+					top: 1,
+					down: 6,
+					north: 5,
+					south: 2,
+					east: 3,
+					west: 4}
+	sum = pos[:top]
+	
+	num.times do
+		case gets.chomp
+		when "North" then action_north(pos)
+		when "South" then action_south(pos)
+		when "East" then action_east(pos)
+		when "West" then action_west(pos)
+		when "Right" then action_right(pos)
+		when "Left" then action_left(pos)
+		end
+		sum += pos[:top]
+	end	
+	puts sum
+
+	pos.clear	# ハッシュの初期化
+end

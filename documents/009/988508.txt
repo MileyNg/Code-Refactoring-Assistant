@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
+using namespace std;
+typedef long long int ll;
+typedef pair<int, int> pii;
+typedef pair<int, pii> ppiii;
+typedef vector<int> vi;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x)-1;i>=0;i--)
+#define RFOR(i,c) for(auto i=(c).rbegin();i!=(c).rend();++i)
+#define ALL(container) container.begin(), container.end()
+#define SZ(container) ((int)container.size())
+
+const int INF = 1<<28;
+const double EPS = 1e-8;
+const int MOD = 1000000007;
+
+
+
+int t, n;
+int x, y;
+
+int d[6][2] = {{0, 1},{1, 0},{0, -1},{-1, 0},{1,1},{-1,-1}};
+
+main(){
+	while(cin >> t >> n, t){
+		set<pii> obst;
+		REP(i, n){
+			cin >> x >> y;
+			obst.insert(pii(x, y));
+		}
+		int ans = 0;
+		queue<ppiii> q;
+		cin >> x >> y;
+		q.push(ppiii(0, pii(x, y)));
+		obst.insert(pii(x, y));
+		while(!q.empty()){
+			int c = q.front().first;
+			pii s = q.front().second;q.pop();
+			ans ++;
+			if(c < t) REP(i, 6){
+				pii t(s.first + d[i][0], s.second + d[i][1]);
+				if(!obst.count(t)){
+					q.push(ppiii(c+1, t));
+					obst.insert(t);
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,34 @@
+require 'set'
+
+def main
+  loop do
+    n,h = gets.chomp.split(' ').map(&:to_i)
+    break if (n|h) == 0
+    puts get_non_hole_cubes_num(n, h)
+  end
+end
+ 
+def get_non_hole_cubes_num n, h
+  hole_cubes = Set.new
+ 
+  h.times do
+    c,a,b = gets.chomp.split(' ')
+    case c
+    when 'xy'
+      1.upto(n) do |idx|
+        hole_cubes << "#{a.to_i} #{b.to_i} #{idx}"
+      end
+    when 'xz'
+      1.upto(n) do |idx|
+        hole_cubes << "#{a.to_i} #{idx} #{b.to_i}"
+      end
+    when 'yz'
+      1.upto(n) do |idx|
+        hole_cubes << "#{idx} #{a.to_i} #{b.to_i}"
+      end
+    end
+  end
+  n ** 3 - hole_cubes.size
+end
+
+main

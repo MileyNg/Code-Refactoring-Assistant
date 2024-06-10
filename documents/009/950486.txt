@@ -1,0 +1,81 @@
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+#include<math.h>
+#define mk make_pair
+#define x first
+#define y second
+using namespace std;
+typedef pair<int,int> pr;
+const int N = 105;
+const int NUM=50;
+int n,m,match[N],g[N][N],v[N];
+bool vis[N];
+pr p1[N],p2[N];
+double get(int i,int j){
+//    cout<<p1[i].y<<" "<<p2[i].y<<" "<<endl;
+    return 1.0*(p1[i].x-p2[j].x)*(p1[i].x-p2[j].x)+
+        (p1[i].y-p2[j].y)*(p1[i].y-p2[j].y);
+}
+bool dfs(int u){
+    for(int v=1;v<=m;++v){
+        if(!vis[v]&&g[u][v]){
+            vis[v]=1;
+            if(match[v]==-1||dfs(match[v])){
+                match[v]=u;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+int Match()
+{
+    int ret=0;
+    memset(match,-1,sizeof match);
+    for(int x=1;x<=n;++x){
+        memset(vis,0,sizeof vis);
+        if(dfs(x)) ++ret;
+    }
+    return ret;
+}
+bool judge(double mid){
+//    cout<<get(2,1)<<endl;
+    memset(g,0,sizeof g);
+    for(int i=1;i<=n;++i)
+        for(int j=1;j<=m;++j)
+        {
+            double dis=get(i,j);
+            if(dis<=mid*mid*v[i]*v[i]){
+                g[i][j]=1;
+//                cout<<dis<<" "<<mid<<" "<<i<<" "<<j<<endl;
+            }
+        }
+    return Match()==m;
+}
+int main()
+{
+//    assert(0);
+    while(~scanf("%d%d",&n,&m),n+m)
+    {
+        if(n<m) assert(0);
+        for(int i=1;i<=n;++i)
+            scanf("%d%d%d",&p1[i].x,&p1[i].y,v+i);
+        for(int i=1;i<=m;++i)
+            scanf("%d%d",&p2[i].x,&p2[i].y);
+        double l=0,r=1e5;
+//        if(judge(0.5)) puts("hh");
+        for(int i=0;i<NUM;++i)
+        {
+            double mid=(l+r)*0.5;
+            if(judge(mid))
+                r=mid;
+            else
+                l=mid;
+//            cout<<l<<" "<<r<<endl;
+        }
+        printf("%.8lf\n",l);
+    }
+    return 0;
+}

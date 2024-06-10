@@ -1,0 +1,122 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef long long ll;
+
+int n,found,buf_length;
+vector<string> word[30],buf;
+string sequence;
+char transfer[26];
+vector<ll> bitmask;
+vector<int> bc;
+set<string> exist;
+char table[26];
+
+bool cmp(const string& a,const string& b){ return a.size() > b.size(); }
+
+void dfs(int cur,long long bit){
+
+  if( found >= 2 ) return;
+
+  //rep(i,26) cout << table[i] << " ";
+  //cout << endl;
+
+  if( cur >= buf_length ){
+    found++;
+    rep(i,26) transfer[i] = table[i];
+    return;
+  }
+
+
+  int len = buf[cur].size();
+  if( __builtin_popcountll( bit & bitmask[cur] ) == bc[cur] ) {
+    string tmp = buf[cur];
+    rep(i,len) tmp[i] = table[tmp[i]-'A'];
+    if( exist.find(tmp) != exist.end() ) dfs(cur+1,bit);
+    return;
+  }
+
+  char tmp_table[26];
+  rep(i,26) tmp_table[i] = table[i];
+  rep(i,word[len].size()){
+    //cout<< endl;
+    //rep(j,26) cout << table[j] << " "; cout << endl; 
+    // cout << "word " << word[len][i] << " is ";
+    bool error = false;
+    long long new_bit = bit;
+    rep(j,26) table[j] = tmp_table[j];
+    rep(j,len){
+
+
+      if( table[buf[cur][j]-'A'] == '?' && table[word[len][i][j]-'A'] == '?' ) {
+        long long SHIFT = word[len][i][j] - 'A';
+        new_bit |= (1LL<<SHIFT);
+        SHIFT = buf[cur][j] - 'A';
+        new_bit |= (1LL<<SHIFT);
+        table[buf[cur][j]-'A']     = word[len][i][j];
+        table[word[len][i][j]-'A'] = buf[cur][j];
+      } else if( !( table[buf[cur][j]-'A'] == word[len][i][j] && table[word[len][i][j]-'A'] == buf[cur][j] ) ) {
+        //cout << "table[" << buf[cur][j] << "] != " << table[buf[cur][j]-'A'] << " ?= " << word[len][i][j] << endl;
+        //cout << "table[" << word[len][i][j] << "] != " << table[word[len][i][j]-'A'] << " ?= " << buf[cur][j] << endl;
+        error = true;
+        break;
+      }
+    }
+
+    if( error ){
+      //cout << "bad" << endl;
+      continue;
+    } //cout << "ok" << endl;
+    dfs(cur+1,new_bit);
+    if( found >= 2 ) {
+      rep(j,26) table[j] = tmp_table[j];
+      return;
+    }
+  }
+}
+
+int main(){
+  while( cin >> n, n ){
+    string tmp;
+    found = 0;
+    buf.clear(), tmp.clear();
+    rep(i,26)transfer[i] = table[i] = '?';
+    rep(i,30) word[i].clear();
+    rep(i,n){
+      cin >> tmp;
+      word[(int)tmp.size()].push_back(tmp);
+      exist.insert(tmp);
+    }
+    cin.ignore();
+    getline(cin,sequence);
+    tmp = sequence.substr(0,(int)sequence.size()-1);
+    stringstream ss(tmp);
+    while( !( ss >> tmp ).fail() ) buf.push_back(tmp);
+
+    sort(buf.begin(),buf.end(),cmp);
+    buf.erase(unique(buf.begin(),buf.end()),buf.end());
+    buf_length = (int) buf.size();
+    bitmask.clear(), bc.clear();
+    bitmask.resize(buf_length,0), bc.resize(buf_length);
+    rep(i,buf_length){
+      rep(j,buf[i].size()){
+        long long SHIFT = buf[i][j] - 'A';
+        bitmask[i] |= (1LL<<SHIFT);
+      }
+      bc[i] = __builtin_popcountll(bitmask[i]);
+    }
+
+    dfs(0,0LL);
+
+    if( found == 1 ) {
+      rep(i,sequence.size()) cout << (isupper(sequence[i])?transfer[sequence[i]-'A']:sequence[i]);
+      puts("");
+    } else puts("-.");
+
+  }
+  return 0;
+}

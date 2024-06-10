@@ -1,0 +1,20 @@
+require 'complex'
+include Math
+
+current = 0
+direction = PI / 2
+
+while line = gets
+  arr = line.split(",")
+  r = arr[0].to_i
+  theta = arr[1].to_i * PI / 180
+
+  break if r == 0 and theta == 0
+  
+  current += Complex.polar(r, direction)
+
+  direction -= theta
+end
+
+puts current.real.to_i
+puts current.imag.to_i

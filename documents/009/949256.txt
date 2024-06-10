@@ -1,0 +1,35 @@
+#include <cstdio>
+#include <utility>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+    for (;;) {
+        int n;
+        scanf("%d", &n);
+        if (n == 0)
+            break;
+
+        pair<int, int> v[25];
+        for (int i = 0; i < n; ++i) {
+            scanf("%d %d", &v[i].second, &v[i].first);
+        }
+
+        sort(v, v + n);
+
+        int w = 0;
+        bool f = true;
+        for (int i = 0; i < n; ++i) {
+            if (v[i].first < w + v[i].second) {
+                f = false;
+                break;
+            }
+            w += v[i].second;
+        }
+        if (f)
+            puts("Yes");
+        else
+            puts("No");
+    }
+}

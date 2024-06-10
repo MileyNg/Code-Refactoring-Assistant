@@ -1,0 +1,129 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1<<28;
+
+struct Edge {
+  int to, cost, cap, rev; 
+  Edge(int to, int cost, int cap, int rev)
+    : to(to), cost(cost), cap(cap), rev(rev) {}
+  Edge() {}
+};
+
+typedef vector<vector<Edge> > Graph;
+
+void addEdgeF(int from, int to, int cost, int cap, Graph &g) {
+  g[from].push_back(Edge(to,cost,cap,g[to].size()));
+  g[to].push_back(Edge(from,-cost,0,(int)g[from].size()-1));
+}
+
+typedef pair<int,int> Pair;
+
+int minCostFlow(int s, int t, int f, Graph g) {
+  int V = g.size();
+  vector<int> h(V), dist(V), prevv(V), preve(V);
+  int res = 0;
+  fill(h.begin(), h.end(), 0);
+  while(f > 0) {
+    priority_queue<Pair, vector<Pair>, greater<Pair> > que;
+    fill(dist.begin(), dist.end(), INF);
+    dist[s] = 0;
+    que.push(Pair(0, s));
+    while(!que.empty()) {
+      Pair p = que.top(); que.pop();
+      int v = p.second;
+      if(dist[v] < p.first) continue;
+      for(int i = 0; i < g[v].size(); ++i) {
+        Edge&e = g[v][i];
+        int tmp = dist[v] + e.cost + h[v] - h[e.to];
+        if(e.cap > 0 && dist[e.to] > tmp) {
+          dist[e.to] = tmp;
+          prevv[e.to] = v;
+          preve[e.to] = i;
+          que.push(Pair(dist[e.to], e.to));
+        }
+      }
+    }
+    if(dist[t] == INF) {
+      return -1;
+    }
+    for(int v = 0;v < V; ++v) h[v] += dist[v];
+
+    int d = f;
+    for(int v = t; v != s; v = prevv[v]) {
+      d = min(d, g[prevv[v]][preve[v]].cap);
+    }
+    f -= d;
+    res += d * h[t];
+    for(int v = t; v != s; v = prevv[v]) {
+      Edge &e = g[prevv[v]][preve[v]];
+      e.cap -= d;
+      g[v][e.rev].cap += d;
+    }
+  }
+  return res;
+}
+
+int editDist(const string &a, const string &b) {
+  int n = a.size();
+  int m = b.size();
+  vector<vector<int> > dp(n+1, vector<int>(m+1, INF));
+  dp[0][0] = 0;
+  for(int i = 0; i <= n; ++i) {
+    for(int j = 0; j <= m; ++j) {
+      // change
+      if(i < n && j < m) {
+        dp[i+1][j+1] = min(dp[i+1][j+1], dp[i][j] + (a[i] != b[j]));
+      }
+      // delete
+      if(i < n) {
+        dp[i+1][j] = min(dp[i+1][j], dp[i][j] + 1);
+      }
+      if(j < m) {
+        dp[i][j+1] = min(dp[i][j+1], dp[i][j] + 1);
+      }
+    }
+  }
+  return dp[n][m];
+}
+
+int main() {
+  int N, M;
+  cin >> N >> M;
+  cin.ignore();
+  map<string,int> num;
+  for(int i = 0; i < N; ++i) {
+    string s;
+    getline(cin, s);
+    stringstream ss(s);
+    while(ss >> s) {
+      num[s] += 1;
+    }
+  }
+
+  vector<string> text;
+  for(map<string,int>::iterator it = num.begin();
+      it != num.end(); ++it) {
+    text.push_back(it->first);
+  }
+  vector<string> dict(M);
+  for(int i = 0; i < M; ++i) {
+    cin >> dict[i];
+  }
+
+  int n = text.size();
+  int m = dict.size();
+  Graph g(n+m+2);
+  int src = g.size()-1;
+  int dst = src - 1;
+  for(int i = 0; i < n; ++i) addEdgeF(src, i, 0, 1, g);
+  for(int i = 0; i < n; ++i) {
+    for(int j = 0; j < m; ++j) {
+      addEdgeF(i, n+j, editDist(text[i], dict[j]) * num[text[i]], 1, g);
+    }
+  }
+  for(int j = 0; j < m; ++j) addEdgeF(n+j, dst, 0, 1, g);
+
+  cout << minCostFlow(src, dst, n, g) << endl;
+  return 0;
+}

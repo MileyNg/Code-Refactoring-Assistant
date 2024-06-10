@@ -1,0 +1,44 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int i;
+    char in;
+    int alph_in_sma;
+    int alph_in_cap;    /*small and capital*/
+    int cnt[26];
+    char alph_ord[26];    /*alphabet in order; for output*/
+
+    /*alph_ord[26] = {a, b, c, ... , z}*/
+    alph_ord[0] = 'a';
+    for (i = 1; i < 26; i++){
+        alph_ord[i] = alph_ord[i - 1] + 1;
+    }
+    
+    /*initialize*/
+    for (i = 0; i < 26; i++){
+        cnt[i] = 0;
+    }
+    
+    /*input*/
+    while ((scanf("%c", &in)) != EOF){
+        /*alph_in_sma = 0, 1, 2, ... , 25; a = 0, z = 25*/
+        alph_in_sma = in - 'a';
+        /*alph_in_cap = 0, 1, 2, ... , 25; A = 0, Z = 25*/
+        alph_in_cap = in - 'A';
+        /*if alphabet*/
+        if (alph_in_sma >= 0 && alph_in_sma <= 25){
+            cnt[alph_in_sma]++;
+        }
+        if (alph_in_cap >= 0 && alph_in_cap <= 25){
+            cnt[alph_in_cap]++;
+        }
+    }
+
+    /*output*/
+    for (i = 0; i < 26; i++){
+        printf("%c : %d\n", alph_ord[i], cnt[i]);
+    }
+
+    return 0;
+}

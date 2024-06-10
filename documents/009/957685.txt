@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<math.h>
+
+void kock(double,double,double,double,int);
+
+double equ_tri_x(double,double);
+double equ_tri_y(double,double);
+
+int n;
+
+int main(void){
+	scanf("%d",&n);
+
+	kock(0,0,100,0,0);
+
+	return 0;
+}
+
+
+void kock(double x1,double y1,double x5,double y5,int cnt){
+	double x2,y2;
+	double x3,y3;
+	double x4,y4;
+
+
+	if(cnt==n){
+		printf("%f %f\n",x1,y1);
+	}
+	else{
+		x2=(x5-x1)/3.0+x1;
+		y2=(y5-y1)/3.0+y1;
+		x4=(x5-x1)/3.0*2.0+x1;
+		y4=(y5-y1)/3.0*2.0+y1;
+
+		x3=equ_tri_x(x4-x2,y4-y2)+x2;
+		y3=equ_tri_y(x4-x2,y4-y2)+y2;
+
+		kock(x1,y1,x2,y2,cnt+1);
+
+		kock(x2,y2,x3,y3,cnt+1);
+		
+		kock(x3,y3,x4,y4,cnt+1);
+		
+		kock(x4,y4,x5,y5,cnt+1);
+	}
+
+	if(cnt==0) printf("%f %f\n",x5,y5);
+}
+
+
+double equ_tri_x(double dx,double dy){
+	return (dx/2.0)-(sqrt(3.0)/2.0*dy);
+}
+
+
+double equ_tri_y(double dx,double dy){
+ 	return (sqrt(3.0)/2.0*dx)+(dy/2.0);
+}

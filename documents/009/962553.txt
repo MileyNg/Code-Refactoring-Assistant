@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+#include <string>
+using namespace std;
+int keep[100][100][100];
+int main(){
+  for(int i = 0;i < 100;i++){
+    for(int j = 0;j < 100;j++){
+      for(int k = 0;k < 100;k++){
+	keep[i][j][k] = 2;
+      }
+    }
+  }
+  int a,b,c;
+  cin >> a >> b >> c;
+  int n;
+  cin >> n;
+  vector<int> f(a+b+c,2);
+  for(int i =0 ;i < n;i++){
+    int at,bt,ct,ans;
+    cin >> at >> bt >> ct >> ans;
+    keep[at-1][bt-1-a][ct-1-a-b] = ans;
+    if(ans == 1){
+      f[at-1] = 1;
+      f[bt-1] = 1;
+      f[ct-1] = 1;
+    }
+  }
+  
+  for(int i = 0;i < a;i++){
+    for(int j = a;j < a+b;j++){
+      for(int k = a+b;k < a+b+c;k++){
+	if(keep[i][j-a][k-b-a] == 0){
+
+	  if(f[i] == 2 && f[j] == 1 && f[k] == 1){
+	    f[i] = 0;
+	  }
+	  if(f[i] == 1 && f[j] == 2 && f[k] == 1){
+	    f[j] = 0;
+	  }
+	  if(f[i] == 1 && f[j] == 1 && f[k] == 2){
+	    f[k] = 0;
+	  }
+	}
+      }
+    }
+  }
+  for(int i =0;i < f.size();i++){
+    cout << f[i] << endl;
+  }
+  
+  return 0;
+}
+vector<string> split(string str,string delim){
+  vector<string> items;
+  size_t dlm_idx;
+  if(str.npos == (dlm_idx = str.find_first_of(delim))){
+    items.push_back(str.substr(0,dlm_idx));
+  }
+  while(str.npos != (dlm_idx = str.find_first_of(delim))){
+    if(str.npos == str.find_first_not_of(delim)){
+      break;
+    }
+    items.push_back(str.substr(0,dlm_idx));
+    dlm_idx++;
+    str = str.erase(0,dlm_idx);
+    if(str.npos == str.find_first_of(delim) && "" != str){
+      items.push_back(str);
+      break;
+    }
+  }
+  return items;
+}

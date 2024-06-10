@@ -1,0 +1,112 @@
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=x && x<w && 0<=y && y<h)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem1189 : Prime Caves **/
+int caves[1010][1010];
+int dp[1010][1010];
+const int MAX = 1030000;
+bool prime[MAX];
+
+int main()
+{
+	int m, n;
+	const int dx0[4] = {1, 0, -1, 0}, dy0[4] = {0, -1, 0, 1}, dx1[3]={-1, 0, 1};
+	int sx, sy;
+	
+	for (int i=0; i<MAX; i++)
+		prime[i] = true;
+	
+	prime[0] = false; prime[1] = false;
+	
+	for (int i=2; i<MAX; i++) {
+		if (prime[i]) {
+			for (int j=2; i*j<MAX; j++) {
+				prime[i*j] = false;
+			}
+		}
+	}
+	
+	while (cin>>m>>n, m||n) {
+		fill(caves[0], caves[0]+1010*1010, 0);
+		fill(dp[0], dp[0]+1010*1010, -1);
+		int x=1010/2, y=1010/2 , t=1, direct=1;
+		caves[x][y]=1;
+		caves[++x][y]=2;
+		int i=2; bool change = true;
+		while (1) {
+			rep(j, t) {
+				x+=dx0[direct]; y+=dy0[direct];
+				caves[x][y]=i+1;
+				i++;
+				if (i==n) {
+					sx = x; sy = y;
+				}
+				if (i>=m) goto end;
+			}
+			if (change) {
+				t++;
+				change = false;
+			} else {
+				change=true;
+			}
+			direct++; direct%=4;
+		}
+	end: ;
+		int ans=0, alast=0;
+
+		dp[sx][sy] = prime[caves[sx][sy]];
+		REP(j, 0, 1010) {
+			REP(i, 0, 1010) {
+				ans = max(ans, dp[i][j]);
+				
+				if (dp[i][j] == -1) continue;
+				if (caves[i][j] == 0) continue;
+				
+				rep(k, 3) {
+					int nx=i+dx1[k], ny=j+1;
+					if (!(0<=nx && nx<1010) || ny>=1010) continue;
+					if (caves[nx][ny]==0) continue;
+
+					dp[nx][ny] = max(dp[nx][ny], dp[i][j]+prime[caves[nx][ny]]);
+
+					ans = max(ans, dp[nx][ny]);
+				}
+			}
+		}
+		
+		if (ans!=0) {
+			REP(j, 0, 1010) {
+				REP(i, 0, 1010) {
+					if (dp[i][j]==ans && prime[caves[i][j]]) {
+						alast = max(alast, caves[i][j]);
+					}
+				}
+			}
+		}
+		
+		cout << ans << " " << alast << endl;
+	}
+	return 0;
+}

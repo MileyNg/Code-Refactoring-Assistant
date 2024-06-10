@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+int t, n, k;
+int first, last, x[2];
+int main(){
+  scanf("%d", &t);
+  while(t--){
+    vector<int>diff;
+    scanf("%d%d", &n, &k);
+    scanf("%d", &x[0]);
+    first = x[0];
+    rep(i, n-1){
+      scanf("%d", &x[1]);
+      diff.push_back(x[1]-x[0]);
+      x[0] = x[1];
+    }
+    last = x[0];
+
+    if(n > k){
+      int res = last - first;
+      sort(diff.begin(), diff.end(), greater<int>());
+      rep(j, k-1) res -= diff[j];
+      printf("%d\n", res);
+    }else puts("0");
+  }
+  return 0;
+}

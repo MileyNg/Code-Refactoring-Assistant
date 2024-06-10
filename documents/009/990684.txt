@@ -1,0 +1,49 @@
+  #include <bits/stdc++.h>
+
+#define loop(v, f, l) for(int v = (f), v##_ = (l); v < v##_; ++v)
+
+using namespace std;
+
+typedef long long int lint;
+static inline int in(){ int x; scanf("%d", &x); return (x); }
+static inline lint inl(){ lint x; scanf("lld", &x); return (x); }
+
+int isPrime[10252];
+int primeList[10000];
+int primeIndex;
+int sumPrime[10000];
+
+void initPrimeList()
+{
+        isPrime[0] = isPrime[1] = 1;
+        loop(i, 2, 10252)
+        {
+                if( isPrime[i] == 0 )
+                {
+                        primeList[primeIndex] = i;
+                        primeIndex++;
+                        if( primeIndex == 10000 )break;
+                        for( int j = i + i; j * j < 100252; j += i )
+                        {
+                                isPrime[j] = 1;
+                        }
+                }
+        }
+
+        sumPrime[0] = primeList[0];
+        loop(i, 1, 10000)
+        {
+                sumPrime[i] = sumPrime[i - 1] + primeList[i];
+        }
+}
+
+int main()
+{
+        int n;
+        initPrimeList();
+        while( (n = in()) != 0 )
+        {
+                printf( "%d\n", sumPrime[n - 1] );
+        }
+        return (0);
+}

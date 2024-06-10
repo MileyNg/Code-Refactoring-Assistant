@@ -1,0 +1,101 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+int main()
+{
+	//真理値表
+	char getminus[3], getmulti[3][3], getplus[3][3];
+	getminus[0] = '2';
+	getminus[1] = '1';
+	getminus[2] = '0';
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < 3; j++){
+			if (i == 0 || j == 0){
+				getmulti[i][j] = '0';
+			}
+			else if (i == 2 && j == 2){
+				getmulti[i][j] = '2';
+			}
+			else
+				getmulti[i][j] = '1';
+		}
+	}
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < 3; j++){
+			if (i == 2 || j == 2){
+				getplus[i][j] = '2';
+			}
+			else if (i == 0 && j == 0){
+				getplus[i][j] = '0';
+			}
+			else
+				getplus[i][j] = '1';
+		}
+	}
+
+	string s,inits;
+	while (cin >> inits, inits[0] != '.'){
+		int counter = 0;
+		for (char p = '0'; p < '3'; p++){
+			for (char q = '0'; q < '3'; q++){
+				for (char r = '0'; r < '3'; r++){
+					s = inits;
+					while (s.length()>1){
+						//代入
+						for (int i = 0; i < s.length(); i++){
+							if (s[i] == 'P'){
+								s[i] = p;
+							}
+							else if (s[i] == 'Q'){
+								s[i] = q;
+							}
+							else if (s[i] == 'R'){
+								s[i] = r;
+							}
+						}
+						// "-"を探索し，書き換える
+						for (int i = 0; i < s.length() - 1; i++){
+							if (s[i] == '-'&& s[i + 1] != '-' && s[i + 1] != '('){
+								s[i] = getminus[(int)s[i + 1] - '0'];
+								s.erase(s.begin() + i + 1);
+								break;
+							}
+						}
+						if (s.length() == 1)
+							break;
+
+						//"*"を探索し，書き換える
+						for (int i = 0; i < s.length() - 4; i++){
+							if (s[i] == '('&& s[i + 2] == '*' && s[i + 4] == ')'){
+								s[i] = getmulti[(int)s[i + 1] - '0'][(int)s[i + 3] - '0'];
+								s.erase(i + 1, 4);
+								break;
+							}
+						}
+						if (s.length() == 1)
+							break;
+
+						//"+"を探索し，書き換える
+						for (int i = 0; i < s.length() - 4; i++){
+							if (s[i] == '('&& s[i + 2] == '+' && s[i + 4] == ')'){
+								s[i] = getplus[(int)s[i + 1] - '0'][(int)s[i + 3] - '0'];
+								s.erase(i + 1, 4);
+								break;
+							}
+						}
+						if (s.length() == 1)
+							break;
+
+					}
+					if (s[0] == '2'){
+						counter++;
+					}
+				}
+			}
+		}
+		cout << counter++ << endl;
+	}
+	return 0;
+}

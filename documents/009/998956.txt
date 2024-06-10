@@ -1,0 +1,48 @@
+### subroutines
+
+def min_cost(item, prices, recipes)
+  return $mccache[item] if ! $mccache[item].nil?
+
+  rcp = recipes[item]
+  return ($mccache[item] = prices[item]) if rcp.nil?
+
+  sum = 0
+  for ri in rcp
+    sum += min_cost(ri, prices, recipes)
+  end
+
+  mc = (prices[item] < sum) ? prices[item] : sum
+  $mccache[item] = mc
+end
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  prices = {}
+
+  n.times.each do
+    item, price = gets.strip.split(' ')
+    prices[item] = price.to_i
+  end
+
+  m = gets.strip.to_i
+
+  recipes = {}
+
+  m.times.each do
+    rs = gets.strip.split(' ')
+    item = rs.shift
+    k = rs.shift
+
+    recipes[item] = rs
+  end
+
+  target = gets.strip
+
+  $mccache = {}
+
+  puts min_cost(target, prices, recipes)
+end

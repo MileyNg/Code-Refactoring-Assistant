@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+#define mp(a, b) make_pair(a, b)
+const int inf = 1 << 28;
+
+struct edge{int to, wt;};
+
+int n, m;
+map<int, vector<pair<int, int> > > es;
+vector<vector<edge> > g;
+
+bool slimPrim(){
+    vector<bool> vis(n);
+    auto comp = [](const edge &e, const edge &d){return e.wt < d.wt;};
+    priority_queue<edge, vector<edge>, decltype(comp)> q(comp);
+    for(q.push((edge){0, 0}); !q.empty();){
+        edge e = q.top(); q.pop();
+        if(vis[e.to])continue;
+        vis[e.to] = true;
+        for(auto x: g[e.to])if(!vis[x.to])q.push(x);
+    }
+    return count(all(vis), false) == 0;
+}
+
+int solve(){
+    int res = inf;
+    for(auto itr1=es.begin(); itr1!=es.end(); ++itr1){
+        g.assign(n, vector<edge>());
+        for(auto itr2=itr1; itr2!=es.end(); ++itr2){
+            if(res <= (*itr2).first - (*itr1).first)break;
+            for(auto v: (*itr2).second){
+                g[v.first].push_back((edge){v.second, (*itr2).first});
+                g[v.second].push_back((edge){v.first, (*itr2).first});
+            }
+            if(slimPrim())res = (*itr2).first - (*itr1).first;
+        }
+    }
+    return res == inf? -1: res;
+}
+
+int main(){
+    while(cin >> n >> m, n|m){
+        es.clear();
+        rep(i, m){
+            int a, b, w;
+            cin >> a >> b >> w;
+            es[w].push_back(mp(a-1, b-1));
+        }
+        cout << solve() << '\n';
+    }
+    return 0;
+}

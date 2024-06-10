@@ -1,0 +1,16 @@
+wdays = %w(Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
+mdays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+base = 3
+
+while (line = gets)
+  m, d = line.chop.split(" ").map{|s| s.to_i}
+
+  if m == 0 || d == 0
+    break
+  end
+
+  days = base + d
+  (0...(m - 1)).each{|k| days += mdays[k]}
+
+  puts wdays[days % 7]
+end

@@ -1,0 +1,46 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+const int INF=100000000;
+
+int dp[2][2][5001];
+int cost[10000];
+
+bool update(int &a,int v){
+	if(a<v) return false;
+	a=v;
+	return true;
+}
+
+int main(){
+	int N;
+	cin >> N;
+	for(int i=0; i<N-1; ++i){
+		cin >> cost[i];
+	}
+	int ans=INF;
+	int ptr=0;
+	fill_n(dp[ptr][0],N/2+1,INF);
+	fill_n(dp[ptr][1],N/2+1,INF);
+	dp[ptr][0][N/2-1]=dp[ptr][1][N/2]=0;
+	ptr^=1;
+	for(int i=1; i<N; ++i){
+		int prev=ptr^1;
+		fill_n(dp[ptr][0],N/2+1,INF);
+		fill_n(dp[ptr][1],N/2+1,INF);
+		for(int j=0; j<=N/2; ++j){
+			if(j+1<=N/2) update(dp[ptr][0][j],dp[prev][0][j+1]);
+			update(dp[ptr][1][j],dp[prev][0][j]+cost[i-1]);
+			if(j+1<=N/2) update(dp[ptr][0][j],dp[prev][1][j+1]+cost[i-1]);
+			update(dp[ptr][1][j],dp[prev][1][j]);
+			if(j==0){
+				if(i<N-1) dp[ptr][0][j]+=cost[i];
+			}
+		}
+		update(ans,min(dp[ptr][0][0],dp[ptr][1][0]));
+		ptr^=1;
+	}
+	cout << ans << endl;
+	return 0;
+}

@@ -1,0 +1,135 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+char p[12][7];
+int f[12][6];
+char memo;
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+
+int dfs(int y, int x, int c){
+  //  fprintf(stderr, "%d %d %d\n", y, x, c);
+  int ret = 0;
+  bool flag = 0;
+  rep(d, 4){
+    int ny = y+dy[d], nx = x+dx[d];
+    if(ny < 0 || nx < 0 || ny >= 12 || nx >= 6 || memo != p[ny][nx] || f[ny][nx]) continue;
+    flag = 1;
+    f[ny][nx] = 1;
+    //    fprintf(stderr, "%d %d %d\n", ny, nx, c+1);
+    ret += dfs(ny, nx, c+1);
+    if(!ret) f[ny][nx] = 0;
+  }
+
+  if(!flag  && c >= 4){
+    return 1;
+  }
+  return ret;
+}
+
+void ojama(){
+  rep(i, 12) rep(j, 7){
+    if(p[i][j] != 'O') continue;
+    //    printf("%d %d\n", i, j);
+    rep(d, 4){
+      int ny = i + dy[d], nx = j + dx[d];
+      if(ny < 0 || nx < 0 || ny >= 12 || nx >= 6 || !f[ny][nx]) continue;
+      f[i][j] = 1;
+      break;
+    }
+  }
+  return;
+}
+
+void del(){
+  rep(i, 12) rep(j, 6){
+    if(!f[i][j]) continue;
+    p[i][j] = '.';
+  }
+  return;
+}
+
+void next(){
+  /*  rep(i, 12){
+    rep(j, 6) printf("%d ", f[i][j]); puts("");
+    }*/
+
+  for(int i = 11; i >= 0; i--) rep(j, 6){
+      if(p[i][j] != '.') continue;
+      for(int k = i; k >= 0; k--){
+	if(p[k][j] == '.') continue;
+	p[i][j] = p[k][j];
+	p[k][j] = '.';
+	break;
+      }
+    }
+
+  /*  rep(i, 12){
+    puts(p[i]);
+    }*/
+  return;
+}
+
+int main(){
+  int n;
+  scanf("%d", &n);
+
+  while(n--){
+    //    puts("in");
+    rep(i, 12){
+      scanf("%s", p[i]);
+    }
+
+    int res = 0;
+    while(true){
+      //      fprintf(stderr, "%d\n", res);
+      int judge = 0, flag = 0;;
+      memset(f, 0, sizeof(f));
+      rep(i, 12) rep(j, 6){
+	//	fprintf(stderr, "%d %d\n", i, j);
+	if(p[i][j] == '.' || p[i][j] == 'O'|| f[i][j]) continue;
+	//	fprintf(stderr, "%d %d\n", i, j);
+	memo = p[i][j];
+	flag = dfs(i, j, 0);
+	judge += flag;
+	//	fprintf(stderr, "%d\n", judge);
+	if(flag) f[i][j] = 1;
+      }
+      //      printf("%d\n", judge);
+      if(!judge) break;
+      ojama();
+      //      fprintf(stderr, "ojama\n");
+      del();
+      //      fprintf(stderr, "del\n");
+      next();
+      //      fprintf(stderr, "next\n");
+      res++;
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

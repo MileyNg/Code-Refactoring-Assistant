@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+#define max(a,b)(a>b?a:b)
+
+int choco[100][100]={0};
+
+
+bool sumCul(int i,int h,int j,int w){
+	int count =0;
+	int sumBL=0,sumWR=0;
+	for(int a=i;a<i+h;a++)
+		for(int b=j;b<j+w;b++)
+			((a+b)%2)?sumWR+=choco[a][b]:sumBL+=choco[a][b];
+	if(sumWR==sumBL)
+		return 1;
+	else
+		return 0;
+}
+
+int main(void){
+
+	int numH,numW;
+	int sum=0;
+
+	cin >>numH >> numW;
+
+	for(int i=0;i<numH;i++)
+		for(int j=0;j<numW;j++)
+			cin >> choco[i][j];
+
+	int hT,wT;
+	int h=numH;
+	int w=numW;
+	int i=0,j=0;
+	while(1){
+
+		if(sumCul(i,h,j,w)){
+			sum=max(sum,h*w);
+			hT=h;
+			wT=w;
+			break;
+		}
+
+		if(i+h==numH&&j+w==numW){
+			
+		}
+
+	}
+	cout<< sum<<endl;
+
+
+
+
+	return 0;
+}

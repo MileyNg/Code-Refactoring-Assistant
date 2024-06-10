@@ -1,0 +1,202 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+struct UnionFind{
+    vector<int> par; // 親
+    vector<int> rank; // 木の深さ
+    vector<int> ss;//xの属する集合のサイズ:option
+    int size;//集合の個数:option
+    UnionFind(int n){
+        REP(i,n) par.push_back(i);
+        rank = vector<int>(n);
+        ss=vector<int>(n,1);
+        size=n;
+    }
+    int root(int x){
+        if(par[x] == x)return x;
+        return par[x] = root(par[x]);
+    }
+    bool same(int x,int y){
+        return root(x) == root(y);
+    }
+    void unite(int x,int y){
+        x = root(x);y = root(y);
+        if(x==y)return;
+        if(rank[x] < rank[y]){
+            par[x] = y;
+            ss[y]+=ss[x];
+        }else{
+            par[y] = x;
+            ss[x]+=ss[y];
+        }
+        if(rank[x] == rank[y]) rank[x]++;
+        size--;
+    }
+};
+
+namespace SpanningTree{
+	typedef double Cost;
+	struct Edge{
+		int from,to;Cost cost;
+		Edge(int from,int to,Cost cost)
+		: from(from),to(to),cost(cost) {};
+
+		bool operator<(Edge r) const{return cost<r.cost;}
+		bool operator>(Edge r) const{return cost>r.cost;}
+	};
+	typedef vector<vector<Edge> >  Graph;
+
+	//O(E*log(V))
+	// verified by ACAC002 B
+	// http://judge.u-aizu.ac.jp/onlinejudge/creview.jsp?rid=899132&cid=ACAC002
+	Cost kruskal(Graph g){
+		const int V=g.size();
+		UnionFind uf=UnionFind(V);
+		priority_queue<Edge,vector<Edge>,greater<Edge>> que;
+		REP(u,V)for(Edge e:g[u])
+			que.push(e);
+		Cost res=0;
+		while(!que.empty()){
+			Edge e=que.top();que.pop();
+			if(!uf.same(e.from,e.to)){
+				uf.unite(e.from,e.to);
+				res+=e.cost;
+			}
+		}
+		return res;
+	}
+}
+using namespace SpanningTree;
+
+
+class Main{
+public:
+	void run(){
+	//	ifstream cin("in");
+	//	ofstream cout( "out" );
+		while(true){
+			int N,M;nextInt(N);nextInt(M);
+			if(N==0 && M==0)break;
+			vector<int> as(N);
+			REP(i,N) nextInt(as[i]);
+
+			vector<int> bs(M);
+			REP(i,M) nextInt(bs[i]);
+			int pos=0;
+			REP(j,M){
+				pos+=bs[j];
+				if(pos>=N-1){
+					cout <<(j+1)<<endl;break;
+				}
+				pos+=as[pos];
+				if(pos>=N-1){
+					cout <<(j+1)<<endl;break;
+				}
+				DUMP(pos);
+			}
+		}
+	}
+};
+int main(){
+	cout <<fixed<<setprecision(13);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

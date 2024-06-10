@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main(void) {
+	double x1,x2,x3,x4,y1,y2,y3,y4;
+	int n;
+	
+	scanf("%d", &n);
+	
+	for(int i=0; i<n; i++) {
+	
+		while( scanf("%lf %lf %lf %lf %lf %lf %lf %lf", &x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4) != EOF ){
+			
+			if(x1==x2) {
+				if(x3==x4) printf("YES\n");
+				else printf("NO\n");
+			}
+			else {
+				if( (x2-x1)/(y2-y1) == (x4-x3)/(y4-y3) ) printf("YES\n");
+				else printf("NO\n");	
+			}
+			
+		}
+	}
+	
+	return 0;
+}

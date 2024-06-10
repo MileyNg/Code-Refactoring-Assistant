@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Programminng
+{
+    class AOJ_Volume0016
+    {
+        public static void Main(string[] args)
+        {
+            double x = 0.0, y = 0.0, angle = 90;
+            while (true)
+            {
+                string[] input = Console.ReadLine().Split(',');
+
+                if (input[0] == "0" && input[1] == "0") break;
+
+                int value = int.Parse(input[0]);
+                int value_2 = int.Parse(input[1]);
+               
+
+                x += Math.Cos(angle * Math.PI / 180) * value;
+                y += Math.Sin(angle * Math.PI / 180) * value;
+                angle -= value_2;
+            }
+
+            Console.WriteLine((int)x);
+            Console.WriteLine((int)y);
+        }
+    }
+}

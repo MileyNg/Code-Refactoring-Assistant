@@ -1,0 +1,68 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<string>
+using namespace std;
+
+bool addsum ;
+
+void add( int& ret, char c){
+  if(c == 'A'){
+    if(ret >= 11) ret++;
+    else ret += 11, addsum = true;
+  }else if(c == 'T'|| c == 'J' || c == 'Q' || c == 'K'){
+    ret += 10;
+  }else{
+    ret += c - '0';
+  }
+  if(ret >= 22 && addsum){
+    addsum = false; ret -= 10;
+  }
+}
+
+
+int main(){
+  int q;
+  cin >> q;
+  while(q--){
+    addsum = false;
+    int ret = 0;
+    char buff;
+
+    queue< char > que;
+    for(int i = 0 ; i < 10 ; i++ ){
+      cin >> buff;
+      que.push( buff );
+    }
+
+    for(int i = 0 ; i < 2 ; i++ ){
+      add( ret, que.front()); que.pop();
+    }
+
+    if(ret == 21){
+      cout << "blackjack\n";
+      continue;
+    }else if((ret >= 18 || (ret == 17 && !addsum)) && ret <= 21){
+      cout << ret << endl;
+      continue;
+    }else if(ret > 21){
+      cout << "bust" << endl;
+      continue;
+    }
+
+    for(int i = 0; ; i++){
+      char c = que.front(); que.pop(); //ふえぇぇ
+      add( ret, c);
+      if((ret >= 18 || (ret == 17 && !addsum)) && ret <= 21){
+        cout << ret << endl;
+        break;
+      }else if(ret > 21){
+        cout << "bust" << endl;
+        break;
+      }else if(i == 7){
+        cout << ret << endl;
+        break;
+      }
+    }
+  }
+}

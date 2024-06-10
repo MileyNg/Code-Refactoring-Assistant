@@ -1,0 +1,63 @@
+#include<cstdio>
+#include<cstdlib>
+#include<ctime>
+#include<cmath>
+#include<cstring>
+#include<cctype>
+#include<complex>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<vector>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+#include<set>
+#include<bitset>
+#include<numeric>
+using namespace std;
+const int dx[]={1,0,-1,0};
+const int dy[]={0,1,0,-1};
+#define INF 1e+8
+#define EPS 1e-7
+#define PB push_back
+#define fi first
+#define se second
+#define ll long long
+#define reps(i,j,k) for(int i = (j); i < (k); i++)
+#define rep(i,j) reps(i,0,j)
+typedef pair<int,int> Pii;
+typedef vector<int> vi;
+ll memo[12][10000];
+int n,s;
+ll solve(int dep,int f,int res){
+	if(dep == n && s == res){
+        return 1;
+	}
+	if(dep == n)return 0;
+	if(memo[dep][res] != -1){
+        return memo[dep][res];
+	}
+	ll ret = 0;
+	reps(i,f+1,101){
+		if(res+i > s){
+            break;
+		}
+		ret += solve(dep+1,i,res+i);
+	}
+    memo[dep+1][res] = ret;
+	return ret;
+}
+int main(){
+	while(scanf("%d%d",&n,&s),(n|s)){
+		rep(i,12){
+            rep(j,10000){
+                memo[i][j] = -1;
+            }
+		}
+		printf("%lld\n",solve(0,-1,0));
+	}
+	return 0;
+}

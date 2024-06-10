@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest8
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                //文字列読み込み
+                var line_origin = Console.ReadLine();
+
+                //空なら終わり
+                if (string.IsNullOrEmpty(line_origin))
+                {
+                    break;
+                }
+                int ans = int.Parse(line_origin);
+
+                int count = 0;
+/*
+ *              var choice = from a in Enumerable.Range(0, 10)
+                             from b in Enumerable.Range(0, 10)
+                             from c in Enumerable.Range(0, 10)
+                             from d in Enumerable.Range(0, 10)
+                             where a + b + c + d == ans
+                             select Tuple.Create(a,b,c,d);
+
+                foreach (Tuple<int,int,int,int> i in choice)
+                {
+                    count++;
+                }
+*/
+                for (int a = 0; a < 10; a++)
+                {
+                    for (int b = 0; b < 10; b++)
+                    {
+                        for (int c = 0; c < 10; c++)
+                        {
+                            for (int d = 0; d < 10; d++)
+                            {
+                                if (a + b + c + d == ans)
+                                {
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Console.WriteLine(count.ToString());
+            }
+        }
+    }
+}

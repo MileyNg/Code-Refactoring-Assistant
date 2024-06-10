@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <iterator>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+#define exist(c, x) find(all(c), x) != (c).end()
+#define mp(a, b) make_pair(a, b)
+const int inf = 1 << 28;
+const int dx[][9] = {{-2, -1, -1, 0, 0, 0, 1, 1, 2}, {-2, -1, -1,  0,  0,  0,  1,  1,  2}},
+          dy[][9] = {{ 1,  1,  2, 1, 2, 3, 1, 2, 1}, {-1, -1, -2, -1, -2, -3, -1, -2, -1}};
+
+int w, h;
+vector<vector<int> > cliff;
+
+inline bool inrect(int x, int y){
+    return 0 <= x && x < h && 0 <= y && y < w;
+}
+
+int solve(){
+    vector<vector<int> > mem;
+    mem.assign(h * 100 + w, vector<int>(h * 100 + w, inf));
+    vector<int> T;
+    rep(j, w)if(cliff[0][j] == 0)T.push_back(j);
+    auto comp = [&](const pair<int, int> &a, const pair<int, int> &b){
+        return mem[a.first][a.second] > mem[b.first][b.second];
+    };
+    priority_queue<pair<int, int>, vector<pair<int, int> >, decltype(comp)> q(comp);
+    rep(k, w)if(cliff[h-1][k] == -1){
+        int st = (h-1) * 100 + k;
+        rep(i, 2)rep(j, 9){
+            int nx = h-1 + dx[i][j], ny = k + dy[i][j];
+            if(inrect(nx, ny) && 0 <= cliff[nx][ny]){
+                int nxt = nx * 100 + ny;
+                mem[i? nxt: st][i? st: nxt] = cliff[nx][ny];
+                q.push(mp(i? nxt: st, i? st: nxt));
+            }
+        }
+    }
+    int res = inf;
+    while(!q.empty()){
+        pair<int, int> p = q.top(); q.pop();
+        if(exist(T, p.first) || exist(T, p.second)){
+            res = min(res, mem[p.first][p.second]);
+            continue;
+        }
+        if(res <= mem[p.first][p.second])continue;
+        int lx = p.first / 100, ly = p.first % 100, rx = p.second / 100, ry = p.second % 100;
+        rep(i, 2)rep(j, 9){
+            int nx = (i? rx: lx) + dx[i][j], ny = (i? ry: ly) + dy[i][j];
+            if(inrect(nx, ny) && 0 <= cliff[nx][ny]){
+                int cost = mem[p.first][p.second] + cliff[nx][ny], nxt = nx * 100 + ny;
+                if(mem[i? nxt: p.first][i? p.second: nxt] <= cost)continue;
+                mem[i? nxt: p.first][i? p.second: nxt] = cost;
+                q.push(mp(i? nxt: p.first, i? p.second: nxt));
+            }
+        }
+    }
+    return res == inf? -1: res;
+}
+
+int main(){
+    while(cin >> w >> h, w|h){
+        cin.ignore();
+        cliff.assign(h, vector<int>(w, 0));
+        rep(i, h){
+            string in;
+            getline(cin, in);
+            in.erase(remove_if(all(in), [](char c){return c == ' ';}), in.end());
+            rep(j, w)cliff[i][j] = in[j] == 'X'? -2: in[j] == 'S'? -1: in[j] == 'T'? 0: in[j] - '0';
+        }
+        cout << solve() << '\n';
+    }
+    return 0;
+}

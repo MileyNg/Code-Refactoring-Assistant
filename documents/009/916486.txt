@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define N 151
+
+using namespace std;
+
+struct DATA{
+  int h, w, d_2;
+  DATA(int h_, int w_){
+    h = h_; w = w_; d_2 = h*h + w*w;
+  }
+  bool operator ==(const DATA& a){
+    return (h==a.h && w==a.w && d_2==a.d_2);
+  }
+};
+
+bool comp(const DATA& a, const DATA& b){
+  return (a.d_2 != b.d_2) ? (a.d_2 < b.d_2) : (a.h < b.h);
+}
+
+void init(vector<DATA>* data){
+  data->clear();
+  for(int i=1; i<=N; ++i){
+    for(int j=i+1; j<=N; ++j){
+      data->push_back(DATA(i,j));
+    }
+  }
+  sort(data->begin(), data->end(), comp);
+}
+
+int main(){
+  int h, w, d_2;
+  vector<DATA> data;
+  init(&data);
+  while(1){
+    cin >> h >> w;
+    if(!h && !w) break;
+    DATA data_(h, w);
+    for(vector<DATA>::iterator it=data.begin(); it!=data.end(); ++it){
+      if(data_ == *it){
+	++it;
+	cout << it->h << " " << it->w << endl;
+	break;
+      }
+    }
+  }
+  return 0;
+}

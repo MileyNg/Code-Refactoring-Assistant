@@ -1,0 +1,15 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+while (true) {
+	var str = lines.shift();
+	if (str == '-')
+		break;
+
+	var n = +lines.shift();
+	for (var i = 0; i < n; i++) {
+		var num = +lines.shift();
+		str = str.substr(num) + str.substr(0, num);
+	}
+	console.log(str);
+}

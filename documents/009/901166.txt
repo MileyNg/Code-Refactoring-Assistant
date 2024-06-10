@@ -1,0 +1,238 @@
+#include <array>
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+typedef vector<int> vec;
+typedef vector<vec> mat;
+
+constexpr int mod = (1 << 15);
+
+mat operator-(const mat &A) {
+	mat res(A);
+	for(auto &row : res) {
+		for(auto &e : row) {
+			e = (-e + mod) % mod ;
+		}
+	}
+	return res;
+}
+
+mat operator+(const mat &A, const mat &B) {
+	const int n = A.size();
+	const int m = A[0].size();
+	mat res(n, vec(m));
+	for(int i = 0; i < n; ++i) {
+		for(int j = 0; j < m; ++j) {
+			res[i][j] = (A[i][j] + B[i][j]) % mod;
+		}
+	}
+	return res;
+}
+
+mat operator-(const mat &A, const mat &B) {
+	return A + -B;
+}
+
+mat operator*(const mat &A, const mat &B) {
+	const int n = A.size();
+	const int m = B[0].size();
+	mat res(n, vec(m, 0));
+	for(int i = 0; i < n; ++i) {
+		for(int k = 0; k < static_cast<int>(B.size()); ++k) {
+			for(int j = 0; j < m; ++j) {
+				res[i][j] = (res[i][j] + A[i][k] * B[k][j]) % mod;
+			}
+		}
+	}
+	return res;
+}
+
+mat operator*(const mat &A, int x) {
+	mat res(A);
+	for(auto &row : res) {
+		for(auto &e : row) {
+			e = (e * x) % mod;
+		}
+	}
+	return res;
+}
+
+class matrix_calculator {
+private:
+	array<mat, 26> M;
+	string::const_iterator it;
+
+	mat inum() {
+		int res = 0;
+		while(isdigit(*it)) {
+			res = res * 10 + (*it - '0');
+			++it;
+		}
+		return mat(1, vec(1, res));
+	}
+
+	mat row() {
+		mat res = expr();
+		const int n = res.size();
+		while(*it == ' ') {
+			++it;
+
+			const mat tmp = expr();
+			for(int i = 0; i < n; ++i) {
+				res[i].insert(res[i].end(), tmp[i].begin(), tmp[i].end());
+			}
+		}
+		return res;
+	}
+
+	mat row_seq() {
+		mat res = row();
+		while(*it == ';') {
+			++it;
+			const mat tmp = row();
+			res.insert(res.end(), tmp.begin(), tmp.end());
+		}
+		return res;
+	}
+
+   mat matrix() {
+	   ++it; // '['
+	   const mat res = row_seq();
+	   ++it; // ']'
+	   return res;
+	}
+
+	mat transposed_matrix(const mat &A) {
+		++it; // '\''
+		const int n = A.size();
+		const int m = A[0].size();
+		mat res(m, vec(n));
+		for(int i = 0; i < n; ++i) {
+			for(int j = 0; j < m; ++j) {
+				res[j][i] = A[i][j];
+			}
+		}
+		return res;
+	}
+
+	mat indexed_matrix(const mat &A) {
+		++it; // '('
+		vec r_idx = expr()[0];
+		++it; // ','
+		vec c_idx = expr()[0];
+		++it; // ')'
+
+		const int n = r_idx.size();
+		const int m = c_idx.size();
+		mat res(n, vec(m));
+		for(int i = 0; i < n; ++i) {
+			for(int j = 0; j < m; ++j) {
+				res[i][j] = A[r_idx[i] - 1][c_idx[j] - 1];
+			}
+		}
+		return res;
+	}
+
+	mat primary() {
+		mat res;
+		if(isdigit(*it)) {
+			res = inum();
+		}
+		else if(isupper(*it)) {
+			res = M[*it -'A'];
+			++it;
+		}
+		else if(*it == '[') {
+			res = matrix();
+		}
+		else {
+			++it; // '('
+ 			res = expr();
+			++it; // ')'
+		}
+
+		while(*it == '(' || *it == '\'') {
+			if(*it == '(') res = indexed_matrix(res);
+			else           res = transposed_matrix(res);
+		}
+		return res;
+	}
+
+	mat factor() {
+		if(*it == '-') {
+			++it;
+			return -factor();
+		}
+		return primary();
+	}
+
+	mat term() {
+		mat res = factor();
+		while(*it == '*') {
+			++it;
+			const mat tmp = factor();
+			if(res.size() == 1 && res[0].size() == 1) {
+				res = tmp * res[0][0];
+			}
+			else if(tmp.size() == 1 && tmp[0].size() == 1) {
+				res = res * tmp[0][0];
+			}
+			else {
+				res = res * tmp;
+			}
+		}
+		return res;
+	}
+
+	mat expr() {
+		mat res = term();
+		while(*it == '+' || *it == '-') {
+			const bool plus = (*it == '+');
+			++it;
+			if(plus) res = res + term();
+			else     res = res - term();
+		}
+		return res;
+	}
+
+public:
+	void print(int idx) const {
+		for(const auto &row : M[idx]) {
+			for(unsigned i = 0; i < row.size(); ++i) {
+				cout << row[i] << (i + 1 == row.size() ? "\n" : " ");
+			}
+		}
+	}
+
+	void parse(const string &s) {
+		it = s.begin();
+		const int index = *it - 'A';
+		++it; // '[A-Z]'
+		++it; // '='
+		M[index] = expr();
+		print(index);
+	}
+};
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		cin.ignore();
+
+		matrix_calculator calculator;
+		for(int i = 0; i < n; ++i) {
+			string statement;
+			getline(cin, statement);
+			calculator.parse(statement);
+		}
+
+		cout << string(5, '-') << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

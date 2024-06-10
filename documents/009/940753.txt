@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int i,j,n,a,b,c,d,e,f,g,m[5050];
+	while(cin >> n) {
+		if (n==0) break;
+		for (j=0;j<5050;j++) m[j]=0; d=1;
+		for (i=0;i<n;i++) {
+			cin >> a >> b >> c;
+			f=a >1 ? 1 << (c-1) : ((1 << b)-1)  << (c-1);  
+			for (j=d;j>=0;j--) if ( m[j]+f != (m[j] | f)) break;
+			e=g=j+1; 
+			if (a==1) { m[e]+=f; d++;}  else for (j=0;j<b;j++) { m[e+j]+=f; d++;}
+			for (j=g; j<d+5; j++) if (m[j]<31) m[e++]=m[j]; 
+		}
+		f=0;
+		for (i=0;i<5050;i++) for (j=0;j<5;j++) f+=(m[i] & ( 1 << j))>0;
+		cout << f << endl;
+	}
+	return 0;
+}

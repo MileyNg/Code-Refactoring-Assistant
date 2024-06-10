@@ -1,0 +1,22 @@
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+
+int main(){
+  int n,m,x,min,max,i,ans;
+
+  cin >> n >> m;
+  if(m < n){
+    x = n;
+    n = m;
+    m = x;
+  }
+  min = m%n;
+  max = n;
+  for(i=1; i<min; i++){
+    if(min%i==0 && max%i==0) ans = i;
+  }
+  if(n == m) ans = n;
+  cout<<ans<<endl;
+  return 0;
+}

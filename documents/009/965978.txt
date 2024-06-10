@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+#include <array>
+
+class Baseball{
+	int score;
+	int out_count;
+	std::array<bool, 3> runner;
+	
+public:
+	Baseball(){
+		score = 0;
+		out_count = 0;
+		for(int i = 0 ; i < 3 ; ++i){
+			runner[i] = false;
+		}
+	}
+	int get_score(){ return score; } //getter
+	void start_inning();
+	void event_hit();
+	void event_homerun();
+	void event_out();
+};
+
+void Baseball::start_inning(){
+	std::string event;
+	
+	while(out_count < 3){
+		std::cin >> event;
+		if(event == "HIT"){
+			event_hit();
+		}else if(event == "HOMERUN"){
+			event_homerun();
+		}else if(event == "OUT"){
+			event_out();
+		}
+	}
+}
+
+void Baseball::event_hit(){
+	if(runner[2]){
+		++score;
+		runner[2] = false;
+	}else if(runner[1]){
+		runner[2] = true;
+		runner[1] = false;
+	}else if(runner[0]){
+		runner[1] = true;
+		runner[0] = false;
+	}
+	runner[0] = true;
+}
+
+void Baseball::event_homerun(){
+	for(int i = 0 ; i < 3 ; ++i){
+		if(runner[i]){
+			runner[i] = false;
+			++score;
+		}
+	}
+	++score;
+}
+
+void Baseball::event_out(){
+	++out_count;
+}
+
+int main(){
+	int n; //number of inning
+	std::cin >> n;
+	
+	while(n--){
+		Baseball baseball;
+		
+		baseball.start_inning();
+		std::cout << baseball.get_score() << std::endl;
+	}
+	
+    return 0;
+}

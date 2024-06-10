@@ -1,0 +1,18 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main(){
+	int N,M;
+	while(cin >> N >> M&&N&&M){
+		vector<int> vi;
+		for(int i=1; i<=N; ++i) vi.push_back(i);
+		vector<int>::iterator it=vi.begin();
+		while(1<vi.size()){
+			for(int i=1; it=(it==vi.end()?vi.begin():it),i<M; ++i) ++it;
+			it=vi.erase(it); 
+		}
+		cout << vi[0] << endl;
+	}
+	return 0;
+}

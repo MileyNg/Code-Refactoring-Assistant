@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+#define price first
+#define weight second
+
+int main(){
+	int W;
+	int cnt = 1;
+	while (cin >> W, W) {
+		int N; cin >> N;
+		vector<pair<int, int> > tres(N);
+		vector<int> dp(W+1);
+		for (int i = 0; i < N; i++) { scanf("%d,%d", &tres[i].price, &tres[i].weight);}
+		for (int i = 0; i < W+1; i++) { dp[i] = -1; }
+		dp[0] = 0;
+
+		for (int i = 0; i < N; i++) {
+			for (int j = W; j >= 0; j--) {
+				if (dp[j] == -1) { continue; }
+				if (j+tres[i].weight <= W) {
+					if (dp[j+tres[i].weight] < dp[j]+tres[i].price) {
+						dp[j+tres[i].weight] = dp[j]+tres[i].price;
+					}
+				}
+			}
+		}
+		int PRICE = 0;
+		int WEIGHT = 0;
+		for (int i = W; i >= 0; i--) {
+			if (PRICE <= dp[i]) {
+				PRICE = max(PRICE, dp[i]);
+				WEIGHT = i;
+			}
+		}
+
+		cout << "Case " << cnt << ":" << endl;
+		cout << PRICE << endl;
+		cout << WEIGHT-1 << endl;
+		cnt++;
+	}
+
+	return 0;
+}

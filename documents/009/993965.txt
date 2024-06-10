@@ -1,0 +1,35 @@
+<?php
+/*
+	AOJ 0556
+	Title:Tile
+	@kankichi573
+*/
+function calc_color($n,$a,$b)
+{
+	if($a > $n / 2)
+	  $a = ($n + 1)-$a;
+	if($b > $n / 2)
+	  $b = ($n + 1)-$b;
+	  
+	if($a<$b)
+	  $ret=$a;
+	else 
+	  $ret=$b;
+
+	$ret = $ret % 3;
+	if($ret==0)
+	  $ret=3;
+	return($ret);
+}
+
+fscanf(STDIN,"%d",$n);
+fscanf(STDIN,"%d",$k);
+for($i=0;$i<$k;$i++)
+  {
+    fscanf(STDIN,"%d %d",$a,$b);
+    fprintf(STDOUT,"%d\n",calc_color($n,$a,$b));
+  }
+
+return(0);
+
+?>

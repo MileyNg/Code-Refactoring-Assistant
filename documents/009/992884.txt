@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <math.h>
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+
+/** Problem0130 : Train **/
+int main()
+{
+	string s; int n;
+	cin>>n;
+	rep(k, n) {
+		cin>>s;
+		int d=0, i=1;
+		string ans;
+		bool ahead;
+		string t;
+		
+		ans = s[0]; t = s[0];
+		for (; i<s.size(); i++) {
+			if (s[i]=='>') {
+				ahead=true;
+			} else if (s[i]=='<') {
+				ahead=false;
+				i++;
+			} else if ('a'<= s[i] && s[i] <= 'z') {
+				int pos = (int)ans.find(t, 0);
+				if (string::npos == ans.find(s[i], 0)) {
+					if (ahead) {
+						ans.insert(pos+1, 1, s[i]);
+					} else {
+						ans.insert(pos, 1, s[i]);
+					}
+				}
+				t=s[i];
+			}
+		}
+		cout << ans << endl;
+	}
+}

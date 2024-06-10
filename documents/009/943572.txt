@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void push(int); 
+int pop(); 
+int isempty();
+int dtoi(char); 
+void print_stack(); 
+
+int stack[max+1],p;
+
+main()
+{
+  char c;
+  p = 0;
+
+  printf("Input data by Reverse Polish Notation: ");
+
+  
+  for(;c != '\n';){
+    c = getchar();
+
+    if(c >= '1' && c <= '9'){
+      push(dtoi(c));
+    }
+
+    if(c == '+'){
+     push(pop() + pop());
+    }
+   else if(c == '-'){
+     push(pop() - pop());
+    }
+   else if(c == '*'){
+     push(pop() * pop());
+    }
+   else if(c == '/'){
+     push(pop() / pop());
+    }
+    print_stack();
+  }
+  printf("Answer: %d\n",stack[0]);
+}
+
+void push(int v)// ?π???√??§???°??? x §????√????°?∞??÷??§?√÷§?°?
+{
+  stack[p++] = v;
+}
+
+int pop(int v)// ?π???√??§´§???°???§????√??°?∞??÷??§???§?°?§?§?°¢§Ω§?§??÷§π
+{
+  if(isempty() == 0) return stack[--p];
+  else if(isempty() == 1) exit(1);
+}
+
+int isempty() // ?π???√??§¨∂?§´§??????√??°£∂?§?§? 1°¢§Ω§¶§?§?§§§?§? 0 °£
+{
+  if(p == 0) return 1;
+  else return 0;
+}
+
+
+int dtoi(char c) // ??????§?§?§?§?????§??∞????§??—\π °???°? '5' ¢? 5°?
+{
+  if(c == '1') return 1;
+  else if( c == '2') return 2;
+  else if( c == '3') return 3;
+  else if( c == '4') return 4;
+  else if( c == '5') return 5;
+  else if( c == '6') return 6;
+  else if( c == '7') return 7;
+  else if( c == '8') return 8;
+  else if( c == '9') return 9;
+}
+
+void print_stack() // ?π???√??§?√???§?…Ω??
+{
+  int i;
+
+  for(i=0; i<p; i++){
+    printf("%d ",stack[i]);
+  }
+  printf("\n");
+}

@@ -1,0 +1,70 @@
+### global variables
+
+$cmap = {}
+
+### subroutines
+
+def neighbors(nd)
+  len = nd.length
+
+  nbrs = []
+  c0 = nd[0]
+
+  for i in (1...len)
+    c1 = nd[i]
+    c01 = c0 + c1
+
+    if ! $cmap[c01].nil?
+      nd0 = nd.clone
+      nd0[i - 1, 2] = $cmap[c01]
+      nbrs << nd0
+    end
+    c0 = c1
+  end
+
+  nbrs
+end
+
+### main
+
+for c0 in ['r', 'g', 'b']
+  for c1 in ['r', 'g', 'b']
+    if c0 != c1
+      $cmap[c0 + c1] =
+        (c0 != 'r' && c1 != 'r') ? 'rr' :
+        (c0 != 'g' && c1 != 'g') ? 'gg' : 'bb'
+    end
+  end
+end
+
+while true
+  st = gets.strip
+  break if st == '0'
+
+  queue = [st]
+  dists = {}
+  dists[st] = 0
+  dist = 'NA'
+
+  nst = st.length
+  ens = ['r' * nst, 'g' * nst, 'b' * nst]
+
+  while ! queue.empty?
+    nd = queue.shift
+
+    if ens.include? nd
+      dist = dists[nd]
+      found = true
+      break
+    end
+
+    for nd0 in neighbors(nd)
+      if dists[nd0].nil?
+        dists[nd0] = dists[nd] + 1
+        queue << nd0
+      end
+    end
+  end
+
+  puts dist
+end

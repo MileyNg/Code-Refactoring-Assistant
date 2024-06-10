@@ -1,0 +1,97 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+const int di[]={-1,-1,-1,0,0,1,1,1};
+const int dj[]={-1,0,1,-1,1,-1,0,1};
+
+vs update(vs a)
+{
+	int n=a.size();
+	vs b(n,string(n,'.'));
+	rep(i,n) rep(j,n){
+		if(a[i][j]=='@'){
+			b[i][j]='@';
+			continue;
+		}
+		int cnt=0;
+		rep(k,8){
+			int ni=i+di[k],nj=j+dj[k];
+			if(0<=ni && ni<n && 0<=nj && nj<n && a[ni][nj]!='.')
+				cnt++;
+		}
+		if(a[i][j]=='#' && (cnt==2 || cnt==3) || a[i][j]=='.' && cnt==3)
+			b[i][j]='#';
+	}
+	return b;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vs grid(n);
+		rep(i,n) cin>>grid[i];
+		
+		set<vs> vis;
+		queue<pair<vs,int>> q;
+		q.emplace(grid,0);
+		int res=-1;
+		while(q.size()){
+			vs cur; int turn;
+			tie(cur,turn)=q.front(); q.pop();
+			if(vis.count(cur)) continue;
+			vis.insert(cur);
+			
+			int cnt=0;
+			rep(i,n) rep(j,n) cnt+=cur[i][j]=='#';
+			if(cnt==0){
+				res=turn;
+				break;
+			}
+			
+			rep(i,n) rep(j,n) if(cur[i][j]=='@') rep(k,8){
+				int ni=i+di[k],nj=j+dj[k];
+				if(ni<0 || n<=ni || nj<0 || n<=nj || cur[ni][nj]=='#') continue;
+				swap(cur[i][j],cur[ni][nj]);
+				q.emplace(update(cur),turn+1);
+				swap(cur[i][j],cur[ni][nj]);
+			}
+		}
+		cout<<res<<endl;
+	}
+}

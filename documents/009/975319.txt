@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+
+int main(){
+
+  int train[20] , num[20];
+
+ for( int i = 0; i < 20; i++ ){
+    train[i] = 0;
+    num[i] = 0;
+ }
+
+  for( int i = 0; i < 20; i++ ){
+
+    cin >> train[i];
+
+    if( train[i] == 0 ){
+      for( int j = i; j >= 0; j-- ){
+	if( train[j] != 0 ){
+	num[i] = train[j];
+	train[j] = 0;
+	break;
+	}
+      }
+    }
+  }
+  
+  cout << endl;
+  for( int k = 0; k < 20; k++ ){
+    if( num[k] != 0 ) cout  << num[k] << endl; 
+
+  }
+
+
+  return 0;
+}

@@ -1,0 +1,72 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define MAX_N 310
+
+using namespace std;
+
+const int IINF = INT_MAX;
+
+
+
+struct Recipe{
+  int G;
+  vector<int> S;
+};
+
+
+int N,E,T,W[MAX_N],C;
+int mincost[MAX_N];
+
+bool cmp(const int& a,const int& b){
+  return mincost[a] > mincost[b];
+}
+
+
+int main(){
+  cin >> N >> E >> T;
+  --T;
+  Recipe *reci = new Recipe[E];
+  rep(i,N)cin>>W[i],mincost[i] = (W[i]?1:IINF);
+  rep(i,E){
+    cin >> reci[i].G >> C;
+    --reci[i].G;
+    reci[i].S.resize(C);
+    rep(k,C){
+      cin >> reci[i].S[k];
+      --reci[i].S[k];
+    }
+  }
+
+  bool update = true;
+  while(update){
+    update = false;
+    rep(i,E){
+      bool ok = true;
+      int greef = 0,need = 0;
+      sort(reci[i].S.begin(),reci[i].S.end(),cmp);
+      rep(j,reci[i].S.size()){
+        if( mincost[reci[i].S[j]] == IINF ){
+          ok = false;
+          break;
+        } else{
+          if( greef >= mincost[reci[i].S[j]] ) --greef;
+          else{
+            need += mincost[reci[i].S[j]] - greef;
+            greef = mincost[reci[i].S[j]] - 1;
+          }
+        }
+      }
+      if(ok && mincost[reci[i].G] > need ){
+        mincost[reci[i].G] = need;
+        update = true;
+      }
+    }
+  }
+
+  cout << ((mincost[T]!=IINF)?mincost[T]:-1) << endl;
+
+  delete [] reci;
+  return 0;
+}

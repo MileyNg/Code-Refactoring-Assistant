@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  string str1, str2;
+  int taro=0, hanako=0, n;
+  bool b;
+
+  cin >> n;
+
+  for(int i = 0; i < n; i++) {
+    cin >> str1 >> str2;
+    b = true;
+    for(int j = 0; j < max(str1.size(), str2.size()); j++) {
+      if(str2[j] == '0') {
+	taro += 3;
+	b = false;
+	break;
+      } else if(str1[j] == '0') {
+	hanako += 3;
+	b = false;
+	break;
+      }
+      if(str1[j] > str2[j]) {
+	taro += 3;
+	b = false;
+	break;
+      }
+      else if(str1[j] < str2[j]) {
+	hanako += 3;
+	b = false;
+	break;
+      }
+    }
+    if(b) {
+      taro++;
+      hanako++;
+    }
+  }
+  
+  cout << taro << ' ' << hanako << endl;
+}

@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);i++)
+int N,M;
+
+int ans=0;
+vector<int> result;
+vector<int> amida(const vector<int>& vec) {
+    vector<int> ret;
+    rep(i,N) ret.push_back(i+1);
+    rep(i,vec.size()) {
+        swap(ret[vec[i]-1],ret[vec[i]]);
+    }
+
+    return ret;
+}
+
+bool check(const vector<int>& vec1,const vector<int>& vec2) {
+    if(vec1.size()!=vec2.size()) return false;
+    rep(i,vec1.size()) if(vec1[i]!=vec2[i]) return false;
+    return true;
+}
+int cnt(const vector<int>& vec) {
+    //vec[i]はh[i-1]までほかの横棒を追い越さずに上昇させる
+    vector<int> h(M);
+    map<int,set<int> > s;
+    rep(i,h.size()) h[i]=i+1;
+
+    set<int> t;
+    t.insert(vec[0]);
+    s[1]=t;
+    rep(i,h.size()) {
+        if(!i) continue;
+        while(true) {
+            if(h[i]==1) break;
+            if(s[h[i]-1].find(vec[i]+1)!=s[h[i]-1].end()) break;
+            if(s[h[i]-1].find(vec[i]-1)!=s[h[i]-1].end()) break;
+            h[i]--;
+        }
+        //cout<<i<<" : "<<h[i]<<","<<vec[i]<<endl;
+        s[h[i]].insert(vec[i]);
+    }
+
+    int ret = 0;
+    rep(i,h.size())ret = max(ret,h[i]);
+    return ret;
+
+}
+
+int main() {
+    cin>>N>>M;
+    vector<int> yoko;
+    yoko.resize(M);
+    rep(i,M) {
+        int a; cin>>a;
+        yoko[i]=a;
+    }
+    result = amida(yoko);
+    sort(yoko.begin(), yoko.end());
+    ans=M;
+
+    do {
+        vector<int> t = amida(yoko);
+
+        //cout<<t.size()<<" : "<<endl;
+        //rep(i,t.size()) cout<<t[i]<<" ";
+        //cout<<endl;
+
+        if(check(result,t)) {
+            /*
+            cout<<"find : ";
+            rep(i,yoko.size()) cout<<yoko[i]<<" ";
+            cout<<endl;
+            cout<<cnt(yoko)<<endl;
+            */
+            ans=min(ans,cnt(yoko));
+        }
+
+    } while(next_permutation(yoko.begin(), yoko.end()));
+    cout<<ans<<endl;
+
+
+    return 0;
+}

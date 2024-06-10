@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <cstring>
+char ss[510][20];
+bool map[30][30];
+bool v[30];
+int main(){
+	int n;
+	while (scanf("%d", &n) && n){
+		for (int i = 0; i < n; i ++){
+			scanf("%s", ss[i]);
+			for (int j = 0; ss[i][j]; j ++){
+				ss[i][j] -= 'a' - 1;
+			}
+		}
+		bool mark = false;
+		memset(map, 0, sizeof(map));
+		for (int i = 0; i < n; i ++)
+			for (int j = i + 1; j < n; j ++){
+				for (int k = 0; ss[i][k] || ss[j][k]; k ++)
+					if (ss[i][k] != ss[j][k]){
+						if (ss[i][k] && !ss[j][k])
+							mark = true;
+						if (ss[i][k] && ss[j][k])
+							map[ss[i][k]][ss[j][k]] = 1;
+						break;
+					}
+			}
+		for (int k = 1; k <= 26; k ++)
+			for (int i = 1; i <= 26; i ++)
+				for (int j = 1; j <= 26; j ++)
+					if (map[i][k] && map[k][j])
+						map[i][j] = true;
+		for (int i = 1; i <= 26; i ++)
+			for (int j = 1; j <= 26; j ++)
+				if (map[i][j] && map[j][i])
+					mark = true;
+		if (mark)
+			puts("no");
+		else
+			puts("yes");
+	}
+	return 0;
+}

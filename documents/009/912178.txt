@@ -1,0 +1,23 @@
+#include<stdio.h>
+ 
+int main(void)
+{
+	int i,j,k,l,o,n=0;
+
+	while(scanf("%d",&i) != EOF){
+		for(j=0;j<=9;j++){
+			for(k=0;k<=9;k++){
+				for(l=0;l<=9;l++){
+					for(o=0;o<=9;o++){
+						if(i==j+k+l+o){
+							n++;
+						}
+					}
+				}
+			}
+		}
+	printf("%d\n",n);
+	n = 0;
+	}
+   return 0;
+}

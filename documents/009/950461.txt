@@ -1,0 +1,23 @@
+#include<stdio.h>
+#include<string.h>
+
+int main(){
+	int a[10][10]={{'*'},{'.',',','!','?',' '},{'a','b','c'},{'d','e','f'},{'g','h','i'},{'j','k','l'},{'m','n','o'},{'p','q','r','s'},{'t','u','v'},{'w','x','y','z'}};
+	int n, i,ch,t,cnt=-1;
+	scanf("%d",&n);
+	getchar();
+	for(i=0;i<n;i++){
+		while((ch=getchar())!='\n'){
+			if(ch=='0'){
+				if(cnt==-1)continue;
+				printf("%c",a[t-'0'][cnt%(t>='2' ? t=='9'||t=='7' ? 4 : 3 : 5)]);
+				cnt=-1;
+			}else{
+				t=ch;
+				cnt++;
+			}
+		}
+		printf("\n");
+	}
+	return 0;
+}

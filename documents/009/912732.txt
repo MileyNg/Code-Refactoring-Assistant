@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+
+int main(void)
+{
+  int w,s,i,j,a[10],b[10],queue;
+  s=1;
+  for(i=0;i<10;i++){
+    a[i]=s;
+    s*=2;
+  }
+  
+  while(scanf("%d",&w)!=EOF){
+    i=9;
+    queue=0;
+    while(1){
+      while(a[i]>w){
+	i--;
+      }
+      w-=a[i];
+      b[queue++]=a[i];
+      if(w==0)break;
+    }
+    for(j=queue-1;j>=0;j--)
+      printf("%d ",b[j]);
+    printf("\n"); 
+  }
+  
+  return 0;
+}

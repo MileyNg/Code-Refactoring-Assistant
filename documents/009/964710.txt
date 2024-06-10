@@ -1,0 +1,58 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cassert>
+using namespace std;
+
+#define MAXN 1000000
+
+int N, A[MAXN];
+int W[MAXN];
+
+int merge_and_count(int l, int r) {
+    if (l+1 >= r) return 0;
+    if (l+2 == r) {
+        if (A[l] <= A[l+1]) return 0;
+        swap(A[l], A[l+1]);
+        return 1;
+    }
+    int m = (l+r)/2;
+    int cl = merge_and_count(l, m);
+    int cr = merge_and_count(m, r);
+    int c = 0;
+    int i = l, j = m;
+    int k = l;
+    while (i < m && j < r) {
+        if (A[i] <= A[j]) W[k++] = A[i++];
+        else {
+            W[k++] = A[j++];
+            c += m-i;
+        }
+    }
+    while (i < m) {
+        W[k++] = A[i++];
+    }
+    while (j < r) W[k++] = A[j++];
+    assert(k == r);
+    copy(W+l, W+r, A+l);
+    return cl+cr+c;
+}
+
+int main(void) {
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> A[i];
+    cout << merge_and_count(0, n) << endl;
+    return 0;
+}

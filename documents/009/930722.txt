@@ -1,0 +1,50 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+
+	int n;
+	int mo[4];
+	int moda[]={10,50,100,500};
+	int mocn[4];
+
+	while(1){
+
+		cin>>n;
+		if(n==0) break;
+
+		for(int i=0;i<4;i++){
+			cin>>mo[i];
+			mocn[i]=0;
+		}
+
+		for(int i=0;i<4&&n>0;){
+			if(mo[i]>=1){
+				mo[i]--;
+				mocn[i]++;
+				n-=moda[i];
+			}
+			else i++;
+		}
+
+		for(int i=0;i<4;){
+			if(n+moda[i]<=0&&mocn[i]>=1){
+				mocn[i]--;
+				mo[i]++;
+				n+=moda[i];
+			}
+			else i++;
+		}
+
+		mocn[0]+=mo[0]/5*5;
+		mocn[1]+=mo[1]/2*2;
+		mocn[2]+=mo[2]/5*5;
+
+		for(int i=0;i<4;i++){
+			if(mocn[i]!=0) cout<<moda[i]<<" "<<mocn[i]<<endl;
+		}
+	}
+
+	return 0;
+}

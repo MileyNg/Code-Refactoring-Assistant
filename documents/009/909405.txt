@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long lli;
+
+const lli mod = 1000000007LL;
+
+string s;
+int p;
+
+pair<lli,lli> exp();
+pair<lli,lli> term();
+pair<lli,lli> fact();
+
+pair<lli,lli> exp() {
+  pair<lli,lli> x = term();
+  lli all = (x.first + x.second) % mod;
+  lli f = x.second;
+  while(s[p] == '|') {
+    ++p;
+    x = term();
+    all = (all * (x.first+x.second)) % mod;
+    f = (f * (x.second)) % mod;
+  }
+  lli a = ((all - f) % mod + mod) % mod;
+  lli b = f;
+  return make_pair(a, b);
+}
+
+pair<lli,lli> term() {
+  pair<lli,lli> x = fact();
+  lli all = (x.first + x.second) % mod;
+  lli t = x.first;
+  while(s[p] == '&') {
+    ++p;
+    x = fact();
+    all = (all * (x.first+x.second)) % mod;
+    t = (t * (x.first)) % mod;
+  }
+  lli a = t;
+  lli b = ((all - t) % mod + mod) % mod;
+  return make_pair(a, b);
+}
+
+pair<lli,lli> fact() {
+  if(s[p] == '(') {
+    ++p;
+    pair<lli,lli> tmp = exp();
+    ++p;
+    return tmp;
+  } else if(s[p] == '~') {
+    ++p;
+    pair<lli,lli> tmp = fact();
+    swap(tmp.first, tmp.second);
+    return tmp;
+  } else if(s[p] == 'x') {
+    ++p;
+    while(isdigit(s[p])) ++p;
+    return make_pair(1LL, 1LL);
+  } else {
+    //assert(false);
+  }
+}
+
+int main() {
+  cin >> s;
+  s += '$';
+  p = 0;
+  cout << exp().first << endl;
+  return 0;
+}

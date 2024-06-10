@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	
+	scanf("%d", &n);
+	while (n != 0){
+		int table[10][10] = {{0}};
+		int i, j;
+		int sum[10] = {0};
+		int all_sum = 0;
+		
+		for (i = 0; i < n; i++){
+			for (j = 0; j < n; j++){
+				scanf("%d", &table[i][j]);
+				sum[i] += table[i][j];
+				all_sum += table[i][j];
+			}
+		}
+		
+		for (i = 0; i < n; i++){
+			for (j = 0; j < n; j++){
+				printf("%5d", table[i][j]);
+			}
+			printf("%5d\n", sum[i]);
+			sum[i] = 0;
+		}
+		for (i = 0; i < n; i++){
+			for (j = 0; j < n; j++){
+				sum[j] += table[i][j];
+			}
+		}
+		for (i = 0; i < n; i++){
+			printf("%5d", sum[i]);
+		}
+		printf("%5d\n", all_sum);
+		
+		scanf("%d", &n);
+	}
+	
+	return 0;
+}

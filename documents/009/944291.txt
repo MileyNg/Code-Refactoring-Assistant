@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+const int INF = 1<<28;
+struct edge{
+  int to,cost;
+  edge(int a,int c){
+    to = a;
+    cost = c;
+  }
+};
+typedef pair<int,pair<int,int> > P;
+
+void dijk(int s,int g,vector<vector<int> > &field,vector<vector<edge> > &G){
+  priority_queue<P,vector<P>,greater<P> > que;
+  field[s][0] = 0;
+  que.push(P(0,pair<int,int>(s,0)));
+
+  while(!que.empty()){
+    P p = que.top();que.pop();
+    int v = p.second.first;
+    int v_f = p.second.second;
+    if(field[v][v_f] < p.first)continue;
+    for(int i = 0;i < G[v].size();i++){
+      edge e = G[v][i];
+      if(field[e.to][v_f] > field[v][v_f]+e.cost){
+	field[e.to][v_f] = field[v][v_f]+e.cost;
+	que.push(P(field[e.to][v_f],pair<int,int>(e.to,v_f)));
+      }
+      if(v_f == 0){
+	for(int j = 0;j < G[e.to].size();j++){
+	  edge ne = G[e.to][i];
+	  if(field[ne.to][1] > field[v][v_f]){
+	    field[ne.to][1] = field[v][v_f];
+	    que.push(P(field[ne.to][1],pair<int,int>(ne.to,1)));
+	  }
+	}
+      }
+    }
+  }
+}
+int main(){
+  int n,m;
+  while(cin >> n >> m,n != 0 || m != 0){
+    vector<vector<int> > field(n,vector<int>(2,INF));
+    vector<vector<edge> > G(n);
+    for(int i = 0;i < m;i++){
+      int a,b,c;
+      cin >> a >> b >> c;      
+      G[a-1].push_back(edge(b-1,c));
+    }
+    dijk(0,n-1,field,G);
+    int ans;
+    if(field[n-1][0] < field[n-1][1]){
+      cout << field[n-1][0] << endl;
+    }else{
+      cout << field[n-1][1] << endl;
+    }
+    
+  }
+
+  return 0;
+}

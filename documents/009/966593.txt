@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+
+int main() {
+	while (1) {
+		int n; cin >> n; if (n==0) break;
+		
+		int W, H; cin >> W >> H;
+		
+		vector<int> X(n), Y(n);
+		for (int i=0; i<n; i++) cin >> X[i] >> Y[i];
+		
+		int S, T; cin >> S >> T;
+		
+		int ans = 0;
+		for (int x = 1; x <= W - S + 1; x++) {
+			for (int y = 1; y <= H - T + 1; y++) {
+				
+				int cnt = 0;
+				for (int i = 0; i<n; i++) {
+					if (x <= X[i] && X[i] <= x+S-1 && y <= Y[i] && Y[i] <= y+T-1) cnt++;
+				}
+				ans = max(ans, cnt);
+			}
+		}
+		
+		cout << ans << endl;
+	}
+	
+	return 0;
+}

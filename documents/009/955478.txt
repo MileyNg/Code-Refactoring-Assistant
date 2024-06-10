@@ -1,0 +1,94 @@
+#include<iostream>
+
+int field_x, field_y;
+int start;
+int color;
+int res = 20;
+
+int check(int field[20][20], int before_field[20][20]){
+
+	int r = 0, g = 0, b = 0;
+
+	for (int i = 0; i < field_y; i++){
+		for (int j = 0; j < field_x; j++){
+			field[i][j] == 0 ? r++ : field[i][j] == 1 ? g++ : b++;
+		}
+	}
+
+	int a = field_x*field_y;
+	if (r == a || g == a || b == a)return -1;
+
+	int cnt = 0;
+
+	for (int i = 0; i < field_y; i++){
+		for (int j = 0; j < field_x; j++){
+			if (field[i][j] != before_field[i][j])cnt++;
+		}
+	}
+
+	return cnt;
+}
+
+void bfs(int(&field)[20][20], int x, int y){
+
+	if (start == color)return;
+
+	field[y][x] = color;
+
+	if (x + 1 < field_x && field[y][x + 1] == start)bfs(field, x + 1, y);
+	if (x - 1 > 0 && field[y][x - 1] == start)bfs(field, x - 1, y);
+	if (y + 1 < field_y && field[y + 1][x] == start)bfs(field, x, y + 1);
+	if (y - 1 > 0 && field[y - 1][x] == start)bfs(field, x, y - 1);
+
+}
+
+void calc(int field[20][20], int count){
+
+	if (count > res)return;
+
+	for (int i = 0; i < 3; i++){
+		start = field[0][0];
+		color = i;
+
+		int copy_field[20][20];
+		for (int i = 0; i < field_y; i++){
+			for (int j = 0; j < field_x; j++){
+				copy_field[i][j] = field[i][j];
+			}
+		}
+
+		bfs(copy_field, 0, 0);
+
+		int c = check(copy_field, field);
+
+		if (c == -1)res = count;
+
+		else if (c >= 1)calc(copy_field, count + 1);
+
+	}
+
+}
+
+int main(){
+
+	while (std::cin >> field_x >> field_y, field_x || field_y){
+
+		int field[20][20];
+
+		for (int i = 0; i < field_y; i++){
+			for (int j = 0; j < field_x; j++){
+				char c;
+				std::cin >> c;
+				c == 'R' ? field[i][j] = 0 : c == 'G' ? field[i][j] = 1 : field[i][j] = 2;
+			}
+		}
+
+		calc(field, 1);
+
+		std::cout << res << std::endl;
+
+		res = 20;
+	}
+
+	return 0;
+}

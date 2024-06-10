@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+void solve()
+{
+	int q1, b, c1, c2, q2;
+	while(cin >> q1, q1)
+	{
+		cin >> b >> c1 >> c2 >> q2;
+		if((b - c1) / c2 < q1 - 1)
+		{
+			cout << "NA" << endl;
+			continue;
+		}
+		int aizuChicken = min(b / c1, q2);
+		while(aizuChicken + (b - (aizuChicken * c1)) / c2 < q1)
+		{
+			--aizuChicken;
+		}
+		cout << aizuChicken << " " << (b - (aizuChicken * c1)) / c2 << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

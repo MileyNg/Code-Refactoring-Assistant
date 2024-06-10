@@ -1,0 +1,161 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cmath>
+#include <cassert>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
+#include <numeric>
+#include <complex>
+#include <list>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <bitset>
+#include <utility>
+#include <functional>
+#include <iterator>
+
+using namespace std;
+
+#define dump(n) cerr<<"# "<<#n<<"="<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define iter(c) __typeof__((c).begin())
+#define foreach(i,c) for(iter(c) i=(c).begin();i!=(c).end();++i)
+#define all(c) (c).begin(),(c).end()
+#define mp make_pair
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+typedef pair<int,int> pii;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'['; rep(i,a.size()) os<<(i?" ":"")<<a[i]; return os<<']';
+}
+
+const char START='%';
+const char GOAL='&';
+const char WALL='#';
+const char STAIR='|';
+const char FIRST='_';
+const char SECOND='^';
+
+const int INFTY=1<<29;
+
+struct State{
+	int i,j;
+	int floor,sw,weight;
+	State(){}
+	State(int i,int j,int f,int s,int w):i(i),j(j),floor(f),sw(s),weight(w){}
+	bool operator<(const State& s)const{return weight<s.weight;}
+	bool operator>(const State& s)const{return weight>s.weight;}
+};
+
+void solve(vs& grid,pii start,pii goal,vvi& floor,vvi& move,int s)
+{
+	int h=grid.size(),w=grid[0].size();
+	static int dist[1<<10][3][50][50]; // [sw][floor][i][j]
+	rep(i,1<<s) rep(j,2) rep(k,h) rep(l,w) dist[i][j+1][k][l]=INFTY;
+	
+	priority_queue<State,vector<State>,greater<State> > pq;
+	pq.push(State(start.first,start.second,1,0,0));
+	while(pq.size()){
+		State cur=pq.top(); pq.pop();
+		int ci=cur.i,cj=cur.j;
+		int cf=cur.floor,cs=cur.sw,cw=cur.weight;
+		if(dist[cs][cf][ci][cj]!=INFTY)
+			continue;
+		dist[cs][cf][ci][cj]=cw;
+		
+		// 階段
+		if(grid[ci][cj]==STAIR)
+			pq.push(State(ci,cj,3-cf,cs,cw+1));
+		
+		// スイッチ
+		if(isalpha(grid[ci][cj])){
+			char offset=isupper(grid[ci][cj])?'A':'a';
+			int ns=cs^1<<(grid[ci][cj]-offset);
+			int nf=cf;
+			if(move[ci][cj]>>(grid[ci][cj]-offset)&1)
+				nf=3-nf;
+			pq.push(State(ci,cj,nf,ns,cw+1));
+		}
+		
+		// 4近傍
+		int di[]={-1,1,0,0},dj[]={0,0,-1,1};
+		rep(k,4){
+			int ni=ci+di[k],nj=cj+dj[k];
+			if(grid[ni][nj]==WALL) continue;
+			if(grid[ni][nj]==STAIR)
+				pq.push(State(ni,nj,cf,cs,cw+1));
+			else{
+				int nf=floor[ni][nj];
+				assert(nf==1 || nf==2);
+				rep(i,s) if((cs>>i&1) && (move[ni][nj]>>i&1))
+					nf=3-nf;
+				if(nf!=cf)
+					continue;
+				pq.push(State(ni,nj,nf,cs,cw+1));
+			}
+		}
+	}
+	
+	int res=INFTY;
+	rep(i,1<<s) rep(j,2)
+		res=min(res,dist[i][j+1][goal.first][goal.second]);
+	cout<<(res==INFTY?-1:res)<<endl;
+}
+
+int main()
+{
+	for(int w,h;cin>>w>>h && w|h;){
+		vs grid(h);
+		rep(i,h) cin>>grid[i];
+		int s; cin>>s;
+		vector<vs> sws(s,vs(h));
+		rep(i,s) rep(j,h) cin>>sws[i][j];
+		
+		pii start,goal;
+		rep(i,h) rep(j,w){
+			if(grid[i][j]==START)
+				start=mp(i,j);
+			if(grid[i][j]==GOAL)
+				goal=mp(i,j);
+		}
+		
+		vvi move(h,vi(w)); // i番目のスイッチを押したときに階が変わるかどうか
+		rep(k,s) rep(i,h) rep(j,w)
+			if(sws[k][i][j]=='*')
+				move[i][j]|=1<<k;
+		
+		vvi floor(h,vi(w)); // 壁と階段は0階とする
+		rep(i,h) rep(j,w) if(grid[i][j]!=WALL && grid[i][j]!=STAIR){
+			if(grid[i][j]==START || grid[i][j]==GOAL || grid[i][j]==FIRST || islower(grid[i][j]))
+				floor[i][j]=1;
+			else
+				floor[i][j]=2;
+		}
+		
+		solve(grid,start,goal,floor,move,s);
+	}
+	
+	return 0;
+}

@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+struct Edge {
+    int to, t, m;
+    LL v;
+};
+
+void dfs(int v, int parent, const vector<vector<Edge>> &graph, vector<LL> &dp, int lim) {
+    const int T = dp.size();
+    vector<LL> cache = dp;
+    for(const Edge &e : graph[v]) {
+        if(e.to == parent) continue;
+
+        // force to use edge at least once
+        {
+            const int dt = e.t * 2;
+            const LL dv = e.v * min(2, e.m);
+            for(int t = T-1; t >= 0; --t) {
+                if(t-dt >= lim && dp[t-dt] >= 0) dp[t] = max(dp[t], dp[t-dt] + dv);
+            }
+        }
+        int rem = (e.m - min(2, e.m)) / 2;
+        for(int ord = 0; (1<<ord) <= rem; ++ord) {
+            const int dt = e.t * (1<<ord) * 2;
+            const LL dv = e.v * (1<<ord) * 2;
+            for(int t = T-1; t >= lim; --t) {
+                if(t-dt >= lim && dp[t-dt] >= 0) dp[t] = max(dp[t], dp[t-dt] + dv);
+            }
+            rem -= (1<<ord);
+        }
+        for(int t = T-1; t >= lim; --t) {
+            const int dt = e.t * rem * 2;
+            const LL dv = e.v * rem * 2;
+            if(t-dt >= lim && dp[t-dt] >= 0) dp[t] = max(dp[t], dp[t-dt] + dv);
+        }
+        // if e.m is odd, there is one more chance
+        if(e.m % 2 == 1 && e.m >= 3) {
+            const int dt = e.t * 2;
+            for(int t = T-1; t >= lim; --t) {
+                if(t-dt >= lim && dp[t-dt] >= 0) dp[t] = max(dp[t], dp[t-dt] + e.v);
+            }
+        }
+        dfs(e.to, v, graph, dp, min(T-1, lim + 2*e.t));
+        /*
+        for(int t = 0; t < T; ++t) {
+            dp[t] = max(dp[t], cache[t]);
+        }
+        cache = dp;
+        */
+    }
+    /*
+    cout << v << ": ";
+    for(auto val : dp) {
+        cout << val << ' ';
+    }
+    cout << endl;
+    */
+}
+
+bool solve() {
+    int N, T;
+    if(!(cin >> N >> T)) return false;
+    if(!N && !T) return false;
+
+    vector<vector<Edge>> graph(N);
+    for(int i = 0; i < N-1; ++i) {
+        int a, b, t, m;
+        LL v;
+        cin >> a >> b >> t >> m >> v;
+        --a; --b;
+        graph[a].push_back((Edge){b, t, m, v});
+        graph[b].push_back((Edge){a, t, m, v});
+    }
+    
+    vector<LL> dp(T+1, -1);
+    dp[0] = 0;
+    dfs(0, -1, graph, dp, 0);
+    cout << *max_element(dp.begin(), dp.end()) << endl;
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

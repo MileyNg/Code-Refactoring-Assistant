@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Programminng
+{
+    class AOJ_Volume0025
+    {
+        public static void Main(string[] args)
+        {
+            while (true)
+            {
+                string s = Console.ReadLine();
+                if (string.IsNullOrEmpty(s)) break;
+
+                string s2 = Console.ReadLine();
+                string[] _s = s.Split(' ');
+                string[] _s2 = s2.Split(' ');
+                int[] a = new int[4];
+                int[] b = new int[4];
+                int count = 0, count_2 = 0;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    a[i] = int.Parse(_s[i]);
+                    b[i] = int.Parse(_s2[i]);
+                }
+
+
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (a[i] == b[j])
+                        {
+                            if (i == j) count++;
+                            else count_2++;
+                        }
+                    }
+                }
+
+                Console.WriteLine(count + " " + count_2);
+
+            }
+        }
+    }
+}

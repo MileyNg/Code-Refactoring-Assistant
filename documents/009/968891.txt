@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <algorithm>
+#include <string.h>
+using namespace std;
+ 
+#define MAX_V 10005
+#define MAX_E 20005
+ 
+struct edge{
+    int to, dist, cost;
+    edge(int to=0,int dist=0,int cost=0):
+        to(to), dist(dist), cost(cost){}
+};
+int d[MAX_V];
+vector<edge>G[MAX_V];
+//前&#39537;&#32467;点 注意不要个prev迭代器混淆
+vector<edge>Prev[MAX_V];
+//距&#31163; &#33410;点
+typedef pair<int, int>P;
+int N, M;
+void dijstra(){
+    memset(d, 0x3f, sizeof(d));
+    for (int i = 0; i < N; i++) Prev[i].clear();
+    priority_queue<P, vector<P>, greater<P> >que;
+    d[0] = 0;
+    que.push(P(0, 0));
+    while (!que.empty()){
+        auto cur = que.top(); que.pop();
+        int v = cur.second;
+        if (d[v] < cur.first)continue;
+        for (auto& k : G[v]){
+            if (d[k.to]>d[v] + k.dist){
+                d[k.to] = d[v] + k.dist;
+                Prev[k.to].clear();
+                Prev[k.to].push_back(k);
+                que.push(P(d[k.to], k.to));
+            }
+            else if (d[k.to] == d[v] + k.dist)
+                Prev[k.to].push_back(k);
+        }
+    }
+}
+int cost(int v){
+    int min_cost = 0x3f3f3f3f;
+    for (int i = 0; i < Prev[v].size(); ++i)
+        min_cost = min(min_cost, Prev[v][i].cost);
+    return min_cost;
+}
+ 
+int main()
+{
+ 
+    while (cin >> N >> M){
+        for (int i = 0; i < N; ++i)G[i].clear();
+        for (int i = 0; i < N; ++i)Prev[i].clear();
+        if (!N&&!M)
+            return 0;
+        int a, b, c, d;
+        for (int i = 0; i < M; ++i){
+            cin >> a >> b >> c >> d;
+            --a; --b;
+            G[a].push_back(edge(b, c, d));
+            G[b].push_back(edge(a, c, d));
+        }
+        dijstra();
+        int res = 0;
+        for (int i = 1; i < N; ++i)
+            res += cost(i);
+        cout << res << "\n";
+    }
+    return 0;
+}

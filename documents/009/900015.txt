@@ -1,0 +1,18 @@
+import math
+n = int(raw_input())
+sqrt = int(math.sqrt(n))
+p = [1]*(sqrt+1)
+p[0] = 0
+for i in range(2,int(math.sqrt(sqrt))+1):
+	if p[i]:
+		p[2*i::i] = [0 for x in range(2*i,sqrt+1,i)]
+
+div = []
+for i in range(2,sqrt+1):
+	if p[i] and n%i == 0:
+		div.append(i)
+
+phai = n
+for i in div:
+	phai *= (1-1/float(i))
+print int(phai)

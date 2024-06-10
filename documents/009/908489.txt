@@ -1,0 +1,36 @@
+import math
+def isHit(a,b,ufo):
+	D=abs(a*ufo[0]+b*ufo[1])*ufo[4]
+	return True if D<=ufo[2]+1e-5 else False
+
+while 1:
+	R,N=map(int,raw_input().split())
+	if R==0:break
+	ufos=[map(int,raw_input().split()) for i in range(N)]
+	for i in range(N):
+		#append d and calc cos,sin
+		ufos[i].append(math.sqrt(ufos[i][0]**2+ufos[i][1]**2))
+		ufos[i][0]/=ufos[i][4]
+		ufos[i][1]/=ufos[i][4]
+	#ufos[i]=[cos,sin,r,v,d]
+	invade=0
+	while ufos:
+		# update d
+		for i in range(len(ufos)):
+			ufos[i][4]-=ufos[i][3]
+		# remove ufo d<=R
+		for i in range(len(ufos)-1,-1,-1):
+			if ufos[i][4]<=R+1e-7:
+				invade+=1
+				del ufos[i]
+		if len(ufos)<=1:break
+		# remove nearest ufo
+		ufos=sorted(ufos,key=lambda i:i[4])
+		target=ufos.pop(0)
+		a,b=target[1],-target[0]
+		# remove ufo that laser hits
+		for i in range(len(ufos)-1,-1,-1):
+			if isHit(a,b,ufos[i]):
+				del ufos[i]
+				
+	print invade

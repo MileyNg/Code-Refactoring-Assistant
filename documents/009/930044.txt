@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <limits.h>
+#include <math.h>
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <algorithm>
+#include <functional>
+#include <utility>
+#include <bitset>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
+
+using namespace std;
+
+const int INF = 1e+8;
+
+typedef struct edge_def {
+	int from;
+	int to;
+	int cost;
+} edge;
+
+int V, E;
+edge es[90];
+int d[10];
+
+#define FOR(i,s,e) for((i)=(s);(i)<(int)(e);(i)++)
+
+void min_time(int s) {
+	int i;
+	FOR(i,0,V+1) d[i] = INF;
+	d[s] = 0;
+	while (1) {
+		bool update = false;
+		FOR(i,0,2*E) {
+			edge e = es[i];
+			if (e.from != INF && d[e.to] > d[e.from] + e.cost) {
+				d[e.to] = d[e.from] + e.cost;
+				update = true;
+			}
+		}
+		if (!update) break;
+	}
+}
+
+int main() {
+	int i, j;
+	int total;
+	int minT;
+
+	while (1) {
+		scanf("%d ", &E);
+		if (!E) break;
+
+		V = 0;
+		FOR(i,0,E) {
+			scanf("%d%d%d ", &(es[i].from), &(es[i].to), &(es[i].cost));
+			es[E+i].from = es[i].to;
+			es[E+i].to = es[i].from;
+			es[E+i].cost = es[i].cost;
+			V = max(V, es[i].to);	
+		}
+
+		total = INF;
+		minT = INF;
+		FOR(i,0,V+1) {
+			min_time(i);
+
+			int sum = 0;
+			FOR(j,0,V+1)
+				sum += d[j];
+
+			if (sum < total) {
+				total = sum;
+				minT = i;
+			} else if (sum == total && i < minT)
+				minT = i;
+		}
+
+		printf("%d %d\n", minT, total);
+	}	
+
+	return 0;
+}

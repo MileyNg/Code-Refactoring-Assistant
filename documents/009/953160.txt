@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cmath>
+
+using namespace std;
+
+bool isRoom(int s){
+	s = 2*s+1;
+	int end = sqrt(s);
+	for(int x = 1; 2*x+1 <= end; x++){
+		if( ((double)s/(2*x+1)) - (s/(2*x+1)) > 0) continue;
+		if((s/(2*x+1)) % 2 == 1) return true;
+	}
+		
+	return false;
+}
+
+int main(){
+	int n, cnt = 0;
+	cin >> n;
+	for(int i = 0; i < n; i++) {
+		int s;
+		cin >> s;
+		if(!isRoom(s)) cnt++;	
+	}
+	printf("%d\n", cnt);
+	return 0;
+}

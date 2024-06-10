@@ -1,0 +1,128 @@
+class Point
+  include Comparable
+
+  attr_reader :x, :y, :z
+
+  def initialize(x, y, z)
+    @x, @y, @z = x, y, z
+  end
+
+  def <=>(other)
+    return @x <=> other.x unless @x == other.x
+    return @y <=> other.y unless @y == other.y
+    @z <=> other.z
+  end
+  def +(other)
+    Point.new(@x + other.x, @y + other.y, @z + other.z)
+  end
+  def -(other)
+    Point.new(@x - other.x, @y - other.y, @z - other.z)
+  end
+
+  def rotate(direction)
+    case direction
+      when :x
+        @y, @z = -@z, @y
+      when :y
+        @x, @z = -@z, @x
+      when :z
+        @x, @y = -@y, @x
+    end
+  end
+end
+
+class Edge
+  include Comparable
+
+  attr_accessor :initial, :terminal
+
+  def initialize(initial, terminal)
+    @initial, @terminal = initial, terminal
+  end
+
+  def <=>(other)
+    return @initial <=> other.initial unless @initial == other.initial
+    @terminal <=> other.terminal
+  end
+
+  def reverse
+    @initial, @terminal = @terminal, @initial
+  end
+end
+
+class Key
+  attr_reader :edge
+
+  def initialize(list)
+    @edge = Array.new
+    @point = Hash.new
+    make_path(list)
+  end
+
+  def make_path(list)
+    x, y, z = [0, 0, 0]
+    until list.empty?
+      operator, direction = list.shift.chars
+      px, py, pz = x, y, z
+      case operator
+        when /[+-]/
+          eval("#{direction} #{operator}= 1")
+          @edge << Edge.new(Point.new(px, py, pz), Point.new(x, y, z))
+#           @edge << Edge.new(Point.new(x, y, z), Point.new(px, py, pz))
+        else
+          @point[operator] = [x, y, z] unless @point[operator]
+          x, y, z = @point[operator]
+      end
+    end
+  end
+
+  def rotate(direction)
+    @edge.each do |e|
+      e.initial.rotate(direction)
+      e.terminal.rotate(direction)
+    end
+  end
+
+  def move(difference)
+    @edge.each do |e|
+      e.initial = e.initial + difference
+      e.terminal = e.terminal + difference
+    end
+  end
+
+  def sort_edges
+    @edge.each do |e|
+      e.reverse if e.initial > e.terminal
+    end
+    @edge.sort!
+  end
+
+  def same?(other)
+    sort_edges
+#     @edge.sort!
+    4.times do
+      4.times do
+        4.times do
+          other.sort_edges
+#           other.edge.sort!
+          other.move(@edge.first.initial - other.edge.first.initial)
+          return true if @edge == other.edge
+          other.rotate(:x)
+        end
+        other.rotate(:y)
+      end
+      other.rotate(:z)
+    end
+    false
+  end
+end
+
+key = Array.new
+loop do
+  list = gets.split(" ")
+  n = list.shift.to_i
+  list += gets.split(" ") until list.size == n
+  break if n.zero?
+  key << Key.new(list)
+  puts (key.shift.same?(key.shift) ? "SAME" : "DIFFERENT") if key.size == 2
+end

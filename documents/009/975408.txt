@@ -1,0 +1,61 @@
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+constexpr int SIZE = 3;
+constexpr int N = SIZE * SIZE;
+constexpr int correct = 'a' - 'A';
+
+string pieces[N];
+
+int ans;
+int turn[SIZE][SIZE];
+int put[SIZE][SIZE];
+bool used[N];
+
+inline bool match(char a, char b) {
+	return abs(a - b) == correct;
+}
+
+void dfs(int x, int y) {
+	if(x == SIZE) return dfs(0, y + 1);
+	if(y == SIZE) {
+		++ans;
+		return;
+	}
+
+	int &i = put[y][x];
+	int &r = turn[y][x];
+
+	for(i = 0; i < N; ++i) {
+		if(used[i]) continue;
+
+		for(r = 0; r < 4; ++r) {
+			if(x && !match(pieces[i][(r+3)%4], pieces[put[y][x-1]][(turn[y][x-1]+1)%4])) continue;
+			if(y && !match(pieces[i][r], pieces[put[y-1][x]][turn[y - 1][x] ^ 2])) continue;
+
+			used[i] = true;
+			dfs(x + 1, y);
+			used[i] = false;
+		}
+	}
+}
+
+
+void solve() {
+	for(auto &e : pieces) cin >> e;
+	ans = 0;
+	dfs(0, 0);
+	cout << ans << endl;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int t;
+	cin >> t;
+	while(t--) solve();
+
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,37 @@
+function parent(i) {
+	return Math.floor((i + 1) / 2);
+}
+function left(i) {
+	return (i + 1) * 2;
+}
+function right(i) {
+	return (i + 1) * 2 + 1;
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var size = +lines.shift()
+var vals = lines.shift().split(' ');
+var heap = [];
+for (var i = 0; i < size; i++) {
+	heap.push(+vals[i]);
+}
+
+heap.forEach(function(val, idx) {
+	var pidx = parent(idx) - 1;
+	var lidx = left(idx) - 1;
+	var ridx = right(idx) - 1;
+
+	var str = 'node ' + (idx + 1) + ': key = ' + val + ', ';
+	if (pidx >= 0) {
+		str += 'parent key = ' + heap[pidx] + ', ';
+	}
+	if (lidx < heap.length) {
+		str += 'left key = ' + heap[lidx] + ', ';
+	}
+	if (ridx < heap.length) {
+		str += 'right key = ' + heap[ridx] + ', ';
+	}
+	console.log(str);
+});

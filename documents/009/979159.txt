@@ -1,0 +1,44 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+#include <stack>
+#include <queue>
+#include <set>
+using namespace std;
+
+string str[2];
+string result[2];
+int pointer[2];
+
+int main(int argc, const char * argv[]){
+    while(true){
+        cin >> str[0];
+        if(str[0][0] == '-') return 0;
+        cin >> str[1] >> result[0];
+        result[2] = "";
+        pointer[0] = 0;
+        pointer[1] = 1;
+        char next = str[1][0];
+        
+        int i = 0;
+        while(i < result[0].length()){
+            if(next == result[0][i]){
+                // push down
+                next = str[0][pointer[0]];
+                pointer[0]++;
+                i++;
+            }else{
+                //push right
+                cout << next;
+                next = str[1][pointer[1]];
+                pointer[1]++;
+            }
+        }
+        cout << next;
+        for(;pointer[1] < str[1].length(); pointer[1]++){
+            cout << str[1][pointer[1]];
+        }
+        cout << result[2] << endl;
+    }
+}

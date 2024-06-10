@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+char num[10000001];
+int s[100000];
+int t[50000];
+
+int main(void)
+{
+	int n, q;
+	int i;
+	int count = 0;
+	
+	scanf("%d", &n);
+	for (i = 0; i < n; i++){
+		scanf("%d", s + i);
+		num[s[i]] = 1;
+	}
+	
+	scanf("%d", &q);
+	for (i = 0; i < q; i++){
+		scanf("%d", t + i);
+		if (num[t[i]] == 1) count++;
+	}
+	
+	printf("%d\n", count);
+	
+	return 0;
+}

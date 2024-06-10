@@ -1,0 +1,36 @@
+#include<iostream>
+#define rep(i,a) for(int i = 0; i < a; i++)
+using namespace std;
+
+int main(){
+	int r, c, array[100][100] = {0};
+	cin >> r >> c;
+	rep(i, r){
+		rep(j, c){
+			cin >> array[i][j];
+		}
+	}
+	//縦横の計算
+	rep(i, r){
+		rep(j, c){
+			array[i][c] += array[i][j];
+			array[r][j] += array[i][j];
+		}
+	}
+	//右下の計算
+	rep(i , c){
+		array[r][c] += array[r][i];
+	}
+	
+
+
+	//出力結果
+	rep(i, r+1){
+		rep(j, c+1){
+			cout << array[i][j];
+			if(j != c) cout << " ";  
+		}
+	cout << endl;
+	}
+
+}

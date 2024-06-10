@@ -1,0 +1,32 @@
+#include <algorithm>
+#include <iostream>
+using namespace std;
+int N,X,Y,ct,output[1000];
+int main() {
+	cin >> N;
+	for(int g=0; g<N; ++g) {
+		cin >> X >> Y >> ct;
+		int T[64][64] = {{0}},up[64][64] = {{0}},left[64][64] = {{0}};
+		for(int i=0; i<ct; ++i) {
+			int x1,x2,y1,y2;
+			cin >> x1 >> y1 >> x2 >> y2;
+			if(x1==x2)
+			up[x1][max(y1,y2)] = 1;
+			else left[max(x1,x2)][y1] = 1;
+		}
+		T[0][0] = 1;
+		for(int x=0; x<=X; ++x) {
+			for(int y=0; y<=Y; ++y) {
+				if(up[x][y]==0) T[x][y] += T[x][y-1];
+				if(left[x][y]==0) T[x][y] += T[x-1][y];
+			}
+		}
+		output[g] = T[X][Y];
+	}
+	for(int i=0; i<N; ++i) {
+		if(output[i] == 0) 
+			cout << "Miserable Hokusai!" << endl;
+		else
+		cout << output[i] << endl;
+	}
+}

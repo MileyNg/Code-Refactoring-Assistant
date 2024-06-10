@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int T;
+	cin>>T;
+	for(int i=0;i<T;i++){
+		int x,y;
+		cin>>x>>y;
+		int n;
+		cin>>n;
+		int board[16][16]={0};
+		board[0][0]=1;
+		//cerr<<board[1][0]<<endl;
+		for(int j=0;j<n;j++){
+			int sx;
+			int sy;
+			cin>>sx>>sy;
+			int lx,ly;
+			cin>>lx>>ly;
+			if(sx==lx){
+				board[sx][max(sy,ly)]+=-1;
+			}else{
+				board[max(sx,lx)][sy]+=-2;
+			}
+		}
+		//cerr<<board[1][0]<<endl;
+		for(int j=0;j<=y;j++){
+			for(int k=0;k<=x;k++){
+				if(j==0 && k==0) continue;
+				if(board[j][k]==-1){
+					board[j][k]=0;
+					if(j!=0) board[j][k]+=board[j-1][k];
+				}else if(board[j][k]==-2){
+					board[j][k]=0;
+					if(k!=0) board[j][k]+=board[j][k-1];
+					//cerr<<board[j][k]<<endl;
+				}else if(board[j][k]==0){
+					if(j!=0) board[j][k]+=board[j-1][k];
+					if(k!=0) board[j][k]+=board[j][k-1];
+				}else{
+					board[j][k]=0;
+				}
+				//cserr<<j<<' '<<k<<endl;
+			}
+		}
+		//cerr<<board[1][1]<<endl;
+		if(board[y][x]==0){
+			cout<<"Miserable Hokusai!"<<endl;
+		}else{
+			cout<<board[y][x]<<endl;
+		}
+	}
+	return 0;
+}

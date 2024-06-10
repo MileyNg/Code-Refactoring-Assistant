@@ -1,0 +1,201 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#include<algorithm>
+
+#define LL long long
+#define MOD 1000000009
+
+
+using namespace std;
+
+int W;
+LL H;
+
+int n;
+
+struct node{
+    int x;
+    LL y;
+}sq[33];
+
+bool cmp(node p, node q)
+{
+    if (p.y != q.y)
+    {
+        return p.y < q.y;
+    }
+    return p.x < q.x;
+}
+
+LL split[33];
+int nn;
+
+int get(LL y)
+{
+    for (int i=1;i<=nn;i++)
+    {
+        if (split[i] == y)
+        {
+            return i;
+        }
+    }
+}
+
+LL dp[33][111];
+bool vis[33][111];
+
+
+struct Matrix{
+    int n;
+    LL m[111][111];
+    void init(int __n)
+    {
+        n = __n;
+        memset(m, 0, sizeof(m));
+    }
+    void e(){
+        for (int i=1;i<=n;i++)
+        {
+            m[i][i] = 1;
+        }
+    }
+    void mod()
+    {
+        for (int i=1;i<=n;i++)
+        {
+            for (int j=1;j<=n;j++)
+            {
+                m[i][j] = ((m[i][j] % MOD) + MOD) % MOD;
+            }
+        }
+    }
+    void get()
+    {
+        for (int i=1;i<=n;i++)
+        {
+            for (int j=max(1,i-1);j<=min(i+1,n);j++)
+            {
+                m[i][j] = 1;
+            }
+        }
+    }
+};
+
+Matrix mul(Matrix A, Matrix B)
+{
+    Matrix C;
+    C.init(A.n);
+    for (int i=1;i<=A.n;i++)
+        for (int j=1;j<=A.n;j++)
+        {
+            for (int k=1;k<=A.n;k++)
+            {
+                C.m[i][j] = (C.m[i][j] + A.m[i][k] * B.m[k][j]) % MOD;
+            }
+        }
+    return C;
+}
+
+Matrix powerMat(Matrix A, LL p)
+{
+    Matrix C;
+    C.init(A.n);
+    C.e();
+    while (p)
+    {
+        if (p & 1)
+        {
+            C = mul(C, A);
+        }
+        A = mul(A, A);
+        p/=2;
+    }
+    return C;
+}
+LL X[111], Y[111];
+
+
+int main()
+{
+    Matrix O;
+    //init();
+    int cast = 0;
+    while (scanf("%d%lld%d",&W,&H,&n)==3)
+    {
+        if (W == 0 && H ==0 && n == 0)
+        {
+            break;
+        }
+        int flag = 0;
+        for (int i=1;i<=n;i++)
+        {
+            scanf("%d%lld",&sq[i].x,&sq[i].y);
+            if (sq[i].x == W && sq[i].y == H)
+            {
+                flag = 1;
+            }
+        }
+        if (flag == 1)
+        {
+            printf("Case %d: %lld\n",++cast, 0);
+            continue;
+        }
+        sq[0].x = 1, sq[0].y = 1;
+        sq[n+1].x = W, sq[n+1].y = H;
+        n++;
+
+        sort(sq, sq + n + 1,cmp);
+        nn = 0;
+        split[++nn] = 1;
+        for (int i=1;i<=n;i++)
+        {
+            if (sq[i].y != split[nn]){
+                split[++nn] = sq[i].y;
+            }
+        }
+        memset(dp , 0, sizeof(dp));
+        memset(vis, 0, sizeof(vis));
+
+        for (int i=0;i<=n;i++)
+        {
+            int ii = get(sq[i].y);
+            vis[ii][sq[i].x] = 1;
+        }
+        vis[nn][W] = 0;
+        vis[1][1] = 0;
+        dp[1][1]= 1;
+
+
+        O.init((int)W);
+        O.get();
+
+        for (int i=2;i<=nn;i++)
+        {
+            for (int j=1;j<=W;j++)
+            {
+                if (vis[i-1][j]){
+                    dp[i-1][j] = 0;
+                }
+            }
+            Matrix P = powerMat(O, split[i] - split[i-1]);
+
+            for (int j=1;j<=W;j++)
+            {
+                dp[i][j] = 0;
+                for (int k=1;k<=W;k++)
+                {
+                    dp[i][j] = (dp[i][j] + P.m[k][j] * dp[i-1][k]) % MOD;
+                }
+                if (vis[i][j])
+                {
+                    dp[i][j] = 0;
+                }
+            }
+
+        }
+
+        printf("Case %d: %lld\n",++cast, dp[nn][W]);
+    }
+    return 0;
+}

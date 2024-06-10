@@ -1,0 +1,266 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<int,vector<int> > checkHand(vector<pair<int,int> > v) {
+  sort(v.begin(), v.end());
+  bool st = true;
+  for(int i = 0; i+1 < v.size(); ++i) {
+    if(v[i+1].first - v[i].first != 1) {
+      if(i+2 == v.size() && v[0].first == 2 && v[i+1].first == 14) {
+        // 2,3,4,5,A
+      } else {
+        st = false;
+        break;
+      }
+    }
+  }
+  bool fs = true;
+  for(int i = 1; i < v.size(); ++i) {
+    if(v[0].second != v[i].second) {
+      fs = false;
+      break;
+    }
+  }
+
+  // royal straight flush
+  if(st && fs && v[0].first == 10) {
+    vector<int> c;
+    return make_pair(0, c);
+  }
+
+  // straight flush
+  if(st && fs) {
+    vector<int> c;
+    if(v[0].first == 2 && v.back().first == 14) {
+      c.push_back(-5);
+    } else {
+      c.push_back(-v.back().first);
+    }
+    return make_pair(1, c);
+  }
+
+  // four of a kind
+  if(v[0].first == v[3].first) {
+    vector<int> c;
+    c.push_back(-v[0].first);
+    c.push_back(-v[4].first);
+    return make_pair(2, c);
+  }
+  if(v[1].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[1].first);
+    c.push_back(-v[0].first);
+    return make_pair(2, c);
+  }
+
+  //full house
+  if(v[0].first == v[1].first && v[2].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[2].first);
+    c.push_back(-v[0].first);
+    return make_pair(3, c);
+  }
+  if(v[0].first == v[2].first && v[3].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[0].first);
+    c.push_back(-v[3].first);
+    return make_pair(3, c);
+  }
+
+  // flush
+  if(fs) {
+    vector<int> c;
+    for(int i = (int)v.size()-1; i >= 0; --i) c.push_back(-v[i].first);
+    return make_pair(4, c);
+  }
+
+  // straight
+  if(st) {
+    vector<int> c;
+    if(v[0].first == 2 && v.back().first == 14) {
+      c.push_back(-5);
+    } else {
+      c.push_back(-v.back().first);
+    }
+    return make_pair(5, c);
+  }
+
+  // three of a kind
+  if(v[0].first == v[2].first) {
+    vector<int> c;
+    c.push_back(-v[0].first);
+    c.push_back(-v[4].first);
+    c.push_back(-v[3].first);
+    return make_pair(6, c);
+  }
+  if(v[1].first == v[3].first) {
+    vector<int> c;
+    c.push_back(-v[1].first);
+    c.push_back(-v[4].first);
+    c.push_back(-v[0].first);
+    return make_pair(6, c);
+  }
+  if(v[2].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[2].first);
+    c.push_back(-v[1].first);
+    c.push_back(-v[0].first);
+    return make_pair(6, c);
+  }
+
+  // two pairs
+  if(v[0].first == v[1].first && v[2].first == v[3].first) {
+    vector<int> c;
+    c.push_back(-v[2].first);
+    c.push_back(-v[0].first);
+    c.push_back(-v[4].first);
+    return make_pair(7, c);
+  }
+  if(v[0].first == v[1].first && v[3].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[3].first);
+    c.push_back(-v[0].first);
+    c.push_back(-v[2].first);
+    return make_pair(7, c);
+  }
+  if(v[1].first == v[2].first && v[3].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[3].first);
+    c.push_back(-v[1].first);
+    c.push_back(-v[0].first);
+    return make_pair(7, c);
+  }
+
+  // one pair
+  if(v[0].first == v[1].first) {
+    vector<int> c;
+    c.push_back(-v[0].first);
+    c.push_back(-v[4].first);
+    c.push_back(-v[3].first);
+    c.push_back(-v[2].first);
+    return make_pair(8, c);
+  }
+  if(v[1].first == v[2].first) {
+    vector<int> c;
+    c.push_back(-v[1].first);
+    c.push_back(-v[4].first);
+    c.push_back(-v[3].first);
+    c.push_back(-v[0].first);
+    return make_pair(8, c);
+  }
+  if(v[2].first == v[3].first) {
+    vector<int> c;
+    c.push_back(-v[2].first);
+    c.push_back(-v[4].first);
+    c.push_back(-v[1].first);
+    c.push_back(-v[0].first);
+    return make_pair(8, c);
+  }
+  if(v[3].first == v[4].first) {
+    vector<int> c;
+    c.push_back(-v[3].first);
+    c.push_back(-v[2].first);
+    c.push_back(-v[1].first);
+    c.push_back(-v[0].first);
+    return make_pair(8, c);
+  }
+
+  // high card
+  if(1) {
+    vector<int> c;
+    for(int i = (int)v.size()-1; i >= 0; --i) c.push_back(-v[i].first);
+    return make_pair(9, c);
+  }
+}
+
+pair<int,int> get(string s) {
+  pair<int,int> res;
+  if(s[0] == 'S') res.second = 0;
+  if(s[0] == 'H') res.second = 1;
+  if(s[0] == 'D') res.second = 2;
+  if(s[0] == 'C') res.second = 3;
+
+  if(s[1] == 'T') res.first = 10;
+  else if(s[1] == 'J') res.first = 11;
+  else if(s[1] == 'Q') res.first = 12;
+  else if(s[1] == 'K') res.first = 13;
+  else if(s[1] == 'A') res.first = 14;
+  else res.first = s[1] - '0';
+  return res;
+}
+
+map<pair<int,int>, int> used;
+double sum, win;
+pair<int, vector<int> > hh;
+
+void highHand(vector<pair<int,int> > &a, vector<pair<int,int> > &c, int k) {
+  if(a.size() == 5) {
+    hh = min(hh, checkHand(a));
+    return;
+  }
+  for(int i = k; i < c.size(); ++i) {
+    a.push_back(c[i]);
+    highHand(a, c, i+1);
+    a.pop_back();
+  }
+}
+
+void rec(vector<pair<int,int> > &a, vector<pair<int,int> > &b, vector<pair<int,int> > &c) {
+  if(c.size() == 5) {
+    hh = make_pair(99, vector<int>());
+    c.push_back(a[0]); c.push_back(a[1]);
+    vector<pair<int,int> > v;
+    highHand(v, c, 0);
+    c.pop_back(); c.pop_back();
+    pair<int,vector<int> > A = hh;
+
+    hh = make_pair(99, vector<int>());
+    c.push_back(b[0]); c.push_back(b[1]);
+    highHand(v, c, 0);
+    c.pop_back(); c.pop_back();
+    pair<int,vector<int> > B = hh;
+
+    ++sum;
+    if(A < B) ++win;
+    return;
+  }
+
+  for(int i = 2; i <= 14; ++i) {
+    for(int j = 0; j < 4; ++j) {
+      pair<int,int> p = make_pair(i,j);
+      if(used[p]) continue;
+      used[p] = true;
+      c.push_back(p);
+      rec(a,b,c);
+      c.pop_back();
+      used[p] = false;
+    }
+  }
+}
+
+int main() {
+  string a, b, c, d, e, f, g;
+  while(cin >> a && a != "#") {
+    cin >> b >> c >> d >> e >> f >> g;
+    vector<pair<int,int> > A, B, C;
+    A.push_back(get(a));
+    A.push_back(get(b));
+    B.push_back(get(c));
+    B.push_back(get(d));
+    C.push_back(get(e));
+    C.push_back(get(f));
+    C.push_back(get(g));
+    used.clear();
+    used[get(a)] = 1;
+    used[get(b)] = 1;
+    used[get(c)] = 1;
+    used[get(d)] = 1;
+    used[get(e)] = 1;
+    used[get(f)] = 1;
+    used[get(g)] = 1;
+    sum = win = 0;
+    rec(A, B, C);
+    printf("%.10f\n", win/sum);
+  }
+  return 0;
+}

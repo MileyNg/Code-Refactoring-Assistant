@@ -1,0 +1,47 @@
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+
+int P, Q, A, N, ans;
+
+/** Problem1131 : Unit Fraction Partition **/
+void dfs(int p, int q, int n, int old)
+{
+	if (P*q == p*Q) {
+		ans++;
+		return;
+	} else if (P*q < p*Q)
+			return ;
+
+	if (n==N) return;
+	for (int i=old; i*q<=A; i++) {
+		dfs(p*i+q, i*q, n+1, i);
+	}
+}
+
+int main()
+{
+	while (cin>>P>>Q>>A>>N, P||Q||A||N) {
+		ans=0;
+		dfs(0, 1, 0, 1);
+		cout << ans << endl;
+	}
+	return 0;
+}

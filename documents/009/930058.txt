@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int Wm, N, W;
+int w[1000];
+bool dp[1000001];
+vector< int > vc;
+void rec( int mul){ // mul: 残りの重さ
+  if(dp[mul]++) return;
+  for(int i = 0; i < N; i++){
+    if(mul + w[i] >= W){
+      vc.push_back(mul);
+      continue;
+    }    
+    rec(mul + w[i]);
+  }
+}
+bool isprime(int& x){
+  for(int i = 2 ; i * i <= x ; i++ ) if( x % i == 0) return true;
+  return x == 1;
+}
+int solve(int i){
+  while(true){
+    if(dp[i] && !isprime(i)) return i;
+    i--;
+  }
+}
+int main(){
+
+  while(cin >> N >> Wm, N){
+    fill_n( dp, Wm + 1, false);
+    for(int i = 0; i < N; i++){
+      cin >> w[i];
+    }
+    vc.push_back(0);
+    for(W = 100000 ; W < Wm; W += 100000){
+      for(int i = 0; i < vc.size() ; i++){
+        rec(vc[0]);
+        vc.pop_back();
+      }
+    }
+    W = Wm;
+    for(int i = 0; i < vc.size() ; i++){
+      rec(vc[0]);
+      vc.pop_back();
+    }
+    int ret = solve(W);
+    if(ret == 0) cout << "NA" << endl;
+    else cout << solve(W) << endl;
+    vc.clear();
+  }
+}

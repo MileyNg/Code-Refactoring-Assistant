@@ -1,0 +1,92 @@
+/*
+  AOJ 2048
+  Title:Everlasting...?
+  @kankichi573
+*/
+#include <stdio.h>
+#include <string.h>
+#include <setjmp.h>
+jmp_buf jb;
+int result;
+char prime_flag[65536];
+
+int prime256[]={2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,
+67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,
+157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,
+241,251};
+
+make_furui()
+{
+        int i,j,num;
+        memset(prime_flag,-1,65536);
+        
+        prime_flag[0]=prime_flag[1]=0;
+
+        for(i=0;prime256[i];i++)
+                for(j=2;(num=prime256[i]*j)<65536;j++)
+                {
+                        //printf("%d\n",num);
+                        prime_flag[num]=0;
+                }
+}
+int isprime32(unsigned int n)
+{
+        int i;
+
+        for(i=2;i<65536;i++)
+                if(prime_flag[i] && 0==(n % i) && (n > i))
+                        return(0);
+        return(1);
+}
+int solve(int x,int acc,int start)
+{
+  int i,cnt,ret;
+
+  //printf("x=%d start=%d\n",x,start);
+  if(isprime32(x))
+    {
+      if(x==start)
+	result=x-(acc-x);
+      else
+	result=x-acc;
+      longjmp(jb,1);
+    }
+  for(i=start;i<1000;i++)
+    {
+      if(x % i)
+	  continue;
+      if(prime_flag[i])
+	{
+	  while((x % i)==0 && x>i)
+	    x /= i;
+	  solve(x,acc+i,i);
+	}
+    }
+}
+main()
+{
+  int a,b,i,reta,retb;
+  make_furui();
+
+
+  while(scanf("%d %d",&a,&b) && (a||b))
+    {
+      if(setjmp( jb ) == 0 ) 
+	solve(a,0,2);
+      else
+	reta=result;
+     if(setjmp( jb ) == 0 ) 
+       solve(b,0,2);
+      else
+	retb=result;
+#ifdef DEBUG
+      printf("%d %d\n",reta,retb);
+#endif
+      if(reta>retb)
+	printf("a\n");
+      else
+	printf("b\n");
+    }
+
+  return(0);
+}

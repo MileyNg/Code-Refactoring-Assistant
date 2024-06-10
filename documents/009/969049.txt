@@ -1,0 +1,39 @@
+#include<stdio.h>
+#define N 2000000
+
+int a[N],c[N],b[N];
+
+int main(){
+  int i,j,n;
+   
+  scanf("%d",&n);
+
+  for(i = 0; i < n; i++){
+    scanf("%d",&a[i]);
+  }
+
+  for(j = 0; j < n; j++){
+    c[a[j]]++;
+  }
+
+  for(i = 1; i <= n; i++){
+    c[i] = c[i-1] + c[i];
+  }
+ 
+  for(j = n; j > -1; j--){
+    b[c[a[j]]] = a[j];
+    c[a[j]]--;
+  }
+
+  for(i = 1; i < n+1; i++){
+    if(i != n){
+      printf("%d ",b[i]);
+    }else{
+      printf("%d\n",b[i]);
+    }
+    
+  }
+   
+   
+  return 0;
+}

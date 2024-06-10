@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 2000
+
+int main(){
+  int n, i, j, a[20], dp[MAX+1], in;
+
+  memset(dp,0,sizeof(dp));
+
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d" ,a + i);
+    dp[a[i]] = 1;
+  }
+
+  for(i = 0 ; i < n ; i++){
+    for(j = MAX-a[i] ; j >= 0 ; j--){
+      if(dp[j] && j + a[i] <= MAX && j != a[i]){
+        dp[j + a[i]] = 1;
+      }
+    }
+  }
+  
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d" ,&in);
+    if(dp[in]){
+      puts("yes");
+    }else{
+      puts("no");
+    }
+  }
+
+  return 0;
+}

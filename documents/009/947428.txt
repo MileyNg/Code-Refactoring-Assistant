@@ -1,0 +1,49 @@
+#include<stdio.h>
+
+int min(int a, int b){
+    if(a < b){return a;}
+    return b;
+}
+
+void swap(int *a, int *b){
+    int _i = *a;
+    *a = *b;
+    *b = _i;
+}
+
+void showArray(int *xs, int n){
+    for(int i=0;i<n;i++){
+        if(i == 0){printf("%d", xs[i]);}
+        else{printf(" %d", xs[i]);}
+    }
+    puts("");
+}
+
+int selectionSort(int *xs, int n){
+    int counter = 0;
+    for(int i=0;i<n;i++){
+        int minIndex = i;
+        for(int j=i;j<n;j++){
+            if(xs[minIndex] > xs[j]){minIndex = j;}
+        }
+        if(i != minIndex){counter += 1;}
+        swap(xs+i, xs+minIndex);
+    }
+    return counter;
+}
+
+int main(){
+    int N, xs[100];
+
+    scanf("%d", &N);
+    for(int i=0;i<N;i++){
+        scanf("%d", xs+i);
+    }
+
+    int count = selectionSort(xs, N);
+
+    showArray(xs, N);
+    printf("%d\n", count);
+
+    return 0;
+}

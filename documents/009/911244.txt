@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int g[100][100];
+	int a,b;
+	while(1){
+		for(int i=0;i<100;i++) for(int j=0;j<100;j++) g[i][j]=0;
+		while(1){
+			if(scanf("%d %d",&a,&b)==EOF) return 0;
+			if(a==0&&b==0) break;
+			g[a][b]++;
+			g[b][a]++;
+		}
+		int odd=0;
+		for(int i=0;i<100;i++){
+			int sum=0;
+			for(int j=0;j<100;j++){
+				sum+=g[i][j];
+			}
+			if(sum%2==1) odd++;
+		}
+		if(odd<=2) printf("OK\n");
+		else printf("NG\n");
+	}
+	return 0;
+}

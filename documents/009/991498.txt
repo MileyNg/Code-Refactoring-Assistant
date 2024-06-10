@@ -1,0 +1,65 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <string>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++)
+#define ascent(i, a, b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+
+using namespace std;
+
+int dp[1000][10000];
+
+int main() {
+	int w_max, count = 0;
+	while(cin >> w_max, w_max) {
+		count ++;
+		int n;
+		cin >> n;
+
+		ascent(i, 0, n) {
+			ascent(j, 0, w_max) {
+				dp[i][j] = 0;
+			}
+		}
+		
+
+		vector<int> v, w;
+		v.clear();w.clear();
+		loop(n) {
+			int tmp, tmp2;
+			scanf("%d,%d", &tmp, &tmp2);
+			v.pb(tmp);
+			w.pb(tmp2);
+		}
+		
+		int ww = 0;
+		ascent(i, 0, n+1) {
+			ascent(j, 0, w_max+1) {
+				if(j < w[i]) {
+					dp[i+1][j] = dp[i][j];
+				}
+				else {
+					int a = dp[i][j];
+					int b = dp[i][j-w[i]] + v[i];
+
+					if(a < b) {
+						dp[i+1][j] = b;
+						ww = max(ww, j);
+					}
+					else {
+						dp[i+1][j] = a;
+					}
+				}
+			}
+		}
+				
+		cout << "Case " << count << ":" << endl << dp[n][w_max] << endl << ww << endl;
+	}
+  return 0;
+}

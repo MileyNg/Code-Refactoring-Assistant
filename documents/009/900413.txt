@@ -1,0 +1,22 @@
+def convertRoman(str)
+  str.gsub!("IV", "IIII")
+  str.gsub!("IX", "VIIII")
+  str.gsub!("XL", "XXXX")
+  str.gsub!("XC", "LXXXX")
+
+  num = 0
+  num += str.count("I")
+  num += str.count("V") * 5
+  num += str.count("X") * 10
+  num += str.count("L") * 50
+  num += str.count("C") * 100
+  num += str.count("D") * 500
+  num += str.count("M") * 1000
+  return num
+end
+
+if __FILE__ == $0
+  while line = gets
+    puts convertRoman(line)
+  end
+end

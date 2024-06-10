@@ -1,0 +1,34 @@
+#include <cstdlib>
+#include <iostream>
+#include <tuple>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+
+#define dist(s) get<0>(s)
+#define x(s) get<1>(s)
+#define y(s) get<2>(s)
+
+void solve() {
+	tuple<int, int, int> current(0, 0, 0);
+	tuple<int, int, int> ans(current);
+
+	for(int dx, dy; cin >> dx >> dy && (dx | dy);) {
+		x(current) += dx;
+		y(current) += dy;
+		chmax(ans, current);
+	}
+
+	cout << x(ans) << " " << y(ans) << endl;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int t;
+	cin >> t;
+	while(t--) solve();
+
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,23 @@
+#include <iostream>
+
+using namespace std;
+
+int main(void) {
+    int w;
+    while (true) {
+        cin >> w;
+        if (cin.eof()) break;
+        for (int x = 1; x <= 512; x *= 2) {
+            if (w % (x * 2) != 0) {
+                cout << x;
+                w -= x;
+                if (w == 0) {
+                    cout << endl;
+                    break;
+                }
+                cout << " ";
+            }
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,33 @@
+#include<stdio.h>
+
+main(){
+  double a, b, c;
+  double d, e, f;
+  int res;
+  double s_x, s_y, tmp;
+
+  while(1){
+    res = scanf("%lf %lf %lf %lf %lf %lf", &a, &b, &c, &d, &e, &f);
+
+    if(res == EOF) break;
+
+    if(a != 1){
+      b /= a;
+      c /= a;
+      a /= a;
+    }
+    
+    if(d != 1){
+      e /= d;
+      f /= d;
+      d /= d;
+    }
+
+    s_y = (double)(c - f) / (double)(b - e);
+    s_x = c - b * (double)s_y;
+
+   printf("%0.3f %0.3f\n", s_x, s_y);
+  }
+
+  return 0;
+}

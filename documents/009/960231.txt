@@ -1,0 +1,139 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+
+//マクロ定義
+#define MAX 10
+#define TRUE 1
+#define FALSE 0
+
+#define compile 0
+/*
+デバッグ用
+0:実装 1:main関数 2:initialize関数 3:judge関数 4:output関数
+*/
+
+//関数のプロトタイプ宣言
+void initialize(int array[]); //配列の初期化
+int judge(int input[], int cylinderB[], int cylinderC[]);
+void output(int flag);
+int search(int array1[], int array2[]);
+
+main()
+{
+	int i = 0, j = 0, n = 0; //i:for文制御変数j:入力制御変数n:ループ上限回数を代入する変数
+	int input[MAX], cylinderB[MAX], cylinderC[MAX]; //配列を3つ宣言
+	int flag = 0; //結果はフラグで管理
+	scanf("%d", &n); //ループ回数を入力
+	
+	for(i = 0; i < n; i++)
+	{
+		initialize(input); //配列の初期化
+		initialize(cylinderB);
+		initialize(cylinderC);
+		
+		for(j = 0; j < MAX; j++) //入力値の取得
+		{
+			scanf("%d", &input[j]);
+		}
+		
+		flag = judge(input, cylinderB, cylinderC); //判定を行う
+		
+#if compile == 1
+		printf("flag = %d\n", flag);
+#endif
+		output(flag);
+		flag = 0;
+	}
+	
+	return 0;
+}
+
+void initialize(int array[]) //配列の初期化
+{
+	int i = 0;
+	for(i = 0; i < MAX; i++)
+	{
+		array[i] = 0;
+	}
+}
+
+int judge(int input[], int cylinderB[], int cylinderC[])
+{
+	int i = 0, j = -1, k = -1; //i:for文制御変数j:cylinderB[]制御変数k:cylinderC[]制御変数
+	cylinderB[++j] = input[i]; //この時点でcylinderB[0]にはinput[0]の値が代入される
+	for(i = 1; i < MAX; i++)
+	{
+#if compile == 3
+		printf("abs(input[i] - cylinderB[j]) = %d\tabs(input[i] - cylinderC[k]) = %d\n", abs(input[i] - cylinderB[j]), abs(input[i] - cylinderC[k]));
+		printf("input[i] - cylinderB[j] = %d\tinput[i] - cylinderC[k] = %d\n", input[i] - cylinderB[j], input[i] - cylinderC[k]);
+#endif
+
+		if(abs(input[i] - cylinderB[j]) < abs(input[i] - cylinderC[k]))
+		{
+			cylinderB[++j] = input[i];
+		}
+		else if(abs(input[i] - cylinderB[j]) > abs(input[i] - cylinderC[k]))
+		{
+			cylinderC[++k] = input[i];
+		}
+		else if(abs(input[i] - cylinderB[j]) == abs(input[i] - cylinderC[k]))
+		{
+			if((input[i] - cylinderB[j]) > 0)
+			{
+				cylinderB[++j] = input[i];
+			}
+			else if((input[i] - cylinderC[k]) > 0)
+			{
+				cylinderC[++k] = input[i];
+			}
+		}
+	}
+#if compile == 3
+	for(i = 0; i < MAX; i++)
+	{
+		printf("input[%d] = %d\tcylinderB[%d] = %d\tcylinderC[%d] = %d\n", i, input[i], i, cylinderB[i], i, cylinderC[i]);
+	}
+#endif
+	
+	int flag = FALSE;
+	flag = search(cylinderB, cylinderC);
+	return flag;
+}
+
+void output(int flag)
+{
+	if(flag == FALSE)
+	{
+		puts("NO");
+	}
+	else if(flag == TRUE)
+	{
+		puts("YES");
+	}
+	return;
+}
+int search(int array1[], int array2[])
+{
+	int i = 0;
+	
+	int max = 0;
+	for(i = 0; ((array1[i] != 0) && (i < MAX)); i++)
+	{
+		max = array1[i];
+		if(max < array1[i + 1])
+		{
+			return FALSE;
+		}
+	}
+	max = 0;
+	for(i = 0; ((array2[i] != 0) && (i < MAX)); i++)
+	{
+		max = array2[i];
+		if(max < array2[i + 1])
+		{
+			return FALSE;
+		}
+	}
+	return TRUE;
+}

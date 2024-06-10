@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+int main(){
+    /*
+    for(int m = 1; m < 40; m++){
+        double e = 0;
+        for(int i = 1; i <= m; i++){
+            double p = 1;
+            for(int j = 0; j < i; j++){
+                p *= 1.0 * (m - j) / (40 - j);
+            }
+            p *= 1.0 * (40 - m) / (40 - i);
+            e += p * i;
+        }
+        printf("m = %d e = %f a - e = %f\n", m, e, m - e);
+    }
+    */
+    int M = 35;
+    bool d[40][40] = {};
+    for(int i = 0; i < M; i++){
+        for(int j = 0; j < M; j++){
+            d[i][j] = (i != j);
+        }
+    }
+    for(int i = 0; i < 40; i++){
+        for(int j = 0; j < 40; j++){
+            if(i != j){
+                d[i][j] = !d[i][j];
+            }
+        }
+    }
+    cout << 40 << endl;
+    REP(i, 40) {
+        REP(j, 40) cout << (d[i][j] ? "Y" : "N");
+        cout << endl;
+    }
+    return 0;
+}

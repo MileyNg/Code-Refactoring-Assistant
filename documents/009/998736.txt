@@ -1,0 +1,70 @@
+#include <stdio.h>
+int H[500001],heap_size;
+
+int parent(int n){
+  return ((double)1/2)*n;
+}
+
+int left(int n){
+  return 2*n;
+}
+
+int right(int n){
+  return 2*n+1;
+}
+
+void maxHeapify(int n){
+  int l = left(n),r = right(n),largest,temp;
+  if (l <= heap_size && H[l] > H[n]){
+    largest = l;
+  } else {
+    largest = n;
+  }
+  if (r <= heap_size && H[r] > H[largest]){
+    largest = r;
+  }
+  if (largest != n){
+    temp = H[n];
+    H[n] = H[largest];
+    H[largest] = temp;
+    maxHeapify(largest);
+  }
+}
+
+int main() {
+  int i;
+
+  scanf ("%d",&heap_size);
+  for (i=1;i<=heap_size;i++){
+    scanf ("%d",&H[i]);
+  }
+  /*
+  for (i=1;i<=heap_size;i++){
+    printf ("node %d: key = %d, ",i,H[i]);
+    if (parent(i)>=1){
+      printf ("parent key = %d, ",H[parent(i)]);
+    }
+    if (left(i)<=heap_size){
+      printf ("left key = %d, ",H[left(i)]);
+    }
+    if (right(i)<=heap_size){
+      printf ("right key = %d, ",H[right(i)]);
+    }
+    printf("\n");
+    }
+  */
+
+  for (i=heap_size/2; i>=1;i--){
+    maxHeapify(i);
+  }
+
+  for (i=1;i<=heap_size;i++){
+    //if (i!=1){
+      printf(" ");
+    //}
+    printf("%d", H[i]);
+  }
+  printf("\n");
+
+  return 0;
+}

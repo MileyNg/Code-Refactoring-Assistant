@@ -1,0 +1,44 @@
+#include<iostream>
+#include<cstring>
+#include<climits>
+using namespace std;
+
+#define MAX_N 100000
+#define FIND 1
+#define UPDATE 0
+
+int n, q;
+int a[MAX_N+1];
+
+int find(int s, int t);
+void update(int i, int x);
+
+int main()
+{
+	cin >> n >> q;
+	for(int i=0; i<=MAX_N; i++) a[i] = INT_MAX;
+	int com, x, y;
+	for(int i=0; i<q; i++){
+		cin >> com >> x >> y;
+		switch(com){
+		case UPDATE:{update(x, y);break;}
+		case FIND:{cout<<find(x, y)<<endl;break;}
+		}
+	}
+	return 0;
+}
+
+
+int find(int s, int t)
+{
+	int min = a[s];
+	for(int i=s+1; i<=t; i++)
+		if(a[i]<min) min = a[i];
+
+	return min;
+}
+
+void update(int i, int x)
+{
+	a[i] = x;
+}

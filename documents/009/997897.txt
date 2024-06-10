@@ -1,0 +1,261 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<cmath>
+#include<cstring>
+#include<algorithm>
+#define LL long long
+/*
+#ifdef unix
+#define INT64 "%lld"
+#else
+#define INT64 "%I64d"
+#endif
+*/
+using namespace std;
+int n,m,cnt,snt,K,s,times;
+int xx1,xx2,yy1,yy2,len;
+LL oo=1000000007;
+double pi=3.1415926535897;
+double dis(double x1,double y1,double x2,double y2)
+{
+	return pow(pow(x1-x2,2)+pow(y1-y2,2),0.5);
+}
+void calc1()
+{
+	double l=len;
+	double x1=xx1,y1=yy1,x2=xx2,y2=yy2;
+	double ans=0;
+	if (l<=y2) //蝨?	{
+		ans=2*pi*l;
+	}
+	else if (dis(x1,y2,0,0)+y1-y2+x2-x1+dis(x2,y2,0,0)+y1-y2>=2*l) 
+	{
+		ans=pi*l;
+		//蟾ヲ
+		if (l<=dis(x1,y2,0,0))
+		{
+			double d=y2;
+			double a=acos(d/l);
+			ans+=(pi/2.0-a)*l;
+		}
+		else if (l<=dis(x1,y2,0,0)+y1-y2)
+		{
+			double d=y2;
+			double a=acos(d/dis(x1,y2,0,0));
+			ans+=(pi/2.0-a)*l;
+			double tl=l-dis(x1,y2,0,0);
+			ans+=a*tl;
+		}
+		else 
+		{
+			double d=y2;
+			double a=acos(d/dis(x1,y2,0,0));
+			ans+=(pi/2.0-a)*l;
+			double tl=l-dis(x1,y2,0,0);
+			ans+=a*tl;
+			tl-=y1-y2;
+			ans+=pi/2*tl;
+		}
+		//蜿ウ
+		if (l<=dis(x2,y2,0,0))
+		{
+			double d=y2;
+			double a=acos(d/l);
+			ans+=(pi/2.0-a)*l;
+		}
+		else if (l<=dis(x2,y2,0,0)+y1-y2)
+		{
+			double d=y2;
+			double a=acos(d/dis(x2,y2,0,0));
+			ans+=(pi/2.0-a)*l;
+			double tl=l-dis(x2,y2,0,0);
+			ans+=a*tl;
+		}
+		else 
+		{
+			double d=y2;
+			double a=acos(d/dis(x2,y2,0,0));
+			ans+=(pi/2.0-a)*l;
+			double tl=l-dis(x2,y2,0,0);
+			ans+=a*tl;
+			tl-=y1-y2;
+			ans+=pi/2*tl;
+		}
+	}
+	else //蜿ッ莉・逶ク莠、
+	{
+		ans+=pi*l;
+		double d=y2;
+		double a=acos(d/dis(x1,y2,0,0));
+		ans+=(pi/2.0-a)*l;
+		double ll=l-dis(x1,y2,0,0);
+		ans+=a*ll;
+		ll-=y1-y2;
+		////
+		double b=acos(d/dis(x2,y2,0,0));
+		ans+=(pi/2.0-b)*l;
+		double rl=l-dis(x2,y2,0,0);
+		ans+=b*rl;
+		rl-=y1-y2;
+		double dd=x2-x1;
+		double c1=(rl*rl+dd*dd-ll*ll)/(2*rl*dd);
+		if (c1>=0&&c1<=1)
+		{
+			double c2=(ll*ll+dd*dd-rl*rl)/(2*ll*dd);
+			ans+=(pi/2-acos(c1))*rl+(pi/2-acos(c2))*ll;
+		}
+		else 
+		{
+			rl+=y1-y2;
+			ans-=b*rl;
+			dd=dis(x1,y1,x2,y2);
+			double e,f;
+			e=acos((y1-y2)/dd);
+			f=acos((x2-x1)/dd);
+			c1=acos((rl*rl+dd*dd-ll*ll)/(2*rl*dd));
+			double c2=acos((ll*ll+dd*dd-rl*rl)/(2*ll*dd));
+			ans+=ll*(pi/2-c2+f)+rl*(pi/2-c1+e);
+		}
+	}
+	printf("%.8lf\n",ans);
+}
+void calc2()
+{
+	double l=len;
+	double x1=xx1,y1=yy1,x2=xx2,y2=yy2;
+	double ans=0;
+	if (l<=dis(x1,y2,0,0)) //蝨?	{
+		ans=2*pi*l;
+	}
+	else if (dis(x1,y1,0,0)+dis(x2,y2,0,0)+x2-x1+y1-y2>2*l)
+	{
+		ans+=1.5*pi*l;
+		//蟾ヲ
+		if (l<dis(x1,y1,0,0))
+		{
+			ans+=asin(x1/l)*l;
+		}
+		else 
+		{
+			double a=asin(x1/dis(x1,y1,0,0));
+			ans+=a*l;
+			double ll=l-dis(x1,y1,0,0);
+			if (ll<=x2-x1)
+			{
+				ans+=(pi/2-a)*ll;
+			}
+			else 
+			{
+				ans+=(pi/2-a)*ll;
+				ll-=x2-x1;
+				ans+=pi/2*ll;
+			}
+		}
+		//蜿ウ
+		if (l<dis(x2,y2,0,0))
+		{
+			ans+=asin(y2/l)*l;
+		}
+		else 
+		{
+			double b=asin(y2/dis(x2,y2,0,0));
+			ans+=b*l;
+			double rl=l-dis(x2,y2,0,0);
+			if (rl<=y1-y2)
+			{
+				ans+=(pi/2-b)*rl;
+			}
+			else 
+			{
+				ans+=(pi/2-b)*rl;
+				rl-=y1-y2;
+				ans+=pi/2*rl;
+			}
+		}
+	}
+	else 
+	{
+		ans+=1.5*pi*l;
+		double a=asin(x1/dis(x1,y1,0,0));
+		ans+=a*l;
+		double ll=l-dis(x1,y1,0,0);
+		double b=asin(y2/dis(x2,y2,0,0));
+		ans+=b*l;
+		double rl=l-dis(x2,y2,0,0);
+		bool cd=true;
+		if (ll-x2+x1>=0)
+		{
+			double tll=ll-x2+x1,d=y1-y2;
+			double c1=(tll*tll+d*d-rl*rl)/(2*tll*d);
+			if (c1>=0&&c1<=1)
+			{
+				cd=false;
+				ans+=ll*(pi/2-a)+tll*(pi/2-acos(c1));
+				double c2=(rl*rl+d*d-tll*tll)/(2*rl*d);
+				ans+=rl*(pi/2-b-acos(c2));
+			}
+		}
+		if (rl-y1+y2>=0&&cd)
+		{
+			double trl=rl-y1+y2,d=x2-x1;
+			double c1=(trl*trl+d*d-ll*ll)/(2*trl*d);
+			if (c1>=0&&c1<=1)
+			{
+				cd=false;
+				ans+=rl*(pi/2-b)+trl*(pi/2-acos(c1));
+				double c2=(ll*ll+d*d-trl*trl)/(2*ll*d);
+				ans+=ll*(pi/2-a-acos(c2));
+			}
+		}
+		if (cd)
+		{
+			double d=dis(x1,y1,x2,y2);
+			double e,f;
+			e=acos((y1-y2)/d);
+			f=pi/2-e;
+			double c1=acos((ll*ll+d*d-rl*rl)/(2*ll*d));
+			double c2=acos((rl*rl+d*d-ll*ll)/(2*rl*d));
+			ans+=ll*(pi/2-a-c1+f)+rl*(pi/2-b-c2+e);
+		}
+	}
+	printf("%.8lf\n",ans);
+}
+void work()
+{
+	if (abs(yy1)<abs(yy2))
+	{
+		yy1*=-1;yy2*=-1;swap(yy1,yy2);
+	}
+	if (abs(xx1)>abs(xx2))
+	{
+		xx1*=-1;xx2*=-1;swap(xx1,xx2);
+	}
+	if (xx1<0)
+	{
+		calc1();
+	}
+	else if (yy2<0)
+	{
+		swap(xx1,yy1);
+		swap(xx2,yy2);
+		swap(xx1,xx2);
+		swap(yy1,yy2);
+		calc1();
+	}
+	else 
+	{
+		calc2();
+	}
+}
+int main()
+{
+	scanf("%d%d%d%d%d",&len,&xx1,&yy1,&xx2,&yy2);
+	while (len!=0||xx1!=0||yy1!=0||xx2!=0||yy2!=0)
+	{
+		swap(yy1,yy2);
+		work();
+		scanf("%d%d%d%d%d",&len,&xx1,&yy1,&xx2,&yy2);
+	}
+    return 0;
+}

@@ -1,0 +1,156 @@
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+// ヘロンの公式により三角形の面積を求める
+double Heron(double a, double b, double c) {
+    double s = (a + b + c) / 2;
+    return sqrt(s * (s - a) * (s - b) * (s - c));
+}
+
+// 2次元座標上の点、あるいはベクトル
+struct Point {
+    double x, y;
+    Point(double x = 0, double y = 0) : x(x), y(y) {}
+    double abs() { return sqrt(x * x + y * y); }
+    Point unit() {
+        double l = abs();
+        return Point(x / l, y / l);
+    }
+    Point operator+(const Point& p) const { return Point(x + p.x, y + p.y); }
+    Point operator-() const { return Point(-x, -y); }
+    Point operator-(const Point& p) const { return Point(x - p.x, y - p.y); }
+    Point operator*(double a) const { return Point(a * x, a * y); }
+    double operator*(const Point& p) const { return x * p.y + y * p.x; }
+    Point operator/(double a) const { return Point(x / a, y / a); }
+    Point R90() const { return Point(y, -x); }
+    Point R180() const { return Point(-x, -y); }
+    Point R270() const { return Point(-y, x); }
+    static double Distance(const Point& a, const Point& b) {
+        return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    }
+#define EPS (1e-9)
+    static double CROSS(const Point& a, const Point& b) { return a.x * b.y - a.y * b.x; }
+    static int CCW(Point a, Point b, Point c){
+        b = b - a; c = c - a;
+        if (CROSS(b, c) > EPS) return +1;  // 反時計周り
+        if (CROSS(b, c) < -EPS) return -1; // 時計周り
+        if (b * c < 0) return +2;          // c--a--b 直線
+        if (b.abs() < c.abs()) return -2;  // a--b--c 直線
+        return 0;                          // a--c--b 直線
+    }
+};
+ostream& operator<<(ostream& os, const Point& p) {
+    os << "(" << p.x << "," << p.y << ")";
+    return os;
+}
+
+struct Segment {
+    Point a, b;
+    Segment(Point a, Point b) : a(a), b(b) {}
+    bool DoesIntersect(const Segment &s){
+        return Point::CCW(a, b, s.a) * Point::CCW(a, b, s.b) <= 0 &&
+               Point::CCW(s.a, s.b, a) * Point::CCW(s.a, s.b, b) <= 0;
+    }
+};
+
+struct Circle {
+    Point o;
+    double r;
+    Circle(Point o, double r) : o(o), r(r) {}
+    static pair<Point, Point> IPoints(const Circle& a, const Circle& b) {
+        double d = Point::Distance(a.o, b.o);
+        double h = Heron(a.r, b.r, d) / d * 2;
+        double l = sqrt(a.r * a.r - h * h);
+        Point e = (b.o - a.o).unit();
+        Point proj = a.o + e * l;
+        return make_pair(proj + e.R90() * h, proj + e.R270() * h);
+    }
+};
+
+int N;
+#define MN 101
+double X[MN], Y[MN], R[MN];
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    for (int i = 0; i < N; i++) {
+        cin >> X[i] >> Y[i] >> R[i];
+    }
+    return true;
+}
+
+void solve() {
+    vector<Point> Ps;
+    Ps.push_back(Point(X[0], Y[0]));
+    for (int i = 0; i < N - 1; i++) {
+        Circle a(Point(X[i], Y[i]), R[i]),
+               b(Point(X[i + 1], Y[i + 1]), R[i + 1]);
+        pair<Point, Point> pp = Circle::IPoints(a, b);
+        Ps.push_back(pp.first);
+        Ps.push_back(pp.second);
+    }
+    Ps.push_back(Point(X[N - 1], Y[N - 1]));
+    static double G[MN][MN];
+    static const double INF = 1e20;
+    int N1 = 2 * N;
+    for (int i = 0; i < N1; i++) for (int j = 0; j < N1; j++) {
+        if (i == j) G[i][j] = 0;
+        else G[i][j] = INF;
+    }
+    for (int i = 0; i < Ps.size(); i++) {
+        for (int j = i + 1; j < Ps.size(); j++) {
+            Point& a = Ps[i];
+            Point& b = Ps[j];
+            Segment s(a, b);
+            int li = (i + 1) / 2 + 1,
+                lj = (j + 1) / 2;
+            for (int k = li; k < lj; k++) {
+                if (!s.DoesIntersect(Segment(Ps[k * 2 - 1], Ps[k * 2]))) {
+                    goto FAIL;
+                }
+            }
+            G[i][j] = Point::Distance(a, b);
+            FAIL:;
+        }
+    }
+    /*
+    for (int k = 0; k < N1; k++) {
+        for (int i = 0; i < N1; i++) {
+            for (int j = 0; j < N1; j++) {
+                G[i][j] = min(G[i][j], G[i][k] + G[k][j]);
+            }
+        }
+    }
+    */
+    for (int i = 0; i < N1; i++) {
+        for (int j = i + 1; j < N1; j++) {
+            G[0][j] = min(G[0][j], G[0][i] + G[i][j]);
+        }
+    }
+    printf("%.8lf\n", G[0][2 * N - 1]);
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

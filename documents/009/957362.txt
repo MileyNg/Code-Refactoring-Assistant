@@ -1,0 +1,39 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+
+int main(){
+
+  int s[1000];
+
+  int n;
+  while(cin >> n){
+    double sum=0;
+    double bun;
+    double ave;
+    int i;
+    if(n==0)
+      break;
+    for(i=0;i<n;i++){
+      int m;
+      cin >> m;
+      sum+=m;
+      s[i]=m;
+    }
+    ave=(double)sum/i;
+    sum=0;
+
+    for(int j=0;j<i;j++){
+      sum+=(s[j]-ave)*(s[j]-ave)/i;
+    }
+    cout << fixed << sqrt(sum) << endl;
+
+    for(int j=0;j<i;j++)
+      s[i]=0;
+
+  }
+
+
+}

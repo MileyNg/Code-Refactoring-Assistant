@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+class Team
+{
+public:
+	int id, penalty, acs;
+	vector<int> buffer;
+
+	Team(int id, int problem_number) : id(id), penalty(0), acs(0), buffer(problem_number) { }
+
+	void submit(int m, int p, int j)
+	{
+		if(!j) {
+			acs++;
+			penalty += buffer[p] + m;
+		} else {
+			buffer[p] += 20;
+		}
+	}
+};
+
+bool operator == (const Team& a, const Team& b)
+{
+	return a.acs == b.acs && a.penalty == b.penalty;
+}
+
+bool operator < (const Team& a, const Team& b)
+{
+	if(a.acs != b.acs) return a.acs > b.acs;
+	if(a.penalty != b.penalty) return a.penalty < b.penalty;
+	return a.id > b.id;
+}
+
+int main()
+{
+	for(int M, T, P, R; cin >> M >> T >> P >> R && (M||T||P||R); ) {
+		vector<Team> teams;
+
+		for(int i = 0; i < T; i++) {
+			teams.push_back(Team(i+1, P));
+		}
+
+		for(int i = 0; i < R; i++) {
+			int m, t, p, j;
+			cin >> m >> t >> p >> j;
+			teams[t-1].submit(m, p-1, j);
+		}
+
+		sort(teams.begin(), teams.end());
+
+		for(int i = 0; i < T; i++) {
+			cout << teams[i].id << (i+1 == T ? '\n' : (teams[i] == teams[i+1] ? '=' : ','));
+		}
+	}
+}

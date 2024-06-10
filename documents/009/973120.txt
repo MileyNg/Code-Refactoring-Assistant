@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+
+int main(void){
+    int x, y, max_x, max_y, num_cannot_pass;
+    while(std::cin >> max_x >> max_y >> num_cannot_pass){
+        if(max_x == 0 && max_y ==0)
+            break;
+        std::vector<std::vector<int> > crossing(max_x + 1, std::vector<int>(max_y + 1, 0));
+        
+        crossing[1][1] = 1;
+        for(int i = 1; i <= num_cannot_pass; ++i){
+            std::cin >> x >> y;
+            crossing[x][y] = -1;
+        }
+        for(int i = 1; i <= max_x; ++i){
+            for(int j = 1; j <= max_y; ++j){
+                if(i != 1 || j != 1){
+                    if(crossing[i][j] == -1){
+                        crossing[i][j] = 0;
+                        continue;
+                    }
+                    crossing[i][j] = crossing[i - 1][j] + crossing[i][j - 1];
+                }
+            }
+        }
+        std::cout << crossing[max_x][max_y] << std::endl;
+    }
+}

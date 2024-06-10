@@ -1,0 +1,28 @@
+#include <iostream>
+
+using namespace std;
+/** Problem0136 : Frequency Distribution of Height **/
+int main()
+{
+	int n, list[6]={0};
+	double d;
+	
+	cin >> n;
+	for (int i=0; i<n; i++) {
+		cin >> d;
+		if (d < 165) list[0]++;
+		else if (d<170) list[1]++;
+		else if (d<175) list[2]++;
+		else if (d<180) list[3]++;
+		else if (d<185) list[4]++;
+		else			list[5]++;
+	}
+	
+	for (int i=0; i<6; i++) {
+		cout << i+1 << ":";
+		for (int j=0; j<list[i]; j++)
+			cout << "*";
+		cout << endl;
+	}
+	return 0;
+}

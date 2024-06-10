@@ -1,0 +1,37 @@
+#include<iostream>
+#include<string>
+#include<stack>
+
+using namespace std;
+
+int main(){
+	string sin;
+	int num;
+	stack<double> st;
+	double a,b,c,d,n,f;
+	while(getline(cin,sin)){
+		n=f=0;d=1;
+		for(int i=0;i<sin.size();i++){
+			if(sin[i]=='-'&&'0'<=sin[i+1]&&sin[i+1]<='9'){d=-1;continue;}
+			if('0'<=sin[i]&&sin[i]<='9'){
+				if(f==0)n=n*10+sin[i]-'0';
+				else {n+=(sin[i]-'0')*f;f*=0.1;}
+				continue;
+			}
+			if(sin[i]=='.'){f=0.1;continue;}
+			if(sin[i]==' '){st.push(n*d);f=n=0;d=1;continue;}
+			b=st.top();st.pop();
+			c=st.top();st.pop();
+			if(sin[i]=='+')st.push(a+b);
+			if(sin[i]=='-')st.push(a-b);
+			if(sin[i]=='*')st.push(a*b);
+			if(sin[i]=='/')st.push(a/b);
+			i++;
+		}
+		if(st.size()==0) st.push(n);
+		cout<<st.top()<<endl;
+		st.pop();
+	}
+	
+
+}

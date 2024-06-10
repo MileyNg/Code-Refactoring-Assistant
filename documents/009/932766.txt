@@ -1,0 +1,126 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+#define whole(xs) xs.begin(), xs.end()
+
+int N, Q;
+vector<int> S;
+vector<int> sortedS;
+vector<int> Leaders;
+void input() {
+    cin >> N >> Q;
+    S.resize(N);
+    for (int i = 0; i < N; i++) {
+        cin >> S[i];
+    }
+    sortedS = S;
+    sort(whole(sortedS));
+}
+
+struct C_S {
+    int t, d;
+    C_S(int t, int d) : t(t), d(d) {}
+};
+bool C_comp(const C_S& a, const C_S& b) {
+    return a.t < b.t;
+}
+int C(int r) {
+    vector<C_S> ev;
+    for (int i = 0; i < Leaders.size(); i++) {
+        ev.push_back(C_S(
+            lower_bound(whole(sortedS), S[Leaders[i]] - r) - sortedS.begin(),
+            1
+        ));
+        ev.push_back(C_S(
+            lower_bound(whole(sortedS), S[Leaders[i]]) - sortedS.begin(),
+            -1
+        ));
+    }
+    ev.push_back(C_S(N, 0));
+    sort(whole(ev), C_comp);
+    int acc = 0;
+    int d = 0;
+    for (int i = 0; i < int(ev.size() - 1); i++) {
+        int j;
+        for (j = i; j < int(ev.size() - 1) && ev[j].t == ev[i].t; j++) {
+            d += ev[j].d;
+        }
+        i = j - 1;
+        //cout << i << " " << ev[i].t << " " << ev[i + 1].t << endl;
+        if (d >= 1) {
+            acc += ev[i + 1].t - ev[i].t;
+        }
+    }
+
+    bool u[Leaders.size()]; memset(u, 0, sizeof(u));
+    for (int i = 0; i < Leaders.size(); i++) {
+        for (int j = 0; j < Leaders.size(); j++) {
+            if (i == j) continue;
+            int si = S[Leaders[i]],
+                sj = S[Leaders[j]];
+            if (sj <= si) continue;
+            if (sj - si < r) {
+                u[i] = true;
+            }
+        }
+    }
+    for (int i = 0; i < Leaders.size(); i++) {
+        if (!u[i]) {
+            acc++;
+        }
+    }
+
+    /*
+    for (int i = 0; i < ev.size(); i++) {
+        cout << "{ " << ev[i].t << ", " << ev[i].d << " }" << " ";
+    }
+    cout << r << " " << acc << " " << ev.size() << endl;
+    */
+    return N - acc;
+}
+
+int check(int x) {
+    int lb = 0, ub = 1e9;
+    //cout << "check(" << x << ")" << endl;
+    if (C(ub) > x) return -1;
+    if (C(lb) <= x) return 0;
+    while (lb + 1 < ub) {
+        int mid = (lb + ub) / 2;
+        if (C(mid) <= x) {
+            ub = mid;
+        } else {
+            lb = mid;
+        }
+    }
+    return ub;
+}
+
+int main() {
+    input();
+    for (int _ = 0; _ < Q; _++) {
+        string cmd; int a;
+        cin >> cmd >> a;
+        if (cmd == "ADD") {
+            a--;
+            Leaders.push_back(a);
+        } else if (cmd == "REMOVE") {
+            a--;
+            Leaders.erase(find(whole(Leaders), a));
+        } else { assert(cmd == "CHECK");
+            int x = check(a);
+            if (x < 0) cout << "NA" << endl;
+            else cout << x << endl;
+        }
+    }
+    return 0;
+}

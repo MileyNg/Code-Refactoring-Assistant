@@ -1,0 +1,72 @@
+#include<iostream>
+#include<cstdlib>
+#include<string>
+#include<stack>
+
+using namespace std;
+
+int main(){
+
+	string s;
+	int i;
+	stack<int> st;
+	string tmp;
+	string numtm;
+	string ans;
+	bool f;
+	string rtmp;
+
+	while (1){
+		cin >> s >> i;
+		if (s == "0"&&i == 0) break;
+
+		while (!st.empty()) st.pop();
+		tmp = "";
+		numtm = "";
+
+		f = false;
+		for (int j = 0; j < s.size(); j++){
+			if (s[j] >= '0'&&s[j] <= '9'){
+				if (numtm != "" && f == true){
+					for (int k = 0; k < atoi(numtm.c_str()); k++){
+						ans += tmp;
+				}
+					numtm = ("");
+				}
+				else ans += tmp;
+				f = false;
+				tmp = ("");
+				numtm += s[j];
+			}
+			else if (s[j] == '('){
+				st.push(atoi(numtm.c_str()));
+				numtm = "";
+			}
+			else if (s[j] == ')'){
+				rtmp = ans;
+				for (int k = 0; k < st.top(); k++){
+					if (tmp != "") ans += tmp;
+					else if(k!=st.top()-1) ans += rtmp;
+				}
+				tmp = "";
+				st.pop();
+			}
+			else{
+				tmp += s[j];
+				f = true;
+			}
+		}
+		if (numtm != ""){
+			for (int j = 0; j < atoi(numtm.c_str()); j++){
+				ans += tmp;
+			}
+			numtm = ("");
+		}
+		else ans += tmp;
+		if (ans.size() > i) cout << ans[i] << endl;
+		else cout << "0" << endl;
+		ans = "";
+	}
+
+	return 0;
+}

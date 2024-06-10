@@ -1,0 +1,23 @@
+#include<cstdio>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+int ci(double xa,double ya,double ra,double xb,double yb,double rb){
+  double diff2 = (xb-xa)*(xb-xa)+(yb-ya)*(yb-ya);
+  if(diff2 > (ra+rb)*(ra+rb)){return 0;}
+  if(diff2 > ra*ra && diff2 > rb*rb){return 1;}
+  if(ra>=rb){
+    if((ra-rb)*(ra-rb)>diff2){return 2;}
+    else{return 1;}
+  }else{
+    if((rb-ra)*(rb-ra)>diff2){return -2;}
+    else{return 1;}
+  }
+}
+int main(){
+  int n;scanf("%d",&n);
+  REP(i,n){
+    double xa,ya,ra,xb,yb,rb;
+    scanf("%lf %lf %lf %lf %lf %lf",&xa,&ya,&ra,&xb,&yb,&rb);
+    printf("%d\n",ci(xa,ya,ra,xb,yb,rb));
+  }
+}

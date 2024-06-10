@@ -1,0 +1,145 @@
+#include<iostream>
+#include<cmath>
+
+using namespace std;
+#define LIMIT 30
+ 
+struct Puzzle {
+  string cont[9];
+  int space; 
+};
+ 
+ 
+int dx[4]={ 0, 1, 0,-1};
+int dy[4]={-1, 0, 1, 0};
+ 
+int limit;
+Puzzle puzzle;
+char target[9];
+int targetspace;
+ 
+int getHeuristic(){
+  int sum = 0;
+  for(int i=0;i<9;i++){
+    if(puzzle.cont[i][0]=='E')continue;
+    sum+=(puzzle.cont[i][0]!=target[i]);
+  }
+  if(puzzle.space==targetspace&&sum!=0)return sum+2;
+  else return sum;
+
+}
+ 
+bool dfs(int depth,int prev){
+  int heuri=getHeuristic();
+  if(heuri==0){return true;}
+  if(depth+heuri > limit )return false;
+ 
+  char temp;
+  int px,py,nx,ny;
+  Puzzle tmp;
+ 
+  px=puzzle.space%3;
+  py=puzzle.space/3;
+  /*
+  for(int i=0;i<3;i++){
+    for(int j=0;j<3;j++){
+      cout<<puzzle.cont[i*3+j][0];
+    }
+    cout<<endl;
+  }
+  */
+  for(int i=0;i<4;i++){
+ 
+    nx=px+dx[i];
+    ny=py+dy[i];
+    if(max(prev,i)-min(prev,i)==2)continue;
+ 
+    if(nx<0||ny<0||nx>=3||ny>=3)continue;
+ 
+    tmp=puzzle;
+ 
+    if(i%2){
+      // puzzle.cont[py*3+px]=rb(puzzle.cont[ny*3+nx]);
+      puzzle.cont[py*3+px]=puzzle.cont[ny*3+nx];
+      temp=puzzle.cont[py*3+px][0];
+      puzzle.cont[py*3+px][0]=puzzle.cont[py*3+px][2];
+      puzzle.cont[py*3+px][2]=temp;
+    }else{
+      //  puzzle.cont[py*3+px]=ra(puzzle.cont[ny*3+nx]);
+      puzzle.cont[py*3+px]=puzzle.cont[ny*3+nx];
+      temp=puzzle.cont[py*3+px][0];
+      puzzle.cont[py*3+px][0]=puzzle.cont[py*3+px][1];
+      puzzle.cont[py*3+px][1]=temp;
+    }
+ 
+ 
+    puzzle.space=ny*3+nx;
+    puzzle.cont[puzzle.space]="EEE";
+     
+    /*
+    for(int ii=0;ii<3;ii++){
+      for(int j=0;j<3;j++){
+    cout<<puzzle.cont[ii*3+j][0];
+      }
+      cout<<endl;
+    }
+    */
+    if(dfs(depth+1,i))return true;
+    puzzle=tmp;
+ 
+  }
+  return false;
+}
+Puzzle in;
+void solve(){
+  bool a,b;
+  in=puzzle;
+  for(limit=getHeuristic();limit <= LIMIT ; limit+=3 ){
+    puzzle=in;
+    if(dfs(0,-100)){
+
+
+      if(limit==0){cout<<0<<endl;return;}
+
+      
+      limit-=2;
+      puzzle=in;
+      a=dfs(0,-100);
+
+      if(a==true){cout<<limit<<endl;return;}
+
+      limit++;
+      puzzle=in;
+      b=dfs(0,-100);
+      if(b==true){cout<<limit<<endl;return;}
+
+      
+      cout<<limit+1<<endl;
+
+      return;
+    }
+ 
+  }
+  cout<<"-1"<<endl;
+ 
+}
+ 
+int main(){
+  int x,y;
+  while(cin>>x>>y){
+    if(x==0&&y==0)break;
+    x--;y--;
+ 
+    puzzle.space=y*3+x;
+    for(int i=0;i<9;i++){
+      cin>>target[i];
+      if(target[i]=='E')targetspace=i;
+      if(i/3==y&&i%3==x)puzzle.cont[i]="EEE";
+      else puzzle.cont[i]="WRB";
+    }
+    
+    solve();
+     
+  }
+  return 0;
+}

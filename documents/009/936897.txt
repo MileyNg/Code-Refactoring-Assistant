@@ -1,0 +1,157 @@
+#include <cstdio>
+#include <cassert>
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define x first
+#define y second
+
+using namespace std;
+
+typedef pair<double, double> Point;
+
+class Line {
+  public:
+    double a, b, c;
+
+    Line(const double _a = 0.0, const double _b = 0.0, const double _c = 0.0):
+      a(_a),
+      b(_b),
+      c(_c) {}
+
+    Line(const Point &p1, const Point &p2):
+      a(p1.y - p2.y),
+      b(p2.x - p1.x),
+      c(p1.x * p2.y - p1.y * p2.x) {}
+};
+
+vector<Line> Plane;
+vector<Point> Points;
+vector<double> Areas;
+
+inline double Det(const Point &a, const Point &b, const Point &c) {
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
+
+class Compare {
+  public:
+    static Point origin;
+
+    bool operator()(const Point &a, const Point &b) const {
+        return Det(origin, a, b) >= 0;
+    }
+};
+
+Point Compare::origin;
+
+vector<Point> ConvexHull(vector<Point> points) {
+    int n = int(points.size());
+    int origin = 0;
+    for (int i = 1; i < n; ++i)
+        if (points[i] < points[origin])
+            origin = i;
+    swap(points[0], points[origin]);
+    Compare::origin = points[0];
+    sort(points.begin() + 1, points.end(), Compare());
+    points.push_back(points[0]);
+    vector<Point> hull;
+    for (int i = 0; i < int(points.size()); ++i) {
+        while (int(hull.size()) > 1 && Det(hull[int(hull.size()) - 2], hull[int(hull.size()) - 1], points[i]) <= 0)
+            hull.pop_back();
+        hull.push_back(points[i]);
+    }
+    hull.pop_back();
+    return hull;
+}
+
+inline Point Dualize(const Line &l) {
+    if (l.c == 0)
+        return Point(0, 0);
+    else
+        return Point(l.a / l.c, l.b / l.c);
+}
+
+inline Line Dualize(const Point &p) {
+    return Line(p.x, p.y, 1);
+}
+
+inline Point Translate(const Point &p, const Point &shift) {
+    return Point(p.x + shift.x, p.y + shift.y);
+}
+
+inline Line Translate(const Line &l, const Point &shift) {
+    return Line(l.a, l.b, l.c - l.a * shift.x - l.b * shift.y);
+}
+
+vector< vector<Point> > GetVoronoiDiagrams(const vector<Line> &plane, const vector<Point> &points) {
+    int n = int(points.size());
+    vector< vector<Point> > voronoiDiagrams = vector< vector<Point> >(n, vector<Point>());
+    for (int i = 0; i < n; ++i) {
+        Point shift = Point(-points[i].x, -points[i].y);
+        vector<Point> dualizedLines;
+        for (int j = 0; j < int(plane.size()); ++j)
+            dualizedLines.push_back(Dualize(Translate(plane[j], shift)));
+        for (int j = 0; j < n; ++j) {
+            if (i != j) {
+                Point a = points[i], b = points[j];
+                dualizedLines.push_back(Dualize(Translate(Line(2 * (b.x - a.x), 2 * (b.y - a.y), a.x * a.x + a.y * a.y - b.x * b.x - b.y * b.y), shift)));
+            }
+        }
+        vector<Point> hull = ConvexHull(dualizedLines);
+        for (int j = 0; j < int(hull.size()); ++j)
+            voronoiDiagrams[i].push_back(Translate(Dualize(Line(hull[j], hull[(j + 1) % int(hull.size())])), points[i]));
+    }
+    return voronoiDiagrams;
+}
+
+inline double GetArea(const vector<Point> &polygon) {
+    int n = int(polygon.size());
+    double area = 0.0;
+    for (int i = 0; i < n; ++i)
+        area += polygon[i].x * polygon[(i + 1) % n].y - polygon[(i + 1) % n].x * polygon[i].y;
+    area /= 2.0;
+    if (area < 0.0)
+        area = -area;
+    return area;
+}
+
+void Solve() {
+    vector< vector<Point> > voronoi = GetVoronoiDiagrams(Plane, Points);
+    Areas = vector<double>(int(Points.size()), 0.0);
+    for (int i = 0; i < int(Points.size()); ++i)
+        Areas[i] = GetArea(voronoi[i]);
+}
+
+bool Read() {
+    int n, m;
+    cin >> n >> m;
+    if (n == 0 && m == 0)
+        return false;
+    vector<Point> planePolygon = vector<Point>(n);
+    for (int i = 0; i < n; ++i)
+        cin >> planePolygon[i].x >> planePolygon[i].y;
+    Plane = vector<Line>(n);
+    for (int i = 0; i < n; ++i)
+        Plane[i] = Line(planePolygon[i], planePolygon[(i + 1) % n]);
+    Points = vector<Point>(m);
+    for (int i = 0; i < m; ++i)
+        cin >> Points[i].x >> Points[i].y;
+    return true;
+}
+
+void Print() {
+    for (int i = 0; i < int(Points.size()); ++i)
+        printf("%.7lf\n", Areas[i]);
+}
+
+int main() {
+    //assert(freopen("voronoi.in", "r", stdin));
+    //assert(freopen("voronoi.out", "w", stdout));
+    while (Read()) {
+        Solve();
+        Print();
+    }
+    return 0;
+}

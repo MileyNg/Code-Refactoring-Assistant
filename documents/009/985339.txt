@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+int judge(int b[],int n){
+	int i;
+	for(i=0;i<n;i++)if(b[i]!=i+1)break;
+	if(i==n)return 1;
+	else return 0;
+}
+int func(int b[],int n){
+	int i,cid;
+	cid=0;
+	for(i=0;i<n;i++){
+		if(b[i]>1){
+			b[cid]=b[i]-1;
+			cid++;
+		}
+	}
+	b[cid]=n;
+	return cid+1;
+}
+int b[20005];
+int main(){
+	int i,n,c,f;
+	while(1){
+		scanf("%d",&n);
+		if(n==0)break;
+		for(i=0;i<n;i++)scanf("%d",&b[i]);
+		c=0;
+		while(c<=10000){
+			//if(judge(b,n)==1)break;
+			f=judge(b,n);
+			//printf("%d\n",f);
+			if(f==1)break;
+
+			n=func(b,n);
+			//for(i=0;i<n;i++)printf("%d ",b[i]);
+			//printf("\n");
+
+			c++;
+		}
+		if(c==10001)printf("-1\n");
+		else printf("%d\n",c);
+	}
+	return 0;
+}

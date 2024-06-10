@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define pb(a) push_back(a)
+#define mp(a,b) make_pair(a,b)
+#define ALL(a) (a).begin(),(a).end()
+#define SZ(a) ((int)(a).size())
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+string in;
+int p;
+typedef long long ll;
+
+ll rec(){
+  if(in[p]!='['){
+    int ret = 0;
+    while(isdigit(in[p])){
+      ret=(in[p]-'0')+ret*10;
+      ++p;
+    }
+    //cout << ret << endl;
+    return (ret+1)/2;
+  }
+
+  vector<ll> ve;
+  
+  ++p;
+  while(in[p]!=']'){
+    ve.pb(rec());
+    //++p;
+  }
+  ++p;
+  
+  sort(ALL(ve));
+  ll sum = 0;
+  rep(i,SZ(ve)/2+1) sum += ve[i];
+  return sum;
+}
+
+void solve(){
+  cin >> in;
+  p=0;
+  cout << rec() <<endl;
+}
+
+int main(){
+  int n;
+  cin >> n;
+  rep(i,n) solve();
+}

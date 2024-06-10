@@ -1,0 +1,50 @@
+#include<iostream>
+
+#define MAX 1000001
+
+bool isPrime[MAX];
+
+void init(){
+	for (int i = 2; i < MAX; i++)isPrime[i] = true;
+
+	for (int i = 2; i*i < MAX; i++){
+		if (isPrime[i]){
+			for (int j = i * 2; j < MAX; j += i)isPrime[j] = false;
+		}
+	}
+	return;
+}
+
+int main(){
+
+	init();
+
+	int n, x;
+	while (std::cin >> n >> x, n || x){
+		int price[31];
+		bool isMake[MAX];
+
+		for (int i = 0; i <= x; i++)isMake[i] = false;
+		for (int i = 0; i < n; i++){
+			std::cin >> price[i];
+			isMake[price[i]] = true;
+		}
+
+		for (int i = 0; i <= x; i++){
+			if (isMake[i]){
+				for (int j = 0; j < n; j++){
+					if (i + price[j] <= x)isMake[i + price[j]] = true;
+				}
+			}
+		}
+
+		for (int i = x; i >= 0; i--){
+			if (isMake[i] && isPrime[i]){
+				std::cout << i << std::endl;
+				break;
+			}
+			if (i == 0)std::cout << "NA" << std::endl;
+		}
+	}
+	return 0;
+}

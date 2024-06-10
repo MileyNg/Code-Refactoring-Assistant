@@ -1,0 +1,36 @@
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+/** Problem0117 : A reward for a Carpenter **/
+const int INF = 100000;
+
+int main()
+{
+	int d[21][21];
+	int V, E;
+	
+	int s, g, plus, minus;
+	char c;
+	cin >> V >> E;
+	
+	for (int i=0; i<21; i++)
+		for (int j=0; j<21; j++) d[i][j] = INF;
+	
+	for (int i=0; i<E; i++) {
+		int a, b, dd, ddd;
+		cin >> a >> c >> b >> c >> dd >> c >> ddd;
+		d[a][b] = dd;
+		d[b][a] = ddd;
+	}
+	
+	cin >> s >> c >> g >> c >> plus >> c >> minus;
+	
+	for (int k=1; k<=V; k++)
+		for (int i=1; i<=V; i++)
+			for (int j=1; j<=V; j++)
+				d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+	
+	cout << plus - (minus + d[s][g] + d[g][s]) << endl;
+	return 0;
+}

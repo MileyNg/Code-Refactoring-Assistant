@@ -1,0 +1,102 @@
+#include <iostream>
+#include <string>
+#include <queue>
+#include <cmath>
+using namespace std;
+ 
+#define MAX 20
+bool is_wall[MAX][MAX];
+int is_dirty[MAX][MAX];
+
+#define BIT_MAX (1 << 10)
+#define INF 1e8
+int smallest_time[MAX][MAX][BIT_MAX];
+
+#define DIRS 4
+int dx[DIRS] = {-1, 0, 0, 1};
+int dy[DIRS] = { 0,-1, 1, 0};
+
+bool is_ok(int x, int y, int w, int h){
+  return 0 <= x && x < w && 0 <= y && y < h;
+}
+
+int main() {
+  
+  int w, h;
+  
+  while(cin >> w >> h, w || h ) {
+    int start_x = -1, start_y = -1;
+    int dirtys = 0;
+    
+    for(int i = 0; i < h; i++){
+      string line;
+      cin >> line;
+      
+      for(int j = 0; j < w; j++){
+	is_wall[i][j] = false;
+	is_dirty[i][j] = -1;
+	for(int k = 0; k < BIT_MAX; k++){
+	  smallest_time[i][j][k] = INF;
+	}
+	
+	if(line[j] == 'x'){
+	  is_wall[i][j] = true;
+	}else if(line[j] == '*'){
+	  is_dirty[i][j] = dirtys++;
+	}else if(line[j] == 'o'){
+	  start_x = j;
+	  start_y = i;
+	}
+      }
+    }
+    
+    queue<int> xq, yq, bq;
+    xq.push(start_x);
+    yq.push(start_y);
+    bq.push(0);
+    smallest_time[start_y][start_x][0] = 0;
+    
+    bool answered = false;
+    while(!bq.empty()){
+      const int x    = xq.front(); xq.pop();
+      const int y    = yq.front(); yq.pop();
+      const int bit  = bq.front(); bq.pop();
+      const int time = smallest_time[y][x][bit];
+      
+      if(bit == (1 << dirtys) - 1){
+	answered = true;
+	cout << time << endl;
+	break;
+      }
+      
+      for(int dir = 0; dir < DIRS; dir++){
+	const int nx = x + dx[dir];
+	const int ny = y + dy[dir];
+	const int n_time = time + 1;
+	
+	if(!is_ok(nx, ny, w, h)){
+	  continue;
+	}else if(is_wall[ny][nx]){
+	  continue;
+	}
+	
+	const int n_bit = bit | (is_dirty[ny][nx] < 0 ? 0 : (1 << is_dirty[ny][nx]));
+	
+	if(n_time >= smallest_time[ny][nx][n_bit]){
+	  continue;
+	}
+	
+	smallest_time[ny][nx][n_bit] = n_time;
+	xq.push(nx);
+	yq.push(ny);
+	bq.push(n_bit);
+      }
+    }
+    
+    if(!answered){
+      cout << -1 << endl;
+    }
+  }
+  
+  return 0;  
+}

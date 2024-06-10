@@ -1,0 +1,115 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+struct node{
+  int mp;
+  vector<int> enemy;
+  int hp;
+  node(int m,vector<int>v,int h):mp(m), enemy(v),hp(h){}
+  bool operator > (const node &e) const{
+    if(mp!=e.mp)
+      return mp>e.mp;
+    else
+      return hp>e.mp;
+  }
+
+};
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+  {
+    vector<int> enemy;
+    int sum=0;
+    for(int i=0;i<n;i++)
+      {
+	int tmp;
+	cin>>tmp;
+	enemy.push_back(tmp);
+	sum+=tmp;
+      }
+    int m;
+    cin>>m;
+    int mp[m];
+    bool all[m];
+    int damege[m];
+    for(int i=0;i<m;i++)
+      {
+	string name,tmp;
+	cin>>name>>mp[i]>>tmp>>damege[i];
+	//	cout<<tmp<<endl;
+	all[i]=(tmp=="All");
+      }
+    priority_queue<node,vector<node>,greater<node> >P;
+    P.push(node(0,enemy,sum));
+    while(!P.empty())
+      {
+
+	node tmp=P.top();
+	P.pop();
+	/*
+	cout<<"mp:"<<tmp.mp<<endl;
+	cout<<"sumhp:"<<tmp.hp<<endl;
+	for(int j=0;j<tmp.enemy.size();j++)
+	  {
+	    cout<<tmp.enemy[j]<<endl;
+	    //cout<<enemy[j]<<endl;
+	  }
+	*/
+	if(tmp.hp<=0)
+	  {
+	    cout<<tmp.mp<<endl;
+	    break;
+	  }
+	for(int i=0;i<m;i++)
+	  {
+	    int tmp_mp=tmp.mp;
+	    vector<int>tmp_e=tmp.enemy;
+	    int tmp_hp=tmp.hp;
+	    tmp_mp+=mp[i];
+	    if(all[i])
+	      {
+		//	cout<<i<<"=true"<<endl;;
+		for(int j=0;j<tmp_e.size();j++)
+		  {
+		    if(tmp_e[j]>0)
+		      {
+			if(tmp_e[j]<damege[i])
+			  {
+			    tmp_hp-=tmp_e[j];
+			    tmp_e[j]=0;
+			  }
+			else
+			  {
+			    tmp_e[j]-=damege[i];
+			    tmp_hp-=damege[i];
+			  }
+		      }
+		  }
+		P.push(node(tmp_mp,tmp_e,tmp_hp));
+	      }
+	    else
+	      {
+		//	cout<<i<<"=false"<<endl;;
+		for(int j=0;j<tmp_e.size();j++)
+		  {
+		    if(tmp_e[j]>0)
+		      {
+			int subnum;
+			if(tmp_e[j]<damege[i])
+			  subnum=tmp_e[j];
+			else
+			  subnum=damege[i];
+			tmp_e[j]-=subnum;
+			P.push(node(tmp_mp,tmp_e,tmp_hp-subnum));
+			tmp_e[j]+=subnum;
+		      }
+		  }
+	      }
+	  }
+	
+      }
+  }
+
+}

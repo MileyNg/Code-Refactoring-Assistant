@@ -1,0 +1,33 @@
+#include<stdio.h>
+#include<math.h>
+ 
+int main(){
+    long int n,i,j,t;
+    char data[10];
+
+    scanf("%ld",&n);
+     
+    for(;n>0;n--){
+        scanf(" %s ",data);
+         
+        for(i=0;i<8;i++){
+            for(j=i;j<8;j++){
+                if(data[i]<data[j]){
+                    t=data[i];
+                    data[i]=data[j];
+                    data[j]=t;
+                }
+            }
+        }
+
+        t=0;
+         
+        for(i=0;i<8;i++){
+            t+=((int)data[i]-48)*(int)pow(10,7-i);
+            t-=((int)data[i]-48)*(int)pow(10,i);
+        }
+
+        printf("%ld\n",t);
+    }
+    return 0;
+}

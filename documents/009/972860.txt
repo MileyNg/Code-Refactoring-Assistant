@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Edge{
+	int src,dst;
+	Edge(){}
+	Edge(int s,int d):src(s),dst(d){}
+};
+typedef vector<vector<Edge>> Graph;
+
+void DFS(const Graph& g,int v,vi& vis,vi& order)
+{
+	if(vis[v]) return;
+	vis[v]=1;
+	for(auto e:g[v]) DFS(g,e.dst,vis,order);
+	order.push_back(v);
+}
+
+vvi SCC(const Graph& g)
+{
+	int n=g.size();
+	vi vis(n),order;
+	rep(i,n) DFS(g,i,vis,order);
+	Graph t(n);
+	rep(i,n) for(auto e:g[i])
+		t[e.dst].emplace_back(e.dst,e.src);
+	fill(all(vis),0);
+	vvi res;
+	per(i,n) if(!vis[order[i]]){
+		res.resize(res.size()+1);
+		DFS(t,order[i],vis,res.back());
+	}
+	return res;
+}
+
+int calc(const Graph& g,int v)
+{
+	int res=1;
+	for(auto e:g[v])
+		res=(ll(res)*calc(g,e.dst))%MOD;
+	return res+1;
+}
+
+int main()
+{
+	for(int n,m;cin>>n>>m && n|m;){
+		Graph g(n);
+		rep(i,m){
+			int u,v; cin>>u>>v; u--,v--;
+			g[u].emplace_back(u,v);
+		}
+		
+		vvi scc=SCC(g);
+		vi f(n);
+		rep(i,scc.size()) rep(j,scc[i].size())
+			f[scc[i][j]]=i;
+		
+		Graph g2(scc.size());
+		{
+			set<pii> ps;
+			rep(i,n) for(auto e:g[i]) if(f[e.src]!=f[e.dst])
+				ps.insert(mp(f[e.dst],f[e.src]));
+			for(auto p:ps)
+				g2[p.first].emplace_back(p.first,p.second);
+		}
+		vi deg(g2.size()); // 入次数
+		rep(i,g2.size()) for(auto e:g2[i])
+			deg[e.dst]++;
+		
+		int res=1;
+		rep(i,g2.size()) if(deg[i]==0)
+			res=(ll(res)*calc(g2,i))%MOD;
+		cout<<res<<endl;
+	}
+}

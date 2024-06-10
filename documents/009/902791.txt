@@ -1,0 +1,61 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+const int INF=1000000000;
+const int muki[4][2]={{0,1},{1,0},{0,-1},{-1,0}};
+
+queue<pair<int,int>> que;
+char a[1002][1002];
+int cost[1002][1002];
+bool used[1002][1002];
+
+int return_cost(pair<int,int> S,pair<int,int> G){
+	while(!que.empty())que.pop();
+	for(int i=0;i<1002;i++)for(int j=0;j<1002;j++){ cost[i][j]=INF; used[i][j]=false; }
+	que.push(S);
+	cost[S.first][S.second]=0;
+	while(!que.empty()){
+		pair<int,int> p=que.front(); que.pop();
+		if(p==G)break;
+		int x=p.first,y=p.second;
+		if(!used[x][y]){
+			for(int i=0;i<4;i++){
+				int nx=x+muki[i][0],ny=y+muki[i][1];
+				if(a[nx][ny]!='X'&&cost[nx][ny]>cost[x][y]+1){
+					cost[nx][ny]=cost[x][y]+1;
+					que.push(pair<int,int>(nx,ny));
+				}
+			}
+			used[x][y]=true;
+		}
+	}
+	return cost[G.first][G.second];
+}
+
+int main(){
+	int h,w,n;
+	pair<int,int> p[12];
+	for(int i=0;i<1002;i++)for(int j=0;j<1002;j++)a[i][j]='X';
+
+	scanf("%d%d%d",&h,&w,&n);
+	for(int i=1;i<=h;i++){
+scanf("\n");
+	for(int j=1;j<=w;j++){
+		scanf("%c",&a[i][j]);
+		if(a[i][j]=='S'){
+			p[0]=pair<int,int>(i,j);
+		}
+		else if('1'<=a[i][j]&&a[i][j]<='9'){
+			p[a[i][j]-'1'+1]=pair<int,int>(i,j);
+		}
+	}
+	}
+
+	int ret=0;
+	for(int i=0;i<n;i++){
+		ret+=return_cost(p[i],p[i+1]);
+	}
+
+	printf("%d\n",ret);
+}

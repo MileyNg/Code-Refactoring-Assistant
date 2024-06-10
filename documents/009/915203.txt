@@ -1,0 +1,44 @@
+#include<iostream>
+
+using namespace std;
+
+#define NMAX 50
+
+int main(){
+
+	int n,q;
+	int have[NMAX];
+	int stone;
+	int ans;
+	bool f;
+
+	while(1){
+
+		cin>>n>>q;
+		if(n==0&&q==0) break;
+
+		stone=q;
+		f=true;
+		for(int i=0;i<n;i++) have[i]=0;
+		while(f){
+			for(int i=0;i<n;i++){
+				if(stone!=0){
+					stone--;
+					have[i]++;
+					if(have[i]==q){
+						f=false;
+						ans=i;
+						break;
+					}
+				}
+				else{
+					stone+=have[i];
+					have[i]=0;
+				}
+			}
+		}
+		cout<<ans<<endl;
+	}
+
+	return 0;
+}

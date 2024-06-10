@@ -1,0 +1,32 @@
+#include<iostream>
+
+#define MAX 100000001
+
+bool isPrime[MAX];
+
+void init(){
+	for (int i = 2; i < MAX; i++)isPrime[i] = true;
+
+	for (int i = 2; i*i < MAX; i++){
+		if (isPrime[i]){
+			for (int j = i * 2; j < MAX; j+=i)isPrime[j] = false;
+		}
+	}
+}
+
+int main(){
+
+	init();
+
+	int n, cnt = 0;
+	std::cin >> n;
+
+	for (int i = 0, a; i < n; i++){
+		std::cin >> a;
+		if (isPrime[a])cnt++;
+	}
+
+	std::cout << cnt << std::endl;
+
+	return 0;
+}

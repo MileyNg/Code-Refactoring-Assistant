@@ -1,0 +1,50 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+
+using namespace std;
+
+vector<string> map;
+int w,h,area;
+int dx[]={0,0,-1,1};
+int dy[]={-1,1,0,0};
+
+void f(int x,int y){
+	map[y][x]='#';
+	for(int i=0;i<4;i++)
+		if(0<=x+dx[i]&&x+dx[i]<w&&0<=y+dy[i]&&y+dy[i]<h)
+			if(map[y+dy[i]][x+dx[i]]=='.'){
+				area++;
+				f(x+dx[i],y+dy[i]);
+			}
+}
+
+int main(){
+	ostringstream out;
+
+	string line;
+
+	while(cin >> w >> h, w|h){
+		map.clear();
+		int x=-1,y;
+		area=1;
+		for(int iy=0;iy<h;iy++){
+			cin >> line;
+			map.push_back(line);
+			if(x==-1)
+				for(int ix=0;ix<line.length();ix++)
+					if(line[ix]=='@'){
+						x=ix;
+						y=iy;
+					}
+		}
+
+		f(x,y);
+
+		out << area << endl;
+	}
+
+
+	cout << out.str();
+	return 0;
+}

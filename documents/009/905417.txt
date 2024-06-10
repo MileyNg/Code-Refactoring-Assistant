@@ -1,0 +1,38 @@
+#pragma warning (disable:4996)
+#include <stdio.h>
+#include <ctype.h>
+
+void input(char *str){
+	unsigned short int i = 0;
+	char ch;
+	while (1){
+		ch = getchar();
+		if (ch == '\n'){
+			str[i] = '\0';
+			break;
+		}
+		else {
+			str[i] = ch;
+			i++;
+		}
+	}
+}
+void convert(char *str){
+	unsigned short int i;
+	for (i = 0; str[i] != '\0'; i++){
+		if (islower(str[i]))str[i] = toupper(str[i]);
+		else str[i] = tolower(str[i]);
+	}
+}
+void output(char *str){
+	unsigned short int i;
+	for (i = 0; str[i] != '\0'; i++)printf("%c", str[i]);
+	printf("\n");
+}
+int main(void){
+	char str[1200];
+	input(str);
+	convert(str);
+	output(str);
+	return 0;
+}

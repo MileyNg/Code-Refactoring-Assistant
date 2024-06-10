@@ -1,0 +1,76 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+int H, W;
+char grid[110][110];
+
+int const dx[4] = {-1,1,0,0};
+int const dy[4] = {0,0,-1,1};
+
+int memo[101][101];
+
+inline bool IN(int x, int y) {
+  return 0<=x && x<W && 0<=y && y<H;
+}
+
+int const INF = 1<<29;
+
+int const OFFSET = 2;
+
+int main() {
+  
+  while(cin >> W >> H && W) {
+    
+    fill(grid[0], grid[0]+110*110, 'X');
+    
+    int sx, sy;
+    
+    for(int i=0; i<H; i++) {
+      for(int j=0; j<W; j++) {
+        cin >> grid[i+OFFSET][j+OFFSET];
+        if(grid[i+OFFSET][j+OFFSET] == '&') {
+          sx = j+OFFSET, sy = i+OFFSET;
+        }
+      }
+    }
+    
+    int ans = 1<<29;
+    
+    memset(memo, -1, sizeof(memo));
+    typedef pair<int, int> Pii;
+    typedef pair<int, Pii> Piii;
+    
+    priority_queue<Piii> Q;
+    Q.push(Piii(0, Pii(sx, sy)));
+    while(!Q.empty()) {
+      Piii piii = Q.top(); Q.pop();
+      int const x = piii.second.first;
+      int const y = piii.second.second;
+      int const cost = -piii.first;
+      
+      if(grid[y][x] == 'X') {
+        cout << cost << endl;
+        break;
+      }
+      
+      for(int k=0; k<4; k++) {
+        int nx = x + dx[k], ny = y + dy[k];
+        int ncost = cost + (grid[ny][nx] == '#');
+        int ans = 0;
+        if(memo[ny][nx] == -1
+           || memo[ny][nx] > ncost) {
+          memo[ny][nx] = ncost;
+          Q.push(Piii(-ncost, Pii(nx, ny)));
+        }
+      }
+    }
+    
+  }
+  
+  return 0;
+}

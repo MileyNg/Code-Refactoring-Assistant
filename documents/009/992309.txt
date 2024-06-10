@@ -1,0 +1,51 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main()
+{
+    int f, n, t, lim;
+    int schedule[51][51];
+    long long maps[50];
+    while (true) {
+        lim = 0;
+        cin >> n;
+        if (n == 0) {
+            break;
+        }
+        for (int i = 0; i < n; i++) {
+            cin >> f;
+            for (int j = 0; j < f; j++) {
+                cin >> t;
+                lim = max(lim, t);
+                schedule[i][t] = 1;
+            }
+        }
+        
+        for (int i = 0; i <n; i++) {
+            maps[i] = 1LL << i;
+        }
+        
+        int ans = -1;
+        long long gather;
+        for (int t = 1; t <= lim; t++) {
+            for (int i=0; i < n; i++) {
+                gather = 0;
+                if (schedule[i][t]) {
+                    gather |= maps[i];
+                }
+                if (schedule[i][t]) {
+                    maps[i] = gather;
+                }
+            }
+            if (gather == 1LL << n - 1){
+                ans = t;
+                break;
+            }
+        }
+        cout << ans << endl;
+        
+    }
+    return 0;
+}

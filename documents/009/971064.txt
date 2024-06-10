@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(){
+    int n, m;
+    while(cin >> n >> m, n+m){
+        int mx = 1, my = 1;
+        int direction = 1;
+        while(1){
+            string command; int step;
+            cin >> command;
+            if(command == "FORWARD"){
+                cin >> step;
+                if(direction == 1) my += step;
+                else if(direction == 2) mx += step;
+                else if(direction == 3) my -= step;
+                else if(direction == 4) mx -= step;
+            }
+            else if(command == "BACKWARD"){
+                cin >> step;
+                if(direction == 1) my -= step;
+                else if(direction == 2) mx -= step;
+                else if(direction == 3) my += step;
+                else if(direction == 4) mx += step;
+            }
+            else if(command == "RIGHT"){
+                direction++;
+                if(direction == 5) direction = 1;
+            }
+            else if(command == "LEFT"){
+                direction--;
+                if(direction == 0) direction = 4;
+            }
+            else if(command == "STOP")break;
+
+            if(mx < 1) mx = 1;
+            else if(mx > n) mx = n;
+            if(my < 1) my = 1;
+            else if(my > m) my = m;
+        }
+        cout << mx << " " << my << endl;
+    }
+}

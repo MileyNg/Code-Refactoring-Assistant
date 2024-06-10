@@ -1,0 +1,69 @@
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define MAX 1005
+int pre[MAX],rank[MAX];
+struct node
+{
+    int u,v,cost;
+}edge[MAX*10];
+void make_set(int x)
+{
+    pre[x]=x;
+    rank[x]=0;
+}
+int find(int x)
+{
+    if (x!=pre[x])
+        pre[x]=find(pre[x]);
+    return pre[x];
+}
+int cmp(node x,node y)
+{
+    return x.cost<y.cost;
+}
+void unionone(int a,int b)
+{
+    int len1=find(a);
+    int len2=find(b);
+    if (rank[len1]>rank[len2])
+        pre[len2]=len1;
+    else
+        pre[len1]=len2;
+}
+int kruskal(int n,int min)
+{
+    int i,j;
+    int cnt=0;
+    for(i=0;i<n;i++)
+    {
+        if (find(edge[i].u)!=find(edge[i].v))
+        {
+            cnt++;
+            unionone(edge[i].u,edge[i].v);
+            if (cnt==min)
+                return i;
+        }
+    }
+}
+int main()
+{
+    int m,n;
+    while(scanf("%d%d",&m,&n)&&(m+n))
+    {
+        int i,j;
+        int min=m/2;
+        for(i=1;i<=m;i++)
+            make_set(i);
+        for(i=0;i<n;i++)
+        {
+            scanf("%d%d%d",&edge[i].u,&edge[i].v,&edge[i].cost);
+        }
+        sort(edge,edge+n,cmp);
+        int cnt=kruskal(n,min);
+        printf("%d\n",edge[cnt].cost);
+    }
+    return 0;
+}

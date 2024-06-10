@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+typedef vector<double> Vect;
+typedef vector<Vect> Matrix;
+const double EPS = 1e-8;
+
+int rank_of_matrix(Matrix M){
+    int H = M.size();
+    int W = M[0].size();
+    int cy, cx;
+    for(cy = 0, cx = 0; cy < H && cx < W; cy++, cx++){
+        for(int y = cy + 1; y < H; y++){
+            if(abs(M[cy][cx]) < abs(M[y][cx])){
+                swap(M[cy], M[y]);
+            }
+        }
+        if(abs(M[cy][cx]) < EPS){
+            cy--;
+            continue;
+        }
+        for(int y = cy + 1; y < H; y++){
+            double p = M[y][cx] / M[cy][cx];
+            for(int x = cx; x < W; x++){
+                M[y][x] -= p * M[cy][x];
+            }
+        }
+    }
+    return cy;
+}
+
+int main(){
+    int N, M;
+    while(cin >> N >> M){
+        Matrix Mat(N, Vect(M));
+        for(int i = 0; i < M; i++){
+            int s, t;
+            cin >> s >> t;
+            s--; t--;
+            Mat[s][i] += 1.0;
+            Mat[t][i] -= 1.0;
+        }
+        cout << M - rank_of_matrix(Mat) << endl;
+    }
+    return 0;
+}

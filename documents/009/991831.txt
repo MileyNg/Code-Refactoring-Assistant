@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 51
+
+int N, day;
+bool ok[MAX][31];
+bool G[MAX][MAX];
+bool visited[MAX];
+
+void init(){
+  day = 0;
+  memset(ok, false, sizeof(ok));
+  memset(G, false, sizeof(G));
+}
+
+void rec(int now){
+  for(int i = 0 ; i < N ; i++){
+    if(!visited[i] && G[now][i]){
+      visited[i] = true;
+      rec(i);
+    }
+  }
+}
+
+bool check(){
+  memset(visited, false, sizeof(visited));
+  rec(0);
+  if(count(visited, visited+N, true) == N){
+    return true;
+  }
+  return false;
+}
+
+int solve(){
+  for(int i = 0 ; i < 30 ; i++){
+    for(int j = 0 ; j < N-1 ; j++){
+      if(!ok[j][i]) continue;
+      for(int k = j+1 ; k < N ; k++){
+        if(ok[k][i]){
+          G[j][k] = G[k][j] = true;
+        }
+      }
+    }
+    if(check()){
+      return i+1;
+    }
+  }
+  return -1;
+}
+
+int main(){
+  int K, in;
+  while(cin >> N ,N){
+    init();
+    for(int i = 0 ; i < N ; i++){
+      cin >> K;
+      for(int j = 0 ; j < K ; j++){
+        cin >> in;
+        ok[i][in-1] = true;
+        day = max(day, in);
+      }
+    }
+    cout << solve() << endl;
+  }
+
+  return 0;
+}

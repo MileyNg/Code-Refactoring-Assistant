@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+void solve(int n);     //データ処理
+
+char str[102]={'\0'};  //山札
+
+int main(){
+
+  int n;  //参加人数
+
+  while(1){
+
+    /*人数nの入力*/
+    scanf("%d",&n);
+
+    if(n==0)break;
+
+    /*山札の状態を入力*/
+    scanf("%s",str);
+
+    /*データを処理*/
+    solve(n);
+
+  }
+
+  return 0;
+}
+/*データ処理*/
+void solve(int n){
+
+  int i,j;
+  int ground=0;        //場
+  int player[10]={0};  //各プレイヤーの所持札枚数
+
+  /*札を一枚ずつ調べる*/
+  for(i=0;i<100;){
+    for(j=0;j<n;j++,i++){
+      player[j]++;
+      /*坊主なら所持札全て場に*/
+      if(str[i]=='S'){
+	ground+=player[j];
+	player[j]=0;
+      }
+      /*姫なら場の札全てを手に*/
+      else if(str[i]=='L'){
+	player[j]+=ground;
+	ground=0;
+      }
+    }
+  }
+
+  /*プレイヤーの所持札枚数を昇順ソート*/
+  sort(player,player+n);
+
+  /*データの出力*/
+  for(i=0;i<n;i++){
+    printf("%d ",player[i]);
+  }
+  printf("%d\n",ground);
+
+}

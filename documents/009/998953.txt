@@ -1,0 +1,49 @@
+### constant
+
+MAX_INT = (1 << 31) - 1
+
+### main
+
+while true
+  n, m = gets.strip.split(' ').map{|s| s.to_i}
+  break if n == 0 && m == 0
+
+  edges = m.times.map{[]}
+  nbrs = m.times.map{[]}
+
+  n.times.each do
+    a, b, cost, time = gets.strip.split(' ').map{|s| s.to_i}
+    a -= 1
+    b -= 1
+
+    edges[a][b] = edges[b][a] = [cost, time]
+    nbrs[a] << b
+    nbrs[b] << a
+  end
+
+  k = gets.strip.to_i
+
+  k.times.each do
+    st, gl, r = gets.strip.split(' ').map{|s| s.to_i}
+    st -= 1
+    gl -= 1
+
+    q = (0...m).map{|i| i}
+    dists = m.times.map{MAX_INT}
+    dists[st] = 0
+
+    while ! q.empty?
+      u = q.min{|a, b| dists[a] <=> dists[b]}
+      q.delete(u)
+
+      for v in nbrs[u]
+        d = dists[u] + edges[u][v][r]
+        if dists[v] > d
+          dists[v] = d
+        end
+      end
+    end
+
+    puts dists[gl]
+  end
+end

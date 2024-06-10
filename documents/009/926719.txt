@@ -1,0 +1,57 @@
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<string>
+#include<stack>
+
+using namespace std;
+
+int main(void){
+
+	stack<double> por;
+	string inp,sum;
+	double a, b;
+
+	while (cin >> inp){
+		por.push(atof(inp.c_str()));
+		getchar();
+		sum == "";
+		while (1){
+			inp = getchar();
+			if (inp == "\n") break;
+			else if (inp == "*"){
+				a = por.top(); por.pop();
+				b = por.top(); por.pop();
+				por.push(a * b);
+				sum = "";
+			}
+			else if (inp == "+"){
+				a = por.top(); por.pop();
+				b = por.top(); por.pop();
+				por.push(a + b);
+				sum = "";
+			}
+			else if (inp == "-"){
+				a = por.top(); por.pop();
+				b = por.top(); por.pop();
+				por.push(b - a);
+				sum = "";
+			}
+			else if (inp == "/"){
+				a = por.top(); por.pop();
+				b = por.top(); por.pop();
+				por.push(b / a);
+				sum = "";
+			}
+			else if (inp == " "&&sum != ""){
+				por.push(atof(sum.c_str()));
+				sum = "";
+			}
+			else sum += inp;
+		}
+		printf("%.6f\n", por.top());
+		while (!por.empty()) por.pop();
+	}
+
+	return 0;
+}

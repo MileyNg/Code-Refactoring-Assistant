@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+
+int main(){
+
+  int Y,M,D;
+  int n;
+  cin >> n;
+  while(cin >> Y >> M >> D){
+  
+    int date = 0;
+    while( Y < 1000 ){
+ 
+	
+      if( Y % 3 == 0 ){
+	while( D <= 20 ){
+	  date++;
+	  D++;
+	}
+      }else{
+	if( M % 2 == 0 ){
+	  while( D <= 19 ){
+	    date++;
+	    D++;
+	  }
+	}
+	else{
+	  while( D <= 20 ){
+	    date++;
+	    D++;
+	  } 
+	}
+      }
+      M++;
+      D = 1;
+      if( M == 11 ){
+	M = 1;
+	Y++;
+      }
+    }	
+    
+    cout << date <<endl;
+  }
+  return 0;
+}

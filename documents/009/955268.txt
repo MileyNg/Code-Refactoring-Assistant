@@ -1,0 +1,27 @@
+#include<iostream>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  while (true) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    if (a == 0) break;
+    rep (i, a + 1) if (i > 0 && a % i == 0) for (int j = -c; j <= c; ++j) if (j != 0 && c % j == 0) {
+	  int ii = a / i;
+	  int jj = c / j;
+	  if (i * jj + ii * j != b) continue;
+	  if (i > ii || (i == ii && j > jj)) cout << i << " " << j << " " << ii << " " << jj << endl;
+	  else cout << ii << " " << jj << " " << i << " " << j << endl;
+	  goto next;
+	}
+    if (c == 0) {
+      cout << a << " " << b << " " << 1 << " " << 0 << endl;
+      goto next;
+    }
+    cout << "Impossible" << endl;
+  next:;
+  }
+}

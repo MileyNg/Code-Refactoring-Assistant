@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+
+
+int main(void){
+  char c, moji[101];
+  int maru, kaku;
+  bool end = true;
+  bool dame;
+  while(1){ 
+    if(end){
+      maru = 0;
+      kaku = 0;
+      dame = false;
+    }
+    end = false;
+    for(int i=0; i<101; i++){
+      scanf("%c", &c);
+      if(c == '\n'){
+	moji[i] = '\0';
+	break;
+      }else{
+	moji[i] = c;
+      }
+    }
+    if(moji[0] == '.'){
+      break;
+    }
+    for(int i=0; i<101; i++){
+      if(moji[i] == '.'){
+	end = true;
+	break;
+      }else if(moji[i] == '('){
+	maru++;
+      }else if(moji[i] == ')'){
+	maru--;
+	if(maru<0){
+	  dame = true;
+	}
+      }else if(moji[i] == '['){
+	kaku++;
+      }else if(moji[i] == ']'){
+	kaku--;
+	if(kaku<0){
+	  dame = true;
+	}
+      }else if(moji[i] == '\0'){
+	break;
+      }
+    }
+    if(end){
+      if(maru == 0 && kaku == 0 && !dame){
+	printf("yes\n");
+      }else{
+	printf("no\n");
+      }
+    }
+  }
+  return 0;
+}

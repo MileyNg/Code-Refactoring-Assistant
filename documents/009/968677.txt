@@ -1,0 +1,22 @@
+p = Array.new(10) { (0..9).map { 0 } }
+ds = [0, 1, 2, 4]
+
+while (line = gets)
+  x, y, size = line.chop.split(",").map{|s| s.to_i}
+
+  d = ds[size]
+  for i in (0..9)
+    for j in (0..9)
+      if (x - i) ** 2 + (y - j) ** 2 <= d
+        p[i][j] += 1
+      end
+    end
+  end
+end
+
+pf = p.flatten
+
+count = pf.select{|k| k == 0}.length
+max = pf.max
+
+puts count, max

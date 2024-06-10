@@ -1,0 +1,73 @@
+#include <iostream>
+#include <stack>
+#include <algorithm>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+const int MAX_N = 100 + 10;
+
+char str[MAX_N];
+
+int main()
+{
+    //freopen("in.txt", "r", stdin);
+    while(gets(str) && str[0] != '.')
+    {
+        bool flag = false;
+        stack <char> s;
+        int len = strlen(str);
+        int i;
+        for(i = 0; i < len; i++)
+        {
+            if(str[i] == '.')
+                break;
+            if(str[i] == ']')
+            {
+                if(s.empty())
+                {
+                    printf("no\n");
+                    flag = true;
+                    break;
+                }
+                else
+                {
+                    if(s.top() == '[')
+                        s.pop();
+                    else
+                    {
+                        printf("no\n");
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            else if(str[i] == ')')
+            {
+                if(s.empty())
+                {
+                    printf("no\n");
+                    flag = true;
+                    break;
+                }
+                else
+                {
+                    if(s.top() == '(')
+                        s.pop();
+                    else
+                    {
+                        printf("no\n");
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            else if(str[i] == '(' || str[i] == '[')
+                s.push(str[i]);
+        }
+        if(!flag)
+            printf("yes\n");
+    }
+    return 0;
+}

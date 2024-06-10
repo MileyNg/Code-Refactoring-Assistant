@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios::sync_with_stdio(false);
+	int N, Q;
+	while (cin >> N >> Q && N && Q) {
+		vector<int> date(101, 0);
+		for (int i=0; i<N; ++i) {
+			int M, d;
+			cin >> M;
+			for (int j=0; j<M; ++j) {
+				cin >> d;
+				date[d] ++;
+			}
+		}
+		int k = max_element(date.begin(), date.end()) - date.begin();
+		cout << (Q <= date[k] ? k : 0) << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,16 @@
+import itertools
+while 1:
+	R,C = map(int,raw_input().split())
+	if R == 0: break
+	A = [map(int,raw_input().split()) for i in range(R)]
+	ans = 0
+	for n in range(1,R+1):
+		for flip in itertools.combinations(range(R),n):
+			cur = 0
+			for ci in range(C):
+				s = 0
+				for ri in range(R):
+					s += A[ri][ci] if ri not in flip else 1 - A[ri][ci]
+				cur += max(s,R-s)
+			ans = max(ans,cur)
+	print ans

@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int N; cin >> N;
+	rep (i, N ){
+		string s; cin >> s;
+		string t; cin >> t;
+		int n = s.length();
+		int m = t.length();
+		for (int i = n - 1; i >= 0; i-- ){
+			string u = "", u1 = "", u2 = "";
+			char c = s[i];
+			switch (c ){
+  				case 'J':
+					u = t.substr (0, t.length() - 1 );
+					u  = t[t.length() - 1 ] + u;
+					t = u;
+				break;
+				case 'C':
+					u = t.substr (1 );
+					u += t[0];
+					t = u;
+				break; 
+				case 'E':
+					if (t.length() % 2 == 0 ){
+						u1 = t.substr (0, t.length()/2 );
+						u2 = t.substr (t.length()/2 );
+						u = u2 + u1;
+						t = u;
+					}else{
+						u1 = t.substr (0, t.length()/2 );
+						u2 = t.substr (t.length()/2+1 );
+						char mid = t[t.length()/2];
+						u = u2 + mid + u1;
+						t = u;
+					} // end if
+				break;
+				case 'A':
+					reverse (ALL(t ) );
+				break;
+				case 'P':
+					rep (j, m ){
+						if (isdigit (t[j] ) ){
+							t[j] = (char)((t[j] - '0' + 10 - 1 ) % 10 + '0' );
+						} // end if
+					} // end rep
+				break;
+				case 'M':
+					rep (j, m ){
+						if (isdigit (t[j] ) ){
+							t[j] = (char)((t[j] - '0' + 1 ) % 10 + '0' );
+						} // end if
+					} // end rep
+				break;
+			} // end switch
+		} // end for
+		cout << t << endl; 
+	} // end for
+	
+	return 0;
+}

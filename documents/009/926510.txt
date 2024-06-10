@@ -1,0 +1,125 @@
+#include<stdio.h>
+
+struct Card{
+  char suit;
+  char value;
+};
+
+void Bsort(struct Card *A,int len){
+  int i,j;
+  char tmp;
+  char tmp2;
+
+  for(i=0;i<len;i++){
+    for(j=len-1;j>i;j--){
+      if(A[j].value < A[j-1].value){
+	tmp=A[j].value;
+	tmp2=A[j].suit;
+
+	A[j].value=A[j-1].value;
+	A[j].suit=A[j-1].suit;
+
+	A[j-1].value=tmp;
+	A[j-1].suit=tmp2;    
+      }
+    }
+  }
+}
+
+void Ssort(struct Card *A,int len){
+  int i,j,low;
+  char tmp,tmp2;
+  
+  for(i=0;i<len;i++){
+    low=i;
+    for(j=i;j<len;j++){
+      if(A[j].value < A[low].value){
+	low=j;
+      }
+    }
+    if(i != low){
+      tmp=A[i].value;
+      tmp2=A[i].suit;
+      A[i].value=A[low].value;
+      A[i].suit=A[low].suit;
+      
+      A[low].value=tmp;
+      A[low].suit=tmp2;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+int main(){
+  struct Card C1[101], C2[101];
+  char table[9][4]={};
+  int c[9]={};
+  int n, i,j,flg;
+  char ch;
+
+  scanf("%d%c", &n, &ch);
+  for ( i = 0; i <= n; i++ ){
+    scanf("%c%c%c", &C1[i].suit, &C1[i].value, &ch);
+    table[C1[i].value-'1'][c[C1[i].value-'1']]=C1[i].suit;
+    c[C1[i].value-'1']++;
+  }
+
+  for(i = 0; i < n; i++){
+    C2[i].suit=C1[i].suit;
+    C2[i].value=C1[i].value;
+  } 
+
+  Bsort(C1,n);
+  Ssort(C2,n);
+
+
+  for(i=0;i<9;i++) c[i]=0;
+
+  if(table[C1[0].value-'1'][c[C1[0].value-'1']++]!=C1[0].suit){
+    flg=1;
+  }
+
+  printf(" %c%c",C1[0].suit,C1[0].value);
+
+  for(i=1;i<n;i++){
+    if(table[C1[i].value-'1'][c[C1[i].value-'1']++] != C1[i].suit){
+      flg=1;
+    }
+    printf(" %c%c",C1[i].suit,C1[i].value);
+
+  }
+
+  if(flg==0) printf("\nStable\n");
+  else printf("\nNot stable\n");
+
+  for(i=0;i<9;i++) c[i]=0;
+  flg=0;
+  if(table[C2[0].value-'1'][c[C2[0].value-'1']++]!=C2[0].suit){
+    flg=1;
+  }
+  printf(" %c%c",C2[0].suit,C2[0].value);
+
+
+
+
+for(i=1;i<n;i++){
+  if(table[C2[i].value-'1'][c[C2[i].value-'1']++]!=C2[i].suit){
+    flg=1;
+  }
+  printf(" %c%c",C2[i].suit,C2[i].value);
+ }
+if(flg==0) printf("\nStable\n");
+
+ else
+   printf("\nNot stable\n");
+  return 0;
+}

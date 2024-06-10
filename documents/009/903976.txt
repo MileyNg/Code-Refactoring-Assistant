@@ -1,0 +1,107 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <memory>
+#include <time.h>
+using namespace std;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) FOR(i,0,n)
+const double EPS = 1e-3;
+const double PI  = acos(-1.0);
+
+
+typedef vector<double>vec;
+typedef vector<vec>mat;
+vec gaussJordan(const mat& A,const vec& b){
+	int n=A.size();
+	mat B(n,vec(n+1));
+	for (int i=0;i<n;i++)
+		for (int j=0;j<n;j++) B[i][j]=A[i][j];
+	for (int i=0;i<n;i++) B[i][n]=b[i];
+	for (int i=0;i<n;i++){
+		int pivot=i;
+		for (int j=i;j<n;j++){
+			if (abs(B[j][i])>abs(B[pivot][i])) pivot=j;
+		}
+		swap(B[i],B[pivot]);
+		if (abs(B[i][i])<EPS) return vec();
+		for (int j=i+1;j<=n;j++) B[i][j]/=B[i][i];
+		for (int j=0;j<n;j++){
+			if (i!=j){
+				for (int k=i+1;k<=n;k++) B[j][k]-=B[j][i]*B[i][k];
+			}
+		}
+	}
+	vec x(n);
+	for (int i=0;i<n;i++) x[i]=B[i][n];
+	return x;
+}
+
+int main(){
+	int n;
+	while(cin>>n,n){
+		vec v(n+3);
+		REP(i,n+3){
+			cin>>v[i];
+		}
+		int ans=-1;
+		REP(i,n+3){
+			vec vv;
+			mat m;
+			REP(j,n+3){
+				if(i!=j){
+					vv.push_back(v[j]);
+					m.push_back(vec());
+					REP(k,n+1){
+						m[m.size()-1].push_back(pow(j,k));
+					}
+					if(vv.size()==n+1){
+						break;
+					}
+				}
+			}
+			vec cand=gaussJordan(m,vv);
+			if(cand.size()){
+				double val=0;
+				int last=(i==n+2?n+1:n+2);
+				REP(j,cand.size()){
+					val+=cand[j]*pow(last,j);
+				}
+				if(abs(val-v[last])<EPS){
+					ans=i;
+					break;
+				}
+			}
+		}
+		assert(ans!=-1);
+		cout<<ans<<endl;
+	}
+}

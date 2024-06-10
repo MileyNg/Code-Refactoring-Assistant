@@ -1,0 +1,108 @@
+#include<iostream>
+using namespace std;
+
+class Point{
+	public:
+		int x;
+		int y;
+};
+
+class Treasure : public Point{
+	public:
+		bool get;
+		Treasure();
+};
+
+Treasure::Treasure(){
+	get = false;
+}
+
+int main(){
+	int N;	//# of treasure
+	int M;	//# of command
+	char direction;
+	int move;	//l移動距離
+	int num; //見つけた宝の数
+
+	do	{
+		cin >> N;
+		if (N == 0){
+			break;
+		}
+
+		Point Robot;
+		Robot.x = 10;
+		Robot.y = 10;
+		
+		int oldx;
+		int oldy;
+
+		Treasure* T = new Treasure[N];
+
+		for (int i = 0; i < N; i++){
+			cin >> T[i].x >> T[i].y;
+		}
+
+		num = 0;
+
+		cin >> M;
+		// 命令を読んで宝を探す
+		for (int j = 0; j < M && num < N; j++){
+			cin >> direction >> move;
+			switch (direction){
+				case 'N':
+					oldy = Robot.y;
+					Robot.y += move;
+					for (int i = 0; i < N; i++){
+						if (T[i].get == false && T[i].x == Robot.x && oldy <= T[i].y && T[i].y <= Robot.y){
+							T[i].get = true;
+							num++;
+						}
+					}
+					break;
+				case 'E':
+					oldx = Robot.x;
+					Robot.x += move;
+					for (int i = 0; i < N; i++){
+						if (T[i].get == false && T[i].y == Robot.y && oldx <= T[i].x && T[i].x <= Robot.x){
+							T[i].get = true;
+							num++;
+						}
+					}
+					break;
+				case 'S':
+					oldy = Robot.y;
+					Robot.y -= move;
+					for (int i = 0; i < N; i++){
+						if (T[i].get == false && T[i].x == Robot.x && oldy >= T[i].y && T[i].y >= Robot.y){
+							T[i].get = true;
+							num++;
+						}
+					}
+					break;
+				case 'W':
+					oldx = Robot.x;
+					Robot.x -= move;
+					for (int i = 0; i < N; i++){
+						if (T[i].get == false && T[i].y == Robot.y && oldx >= T[i].x && T[i].x >= Robot.x){
+							T[i].get = true;
+							num++;
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		if (num == N){
+			cout << "Yes" << endl;
+		}
+		else{
+			cout << "No" << endl;
+		}
+
+	} while (N != 0);
+	
+	return 0;
+}

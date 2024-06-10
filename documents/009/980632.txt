@@ -1,0 +1,141 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=x && x<w && 0<=y && y<h)
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem0503 : Biased Dice **/
+int num[200][200];
+int top[200][200];
+const int North[6] = {2, 1, 5, 3, 0, 4};
+const int East[6] = {0, 4, 1, 2, 3, 5};
+const int West[6] = {0, 2, 3, 4, 1, 5};
+const int South[6] = {4, 1, 0, 3, 5, 2};
+const int Right[6] = {1, 5, 2, 0, 4, 3};
+const int Left[6] = {3, 0, 2, 5, 4, 1};
+
+
+int dice[6];
+
+void rotate(int d) {
+	int t[6]; rep(i, 6) t[i]=dice[i];
+	
+	switch (d) {
+		case 0:
+			rep(i, 6) dice[i]=t[West[i]];
+			break;
+		case 1:
+			rep(i, 6) dice[i]=t[South[i]];
+			break;
+		case 2:
+			rep(i, 6) dice[i]=t[East[i]];
+			break;
+		case 3:
+			rep(i, 6) dice[i]=t[North[i]];
+			break;
+		case 4:
+			rep(i, 6) dice[i]=t[Right[i]];
+			break;
+	}
+}
+
+void preDice(int t, int f)
+{
+	if (dice[2]==t && dice[5]==f) return;
+	
+	while (1) {
+		rotate(1);
+		rep(i, 4) {
+			if (dice[2]==t && dice[5]==f) return;
+			rotate(4);
+		}
+		rotate(2);
+		rep(i, 4) {
+			if (dice[2]==t && dice[5]==f) return;
+			rotate(4);
+		}
+	}
+}
+
+void move(int t)
+{
+	const int idx[4] = {1, 5, 3, 0};
+	int x=100, y=100;
+	
+	while (1) {
+		for (int b=6; b>3; b--) {
+			rep(j, 4) {
+				if (dice[idx[j]]==b) {
+					int nx = x+dx[j], ny = y+dy[j];
+					if_range(nx, ny, 200, 200) {
+						if (num[x][y]>num[nx][ny]) {
+							rotate(j);
+							
+							x=nx; y=ny;
+
+							goto end;
+						}
+					}
+				}
+			}
+		}
+		break;
+	end:;
+	}
+	
+	top[x][y] = dice[2];
+	num[x][y]++;
+}
+
+int main()
+{
+	int n;
+	while (cin>>n, n) {
+		fill(num[0], num[0]+200*200, 0);
+		fill(top[0], top[0]+200*200, 0);
+
+		rep(z, n) {
+			dice[0]=4; dice[1]=2; dice[2]=1; dice[3]=5; dice[4]=6; dice[5]=3;
+			
+			int t, f;
+			cin>>t>>f;
+			
+			preDice(t, f);
+			
+			move(t);
+			
+		}
+		int ans[6] = {0};
+		rep(y, 200) {
+			rep(x, 200) {
+				if (top[x][y]>0) {
+					ans[top[x][y]-1]++;
+				}
+			}
+		}
+		cout << ans[0];
+		REP(j, 1, 6) {
+			cout << " " << ans[j];
+		}
+		cout << endl;
+	}
+	return 0;
+}

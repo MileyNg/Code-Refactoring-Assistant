@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+typedef long long ll;
+#define loop(i,a,b) for(ll i=0; i<ll(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+bool center;
+
+bool isprime(int n){
+    for(int i=2; i*i<=n; i++){
+        if(n%i==0) return false;
+    }
+    return true;
+}
+
+// a=0
+
+int p10[] = {
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000,
+    1000000000
+};
+
+int add(int a, int b, int l){
+    a=a*10+b;
+    int up=b*p10[l];
+    // rep(i,l)up*=10;
+    return a+up;
+}
+
+pair<bool,int> solve(int n, int k, int a){
+    if(k==0){
+        return make_pair(isprime(n),n);
+    } else {
+        pair<bool,int> ans(0,0);
+        rep(i,10){
+            if(k==1 && i==0) continue;
+            ans = max(ans, solve(add(n,i,(a-k)*2+1+center),k-1,a));
+        }
+        return ans;
+    }
+}
+
+int main(){
+    int a,b;
+    while(cin>>a>>b){
+        pair<bool,int> ans;
+        if(b<0){
+            center=false;
+            for(int i=0; i<10; i++){
+                ans = max(solve(i*10+i,a-1,a), ans);
+            }
+        } else {
+            center=true;
+            for(int i=0; i<10; i++){
+                ans = max(solve(i*100+b*10+i,a-1,a), ans);
+            }
+        }
+        cout << ans.second << endl;
+    }
+}

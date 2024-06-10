@@ -1,0 +1,106 @@
+#include <iostream>
+#include <cstdio>
+#include <cctype>
+#include <cstring>
+using namespace std;
+
+int main(void) {
+
+  int i , j , n , a , b , as1 , as2;
+
+  string card1 , card2;
+
+  a = b = 0;
+
+  cin >> n;
+
+  for(i = 0; i < n ; i++) {
+
+    cin >> card1 >> card2;
+
+    for(j = 0; j < card1.size(); j++) {
+
+      if(isupper(card1[j])) {
+
+	card1[j] = tolower(card1[j]);
+
+      }
+
+    }
+
+    for(j = 0; j < card2.size(); j++) {
+
+      if(isupper(card2[j])) {
+
+	card2[j] = tolower(card2[j]);
+
+      }
+
+    }
+
+    if(card1.size() < card2.size()) {
+
+      for(j = 0; j < card1.size(); j++) {
+
+	as1 = card1[j] - 'a';
+
+	as2 = card2[j] - 'a';
+
+	if(as1 > as2) {
+
+	  a += 3;
+	  break;
+
+	} else if(as1 < as2) {
+
+	  b += 3;
+	  break;
+
+	} else if(as1 == as2) {
+
+	  continue;
+
+	}
+
+      }
+
+    } else {
+
+      for(j = 0; j < card2.size(); j++) {
+
+	as1 = card1[j] - 'a';
+
+	as2 = card2[j] - 'a';
+
+	if(as1 > as2) {
+
+	  a += 3;
+	  break;
+
+	} else if(as1 < as2) {
+
+	  b += 3;
+	  break;
+
+	} else if(as1 == as2) {
+
+	  continue;
+
+	}
+
+      }
+
+    }
+
+    if(card1 == card2) {
+
+      a++;
+      b++;
+
+    }
+
+  }
+
+  cout << a << " " << b << "\n";
+
+}

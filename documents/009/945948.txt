@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <limits.h>
+
+const int INF = INT_MAX;
+
+int main(void)
+{
+	int n, m, a, b, k, t;
+	int tcost[105][105], mcost[105][105], node[105], used[105];
+	int i, j, min;
+	
+	while (1){
+		scanf("%d %d", &n, &m);
+		
+		if (n == 0 && m == 0){
+			break;
+		}
+		
+		for (i = 0; i < m; i++){
+			for (j = 0; j < m; j++){
+				mcost[i][j] = INF;
+				tcost[i][j] = INF;
+			}
+		}
+		
+		for (i = 0; i < n; i++){
+			scanf("%d %d", &a, &b);
+			a--; b--;
+			scanf("%d %d", &mcost[a][b], &tcost[a][b]);
+			mcost[b][a] = mcost[a][b];
+			tcost[b][a] = tcost[a][b]; 
+		}
+		
+		scanf("%d", &k);
+		
+		for (i = 0; i < k; i++){
+			scanf("%d %d %d", &a, &b, &t);
+			a--; b--;
+			for (j = 0; j < m; j++){
+				node[j] = INF;
+				used[j] = 0;
+			}
+			
+			node[a] = 0;
+			while (1){
+				used[a] = 1;
+				min = INF;
+				
+				for (j = 0; j < m; j++){
+					if (t == 1){
+						if (used[j] == 0 && tcost[a][j] != INF && node[j] > node[a] + tcost[a][j]){
+							node[j] = node[a] + tcost[a][j];
+						}
+						if (used[j] == 0 && min > node[j]){
+							min = j;
+						}
+					}
+					else{
+						if (used[j] == 0 && tcost[a][j] != INF && node[j] > node[a] + mcost[a][j]){
+							node[j] = node[a] + mcost[a][j];
+						}
+						if (used[j] == 0 && min > node[j]){
+							min = j;
+						}
+					}
+				}
+				a = min;
+				if (a == b){
+					break;
+				}
+			}
+			printf("%d\n", node[b]);
+		}
+	}
+	return (0);
+}

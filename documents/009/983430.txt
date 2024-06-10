@@ -1,0 +1,125 @@
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<climits>
+
+using namespace std;
+
+class Node{
+private:
+ unsigned long nodeId;
+ unsigned long timestampStart;
+ unsigned long timestampFinish;
+ vector<unsigned long> adjectNode;
+ unsigned long checkedNodeNum;
+
+ void stampStart(unsigned long time){
+  timestampStart = time;
+ };
+
+ void stampFinish(unsigned long time){
+  timestampFinish = time;
+ };
+ 
+
+public:
+ Node(unsigned long nodeId = 0, unsigned long adjectNodenum = 0)
+                  : nodeId(nodeId),
+                    timestampStart(0),
+                    timestampFinish(0),
+                    adjectNode(vector<unsigned long>(adjectNodenum, 0)),
+                    checkedNodeNum(0){
+
+ for(unsigned long adjectNode_i = 0; adjectNode_i < adjectNodenum; ++adjectNode_i){
+  unsigned long adjectNodeId = 0; cin >> adjectNodeId;
+
+  adjectNode[adjectNode_i] = adjectNodeId;
+ } 
+
+ };
+
+ unsigned long getNotCheckedAdjectNode(unsigned long time){
+  unsigned long AdjectNodeMax = adjectNode.size();
+  if(checkedNodeNum == 0){
+   stampStart(time);
+  }else if(checkedNodeNum >= AdjectNodeMax){
+   stampFinish(time);
+   return ULONG_MAX;
+  }
+
+
+  ++checkedNodeNum;
+
+  if(AdjectNodeMax == 0){
+   return nodeId-1;
+  }
+
+  return adjectNode[checkedNodeNum-1]-1;
+
+ };
+
+ void display(){
+  cout << nodeId          << " ";
+  cout << timestampStart  << " ";
+  cout << timestampFinish << endl;
+ };
+
+
+protected:
+};
+
+class Graph{
+private:
+ vector<Node*> graph;
+
+public:
+ Graph(unsigned long nodeNum = 0)
+                  : graph(vector<Node*>(nodeNum, 0)){
+  for(unsigned long node_i = 0; node_i < nodeNum; ++node_i){
+   unsigned long nodeId = 0; cin >> nodeId;
+   unsigned long adjectNodenum = 0; cin >> adjectNodenum;
+   Node* temp_node = new Node(nodeId, adjectNodenum);
+   graph[nodeId-1] = temp_node;
+  }
+ };
+
+ void DepthFirstSearch(){
+  unsigned long time = 1;
+  stack<unsigned long> checkedNode;
+  if(graph[0] == 0) return ;
+
+  checkedNode.push(0);
+  while(!checkedNode.empty()){
+   unsigned long nowNode = checkedNode.top();
+   if(unsigned long nextNode = graph[nowNode]->getNotCheckedAdjectNode(time)){
+    if(nextNode == ULONG_MAX){
+     checkedNode.pop();
+    }else if(nextNode == nowNode){
+    }else{
+     checkedNode.push(nextNode);
+    }
+   }
+   ++time;
+  }
+
+ };
+
+ void display(){
+  for(unsigned long node_i = 0, nodeNum = graph.size(); node_i < nodeNum; ++node_i){
+   graph[node_i]->display();
+  }
+ };
+
+protected:
+
+};
+
+int main(){
+ unsigned long nodeNum = 0; cin >> nodeNum;
+
+ Graph graph(nodeNum);
+ graph.DepthFirstSearch();
+ graph.display();
+
+ return 0;
+};

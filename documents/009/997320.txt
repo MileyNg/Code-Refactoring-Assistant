@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int n;
+
+int parent(int i) {
+	return i / 2;
+}
+
+int left(int i) {
+	return 2 * i;
+}
+
+int right(int i) {
+	return 2 * i + 1;
+}
+
+void swap(int *x, int *y) {
+	int tmp;
+
+	tmp = *x;
+	*x = *y;
+	*y = tmp;
+}
+
+void maxHeapify(int *A, int i) {
+	int l, r, largest;
+
+	l = left(i);
+	r = right(i);
+
+	if (l <= n && A[l] > A[i]) largest = l;
+	else largest = i;
+
+	if (r <= n && A[r] > A[largest]) largest = r;
+	if (largest != i) {
+		swap(&A[i], &A[largest]);
+		maxHeapify(A, largest);
+	}
+}
+
+void heapIncreaseKey(int *A, int i, int key) {
+	if (key >= A[i]) {
+		A[i] = key;
+		while (i > 1 && A[parent(i)] < A[i]) {
+			swap(&A[i], &A[parent(i)]);
+			i = parent(i);
+		}
+	}
+}
+
+void maxHeapInsert(int *A, int key) {
+	n++;
+	A[n] = -32768;
+	heapIncreaseKey(A, n, key);
+}
+
+int heapExtractMax(int *A) {
+	int max;
+
+	if (n >= 1) {
+		max = A[1];
+		A[1] = A[n];
+		n--;
+		maxHeapify(A, 1);
+		return max;
+	}
+
+	return -1;
+}
+
+main() {
+	int *node;
+	int key;
+	char order[8];
+
+	node = (int*)malloc(sizeof(int) * (2000000 + 1));
+
+	while (1) {
+		scanf("%s", &order);
+		if (!strcmp(order, "insert")) {
+			scanf("%d", &key);
+			maxHeapInsert(node, key);
+		}
+		else if (!strcmp(order, "extract")) printf("%d\n", heapExtractMax(node));
+		else if (!strcmp(order, "end")) break;
+	}
+
+	free(node);
+
+	return 0;
+}

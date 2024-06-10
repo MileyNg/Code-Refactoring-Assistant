@@ -1,0 +1,32 @@
+
+n = gets.strip.to_i
+
+n.times.each do
+  s, e = gets.strip.split(' ').map{|s| s.to_i}
+
+  min_rt = nil
+
+  for direc in [-1, 1]
+    next if s > 5 && direc < 0
+
+    nxt = s
+    rt = [nxt]
+    while nxt != e
+      nxt += direc
+      if nxt < 0
+        nxt = 1
+        direc = 1
+      elsif nxt > 9
+        nxt = 5
+        direc = -1
+      end
+      rt << nxt
+    end
+
+    if min_rt.nil? || min_rt.length > rt.length
+      min_rt = rt
+    end
+  end
+
+  puts min_rt.join(' ')
+end

@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+typedef long long LL;
+bool go(LL x, LL y, LL a, LL b) {
+    if(x == a) return true;
+    if(y == b) return true;
+    if(x + y == a + b) return true;
+    if(x - y == a - b) return true;
+    return false;
+}
+typedef pair<int, int> P;
+
+int main(){
+    int T;
+    cin >> T;
+    while(T--){
+        LL x1, y1, x2, y2, X, Y;
+        cin >> x1 >> y1 >> x2 >> y2 >> X >> Y;
+
+        if(x1 == X && y1 == Y) {
+            cout << 0 << endl;
+        } else if(x2 == X && y2 == Y) {
+            cout << 0 << endl;
+        } else if(go(x1, y1, X, Y) && go(x2, y2, X, Y)) {
+            cout << 1 << endl;
+        } else if(go(x1, y1, X, Y) || go(x2, y2, X, Y)) {
+            cout << 2 << endl;
+        } else if(go(x1, y1, x2, y2)) {
+            cout << 3 << endl;
+        } else {
+            vector<P> vp;
+            for(int iter = 0; iter < 2; iter++){
+                vp.push_back(P(x1, y2));
+                vp.push_back(P( x1 - y1 + y2, y2));
+                vp.push_back(P( x1 + y1 - y2, y2));
+                vp.push_back(P(x2, -x1 + x2 + y1));
+                vp.push_back(P(x2, +x1 - x2 + y1));
+                if((x1 - y1 + x2 + y2) % 2 == 0) {
+                    vp.push_back(P((x1 - y1 + x2 + y2) / 2, (-x1 + y1 + x2 + y2) / 2));
+                }
+                swap(x1, x2); swap(y1, y2);
+            }
+            bool ok = false;
+            for(auto p : vp) {
+                assert(p.first != x1 || p.second != y1);
+                assert(p.first != x2 || p.second != y2);
+                if(go(p.first, p.second, X, Y)) {
+                    ok = true;
+                }
+            }
+            cout << (ok ? 3 : 4) << endl;
+        }
+    }
+    return 0;
+}

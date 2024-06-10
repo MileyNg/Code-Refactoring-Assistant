@@ -1,0 +1,17 @@
+while 1:
+	n = raw_input()
+	if n == "0": break
+	size = len(n)
+	s = 0
+	diff = [0]*(size + 1)
+	for i in range(size):
+		s += (-1)**i * int(n[i])
+		diff[i + 1] = s
+	c = 0
+	for sp in range(size - 1):
+		if n[sp] == "0":
+			continue
+		for l in range(2,size - sp + 1):
+			if abs((diff[sp + l] - diff[sp])%11) == 0:
+				c += 1
+	print c

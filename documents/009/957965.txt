@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cassert>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <algorithm>
+#include <map>
+#include <queue>
+#include <sstream>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define mp(a,b) make_pair(a,b)
+#define SZ(a) ((int)(a).size())
+#define FOR(it,a) for(__typeof(a.begin())it=a.begin();it!=a.end();++it)
+#define pb(a) push_back(a)
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+int n,m,c,s,g;
+
+vector<PI> gr[20][100];
+
+int gcost[100][100];
+
+int pi[100];
+
+int qi[100];
+int ri[100];
+
+int ctable[30000];
+
+int sol(int comp){
+  rep(i,pi[comp]-1) cin >> qi[i];
+  rep(i,pi[comp]) cin >> ri[i];
+
+  int ridx=0;
+  for(int i=1;i<30000;++i){
+    if(ridx < pi[comp]-1 && qi[ridx]<i)
+      ++ridx;
+    ctable[i] = ctable[i-1] + ri[ridx];
+  }
+  
+  int ttt[n][n];
+  rep(i,n) rep(j,n) ttt[i][j] = 1<<28;
+
+  rep(i,n)FOR(it,gr[comp][i])
+    ttt[i][it->F]=min(ttt[i][it->F],it->S);
+  
+  rep(k,n)rep(i,n)rep(j,n)
+  ttt[i][j] = min(ttt[i][j],ttt[i][k]+ttt[k][j]);
+
+  rep(i,n)rep(j,n)
+    if(ttt[i][j]<(1<<28))
+      gcost[i][j]=min(gcost[i][j],ctable[ttt[i][j]]);
+  
+}
+
+void solve(){
+  --s,--g;
+  rep(i,20)rep(j,100) gr[i][j].clear();
+
+  rep(i,m){
+    int x,y,d,c;
+    cin >> x >> y >> d >> c;
+    --c,--x,--y;
+    gr[c][x].pb(mp(y,d));
+    gr[c][y].pb(mp(x,d));
+  }
+
+  rep(i,n)rep(j,n) gcost[i][j] = 1<<28;
+  rep(i,c) cin >> pi[i];
+  
+  rep(i,c) sol(i);
+
+  rep(k,n)rep(i,n)rep(j,n)
+    gcost[i][j] = min(gcost[i][j],gcost[i][k]+gcost[k][j]);
+  
+  
+  if(gcost[s][g]==(1<<28)) cout << -1 << endl;
+  else cout << gcost[s][g] << endl;
+}
+
+int main(){
+  while(cin >> n>>m>>c>>s>>g && n) solve();
+}

@@ -1,0 +1,128 @@
+#include <stdio.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+
+
+#define rep(i,a,b)(long long i=a;i<b;i++)
+
+using namespace std;
+
+
+struct POINT {
+	int x;
+	int y;
+	POINT(int X, int Y){
+		x = X;y = Y;
+	}
+};
+
+queue<POINT>	usedWay;
+int SizeX,SizeY;
+int Map[50][50] = {0};
+vector<int>	result;
+
+
+void SearchIsland(int X, int Y){
+	usedWay.push(POINT(X,Y));
+	Map[X][Y] = 2;
+
+	while(usedWay.empty() == false){
+		POINT NowPos = usedWay.front();
+		usedWay.pop();
+
+		if(NowPos.y-1 >= 0){
+			//	左上
+			if(NowPos.x-1 >= 0 && Map[NowPos.x-1][NowPos.y-1] == 1){
+				Map[NowPos.x-1][NowPos.y-1] = 2;
+				usedWay.push(POINT(NowPos.x - 1,NowPos.y - 1));
+			}
+		
+			//	真上
+			if(					  Map[NowPos.x][NowPos.y-1] == 1){
+				Map[NowPos.x][NowPos.y-1] = 2;
+				usedWay.push(POINT(NowPos.x,NowPos.y - 1));
+			}
+
+			//	右上
+			if( NowPos.x + 1 < SizeX && Map[NowPos.x+1][NowPos.y-1] == 1){
+				Map[NowPos.x+1][NowPos.y-1] = 2;
+				usedWay.push(POINT(NowPos.x + 1,NowPos.y - 1));
+			}
+		}
+
+		//	左
+		if(NowPos.x-1 >= 0 && Map[NowPos.x-1][NowPos.y] == 1){
+			Map[NowPos.x-1][NowPos.y] = 2;
+			usedWay.push(POINT(NowPos.x - 1,NowPos.y));
+		}
+
+		//	右
+		if( NowPos.x + 1 < SizeX && Map[NowPos.x+1][NowPos.y] == 1){
+			Map[NowPos.x+1][NowPos.y] = 2;
+			usedWay.push(POINT(NowPos.x + 1,NowPos.y));
+		}
+
+		if(NowPos.y + 1 < SizeY){
+			//	左下
+			if(NowPos.x-1 >= 0 && Map[NowPos.x-1][NowPos.y+1] == 1){
+				Map[NowPos.x-1][NowPos.y+1] = 2;
+				usedWay.push(POINT(NowPos.x - 1,NowPos.y + 1));
+			}
+		
+			//	真下
+			if(					  Map[NowPos.x][NowPos.y+1] == 1){
+				Map[NowPos.x][NowPos.y+1] = 2;
+				usedWay.push(POINT(NowPos.x,NowPos.y + 1));
+			}
+
+			//	右下
+			if( NowPos.x + 1 < SizeX && Map[NowPos.x+1][NowPos.y+1] == 1){
+				Map[NowPos.x+1][NowPos.y+1] = 2;
+				usedWay.push(POINT(NowPos.x + 1,NowPos.y + 1));
+			}
+		}
+
+
+	}
+}
+
+int main(void){
+
+	while(true){
+
+		int NumIsland = 0;
+
+		cin >> SizeX;
+		cin >> SizeY;
+
+		if(SizeX == 0 && SizeY == 0)
+			break;
+
+		int tmp = SizeX;
+		SizeX = SizeY;
+		SizeY = tmp;
+
+		//	読み込み
+		for(int i = 0 ; i < SizeX; ++i)
+			for(int j = 0 ; j < SizeY ; ++j)
+				cin >> Map[i][j];
+
+
+		for(int i = 0 ; i < SizeX ; ++i){
+			for(int j = 0 ; j < SizeY ; ++j){
+				if(Map[i][j] == 1){
+					SearchIsland(i,j);
+					NumIsland++;
+				}
+			}
+		}
+
+		result.push_back(NumIsland);
+	}
+
+	for(auto it = result.begin() ; it != result.end(); ++it)
+		cout << *it << endl;
+
+	return 0;
+}

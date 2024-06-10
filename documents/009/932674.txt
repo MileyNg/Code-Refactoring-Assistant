@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+int pow(int a,int b){
+	int result=1;
+	for(int i=0; i<b; ++i) result*=a;
+	return result;
+}
+
+int main(){
+	int N;
+	while(std::cin >> N&&N!=-1){
+		int i=0;
+		while(pow(4,i)<=N+1) ++i;
+		--i;
+		for( ; i>=0; --i){
+			int tmp=N/pow(4,i);
+			std::cout << tmp;
+			N%=pow(4,i);
+		}
+		std::cout << std::endl;
+	}
+	return 0; 
+}

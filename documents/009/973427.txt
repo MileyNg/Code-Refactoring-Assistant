@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+using namespace std;
+
+int main(){
+  for(int n, a, b; cin >> n >> a >> b && n;) {
+	vector<int> ok(b, false);
+
+	int ans = 0;
+	int i = 0;
+	for(int x = 1; x <= n; ++x) {
+	  while(i * a <= x) {
+		ok[(i * a) % b] = true;
+		++i;
+	  }
+
+	  if(!ok[x % b]) ++ans;
+	}
+
+	cout << ans << endl;
+  }
+
+  return 0;
+}

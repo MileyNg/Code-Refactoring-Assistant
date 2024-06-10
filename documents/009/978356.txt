@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i;
+	int answer = 0;
+	int length;
+	char data[1024];
+	
+	while(1){
+		fgets(data, sizeof(data), stdin);
+		if(strcmp(data,"END OF INPUT") == 0) break;
+		
+		length = strlen(data);
+		for(i = 0; i < length; i++){
+			if(data[i] == ' ' || data[i] == '\n'){
+				printf("%d", answer);
+				answer = 0;
+			}
+			else{
+				answer += 1;
+			}
+		}
+		
+		printf("\n");
+	}
+
+	return 0;
+}

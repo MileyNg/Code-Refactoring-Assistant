@@ -1,0 +1,40 @@
+class BruteForce
+  def initialize
+    @n = 0
+    @a = []
+  end
+
+  def solve
+    @n    = gets.chomp.to_i
+    @a = gets.scan(/\d+/).map(&:to_i)
+    q    = gets.chomp.to_i
+    m = gets.scan(/\d+/).map(&:to_i)
+
+    ans = []
+
+    m.each do |x|
+      if makable(0, x)
+        ans << "yes"
+      else
+        ans << "no"
+      end
+    end
+    return ans
+  end
+
+  def makable(p,t)
+    if p == @n - 1
+      if ((@a[@n - 1] == t) || (t == 0))
+        true
+      else
+        false
+      end
+    else
+      makable(p+1, t - @a[p]) | makable(p+1, t)
+    end
+  end
+end
+
+if $0 == __FILE__
+  puts BruteForce.new.solve
+end

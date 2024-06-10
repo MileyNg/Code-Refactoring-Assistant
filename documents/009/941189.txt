@@ -1,0 +1,26 @@
+#include<stdio.h>
+int main(void)
+{
+  int n,i,j,t=0,h=0;
+
+  scanf("%d",&n);
+
+  for(i=0;i<2*n;i++){
+    char st[100]={'\0'},sh[100]={'\0'};
+    scanf("%s %s",&st,&sh);
+    for(j=0;st[j]=='\0'||sh[j]=='\0';j++){
+      if(st[j]>sh[j])
+        t+=3;  break;
+      if(st[j]<sh[j])
+        h+=3;  break;
+    }
+    if(st[j]=='\0')
+      h+=1;
+    if(sh[j]=='\0')
+      t+=1;
+  }
+
+  printf("%d %d\n",t,h);
+
+  return 0;
+}

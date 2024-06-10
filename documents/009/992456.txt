@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+int main(){
+
+  int m,n,v,m2,n2;
+  double rad,S1,S2;
+  
+  while(1){
+    
+    cin >>m;
+    
+    if(m == 0)break;
+    
+    S1=0;
+    S2=0;
+    m2=360;
+    n2=360;
+    
+    for(int i=0 ; i < m-1 ; i++){
+      cin >>v;
+      m2-=v;
+      rad=v*(M_PI/180);
+      S1+=sin(rad)/2;
+    }
+    
+    rad=m2*(M_PI/180);
+    S1+=sin(rad)/2;
+    
+    cin >>n;
+    
+    for(int i=0 ; i < n-1 ; i++){
+      cin >>v;
+      n2-=v;
+      rad=v*(M_PI/180);
+      S2+=sin(rad)/2;
+    }
+    
+    rad=n2*(M_PI/180);
+    S2+=sin(rad)/2;
+    
+    if( S1 == S2 ){
+      cout <<"0"<<endl;
+    }else if ( S1 > S2 ){
+      cout <<"1"<<endl;
+    }else{
+      cout <<"2"<<endl;
+    }
+    
+  }
+  
+  return 0;
+}

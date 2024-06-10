@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+
+typedef pair<double,int> P;
+
+
+int H,W;
+string str;
+
+vector <P> u;
+char t[600][600];
+
+char T(int y,int x){
+  if(y<0||x<0)return '.';
+  if(y>=H||x>=W)return '.';
+  return t[y][x];
+}
+int main(){
+
+  double a,x,y;
+
+  while(cin>>H>>W){
+    u.clear();
+    for(int i=H-1;i>=0;i--){
+      cin>>str;
+      for(int j=0;j<W;j++){
+	t[i][j]=str[j];
+      }
+    }
+    
+    
+    for(int i=-1;i<H;i++){
+      for(int j=-1;j<W;j++){
+	if(T(i,j)=='#'&&T(i+1,j)=='#'&&T(i,j+1)=='.'&&T(i+1,j+1)=='#'){
+	  x=j+1;y=i+1;
+	  a=acos( (x)/(sqrt(x*x+y*y)) );
+	  u.push_back(P(a,-1));
+	}
+	if(T(i,j)=='.'&&T(i+1,j)=='#'&&T(i,j+1)=='.'&&T(i+1,j+1)=='.'){
+	  x=j+1;y=i+1;
+	  a=acos( (x)/(sqrt(x*x+y*y)) );
+	  u.push_back(P(a,1));
+	}
+	if(T(i,j)=='#'&&T(i+1,j)=='.'&&T(i,j+1)=='#'&&T(i+1,j+1)=='#'){
+	  x=j+1;y=i+1;
+	  a=acos( (x)/(sqrt(x*x+y*y)) );
+	  u.push_back(P(a,1));
+	}
+	if(T(i,j)=='.'&&T(i+1,j)=='.'&&T(i,j+1)=='#'&&T(i+1,j+1)=='.'){
+	  x=j+1;y=i+1;
+	  a=acos( (x)/(sqrt(x*x+y*y)) );
+	  u.push_back(P(a,-1));
+	}
+      }
+    }
+    
+    int cnt=1,ans=1;
+    sort(u.begin(),u.end());
+    for(int i=0;i<(int)u.size();i++){
+      
+      cnt+=u[i].second;
+      ans=max(ans,cnt);
+    }
+    cout<<ans<<endl;
+  }
+  return 0;
+}

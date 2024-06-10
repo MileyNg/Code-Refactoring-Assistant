@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+
+int find(int v, int *T);
+
+int main()
+{
+	int N, Q;
+	while(cin>>N>>Q){
+		if( !N && !Q ){break;}
+		int T[N+1];
+		int OrigT[N+1];
+		T[1] = OrigT[1] = 1;
+		for(int i=2; i<=N; i++){ cin >> T[i]; OrigT[i] = T[i]; }
+
+		int ans = 0;
+		for(int i=0; i<Q; i++){
+			char ch; int v;
+			cin >> ch >> v;
+			if(v==1) continue;
+			switch(ch){
+			case 'Q': ans += find(OrigT[v], T); break;
+			case 'M': T[v] = v; break;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
+
+int find(int v, int *T){
+	int ans = v;
+	while( ans != T[ans] ) ans = T[ans];
+	return ans;
+}

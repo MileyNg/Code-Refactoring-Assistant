@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+static inline int int_size(int n){ return (int)log10(n) + 1; }
+static inline int split(int n, int s){ 
+  int deli = (int)pow(10, s);
+  return (n % deli) * (n / deli);
+}
+
+int main()
+{
+  rep(i, in()){
+    int n = in();
+
+    int count = 0;
+    bool ok = true;
+    set<int> vis;
+    while (n > 9){
+      int maxi = 0;
+      count++;
+      rep(j, int_size(n) - 1){
+        maxi = max(maxi, split(n, j + 1));
+      }
+      if (vis.find(maxi) != vis.end()){
+        ok = false;
+        break;
+      }
+      else {
+        vis.insert(maxi);
+      }
+      n = maxi;
+    }
+    if (ok){
+      printf("%d\n", count);
+    }
+    else {
+      printf("-1\n");
+    }
+  }
+  return 0;
+}

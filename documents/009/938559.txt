@@ -1,0 +1,92 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#include <string>
+#include<algorithm>
+#include<iostream>
+#include<queue>
+#include<stack>
+#include<vector>
+#include<map>
+#include<set>
+#include<cmath>
+#define INF 0xfffffff
+#define CL(x,v); memset(x,v,sizeof(x));
+#define LL long long
+#define REP(i,r,n) for(int i=r;i<=n;i++)
+#define RREP(i,n,r) for(int i=n;i>=r;i--)
+#define max(x,y) x>y?x:y
+#define min(x,y) x<y?x:y
+#define EPS 1e-8
+using namespace std;
+const int Size=100005;
+long long c[Size];
+struct ASK{
+    int n;
+    long long p;
+}ask[100005];
+map<long long ,int >mp;
+long long Hash[100005];
+
+struct BIT{
+
+    void init()
+    {
+         memset(c,0,sizeof(c));
+    }
+    int lowbit(int x)
+    {
+        return x&-x;
+    }
+    void add(int d,long long v){
+        while(d<Size){
+            c[d]+=v;d+=lowbit(d);
+        }
+    }
+    int sum(int d){
+        long long ans=0;
+        while(d>0){
+            ans+=c[d];d-=lowbit(d);
+        }
+        return ans;
+    }
+};
+int main()
+{
+    BIT bit;
+    int q;
+
+    long long p,n;
+    char c;
+    while(scanf("%d",&q)!=EOF)
+    {
+        bit.init();
+        mp.clear();
+        for(int i=0;i<q;i++){
+            scanf("%I64d %c %I64d",&p,&c,&n);
+            Hash[i]=p;
+            ask[i].p=p;
+            if(c=='('){
+                ask[i].n=n;
+            }
+            else ask[i].n=-n;
+        }
+        sort(Hash,Hash+q);
+        int i=1;
+        int npoint=1;mp[Hash[0]]=1;
+        while(i<q){
+            if(Hash[i]!=Hash[i-1]){
+                Hash[npoint++]=Hash[i];
+                mp[Hash[i]]=npoint;
+            }
+            i++;
+        }
+        for(int i=0;i<q;i++){
+            bit.add(mp[ask[i].p],ask[i].n);
+            if(bit.sum(npoint)==0){
+                printf("Yes\n");
+            }else printf("No\n");
+        }
+    }
+    return 0;
+}

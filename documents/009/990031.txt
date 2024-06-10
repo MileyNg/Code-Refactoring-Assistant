@@ -1,0 +1,54 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+  
+  int i,j,r,c;
+  int num[10000][100] ;
+  
+  cin >>r >>c;
+  
+  if(r<1 || c > 100) cout <<"Too large"
+    else{ 
+      for(i=0;i<r;i++){
+	
+	for(j=0;j<c;j++){
+	  
+	  cin >>num[i][j];
+	}
+      }
+      
+      for(i=0;i<r;i++){
+	
+	for(j=0;j<c;j++){
+	  
+	  num[i][c] += num[i][j];
+	}
+      }	
+      
+      for(i=0;i<c;i++){
+	
+	for(j=0;j<r;j++){
+	  
+	  num[r][i] += num[j][i] ;
+	}
+	num[r][c] += num[r][i];
+      }
+      
+      for(i=0;i<r;i++){
+	for(j=0;j<c;j++){
+	  
+	  cout<<num[i][j] <<" " ;
+	}
+	cout<<num[i][c] <<"\n" ;
+      }
+      for(i=0;i<c;i++){
+	
+	cout <<num[r][i] <<" " ; 
+      }
+      cout<<num[r][c];
+      cout <<"\n" ;
+    }
+  
+  return 0;
+}

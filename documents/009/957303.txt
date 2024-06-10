@@ -1,0 +1,30 @@
+#include<stdio.h>
+int main(void){
+    int i,j;
+    char a[8][8]={0},ans;
+    while(scanf(" %s",&a[0])!=EOF){
+        i=1;
+        while(i<8){
+            scanf(" %s",a[i]);
+            i++;
+        }
+        for(i=0;i<8;i++){
+            for(j=0;j<8;j++){
+                if(a[i][j]=='1'){
+                    if(a[i][j+1]=='1' && a[i+1][j+1]=='1' && a[i+1][j]=='1')ans='A';
+                    else if(a[i+3][j]=='1')ans='B';
+                    else if(a[i][j+3]=='1')ans='C';
+                    else if(a[i+2][j-1]=='1')ans='D';
+                    else if(a[i][j+1]=='1' && a[i+1][j+2]=='1')ans='E';
+                    else if(a[i+2][j+1]=='1')ans='F';
+                    else if(a[i][j+1]=='1' && a[i+1][j-1]=='1')ans='G';
+                    goto ANS;
+                }
+            }
+        }
+        ANS:
+        printf("%c\n",ans);
+    }
+    END:
+    return 0;
+}

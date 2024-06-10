@@ -1,0 +1,1 @@
+main(){double a,b,c,d,e,f,g,h;for(scanf("%f",&a);~scanf("%lf%lf%lf%lf%lf%lf%lf%lf",&a,&b,&c,&d,&e,&f,&g,&h);)puts((c-a)*(h-f)-(d-b)*(g-e)?"NO":"YES");return 0;}

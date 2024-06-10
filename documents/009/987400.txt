@@ -1,0 +1,97 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<queue>
+using namespace std;
+
+#define INF 10000000
+int main()
+{
+  int w,h;
+  cin>>w>>h;
+  int maps[h][w];
+  pair<int,int>start;
+  pair<int,int>goal;
+  vector<pair<int,int> >m;
+  memset(maps,0,sizeof(maps));
+
+  for(int i=0;i<h;i++)
+    for(int j=0;j<w;j++)
+      {
+	char tmp;
+	cin>>tmp;
+	maps[i][j]=max(maps[i][j],1);
+	if(tmp=='S')
+	    start=make_pair(i,j);
+	if(tmp=='G')
+	    goal=make_pair(i,j);
+	if(tmp=='M')
+	  m.push_back(make_pair(i,j));
+	if(tmp=='#')
+	  {
+	    maps[i][j]=INF;
+	    for(int ii=i-1;ii<i+2;ii++)
+	      for(int jj=j-1;jj<j+2;jj++)
+		{
+		if(ii>=0 && ii<h &&
+		   jj>=0 && jj<w )
+		  maps[ii][jj]=max(maps[ii][jj],3);
+		}
+	    for(int ii=i-2;ii<i+3;ii++)
+	      for(int jj=j-2;jj<j+3;jj++)
+		if(ii>=0 && ii<h &&
+		   jj>=0 && jj<w )
+		  maps[ii][jj]=max(maps[ii][jj],2);
+	  }
+      }
+/*
+  for(int i=0;i<h;i++)
+    for(int j=0;j<w;j++)
+      {
+	if(maps[i][j]==INF)
+	  cout<<'#';
+	  else
+	    cout<<maps[i][j];
+	if(j==w-1)
+	  cout<<endl;
+      }
+*/
+  //cnt,bit,<pos>;
+  priority_queue<pair<pair<int,int> ,pair<int,int> >,vector< pair<pair<int,int> ,pair<int,int> > > ,greater< pair<pair<int,int> ,pair<int,int>  > >  >qu;
+  qu.push(make_pair(make_pair(0,0),start));
+  int msize=m.size();
+  bool closed[h][w][1<<msize];
+  memset(closed,false,sizeof(closed));
+  int dx[]={1,-1,0,0};
+  int dy[]={0,0,1,-1};
+  while(!qu.empty())
+    {
+      int cnt=qu.top().first.first;
+      int bit=qu.top().first.second;
+      pair<int,int> pos=qu.top().second;
+      qu.pop();
+      for(int i=0;i<msize;i++)
+	{
+	  if(pos==m[i])
+	    bit|=(1<<i);
+	}
+      if(pos==goal && bit==(1<<msize)-1)
+	{
+	  cout<<cnt<<endl;
+	  break;
+	}
+      if(closed[pos.first][pos.second][bit])
+	continue;
+      closed[pos.first][pos.second][bit]=true;
+      for(int i=0;i<4;i++)
+	{
+	  if(pos.first+dx[i]>=0 && pos.first+dx[i]<h &&
+	     pos.second+dy[i]>=0 && pos.second+dy[i]<w  &&
+	     !closed[pos.first+dx[i]][pos.second+dy[i]][bit]
+	     )
+	    qu.push(make_pair(make_pair(cnt+maps[pos.first][pos.second],bit),
+			      make_pair(pos.first+dx[i],pos.second+dy[i])));
+
+	}
+    }
+}

@@ -1,0 +1,20 @@
+n = gets.chomp
+check = true
+
+while n != 0
+  text = gets.chomp
+  for i in 2..n
+    if text =~ /.<*?>\s<.*?>\s<.*?>/
+      if ($2 * $3) >= 1000000
+        puts $1
+        check = false
+      end
+    end
+    text = gets.chomp
+  end
+  if check
+    puts "NA"
+    check = false
+  end
+  n = gets.chomp
+end

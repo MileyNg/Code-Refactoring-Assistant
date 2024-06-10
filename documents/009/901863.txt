@@ -1,0 +1,112 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+#include <cassert>
+ 
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+ 
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+ 
+const int INF = 1001001001;
+ 
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+ 
+int W, H;
+char map[20][20];
+int can_buy[20][20];
+int N;
+int G[8], D[8], S[8], E[8];
+int dp[1<<8][20][20][101];
+ 
+bool didGoSame(int state, int v){
+    REP(i, N){
+        if(state >> i & 1 && G[i] == G[v]){return true;}
+    }
+    return false;
+}
+ 
+int rec(int state, int x, int y, int t){
+    // printf("%d, %d, %d\n", x, y, t);
+    if(t > 100){return 0;}
+    if(dp[state][x][y][t] != -1){return dp[state][x][y][t];}
+ 
+    int res = 0;
+    REP(j, N){
+        // printf("%d, %d: %d\n", x, y, t);
+        if(!(state >> j & 1) && !didGoSame(state, j) && can_buy[y][x] >> G[j] & 1 && S[j] <= t && t < E[j]){
+            res = std::max(res, D[j] + rec(state | 1 << j, x, y, t));
+        }
+    }
+
+    REP(i, 4){
+        int nx = x + dx[i], ny = y + dy[i];
+        if(0 <= nx && nx < W && 0 <= ny && ny < H && map[ny][nx] == '.'){
+            res = std::max(res, rec(state, nx, ny, t+1));
+        }
+    }
+ 
+    return dp[state][x][y][t] = res;
+}
+ 
+int main(){
+    while(std::cin >> W >> H, W){
+        REP(i, 20){
+            REP(j, 20){
+                can_buy[i][j] = 0;
+            }
+        }
+ 
+        REP(i, 1<<8){
+            REP(j, 20){
+                REP(k, 20){
+                    REP(l, 101){
+                        dp[i][j][k][l] = -1;
+                    }
+                }
+            }
+        }
+ 
+        int sx, sy;
+        REP(i, H){
+            REP(j, W){
+                std::cin >> map[i][j];
+                if(map[i][j] == 'P'){
+                    map[i][j] = '.';
+                    sx = j; sy = i;
+                }
+            }
+        }
+ 
+        REP(y, H){
+            REP(x, W){
+                REP(k, 4){
+                    if(map[y][x] == '.'){continue;}
+                    int nx = x + dx[k], ny = y + dy[k];
+                    if(0 <= nx && nx < W && 0 <= ny && ny < H && map[ny][nx] == '.'){
+                        can_buy[ny][nx] |= 1 << (map[y][x] - '0');
+                    }
+                }
+            }
+        }
+ 
+        std::cin >> N;
+ 
+        REP(i, N){
+            std::cin >> G[i] >> D[i] >> S[i] >> E[i];
+        }
+ 
+        std::cout << rec(0, sx, sy, 0) << std::endl;
+    }
+}

@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+#define rep(i, b) for (int i = 0; i < int(b); i++)
+
+int w, h;
+vector<vector<int>> g;
+
+int const dx[] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+int const dy[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+inline bool in(int x, int y){
+    return 0 <= x && x < w && 0 <= y && y < h;
+}
+
+void fill(int x, int y){
+    g[y][x] = 0;
+    rep(i, 8){
+        int xx = x + dx[i];
+        int yy = y + dy[i];
+        if (in(xx, yy) && g[yy][xx]) fill(xx, yy);
+    }
+}
+
+int main(){
+    while (cin >> w >> h, w | h){
+        g.assign(h, vector<int>(w));
+        rep(i, h)rep(j, w) cin >> g[i][j];
+        int c = 0;
+        rep(i, h)rep(j, w){
+            if (g[i][j]){
+                c++;
+                fill(j, i);
+            }
+        }
+        cout << c << endl;
+    }
+}

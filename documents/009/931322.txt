@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void){
+	
+	char w[11], t[1001];
+    char e[] = {"END_OF_TEXT"};
+    int i, sum;
+    
+	sum = 0;
+    
+    scanf("%s", &w);
+    getchar();
+    
+    while (1) {
+        
+        scanf("%s", &t);
+        getchar();
+        
+        if (!(strcmp(t, e))) {
+            break;
+        }
+        
+        for (i=0; t[i] != '\0'; i++) {
+            t[i] = tolower(t[i]);
+        }
+        
+        if (!(strcmp(t, w))) {
+            sum++;
+        }
+        
+        
+        
+    }
+    
+    printf("%d\n", sum);
+    
+	
+	return 0;
+    
+}

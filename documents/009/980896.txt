@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+bool is_connected(vector<vector<int>> &Graph, vector<int> &nodes, int start) {
+    bool visited[26] = {false};
+    queue<int> q;
+    q.push(start);
+    while ( ! q.empty()) {
+        int node = q.front();
+        q.pop();
+        visited[node] = true;
+        for (int i=0; i<26; ++i) {
+            if (Graph[node][i] && ! visited[i]) {
+                q.push(i);
+            }
+        }
+    }
+    for (int x : nodes) {
+        if ( ! visited[x]) return false;
+    }
+    return true;
+}
+
+int main() {
+    int n;
+    while (cin >> n && n) {
+        vector<vector<int>> Graph(26, vector<int>(26));
+        vector<int> nodes;
+        vector<int> d(26, 0);
+        string s;
+        int b, f;
+        for (int i=0; i<n; ++i) {
+            cin >> s;
+            b = s.back() - 'a';
+            f = s.front() - 'a';
+            d[b] ++;
+            d[f] --;
+            Graph[b][f] = true;
+            nodes.push_back(b);
+            nodes.push_back(f);
+        }
+        bool ok = is_connected(Graph, nodes, f);
+        for (int x : d) {
+            if (x != 0) {
+                ok = false;
+                break;
+            }
+        }
+        cout << (ok ? "OK" : "NG") << endl;
+    }
+    return 0;
+}

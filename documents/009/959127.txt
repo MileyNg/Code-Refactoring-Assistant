@@ -1,0 +1,44 @@
+
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+int  s[10];
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	int case_t, case_num;
+	scanf("%d", &case_num);
+	for (case_t=1; case_t<=case_num; case_t++) {
+		int i;
+		for (i=0; i<10; i++)
+			scanf("%d", &s[i]);
+
+		int min1 = -1, min2 = -1;
+
+		for (i=0; i<10; i++) {
+			if (s[i]<min1 && s[i]<min2)
+				break;
+			if (s[i]>min1 && s[i]>min2) {
+				if (min1 < min2)
+					min2 = s[i];
+				else
+					min1 = s[i];
+			}
+			else if (s[i]>min1)
+				min1 = s[i];
+			else
+				min2 = s[i];
+
+		}
+		if (i<10) printf("NO\n");
+		else printf("YES\n");
+
+
+	}
+
+	return 0;
+}

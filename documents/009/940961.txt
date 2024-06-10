@@ -1,0 +1,30 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8').trim();
+var lines = input.split('\n');
+
+var score = [];
+var line;
+while (line = lines.shift()) {
+    var arr = line.split(',').map(function(n){return +n;});
+
+    if (arr[0] + arr[1] == 0)
+        break;
+
+    score.push({id: arr[0], score: arr[1]});
+}
+
+var rank = score.map(function(o) {
+    return o.score;
+})
+.filter(function(v,i,a) {
+    return a.indexOf(v) == i;
+})
+.sort(function(a, b) {
+    return b - a;
+});
+
+while (line = lines.shift()) {
+    var id = +line;
+    var team = score.filter(function(o){return o.id == id;})[0];
+    var r = rank.indexOf(team.score) + 1;
+    console.log(r);
+}

@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <bitset>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  while(1){
+    int n,c;
+    cin >> n >> c;
+    if(!n) break;
+    vector<vector<int>> a(n, vector<int>(16));
+    vector<vector<int>> b(c, vector<int>(16));
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < 16; ++j) {
+        cin >> a[i][j];
+      }
+    }
+    for (int i = 0; i < c; ++i) {
+      for (int j = 0; j < 16; ++j) {
+        cin >> b[i][j];
+      }
+    }
+    vector<vector<int>> dp(n+1, vector<int>(1<<16,-1000000000));
+    dp[0][0] = 0;
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < (1 << 16); ++j) {
+        bitset<16> bs(j);
+        for (int k = 0; k < 16; ++k) {
+          if (a[i][k]) bs[k] = true;
+        }
+        for (int k = 0; k < c; ++k) {
+          bitset<16> cp = bs;
+          int point = dp[i][j];
+          for (int l = 0; l < 16; ++l) {
+            if (b[k][l] & cp[l]) { 
+              cp[l] = false;
+              ++point;
+            }
+          }
+          int m = cp.to_ulong();
+          dp[i+1][m] = max(dp[i+1][m], point);
+        }
+      }
+    }
+    cout << *max_element(begin(dp[n]),end(dp[n])) << endl;
+  }
+  return 0;
+}

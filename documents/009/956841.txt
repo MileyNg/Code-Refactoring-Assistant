@@ -1,0 +1,14 @@
+while 1:
+    try:
+        a, b, c = map(int, raw_input().split())
+    except EOFError:
+        break
+    cards = set(xrange(1, 11))
+    cards -= {a, b, c}
+    ret = 0.0
+    for card in cards:
+        ret += card * 1.0 / len(cards)
+    if ret < 20 - a - b:
+        print "YES"
+    else:
+        print "NO"

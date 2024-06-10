@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+using namespace std;
+
+struct Cup{
+  stack<int> c[3];
+  int mc;
+  bool move(int a, int b){
+    if(c[a].empty() || (!c[b].empty() && c[a].top() <= c[b].top())) return false;
+    else{
+      c[b].push(c[a].top());
+      c[a].pop();
+      mc++;
+      return true;
+    }
+  }
+  void moveback(int a, int b){
+    c[b].push(c[a].top());
+    c[a].pop();
+    mc--;
+    return;
+  }
+}cup;
+queue<Cup> state;
+const int INF = 15000001;
+int m,n;
+
+bool check(Cup c){
+  if(c.c[1].empty() && (c.c[0].empty() || c.c[2].empty())) return true;
+  else return false;
+}
+
+int main(){
+  while(cin >> n >> m && n && m){
+    cup.mc = 0;
+    while(!state.empty()) state.pop();
+    
+    int c, d;
+    cin >> c;
+    for(int i=0; i<c; i++){ cin >> d; cup.c[0].push(d);}
+    cin >> c;
+    for(int i=0; i<c; i++){ cin >> d; cup.c[1].push(d);}
+    cin >> c;
+    for(int i=0; i<c; i++){ cin >> d; cup.c[2].push(d);}
+    
+    state.push(cup);
+    while(!state.empty()){
+      Cup cur_c = state.front();
+      state.pop();
+      if(cur_c.mc > m){ cout << -1 << endl;break;}
+      if(check(cur_c)){ cout << cur_c.mc << endl; break;}
+      
+      if(cur_c.move(0,1)){
+        state.push(cur_c);
+        cur_c.moveback(1,0);
+      }
+      if(cur_c.move(1,0)){
+        state.push(cur_c);
+        cur_c.moveback(0,1);
+      }
+      if(cur_c.move(1,2)){
+        state.push(cur_c);
+        cur_c.moveback(2,1);
+      }
+      if(cur_c.move(2,1)){
+        state.push(cur_c);
+        cur_c.moveback(1,2);
+      }
+    }
+  }
+  return 0;
+}

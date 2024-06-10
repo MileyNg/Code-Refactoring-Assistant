@@ -1,0 +1,29 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  while (true) {
+    int an, bn, r;
+    cin >> an >> bn >> r;
+    if (an == 0) break;
+    vector<pair<int, int> > a(an);
+    rep (i, an) cin >> a[i].first >> a[i].second;
+    rep (i, an) a[i].first += 50;
+    rep (i, an) a[i].second += 50;
+    vector<vector<bool> > b(10100, vector<bool>(10100, false));
+    rep (i, bn) {
+      int x, y;
+      cin >> x >> y;
+      b[x + 50][y + 50] = true;
+    }
+    long long res = 0;
+    vector<pair<int, int> > d;
+    for (int i = -4 * r; i <= 4 * r; ++i) for (int j = -4 * r; j <= 4 * r; ++j) if (4 * r * r <= i * i + j * j && i * i + j * j <= 16 * r * r) d.push_back(make_pair(i, j));
+    rep (i, an) rep (j, d.size()) if (b[a[i].first + d[j].first][a[i].second + d[j].second]) ++res;
+    cout << res << endl;
+  }
+}

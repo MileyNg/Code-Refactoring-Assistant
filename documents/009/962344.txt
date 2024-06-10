@@ -1,0 +1,26 @@
+#include <iostream>
+#include <string>
+
+int main()
+{
+    const std::string str_false = "Hoshino";
+    const std::string str_true = "Hoshina";
+
+    u_int num_of_data;
+    std::cin >> num_of_data;
+    std::cin.ignore();
+    
+    for(u_int i = 0; i < num_of_data; ++i){
+        std::string text;
+        getline(std::cin, text);
+        
+        std::string::size_type index = 0;
+        while((index = text.find(str_false, index)) != std::string::npos){
+            text.replace(index, str_false.size(), str_true);
+            index += str_true.size();
+        }
+        std::cout  << text << std::endl;
+    }
+    
+    return 0;
+}

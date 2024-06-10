@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	int value,value_2;
+	double x=0.0,y=0.0,angle=90;
+
+	while(1)
+	{
+		scanf("%d,%d",&value,&value_2);
+		if(value == 0 && value_2 == 0) break;
+
+		x += cos(angle*M_PI/180)*value;
+		y += sin(angle*M_PI/180)*value;
+		angle -= value_2;
+	}
+
+	printf("%d\n%d\n",(int)x,(int)y);
+	return 0;
+}

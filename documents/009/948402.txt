@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a[1000], b[1000];
+	int n[1000];
+	int s[1000] = {0};
+	int i, j;
+
+	for (i = 0; scanf("%d %d %d", &a[i], &b[i], &n[i]) != EOF; i++){
+		double quo = (double)a[i] / b[i] - a[i] / b[i];
+
+		for (j = 0; j < n[i]; j++){
+			int f = quo * 10;
+
+			f %= 10;
+			s[i] += f;
+			quo = quo * 10 - f;
+		}
+	}
+	for (j = 0; j < i; j++){
+		printf("%d\n", s[j]);
+	}
+
+	return 0;
+}

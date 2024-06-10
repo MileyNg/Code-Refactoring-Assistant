@@ -1,0 +1,153 @@
+#include <algorithm>
+#include <set>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+string L[10];
+bool input() {
+    cin >> L[0];
+    if (L[0] == "END") return false;
+    for (int i = 1; i < 10; i++) cin >> L[i];
+    return true;
+}
+
+ostream& operator<<(ostream& os, const vector<string>& v) {
+    for (int i = 0; i < v.size(); i++) {
+        os << v[i] << endl;
+    }
+    return os;
+}
+
+set<int> Ans;
+char F[5][5];
+
+void Backup(char src[][5], char dst[][5]) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            dst[i][j] = src[i][j];
+        }
+    }
+}
+
+string Conv(string& s) {
+    string Ret;
+    for (int i = 0; i < 5; i++) {
+        Ret[i] = (s[i] == '0' ? '1' : '0');
+    }
+    return Ret;
+}
+char Conv(char c) {
+    return (c == '0' ? '1' : '0');
+}
+
+int EncodeF() {
+    int Ret = 0;
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (F[i][j] == '1') {
+                Ret |= (1 << (i * 5 + j));
+            }
+        }
+    }
+    return Ret;
+}
+
+void dump() {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            cout << F[i][j];
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void dfs(int index, int used) {
+    if (index == 10) {
+        //dump();
+        Ans.insert(EncodeF());
+        return;
+    }
+    int rc = index % 2;
+    char G[5][5];
+    if (rc == 0) {
+        int x = index / 2;
+        for (int i = 0; i < 10; i++) {
+            if (used & (1 << i)) continue;
+
+            string s = L[i];
+            for (int y = 0; y < 5; y++) {
+                if (F[y][x] != '.' && F[y][x] != s[y]) goto next1;
+            }
+            Backup(F, G);
+            for (int y = 0; y < 5; y++) F[y][x] = s[y];
+            dfs(index + 1, used | (1 << i));
+            Backup(G, F);
+            next1:;
+
+            reverse(whole(s));
+            for (int y = 0; y < 5; y++) {
+                if (F[y][x] != '.' && F[y][x] != s[y]) goto next2;
+            }
+            Backup(F, G);
+            for (int y = 0; y < 5; y++) F[y][x] = s[y];
+            dfs(index + 1, used | (1 << i));
+            Backup(G, F);
+            next2:;
+        }
+    } else {
+        int y = index / 2;
+        for (int i = 0; i < 10; i++) {
+            if (used & (1 << i)) continue;
+
+            string s = L[i];
+            for (int x = 0; x < 5; x++) {
+                if (F[y][x] != '.' && F[y][x] != Conv(s[x])) goto next3;
+            }
+            Backup(F, G);
+            for (int x = 0; x < 5; x++) F[y][x] = Conv(s[x]);
+            dfs(index + 1, used | (1 << i));
+            Backup(G, F);
+            next3:;
+
+            reverse(whole(s));
+            for (int x = 0; x < 5; x++) {
+                if (F[y][x] != '.' && F[y][x] != Conv(s[x])) goto next4;
+            }
+            Backup(F, G);
+            for (int x = 0; x < 5; x++) F[y][x] = Conv(s[x]);
+            dfs(index + 1, used | (1 << i));
+            Backup(G, F);
+            next4:;
+        }
+    }
+}
+
+void solve() {
+    Ans.clear();
+    memset(F, '.', sizeof(F));
+    dfs(0, 0);
+    cout << Ans.size() / 8 << endl;
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+
+int n;
+int r[1010];
+int w[1010];
+
+bool dp[1010][1010];
+
+int main(void){
+	while(cin >> n,n){
+		rep(i,1010)rep(j,1010) dp[i][j]=false;
+		rep(i,n) cin >> r[i] >> w[i];
+		int rmax=0,rother=0,rindex=-1;
+		rep(i,n){
+			if(r[i] > rmax){
+				rmax=r[i];
+				rindex=i;
+			}
+			rother+=r[i];
+		}
+		rother-=rmax;
+		int ans=0;
+		if(rother>=rmax){
+			rep(i,n) ans+=r[i]+w[i];
+		}else{
+			int rem=rmax-rother;
+			dp[0][0]=true;;
+			rep(i,n)rep(j,rem+1){
+				if(dp[i][j]==false) 
+					continue;
+				dp[i+1][j]=true;
+				if(i!=rindex&&j+w[i]<=rem)
+					dp[i+1][j+w[i]]=true;
+			}
+			int wsum=0;
+			rep(i,n) wsum+=w[i];
+
+			int res=0;
+			rep(i,rem+1){
+				if(dp[n][i]) res=i;
+			}
+			ans=2*rmax+(wsum-res);
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

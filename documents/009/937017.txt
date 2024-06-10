@@ -1,0 +1,66 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main(void) {
+  int N;
+  cin >> N;
+
+  while (N--) {
+    int num_size;
+    string num1, num2;
+    cin >> num1 >> num2;
+
+    reverse(num1.begin(), num1.end());
+    reverse(num2.begin(), num2.end());
+
+    num_size = max(num1.size(), num2.size());
+    if (num_size > 80) {
+      cout << "overflow" << endl;
+      continue;
+    }
+    if (num1.size() > num2.size()) {
+      int diff = num1.size() - num2.size();
+      while (diff--) {
+        num2 += '0';
+      }
+    } else {
+      int diff = num2.size() - num1.size();
+      while (diff--) {
+        num1 += '0';
+      }
+    }
+
+    string sum;
+    bool flag = false;
+    for (int i = 0; i < num_size; i++) {
+      int n1 = num1[i] - '0';
+      int n2 = num2[i] - '0';
+      int tmp = n1 + n2;
+      if (flag) {
+        tmp++;
+        flag = false;
+      }
+      if (tmp >= 10) {
+        tmp %= 10;
+        flag = true;
+      }
+      sum += tmp + '0';
+    }
+    if (flag) {
+      sum += '1';
+    }
+
+    if (sum.size() > 80) {
+      cout << "overflow" << endl;
+      continue;
+    }
+    
+    reverse(sum.begin(), sum.end());
+    cout << sum << endl;
+
+  }
+
+  return 0;
+}

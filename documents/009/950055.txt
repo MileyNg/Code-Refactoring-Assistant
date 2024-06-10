@@ -1,0 +1,36 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int main(){
+	map<double, int> n_t;
+	int num;
+	double t;
+	vector<double> rank, all;
+	for( int r = 0; r < 3; r++ ){
+		for( int i = 0; i < 8; i++ ){
+			cin >> num >> t;
+			n_t[t] = num;
+			rank.push_back(t);
+		}
+		sort(rank.begin(), rank.end());
+		vector<double>::iterator it = rank.begin();
+		cout << n_t[*it] << ' ' << *it << endl;
+		//rank.erace(it);
+		it++;
+		cout << n_t[*it] << ' ' << *it << endl;
+		it++;
+		for( ; it != rank.end(); it++ ){
+			all.push_back(*it);
+		}
+		rank.clear();
+	}
+	sort(all.begin(), all.end());
+	vector<double>::iterator it = all.begin();
+	cout << n_t[*it] << ' ' << *it << endl;
+	it++;
+	cout << n_t[*it] << ' ' << *it << endl;
+
+	return 0;
+}

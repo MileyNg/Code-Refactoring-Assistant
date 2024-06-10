@@ -1,0 +1,32 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#define Swap(x,y)	{int _t=x; x=y; y=_t;}
+
+int main(void){
+	int a[5];
+	int count;
+	int flg = 1;
+
+	for (count = 0; count < 3; count++){
+		scanf("%d", &a[count]);
+	}
+
+	while(flg==1){
+		flg = 0;
+		for (count = 0; count < 2; count++){
+			if (a[count]>a[count + 1]){
+				Swap(a[count], a[count + 1]);
+				flg = 1;
+			}
+		}
+	}
+	for (count = 0; count < 3; count++){
+		printf("%d", a[count]);
+		if (count < 2){
+			printf(" ");
+		}
+	}
+	printf("\n");
+
+	return 0;
+}

@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<string>
+#include<utility>
+#include<vector>
+#include<queue>
+using namespace std;
+typedef pair<int,string> p;
+typedef pair<string,string>c;
+vector<c>change;
+int N;
+string E;
+int main()
+{
+	for(;scanf("%d",&N),N;)
+	{
+		priority_queue<p,vector<p>,greater<p> >Q;
+		change.clear();
+		char a[12],b[12];
+		for(int i=0;i<N;i++)
+		{
+			scanf("%s%s",a,b);
+			change.push_back(make_pair(string(a),string(b)));
+		}
+		scanf("%s%s",a,b);
+		E=string(b);
+		Q.push(make_pair(0,string(a)));
+		int f;
+		for(f=0;!Q.empty();)
+		{
+			p tmp=Q.top();Q.pop();
+			if(tmp.first>10||tmp.second.length()>10)continue;
+			if(tmp.second==E)
+			{
+				printf("%d\n",tmp.first);
+				f=1;
+				break;
+			}
+			for(int i=0;i<change.size();i++)
+			{
+				string tag=change[i].first;
+				string now=tmp.second;
+				int idx=now.find(tag);
+				for(;idx!=std::string::npos;)
+				{
+					now.replace(idx,tag.length(),change[i].second);
+					idx=now.find(tag,idx+change[i].second.length());
+				}
+				if(now!=tmp.second)
+					Q.push(make_pair(tmp.first+1,now));
+			}
+		}
+		if(!f)
+			puts("-1");
+	
+	}
+	return 0;
+}

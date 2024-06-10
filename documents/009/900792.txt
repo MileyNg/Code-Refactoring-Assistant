@@ -1,0 +1,162 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <memory>
+#include <iostream>
+#include <set>
+#include <utility>
+#include <vector>
+using namespace std;
+
+constexpr int MAX_NODE = 127;
+constexpr double EPS = 1e-5;
+
+typedef vector<long long> pattern;
+
+int memo[MAX_NODE][MAX_NODE];
+int next_ID;
+
+struct node_t {
+	unique_ptr<node_t> left;
+	unique_ptr<node_t> right;
+
+	int ID;
+	int sz;
+	int h;
+	double sim;
+	set<pattern> sp;
+
+	node_t(int ID_):ID(ID_), sz(1), h(1), sim(0.0) {}
+
+	inline bool is_leaf() const {
+		return left.get() == nullptr;
+	}
+
+	string to_string() const {
+		if(is_leaf()) return "x";
+		return "(" + left->to_string() + " " + right->to_string() + ")";
+	}
+
+	void transform(bool is_left = true) {
+		if(is_leaf()) return;
+		if(is_left) {
+			if(*left < *right) swap(left, right);
+		}
+		else {
+			if(*right < *left) swap(left, right);
+		}
+
+		left->transform(true);
+		right->transform(false);
+	}
+
+	void calc_tree_pattern(pattern &p, long long value = 0) const {
+		if(is_leaf()) {
+			p.emplace_back(value);
+		}
+		else if(make_pair(left->h, left->sz) < make_pair(right->h, right->sz)) {
+			left->calc_tree_pattern(p, (value << 1) | 0x0);
+			right->calc_tree_pattern(p, (value << 1) | 0x1);
+		}
+		else {
+			left->calc_tree_pattern(p, (value << 1) | 0x1);
+			right->calc_tree_pattern(p, (value << 1) | 0x0);
+		}
+	}
+
+	void find_pattern() {
+		pattern p;
+		p.reserve(MAX_NODE / 2);
+		calc_tree_pattern(p);
+		sort(p.begin(), p.end());
+		sp.insert(p);
+
+		if(!is_leaf()) {
+			sp.insert(left->sp.begin(), left->sp.end());
+			sp.insert(right->sp.begin(), right->sp.end());
+		}
+	}
+
+	void calc_similarity() {
+		if(is_leaf()) return;
+
+		const set<pattern> &l_s = left->sp;
+		const set<pattern> &r_s = right->sp;
+
+		set<pattern> intersection;
+		for(const auto &e : l_s) {
+			if(r_s.count(e)) intersection.insert(e);
+		}
+
+		set<pattern> all(l_s);
+		all.insert(r_s.begin(), r_s.end());
+
+		sim = (double)intersection.size() / all.size();
+	}
+
+	bool operator<(const node_t &v) const {
+		if(memo[ID][v.ID] != -1) return memo[ID][v.ID];
+
+		if(abs(sim - v.sim) > EPS) return memo[ID][v.ID] = sim > v.sim;
+		if(is_leaf()) return memo[ID][v.ID] = false; // equal
+
+		const bool m_j = *left < *right;
+		const bool v_j = *v.left < *v.right;
+
+		const auto &m_strong = (m_j ? right : left);
+		const auto &m_weak = (m_j ? left : right);
+		const auto &v_strong = (v_j ? v.right : v.left);
+		const auto &v_weak = (v_j ? v.left : v.right);
+
+		bool t = *m_strong < *v_strong;
+		if(t || *v_strong < *m_strong) return memo[ID][v.ID] = t;
+		t = *m_weak < *v_weak;
+		if(t || *v_weak < *m_weak) return memo[ID][v.ID] = t;
+
+		return memo[ID][v.ID] = false; // equal
+	}
+
+	void init() {
+		if(!is_leaf()) {
+			left->init();
+			right->init();
+			sz += left->sz + right->sz;
+			h += max(left->h, right->h);
+		}
+		find_pattern();
+		calc_similarity();
+	}
+};
+
+unique_ptr<node_t> parse(string::const_iterator &it) {
+	unique_ptr<node_t> p(new node_t(next_ID++));
+	if(*it == 'x') {
+		++it;
+		return p;
+	}
+	++it; // '('
+	p->left = parse(it);
+	++it; // ' '
+	p->right = parse(it);
+	++it; // ')'
+	return p;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	string input;
+	while(getline(cin, input) && input != "0") {
+		memset(memo, -1, sizeof(memo));
+		next_ID = 0;
+		string::const_iterator it = input.begin();
+		unique_ptr<node_t> root = parse(it);
+		root->init();
+		root->transform();
+		cout << root->to_string() << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

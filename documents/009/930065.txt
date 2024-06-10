@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	char str[1024];
+	int i, j;
+
+	fgets(str, 1000, stdin);
+	for (i = 0; str[i] != 0; i = j){
+		int k;
+		char word[8];
+		for (j = i, k = 0; j < i + 5 && str[j] != ' ' && str[j] != 0; j++, k++){
+			word[k] = str[j];
+		}
+		word[k] = 0;
+		if (strcmp(word, "apple") == 0){
+			str[i] = 'p';
+			str[i + 1] = 'e';
+			str[i + 2] = 'a';
+			str[i + 3] = 'c';
+			str[i + 4] = 'h';
+		}
+		else if (strcmp(word, "peach") == 0){
+			str[i] = 'a';
+			str[i + 1] = str[i + 2] = 'p';
+			str[i + 3] = 'l';
+			str[i + 4] = 'e';
+		}
+		for (; str[j - 1] != ' ' && str[j - 1] != 0; j++);
+	}
+	puts(str);
+
+	return 0;
+}

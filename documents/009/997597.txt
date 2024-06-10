@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+
+int main(int argc, const char * argv[]){
+    double a,b,c,d,e,f;
+    double x,y;
+    
+    while(scanf("%lf %lf %lf %lf %lf %lf",&a,&b,&c,&d,&e,&f) != EOF){
+        if((-1000 > a || a > 1000) ||
+           (-1000 > b || b > 1000) ||
+           (-1000 > c || c > 1000) ||
+           (-1000 > d || d > 1000) ||
+           (-1000 > e || e > 1000) ||
+           (-1000 > f || f > 1000)){
+            exit(0);
+        }
+//        if (x == -0.0)
+//            x = 0.0;
+//        if (y == -0.0)
+//            y = 0.0;
+        x = (c * e - b * f)/(a * e - b * d);
+        y = (c * d - a * f)/(b * d - a * e);
+    
+        printf("%.3lf %.3lf\n",x,y);
+    }
+    return 0;
+}

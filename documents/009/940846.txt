@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <cctype>
+#include <string>
+#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>
+using namespace std;
+
+int main(){
+	int n;
+	double sum=0, ave,ss=0;
+	while (1){
+		cin >> n;
+		if (n == 0)
+			break;
+		sum = 0;
+		ss = 0;
+		ave = 0;
+		vector<int>v(n);
+		for (auto pv = v.begin(); pv != v.end(); ++pv){
+			cin >> *pv;
+			sum += *pv;
+			ss += *pv * *pv;
+		}
+		ave = sum / n;
+		ss -= n*ave*ave;
+		ss /= n;
+		cout <<sqrt(ss)<<endl;
+	}
+
+
+}

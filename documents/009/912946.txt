@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=int(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+
+int main(){
+    for(int z; cin>>z,z;){
+        int ans = 1e9;
+        for(int x=1; x*x*x<=z*z*z; x++){
+            for(int y=1; y*y*y + x*x*x <= z*z*z; y++){
+                ans = min(z*z*z - x*x*x - y*y*y, ans);
+            }
+        }
+        cout << ans << endl;
+    }
+}

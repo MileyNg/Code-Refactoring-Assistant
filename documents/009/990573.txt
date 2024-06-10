@@ -1,0 +1,62 @@
+#include<iostream>
+using namespace std;
+
+int a,n;
+
+int calc(int p,int q,int aa,int n,int ii)
+{
+  // cout<<"calc "<<p<<" "<<q<<" "<<aa<<" "<<n<<endl;
+  int ans=0;
+  if(aa>a)
+    return 0;
+  if(p<0)
+    return 0;
+  if(p==0)
+    {
+      // cout<<"ANS+ "<<p<<" "<<q<<" "<<aa<<" "<<n<<endl;
+    return 1;
+    }
+  if(n<=0)
+    return 0;
+  
+  for(int i=ii;aa*i<=a;i++)
+    {
+      int pp =i*p-q;
+      int qq =i*q;
+      
+	  if(pp != 0 && qq>=0 && pp>=0 &&  qq%pp==0)
+	    {
+	      qq=qq/pp;
+	      pp=1;
+	    }
+      
+	  ans+=calc(pp,qq,i*aa,n-1,i);
+    }
+
+  return ans;
+
+}
+
+
+
+int main()
+{
+  int p,q,n;
+  for(;cin>>p>>q>>a>>n,p;)
+    {
+      int ans=0;
+      for(int i=1;i<=a;i++)
+	{
+	  //	  cout<<"i "<<i<<endl;
+	  int pp =i*p-q;
+	  int qq =i*q;
+	  if(pp != 0 && qq>=0 && pp>=0 &&  qq%pp==0)   
+	    {
+	      qq=qq/pp;	
+	      pp=1;
+	    }	  
+	  ans+=calc(pp,qq,i,n-1,i);
+	}
+      cout<<ans<<endl;
+    }
+}

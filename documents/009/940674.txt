@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <cctype>
+#include <string>
+using namespace std;
+
+int main(){
+	int n = 0;
+	string w, t;
+	cin >> w;
+	for (auto pw = w.begin(); pw != w.end(); ++pw){
+		if (isalpha(*pw) && isupper(*pw))
+			*pw = tolower(*pw);
+	}
+	while (1){
+		cin >> t;
+		if (t == "END_OF_TEXT")
+			break;
+		for (auto pt = t.begin(); pt != t.end(); ++pt){
+			if (isalpha(*pt) && isupper(*pt))
+				*pt = tolower(*pt);
+		}
+		if (t == w)
+			n++;
+	}
+	cout << n;
+	return 0;
+}

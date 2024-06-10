@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct team{
+	int n, c, t, p;
+};
+
+bool operator<(const team team1, const team team2){
+	bool rep;
+	if(team1.c == team2.c){
+		rep = (team1.t == team2.t) ? team1.n > team2.n : team1.t < team2.t;
+	}else{
+		rep = (team1.c > team2.c);
+	}
+	return rep;
+}
+
+int main(){
+	int M, T, P, R;
+	while( cin >> M >> T >> P >> R, M || T || P || R ){
+		vector<team> teams(T);
+		for(int i = 0; i < T; i++){
+			teams[i].n = i+1;
+			teams[i].c = 0;
+			teams[i].t = 0;
+			teams[i].p = 0;
+		}
+		for(int i = 0; i < R; i++){
+			int m, t, p, j;
+			cin >> m >> t >> p >> j;
+			if( j == 0 ){
+				teams[t-1].c++;
+				teams[t-1].t += m + 20 * teams[t-1].p;
+				teams[t-1].p = 0;
+			}else{
+				teams[t-1].p++;
+			}
+		}
+		sort(teams.begin(), teams.end());
+		cout << teams[0].n;
+		for(int i = 1; i < T; i++){
+			if( teams[i].c == teams[i-1].c && teams[i].t == teams[i-1].t ) cout << "=";
+			else cout << ",";
+			cout << teams[i].n;
+		}
+		cout << endl;
+	}
+}

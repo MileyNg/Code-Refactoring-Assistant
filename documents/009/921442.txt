@@ -1,0 +1,21 @@
+class Array
+  def gcd
+    self.inject do |a, b|
+      a*b/self.lcm
+    end
+  end
+
+  def lcm
+    self.inject do |a, b|
+      a, b = b, a if a < b
+      return a if b == 0
+      arr = b, a%b
+      arr.lcm
+    end
+  end
+end
+
+while str = gets
+  a = str.split(' ').map(&:to_i)
+  puts "#{a.gcd} #{a.lcm}"
+end

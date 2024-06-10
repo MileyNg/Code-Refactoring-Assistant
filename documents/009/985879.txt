@@ -1,0 +1,73 @@
+#include<stdio.h>
+struct Node {int p,l,r;};
+struct Node T[100000];
+
+int sibling(int id)
+{
+  if(T[T[id].p].l==id) return T[T[id].p].r;
+  else if(T[T[id].p].r==id) return T[T[id].p].l;
+  else return -1;
+}
+
+int degree(int id)
+{
+  int sum=0;
+  if(T[id].l!=-1) sum++;
+  if(T[id].r!=-1) sum++;
+  return sum;
+}
+
+int depth(int id)
+{
+  int sum=0,tmp=0;
+  tmp=T[id].p;
+  if(tmp!=-1) sum=depth(tmp)+1;
+  return sum;
+}
+
+int height(int id)
+{
+  int lheight=0;
+  int rheight=0;
+  if(T[id].l!=-1) lheight=height(T[id].l)+1;
+  if(T[id].r!=-1) rheight=height(T[id].r)+1;
+  if(lheight>rheight) return lheight;
+  else return rheight;
+}
+      
+
+
+main()
+{
+  int n,id,i;
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      T[i].p=T[i].l=T[i].r=-1;
+    }
+  for(i=0;i<n;i++)
+    {
+      scanf("%d",&id);
+      scanf("%d %d",&T[id].l,&T[id].r);
+	  T[T[id].l].p=id;
+	  T[T[id].r].p=id;
+    }
+  
+  for(i=0;i<n;i++)
+    {
+      printf("node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d,",i,T[i].p,sibling(i),degree(i),depth(i),height(i));
+      if(T[i].p==-1)
+	{
+	  printf(" root\n");
+	}
+      else if(T[i].l==-1&&T[i].r==-1)
+	{
+	  printf(" leaf\n");
+	}
+      else
+	{
+	  printf(" internal node\n");
+	}
+    }
+  return 0;
+}

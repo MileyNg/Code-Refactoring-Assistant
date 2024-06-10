@@ -1,0 +1,48 @@
+include <iostream>
+using namespace std;
+ 
+int main() {
+	int N = 0;	//入力
+	int x, y, b, p; //入力
+	int max = 0;	//使うぶんをそのまま買った場合の代金
+	int wari = 0;	//割引後の代金
+	
+	int i = 0;	//カウンタ
+ 
+	cin >> N;
+ 
+	while (1) {
+		cin >> x;
+		cin >> y;
+		cin >> b;
+		cin >> p;
+ 
+		max = ((x * b) + (y * p));
+ 
+ 
+		//購入する券数を割引適用の最低基準まで持ち上げる
+		if (b < 5){
+			b = 5;
+		}
+ 
+		if (p < 2){
+			p = 2;
+		}
+		
+		//割引後の代金(または割引を適用する場合の最低額)
+		wari = ((x * b) + (y * p)) * 0.8;
+		
+		//比較
+		if (max < wari) {
+			cout << max << "\n";
+		} else {
+			cout << wari << "\n";
+		}
+ 
+		i++;		//カウントアップ
+ 
+		if(i == N) {
+			return 0;
+		}
+	}
+}

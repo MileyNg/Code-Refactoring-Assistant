@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, i;
+	int nzero_c, max;
+
+	while (scanf("%d", &n), n){
+		nzero_c = 0;
+		max = 0;
+		for (i = 0; i < n; i++){
+			int v;
+			scanf("%d", &v);
+			if (v != 0) nzero_c++;
+			max = fmax(v, max);
+		}
+		if (max < 2){
+			puts("NA");
+		}
+		else {
+			printf("%d\n", nzero_c + 1);
+		}
+	}
+	return (0);
+}

@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  char mounten[100][1001]={'\0'};
+  int height[100]={0};
+  int n;
+
+  scanf("%d",&n);
+
+  for(;;){
+    char operation[5]={'\0'}; // テ・ツ堕ステ、ツサツ、
+    int no1,tmp;
+    scanf("%s",operation);
+
+    if(strcmp(operation,"quit")==0)
+      break;
+    if(strcmp(operation,"push")==0){
+      char c;
+      scanf("%d %c",&no1,&c);
+      mounten[no1][height[no1]] = c;
+      height[no1]++;
+      //putchar(c);
+      //printf("%d\n",height[no1]);
+    }
+    if(strcmp(operation,"pop")==0){
+      scanf("%d",&no1);
+      printf("%c\n",mounten[no1][height[no1]-1]);
+      height[no1]--;
+      // printf("%d\n",height[no]);    
+    }
+    if(strcmp(operation,"move")==0){
+      scanf("%d",&no1);
+      tmp=mounten[no1][height[no1]-1];
+      height[no1]--;
+      scanf("%d",&no1);
+      mounten[no1][height[no1]]=tmp;
+      height[no1]++;
+    }
+  }
+
+
+  return 0;
+}

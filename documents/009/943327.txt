@@ -1,0 +1,60 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+#define MAXV 10
+#define INF 100000000
+int main(){
+
+	int n;
+	int v;
+	int a,b,c;
+	int d[MAXV][MAXV];
+	int sum,ans,ans_i;
+
+	while(1){
+
+		cin>>n;
+		if(n==0) break;
+
+		for(int i=0;i<MAXV;i++){
+			for(int j=0;j<MAXV;j++){
+				if(i==j) d[i][j]=0;
+				else d[i][j]=INF;
+			}
+		}
+
+		v=-1;
+		for(int i=0;i<n;i++){
+			cin>>a>>b>>c;
+			v=max(v,max(a,b));
+			d[a][b]=c;
+			d[b][a]=c;
+		}
+
+		for(int k=0;k<=v;k++){
+			for(int i=0;i<=v;i++){
+				for(int j=0;j<=v;j++){
+					d[i][j]=min(d[i][j],d[i][k]+d[k][j]);
+				}
+			}
+		}
+
+		ans=INF,ans_i=-1;
+		for(int i=0;i<=v;i++){
+			sum=0;
+			for(int j=0;j<=v;j++){
+				if(d[i][j]!=INF) sum+=d[i][j];
+			}
+			if(ans>sum&&sum!=0){
+				ans=sum;
+				ans_i=i;
+			}
+		}
+
+		cout<<ans_i<<" "<<ans<<endl;
+
+	}
+
+}

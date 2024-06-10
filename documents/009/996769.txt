@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> PII;
+
+struct  P {
+	int x, y;
+	P() {}
+	P(int x_, int y_) : x(x_), y(y_) {}
+};
+/** Problem1165 : Pablo Squarson's Headache **/
+int main()
+{
+	int N;
+	const int ddx[4]={-1, 0, 1, 0}, ddy[4]={0, -1, 0, 1};
+	while (cin>>N, N) {
+		vector<P> cubes;
+		cubes.push_back(P(0, 0));
+		
+		rep(i, N-1) {
+			int n, d;
+			cin>>n>>d;
+			cubes.push_back(P(cubes[n].x+ddx[d], cubes[n].y+ddy[d]));
+		}
+		
+		int maxX=0, maxY=0, minX=INF, minY=INF;
+		rep(i, N) {
+			maxX = max(maxX, cubes[i].x);
+			maxY = max(maxY, cubes[i].y);
+			minX = min(minX, cubes[i].x);
+			minY = min(minY, cubes[i].y);
+		}
+		
+		cout << maxX-minX+1 << " " <<  maxY-minY+1 << endl;
+	}
+}

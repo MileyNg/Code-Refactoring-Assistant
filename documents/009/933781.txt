@@ -1,0 +1,40 @@
+#include<iostream>
+#include<string>
+#include<sstream>
+using namespace std;
+
+string toStr(int n);
+string intToString(int n);
+
+int main() {
+  int a, b, c, d, e, f;
+
+  while(cin >> a >> b >> c >> d >> e >> f) {
+    a = a * 10000;
+    b = b * 10000;
+    c = c * 10000;
+    d = d * 10000;
+    e = e * 10000;
+    f = f * 10000;
+    
+    int x, y;
+    int det = a * e - b * d;
+
+    x = ( e * c - b * f) / det;
+    y = (-d * c + a * f) / det;
+
+    cout << toStr(x) << " " << toStr(y) << endl;
+  }
+}
+
+string toStr(int n) {
+  int ipart = n / 10000;
+  int fpart = (n - ipart * 10000) + 5;
+  return intToString(ipart) + "." + intToString(fpart).substr(0, 3);
+}
+
+string intToString(int n) {
+  stringstream ss;
+  ss << n;
+  return ss.str;
+}

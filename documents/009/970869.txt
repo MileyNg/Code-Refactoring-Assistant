@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int roundUp(int x, int index);
+
+int main(void)
+{
+    int i;
+    int n;
+    double intrst;
+    int debt;
+    
+    cin >> n;
+    
+    debt = 100000;
+    intrst = 0.05;
+    for (i = 0; i < n; i++) {
+        debt *= 1.0 + intrst;
+        debt = roundUp(debt, 4);
+    }
+    cout << debt << endl;
+    
+    return 0;
+}
+
+int roundUp(int x, int index)
+{
+    int exp10;
+    
+    exp10 = pow(10, index - 1);
+    x += exp10 - exp10 / 10;
+    x /= exp10;
+    x *= exp10;
+    
+    return x;
+}

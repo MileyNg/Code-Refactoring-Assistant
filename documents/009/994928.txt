@@ -1,0 +1,68 @@
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<tuple>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int W,H,N;
+  cin>>W>>H>>N;
+  int xy[100000][2];
+  for(int i=0;i<N;i++){
+    cin>>xy[i][0]>>xy[i][1];
+  }
+  vector<tuple<int,int,long long> > res[2];
+  for(int i=0;i<2;i++){
+    vector<pair<int,int> > v;
+    for(int j=0;j<N;j++){
+      v.emplace_back(xy[j][i],j);
+    }
+    sort(begin(v),end(v));
+    long long nd=0;
+    int lx=0,x=N-1;
+    int l=N-1,r=0;
+    for(int j=0;j<N-1;j++){
+      nd+=2LL*(v[N-1].first-v[j].first);
+    }
+    long long pd=nd-(v[N-1].first-v[0].first);
+    for(;;){
+      while(x){
+	long long nnd=nd+(v[x].first-v[x-1].first)*2LL*(r+1-l);
+	long long npd=nnd-abs(v[lx].first-v[x-1].first);
+	if(npd>pd)break;
+	nd=nnd;
+	pd=npd;
+	l--;
+	r++;
+	x--;
+      }
+      res[i].emplace_back(v[lx].second,v[x].first,pd);
+      lx++;
+      if(lx==N)break;
+      pd+=abs(v[lx-1].first-v[x].first)-abs(v[lx].first-v[x].first);
+    }
+    sort(begin(res[i]),end(res[i]));
+  }
+  int rx,ry;
+  long long d=1LL<<62;
+  for(int i=0;i<N;i++){
+    long long sd=get<2>(res[0][i])+get<2>(res[1][i]);
+    bool f;
+    if(sd!=d){
+      f=sd<d;
+    }else if(rx!=get<1>(res[0][i])){
+      f=get<1>(res[0][i])<rx;
+    }else{
+      f=get<1>(res[1][i])<ry;
+    }
+    if(f){
+      rx=get<1>(res[0][i]);
+      ry=get<1>(res[1][i]);
+      d=sd;
+    }
+  }
+  cout<<d<<endl;
+  cout<<rx<<' '<<ry<<endl;
+}

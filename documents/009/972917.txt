@@ -1,0 +1,49 @@
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  cnts = []
+  n.times do
+    x, y = gets.chomp.split(",").map{|s| s.to_f}
+    cnts.push [x, y]
+  end
+
+  owmtx = (0...n).map{|i| (0...n).map{|j| i == j}}
+  grps  = []
+  max_gl = 1
+
+  for i in (0...cnts.length)
+    x0, y0 = cnts[i]
+
+    for j in ((i + 1)...cnts.length)
+      x1, y1 = cnts[j]
+      if (x1 - x0) ** 2 + (y1 - y0) ** 2 <= 4.0
+        owmtx[i][j] = owmtx[j][i] = true
+      end
+    end
+
+    grps0 = [[i]]
+
+    for g in grps
+      tf = true
+      for j in g
+        if ! owmtx[j][i]
+          tf = false
+          break
+        end
+      end
+
+      if tf
+        grps0.push g + [i]
+        if max_gl <= g.length
+          max_gl = g.length + 1
+        end
+      end
+    end
+
+    grps += grps0
+    #p grps0
+  end
+
+  puts max_gl
+end

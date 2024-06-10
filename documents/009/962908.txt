@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+  bool ans;
+  int n;
+  int a[10],b,c;
+  cin>>n;
+  for(int i=0;i<n;i++){
+    ans=true;
+    for(int j=0;j<10;j++)cin>>a[j];
+    b=c=0;
+
+    for(int j=0;j<10;j++){
+      if(a[j]<b&&a[j]<c){ans=false;break;
+      }else if(b<a[j]&&c<a[j]){
+	if(b>c)b=a[j];
+	else c=a[j];
+      }
+      else if(b<a[j]&&c>a[j])b=a[j];
+      else if(b>a[j]&&c<a[j])c=a[j];
+    if(b>c)b=a[j];
+    else c=a[j];
+    }	
+    
+    if(ans==true)cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;  
+  }
+  
+}

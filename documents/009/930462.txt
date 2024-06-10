@@ -1,0 +1,26 @@
+while true
+    n = gets.to_i
+    if n == 0
+        break
+    end
+    a = Array.new(n).map{Array.new(2,0)}
+    for i in 0..n-1 do
+        t = gets.split.map(&:to_i)
+        a[i][0] = t[0]
+        a[i][1] = t[1]
+    end
+    a = a.sort {|a,b| a[1]<=>b[1]}
+    sum = 0
+    b = true
+    for i in 0..n-1 do
+        sum += a[i][0]
+        if sum > a[i][1]
+            puts "No"
+            b = false
+            break
+        end
+    end
+    if b
+        puts "Yes"
+    end
+end

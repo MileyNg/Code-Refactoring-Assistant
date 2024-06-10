@@ -1,0 +1,44 @@
+#include <iostream>
+#include <stack>
+
+
+using namespace std;
+int main()
+{
+    int n,r;
+    while(cin>>n>>r){
+        
+        if(n==0&&r==0)break;
+        stack<int> st1;
+        for(int i=0; i<n; i++){
+            st1.push(i+1);
+        }
+        
+        for(int rop=0; rop<r; rop++){
+            int p,c;
+            cin>>p>>c;
+            stack<int> st2,st3;
+            for(int i=0; i<p-1; i++){
+                st2.push(st1.top());
+                st1.pop();
+            }
+            
+            for(int i=0; i<c; i++){
+                st3.push(st1.top());
+                st1.pop();
+            }
+            
+            while (!st2.empty()) {
+                st1.push(st2.top());
+                st2.pop();
+            }
+            
+            while (!st3.empty()) {
+                st1.push(st3.top());
+                st3.pop();
+            }
+        }
+        
+        cout<<st1.top()<<endl;
+    }
+}

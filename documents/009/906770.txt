@@ -1,0 +1,18 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int h,w,n,p,q,x,y;
+  cin >> h >> w >> n >> p >> q;
+  
+  int res = 0;
+  for(int i=1;i<n;i++){
+    cin >> x >> y;
+    x-=p; y-=q;
+    if(x*y<0)res += abs(x) + abs(y);
+    else res += max(abs(x),abs(y));
+    p += x; q += y;
+  }
+
+  cout << res << endl;
+}

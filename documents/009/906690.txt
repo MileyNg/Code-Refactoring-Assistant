@@ -1,0 +1,26 @@
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+double mul(double x1, double y1, double x2, double y2)
+{
+	return x1*x2+y1*y2;
+}
+
+int main(void)
+{
+	double x1,x2,y1,y2,xq,yq;
+	while(scanf("%lf,%lf,%lf,%lf,%lf,%lf",&x1,&y1,&x2,&y2,&xq,&yq)!=EOF){
+		double sx,sy;
+		double t;
+		double rx,ry;
+		t=mul(xq-x1,yq-y1,x2-x1,y2-y1)/mul(x2-x1,y2-y1,x2-x1,y2-y1);
+		sx=t*(x2-x1)+x1;
+		sy=t*(y2-y1)+y1;
+		rx=2*sx-xq;
+		ry=2*sy-yq;
+		printf("%.6lf %.6lf\n",rx,ry);
+	}
+	return 0;
+}

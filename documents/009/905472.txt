@@ -1,0 +1,40 @@
+#!/bin/ruby
+require 'complex'
+def cross(a,b)
+  return a.real*b.imag-a.imag*b.real
+end
+until (n=gets.to_i)==0
+  xyr=n.times.map{gets.split.map(&:to_i)}
+  p=xyr.map{|e|Complex(e[0],e[1])}
+  cp=(n-1).times.map{|x|
+    c=(p[x+1]-p[x]).abs
+    theta=Math.acos((1.0*xyr[x][2]**2+c**2-xyr[x+1][2]**2)/(2*xyr[x][2]*c))
+    alpha=(p[x+1]-p[x]).arg
+    [
+     Complex.polar(xyr[x][2],alpha+theta)+p[x],
+     Complex.polar(xyr[x][2],alpha-theta)+p[x]
+    ]
+  }
+  dp=[[0,0,p[0]]]
+  list=(0...cp.size).reduce([]){|r,x|
+    r+[[x+1,cp[x][0]],[x+1,cp[x][1]]]
+  } << [p.size,p[-1]]
+  list.each do |e|
+    d=1e99
+    c=nil
+    dp.each do |f|
+      if (f[0]..e[0]-2).all?{|g|
+          cross(f[2]-e[1],cp[g][0]-e[1])*cross(f[2]-e[1],cp[g][1]-e[1])<0&&
+          cross(cp[g][1]-cp[g][0],f[2]-cp[g][0])*cross(cp[g][1]-cp[g][0],e[1]-cp[g][0])<0
+        }then
+        cd=(e[1]-f[2]).abs+f[1]
+        if cd<d then
+          d=cd
+          c=[e[0],d,e[1]]
+        end
+      end
+    end
+    dp << c
+  end
+  puts dp[-1][1]
+end

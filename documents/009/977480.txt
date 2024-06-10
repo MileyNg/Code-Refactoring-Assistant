@@ -1,0 +1,43 @@
+#include<stdio.h>//bubble sort(隣接交換法)//
+#include<stdlib.h>
+
+void swap(int []);
+void print(int []);
+
+#define N 5
+
+int main(void){
+	int i,time,num[N];
+
+	for(i = 0;i < N;i++){
+		scanf("%d",&num[i]);
+	}
+	swap(num);
+	print(num);
+
+	return 0;
+}
+
+void swap(int num[N])
+{
+	int temp,i,j;
+	for(i = N; i > 0; i--){
+		for(j = 0; j < i-1; j++){
+			if(num[j] < num[j + 1]){//a>b を b<a に交換する
+				temp =num[j];
+				num[j] =num[j + 1];
+				num[j + 1] = temp;
+			}
+		}
+	}
+}
+
+void print(int num[N]){	
+	int i;
+
+	for(i = 0 ;i < N; i++){
+		printf("%d",num[i]);
+		if(i != (N - 1))/*最後の数字の後にスペースを入れないようにする*/
+			printf(" ");
+	}
+}

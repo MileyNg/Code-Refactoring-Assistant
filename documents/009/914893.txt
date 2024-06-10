@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include<string>
+#include<string.h>
+#include <math.h>
+#include<iostream>
+#include <algorithm>
+#include <map>
+#include <vector>
+#include <queue>
+using namespace  std;
+
+
+/*
+//my header
+#include "define.h"
+#include "geometry.h"*/
+
+#define MyAbs(a) ((a)>0?(a):-(a))
+#define MyEqualDoule(a,b) (MyAbs(a-b)<1e-6)
+
+#define foreach(i,n) for(i=0;i<n;++i)
+#define foreachd(i,n) for(int i=0;i<n;++i)
+#define printfInt1(n) printf("%d\n",n)
+#define scanfInt1(n) scanf("%d",&n)
+#define scanfInt2(a,b) scanf("%d%d", &a, &b)
+#define scanfInt3(a,b,c) scanf("%d%d%d", &a, &b, &c)
+#define scanfFloat2(a,b) scanf("%f%f", &a,&b)
+
+
+void init()
+{
+#ifdef _WIN32
+	freopen("1.txt", "r", stdin);
+#endif
+}
+
+void func();
+
+int main()
+{
+	init();
+	func();
+
+	return 0;
+}
+
+class CNumberTheory
+{
+public:
+	static int gcd(int a, int b)
+	{
+		int t;
+		while (b) {
+			t = a % b;
+			a = b;
+			b = t;
+		}
+		return a;
+	}
+	static int lcm(int a,int b)
+	{
+		return a / gcd(a,b) * b;
+	}
+};
+
+void func()
+{
+	int a, b;
+	while(~scanfInt2(a,b))
+	{
+		printf("%d %d\n", CNumberTheory::gcd(a,b), CNumberTheory::lcm(a,b));
+	}
+}

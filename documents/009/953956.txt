@@ -1,0 +1,25 @@
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+
+int main(){
+  double a,b,c,d,e,f;
+  while(cin >> a >> b >> c >> d >> e >> f){
+    double x,y;
+    if(0 != a * e - d * b){
+      x = (e * c - b * f)  / (a * e - b * d);
+      y = (a * f - d * c)  / (a * e - b * d);
+    }else{
+      x = 0;
+      y = 0;
+    }
+    double x_ = round(x * 1000)/1000;
+    double y_ = round(y * 1000)/1000;
+    if(x_ > -0.001 && x_ < 0.001) { x_ = 0; }
+    if(y_ > -0.001 && y_ < 0.001) { y_ = 0; }
+    cout << fixed << setprecision(3) << x_ << " ";
+    cout << fixed << setprecision(3) << y_ << endl;
+  }
+  return 0;
+}

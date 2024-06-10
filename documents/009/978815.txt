@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Fibonacci{
+private:
+ vector< long > FN;
+ long current;
+public:
+ Fibonacci( long num_0 = 1, long num_1 = 1, long max = 100 ) : current( 1 ), FN( max, 0 ){
+  FN[ 0 ] = num_0;
+  FN[ 1 ] = num_1;
+ };
+
+ void calculate( long num ){
+
+  while( current < num ){
+   ++current;
+   FN[ current ] = FN[ current-2 ] + FN[ current-1 ];
+  }
+ };
+
+ long get( long num ){
+  if( current < num ) calculate( num );
+
+  return FN[ num ];
+ }
+
+ void display(){
+  for(long i = 0; i <= current; ++i)
+   cout << FN[i] << " ";
+  cout << endl;
+ };
+
+};
+
+int main(){
+ Fibonacci fn;
+
+ long n = 0; cin >> n;
+
+ long num = fn.get( n );
+
+ cout << num << endl;
+
+ return 0;
+};

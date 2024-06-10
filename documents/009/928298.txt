@@ -1,0 +1,25 @@
+#include<iostream>
+#include<map>
+using namespace std;
+int main()
+{
+  int n,a,b;
+  for(;cin>>n>>a>>b,n;)
+    {
+      int cnt=0;
+      map<int,bool> hash;
+      for(int i=0;a*i<=n;i++)
+      for(int j=0;a*i+b*j<=n;j++)
+	{
+	  if(!hash[a*i+b*j])
+	    {
+	      //	      cout<<a*i+b*j<<endl;
+	      cnt++;
+	    }
+	  hash[a*i+b*j]=true;	  
+	}
+
+      cout<<n-cnt+1<<endl;
+    }
+
+}

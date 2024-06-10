@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <bitset>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <tuple>
+#include <set>
+#include <functional> 
+#include <string.h>
+
+#define X first
+#define Y second
+#define MP make_pair
+#define MT make_tuple
+#define FOR(i, n) for(int (i) = 0; (i) < (n); (i)++)
+#define REP(i, a, n) for(int (i) = (a); (i) < (n); (i)++)
+typedef long long ll;
+typedef std::pair<int, int> pii;
+typedef std::pair<ll, ll > pll;
+using namespace std;
+const int MAX = 101;
+const double PI = 3.1415926535897932384;
+
+template<class T, class U>
+void convert(T &t, U &u){
+	stringstream ss;
+	ss << t;
+	ss >> u;
+}
+
+double cross(pair<double, double> &a, pair<double, double> &b, pair<double, double> &o){
+	return (a.first - o.first) * (b.second - o.second) - (b.first - o.first) * (a.second - o.second);
+}
+
+int main(){
+	int n;
+	while (cin >> n && n != 0){
+		vector<pair<double, double> > tb;
+		FOR(i, n){
+			char c;
+			double x, y; 
+			cin >> x >> c >> y;
+			tb.push_back(MP(x, y));
+		}
+		sort(tb.begin(), tb.end());
+
+		vector<pair<double, double> > ans(n * 2, MP(0, 0));
+		int k = 0; //使ってる三点
+		//常に2点目が使えるかどうかを判定してる
+		//3点が凹になってる場合は、答えに入れた2点目を外して、次の3点を選択し直す
+		for (int i = 0; i < tb.size(); ans[k++] = tb[i++]){
+			while (k >= 2 && cross(ans[k - 2], ans[k - 1], tb[i]) <= 0){ k--; }
+		}
+
+		for (int i = n - 2, t = k + 1; i >= 0; ans[k++] = tb[i--]){
+			while (k >= t && cross(ans[k - 2], ans[k - 1], tb[i]) <= 0){ k--; }
+		}
+
+		ans.resize(k - 1);
+		cout << n - ans.size() << endl;
+	}
+}

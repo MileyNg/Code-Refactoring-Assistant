@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define S first
+#define W second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = 17;
+
+int n, res;
+int min_cost[N];
+int c[N][N + 1];
+
+bool ok[N];
+
+void dfs(int, int);
+
+int main(void){
+    for(; cin >> n, n; cout << res << endl){
+        res = INF;
+        fill(ok, ok + N, false);
+
+        COUNT(i, n){
+            rep(j, n + 1) cin >> c[i][j];
+            min_cost[i] = min_element(c[i], c[i] + n + 1) - c[i];
+        }
+
+        int cost = 0, cnt = 0;
+        COUNT(i, n) if(!min_cost[i]){
+            ok[i] = true;
+            cost += c[i][0];
+            cnt++;
+        }
+        dfs(cost, cnt);
+    }
+
+    return 0;
+}
+
+void dfs(int cost, int cnt){
+    if(cnt == n){
+        res = min(res, cost);
+        return;
+    }
+
+    int next = -1, w;
+    COUNT(i, n){
+        if(ok[i]) continue;
+        COUNT(j, n){
+            if(!ok[j]) continue;
+            if(c[i][j] == c[i][min_cost[i]]){
+                next = i;
+                w = j;
+                break;
+            }
+        }
+        if(~next) break;
+    }
+    if(~next){
+        ok[next] = true;
+        dfs(cost + c[next][w], cnt + 1);
+        ok[next] = false;
+
+        return;
+    }
+    
+    COUNT(i, n){
+        if(ok[i]) continue;
+        int w = 0;
+        COUNT(j, n){
+            if(j && !ok[j]) continue;
+            if(c[i][j] < c[i][w]) w = j;
+        }
+        ok[i] = true;
+        dfs(cost + c[i][w], cnt + 1);
+        ok[i] = false;
+    }
+}

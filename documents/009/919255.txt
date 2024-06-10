@@ -1,0 +1,101 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cmath>
+#include <ctime>
+#include <cassert>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <complex>
+#include <string>
+#include <vector>
+#include <list>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <bitset>
+#include <iterator>
+#include <functional>
+#include <utility>
+#include <algorithm>
+#include <numeric>
+#include <typeinfo>
+
+using namespace std;
+
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define rep(i,n) repi(i,0,n)
+#define all(c) (c).begin(), (c).end()
+#define mp make_pair
+
+void solve(){
+    string t;
+    getline(cin,t);
+    list<char> s(all(t));
+    rep(i,t.size())
+        s.push_back(t[i]);
+
+    auto it = s.begin();
+    int n; cin>>n; cin.get();
+    rep(x,n){
+        string op;
+        getline(cin,op);
+
+        if(op=="forward char")
+            if(it!=s.end()) ++it;
+        if(op=="backward char")
+            if(it!=s.begin()) --it;
+
+
+        if(op=="forward word"){
+            while(it!=s.end() && *it==' ') ++it;
+            while(it!=s.end() && *it!=' ') ++it;
+        }
+        if(op=="backward word"){
+            while(it!=s.begin() && *--it==' ') continue;
+            while(it!=s.begin()){
+                --it;
+                if(*it==' '){
+                    ++it;
+                    break;
+                }
+            }
+        }
+
+        if(op.substr(0,6)=="insert"){
+            int i=op.find('"')+1,j=op.find('"',i);
+            s.insert(it,op.begin()+i,op.begin()+j);
+        }
+
+        if(op=="delete char")
+            if(it!=s.end()) it=s.erase(it);
+
+        if(op=="delete word"){
+            auto it2 = it;
+            while(it2!=s.end() && *it2==' ') ++it2;
+            if(it2==s.end()) continue;
+            while(it2!=s.end() && *it2!=' ') ++it2;
+            it=s.erase(it,it2);
+        }
+    }
+
+    for(auto i = s.begin();; ++i){
+        if(i==it)
+            cout << '^';
+        if(i==s.end())
+            break;
+        cout << *i;
+    }
+    cout<<endl;
+}
+
+int main(){
+    int t;
+    cin>>t; cin.get();
+    rep(i,t) solve();
+}

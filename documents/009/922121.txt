@@ -1,0 +1,26 @@
+/*
+vectorを使わなくても配列でもできる
+
+*/
+
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main(){
+	int n;
+	while(cin >> n, n){
+		int a, sum[100], min, max;
+		for(int i = 0; i < n; i++){
+			sum[i] = 0;
+			for(int j = 0; j < 5; j++){
+				cin >> a;
+				sum[i] += a;
+			}
+		}
+		max = *max_element(sum, sum + n);
+		min = *min_element(sum, sum + n);
+		cout << max << ' ' << min << endl;
+	}
+	return 0;
+}

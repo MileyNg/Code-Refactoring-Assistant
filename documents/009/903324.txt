@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+inline int toInt(std::string s) {int v; std::istringstream sin(s);sin>>v;return v;}
+template<class T> inline std::string toString(T x) {std::ostringstream sout;sout<<x;return sout.str();}
+
+
+int main(int argc, char const *argv[])
+{
+	int q;
+	int n;
+	string s;
+	int max;
+	int cnt;
+
+	cin>>q;
+
+	for(int i1=0;i1<q;i1++){
+		cin>>n;
+
+		cnt=0;
+		while(1){
+			if(n/10==0) break;
+
+			s=toString<int>(n);
+
+			max=0;
+			for(int i2=1;i2<s.size();i2++){
+				int temp=(toInt(s.substr(0,i2)))*(toInt(s.substr(i2,s.size()-i2)));
+				if(max<temp) max=temp;
+			}
+			n=max;
+			cnt++;
+			if(cnt>1000000) break;
+		}
+		if(cnt>1000000) cout<<-1<<endl;
+		else cout<<cnt<<endl;
+
+	}
+	return 0;
+}

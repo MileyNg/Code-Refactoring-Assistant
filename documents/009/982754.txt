@@ -1,0 +1,58 @@
+#include<stdio.h>
+#define N 100001
+
+typedef struct{
+  int p, lc, rs, deg, dep;
+}node;
+
+int main(){
+  int n, i, j, id, dep, temp, betemp;
+  node t[N];
+  scanf("%d", &n);
+  for(i = 0; i < n; i++){
+    t[i].p = -1;
+    t[i].lc = -1;
+   t[i].rs = -1;
+  }
+  for(i = 0; i < n; i++){
+    scanf("%d", &id);
+    scanf("%d", &t[id].deg);
+    for(j = 0; j < t[id].deg; j++){
+      scanf("%d", &temp);
+      if(j == 0){
+	t[id].lc = temp;
+	t[temp].p = id;
+      }
+      else{
+	t[betemp].rs = temp;
+	t[temp].p = id;
+      }
+      betemp = temp;
+    }
+  }
+  for(i = 0; i < n; i++){
+    t[i].dep = 0;
+    temp = t[i].p;
+    while(1){
+      if(temp == -1) break; 
+      else {
+	t[i].dep++;
+	temp = t[temp].p;
+      }
+    }
+  }
+  for(i = 0; i < n; i++){
+    printf("node %d: parent = %d, depth = %d, ", i, t[i].p, t[i].dep);
+    if(t[i].p == -1) printf("root, [");
+    else if(t[i].deg == 0) printf("leaf, [");
+    else printf("internal node, [");
+    temp = t[i].lc;
+    for(j = 0; j < t[i].deg; j++){
+      printf("%d", temp);
+      temp = t[temp].rs;
+      if(j < t[i].deg - 1) printf(", ");
+    }
+    printf("]\n");
+  }
+ return 0;
+}

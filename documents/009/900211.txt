@@ -1,0 +1,74 @@
+    #include <iostream>
+    #include <vector>
+    #include <string>
+	#include <algorithm>
+     
+    class BigInteger {
+    	std::string num_str_;
+    public:
+    	BigInteger(std::string&& str) {
+    		num_str_ = std::move(str);
+    	}
+    	BigInteger operator+(const BigInteger& rhs) {
+    		return plus(rhs);
+    	}
+    	
+    	std::string to_string() const {return num_str_;}
+    	
+    private:
+    	BigInteger plus(const BigInteger& rhs) {
+    		std::string a = num_str_;
+			std::string b = rhs.to_string();
+			std::reverse(a.begin(), a.end());
+			std::reverse(b.begin(), b.end());
+			const int max = std::max(a.length(), b.length());
+			const int min = std::min(a.length(), b.length());
+
+			if (a.length() < b.length()) {
+				std::swap(a, b);
+			}
+			for (int i = min; i < max; ++i) {
+				b.push_back('0');
+			}
+
+			std::string result("");
+			int carry = 0;
+			for (int i = 0; i < max; ++i) {
+				int sum = to_int(a.at(i)) + to_int(b.at(i)) + carry;
+				carry = sum / 10;
+				const char c_num = to_char(sum % 10);
+				result.push_back(c_num);
+			}
+			if (carry > 0) {
+				result.push_back(to_char(carry));
+			}
+			
+			std::reverse(result.begin(), result.end());
+			return BigInteger(std::move(result));
+    	}
+    	
+    	int to_int(const char& c) const {
+    		return c - '0';
+    	}
+    	char to_char(const int& i) const {
+    		return i + '0';
+    	} 
+    };
+     
+    int main() {
+    	std::vector<BigInteger> ans_list;
+    	int n;
+    	std::cin >> n;
+    	for (int i = 0; i < n; ++i) {
+    		std::string str1, str2;
+    		std::cin >> str1 >> str2;
+    		BigInteger bi1(std::move(str1));
+    		BigInteger bi2(std::move(str2));
+    		ans_list.push_back(bi1 + bi2);
+    	}
+    	
+    	for (auto ans : ans_list) {
+    		auto ans_str = ans.to_string();
+    		std::cout << (ans_str.length() > 80 ? "overflow" : ans_str) << std::endl;
+    	}
+    }

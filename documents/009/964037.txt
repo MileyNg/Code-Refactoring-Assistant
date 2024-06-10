@@ -1,0 +1,25 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int a,b;
+  cin >> a >> b;
+  int ca[a],cb[b];
+  for(int i=0;i<a;i++) cin >> ca[i];
+  for(int i=0;i<b;i++) cin >> cb[i];
+  int ai=0,bi=0,count=0,ans=0;
+  for(int i=0;i<b;i++){
+    while(ai<a&&bi<b){
+      if(ca[ai]!=cb[bi]) ai++;
+      else{
+	count++;
+	bi++;
+	ai++;
+      }
+    }
+    //cout << count << endl;
+    if(count>ans) ans = count;
+    count = 0;
+    ai = 0;
+  }
+  cout << ans << endl;
+}

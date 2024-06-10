@@ -1,0 +1,20 @@
+import math
+
+DELTA = 0.00001
+
+def readnums():
+    return raw_input().split()
+
+def dot(v1,v2):
+    return v1[0]*v2[0]-v1[1]*v2[1]
+
+[n] = readnums()
+for i in range(0,int(n)):
+    [xa,ya,xb,yb,xc,yc,xd,yd] = map(float,readnums())
+    vab = (xb-xa,yb-ya)
+    vcd = (xd-xc,yd-yc)
+    prod = dot(vab,vcd)
+    if math.fabs(prod) < DELTA:
+        print "YES"
+    else:
+        print "NO"

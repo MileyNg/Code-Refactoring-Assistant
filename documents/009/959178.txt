@@ -1,0 +1,37 @@
+#include<iostream>
+ 
+using namespace std;
+ 
+#define INF 1000000000
+ 
+int ll(int a){return (a<0)?-a:a;}
+ 
+int main(){
+ 
+	int n;
+	int x[4],y[4]; /*0,1,2,3 -> a,b,c,d*/
+	int abcd[4];
+	int dis,min=INF;
+ 
+	cin>>n;
+	 
+	for(int i=0;i<4;i++) cin>>abcd[i];
+ 
+	for(int i=n;i>=1;i--){ /*横max*/
+		for(int j=1;j<=n;j++){ /*番目*/
+			for(int k=0;k<4;k++){ /*abcd*/
+				if(abcd[k]==j){
+					x[k]=(j-1)%i;
+					y[k]=(j-1)/i;
+				}
+			}
+		}
+		dis=ll(x[0]-x[1])+ll(y[0]-y[1])+ll(x[2]-x[3])+ll(y[2]-y[3]);
+		/*cout<<i<<","<<dis<<","<<min<<endl;*/
+		if(dis<min) min=dis;
+	}
+ 
+	cout<<min<<endl;
+ 
+	return 0;
+}

@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+
+	while (1) {
+		int N, Q; cin >> N >> Q; if (N==0 && Q==0) break;
+		
+		vector<int> date(100, 0);
+		
+		for (int i=0; i<N; i++) {
+			int M; cin >> M;
+			for (int j=0; j<M; j++) {
+				int d; cin>>d;
+				date[d]++;
+			}
+		}
+		
+		int best_d = 0, max_m = 0;
+		for (int i=0; i<100; i++) {
+			if (max_m < date[i]) {
+				max_m = date[i];
+				best_d = i;
+			}
+		}
+		
+		if (max_m >= Q) cout << best_d << endl;
+		else cout << 0 << endl;
+	}	
+	
+	return 0;
+}

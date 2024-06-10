@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	float len;
+	float front;
+	float angle;
+	float x, y;
+
+	x = 0;
+	y = 0;
+	front = 90;
+
+	while (1){
+		scanf("%f,%f", &len, &angle);
+
+		if (len == 0 && angle == 0){
+			break;
+		}
+
+		y += (sin(front / 180 * M_PI) * len);
+		x += (cos(front / 180 * M_PI) * len);
+
+		front -= angle;
+	}
+
+	printf("%d\n%d\n", (int)x, (int)y);
+
+	return (0);
+}

@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define INF 10000
+
+int E;
+int cost[50][50];
+int d[100];
+
+int main(){
+
+    while(cin >> E, E){
+        int minCost = 100000;
+        fill(d, d+100, 0);
+        for(int i=0; i < 50; i++){
+            cost[i][i] = 0;
+            for(int j=0; j < 50; j++){
+                if(i != j)cost[i][j] = INF;
+            }
+        }
+        for(int i=0; i < E; i++){
+            int a, b, c;
+            cin >> a >> b >> c;
+            cost[a][b] = c;
+            cost[b][a] = c;
+        }
+        for(int k=0; k < 50; k++){
+            for(int i=0; i < 50; i++){
+                for(int j=0; j < 50; j++){
+                    cost[i][j] = min(cost[i][j], cost[i][k]+cost[k][j]);
+                }
+            }
+        }
+
+        for(int i=0; i < 50; i++){
+            for(int j=0; j < 50; j++){
+                if(cost[i][j] != INF) d[i] += cost[i][j];
+            }
+            if(d[i] != 0) minCost = min(minCost, d[i]);
+        }
+
+        for(int i=0; i < 50; i++){
+            if(minCost == d[i] && d[i] != 0) cout << i << " " << d[i] << endl;
+        }
+    }
+}

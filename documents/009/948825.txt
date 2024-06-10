@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long double ld;
+
+const ld EPS = 1e-9;
+const ld INF = 1e10;
+const ld PI = M_PI;
+
+struct Point{
+  ld x, y;
+  Point(ld x, ld y):x(x), y(y){}
+  Point(){}
+};
+
+Point operator+(const Point &a, const Point &b){
+  return Point(a.x + b.x, a.y + b.y);
+}
+Point operator-(const Point &a, const Point &b){
+  return Point(a.x - b.x, a.y - b.y);
+}
+Point operator*(const Point &a, const ld b){
+  return Point(a.x * b, a.y * b);
+}
+Point operator*(const Point &a, const Point &b){
+  return Point(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);
+}
+Point operator/(const Point &a, const ld b){
+  return Point(a.x / b, a.y / b);
+}
+
+ld dot(const Point &a, const Point &b){
+  return a.x*b.x + a.y*b.y;
+}
+ld norm(const Point &a){
+  return dot(a, a);
+}
+
+struct Line:vector<Point>{
+  Line(Point a = Point(0, 0), Point b = Point(0, 0)){
+    this->push_back(a);
+    this->push_back(b);
+  }
+};
+
+// 写像
+Point projection(const Line &l, const Point &p){
+  ld t = dot(p-l[0], l[1]-l[0]) / norm(l[0] - l[1]);
+  return l[0] + (l[1] - l[0]) * t;
+}
+
+// 反射
+Point reflection(const Line &l ,const Point &p){
+  return p + (projection(l, p) - p) * 2;
+}
+
+int main(){
+  double x1, y1, x2, y2, xq, yq;
+  while(scanf("%lf,%lf,%lf,%lf,%lf,%lf", &x1, &y1, &x2, &y2, &xq, &yq)){
+    Line l = Line(Point(x1, y1), Point(x2, y2));
+    Point p = Point(xq, yq);
+    
+    Point ans = reflection(l, p);
+    printf("%.6Lf %.6Lf\n", ans.x, ans.y);    
+  }  
+  return 0;
+}

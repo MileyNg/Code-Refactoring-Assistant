@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  int dx[4] = { -1,  0,  1,  0 };
+  int dy[4] = {  0,  1,  0, -1 };
+
+  long long int n, p, d;
+
+  while( true ) {
+
+    cin >> n;
+
+    if ( n == 0 ) break;
+
+    long long int x0 = 0;
+    long long int x1 = 0;
+    long long int y0 = 0;
+    long long int y1 = 0;
+
+    vector< long long int > x;
+    vector< long long int > y;
+
+    x.push_back(0);
+    y.push_back(0);
+
+    for ( long long int i = 1; i < n; i++ ) {
+
+      cin >> p >> d;
+
+      x.push_back( x[p] + dx[d] );
+      y.push_back( y[p] + dy[d] );
+      x0 = min( x0, x[i] );
+      x1 = max( x1, x[i] );
+      y0 = min( y0, y[i] );
+      y1 = max( y1, y[i] );
+
+    }
+
+    cout << x1 - x0 + 1 << " " << y1 - y0 + 1 << endl;
+
+  }
+
+  return 0;
+
+}

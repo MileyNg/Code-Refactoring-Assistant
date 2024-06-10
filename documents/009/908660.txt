@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+int MAX = 300000+1;
+vector<int> sosuu(MAX,1);
+vector<int> sosuu_list;
+int check(int num){
+  if(num%7 == 1 || num%7 == 6)return 1;
+  return 0;
+}
+void make_sosuu(){
+  sosuu[1] = 0;
+  sosuu[0] = 0;
+  for(int i = 2;i <= MAX;i++){
+    if(check(i) && sosuu[i]){
+      sosuu_list.push_back(i);
+      for(int j = i*2;j <= MAX;j+=i){
+	sosuu[j] = 0;
+      }
+    }
+  }
+    
+}
+int main(){
+  int a;
+  make_sosuu();
+  /*  for(int i =0 ;i < sosuu_list.size();i++){
+    cout << sosuu_list[i] << " ";
+  }
+  cout << endl;*/
+  while(cin >> a,a != 1){
+    cout << a << ":"; 
+
+    for(int i =0;i < sosuu_list.size();i++){
+      if(a % sosuu_list[i] == 0){
+	cout << " " << sosuu_list[i];
+      }
+    }
+    
+    cout  << endl;
+  }
+
+  return 0;
+}

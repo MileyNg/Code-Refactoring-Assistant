@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+int ar[1005][1005];
+
+int max(int a, int b)
+{
+	if (a > b) return(a);
+	
+	else       return (b);
+}
+
+int main(void)
+{
+	int i, j;
+	int m, w;
+	int p[1005], t[1005];
+	int ans;
+	int ca = 1;
+	
+	while (1){
+		scanf("%d", &w);
+		
+		if (w == 0){
+			break;
+		}
+		
+		scanf("%d", &m);
+		
+		for (i = 0; i < m; i++){
+			scanf("%d,%d", &p[i], &t[i]);
+		}
+		
+		for (i = 0; i <= m; i++){
+			for (j = 0; j <= w; j++){
+				ar[i][j] = 0;
+			}
+		}
+		
+		for (i = 1; i <= m; i++){
+			for (j = 1; j <= w; j++){
+				
+				if (j - t[i - 1] >= 0 && ar[i - 1][j - t[i - 1]] + p[i - 1] > ar[i - 1][j]){
+					ar[i][j] = ar[i - 1][j - t[i - 1]] + p[i - 1];
+				}
+				ar[i][j] = max(ar[i][j] ,max(ar[i - 1][j], ar[i][j - 1]));
+				
+			}
+		}
+		
+		ans = ar[m][w];
+	
+		while (ar[m][w] == ans){
+			w--;
+		}
+		
+		printf("Case %d:\n", ca++);
+		printf("%d\n%d\n", ans, w + 1);
+		
+		
+	}
+	
+	return (0);
+}
+					
+		

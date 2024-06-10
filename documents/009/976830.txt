@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+// bad knowhow
+#define REP(i,n) for(long long i=0;i<(long long)n;++i)
+
+struct Score {
+	Score() : ac(0), pn(0) {}
+	bool operator<(const Score & other) const {
+		if (ac == other.ac){
+			if (pn == other.pn) return id < other.id;
+			return pn < other.pn;
+		}
+		return ac > other.ac;
+	}
+	int ac;
+	long long pn;
+	int id;
+};
+
+int g_wrong[50][10];
+bool g_accept[50][10];
+Score g_score[50];
+
+
+int main() {
+	while (true) {
+		fill(g_score, g_score + 50, Score());
+		fill(*g_accept, *g_accept + 500, false);
+		fill(*g_wrong, *g_wrong + 500, 0);
+
+		int t, p, r;
+		cin >> t >> p >> r;
+		if (t == 0) break;
+
+		REP(i, t) g_score[i].id = i;
+
+		REP(i, r) {
+			int tid, pid, time;
+			string message;
+			cin >> tid >> pid >> time >> message;
+			tid--; pid--;
+			if (g_accept[tid][pid]) continue;
+			if (message == "CORRECT") {
+				g_score[tid].ac++;
+				g_accept[tid][pid] = true;
+				g_score[tid].pn += g_wrong[tid][pid] * 1200 + time;
+			} else {
+				g_wrong[tid][pid]++;
+			}
+		}
+
+		sort(g_score, g_score+t);
+		REP(i, t) {
+			cout << g_score[i].id + 1 << " " << g_score[i].ac << " " << g_score[i].pn << endl;
+		}
+	}
+}

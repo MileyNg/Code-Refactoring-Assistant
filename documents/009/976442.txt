@@ -1,0 +1,79 @@
+//#include <algorithm>
+//#include <cmath>
+//#include <cstdio>
+//#include <cstring>
+#include <iostream>
+#include <map>
+//#include <queue>
+//#include <set>
+//#include <stack>
+//#include <string>
+#include <vector>
+
+using namespace std;
+
+//#define INF (1<<29)
+//#define EPS (1e-10)
+#define make_pair mp
+#define pb push_bacck
+
+//typedef long long ll;
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef pair<int,int> pii;
+
+//int dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+int jx[] = {-1,0,1,
+						2,2,2,
+						1,0,-1,
+						-2,-2,-2};
+int jy[] = {-2,-2,-2,
+						-1,0,1,
+						2,2,2,
+						1,0,-1};
+int sx[] = {-1,0,1,-1,0,1,-1,0,1};
+int sy[] = {-1,-1,-1,0,0,0,1,1,1};
+
+int n;
+int park[10][10];
+pii sp[10];
+bool memo[10][9];
+
+bool dfs( int x, int y , int pos ){
+	//cout << "pos:" << pos << " " << x << "," << y << endl;
+	if( pos == n ) return true;
+	//bool res = false;
+	for( int i = 0; i < sizeof(jx); i++ ){
+		int nx = x + jx[i],
+				ny = y + jy[i];
+		if( nx < 0 || 10 <= nx || ny < 0 || 10 <= ny ) continue;
+		for( int j = 0; j < sizeof(sx); j++ ){
+			int nsx = sp[pos].first + sx[j],
+					nsy = sp[pos].second + sy[j];
+			if( nsx < 0 || 10 <= nsx || nsy < 0 || 10 <= nsy ) continue;
+			if( !memo[pos][j] ) continue;
+			if( nx == nsx && ny == nsy ){
+				if( dfs(nx,ny,pos+1) ) return true;
+				else memo[pos+1][j] = false;
+			}
+		}
+	}
+	return false;
+}
+
+int main(){
+	int px, py;
+	while( cin >> px >> py, px || py ){
+		for( int i = 0; i < 10; i++ ){
+			for( int j = 0; j < 9; j++ ){
+				memo[i][j] = true;
+			}
+		}
+		cin >> n;
+		for( int i = 0; i < n; i++ ){
+			cin >> sp[i].first >> sp[i].second;
+		}
+		if( dfs(px,py,0) ) cout << "OK" << endl;
+		else							 cout << "NA" << endl;
+	}
+}

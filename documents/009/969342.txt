@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+
+int W, H;
+vector<string> map;
+
+string maxstr(string s1, string s2) {
+	if ((int)s1.size() >(int)s2.size()) return s1;
+	if ((int)s2.size() > (int)s1.size()) return s2;
+	return max(s1, s2);
+}
+
+string solver() {
+	vector< vector<string> > dp(H, vector<string>(W, ""));
+	
+	string res = "";
+	
+	for (int i = 0; i<H; i++) {
+		
+		for (int j=0; j<W; j++) {
+			
+			if ('0' <= map[i][j] && map[i][j] <= '9') {
+				if (i > 0) {
+					if (j > 0) dp[i][j] = maxstr(dp[i-1][j], dp[i][j-1]) + map[i][j];
+					else dp[i][j] = dp[i-1][j] + map[i][j];
+				} else {
+					if (j > 0) dp[i][j] = dp[i][j - 1] + map[i][j];
+					else dp[i][j] = map[i][j];
+				}
+			}
+			if (dp[i][j] == "0") dp[i][j] = "";
+			res = maxstr(res, dp[i][j]);
+		}
+	}
+	
+	return res;
+}
+
+int main() {
+	while (1) {
+		cin >> W >> H; if (W==0 && H==0) break;
+		
+		map.clear();
+		map.assign(H, "");
+		for (int i=0; i<H; i++) cin >> map[i];
+		
+		 cout << solver() << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,32 @@
+#include<stdio.h>
+
+main(){
+  int n, q, i, head, tail, c = 0;
+  char a[10000][2];
+  char result[10000][2];
+  scanf("%d%d", &n, &q);
+
+  for(i = 0; i < n; i++){
+    scanf("%c%c", &a[i][0], &a[i][1]);
+  }
+
+  head = 0;
+  tail = n + 1;
+  while(head != tail){
+    if(a[head][1] >= 100){
+      a[tail][0] = a[head][0];
+      a[tail][1] = a[head][1];
+      head++;
+      tail++;
+    } else {
+      result[c][0] = a[head][0];
+      result[c][1] = a[head][1];
+      c++;
+      head++;
+    }
+  }
+
+  for(i = 0; i < n; i++){
+    printf("%c%c", a[i][0], a[i][1]);
+  }
+}

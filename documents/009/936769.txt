@@ -1,0 +1,125 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char str[100];
+	char str2[100];
+	char ans[1000];
+	int a, b, c, e, tugi, kaisuu;
+	int zz, kaisuu2;;
+	
+	scanf("%d", &kaisuu);
+	
+	for (kaisuu2 = 0; kaisuu2 < kaisuu; kaisuu2++) {
+		scanf("%s %s", str, str2);
+		a = 0;
+		e = 0;
+		b = 0;
+		tugi = 0;
+		while (str[a] != '\0') {
+			a++;
+		}
+		while (str2[b] != '\0') {
+			b++;
+		}
+		if ((a >= 82 || b >= 82)) {
+			printf("overflow");
+		}
+		else {
+			a -= 1;
+			b -= 1;
+			if (a >= b) {
+				while (a != -1) {
+					if (b <= -1) {
+						c = str[a] - '0';
+					}
+					else {
+						c = (str[a] - '0') + (str2[b] - '0');
+					}
+					if (tugi == 0) {
+						if (c <= 9) {
+							ans[e] = (c + '0');
+							tugi = 0;
+						}
+						else if (c > 9) {
+							ans[e] = ((c % 10) + '0');
+							tugi = c / 10;
+						}
+					}
+					else {
+						c = c + tugi;
+						if (c <= 9) {
+							ans[e] = (c + '0');
+							tugi = 0;
+						}
+						else if (c > 9) {
+							ans[e] = ((c % 10) + '0');
+							tugi = c / 10;
+						}
+					}
+					e++;
+					a--;
+					b--;
+				}
+			}
+			else if (a <= b) {
+				while (b != -1) {
+					if (a == -1) {
+						c = str2[b] - '0';
+					}
+					else {
+						c = (str[a] - '0') + (str2[b] - '0');
+					}
+					if (tugi == 0) {
+						if (c <= 9) {
+							ans[e] = (c + '0');
+							tugi = 0;
+						}
+						else if (c > 9) {
+							ans[e] = ((c % 10) + '0');
+							tugi = c / 10;
+						}
+					}
+					else {
+						c = c + tugi;
+						if (c <= 9) {
+							ans[e] = (c + '0');
+							tugi = 0;
+						}
+						else if (c > 9) {
+							ans[e] = ((c % 10) + '0');
+							tugi = c / 10;
+						}
+					}
+					e++;
+					a--;
+					b--;
+				}
+			}
+		}
+		if (tugi != 0) {
+			ans[e] = tugi + '0';
+			e++;
+		}
+		ans[e] = '\0';
+		zz = 0;
+		while (ans[zz] != '\0') {
+			zz++;
+		}
+		zz -= 1;
+		if (zz >= 81) {
+			printf("overflow");
+		}
+		else {
+			while (zz != -1) {
+				printf("%d", (ans[zz] - '0'));
+				zz--;
+			}
+		}
+		printf("\n");
+	}	
+	
+	return (0);
+}		
+				
+						

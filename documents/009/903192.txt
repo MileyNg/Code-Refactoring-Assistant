@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+#define N 1299710
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	int p1,p2;
+
+	bool f[N];
+
+	f[0]=true;
+	f[1]=true;
+	f[2]=false;
+	for(int i1=0;i1<N;i1++){
+		if(f[i1]==false){
+			for(int i2=2;i2*i1<N;i2++){
+				f[i2*i1]=true;
+			}
+		}
+	}
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		p1=n;
+		while(f[p1]==true) p1--;
+		p2=n;
+		while(f[p2]==true) p2++;
+
+		cout<<p2-p1<<endl;
+
+	}
+	return 0;
+}

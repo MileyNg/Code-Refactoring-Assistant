@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define CR 100
+#define INF 1 << 30
+using namespace std;
+int t, n, field[200][200];
+
+void dfs(int nx, int ny){
+  if(field[nx][ny] == t) return;
+  int dx[] = {-1,-1,0,0,1,1}, dy[] = {-1,0,-1,1,0,1};
+  rep(i, 6){
+    if(field[nx+dx[i]][ny+dy[i]] == -1 || field[nx+dx[i]][ny+dy[i]] <= field[nx][ny]) continue;
+    field[nx+dx[i]][ny+dy[i]] = min(field[nx+dx[i]][ny+dy[i]], field[nx][ny]+1);
+    //    fprintf(stderr, "%d %d %d\n",nx+dx[i], ny+dy[i], field[nx+dx[i]][ny+dy[i]]);
+    dfs(nx+dx[i], ny+dy[i]);
+  }
+  //  return;
+}
+
+int main(){
+  while(scanf("%d%d", &t, &n) && (t||n)){
+    int x, y;
+    rep(i, 200) rep(j, 200) field[i][j] = INF;
+    rep(i, n){
+      scanf("%d%d", &x, &y);
+      field[x+CR][y+CR] = -1;
+    }
+    scanf("%d%d", &x, &y);
+    field[x+CR][y+CR] = 0;
+    dfs(x+CR, y+CR);
+    int res = 1;
+    rep(i, 200) rep(j, 200) if(field[i][j] > 0 && field[i][j] < 100) res++;
+    printf("%d\n", res);
+  }
+  return 0;
+}

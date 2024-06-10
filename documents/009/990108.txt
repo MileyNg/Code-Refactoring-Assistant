@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, m;
+	
+	while (scanf("%d", &n) * n != 0){
+		int map[100][100] = {0};
+		int distance[100][100] = {0};
+		int a, b, d;
+		int lantern = 0;
+		
+		scanf("%d", &m);
+		while (m-- > 0){
+			int i, j;
+			
+			scanf("%d,%d,%d", &a, &b, &d);
+			distance[a][b] = d;
+			map[a][b] = 1;
+			for (i = 0; i < n; i++){
+				if (map[i][b] == 1 && d < distance[i][b]){
+					lantern -= distance[i][b] / 100 - 1;
+					lantern += d / 100 - 1;
+					break;
+				}
+			}
+			if (i == n){
+				lantern += d / 100 - 1;
+			}
+		}
+		if (map[n - 1][0] == 1){
+			lantern -= distance[n - 1][b] / 100 - 1;
+		}
+		printf("%d\n", lantern);
+	}
+	
+	return 0;
+}

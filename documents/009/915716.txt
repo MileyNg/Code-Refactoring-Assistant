@@ -1,0 +1,33 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+void swap(int& a, int& b)
+{
+        int tmp;
+        tmp = a;
+        a = b;
+        b = tmp;
+}
+
+int gcd(int a, int b) // a>b
+{
+        int rem;
+        rem = a%b;
+        if(rem == 0){ return b; }
+        else{ gcd(b, rem); }
+}
+
+int main()
+{
+        int a, b;
+        int g, l;
+
+        while(scanf("%d %d", &a, &b) != EOF){
+                if(a<b){ swap(a, b); }
+                g = gcd(a, b);
+                l = a/g*b;
+                cout << g << " " << l << endl;
+        }
+        return 0;
+}

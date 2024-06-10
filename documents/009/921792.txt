@@ -1,0 +1,22 @@
+n = 1000000.0
+ns = Math.sqrt(n).ceil + 1
+
+arr = [false, false] + [true]*(n-1)
+
+2.upto(ns) do |i|
+  next if !arr[i]
+  i.upto(ns) do |j|
+    break if i*j >= n
+    arr[i*j] = false
+  end
+end
+count = 0
+list = (0..n).map do |i|
+  count += 1 if arr[i]
+  count
+end
+
+
+while gets
+  puts list[$_.to_i]
+end

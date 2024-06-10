@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+#define in(h, w) 0<=h&&h<H&&0<=w&&w<W
+
+int dh[4] = {1, 0, -1, 0};
+int dw[4] = {0, 1, 0, -1};
+
+int main(){
+    int W, H;
+    while (cin >> W >> H and W and H) {
+        int h, w;
+        vector< vector<char> > map(H, vector<char>(W));
+        for (int i = 0; i < H; i++)
+            for (int j = 0; j < W; j++) {
+                cin >> map[i][j];
+                if (map[i][j] == '@') {
+                    h = i;
+                    w = j;
+                }
+            }
+        int res = 1;
+        queue<pair<int, int> > q;
+        q.push(make_pair(h, w));
+        while (!q.empty()) {
+            h = q.front().first;
+            w = q.front().second;
+            q.pop();
+            if (map[h][w] == '.') {
+                res++;
+                map[h][w] = '#';
+            }
+            for (int i = 0; i < 4; i++) {
+                int th = h+dh[i];
+                int tw = w+dw[i];
+                if (0<=th&&th<H&&0<=tw&&tw<W) {
+                    if (map[th][tw] == '.')
+                        q.push(make_pair(th, tw));
+                }
+            }
+        }
+        cout << res << endl;
+    }
+}

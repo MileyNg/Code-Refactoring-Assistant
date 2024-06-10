@@ -1,0 +1,37 @@
+#include<cstdio>
+#include<iostream>
+#include<array>
+using namespace std;
+array<pair<int,int>,1001> pairs;
+array<array<pair<int,int>,10001>,1001> m;
+int main(){
+  for(int caseNo=0;;caseNo++){
+    int w; scanf("%d",&w);
+    if(w==0) break;
+    int n; scanf("%d",&n);
+    for(int i=1;i<=n;i++){
+      scanf("%d,%d",&pairs[i].first,&pairs[i].second);
+    }
+    for(int j=0;j<=w;j++){
+      m[0][j].first=0;
+      m[0][j].second=0;
+    }
+    for(int i=1;i<=n;i++){
+      for(int j=0;j<=w;j++){
+	if(pairs[i].second<=j){
+	  if(m[i-1][j].first>m[i-1][j-pairs[i].second].first+pairs[i].first){
+	    m[i][j].first=m[i-1][j].first;
+	    m[i][j].second=m[i-1][j].second;
+	  }else{
+	    m[i][j].first=m[i-1][j-pairs[i].second].first+pairs[i].first;
+	    m[i][j].second=m[i-1][j-pairs[i].second].second+pairs[i].second;
+	  }
+	}else{
+	  m[i][j].first=m[i-1][j].first;
+	  m[i][j].second=m[i-1][j].second;
+	}
+      }
+    }
+    printf("Case %d:\n%d\n%d\n",caseNo+1,m[n][w].first,m[n][w].second);
+  }
+}

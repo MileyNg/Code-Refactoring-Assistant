@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+int main(){
+  char temp[1001][1001];
+  char nozoki[1000*1000];
+  char str[10],s,i;
+  int cnt[1001]={0},flg=0,a,s2,s3;
+  scanf("%d",&a);
+  while(1){
+    scanf("%s",str);
+    if(strcmp(str,"push")==0){
+      scanf(" %d %c",&s2,&s);
+    temp[s2][cnt[s2]]=s;
+    cnt[s2]++;
+    }else if(strcmp(str,"pop")==0){
+      scanf(" %d",&s2);
+    cnt[s2]--;
+    printf("%c\n",temp[s2][cnt[s2]]);
+    }else if(strcmp(str,"quit")==0){
+  return 0;
+    }else if(strcmp(str,"move")==0){
+      scanf(" %d %d",&s2,&s3);
+      temp[s3][cnt[s3]]=temp[s2][cnt[s2]-1];
+      cnt[s3]++;cnt[s2]--;
+    }
+  }
+}

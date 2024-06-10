@@ -1,0 +1,125 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+pii expr(const string& s,int i);
+
+pii fact(const string& s,int i)
+{
+	//dump(mp(__func__,i));
+	const int n=s.size();
+	if(i==n) throw "fact: out of range";
+	if(s[i]=='('){
+		int x,j; tie(x,j)=expr(s,++i);
+		int c=0,ok=false;
+		repi(k,i,j){
+			if(s[k]=='(') c++;
+			if(s[k]==')') c--;
+			if(c==0 && strchr("+-*",s[k])) ok=true;
+		}
+		if(!ok) throw "fact: '(' number ')' is invalid";
+		return mp(x,j+1);
+	}
+	if(!isdigit(s[i])) throw "fact: invalid char";
+	int x=0;
+	for(;i<n && isdigit(s[i]);i++){
+		(x<<=1)+=s[i]-'0';
+		if(x<0 || 1024<=x) throw "fact: overflow";
+	}
+	return mp(x,i);
+}
+
+pii term(const string& s,int i)
+{
+	//dump(mp(__func__,i));
+	const int n=s.size();
+	if(i==n) throw "term: out of range";
+	int x; tie(x,i)=fact(s,i);
+	while(i<n && strchr("*",s[i])){
+		char op=s[i++];
+		int y; tie(y,i)=fact(s,i);
+		x*=y;
+		if(x<0 || 1024<=x) throw "term: overflow";
+	}
+	return mp(x,i);
+}
+
+pii expr(const string& s,int i)
+{
+	//dump(mp(__func__,i));
+	const int n=s.size();
+	if(i==n) throw "expr: out of range";
+	int x; tie(x,i)=term(s,i);
+	while(i<n && strchr("+-",s[i])){
+		char op=s[i++];
+		int y; tie(y,i)=term(s,i);
+		if(op=='+') x+=y;
+		else        x-=y;
+		if(x<0 || 1024<=x) throw "expr: overflow";
+	}
+	return mp(x,i);
+}
+
+int main()
+{
+	for(string s;cin>>s && s!="#";){
+		vi ds;
+		rep(i,s.size()) if(s[i]=='.') ds.push_back(i);
+		
+		int pat=1;
+		rep(i,ds.size()) pat*=7;
+		
+		int res=-1;
+		rep(i,pat){
+			for(int j=0,k=i;j<ds.size();j++,k/=7)
+				s[ds[j]]="01+-*()"[k%7];
+			try{
+				int x,i; tie(x,i)=expr(s,0);
+				if(i==s.size()){
+					res=max(res,x);
+					//cout<<s<<": "<<x<<endl;
+				}
+			}
+			catch(const char* msg){
+				//dump(msg);
+				//cout<<s<<": "<<msg<<endl;
+			}
+		}
+		cout<<res<<endl;
+	}
+}

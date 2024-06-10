@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <memory.h>
+#include <string.h>
+
+typedef struct _wordindex {
+	char word[100];
+	int page[100];
+	int size;
+} wordindex;
+
+wordindex wi[105];
+int wi_size=0;
+
+void add_wordindex(char* word, int page) {
+	int i;
+	for(i=0;i<wi_size;i++) {
+		if(strcmp(wi[i].word, word) == 0) {
+			wi[i].page[wi[i].size] = page;
+			wi[i].size++;
+			return;
+		}
+	}
+	
+	strcpy(wi[wi_size].word, word);
+	wi[wi_size].page[0] = page;
+	wi[wi_size].size = 1;
+	wi_size++;
+}
+
+void word_index_sort() {
+	int i, j;
+	wordindex t;
+	for(i=0;i<wi_size-1;i++) {
+		for(j=i+1;j<wi_size;j++) {
+			if(strcmp(wi[i].word,wi[j].word)>0) {
+				memcpy((char*)&t, (char*)&wi[i], sizeof(t));
+				memcpy((char*)&wi[i], (char*)&wi[j], sizeof(t));
+				memcpy((char*)&wi[j], (char*)&t, sizeof(t));
+			}
+		}
+	}
+	
+	for(i=0;i<wi_size;i++) {
+		_sort(wi[i].page, wi[i].size);
+	}
+}
+
+void _sort(int A[], int n) {
+	int i, j, t;
+	for(i=0;i<n-1;i++) {
+		for(j=i+1;j<n;j++) {
+			if(A[i] > A[j]) {
+				t = A[i];
+				A[i] = A[j];
+				A[j] = t;
+			}
+		}
+	}
+}
+
+int main(void) {
+	int page, i, j;
+	char word[105];
+	
+	while(scanf("%s %d\n", word, &page)==2) {
+		add_wordindex(word, page);
+	}
+	
+	word_index_sort();
+	
+	for(i=0;i<wi_size;i++) {
+		printf("%s\n", wi[i].word);
+		for(j=0;j<wi[i].size;j++) {
+			printf("%d", wi[i].page[j]);
+			
+			if(j<wi[i].size-1) {
+				printf(" ");
+			} else { 
+				printf("\n");
+			}
+		}
+	}
+	
+	return 0;
+}

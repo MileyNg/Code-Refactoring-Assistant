@@ -1,0 +1,17 @@
+def decode(strings, num):
+    ret = []
+    for string in strings:
+        ret.append(''.join([chr(((ord(s) - ord('a')) + num) % 26 + ord('a')) for s in string]))
+    return ret
+
+while 1:
+    try:
+        line = raw_input().strip('.').split()
+        print line
+        for i in range(26):
+            tmp = decode(line, i)
+            if 'this' in tmp or 'the' in tmp or 'that' in tmp:
+                print ' '.join(tmp) + '.'
+                break
+    except:
+        break

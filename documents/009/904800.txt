@@ -1,0 +1,53 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+#include<stack>
+#include <iomanip>
+
+using namespace std;
+inline double toInt(string s) {double v; istringstream sin(s);sin>>v;return v;}
+
+int main()
+{
+  string str;
+  for(;getline(cin,str);)
+    {
+      istringstream ss(str);
+      stack<double,vector<double> > st;
+      string tmp;
+      for(;ss>>tmp;)
+        {
+          if(tmp=="+")
+            {
+              double a=st.top();st.pop();
+              double b=st.top();st.pop();
+              st.push(b+a);
+            }
+          else if(tmp=="-")
+            {
+              double a=st.top();st.pop();
+              double b=st.top();st.pop();
+              st.push(b-a);
+            }
+          else if(tmp=="*")
+            {
+              double a=st.top();st.pop();
+              double b=st.top();st.pop();
+              st.push(b*a);
+            }
+          else if(tmp=="/")
+            {
+              double a=st.top();st.pop();
+              double b=st.top();st.pop();
+              st.push(b/a);
+            }
+          else
+            {
+              st.push(toInt(tmp));
+              //              cout<<"tmp"<<st.top()<<endl;
+            }
+        }
+      cout<< fixed << setprecision(6) <<st.top()<<endl;
+
+    }
+}

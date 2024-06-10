@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<string.h>
+
+int search(char []);
+
+int main(void){
+	int i,j,flag;
+
+	char string[90];
+
+	fgets(string,80,stdin);
+
+	for(i = 0 ; i < 25; i ++){
+		for(j = 0 ;string[j] != '.' ; j ++){
+			if(string[j] != ' '){
+				if(string[j] == 'z'){
+					string[j] -= 26;
+				}
+				string[j] += 1;
+			}
+		}
+		flag = search(string);
+		if(flag == 1){
+			break;
+		}
+	}
+
+	printf("%s\n",string);
+
+	return  0;
+}
+
+int search(char string[90]){
+	if(strstr(string,"the") != NULL || 
+	   strstr(string,"this") != NULL ||
+	   strstr(string,"that") != NULL){
+		return 1;
+	}
+	return 0;
+}

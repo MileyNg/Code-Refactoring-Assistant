@@ -1,0 +1,56 @@
+#include<iostream>
+#include<algorithm>
+#include<stack>
+#include<cmath>
+
+using namespace std;
+
+#define NMAX 20
+
+struct S{
+	double L, a, b;
+};
+
+int N, M;
+S color[NMAX];
+stack<int> calcs;
+
+
+
+double search(int n,int num){
+	if (n == 0){
+		double sum = 0;
+		int arr[100];
+		for (int i = 0; i < M; i++){
+			arr[i] = calcs.top();
+			calcs.pop();
+		}
+		for (int i = 0; i < M; i++){
+			for (int j = i + 1; j < M; j++){
+				sum += pow(color[arr[i]].L - color[arr[j]].L, 2) + pow(color[arr[i]].a - color[arr[j]].a, 2) + pow(color[arr[i]].b - color[arr[j]].b, 2);
+			}
+		}
+		for (int i = M - 1; i >= 0; i--) calcs.push(arr[i]);
+		//cout << sum << "," << calcs.size() << endl;
+		return sum;
+	}
+	double mx = 0;
+	for (int i = num; i < N; i++){
+		calcs.push(i);
+		mx = max(mx,search(n - 1, i));
+		calcs.pop();
+	}
+	return mx;
+}
+
+int main(){
+
+	cin >> N >> M;
+
+	for (int i = 0; i < N; i++){
+		cin >> color[i].L >> color[i].a >> color[i].b;
+	}
+
+	cout << search(M,0) << endl;
+	return 0;
+}

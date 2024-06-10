@@ -1,0 +1,32 @@
+#include<iostream>
+
+using namespace std;
+
+int N;
+int x[50],y[50];
+
+long long sqr(long long l){
+  return l*l;
+}
+
+long long s(int i){
+  return sqr(x[(i+1)%N]-x[i])+sqr(y[(i+1)%N]-y[i]);
+}
+
+int main(){
+  cin>>N;
+  for(int i=0;i<N;i++){
+    cin>>x[i]>>y[i];
+  }
+  bool f=false;
+  for(int i=0;i+N/2<N;i++){
+    f|=s(i)!=s(i+N/2);
+  }
+  if(N%2==1||f){
+    cout<<"NA"<<endl;
+  }else{
+    cout<<(x[0]*1.+x[N/2])/2<<' '<<(y[0]*1.+y[N/2])/2<<endl;
+  }
+}
+
+  

@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define fi first
+#define se second
+#define MAX 20
+typedef pair<double,double> P;
+
+int N;
+P h, d, crystal[MAX];
+
+double dist(P a, P b){
+  return sqrt(pow(a.fi-b.fi,2) + pow(a.se-b.se,2));
+}
+
+bool solve(){
+  sort(crystal, crystal+N,greater<P>());
+
+  double total_dist = 0;
+  for(int i = 0 ; i < N ; i++){
+    total_dist += dist(h, crystal[i]);
+    if(total_dist >= dist(d, crystal[i])){
+      return false;
+    }
+    h = crystal[i];
+  }
+  return true;
+}
+
+int main(){
+  while(cin >> N >> h.fi >> h.se >> d.fi >> d.se, (N + h.fi + h.se + d.fi + d.se)){
+    for(int i = 0 ; i < N ; i++){
+      cin >> crystal[i].fi >> crystal[i].se;
+    }
+    cout << (solve() ? "YES" : "NO") << endl;
+  }
+ 
+  return 0;
+}

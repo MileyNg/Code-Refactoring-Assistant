@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+struct Era{
+	string name;
+	int start, end;
+};
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int N, Q;
+	while (cin >> N >> Q, N ){
+		Era era[N];
+		rep (i, N ){
+			int y1, y2;
+			cin >> era[i].name >> y1 >> y2;
+			era[i].end = y2;
+			era[i].start = y2 - y1 + 1;
+		} // end rep
+		rep (j, Q ){
+			int year; cin >> year;
+
+			string ans1 = "";
+			int ans2 = 0;
+			rep (i, N ){
+				if (era[i].start <= year && year <= era[i].end ){
+					ans1 = era[i].name;
+					ans2 = year - era[i].start + 1;
+					break;
+				} // end if
+			} // end rep
+
+			if (ans2 != 0 ){
+				cout << ans1 << ' ' << ans2 << endl;
+			}else{
+				cout << "Unknown" << endl;
+			} // end if
+		} // end rep
+	} // end while
+		
+	return 0;
+}

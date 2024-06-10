@@ -1,0 +1,26 @@
+import itertools
+
+def isOK(array):
+	for i in range(n-1):
+		if int(array[i][2])<sum([int(array[i][1]) for x in range(i+1,n)]):
+			return False
+	return G(array)
+
+def G(array):
+	nume=sum([(i+1)*int(array[i][1]) for i in range(n)])*1.0
+	denomi=sum([int(array[i][1]) for i in range(n)])
+	return nume/denomi
+	
+while 1:
+	n=input()
+	if n==0:break
+	lunch=[raw_input().split() for i in range(n)]
+	ans,minG=[],10000
+	for order in itertools.permutations(lunch,n):
+		print order
+		val=isOK(order)
+		if val is not False and val<minG:
+			ans=[order[i][:] for i in range(n)]
+			minG=val
+	for i in range(n):
+		print ans[i][0]

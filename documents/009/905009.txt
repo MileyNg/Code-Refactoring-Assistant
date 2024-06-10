@@ -1,0 +1,63 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+int[ulong] C(ulong[] X) {
+    ulong[] Y = X.dup.sort.uniq.array;
+    int[ulong] ret;
+    foreach (int i, y; Y) {
+        ret[y] = i;
+    }
+    return ret;
+}
+
+void main() {
+    int N, K; readf("%d %d\n", &N, &K);
+    ulong[] X, Y, Z;
+    foreach (i; 0 .. N) {
+        ulong x, y, z;
+        readf("%d %d %d ", &x, &y, &z);
+        X ~= x; Y ~= y; Z ~= z;
+        readf("%d %d %d\n", &x, &y, &z);
+        X ~= x; Y ~= y; Z ~= z;
+    }
+    auto xM = C(X), yM = C(Y), zM = C(Z);
+    auto nx = xM.length,
+         ny = yM.length,
+         nz = zM.length;
+    int[][][] count = new int[][][](nx, ny, nz);
+    for (int i = 0; i < 2 * N; i += 2) {
+        foreach (x; xM[ X[i] ] .. xM[ X[i + 1] ]) {
+            foreach (y; yM[ Y[i] ] .. yM[ Y[i + 1] ]) {
+                foreach (z; zM[ Z[i] ] .. zM[ Z[i + 1] ]) {
+                    count[x][y][z]++;
+                }
+            }
+        }
+    }
+    ulong[] _X = X.dup.sort.uniq.array,
+            _Y = Y.dup.sort.uniq.array,
+            _Z = Z.dup.sort.uniq.array;
+    ulong ans = 0;
+    foreach (x; 0 .. nx) {
+        foreach (y; 0 .. ny) {
+            foreach (z; 0 .. nz) {
+                if (count[x][y][z] >= K) {
+                    ans += (_X[x + 1] - _X[x]) * (_Y[y + 1] - _Y[y]) * (_Z[z + 1] - _Z[z]);
+                }
+            }
+        }
+    }
+    ans.writeln;
+}

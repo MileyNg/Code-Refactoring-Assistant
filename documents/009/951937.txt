@@ -1,0 +1,91 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define fs first
+#define sc second
+using namespace std;
+typedef long double D;
+typedef complex<D> P;
+typedef pair<D,D> pdd;
+const D EPS = 1e-8;
+const D PI = acos(-1);
+
+int n,k;
+pdd p[2000];
+vector<pdd> v;
+int max_r[2000], max_l[2000];
+D dp[1501][1501][2]; // dp[interval_id][#used_interval][use_flag]
+
+inline D modify(D seta){
+  if(seta>PI)seta-=2*PI;
+  if(seta<-PI)seta+=2*PI;
+  return seta;
+}
+
+inline bool in_upper(D seta){
+  seta = modify(seta);
+  return (EPS<seta && seta<PI-EPS);
+}
+
+int main(){
+  cin >> n >> k;
+  rep(i,n){
+    D x,y,r;
+    cin >> x >> y >> r;
+    P c = P(x,y);
+    D d = abs(c), s = arg(c), a = sqrt(d*d-r*r);
+    D ds = acos( (d*d + a*a - r*r)/(2*d*a) );
+    
+    D start = modify(s-ds), end = modify(s+ds);
+    pdd tmp = pdd(in_upper(start)?start:0, in_upper(end)?end:PI);
+    if(tmp.fs<EPS && PI-EPS<tmp.sc)continue;
+    v.push_back(tmp);
+  }
+
+  sort(v.begin(),v.end());
+
+  rep(i,v.size())rep(j,v.size()){
+    if(i==j)continue;
+    if(v[j].fs-EPS<v[i].fs && v[i].sc<v[j].sc+EPS){
+      v.erase(v.begin()+i);
+      i--;
+      break;
+    }
+  }
+
+  rep(i,v.size()){
+    int id = -1;
+    max_l[i] = v.size();
+    for(int j=i+1;j<(int)v.size();j++){
+      if(v[j].fs+EPS<v[i].sc){
+	if(id<0 || v[id].sc+EPS < v[j].sc)id = j;
+      }else{
+	max_l[i] = j;
+	break;
+      }
+    }
+    max_r[i] = id;
+  }
+
+  rep(i,v.size()+1){
+    rep(j,k+1)dp[i][j][0] = dp[i][j][1] = 0;
+  }
+
+  rep(i,v.size()){
+    rep(j,k+1){
+      dp[i+1][j][0] = max(dp[i+1][j][0], dp[i][j][0]);
+      if(j+1<=k){
+	D use = max(dp[i][j][0], dp[i][j][1]);
+	dp[max_l[i]][j+1][0] = max(dp[max_l[i]][j+1][0], use + v[i].sc-v[i].fs);
+	if(max_r[i]>=0){
+	  dp[max_r[i]][j+1][1] = max(dp[max_r[i]][j+1][1], use + v[max_r[i]].fs-v[i].fs);
+	}
+      }
+    }
+  }
+
+  D ans = 0;
+  rep(i,k+1){
+    ans = max(ans, max(dp[v.size()][i][0], dp[v.size()][i][1]) );
+  }
+  cout << fixed << setprecision(10) << ans/PI << endl;
+}

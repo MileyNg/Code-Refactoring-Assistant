@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 100000
+ 
+typedef struct{
+  int p,l,r,s;
+    }Node;
+ 
+Node T[N];
+ 
+int main(void){
+  int i,j,a,b,d,f,r,l,hr=0,hl=0;
+  int id[N],c[N],e[N],h[N];
+   
+  scanf("%d",&a);   
+  for(i = 0 ; i < a ; i++){
+    T[i].p = -1;
+    T[i].l = -1;
+    T[i].r = -1;
+    T[i].s = -1; 
+ }
+  for(i = 0 ; i < a ; i++){
+    scanf("%d",&id[i]);
+    for(j = 0; j < 2; j++){
+      scanf("%d",&c[j]);
+	    if(j == 0){
+	      l = c[j];
+	      T[id[i]].l = c[j];
+	      T[c[j]].p = id[i];
+	    }
+	    else {
+	      r = c[j];
+	      T[id[i]].r = c[j];
+	      T[c[j]].p = id[i];
+	    }
+
+	    if((c[0] == -1) && (c[1] == -1)){
+	      e[id[i]] = 0;
+	    }
+		else if((c[0] != -1) && (c[1] != -1)){
+		  e[id[i]] = 2;
+		}
+		    else e[id[i]] = 1;
+    }
+    T[l].s = r;
+    T[r].s = l;
+  }
+
+  for(i = 0 ; i < a ; i++){
+if((T[i].l == -1) && (T[i].r == -1)){
+    h[i] = 0;
+  }
+  }
+  if(hl > hr){
+    h[i] =  hl+1;
+  }
+  else {
+    h[i] = hr+1;
+  }
+
+
+
+  for(i = 0; i < a; i++){
+   printf("node %d: parent = %d, ",i,T[i].p);
+   printf("sibling = %d, ",T[i].s);
+   printf("degree = %d ",e[i]);
+    id[i] = i; 
+    for(j = 0; T[id[i]].p != -1; j++){
+      id[i] = T[id[i]].p;
+    }
+    printf("depth = %d ",j);
+    printf("height = %d ",h[i]);
+
+    if(T[i].p == -1){
+      printf("root\n");
+    }
+    else if((T[i].p != -1) && ((T[i].l != -1) || (T[i].r != -1))){
+      printf("internal node\n");
+    }
+    else if((T[i].l == -1) && (T[i].r == -1)){
+      printf("leaf\n");
+    }
+  }
+  return 0;
+}

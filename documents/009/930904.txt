@@ -1,0 +1,49 @@
+#include<cstdio>
+#include<cstdlib>
+#include<utility>
+#include<vector>
+#include<set>
+using namespace std;
+int N,W,D,p,s;
+typedef pair<int,int>P;
+vector<P>C;
+multiset<int>S;
+int main()
+{
+	for(;scanf("%d%d%d",&N,&W,&D),W;)
+	{
+		C.clear();
+		S.clear();
+		C.push_back(make_pair(W,D));
+		for(int i=0;i<N;i++)
+		{
+			scanf("%d%d",&p,&s);
+			vector<P>::iterator I=C.begin();
+			for(int j=1;j<p;j++)
+				I++;
+			P tmp=*I;
+			I=C.erase(I);
+			int pos=s%(tmp.first+tmp.second);
+			if(pos<tmp.first)
+			{
+				int n=tmp.first/2<pos?tmp.first-pos:pos;
+				C.push_back(make_pair(n,tmp.second));
+				C.push_back(make_pair(tmp.first-n,tmp.second));
+			}
+			else
+			{
+				pos-=tmp.first;
+				int n=tmp.second/2<pos?tmp.second-pos:pos;
+				C.push_back(make_pair(tmp.first,n));
+				C.push_back(make_pair(tmp.first,tmp.second-n));
+			}
+		}
+		
+		for(vector<P>::iterator I=C.begin();I!=C.end();I++)
+			S.insert(I->first*I->second);
+		for(multiset<int>::iterator I=S.begin();I!=S.end();I++)
+			printf("%s%d",I!=S.begin()?" ":"",*I);
+		puts("");
+	}
+	return 0;
+}

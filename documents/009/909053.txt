@@ -1,0 +1,33 @@
+/*
+	0587:Tunnel
+*/
+#include	<iostream>
+#include	<algorithm>
+
+using namespace std;
+
+int main(void) {
+	int n, m;
+	int maxS = 0;
+	bool frag = false;
+	
+	cin >> n >> m;
+	
+	int tc = m;
+	maxS = tc;
+	
+	for(int i = 0; i < n; i++) {
+		int a, b;
+		cin >> a >> b;
+		
+		tc = tc + a - b;
+		if(tc < 0) { frag = true; }
+		
+		maxS = max(tc, maxS);
+	}
+	
+	if(frag) { maxS = 0; }
+	cout << maxS << endl;
+	
+	return 0;
+}

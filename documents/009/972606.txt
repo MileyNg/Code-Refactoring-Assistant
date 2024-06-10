@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <cctype>
+#include <algorithm>
+#include <set>
+#include <cmath>
+using namespace std;
+
+bool reach_above(int v, int t, const vector<int> &above) {
+  if(v == t) return true;
+  if(v == -1) return false;
+  return reach_above(above[v], t, above);
+}
+
+void put_on_floor(int current, vector<int> &above, vector<int> &bellow) {
+  if(current == -1) return;
+  if(bellow[current] != -1) {
+	above[bellow[current]] = -1;
+	bellow[current] = -1;
+  }
+  put_on_floor(above[current], above, bellow);
+}
+
+int main(){
+  for(int m; cin >> m && m;) {
+	vector<int> bellow(m, -1), above(m, -1);
+
+	for(int former, latter; cin >> former >> latter && former;) {
+	  if(latter == 0) {
+		put_on_floor(former - 1, above, bellow);
+	  }
+	  else if(latter != former) {
+		--former, --latter;
+		if(reach_above(former, latter, above)) {
+		  put_on_floor(above[former], above, bellow);
+		  if(bellow[former] != -1) above[bellow[former]] = -1;
+		  above[latter] = former;
+		  bellow[former] = latter;
+		}
+		else if(reach_above(latter, former, above)) {
+		  // ignore
+		}
+		else {
+		  while(above[latter] != -1) latter = above[latter];
+		  put_on_floor(former, above, bellow);
+		  above[latter] = former;
+		  bellow[former] = latter;
+		}
+	  }
+	}
+
+	vector<int> piles;
+	for(int i = 0; i < m; ++i) {
+	  if(above[i] == -1) {
+		int current = i;
+		int height = 0;
+
+		while(current != -1) {
+		  current = bellow[current];
+		  ++height;
+		}
+		piles.emplace_back(height);
+	  }
+	}
+
+	sort(piles.begin(), piles.end());
+
+	for(const auto &e : piles) {
+	  cout << e << endl;
+	}
+	cout << "end" << endl;
+  }
+
+  return 0;
+}

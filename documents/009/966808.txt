@@ -1,0 +1,35 @@
+#include <iostream>
+
+int check_circle(const double xa, const double ya, const double ra,
+                 const double xb, const double yb, const double rb){
+  double distance;
+  distance = (xa - xb)*(xa - xb) + (ya - yb)*(ya - yb);
+
+  if(distance > (ra + rb)*(ra + rb) ){
+    return 0;
+  }
+  else if(distance < (ra - rb)*(ra - rb) ){
+    if(ra > rb){
+      return 2;
+    }
+    else{
+      return -2;
+    }
+  }
+  else{
+    return 1;
+  }
+}
+
+int main(){
+  int data_num;
+  std::cin >> data_num;
+
+  for(int i = 0; i < data_num; ++i){
+    double xa, ya, ra, xb, yb, rb;
+    std::cin >> xa >> ya >> ra
+             >> xb >> yb >> rb;
+    std::cout << check_circle(xa, ya, ra, xb, yb, rb) << std::endl;
+  }
+
+}

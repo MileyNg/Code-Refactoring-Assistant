@@ -1,0 +1,134 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <complex>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+
+// Bipartite_Matching 
+// Verify AOJ
+// O(EV)
+
+class Bipartite_Matching{
+	public :
+		void init(int _n){
+			n=_n;
+			G.resize(n);
+			match.resize(n);
+			used.resize(n);
+		}
+
+		void add_edge(int from,int to){
+			G[from].push_back(to);
+			G[to].push_back(from);
+		}
+	
+		void add_edge_both(int from,int to){
+			add_edge(from,to);
+			add_edge(to,from);
+		}
+	
+		
+		int bipartite_matching(void){
+			int res=0;
+			match.assign(n,-1);
+			rep(v,n){
+				if(match[v] <0){
+					used.assign(n,false);
+					if(dfs(v))
+						res++;
+				}
+			}
+			return res;
+		}	
+
+	private:
+	
+		int n;
+		static const int DINIC_INF = inf;
+		vvi G;
+		vi match;
+		vector<bool> used;
+
+		bool dfs(int v){
+			used[v]=true;
+			rep(i,G[v].size()){
+				int u=G[v][i],w=match[u];
+				if(w<0|| !used[w]&& dfs(w)){
+					match[u]=v;
+					match[v]=u;
+					return true;
+				}
+			}
+			return false;
+		}
+};
+
+
+int m,n;
+int blue[510];
+int red[510];
+
+int main(void){
+	while(cin >> m >> n,m|n){
+		Bipartite_Matching b;
+		rep(i,m) cin >> blue[i];
+		rep(i,n) cin >> red[i];
+		b.init(m+n);
+		rep(i,m)rep(j,n){
+			if(__gcd(blue[i],red[j])==1)
+				continue;
+			else
+				b.add_edge(i,m+j);
+		}
+		cout << b.bipartite_matching() << endl;
+	}
+	return 0;
+}

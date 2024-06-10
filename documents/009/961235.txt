@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<math.h>
+int main(void){
+	double x[3],y[3],l,m,n,a,b,c,d,e,f;
+	int i,h;
+	scanf("%d",&h);
+	for(i=0; i<h; i++){
+	scanf("%lf%lf%lf%lf%lf%lf",&x[0],&y[0],&x[1],&y[1],&x[2],&y[2]);
+
+	a=x[0]-x[1];
+	b=y[0]-y[1];
+	c=(x[1]*x[1]+y[1]*y[1])-(x[0]*x[0]+y[0]*y[0]);
+	d=x[1]-x[2];
+	e=y[1]-y[2];
+	f=(x[2]*x[2]+y[2]*y[2])-(x[1]*x[1]+y[1]*y[1]);
+
+	l=(c*e-b*f)/(a*e-b*d);
+	m=(c*d-a*f)/(b*d-a*e);
+	n=-1*(x[0]*x[0]+y[0]*y[0]+l*x[0]+m*y[0]);
+	a=l/(-2);
+	b=m/(-2);
+	c=sqrt(a*a+b*b-n);
+
+	printf("%.3f %.3f %.3f\n",a,b,c);
+	}
+
+	return 0;
+}

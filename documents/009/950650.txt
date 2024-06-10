@@ -1,0 +1,74 @@
+#include<iostream>
+#include<stdio.h>
+#include<algorithm>
+#include<assert.h>
+using namespace std;
+typedef long long LL;
+char s[100];
+const int N = 105;
+const int M = 100050;
+const int inf = (int)1e9+2;
+struct node{
+    int a,b,c;
+    void read(){
+        scanf("%s%d%s%d",s,&a,s,&b);
+        if(s[0]=='S') c=0;
+        else c=1;
+    }
+    bool operator <(const node tmp)const{
+        if(c!=tmp.c) return c<tmp.c;
+        return b*tmp.a>tmp.b*a;
+    }
+    void print(){
+        cout<<a<<" "<<b<<" "<<c<<endl;
+    }
+}no[N];
+int val[N],n,m;
+LL opt[M],dp[M];
+int main()
+{
+    while(scanf("%d",&n),n)
+    {
+        for(int i=1;i<=n;++i)
+            scanf("%d",val+i);
+        scanf("%d",&m);
+        for(int i=1;i<=m;++i)
+            no[i].read();
+        sort(no+1,no+1+m);
+//        for(int i=1;i<=m;++i)
+//            no[i].print();
+        int al;
+        for(al=1;al<=m;++al)
+            if(no[al].c==1) break;
+        for(int i=0;i<M;++i){
+            opt[i]=inf;opt[0]=0;
+            for(int j=1;j<al;++j){
+                int pi=i-no[j].b;
+                if(pi<0) pi=0;
+                if(opt[i]>opt[pi]+no[j].a)
+                    opt[i]=opt[pi]+no[j].a;
+            }
+        }
+        LL ans=inf;
+        for(int i=0;i<M;++i)
+        {
+            dp[i]=inf; dp[0]=0;
+            for(int j=al;j<=m;++j){
+                int pi=i-no[j].b;
+                if(pi<0) pi=0;
+                if(dp[i]>dp[pi]+no[j].a)
+                    dp[i]=dp[pi]+no[j].a;
+            }
+            LL tmp=dp[i];
+            for(int j=1;j<=n;++j){
+                int nv=val[j]-i;
+                if(nv<0) nv=0;
+                tmp+=opt[nv];
+            }
+            if(ans>tmp) ans=tmp;
+        }
+        if(ans>=inf) assert(0);
+        cout<<ans<<endl;
+    }
+    return 0;
+}

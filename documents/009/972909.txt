@@ -1,0 +1,53 @@
+def ovwp?(g0, g1, mtx)
+  g0.each do |i|
+    g1.each do |j|
+      return false if ! mtx[i][j]
+    end
+  end
+
+  return true
+end
+
+### main
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  cnts = []
+  n.times do
+    x, y = gets.chomp.split(",").map{|s| s.to_f}
+    cnts.push [x, y]
+  end
+
+  owmtx = (0...n).map{|i| (0...n).map{|j| i == j}}
+  grps  = []
+
+  for i in (0...cnts.length)
+    x0, y0 = cnts[i]
+    for j in ((i + 1)...cnts.length)
+      x1, y1 = cnts[j]
+      if (x1 - x0) ** 2 + (y1 - y0) ** 2 <= 4.0
+        owmtx[i][j] = owmtx[j][i] = true
+        grps.push [i, j]
+      end
+    end
+  end
+
+  max_gl = 1
+
+  while grps.length > 0
+    g0 = grps.shift
+    grps0 = grps
+
+    for g1 in grps0
+      if (g0 & g1 != g0) && ovwp?(g0, g1, owmtx)
+        grps.push (g0 + g1).uniq
+      end
+    end
+
+    max_gl = g0.length if max_gl < g0.length
+  end
+
+  puts max_gl
+end

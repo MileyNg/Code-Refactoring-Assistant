@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+
+typedef struct Eachtop {
+  double x;
+  double y;
+  struct Eachtop *next;
+} Top;
+
+Top *topnode, *lastnode, *thisnode;
+
+void makenewpoint(Top* a, Top* b){
+  Top *firstnode, *secondnode, *thirdnode;
+  firstnode = (Top*)malloc(sizeof(Top));
+  firstnode->x = (b->x - a->x)/ 3.0+a->x;
+  firstnode->y = (b->y - a->y)/ 3.0+a->y;
+  secondnode = (Top*)malloc(sizeof(Top));
+  secondnode->x = (b->x - a->x)/ 3.0*2+a->x;
+  secondnode->y = (b->y - a->y)/ 3.0*2+a->y;
+  thirdnode = (Top*)malloc(sizeof(Top));
+  thirdnode->x =1/sqrt(3.0)* ((b->x - a->x) * cos(M_PI/6.0) - (b->y - a->y)*sin(M_PI/6.0)) + a->x;
+  thirdnode->y =1/sqrt(3.0)* ((b->x - a->x) * sin(M_PI/6.0) + (b->y - a->y)*cos(M_PI/6.0)) + a->y;
+  a->next = firstnode;
+  firstnode->next = thirdnode;
+  thirdnode->next = secondnode;
+  secondnode->next = b;
+  thisnode = b;
+}
+int main(void){
+  int n, i;
+  scanf("%d", &n);
+  topnode = NULL;
+  lastnode = NULL;
+  topnode = (Top*)malloc(sizeof(Top));
+  topnode->x = 0;
+  topnode->y = 0;
+  lastnode = (Top*)malloc(sizeof(Top));
+  lastnode->x = 100;
+  lastnode->y = 0;
+  thisnode = topnode;
+  topnode->next = lastnode;
+  lastnode->next = NULL;
+  for(i=0; i<n ;i++){
+    thisnode = topnode;
+    while(thisnode != lastnode)
+      makenewpoint(thisnode, thisnode->next);
+  }
+  thisnode = topnode;
+  while(thisnode != NULL){	
+    printf("%f %f\n", thisnode->x, thisnode->y);
+    thisnode = thisnode->next;
+  }
+  return 0;
+}
+  

@@ -1,0 +1,17 @@
+import sys
+
+def readint():
+    for line in sys.stdin:
+        yield map(int,line.split())
+
+def gcd(x,y):
+    [x,y] = [max(x,y),min(x,y)]
+    z = x % y
+    while z > 0:
+        [x,y,z] = [y,z,x % y]
+    return y
+
+for [x,y] in readint():
+    GCD = gcd(x,y)
+    mx = x/GCD
+    print GCD,mx*y

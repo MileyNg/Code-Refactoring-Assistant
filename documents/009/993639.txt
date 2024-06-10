@@ -1,0 +1,61 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <cmath>
+#include <set>
+#include <map>
+#include <string>
+using namespace std;
+
+
+int n;
+int key[1000];
+string str;
+
+char x[60];
+
+int main(){
+  
+  while(1){
+    cin >> n;
+    if(n == 0) break;
+
+
+
+    for(int i= 0; i < n ; i++)
+      cin >> key[i];
+
+    cin >> str;
+
+    int size = str.size();
+    //  cout << size <<" ";
+    for(int i = 0,j = 0; i < size; i++,j++){
+      if(i % n == 0){
+	j = 0;
+      }      
+   
+      for(int k = 0; k < key[j] ; k++){
+	str[i]--;
+	if(str[i]  < 'a' && str[i] > 'Z') str[i] -= 6;
+	if(str[i] < 'A' ) str[i] += 52 + 6;
+
+      }
+      /*
+	if(str[i] - key[j] < 'A' && str[i] <= 'Z' && ){
+	str[i] += 52 + 6;
+	}else  if(str[i] - key[j] < 'A' && str[i] >= 'a' ){
+	str[i] += 52;
+	}
+	if(str[i] >= 'a' && str[i] - key[j] < 'a' && str[i] - key[j] > 'Z') str[i] -= 6;
+	str[i] -= key[j];
+	}
+
+      */
+          }
+    cout << str << endl;
+    
+  }
+  return 0;
+  
+}

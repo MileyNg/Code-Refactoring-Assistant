@@ -1,0 +1,57 @@
+#include<iostream>
+#include<complex>
+#include<queue>
+using namespace std;
+const int dx[] = {1,0,-1,0};
+const int dy[] = {0,1,0,-1};
+int main(){
+
+    int w,h;
+    while(cin>>w>>h,w){
+        string screen[30];
+        bool flg[30][30]={{false}};
+
+        complex<int> pos;
+        for(int i = 0;i < h;i++){
+            cin>>screen[i];
+            for(int j = 0;j < w;j++){
+                if(screen[i][j] == '@'){
+                    pos.real() = i;
+                    pos.imag() = j;
+                }
+            }
+        }
+
+        queue< complex < int > > Q;
+        Q.push(pos);
+        while(!Q.empty()){
+            complex<int> D = Q.front();
+            Q.pop();
+            flg[D.real()][D.imag()] = true;
+            for(int i = 0;i < 4;i++){
+                int x = D.real()+dx[i],y = D.imag()+dy[i];
+                if(0<=x&&x<h&&0<=y&&y<w){
+                    if(!flg[x][y]&&screen[x][y] == '.'){
+                        complex<int>E;
+                        E.real() = x;
+                        E.imag() = y;
+                        Q.push(E);
+                    }
+                }
+            }
+        }
+
+        int cnt = 0;
+        for(int i = 0;i < h;i++){
+            for(int j = 0;j < w;j++){
+                cnt += flg[i][j];
+            }
+        }
+        cout<<cnt<<endl;
+
+
+    }
+
+
+    return 0;
+}

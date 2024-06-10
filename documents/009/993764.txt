@@ -1,0 +1,47 @@
+### subroutines
+
+def quantity(ac, c1, c2, b)
+  ac + (b - ac * c1) / c2
+end
+
+### main
+
+while true
+  line = gets.strip
+  break if line == '0'
+
+  q1, b, c1, c2, q2 = line.split(' ').map{|s| s.to_i}
+  #p [q1, b, c1, c2, q2]
+
+  max_q = quantity(1, c1, c2, b)
+  if max_q < q1
+    puts "NA"
+    next
+  end
+
+  ac1 = 1
+  ac2 = max_ac = [q2, b / c1].min
+
+  while ac1 < ac2
+    ac0 = (ac1 + ac2) / 2
+    q0 = quantity(ac0, c1, c2, b)
+    if q0 > q1
+      ac1 = ac0 + 1
+    else
+      ac2 = ac0 - 1
+    end
+  end
+  #p [ac1, ac2]
+
+  ac = ac0
+  while quantity(ac, c1, c2, b) < q1
+    ac -= 1
+  end
+
+  while ac < max_ac && quantity(ac + 1, c1, c2, b) >= q1
+    ac += 1
+  end
+
+  nc = (b - ac * c1) / c2
+  puts [ac, nc].join(' ')
+end

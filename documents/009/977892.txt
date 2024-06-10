@@ -1,0 +1,35 @@
+#include<stdio.h>
+#define N 100
+int len;
+int A[N];
+int B[N];
+void CountingSort(int k){
+  int i,j,C[N];
+  for(i=0;i<k;i++){//数字の種類だけループ
+    C[i]=0;
+    for(j=1; j<len; j++)
+      C[A[j]]++;
+    for(i=1; i<k;i++)
+      C[i]=C[i]+C[i-1];
+    for(j=len; j>1;j--){
+       B[C[A[j]]]=A[j];
+      C[A[j]]--;
+    }
+  }
+}
+int main(){
+  int i,j,*A[N],n,K=10000;
+  scanf("%d",&len);
+  for(i=0; i<len; i++)
+    scanf("%d",A[i]);
+  CountingSort(K);
+  for(i=0;i<len;i++){
+    printf("%d ",B[i]);
+    if(i<=len-1)
+      printf("  ");
+    printf("\n");
+    return 0;
+  }
+  
+}
+ 

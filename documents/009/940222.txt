@@ -1,0 +1,22 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var nums = input.trim().split('\n');
+
+var f = [];
+nums.forEach(function(num) {
+	var o = f[num];
+	if (!o) {
+		o = {id: +num, cnt: 0};
+		f[num] = o;
+	}
+	o.cnt++;
+});
+
+f.sort(function(a,b){return b.cnt - a.cnt;});
+var maxCnt = f[0].cnt;
+
+f = f.filter(function(o){return o.cnt == maxCnt});
+f.sort(function(a,b){return a.id - b.id;});
+
+f.forEach(function(o) {
+	console.log(o.id);
+});

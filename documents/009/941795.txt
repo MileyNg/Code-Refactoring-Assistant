@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+
+#define N 100
+
+#define rep(i, n) for(int i=0; i<n; ++i)
+#define pow2(x) ((x)*(x))
+
+int dist(int x1, int y1, int x2, int y2) {
+	return pow2(x2-x1)+pow2(y2-y1);
+}
+
+#define S "Safe"
+#define D "Danger"
+
+int main() {
+	int n, m;
+	int wx[N], wy[N], r[N];
+	bool safe;
+	int tx, ty, sx, sy;
+	while(cin >> n && n) {
+		rep(i, n) {
+			cin >> wx[i] >> wy[i] >> r[i];
+			r[i] *= r[i];
+		}
+		cin >> m;
+		rep(i, m) {
+			cin >> tx >> ty >> sx >> sy;
+			int dx = sx - tx, dy = sy - ty;
+			safe = false;
+			rep(j, n) {
+				bool isin_t = dist(tx, ty, wx[j], wy[j])<=r[j];
+				bool isin_s = dist(sx, sy, wx[j], wy[j])<=r[j];
+				if( isin_t ^ isin_s ) {
+					safe = true;
+					break;
+				}
+				int t1 = -( dx*(tx-wx[j]) + dy*(ty-wy[j]) ), t0 = pow2(dx) + pow2(dy);
+				if(!isin_s && !isin_t && 0<=t1 && t1<=t0 && pow2( dx*(ty-wy[j]) - dy*(tx-wx[j]) ) <= t0*r[j]) {
+					safe = true;
+					break;
+				}
+			}
+			cout << (safe ? S : D) << endl;
+		}
+	}
+	return 0;
+}

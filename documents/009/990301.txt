@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define ROW_MAX 150
+#define DANGER_MAX 2000000
+
+int dp[75][ROW_MAX][10];
+
+int main (void) {
+    int N, M, K[ROW_MAX], X[ROW_MAX][10], D[ROW_MAX][10];
+    int i, n, m, k, d, j, dmin;
+    
+    while (scanf("%d%d\n", &N, &M) != EOF && (N || M)) {
+        for (i = 0; i < N; i++) {
+            scanf("%d", &K[i]);
+            for (j = 0; j < K[i]; j++) {
+                scanf("%d%d", &X[i][j], &D[i][j]);
+            }
+        }
+        
+        for (m = 0; m <= M; m++) {
+            for (i = 0; i < N; i++) {
+                for (k = 0; k < K[i]; k++) {
+                    dp[m][i][k] = DANGER_MAX;
+                }
+            }
+        }
+        for (k = 0; k < K[0]; k++) {
+            dp[0][0][k] = 0;
+        }
+        for (k = 0; k < K[1]; k++) {
+            for (j = 0, dmin = DANGER_MAX; j < K[0]; j++) {
+                 d = (D[1][k] + D[0][j]) * abs(X[1][k] - X[0][j]);
+                 if (d < dmin) dmin = d;
+            }
+            dp[0][1][k] = dmin;
+            dp[1][1][k] = 0;
+        }
+        for (m = 0; m <= M; m++) {
+            for (i = 2; i < N; i++) {
+                for (j = 0; j < K[i]; j++) {
+                    for (k = 0, dmin = DANGER_MAX; k < K[i-1]; k++) {
+                        d = dp[m][i-1][k] +
+                            (D[i][j] + D[i-1][k]) * abs(X[i][j] - X[i-1][k]);
+                        if (d < dmin) dmin = d;
+                    }
+                    if (m > 0) {
+                        for (k = 0; k < K[i-2]; k++) {
+                            d = dp[m-1][i-2][k] +
+                                (D[i][j] + D[i-2][k]) * abs(X[i][j] - X[i-2][k]);
+                            if (d < dmin) dmin = d;
+                        }
+                    }
+                    dp[m][i][j] = dmin;
+                }
+            }
+        }
+        for (m = 0, dmin = DANGER_MAX; m <= M; m++) {
+            for (k = 0; k < K[N-1]; k++) {
+                if (dp[m][N-1][k] < dmin) dmin = dp[m][N-1][k];
+            }
+        }
+        printf("%d\n", dmin);
+    }
+    return 0;
+}

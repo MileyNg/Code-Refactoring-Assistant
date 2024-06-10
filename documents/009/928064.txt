@@ -1,0 +1,72 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int M, T, P, R;
+	while (cin >> M >> T >> P >> R) {
+		if (M == 0 && T == 0 && P == 0 && R == 0) {
+			break;
+		}
+		int m, t, p, j;
+		int tm[50][10] = {0};
+		int sol[50][3] = {0};
+
+		for (int i = 0; i < T; i++) {
+			sol[i][2] = i+1;
+		}
+
+		for (int i = 0; i < R; i++) {
+			cin >> m >> t >> p >> j;
+			t -= 1;
+			p -= 1;
+			if (j != 0) {
+				tm[t][p] += 20;
+			} else {
+				tm[t][p] += m;
+				sol[t][0]++;
+				sol[t][1] += tm[t][p];
+			}
+		}
+
+		/*for (int i = 0; i < T; i++) {
+	//		cout << sol[i][0] << " " << endl;
+		}*/
+
+		for (int i = T-1; i > 0; i--) {
+			for (int j = 0; j < i; j++) {
+				if (sol[j][0] < sol[j+1][0]) {
+					swap(sol[j][0], sol[j+1][0]);
+					swap(sol[j][1], sol[j+1][1]);
+					swap(sol[j][2], sol[j+1][2]);
+				} else if (sol[j][0] == sol[j+1][0]) {
+					if (sol[j][1] > sol[j+1][1]) {
+						swap(sol[j][1], sol[j+1][1]);
+						swap(sol[j][2], sol[j+1][2]);
+					} else if (sol[j][1] == sol[j+1][1]) {
+						if (sol[j][2] < sol[j+1][2]) {
+							swap(sol[j][2], sol[j+1][2]);
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < T; i++) {
+			if (i != 0) {
+				if (sol[i][0] < sol[i-1][0]) {
+					cout << "," ;
+				} else {
+					if (sol[i][1] != sol[i-1][1]) {
+						cout << ",";
+					} else {
+						cout << "=";
+					}
+				}
+			}
+			cout << sol[i][2];
+		} 
+		cout << endl;
+	}
+	return 0;
+}

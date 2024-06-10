@@ -1,0 +1,91 @@
+#include<cstring>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+int n, m, bak, cl, qx[909], qy[909], dis[33][33], pas[77][77], x, y, dx[4], dy[4], mn[33][33], ans[77][77][2];
+int main()
+{
+	dx[0] = -1; dy[0] = 0;
+	dx[1] = 0; dy[1] = -1;
+	dx[2] = +1; dy[2] = 0;
+	dx[3] = 0; dy[3] = +1;
+		for(;;)
+	{
+	for(int i = 0; i < 77; i++) for(int j = 0; j < 77; j++) pas[i][j] = 1;
+		scanf("%d%d", &n, &m);
+		if(!n or !m)
+			break;
+		//printf("%d %d\n", n, m);
+		for(int i = 1; i <= 2 * n - 1; i++)
+		{
+			if(i & 1)
+			{
+				for(int j = 1; j < m; j++)
+				{
+					scanf("%d", &pas[i + 1][j * 2 + 1]);
+				}
+			}else
+			{
+				for(int j = 1; j <= m; j++)
+				{
+					scanf("%d", &pas[i + 1][j * 2]);
+				}
+			}
+		}
+		bool flag = true;
+		for(int i = 2; i <= 2 * n; i++) for(int j = 2; j <= 2 * m; j++) if(i % 2 == 1 xor j % 2 == 1)
+		{
+			//	printf("%d %d\n", i,j);
+			bak = pas[i][j];
+			pas[i][j] = 1;
+
+			qx[cl = 1] = n;
+			qy[1] = m;
+			for(int i1 = 1; i1 <= n; i1++) for(int j1 = 1; j1 <= m; j1++) dis[i1][j1] = -1;
+			dis[n][m] = 0;
+			for(int op = 1; op <= cl; op++)
+			{
+			//	printf("%d\n", op);
+				x = qx[op]; y = qy[op];
+				for(int d = 0; d < 4; d++)
+				{
+				//	printf("%d %d\n", x + dx[d], y + dy[d]);
+					if(!pas[2 * x + dx[d]][2 * y + dy[d]] and dis[x + dx[d]][y + dy[d]] == -1)
+					{
+						dis[x + dx[d]][y + dy[d]] = dis[x][y] + 1;
+						qx[++cl] = x + dx[d];
+						qy[cl] = y + dy[d];
+					}
+				}
+			}
+			if(dis[1][1] == -1) {flag = false; break;}
+			ans[i][j][0] = dis[i / 2][j / 2];
+			ans[i][j][1] = dis[(i + 1) / 2][(j + 1) / 2];
+		//	printf("ans[%d][%d][%d] = %d, ans[%d][%d][%d] = %d, \n", i, j,0, ans[i][j][0], i, j, 1, ans[i][j][1]);
+			pas[i][j] = bak;
+		}
+		if(!flag) {printf("-1\n"); continue;}
+		for(int i = 1; i <= n; i++) for(int j = 1; j <= m; j++) mn[i][j] = 0x3fffffff;
+		mn[n][m] = 0;
+		qx[cl = 1] = n;
+		qy[1] = m;
+		for(int op = 1; op <= cl; op++)
+		{
+			x = qx[op]; y = qy[op];
+			for(int d = 0; d < 4; d++)if(!pas[x * 2 + dx[d]][y * 2 + dy[d]])
+			{
+				int tmp = max(1 + mn[x][y], ans[x * 2 + dx[d]][y * 2 + dy[d]][(dx[d] + dy[d]) == 1?1:0]);
+				//printf("%d %d %d\n", x, y, tmp);
+				if(mn[x + dx[d]][y + dy[d]] > tmp)
+				{
+					mn[x + dx[d]][y + dy[d]] = tmp;
+					qx[++cl] = x + dx[d];
+					qy[cl] = y + dy[d];
+				}
+			}
+		}
+		printf("%d\n", mn[1][1]);
+	}
+	fclose(stdin);
+	return 0;
+}

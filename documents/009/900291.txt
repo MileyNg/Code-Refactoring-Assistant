@@ -1,0 +1,42 @@
+class BallGame
+  attr_accessor :left, :right
+
+  def initialize(left = [], right = [])
+    @left = left
+    @right = right
+  end
+
+  def insertable(balls)
+    if balls.length() == 0
+      return true
+    end
+    if balls[0] > (@left[-1].nil? ? 0 : @left[-1])
+      new_ball_game = BallGame.new(@left + [balls[0]], @right)
+      if new_ball_game.insertable(balls[1..-1])
+        return true
+      end
+    end
+    if balls[0] > (@right[-1].nil? ? 0 : @right[-1])
+      new_ball_game = BallGame.new(@left, @right + [balls[0]])
+      if new_ball_game.insertable(balls[1..-1])
+        return true
+      else
+        return false
+      end
+    end
+    return false
+  end
+end
+
+if __FILE__ == $0
+  n = gets.to_i
+  n.times do 
+    balls = gets.split().map{|i| i.to_i}
+    ballGame = BallGame.new()
+    if ballGame.insertable(balls)
+      puts "YES"
+    else
+      puts "NO"
+    end
+  end
+end

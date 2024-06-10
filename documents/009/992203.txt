@@ -1,0 +1,26 @@
+class Point
+  attr_accessor :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_i)
+  end
+  def -(p)
+    Point.new(@x - p.x, @y - p.y, @z - p.z)
+  end
+  def dot(p)
+    @x * p.x + @y * p.y + @z * p.z
+  end
+  def cross(p)
+    Point.new(@y * p.z - @z * p.y, @z * p.x - @x * p.z, @x * p.y - @y * p.x)
+  end
+end
+def solve2
+  d, e, a, b, c = 5.times.map{Point.new(*gets.split)}
+  abde = (e - d).dot((b - a).cross(d - a)).abs
+  bcde = (e - d).dot((c - b).cross(d - b)).abs
+  cade = (e - d).dot((a - c).cross(d - c)).abs
+  abcd = (d - c).dot((b - a).cross(c - a)).abs
+  abce = (e - c).dot((b - a).cross(c - a)).abs
+  return true if [abde, bcde, cade, abcd, abce].any?(&:zero?)
+  abde + bcde + cade == abcd + abce
+end
+puts (solve2 ? "MISS" : "HIT")

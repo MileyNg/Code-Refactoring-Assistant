@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<string.h>
+#define rep(i,X) for(i=0;i<X;i++)
+int n;
+char c[27],s[102],cl,sl,ans;
+
+int main(){
+	int i,j,k,l,tab;
+	scanf("%d%s",&n,c);
+	cl=strlen(c);
+	rep(i,n){
+		scanf("%s",s);sl=strlen(s);
+		rep(j,sl){
+			if(s[j]-c[0])continue;
+			rep(k,199){
+				tab=k+1;
+				rep(l,199){
+					if(l>=cl){l=1;break;}
+					if(j+tab*l>=sl || s[j+tab*l]-c[l]){l=0;break;}
+				}
+				if(l){ans++;goto E;}
+			}
+		}
+	E:;
+	}
+	printf("%d\n",ans);
+	return 0;
+}
+	

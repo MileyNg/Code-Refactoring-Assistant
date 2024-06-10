@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+constexpr double EPS = 0.00001;
+
+int main() {
+	cout.precision(10);
+	cout.setf(ios::fixed);
+
+	for(int q; cin >> q && q != -1;) {
+		double x = q / 2.0;
+
+		while(abs(x * x * x - q) >= EPS * q) {
+			x -= ((x * x * x) - q) / (3 * x * x);
+		}
+
+		cout << x << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

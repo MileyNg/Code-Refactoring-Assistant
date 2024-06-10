@@ -1,0 +1,23 @@
+#include<stdio.h>
+int icm(int a,int b);
+int gcd(int a,int b);
+int main(){
+  int a,b;
+  int small,big;
+  scanf("%d %d",&a,&b);
+  big=gcd(a,b);
+  small=icm(a,b);
+  printf("%d %d\n",big,small);
+  return 0;
+}
+int gcd(int a,int b){
+  int r;
+  while((r=a%b)!=0){
+    a=b;
+    b=r;
+  }
+  return b;
+}
+int icm(int a,int b){
+  return(a*b/gcd(a,b));
+}

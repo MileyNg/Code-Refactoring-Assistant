@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define pb(a) push_back(a)
+#define mp(a,b) make_pair(a,b)
+#define ALL(a) (a).begin(),(a).end()
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+
+int m,t,p,r;
+
+int app[400][400];
+int pena[400];
+
+
+void solve(){
+  memset(app,0,sizeof(app));
+  memset(pena,0,sizeof(pena));  
+  
+  vector<int> sol(10000);
+  
+  rep(i,r){
+    int mk,tk,pk,jk;
+    cin >> mk >> tk >> pk >> jk;
+    if(jk==0){
+      pena[tk] += app[tk][pk]*20+mk;
+      ++sol[tk];
+    }else{
+      ++app[tk][pk];
+    }
+  }
+
+  vector<pair<PI,int> > team;
+  
+  rep(i,t){
+    team.pb(mp(mp(-sol[i+1],pena[i+1]),-i-1));
+  }
+
+  
+  sort(ALL(team));
+  rep(i,t){
+    if(i){
+      if(team[i-1].F == team[i].F) cout << "=";
+      else cout << ",";
+    }
+    cout << -team[i].S;
+  }
+  cout << endl;
+}
+
+int main(){
+  while(cin >> m >> t >> p >> r && m) solve();
+}

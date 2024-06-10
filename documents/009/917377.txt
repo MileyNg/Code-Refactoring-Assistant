@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int rec[2000][1010];
+
+int main(void){
+	int N, M, r, q;
+	while(1){
+		memset(rec, 0, sizeof(rec));
+		cin >> N >> M;
+		if(!N) break;
+		cin >> r;
+		for(int i = 0; i < r; i++){
+			int t, n, m, s;
+			cin >> t >> n >> m >> s;
+			if(s)
+				rec[t][n] = m;
+			else
+				for(int tt = t - 1; rec[tt][n] != m; tt--) rec[tt][n] = m;
+		}
+		
+		cin >> q;
+		
+		for(int t = 0; t < q; t++){
+			int ans = 0;
+			int ts, te, m;
+			cin >> ts >> te >> m;
+			for(int j = ts; j < te; j++){
+				int f = 0;
+				for(int i = 1; i <= N; i++){
+					if(rec[j][i] == m) f = 1;
+				}
+				if(f) ans++;
+			}
+			cout << ans << endl;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,27 @@
+import std.stdio;
+import std.string;
+import std.conv;
+import std.math;
+
+int main() {
+    auto digit = 0;
+    string buf;
+    while ((buf = strip(readln())) != null) {
+        digit = calc_digit(buf);
+        writeln(calc_digit(buf));
+    }
+
+    return 0;
+}
+
+int calc_digit(string src) {
+    string[] seed = split(src);
+    int sum = to!(uint)(seed[0]) + to!(uint)(seed[1]);
+    uint digit = 0;
+
+    while (pow(10, digit) <= sum) {
+        digit += 1;
+    }
+
+    return digit;
+}

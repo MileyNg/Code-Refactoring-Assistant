@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <limits.h>
+
+int main(void) {
+	long i, n, val, tmin, trange;
+	
+	scanf("%ld\n", &n);
+	scanf("%ld\n", &tmin);
+	for(i=1,trange=LONG_MIN;i<n;i++) {
+		scanf("%ld\n", &val);
+		if(tmin > val) {
+			tmin = val;
+		} else if(trange < val-tmin) {
+			trange = val - tmin;
+		}
+	}
+
+	printf("%ld\n", trange);
+
+	return 0;
+}

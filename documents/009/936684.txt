@@ -1,0 +1,13 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+lines.shift();
+
+var result = 0;
+for (var i = 0; i < lines.length; i++) {
+	for (var j = i + 1; j < lines.length; j++) {
+		if (lines[j] - lines[i] > result)
+			result = lines[j] - lines[i];
+	}
+}
+
+console.log(result);

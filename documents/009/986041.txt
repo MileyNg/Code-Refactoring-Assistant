@@ -1,0 +1,107 @@
+#include <iostream>
+#include <string>
+#include <queue>
+#include <cmath>
+using namespace std;
+
+int cnt[11][11];
+long long int ans;
+
+#define MAX 20
+bool is_wall[MAX][MAX];
+int is_dirty[MAX][MAX];
+
+#define BIT_MAX (1 << 10)
+bool visited[MAX][MAX][BIT_MAX];
+
+#define DIRS 4
+int dx[DIRS] = {-1, 0, 0, 1};
+int dy[DIRS] = { 0,-1, 1, 0};
+
+bool is_ok(int x, int y, int w, int h){
+  return 0 <= x && x < w && 0 <= y && y < h;
+}
+ 
+int main() {
+  
+  int w, h;
+  
+  while(cin >> w >> h, w || h ) {
+    int start_x = -1, start_y = -1;
+    int dirtys = 0;
+
+    for(int i = 0; i < h; i++){
+      string line;
+      cin >> line;
+    
+      for(int j = 0; j < w; j++){
+	is_wall[i][j] = false;
+	is_dirty[i][j] = -1;
+	for(int k = 0; k < BIT_MAX; k++){
+	  visited[i][j][k] = false;
+	}
+
+	if(line[j] == 'x'){
+	  is_wall[i][j] = true;
+	}else if(line[j] == '*'){
+	  is_dirty[i][j] = dirtys++;
+	}else if(line[j] == 'o'){
+	  start_x = j;
+	  start_y = i;
+	}
+      }
+    }
+    
+    queue<int> xq, yq, tq, bq;
+    xq.push(start_x);
+    yq.push(start_y);
+    tq.push(0);
+    bq.push(0);
+    visited[start_y][start_x][0] = true;
+
+    bool answered = false;
+    while(!tq.empty()){
+      const int x    = xq.front(); xq.pop();
+      const int y    = yq.front(); yq.pop();
+      const int time = tq.front(); tq.pop();
+      const int bit  = bq.front(); bq.pop();
+      
+      if(bit == (1 << dirtys) - 1){
+	answered = true;
+	cout << time << endl;
+	break;
+      }
+ 
+      for(int dir = 0; dir < DIRS; dir++){
+	const int nx = x + dx[dir];
+	const int ny = y + dy[dir];
+	const int n_time = time + 1;
+	
+	if(!is_ok(nx, ny, w, h)){
+	  continue;
+	}else if(is_wall[ny][nx]){
+	  continue;
+	}
+
+	const int n_bit = bit | (is_dirty[ny][nx] < 0 ? 0 : (1 << is_dirty[ny][nx]));
+	
+	if(visited[ny][nx][n_bit]){
+	  continue;
+	}
+	
+	visited[ny][nx][n_bit] = true;
+	xq.push(nx);
+	yq.push(ny);
+	tq.push(n_time);
+	bq.push(n_bit);
+      }
+    }
+
+    if(!answered){
+      cout << -1 << endl;
+    }
+  }
+  
+  return 0;
+  
+}

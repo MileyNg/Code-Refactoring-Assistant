@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+int main (){
+
+  int a,b,c,d,e,r,A;
+
+  cin >>a>>b;
+
+  if( b > a ){
+    A=a;
+    a=b; 
+    b=A;
+  }
+
+  while( b  > 0 ){
+    r=a%b;
+    a=b;
+    b=r;
+  }
+    
+  if( b == 0 ){
+    cout <<a<<endl;
+  }else if( b >= 1 && a >= b ){
+    c=a%b;
+    for( int i=b ; i >= 1 ; i-- ){
+      d=c%i;
+      e=b%i;
+      if( d == 0 && e == 0 ){
+	cout <<i<<endl;
+	break;
+      }
+    }
+  }
+ 
+  return 0;
+}

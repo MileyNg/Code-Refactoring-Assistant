@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void){
+	int n;
+	double x1,y1,x2,y2,x3,y3,a,b,c,s,ss,sina,r,px,py;
+	scanf("%d",&n);
+	while (n--){
+		scanf("%lf %lf %lf %lf %lf %lf",&x1,&y1,&x2,&y2,&x3,&y3);
+		a = sqrt(pow(x1-x2,2)+pow(y1-y2,2));
+		b = sqrt(pow(x1-x3,2)+pow(y1-y3,2));
+		c = sqrt(pow(x2-x3,2)+pow(y2-y3,2));
+		s = (a+b+c)/2;
+		ss = sqrt(s*(s-a)*(s-b)*(s-c));
+		sina = 2*ss/b/c;
+		r = a/sina/2;
+		a = a*a; b = b*b; c = c*c;
+		px = (a*(b+c-a)*x3 + b*(a+c-b)*x2+c*(a+b-c)*x1)/16/pow(ss,2);
+		py = (a*(b+c-a)*y3 + b*(a+c-b)*y2+c*(a+b-c)*y1)/16/pow(ss,2);
+		printf("%.3f %.3f %.3f\n",px, py, r);
+	}
+}

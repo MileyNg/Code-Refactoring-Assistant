@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string>
+#include <climits>
+using namespace std;
+
+int conv(char a) {
+  if (a >= '0' && a <= '9') {
+    return a - '0';
+  } else {
+    return a - 'a' + 10;
+  }
+}
+
+int conv(char a, char b) {
+  return conv(a)*16 + conv(b);
+}
+
+int main() {
+  string str;
+  int c[3], d, m, ans;
+  int cc[8][3] = {{0, 0, 0}, {0, 0, 0xff}, {0, 0xff, 0}, {0, 0xff, 0xff},
+                  {0xff, 0, 0}, {0xff, 0, 0xff}, {0xff, 0xff, 0}, {0xff, 0xff, 0xff}};
+  const char *label[8] = {"black", "blue", "lime", "aqua", "red", "fuchsia", "yellow", "white"};
+
+  while (1) {
+    cin >> str;
+    if (str == "0") break;
+    for (int i=0; i<3; i++) {
+      c[i] = conv(str.at(2*i+1), str.at(2*i+2));
+    }
+    m = INT_MAX;
+    ans = -1;
+    for (int i=0; i<8; i++) {
+      d = 0;
+      for (int j=0; j<3; j++) {
+        d += (c[j]-cc[i][j])*(c[j]-cc[i][j]);
+      }
+      if (m > d) {
+        m = d;
+        ans = i;
+      }
+    }
+    cout << label[ans] << endl;
+  }
+  return 0;
+}

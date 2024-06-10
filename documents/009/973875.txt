@@ -1,0 +1,114 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=x && x<w && 0<=y && y<h)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+const int MAX = 2*123500;
+
+/** Problem0243 : Filling Game **/
+typedef struct {
+	char field[10][10];
+	bool area[10][10];
+	int cost;
+} S;
+
+int w, h;
+string list = "RGB";
+void bond(char f[10][10], bool b[10][10])
+{
+	bool vis[10][10];
+	queue<P> Q;
+	fill(vis[0], vis[0]+10*10, false);
+	Q.push(P(0, 0));
+	
+	while (Q.size()) {
+		P p = Q.front(); Q.pop();
+		if (vis[p.first][p.second]) continue;
+		else vis[p.first][p.second]=true;
+		
+		rep(i, 4) {
+			int nx=p.first+dx[i], ny=p.second+dy[i];
+			if_range(nx, ny, w, h) {
+				if (f[nx][ny] == f[p.first][p.second]) {
+					b[nx][ny] = true;
+					Q.push(P(nx, ny));
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	while (cin>>w>>h, h||w) {
+		
+		queue<S> Q;
+		S first;
+		
+		rep(y, h) rep(x, w) {
+			cin >> first.field[x][y];
+			first.area[x][y]=false;
+		}
+		
+		first.area[0][0]=true;
+		bond(first.field, first.area);
+		
+		rep(y, h) rep(x, w) {
+			rep(i, 4) {
+				int nx=x+dx[i], ny=y+dy[i];
+				if (0<=nx&&nx<w&&0<=ny&&ny<h&&first.area[x][y]&&first.field[0][0]==first.field[nx][ny])
+					first.area[nx][ny]=true;
+			}
+		}
+		
+		first.cost = 0;
+		Q.push(first);
+		
+		while (Q.size()) {
+			S s = Q.front();
+			
+			bool flg=true;
+			rep(y, h) {
+				rep(x, w) {
+					flg &= s.area[x][y];
+				}
+				if (!flg) break;
+			}
+			if (flg) {
+				cout << s.cost << endl;
+				break;
+			}
+			rep(i, 3) {
+				if (s.field[0][0]==list[i]) continue;
+				rep(y, h) rep(x, w) {
+					if (s.area[x][y])
+						s.field[x][y] = list[i];
+				}
+				bond(s.field, s.area);
+				s.cost++;
+				Q.push(s);
+				s = Q.front();
+			}
+			Q.pop();
+		}
+	}
+}

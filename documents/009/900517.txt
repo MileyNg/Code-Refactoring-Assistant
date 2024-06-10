@@ -1,0 +1,42 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+typedef vector <int> vi;
+#define REP(i,n) for(i=0;i<n;i++)
+
+struct branch{
+	int n1,n2,w;
+};
+bool f(branch i, branch j){
+	return (i.w>j.w);
+}
+int main(){
+	while (1){
+		int n,i;
+		char c;
+		cin>>n;
+		if(n==0)break;
+		vector<int>T(n);
+		REP(i,n)T[i]=i;
+
+		branch tmp;
+		int m; cin>>m;
+		vector<branch>S(m);
+		REP(i,m) cin>>S[i].n1>>c>>S[i].n2>>c>>S[i].w;
+		sort(S.begin(),S.end(),f);
+
+		int a=0;
+		while(S.size()){
+			tmp=S.back();
+			S.pop_back();
+			int b=T[tmp.n1],c=T[tmp.n2];
+			if (b!=c){
+				for(i=0;i<n;i++)
+					if(T[i]==c)T[i]=b;
+				a+=tmp.w/100-1;
+			}
+		}
+		cout<<a<<endl;
+	}
+}

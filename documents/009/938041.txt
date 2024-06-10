@@ -1,0 +1,56 @@
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+#define MH 100
+int H, W;
+string F[MH];
+
+bool input() {
+    cin >> H >> W;
+    if (H == 0 && W == 0) return false;
+    for (int i = 0; i < H; i++) cin >> F[i];
+    return true;
+}
+
+void dfs(int y, int x, char c) {
+    static const int dy[] = {0, 1, 0, -1},
+                     dx[] = {1, 0, -1, 0};
+    F[y][x] = 'x';
+    for (int i = 0; i < 4; i++) {
+        int ny = y + dy[i],
+            nx = x + dx[i];
+        if (ny < 0 || ny >= H) continue;
+        if (nx < 0 || nx >= W) continue;
+        if (F[ny][nx] == c) {
+            dfs(ny, nx, c);
+        }
+    }
+}
+
+void solve() {
+    int ans = 0;
+    for (int y = 0; y < H; y++) {
+        for (int x = 0; x < W; x++) {
+            if (F[y][x] == 'x') continue;
+            ans++;
+            dfs(y, x, F[y][x]);
+        }
+    }
+    cout << ans << endl;
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

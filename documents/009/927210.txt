@@ -1,0 +1,56 @@
+#include<cstdio>
+#include<queue>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<set>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+
+int main(){
+	int n;
+	cin>>n;
+	
+	
+	rep(i,n){
+		map<string,int> ans;
+		string str;
+		cin>>str;
+		
+		reps(j,1,str.size()){
+			string sb1 = str.substr(0,j);
+			string sb2 = str.substr(j,str.size()-j);
+			
+			
+			string resb1 = sb1;
+			reverse(resb1.begin(),resb1.end());
+			string resb2 = sb2;
+			reverse(resb2.begin(),resb2.end());
+			
+			ans[sb1+sb2]=1;
+			ans[resb1+sb2]=1;
+			ans[sb1+resb2]=1;
+			ans[resb1+resb2]=1;
+			
+			ans[sb2+sb1]=1;
+			ans[resb2+sb1]=1;
+			ans[sb2+resb1]=1;
+			ans[resb2+resb1]=1;
+		}
+		printf("%d\n",ans.size());
+	}
+	
+	
+}
+
+/*
+1
+abcd
+
+*/

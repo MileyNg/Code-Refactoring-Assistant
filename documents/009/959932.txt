@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+#include <unistd.h>
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,n) loop(i,0,n)
+
+using namespace std;
+
+char win[10][10];
+
+inline void pon(int n){
+    printf("%d\n", n);
+    fflush(stdout);
+}
+
+inline int get(){
+    int res;
+    scanf("%d",&res);
+    return res;
+}
+
+int main(){
+    srand(time(0u)+getpid());
+
+    int n;
+    scanf("%d",&n);
+    rep(i,n) scanf("%s", win[i]);
+
+    bool change = true;
+    int h;
+    rep(i,1000){
+        if(change) h = rand()%n+1;
+        pon(h);
+        int e=get()-1;
+        if(win[h][e]=='o') change = false;
+        else change = true;
+    }
+}

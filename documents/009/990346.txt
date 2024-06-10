@@ -1,0 +1,21 @@
+module Alphametic
+
+  def self.solve(input)
+    candidate = 0..9
+    if input =~ /\+X(\d)+/ or input =~ /=X(\d)+/
+      candidate = 1..9
+    end
+
+    found = candidate.find do |i|
+      replaced = input.gsub('X', i.to_s)
+      replaced.sub!('=', '==')
+      eval(replaced)
+    end
+
+    found ||= "NA"
+  end
+end
+
+while line = $stdin.gets
+  puts Alphametic.solve(line)
+end

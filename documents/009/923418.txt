@@ -1,0 +1,114 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <complex>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 30;
+
+
+
+// 以下 幾何部分
+template<class T> bool operator==(T a, T b){return abs(a-b)< eps;}
+template<class T> int sig(T r) {return (r==0||r==-0) ? 0 : r > 0 ? 1 : -1;}
+#define X real()
+#define Y imag()
+
+typedef bool B;
+typedef long double D;
+typedef complex <D> P;
+typedef vector <P> Pol;
+
+// ソートのキー
+bool cmp_x(const P &a,const P &b){ return (abs(a.X-b.X)<eps ) ?  a.Y<b.Y : a.X<b.X;}
+bool cmp_y(const P &a,const P &b){ return (abs(a.Y-b.Y)<eps ) ?  a.X<b.X : a.Y<b.Y;}
+bool cmp_a(const P &a,const P &b){ return (abs(a.X-b.X)<eps ) ?  norm(a) < norm(b) : a.X<b.X;}
+
+
+// 
+D ip(P a, P b) {return a.X * b.X + a.Y * b.Y;}
+D ep(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+D sr(D a) {return sqrt(max(a, (D)0));}
+
+Pol convex_hull(Pol pol){
+	int n=pol.size();
+	sort(pol.begin(),pol.end(),cmp_x);
+	Pol res(2*n);
+	int k=0;
+	
+	// down
+	rep(i,n){
+		while( k>1 && ep(res[k-1]-res[k-2],pol[i]-res[k-1])<=0) k--;
+		res[k++]=pol[i];
+	}
+	// up
+	for(int i=n-2,t=k;i>=0;i--){
+		while( k>t && ep(res[k-1]-res[k-2],pol[i]-res[k-1])<=0) k--;
+		res[k++]=pol[i];
+	}
+	res.resize(k-1);
+	return res;
+}
+
+int main(void){
+	int n;
+	while(cin >> n, n){
+		Pol a(n);
+		rep(i,n){
+			P tmp;
+			char buf;
+			cin >> tmp.X >> buf >> tmp.Y;
+			a[i]=tmp;
+		}
+		Pol b=convex_hull(a);
+	//	dump(a.size())
+	//	dump(b.size())
+		cout << a.size()-b.size() << endl;
+	}
+	return 0;
+}

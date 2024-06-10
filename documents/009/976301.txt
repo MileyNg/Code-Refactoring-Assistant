@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int dijkstra(const vector<vector<int>>& to, const vector<vector<int>>& w, int s, int t, int n) {
+  vector<int> weight(n, 1000000000);
+  weight[s] = 0;
+  priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> q;
+  q.push(make_pair(0,s));
+  while(!q.empty()){
+    auto p = q.top(); q.pop();
+    if(p.first > weight[p.second]) continue;
+    for(int i = 0;i < to[p.second].size(); ++i) {
+      if (weight[to[p.second][i]] > p.first + w[p.second][i]) {
+        weight[to[p.second][i]] = p.first + w[p.second][i];
+        q.push(make_pair(weight[to[p.second][i]], to[p.second][i]));
+      }
+    }
+  }
+  return weight[t];
+}
+
+
+int main() {
+  while(1){
+    int n,m;
+    cin>>n>>m;
+    if(!n) break;
+    vector<vector<int>> to(m);
+    vector<vector<int>> cost(m);
+    vector<vector<int>> time(m);
+    for (int i = 0; i < n; ++i) {
+      int a, b, c, t;
+      cin >> a >> b >> c >> t;
+      --a;--b;
+      to[a].push_back(b);
+      to[b].push_back(a);
+      cost[a].push_back(c);
+      cost[b].push_back(c);
+      time[a].push_back(t);
+      time[b].push_back(t);
+    }
+    int k;
+    cin >> k;
+    for (int i = 0; i < k; ++i) {
+      int p,q,r;
+      cin >> p >> q >> r;
+      --p;--q;
+      if (r == 0) {
+        cout << dijkstra(to,cost,p,q, m) << endl;
+      } else {
+        cout << dijkstra(to,time,p,q, m) << endl;
+      }
+    }
+  }
+  return 0;
+}

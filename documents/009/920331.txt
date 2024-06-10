@@ -1,0 +1,43 @@
+#include <iostream>
+using namespace std;
+
+/** Problem0067 : The Number of Island **/
+char map[12][12];
+
+void dfs(int x, int y);
+
+void dfs(int x, int y)
+{
+	map[x][y] = '0';
+	
+	if (0 <= x-1 && map[x-1][y] == '1') dfs(x-1, y);
+	if (x+1 < 13 && map[x+1][y] == '1') dfs(x+1, y);
+	if (0 <= y-1 && map[x][y-1] == '1') dfs(x, y-1);
+	if (y+1 < 13 && map[x][y+1] == '1') dfs(x, y+1);
+}
+
+int main()
+{
+	int count;
+	
+	while (1) {
+		count = 0;
+
+		
+		for (int i=0; i<12; i++)
+			cin >> map[i];
+		
+		if (cin.eof()) break;
+		
+		for (int i=0; i<12; i++)
+			for (int j=0; j<12; j++)
+				if (map[i][j] == '1') {
+					dfs(i, j);
+					count++;
+				}
+		
+		cout << count << endl;
+	}
+	
+	return 0;
+}

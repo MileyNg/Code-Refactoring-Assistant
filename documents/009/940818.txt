@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <random>
+
+using namespace std;
+
+void QuickSort(vector<int> &vec, int start, int end);
+int RandPartition(vector<int> &vec, int start, int end);
+int Partition(vector<int> &vec, int start, int end);
+
+int main(void)
+{
+    int i;
+    int n;
+    vector<int> vec;
+    
+    cin >> n;
+    vec.resize(n);
+    for (i = 0; i < n; i++) {
+        cin >> vec[i];
+    }
+    QuickSort(vec, 0, n - 1);
+    
+    for (i = 0; i < n; i++) {
+        if ( i ) {
+            cout << " ";
+        }
+        cout << vec[i];
+    }
+    cout << endl;
+    
+    return 0;
+}
+
+void QuickSort(vector<int> &vec, int start, int end)
+{
+    if (start < end) {
+        start = Partition(vec, start, end);
+        QuickSort(vec, start, end - 1);
+        QuickSort(vec, start + 1, end);
+    }
+}
+
+int RandPartition(vector<int> &vec, int start, int end)
+{
+    int i;
+    random_device rd;
+	mt19937_64 mt(rd());
+    
+    i = start + mt() % (end - start);
+    swap(vec[i], vec[end - 1]);
+    
+    return Partition(vec, start, end);
+}
+
+int Partition(vector<int> &vec, int start, int end)
+{
+    int i = start - 1;
+    int j;
+    int pivot = vec[end];
+    
+    for (j = start; j < end; j++) {
+        if (vec[j] < pivot) {
+            i++;
+            swap(vec[i], vec[j]);
+        }
+    }
+    swap(vec[i + 1], vec[end]);
+    
+    return i + 1;
+}

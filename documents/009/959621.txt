@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int main () {
+    int n, w, i, j, itmv, itmw, v1, v2;
+    int value[100], weight[100];
+    int **wv, *wv_data;
+
+    scanf("%d %d", &n, &w);
+    for (i=0; i<n; i++) {
+        scanf("%d %d", &value[i], &weight[i]);
+    }
+
+    wv_data = (int*)malloc(sizeof(int) * (n+1) * (w+1));
+    wv = (int**)malloc(sizeof(int*) * (n+1));
+    for (i = 0; i <= n; i++) {
+        wv[i] = &(wv_data[i*(w+1)]);
+    }
+
+    for (i=0; i <= w; i++) {
+        wv[0][i] = 0;
+    }
+    for (i=1; i <= n; i++) {
+        wv[i][0] = 0;
+    }
+
+    for (i = 1; i <= n; i++) {
+        itmv = value[i-1];
+        itmw = weight[i-1];
+        for (j = 1; j <= w; j++) {
+            if (j >= itmw) {
+                v1 = wv[i][j-itmw] + itmv;
+                v2 = wv[i-1][j];
+                wv[i][j] = v1 > v2 ? v1 : v2;
+            }
+            else {
+                wv[i][j] = wv[i-1][j];
+            }
+        }
+    }
+    printf("%d\n", wv[n][w]);
+
+    free(wv_data);
+    free(wv);
+
+    return 0;
+}

@@ -1,0 +1,225 @@
+
+
+#include <cstdio>
+#include <climits>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+static int N, M, R;
+
+
+
+static int dist_l[201][201];
+static int dist_s[201][201];
+
+static int dest[1001];
+
+
+
+static void flood()
+{
+	int i, j, k;
+
+	for (k=1; k<=N; k++) {
+		for (i=1; i<=N; i++) {
+			if (i==k || dist_l[i][k]==INT_MAX)
+				continue;
+			for (j=i+1; j<=N; j++) {
+				if (j==k || dist_l[k][j]==INT_MAX)
+					continue;
+				if (dist_l[i][j] > dist_l[i][k]+dist_l[k][j]) {
+					dist_l[i][j] = dist_l[j][i] = dist_l[i][k]+dist_l[k][j];
+				}
+			}
+		}
+
+	}
+
+	for (k=1; k<=N; k++) {
+		for (i=1; i<=N; i++) {
+			if (k==i || dist_s[i][k]==INT_MAX) continue;
+			for (j=i+1; j<=N; j++) {
+				if (j==k || dist_s[k][j]==INT_MAX) continue;
+				if (dist_s[i][j] > dist_s[i][k] + dist_s[k][j]) {
+					dist_s[i][j] = dist_s[j][i] = dist_s[i][k] + dist_s[k][j];
+				}
+			}
+		}
+
+	}
+
+}
+
+
+static int dp[1001][201];
+
+static void solve()
+{
+	flood();
+
+	int i, j;
+
+	for (i=0; i<=R; i++) {
+		for (j=1; j<=N; j++)
+			dp[i][j] = INT_MAX;
+	}
+	int z0 = dest[1];
+	
+	for (j=1; j<=N; j++) {
+		if (dist_l[j][z0]!=INT_MAX && dist_s[z0][j]!=INT_MAX) {
+			if (dp[1][j] > dist_l[j][z0] + dist_s[z0][j])
+				dp[1][j] = dist_l[j][z0] + dist_s[z0][j];
+		}
+	}
+
+	for (i=2; i<=R; i++) {
+
+		int start, end;
+		int total_land_cost;
+
+		start = dest[i-1]; end = dest[i];
+
+		for (j=1; j<=N; j++) {
+			if (dp[i-1][j]!=INT_MAX) {
+				int k;
+
+				for (k=1; k<=N; k++) {
+					if (k!=j) {
+						int c1, c2, c3;
+						c1 = dist_l[start][j];
+						c2 = dist_s[j][k];
+						c3 = dist_l[k][end];
+						//printf("c1=%d c2=%d c3=%d\n", c1, c2, c3);
+						if (c1==INT_MAX || c2==INT_MAX || c3==INT_MAX) continue;
+						if (dp[i][k] > c1+c2+c3+dp[i-1][j]) {
+							dp[i][k] = c1+c2+c3+dp[i-1][j];
+							//printf("s_end[%d] = %d\n", k, s_end[k]);
+						}
+					}
+					else {
+						if (dist_l[start][end]!=INT_MAX && dp[i][k] > dp[i-1][k]+dist_l[start][end])
+							dp[i][k] = dp[i-1][k]+dist_l[start][end];
+					}
+				}
+			}
+		}
+
+	}
+
+	int min = INT_MAX;
+	for (i=1; i<=N; i++) {
+		if (min > dp[R][i])
+			min = dp[R][i];
+	}
+
+	printf("%d\n", min);
+
+}
+
+
+static void solve1()
+{
+	flood();
+
+
+
+	int i, j;
+
+	for (i=0; i<=R; i++) {
+		for (j=1; j<=N; j++)
+			dp[i][j] = INT_MAX;
+	}
+	dp[0][1] = 0;
+
+	for (i=1; i<=R; i++) {
+
+		int start, end;
+		int total_land_cost;
+
+		start = dest[i-1]; end = dest[i];
+
+		total_land_cost = dist_l[start][end];
+
+		for (j=1; j<=N; j++) {
+			if (dp[i-1][j]!=INT_MAX) {
+				if (total_land_cost!=INT_MAX) {
+					if (dp[i][j] > dp[i-1][j]+total_land_cost)
+						dp[i][j] = dp[i-1][j]+total_land_cost;
+				}
+				int k;
+
+				for (k=1; k<=N; k++) {
+					if (k==j) continue;
+					int c1, c2, c3;
+					c1 = dist_l[start][j];
+					c2 = dist_s[j][k];
+					c3 = dist_l[k][end];
+					//printf("c1=%d c2=%d c3=%d\n", c1, c2, c3);
+					if (c1==INT_MAX || c2==INT_MAX || c3==INT_MAX) continue;
+					if (dp[i][k] > c1+c2+c3+dp[i-1][j]) {
+						dp[i][k] = c1+c2+c3+dp[i-1][j];
+						//printf("s_end[%d] = %d\n", k, s_end[k]);
+					}
+				}
+			}
+		}
+
+	}
+
+	int min = INT_MAX;
+	for (i=1; i<=N; i++) {
+		if (min > dp[R][i])
+			min = dp[R][i];
+	}
+
+	printf("%d\n", min);
+
+}
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	while (scanf("%d%d", &N, &M)==2) {
+		if (N==0 && M==0) break;
+		int i, j;
+
+		for (i=1; i<=N; i++) {
+			dist_l[i][i] = dist_s[i][i] = 0;
+			for (j=i+1; j<=N; j++) {
+				dist_l[i][j] = dist_l[j][i] = dist_s[i][j] = dist_s[j][i] = INT_MAX;
+			}
+		}
+
+		for (i=0; i<M; i++) {
+			int x, y, t;
+			char c;
+			scanf("%d%d%d", &x, &y, &t);
+			do { c=getchar();
+			} while (c!='S' && c!='L');
+
+			if (c=='S') {
+				if (dist_s[x][y] > t)
+					dist_s[x][y] = dist_s[y][x] = t;
+			}
+			else {
+				if (dist_l[x][y] > t)
+					dist_l[x][y] = dist_l[y][x] = t;
+			}
+		}
+
+		scanf("%d", &R);
+		dest[0] = 1;
+		for (i=1; i<=R; i++) {
+			scanf("%d", &dest[i]);
+		}
+
+		solve();
+
+	}
+
+	return 0;
+}

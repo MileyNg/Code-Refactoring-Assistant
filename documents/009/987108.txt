@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+#define HP 6
+#define M(a, b) make_pair(a, b)
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int w, h;
+int d[8][8];
+int dp[8][8];
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+
+int main(){
+  while(scanf("%d%d", &w, &h) && w+h){
+    int y, x;
+    rep(i, h) rep(j, w){
+      scanf("%d", &d[i][j]);
+      if(d[i][j] != 2) continue;
+      y = i; x = j;
+      d[i][j] = 1;
+    }
+
+    rep(i, h) rep(j, w) dp[i][j] = INF;
+    dp[y][x] = 0;
+
+    queue<pii> q;
+    q.push(M(HP, M(y, x)));
+    map<pi, bool> m;
+    int t = 1;    
+    while(!q.empty()){
+      int qsize = (int)q.size();
+      rep(i, qsize){
+	pii now = q.front(); q.pop();
+	rep(j, 4){
+	  int nt = now.F - 1, ny = now.S.F + dy[j], nx = now.S.S + dx[j];
+	  if(nt == 0 || ny < 0 || nx < 0 || ny >= h || nx >= w || d[ny][nx] == 0) continue;
+	  if(!m.count(M(ny, nx)) && d[ny][nx] == 4){
+	    nt = 6;
+	    m[M(ny, nx)] = true;
+	  }else if(d[ny][nx] == 3){
+	    printf("%d\n", t);
+	    goto e;
+	  }
+
+	  q.push(M(nt, M(ny, nx)));
+	}
+      }
+      t++;
+    }
+    puts("-1");
+  e:;
+  }
+  return 0;
+}

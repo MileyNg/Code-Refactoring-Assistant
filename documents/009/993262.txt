@@ -1,0 +1,28 @@
+#include<stdio.h>
+
+int ttos(int h,int m,int s){
+  int a=3600*h+60*m+s;
+  return a;
+}
+
+void stot(int s){
+  int h=s/3600;
+  int s1=s%3600;
+  int m=s1/60;
+  int s2=s1%60;
+  printf("%d %d %d\n",h,m,s2);
+}
+
+void doit(){
+  int h1,m1,s1,h2,m2,s2;
+  while(scanf("%d %d %d %d %d %d",&h1,&m1,&s1,&h2,&m2,&s2)!=EOF){
+    int s3=ttos(h1,m1,s1);
+    int s4=ttos(h2,m2,s2);
+    stot(s4-s3);
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

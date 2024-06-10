@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<stdbool.h>
+#define N 4001
+
+typedef struct{
+  int number;
+  int score;
+}DATA;  
+
+DATA data[N];
+
+void init()
+{
+  int i;
+  for(i=0;i<N;i++)
+    {
+      data[i].score=0;
+      data[i].number=0;
+    }
+}
+
+
+int main()
+{
+  int n,i,j,number,value,amount,count;
+  bool flag;
+  while(1)
+    {
+      init();
+      flag = true;
+      count = 0;
+      scanf("%d",&n);
+      if(n==0) break;
+      for(i=0;i<n;i++)
+	{
+	  scanf("%d %d %d",&number,&value,&amount);
+	  for(j=0;j<=count;j++){
+	    if(data[j].number==number){
+	      data[j].score += value * amount;
+	      break;
+	    }
+	    if(j == count){
+	      data[count].number = number; 
+	      data[count].score += value * amount;
+	      count++;
+	      break;
+	    }
+	  }
+	}
+      for(i=0;i<count;i++)
+	{
+	  if(data[i].score>=1000000){
+	    printf("%d\n",data[i].number);
+	    flag = false;
+	  }
+	}
+      if(flag) printf("NA\n");	  
+    }
+  return 0;
+}

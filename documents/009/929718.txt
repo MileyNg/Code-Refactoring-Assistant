@@ -1,0 +1,17 @@
+#include <stdio.h>
+#include <math.h>
+int main(void) {
+	double x1, x2, x3, px, y1, y2, y3, py, r;
+	double a1, a2, aslo, b1, b2, bslo;
+	int n, i;
+	
+	scanf("%d", &n);
+	for(i = 1; i <= n; i++){
+		scanf("%lf %lf %lf %lf %lf %lf", &x1, &y1, &x2, &y2, &x3, &y3);
+		px = ((y1-y3)*(x2*x2-x1*x1+y2*y2-y1*y1)-(y1-y2)*(x3*x3-x1*x1+y3*y3-y1*y1)) / (-2*(x1-x2)*(y1-y3)+2*(x1-x3)*(y1-y2));
+		py = ((x1-x3)*(x2*x2-x1*x1+y2*y2-y1*y1)-(x1-x2)*(x3*x3-x1*x1+y3*y3-y1*y1)) / (-2*(x1-x3)*(y1-y2)+2*(x1-x2)*(y1-y3));
+		r = sqrt((px - x1) * (px - x1) + (py - y1) * (py - y1));
+		printf("%lf %lf %lf\n", px, py, r);
+	}
+	return 0;
+}

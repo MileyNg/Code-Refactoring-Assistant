@@ -1,0 +1,45 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/19 02:46:20 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <climits>
+#include <set>
+#include <bitset>
+
+#define MP(a, b) make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+int main(int argc, char *argv[])
+{
+  int n,m;
+  std::cin>>n>>m;
+  std::vector<int> a(m);
+  std::vector<int> b(n+1,100000000);
+  int t;
+  rep(i,m){
+    std::cin >> t;
+    a[i] = t;
+  }
+  b[0]=0;
+  rep(i,n+1){
+    reu(j,0,m){
+      if(i-a[j]>=0)
+	amin(b[i],b[i-a[j]]+1);
+    }
+  }
+  std::cout<<b[n]<<std::endl;
+
+  return 0;
+}

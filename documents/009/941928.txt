@@ -1,0 +1,37 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+/** Problem0112 : A Milk Shop **/
+int main()
+{
+	vector<ll> c;
+	ll t, n, ans;
+
+	while (cin>>n, n!=0) {
+		c.clear();
+		ans=0;
+		rep(i, n) {
+			cin >> t;
+			c.push_back(t);
+		}
+		sort(c.begin(), c.end());
+		rep(i, n) {
+			ans += c[i]*(n-i-1);
+		}
+		cout << ans << endl;
+	}
+	
+	return 0;
+}

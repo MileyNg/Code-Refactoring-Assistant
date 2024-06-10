@@ -1,0 +1,52 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+
+int i,j,d,n1,n2,n3,k,temp;
+
+
+   cin >> d;
+   while(d <= 1 or d >= 1000){
+       cin >> d;
+   }
+ 
+
+ 
+ int l[d][3];
+ 
+
+//入力
+for(i=0; i<d; i++){
+   cin >> n1 >> n2 >> n3;
+   
+   if(n1 >= 1 and n1 <= 1000 and n2 >= 1 and n2 <=1000 and n3 >= 1 and n3 <= 1000){
+       l[i][0]=n1;
+       l[i][1]=n2;
+       l[i][2]=n3;
+        for (k = 0; k < 2; k++) {
+        for (j = 2; j > k; j--) {
+            if (l[j - 1] > l[j]) {  
+                temp = l[i][j];  
+                l[i][j] = l[i][j - 1];
+                l[i][j - 1] = temp;
+            }
+        }
+    }
+   }else{
+   i--;
+   }
+}
+
+    
+//出力
+for (i = 0; i < d; i++) {
+    if(l[i][2]*l[i][2] == (l[i][1]*l[i][1]+l[i][0]*l[i][0])){
+    cout << "YES\n";
+    }else{
+    cout << "NO\n";
+    }
+}
+
+    return 0;
+}

@@ -1,0 +1,51 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+const string INF = "~";
+
+class Edge {
+public:
+    int from, to;
+    string cost;
+    Edge(int f, int t, string c) :from(f), to(t), cost(c) {}
+};
+
+int n, a, s, g;
+vector<Edge> edge;
+
+bool operator<(const string& s1, const string& s2) {
+    for(int i = 0; i < min(s1.size(), s2.size()); ++i) if(s1[i] != s2[i]) return s1[i] < s2[i];
+    return s1.size() < s2.size();
+}
+
+string BellmanFord() {
+    vector<string> memo(n, INF);
+    memo[g] = "";
+    for(int step = 0; step <= 6 * n; ++step) {
+        for(const auto& e: edge) {
+            int v = e.from;
+            int u = e.to;
+            string cost = e.cost;
+            if(cost + memo[u] < memo[v]) {
+                memo[v] = cost + memo[u];
+                if(v == s && step >= n) return INF;
+            }
+        }
+    }
+    return memo[s];
+}
+
+int main() {
+    while(cin >> n >> a >> s >> g, n | a | s | g) {
+        edge.clear();
+        for(int i = 0; i < a; ++i) {
+            int x, y;
+            string lab;
+            cin >> x >> y >> lab;
+            edge.push_back(Edge(x, y, lab));
+        }
+        string answer = BellmanFord();
+        cout << (answer != INF ? answer : "NO") << endl;
+    }
+}

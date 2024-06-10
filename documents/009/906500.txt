@@ -1,0 +1,45 @@
+#include<iostream>
+#include<map>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define mp make_pair
+
+int main(){
+    int n;
+    string a;
+    long long b,c;
+    map<string,long long> data;
+    vector<string> id;
+    while(cin>>n, n){
+        id.clear();
+        data.clear();
+        rep(i,n){
+            cin>>a>>b>>c;
+            c*=b;
+            if(data.find(a)==data.end()){
+                data.insert(mp(a,c));
+                id.push_back(a);
+            }
+            else{
+                data[a]+=c;
+            }
+        }
+
+        bool empty = true;
+        rep(i,id.size()){
+            if(data[id[i]]>=1000000){
+                cout<<id[i]<<endl;
+                empty = false;
+            }
+        }
+        if (empty)
+            cout<<"NA"<<endl;
+
+    }
+    return 0;
+}

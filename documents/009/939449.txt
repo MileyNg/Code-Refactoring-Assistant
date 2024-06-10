@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int to10(const string &s) {
+  int x = 0;
+  for(int i = 0; i < s.size(); ++i) {
+    int d;
+    if(isdigit(s[i])) d = s[i] - '0';
+    else d = 10 + s[i] - 'a';
+    x = x * 16 + d;
+  }
+  return x;
+}
+
+vector<int> conv(const string &s) {
+  vector<int> res(3);
+  res[0] = to10(s.substr(1,2));
+  res[1] = to10(s.substr(3,2));
+  res[2] = to10(s.substr(5,2));
+  return res;
+}
+
+int norm(vector<int> a, vector<int> b) {
+  int res = 0;
+  for(int i = 0; i < 3; ++i) {
+    int sub = a[i] - b[i];
+    res += sub * sub;
+  }
+  return res;
+}
+
+
+int main() {
+  vector<string> name;
+  vector<vector<int> > v;
+  name.push_back("black");
+  v.push_back(conv("#000000"));
+  name.push_back("blue");
+  v.push_back(conv("#0000ff"));
+  name.push_back("lime");
+  v.push_back(conv("#00ff00"));
+  name.push_back("aqua");
+  v.push_back(conv("#00ffff"));
+  name.push_back("red");
+  v.push_back(conv("#ff0000"));
+  name.push_back("fuchsia");
+  v.push_back(conv("#ff00ff"));
+  name.push_back("yellow");
+  v.push_back(conv("#ffff00"));
+  name.push_back("white");
+  v.push_back(conv("#ffffff"));
+  string s;
+  while(cin >> s && s != "0") {
+    vector<int> x = conv(s);
+    int k = 0;
+    for(int i = 1; i < v.size(); ++i) {
+      if(norm(x, v[i]) < norm(x, v[k])) {
+        k = i;
+      }
+    }
+    cout << name[k] << endl;
+  }
+  return 0;
+}

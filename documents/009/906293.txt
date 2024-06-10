@@ -1,0 +1,41 @@
+#include <cstdio>
+#include <queue>
+#include <set>
+
+using namespace std;
+
+int main(){
+  int N,M,in,cnt = 0;
+  queue<int> Q;
+  set<int> st;
+
+  scanf("%d %d" ,&N ,&M);
+  while(N--){
+    scanf("%d" ,&in);
+   
+    cnt++;
+
+    if(cnt > M){
+      if(st.count(in)){
+	continue;
+      }
+      cnt--;
+      int t = Q.front();
+      st.erase(t);
+      Q.pop();
+    }
+    Q.push(in);    
+    st.insert(in);
+  }
+
+  int a[M],pos = 0;
+  while(!Q.empty()){
+    a[pos++] = Q.front(); Q.pop();
+  }
+
+  for(int i = pos-1 ; i >= 0 ; i--){
+    printf("%d\n" ,a[i]);
+  } 
+
+  return 0;
+}

@@ -1,0 +1,35 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  const int M=1000000007;
+  int N,W;
+  cin>>N>>W;
+  vector<int> v(N);
+  for(auto &e:v){
+    cin>>e;
+  }
+  sort(v.rbegin(),v.rend());
+  vector<int> r(N);
+  r.back()=v.back();
+  for(int i=N-2;i>=0;i--){
+    r[i]=r[i+1]+v[i];
+  }
+  int dp[10001]={1};
+  for(int j=0;j<N;j++){
+    for(int i=W;i-v[j]>=0;i--){
+      dp[i]=(dp[i]+dp[i-v[j]])%M;
+      if(i-v[j]+r[j]<=W){
+	dp[i-v[j]]=0;
+      }
+    }
+  }
+  int s=0;
+  for(auto e:dp){
+    s=(s+e)%M;
+  }
+  cout<<s<<endl;
+}

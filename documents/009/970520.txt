@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+
+int main() {
+	int n;
+	while(std::cin >> n){
+		if(!n){
+			return 0;
+		}
+		std::vector<std::pair<int, long long> > sales;
+		while(n--){
+			int id, unit, num;
+			std::cin >> id >> unit >> num;
+			int i = 0;
+			for(; i < sales.size(); i++){
+				if(sales.at(i).first == id){
+					sales.at(i).second += (long long)unit * num;
+					break;
+				}
+			}
+			if(i == sales.size()){
+				std::pair<int, long long> worker;
+				worker.first = id;
+				worker.second = (long long)unit * num;
+				sales.push_back(worker);
+			}
+		}
+		bool found = false;
+		for(int i = 0; i < sales.size(); i++){
+			if(sales.at(i).second >= 1000000){
+				found = true;
+				std::cout << sales.at(i).first << std::endl;
+			}
+		}
+		if(!found){
+			std::cout << "NA" << std::endl;
+		}
+	}
+	return 0;
+}

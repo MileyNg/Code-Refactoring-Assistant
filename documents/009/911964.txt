@@ -1,0 +1,68 @@
+/*
+  AOJ 2547
+  Title:Carpet
+  @kankichi573
+*/
+#include <stdio.h>
+#include <limits.h>
+
+#define max(x,y) (((x)>(y))?(x):(y))
+#define min(x,y) (((x)<(y))?(x):(y))
+int N,a[20000];
+int minimum(int *ar,int n)
+{
+  int i,ret;
+
+  ret=INT_MAX;
+  for(i=0;i<n;i++)
+    ret=min(ret,ar[i]);
+  return(ret);
+}
+long long solve(int *ar,int n)
+{
+  int i,min_=minimum(ar,n),*p,*q,c;
+  long long ret;
+#ifdef DEBUG
+  for(i=0;i<n;i++)
+    printf("%d|",ar[i]);
+  printf("\n");
+  printf("min=%d\n",min_);
+#endif
+  for(i=0;i<n;i++)
+    ar[i]-=min_;
+
+  p=ar;
+  ret=1;c=0;
+  for(p=ar;p<=ar+n;p++)
+  {
+    if(*p==0)
+      {
+	if(c>0)
+	  {
+	    ret+=solve(q,c);
+	    c=0;
+	  }
+      }
+    else
+      {
+	if(c==0)
+	  q=p;
+	c++;
+      }
+  }  
+  if(c>0)
+    ret+=solve(q,c);
+  return(ret);
+}
+main()
+{
+  int i;
+  long long ret;
+
+  scanf("%d",&N);
+  for(i=0;i<N;i++)
+    scanf("%d",&a[i]);
+  ret=solve(a,N);
+  printf("%lld\n",ret);
+  return(0);
+}

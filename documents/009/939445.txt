@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstring>
+using namespace std ;
+
+int main()
+{
+	int inning ;
+	int point = 0 , out = 0 , runner = 0 ;
+	char get[10] ;
+
+	cin >> inning ;
+
+	int i = 0 ;
+	while( i < inning )
+	{
+		cin >> get ;
+		if( strcmp(get,"HIT") == 0 )
+		{
+			runner ++ ;
+			if( runner == 4 )
+			{
+				point ++ ;
+				runner = 3 ;
+			}
+		}
+		else if( strcmp(get,"HOMERUN") == 0 )
+		{
+			point += (runner+1) ;
+			runner = 0 ;
+		}
+		else if( strcmp(get,"OUT") == 0 )
+		{
+			out ++ ;
+
+			if( out == 3 )
+			{
+				cout << point << endl ;
+				i ++ ;
+				point = 0 ;
+				out = 0 ;
+				runner = 0 ;
+			}
+		}
+	}
+	return 0 ;
+}

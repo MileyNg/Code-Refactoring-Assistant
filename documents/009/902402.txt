@@ -1,0 +1,76 @@
+#include<sstream>
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<string>
+#include<vector>
+#include<set>
+#include<map>
+#include<queue>
+#include<numeric>
+#include<functional>
+#include<algorithm>
+using namespace std;
+#define INF (1<<29)
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define all(v) v.begin(),v.end()
+#define uniq(v) v.erase(unique(all(v)),v.end())
+#define indexOf(v,x) (find(all(v),x)-v.begin())
+
+
+using namespace std;
+
+int dpt[101][128];
+int dpd[10001];
+int dp[101][128];
+
+int e[100],c[100];
+int h[100],a[100];
+
+
+int main(){
+	int S,T,U,N,O,D;
+	cin>>S>>T>>U>>N>>O>>D;
+	rep(i,T)cin>>e[i]>>c[i];
+	rep(i,N)cin>>h[i]>>a[i];
+	memset(dpt,-1,sizeof(dpt));
+	dpt[0][0]=0;
+	rep(i,T){
+		for(int j=i;j>=0;j--){
+			for(int k=S-e[i];k>=0;k--){
+				if(dpt[j][k]==-1)continue;
+				dpt[j+1][k+e[i]]=max(dpt[j+1][k+e[i]], dpt[j][k]+c[i]);
+			}
+		}
+	}
+	memset(dpd,-1,sizeof(dpd));
+	dpd[0]=0;
+	rep(i,N){
+		rep(j,100*100+1){
+			if(dpd[j]==-1||10000<j+a[i])continue;
+			dpd[j+a[i]]=max(dpd[j+a[i]],dpd[j]+h[i]);
+		}
+	}
+	int v=0;
+	rep(i,100*100+1){
+		v=max(v,dpd[i]);
+		dpd[i]=v;
+	}
+	memset(dp,-1,sizeof(dp));
+	dp[0][S]=0;
+	rep(i,D){
+		rep(j,S+1){
+			if(dp[i][j]==-1)continue;
+			rep(k,j+1){
+				if(dpt[U][k]==-1)continue;
+				dp[i+1][min(S,j-k+O)]=max(dp[i+1][min(S,j-k+O)], dp[i][j]+dpd[dpt[U][k]]);
+			}
+		}
+	}
+	int ans=-1;
+	rep(i,S+1)ans=max(ans,dp[D][i]);
+	cout<<ans<<endl;
+	return 0;
+}

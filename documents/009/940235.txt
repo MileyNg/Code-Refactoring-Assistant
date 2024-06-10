@@ -1,0 +1,19 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var words = input.trim().split(' ');
+
+var f = {};
+var maxCnt = 0;
+var maxWord;
+words.forEach(function(word) {
+	var cnt = f[word] || 0;
+	cnt++;
+	if (cnt > maxCnt) {
+		maxCnt = cnt;
+		maxWord = word;
+	}
+	f[word] = cnt;
+});
+
+words.sort(function(a,b) {return b.length - a.length;});
+
+console.log(maxWord + ' ' + words[0]);

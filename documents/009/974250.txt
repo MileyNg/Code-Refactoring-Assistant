@@ -1,0 +1,33 @@
+#include<iostream>
+#include<vector>
+
+int main(){
+	int n;
+	std::cin >> n;
+	while (n){
+		std::vector<int> ball(10);
+		for (int i = 0; i < 10; ++i)std::cin >> ball[i];
+		int b = 0, c = 0;
+		for (int i = 0; i < 10; ++i){
+			if (b < c){
+				std::swap(b, c);
+			}
+			else if (b < ball[i]){
+				b = ball[i];
+			}
+			else if (c < ball[i]){
+				c = ball[i];
+			}
+			else {
+				std::cout << "NO" << std::endl;
+				break;
+			}
+			if(i==9){
+				std::cout << "YES" << std::endl;
+				break;
+			}
+		}
+		n--;
+	}
+	return 0;
+}

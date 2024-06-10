@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define loop(i,a,b) for(ull i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+#define iter(i,c) for(auto i=(c).begin(); i!=(c).end(); ++i)
+#define riter(i,c) for(auto i=(c).rbegin(); i!=(c).rend(); ++i)
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const double inf = (int)1e8;
+namespace std {
+    template<typename T>ostream&operator<<(ostream&os, vector<T>const&v){
+        iter(it,v) os<<*it<<(it+1==v.end()?"":",");
+        return os;
+    }
+    template<typename T, typename U>ostream&operator<<(ostream&os,const pair<T,U>&p){
+        return os << "[" << p.dirst << "," << p.second << "]";
+    }
+}
+
+void visit(const vvi &g, int v, vvi& scc,
+           stack<int> &S, vector<bool> &inS,
+           vector<int> &low, vector<int> &num, int& time) {
+    low[v] = num[v] = ++time;
+    S.push(v); inS[v] = true;
+    iter(e, g[v]) {
+        int w = *e;
+        if (num[w] == 0) {
+            visit(g, w, scc, S, inS, low, num, time);
+            low[v] = min(low[v], low[w]);
+        } else if (inS[w])
+            low[v] = min(low[v], num[w]);
+    }
+    if (low[v] == num[v]){
+        scc.push_back(vi());
+        while (1) {
+            int w = S.top(); S.pop(); inS[w] = false;
+            scc.back().push_back(w);
+            if (v == w) break;
+        }
+    }
+}
+ 
+void scc(vvi const& g, vvi& res) {
+    int const n = g.size();
+    vi num(n), low(n);
+    stack<int> S;
+    vector<bool> inS(n);
+    int time = 0;
+    rep(u,n)if(num[u]==0) visit(g, u, res, S, inS, low, num, time);
+}
+ 
+bool f(string const& a, string const& b){
+    if(a.size()!=b.size()) return false;
+    bool res=true;
+    rep(i,a.size()){
+        if(a[i]=='*') continue;
+        if(a[i]!=b[i]){
+            res=false;
+            break;
+        }
+    }
+    return res;
+}
+
+int main(){
+    int b,r,g,c,s,t;
+    while(cin >> b>>r>>g>>c>>s>>t && max({b,r,g,s,t})){
+        int win = 100;
+        win += 
+            + b * (15 + 5*15 + 5)
+            + r * (15 + 3*15 + 3)
+            + g * 7 + c*2;
+
+        int p=t-s;
+        int lose = p*3;
+        cout<<win-lose<<endl;
+    }
+     
+    return 0;
+}

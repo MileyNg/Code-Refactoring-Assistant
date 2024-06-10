@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<queue>
+#include<algorithm>
+#include<vector>
+using namespace std;
+vector<pair<int,pair<int,int> > > g[110];
+int ijk[110][110];
+int v[110][110];
+int main(){
+	int a,b,c;
+	while(scanf("%d%d%d",&a,&b,&c),a){
+		for(int i=0;i<110;i++)g[i].clear();
+		for(int i=0;i<b;i++){
+			int p,q,r,s;
+			scanf("%d%d%d%d",&p,&q,&r,&s);
+			p--;q--;
+			g[p].push_back(make_pair(q,make_pair(r,s)));
+			g[q].push_back(make_pair(p,make_pair(r,s)));
+		}
+		for(int i=0;i<110;i++){
+			for(int j=0;j<110;j++){
+				v[i][j]=0;
+				ijk[i][j]=999999999;
+			}
+		}
+		ijk[0][c]=0;
+		priority_queue<pair<int,pair<int,int> > >Q;
+		Q.push(make_pair(0,make_pair(0,c)));
+		while(Q.size()){
+			int cost=-Q.top().first;
+			int at=Q.top().second.first;
+			int has=Q.top().second.second;
+			Q.pop();
+			if(v[at][has])continue;
+			v[at][has]=1;
+			for(int i=0;i<g[at].size();i++){
+				if(has>=g[at][i].second.first){
+					if(!v[g[at][i].first][has-g[at][i].second.first]&&ijk[g[at][i].first][has-g[at][i].second.first]>cost){
+						ijk[g[at][i].first][has-g[at][i].second.first]=cost;
+						Q.push(make_pair(-cost,make_pair(g[at][i].first,has-g[at][i].second.first)));
+					}
+				}
+				if(!v[g[at][i].first][has]&&ijk[g[at][i].first][has]>cost+g[at][i].second.second){
+					ijk[g[at][i].first][has]=cost+g[at][i].second.second;
+					Q.push(make_pair(-ijk[g[at][i].first][has],make_pair(g[at][i].first,has)));
+				}
+			}
+		}
+		int ret=999999999;
+		for(int i=0;i<=c;i++){
+			ret=min(ret,ijk[a-1][i]);
+		}
+		printf("%d\n",ret);
+	}
+}

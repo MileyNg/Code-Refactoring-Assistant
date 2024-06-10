@@ -1,0 +1,42 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+int dx[] = { -1, 0, 1, 1, 1, 0, -1, -1 };
+int dy[] = { -1, -1, -1, 0, 1, 1, 1, 0 };
+
+int main(){
+	int w, h;
+	while( cin >> w >> h && w && h ){
+		int field[52][52];
+		stack< pair<int, int> > st;
+		for( int i = 1; i <= h; i++ ){
+			for( int j = 1; j <= w; j++ ){
+				cin >> field[i][j];
+			}
+		}
+		int sum = 0;
+		for( int i = 1; i <= h; i++ ){
+			for( int j = 1; j <= w; j++ ){
+				if( field[i][j] == 1 ){
+					sum++;
+					field[i][j] = 0;
+					st.push( pair<int, int>(i, j) );
+					while( !st.empty() ){
+						int x0 = st.top().second;
+						int y0 = st.top().first;
+						st.pop();
+						for( int k = 0; k < 8; k++ ){
+							int x = x0 + dx[k];
+							int y = y0 + dy[k];
+							if( field[y][x] == 1 ){
+								st.push( pair<int, int>(y, x) );
+								field[y][x] = 0;
+							}
+						}
+					}
+				}
+			}
+		}
+		cout << sum << endl;
+	}
+}

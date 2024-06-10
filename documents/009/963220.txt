@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+using namespace std;
+
+int main()
+{
+  for(;;){
+    int x;
+    cin >> x;
+
+    if(x==0)
+      break;
+
+    int count=0;
+    int count_ki=0;
+    int tmp;
+    /*for(int i=1;i<=x;i++){
+      tmp=i*(i+1)*(i+2)/6;
+      if(tmp>x)
+	break;
+      count++;
+      if(tmp%2==1)
+	count_ki++;
+	}*/
+
+    int coin[x];
+    int coin_ki[x];
+    //fill(coin,coin + x + 1,-1);
+    //fill(coin_ki,coin_ki + x + 1,-1);
+    int tmp2=0;
+  
+    for(int i=1;i<x;i++){
+      coin[i-1]=i*(i+1)*(i+2)/6;
+      count++;
+      if(coin[i-1]%2==1){
+	coin_ki[tmp2++]=coin[i-1];
+	count_ki++;
+      }
+      if(coin[i-1]>x)break;
+    }
+
+    int dp[x+1];
+    fill(dp,dp + x + 1,100000);
+  
+
+    /*for(int i=0;i<=x;i++)
+      printf("dp[%d]=%d\n",i,dp[i]);
+    */
+    dp[0]=0;
+    for(int i = 0;i<x+1;i++){
+      for(int j=0;j<count;j++){
+	if(i+coin[j]<=x){
+	  dp[i+coin[j]]=min(dp[i+coin[j]],dp[i]+1);
+	}
+      }
+    }
+
+    cout << dp[x] << " ";
+    fill(dp,dp + x + 1,100000);
+  
+    //printf("%d\n",count_ki);
+    dp[0]=0;
+    for(int i = 0;i<x+1;i++){
+      for(int j=0;j<count_ki;j++){
+	if(i+coin_ki[j]<=x){
+	  dp[i+coin_ki[j]]=min(dp[i+coin_ki[j]],dp[i]+1);
+	}
+      }
+    }
+   
+    cout << dp[x] << endl;
+  
+    ///*/
+  }
+  return 0;
+}
+
+  

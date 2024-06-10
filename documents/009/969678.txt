@@ -1,0 +1,89 @@
+#include <iostream>
+#include <algorithm>
+
+#define range(i,a,b) for(int (i)=a;(i)<(b);(i)++)
+#define rep(i,n) range(i,0,n)
+
+using namespace std;
+
+
+int dx[4]={1,0,-1,0};
+int dy[4]={0,1,0,-1};
+
+int table[30][30];
+
+int sx,sy;
+int gx,gy;
+
+int dfs(int n,int cx,int cy){
+	//cout << "x "  << cx << " y " <<  cy << endl;
+	int res=11;
+
+	if(cx==gx&&cy==gy){
+		//cout << "check" << endl;
+		return n;
+	}
+
+	if(n>=11)
+		return res;
+
+	rep(i,4){
+		int nx=cx+dx[i];
+		int ny=cy+dy[i];
+
+
+		if(table[nx][ny]==1)
+			continue;
+
+	
+		while(table[nx][ny]==0){
+			nx+=dx[i];
+			ny+=dy[i];
+		}
+
+		//cout << "x "  << nx << " y " <<  ny << endl;
+		//cout << table[nx][ny] << endl;
+
+
+		if(table[nx][ny]==-1)
+			continue;
+		
+		if(table[nx][ny]==1){
+			table[nx][ny]=0;	
+			res=min(res,dfs(n+1,nx-dx[i],ny-dy[i]));
+			table[nx][ny]=1;
+		}
+
+		if(table[nx][ny]==3){
+			//cout << "check" << endl;
+			res=min(res,dfs(n+1,nx,ny));
+		}
+		//cout << res << endl;
+	}
+	return res;
+}
+int main(void){
+	int w,h;
+	while(cin >> w >> h,w|h){
+		rep(i,30)rep(j,30) table[i][j]=-1;
+
+		range(j,1,h+1)range(i,1,w+1){
+			cin >> table[i][j];
+			if(table[i][j]==2){
+				sx=i;sy=j;
+				table[i][j]=0;
+			}
+			if(table[i][j]==3){
+				gx=i;gy=j;
+			}
+		}
+
+		int res=dfs(0,sx,sy);
+		if(res==11)
+			cout << -1 << endl;
+		else
+			cout << res << endl;
+		
+	}
+	return 0;
+}

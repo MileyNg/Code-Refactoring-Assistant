@@ -1,0 +1,25 @@
+#include<iostream>
+#include<string>
+
+int main(){
+
+	std::string str;
+	while (std::cin >> str){
+		if (str == "-")break;
+
+		int m;
+		std::cin >> m;
+
+		for (int i = 0; i < m; i++){
+			int h;
+			std::cin >> h;
+			std::string str2;
+			str2 = str.substr(0, h);
+			str.erase(0, h);
+			str += str2;
+		}
+
+		std::cout << str << std::endl;
+	}
+	return 0;
+}

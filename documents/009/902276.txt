@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+bool isP[2000001];
+int sumP[2000001];
+int N=2000000;
+
+void make_table();
+
+int n,p,m,sum,X;
+int main(){
+  make_table();
+  while(cin>>n&&n){
+    sum=0;
+    for(int i=0;i<n;i++){
+      cin>>p>>m;
+      X=sumP[p+m];
+      if(p-m-1>=0)X-=sumP[p-m-1];
+      if(X>0)sum+=(X-1);
+      else sum--;
+    }
+    cout<<sum<<endl;
+  }
+  return 0;
+}
+void make_table(){
+  for(int i=0;i<=N;i++){isP[i]=true;sumP[i]=0;}
+  isP[0]=isP[1]=false;
+  for(int i=2;i*i<=N;i++){
+    if(isP[i]==false)continue;
+    for(int j=i*i;j<=N;j+=i)isP[j]=false;
+  }
+
+  for(int i=1000003;i<=N;i++)isP[i]=false;
+
+  for(int i=1;i<=N;i++){
+    sumP[i]=sumP[i-1]+isP[i];
+  }
+}

@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  char in[60][80]={0};
+  int k,e=0,i,j;
+  
+  for(k=0;scanf("%s",in[k])!=EOF;k++){
+    int i,j;
+	if(in[k][5]!=0||in[k][2]==0)
+	  continue;
+	for(i=0;i<26;i++){
+	  if(strcmp(in[k],"the")==0){
+	    e=i;
+	  }
+	  if(strcmp(in[k],"that")==0){
+	    e=i;
+	  }
+	  if(strcmp(in[k],"this")==0){
+	    e=i;
+	  }
+	  if(strcmp(in[k],"the.")==0){
+	    e=i;
+	  }
+	  if(strcmp(in[k],"that.")==0){
+	    e=i;
+	  }
+	  if(strcmp(in[k],"this.")==0){
+	    e=i;
+	  }
+	  for(j=0;j<5;j++){
+	    if(in[k][j]==0)
+		  break;
+		in[k][j]++;
+		if(in[k][j]>'z')
+		  in[k][j]-=26;
+		if(in[k][j]<'a')
+		  in[k][j]--;
+      }
+	  //printf("%s\n",in[k]);
+
+	}
+	//printf("%d\n",i);
+
+  }
+  
+  for(i=0;i<k;i++){
+    for(j=0;in[i][j]!=0;j++){
+  	  if(in[i][j]+e>'z')
+  	    in[i][j]-=26;
+      if(in[i][j]+e<'a')
+	    in[i][j]-=e;
+    printf("%c",in[i][j]+e);
+	}
+	if(i!=k-1)
+	  putchar(' ');
+  }
+
+  return 0;
+}

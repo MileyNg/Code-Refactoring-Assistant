@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cmath>
+#include<string>
+
+using namespace std;
+
+int main(){
+
+	string inp;
+	string base = ("0123456789abcdef" );
+	string scol[8] = { "black", "blue", "lime", "aqua", "red", "fuchsia", "yellow", "white" };
+	int icol[8][3] = { { 0, 0, 0 }, { 0, 0, 256 }, { 0, 256, 0 }, { 0, 256, 256 }, { 256, 0, 0 }, { 256, 0, 256 }, { 256, 256, 0 }, { 256, 256, 256 } };
+	int r, g, b;
+	int ans;
+	double ansnum;
+
+	while (1){
+
+		cin >> inp;
+		if (inp == "0") break;
+
+		r = base.find(inp[2]) * 1 + base.find(inp[1]) * 16;
+		g = base.find(inp[4]) * 1 + base.find(inp[3]) * 16;
+		b = base.find(inp[6]) * 1 + base.find(inp[5]) * 16;
+
+		ans = 0;
+		ansnum = pow(r - icol[0][0], 2.0) + pow(g - icol[0][1], 2.0) + pow(b - icol[0][2], 2.0);
+		for (int i = 1; i < 8; i++){
+			if (ansnum>pow(r - icol[i][0], 2.0) + pow(g - icol[i][1], 2.0) + pow(b - icol[i][2], 2.0)){
+				ans = i;
+				ansnum = pow(r - icol[i][0], 2.0) + pow(g - icol[i][1], 2.0) + pow(b - icol[i][2], 2.0);
+			}
+		}
+
+		cout << scol[ans] << endl;
+
+	}
+}

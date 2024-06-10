@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+struct Treasure
+{
+	int value;
+	int weight;
+};
+
+int main(void)
+{
+	int w;
+	int n;
+	struct Treasure t[1000];
+	int case_n = 0;
+	
+	scanf("%d", &w);
+	while (w != 0){
+		int i;
+		struct Treasure max = {0, 0};
+		int suck[1001] = {0};
+		
+		scanf("%d", &n);
+		for (i = 0; i < n; i++){
+			int j;
+			
+			scanf("%d,%d", &t[i].value, &t[i].weight);
+			for (j = w - t[i].weight; j >= 0; j--){
+				if ((j == 0 || suck[j] > 0) && suck[j + t[i].weight] < suck[j] + t[i].value){
+					suck[j + t[i].weight] = suck[j] + t[i].value;
+				}
+			}
+		}
+		for (i = 0; i <= w; i++){
+			if (suck[i] > max.value){
+				max.value = suck[i];
+				max.weight = i;
+			}
+		}
+		
+		printf("Case %d:\n", ++case_n);
+		printf("%d\n%d\n", max.value, max.weight);
+		
+		scanf("%d", &w);
+	}
+	
+	return 0;
+}

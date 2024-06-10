@@ -1,0 +1,25 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main(void){
+	for(float h,w;cin >> h >> w,h&&w;){
+		float H,W,diag2 = pow(w,2)+pow(h,2),max_h=sqrt(diag2/2);
+		bool yet=true;
+
+		for(H=1;yet&&H<max_h;H++)
+			if((W=sqrt(diag2-pow(H,2)))-(int)W==0&&H>h){
+				cout << (int)H << " " << (int)W << endl;
+				yet=false;
+			}
+		for(diag2++;yet;max_h=sqrt(++diag2/2))
+			for(H=1;yet&&H<max_h;H++)
+				if((W=sqrt(diag2-pow(H,2)))-(int)W==0){
+					cout << (int)H << " " << (int)W << endl;
+					yet=false;
+				}
+	}
+
+	return 0;
+}

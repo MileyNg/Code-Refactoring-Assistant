@@ -1,0 +1,96 @@
+#include <iostream>
+#include <array>
+#include <algorithm> //For_each
+
+#define LEN 100050
+
+using namespace std;
+
+
+bool allNull(array<int,LEN> d,int n,int fp){
+     for(int i=0;i<n;i++){
+         if(d[i+fp]!=-1){
+             return false;
+         }
+     }
+     return true;
+}
+
+
+int main(){
+     int n;
+     long long int qtime;
+     cin>>n>>qtime;
+     array<int,LEN>     dat;
+     array<string,LEN>  name;
+     vector<pair<string,int> > res;
+     long long int time=0;
+     for(int i=0;i<n;i++){
+         string strTmp;
+         int intTmp;
+         cin>>strTmp>>intTmp;
+         dat[(i)%LEN]=intTmp;
+         name[(i)%LEN]=strTmp;
+     }
+
+     int fp=0;     
+     int ep=n;
+
+     for(int i=0;!allNull(dat,n,fp);i++){
+        
+         if(dat[i]==-1){
+
+         }else if(dat[i]>qtime){
+             dat[i]-=qtime;
+             time+=qtime;
+         }else{
+             time+=dat[i];
+             dat[i]=-1;
+             res.push_back(pair<string,int>(name[i],time));
+         }
+         
+/*
+        
+         cout<<"round["<<i<<"]--------------"<<endl;
+         for(int j=0;j<n;j++){
+              cout<<name[fp+j]<<" "<<dat[fp+j]<<endl;
+         }
+         cout<<"--------------------"<<endl;
+         
+
+         if(i>4)break; 
+*/
+         if((ep+1)%LEN!=fp){
+             dat[ep] =dat[fp];
+             name[ep]=name[fp];
+             ep=(ep+1)%LEN;
+         }
+
+         auto push=[&](pair<string,int> v){
+            dat[(fp+ep)%LEN]=v.second;
+            name[(fp+ep)%LEN]=v.first;
+            ep++;
+         //   cout<<"push["<<dat[(fp+ep-1)%LEN]<<"]"<<endl;
+         };
+         auto pop=[&]{
+         //   cout<<"pop ["<<dat[fp]<<"]"<<endl;
+            dat[fp]=0;
+            name[fp]="";
+
+            fp=(fp+1)%LEN;
+            ep--;
+         };
+
+         auto tmp=pair<string,int>(name[fp],dat[fp]);
+         pop();
+         push(tmp);
+
+     }
+
+     std::for_each(res.begin(),res.end(),[](pair<string,int> i){
+             cout<<i.first<<" "<<i.second<<endl;
+     });
+
+
+     return 0;
+}

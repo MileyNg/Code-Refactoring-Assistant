@@ -1,0 +1,17 @@
+#include <stdio.h>
+int main(void){
+	int h,w;
+	while(1){
+		scanf("%d %d", &h, &w);
+		if(h == 0 && w == 0)	break;
+		int i, j;
+		for ( i = 0; i < h; i++ ){
+			for ( j = 0; j < w; j++ ){
+				(!i || i ==h-1 || !j || j==w-1)?printf("#"):printf(".");
+			}
+			printf("\n");
+		}
+			printf("\n");
+	}
+	return 0;
+}

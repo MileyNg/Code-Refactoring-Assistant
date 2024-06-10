@@ -1,0 +1,27 @@
+#include <iostream>
+#include <utility>
+
+u_int getGCD(u_int m, u_int n){
+  u_int temp;
+  if(m < n)
+    std::swap(m,n);
+  while(n != 0){
+    temp = m % n;
+    m = n;
+    n = temp;
+  }
+  return m;
+}
+
+inline u_int getLCM(u_int m, u_int n, u_int gcd){
+  return m * (n / gcd);
+}
+
+int main(){
+  u_int a, b, gcd;
+  while(std::cin >> a >> b){
+    gcd = getGCD(a, b);
+    std::cout << gcd << " " << getLCM(a, b, gcd) << std::endl;
+  }
+  return 0;
+}

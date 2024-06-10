@@ -1,0 +1,89 @@
+import std.stdio;
+import core.bitop;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int n, m, l, s, t;
+    while (readf("%d %d %d %d %d\n", &n, &m, &l, &s, &t), n || m || l || s || t) {
+        //writeln("CASE ", n, " ", m, " ", l, " ", s, " ", t);
+        s--;
+        int[][] G = new int[][](n, n);
+        foreach (ref _; G) _[] = int.max;
+        foreach (i; 0 .. m) {
+            int a, b, c; readf("%d %d %d\n", &a, &b, &c);
+            a--; b--;
+            G[a][b] = c;
+            G[b][a] = c;
+        }
+
+        foreach (k; 0 .. n) {
+            foreach (i; 0 .. n) {
+                foreach (j; 0 .. n) {
+                    if (G[i][k] == int.max) continue;
+                    if (G[k][j] == int.max) continue;
+                    G[i][j] = min(G[i][j], G[i][k] + G[k][j]);
+                }
+            }
+        }
+
+        int[int] id;
+        int[] rid = [s];
+        id[s] = 0;
+        int I = 1;
+        int[] T = [0];
+        int[] L = [t];
+        foreach (i; 0 .. l) {
+            int j, e; readf("%d %d\n", &j, &e);
+            j--;
+            rid ~= I++;
+            id[j] = rid.back;
+            T ~= e;
+            L ~= t - G[s][i];
+        }
+        //T.writeln;
+
+        int[][] memo = new int[][](l + 1, 1 << I);
+        foreach (ref _; memo) _[] = int.max;
+
+        struct S {int v, used, t;}
+        BinaryHeap!(Array!S, "a.t > b.t") Q; Q.insert(S(0, 0, 0));
+        bool[][] used = new bool[][](I, (1<<I));
+        while (!Q.empty) {
+            S cur = Q.front; Q.removeFront;
+            //cur.writeln;
+            if (cur.t < memo[cur.v][cur.used]) {
+                memo[cur.v][cur.used] = cur.t;
+                foreach (i, k; id) {
+                    if (cur.used & (1 << k)) continue;
+                    if (G[s][i] == int.max) continue;
+                    int nt = cur.t + T[k] + G[ rid[cur.v] ][i];
+                    if (nt > t) continue;
+                    int nused = cur.used | 1<<k;
+                    if (used[k][nused]) continue;
+                    used[k][nused] = true;
+                    Q.insert(S(k, nused, nt));
+                }
+            }
+        }
+
+        int ans = 0;
+        foreach (i; 0 .. (1 << I)) {
+            if (memo[0][i] != int.max && i % 2 == 1) {
+                ans = max(ans, i.popcnt - 1);
+            }
+        }
+        writeln(ans);
+    }
+}

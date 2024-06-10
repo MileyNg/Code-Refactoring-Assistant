@@ -1,0 +1,17 @@
+until [0,0] == (num,s = gets.split.map &:to_i)
+  ary =Array.new()
+  (num).times do
+    ary.push(gets.chomp.to_i)
+  end
+  ary.sort!{|a, b| b <=> a }
+  count=0
+  (num-1).times do |x|
+    (x+1).upto(num-1) do |y|
+      if ary[x]+ary[y]>s
+        count+=(num-y)
+        break
+      end
+    end
+  end
+  p count
+end  

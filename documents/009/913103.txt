@@ -1,0 +1,39 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+
+int main(void){
+  
+  long long int sum=0,N;
+  long long int tmp;
+  while(true){
+    sum=0;
+    cin >> N;
+    if(N==0)
+      break;
+  vector<int> joint;
+  for(int i=0;i<N;i++){
+    cin >> tmp;
+    sum+=tmp;
+  }
+  for(int i=0;i<N-1;i++){
+    cin >> tmp;
+    joint.push_back(tmp);
+  }
+  sort(joint.begin(),joint.end(),greater<int>());
+  for(int i=0;i<N-1;i++){
+    if(N*sum>(N-1)*(sum+joint[i]))
+      break;
+    else{
+      N--;
+      sum+=joint[i];
+    }
+  }
+  
+  cout << (long long int)(N*sum) << endl;
+  joint.clear();
+  }
+  return 0;
+}

@@ -1,0 +1,13 @@
+import itertools
+while 1:
+	n = input()
+	if n == 0: break
+	s = sorted(map(int,raw_input().split()))
+	sm = ans = sum(s)
+	for i in range(1,n-1):
+		for party in sorted(itertools.combinations(s,i)):
+			sm1 = sm - 2*sum(party)
+			if sm1 < -ans: break
+			ans = min(ans,abs(sm1))
+			if ans == 0: break
+	print ans

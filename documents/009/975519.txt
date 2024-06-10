@@ -1,0 +1,131 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<cassert>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+typedef pair<int,int> pii;
+
+const int N = 222;
+const int R = 1111;
+const int INF = 500000000;
+int n,m;
+
+vector<pii> sea[N];
+vector<pii> land[N];
+vector<int> move;
+
+int wsea[N][N];
+int wland[N][N];
+
+void init(){
+	rep(i,N)sea[i].clear();
+	rep(i,N)land[i].clear();
+	move.clear();
+	
+	rep(i,N)rep(j,N)wsea[i][j]=wland[i][j]=INF;
+}
+
+bool input(){
+	cin>>n>>m;
+	if(n==0)return false;
+	rep(i,m){
+		int a,b,c;
+		string d;
+		cin>>a>>b>>c>>d;
+		if(d=="L"){
+			land[a].push_back(pii(b,c));
+			land[b].push_back(pii(a,c));
+		}
+		if(d=="S"){
+			sea[a].push_back(pii(b,c));
+			sea[b].push_back(pii(a,c));
+		}
+	}
+	int r;
+	cin>>r;
+	rep(i,r){
+		int a;
+		cin>>a;
+		move.push_back(a);
+	}
+	
+	return true;
+}
+
+void solve_wf_edge(int memo[N][N], vector<pii> edge[N]){
+	rep(i,N)rep(j,N)memo[i][j]=INF;
+	reps(i,1,n+1)memo[i][i]=0;
+	rep(i,n+1){
+		rep(j,edge[i].size()){
+			pii e = edge[i][j];
+			memo[i][e.first] = e.second;
+			memo[e.first][i] = e.second;
+		}
+	}
+	
+	reps(k,1,n+1){
+		reps(i,1,n+1){
+			reps(j,1,n+1){
+				memo[i][j] = min(memo[i][j], memo[i][k]+memo[k][j]);
+			}
+		}
+	}
+}
+
+void solve_wf(){
+	solve_wf_edge(wsea, sea);
+	solve_wf_edge(wland, land);
+}
+
+int solve_dp(){
+	int dp[R][N];
+	rep(i,R)rep(j,N)dp[i][j]=INF;
+	
+	dp[0][move[0]]=0;
+	
+	reps(i,1,move.size()){
+		int prev = move[i-1];
+		int now = move[i];
+		reps(j,1,n+1){
+			dp[i][j]=min(INF,dp[i-1][j]+wland[prev][now]);
+			reps(k,1,n+1){
+				dp[i][j] = min(dp[i][j], dp[i-1][k]+wland[prev][k]+wsea[k][j]+wland[j][now]);
+			}
+		}
+	}
+	
+	int ret = INF;
+	reps(i,1,n+1)ret = min(ret, dp[move.size()-1][i]);
+	if(ret>=INF)return -1;
+	return ret;
+}
+
+int solve(){
+	solve_wf();
+	return solve_dp();
+}
+
+int main(){
+	while(init(),input()){
+		printf("%d\n",solve());
+	}
+}
+
+/*
+3 3
+1 2 5 L
+1 2 7 S
+2 3 11 S
+3
+1 2 3
+0 0
+
+
+*/

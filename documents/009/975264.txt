@@ -1,0 +1,46 @@
+#include<stdio.h>
+
+int judge(int *pipe,int *joint,int i,int n,int mx,int cnt){
+  if(i==n){
+    return mx;
+  }
+  else{
+    int a=(mx/cnt+pipe[i+1])*(cnt+1);
+    int b=mx+(pipe[i+1]+joint[i])*cnt;
+
+    if(a>b){
+      judge(pipe,joint,i+1,n,a,cnt+1);
+    }
+    else{
+      judge(pipe,joint,i+1,n,b,cnt);
+    }
+  }
+}
+
+void prans(int n){
+  int i;
+  int p[n],j[n-1];
+  int ans;
+  for(i=0;i<n;i++){
+    scanf("%d",&p[i]);
+  }
+  for(i=0;i<n-1;i++){
+    scanf("%d",&j[i]);
+  }
+  ans=judge(p,j,0,n-1,p[0],1);
+  printf("%d\n",ans);
+}
+
+void doit(){
+  int n;
+  scanf("%d",&n);
+  if(n!=0){
+    prans(n);
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

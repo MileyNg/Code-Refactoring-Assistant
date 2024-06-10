@@ -1,0 +1,38 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct br{
+	int n1,n2,w;
+};
+bool f(br i,br j){
+	return(i.w>j.w);
+}
+int main(){
+	while(1){
+		int m,n,i,x=0;
+		char c;
+		cin>>n; if(n==0)break;
+		vector<int>T(n);
+		for(i=0;i<n;i++) T[i]=i;
+
+		cin>>m;
+		vector<br>S(m);
+		for(i=0;i<m;i++) cin>>S[i].n1>>c>>S[i].n2>>c>>S[i].w;
+		sort(S.begin(),S.end(),f);
+
+		while (S.size()){
+			br B=S.back();
+			S.pop_back();
+			int b=T[B.n1],c=T[B.n2],a;
+			b>c?(a=c,c=b):a=b;
+			if(b!=c){
+				for(i=a;i<n;i++)
+					if(T[i]==c)T[i]=a;
+				x+=B.w/100-1;
+			}
+		}
+		cout<<x<<endl;
+	}
+}

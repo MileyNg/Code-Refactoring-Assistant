@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <bitset>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <tuple>
+#include <set>
+#include <functional> 
+#include <string.h>
+
+#define X first
+#define Y second
+#define MP make_pair
+#define MT make_tuple
+#define FOR(i, n) for(int (i) = 0; (i) < (n); (i)++)
+#define REP(i, a, n) for(int (i) = (a); (i) < (n); (i)++)
+typedef long long ll;
+typedef std::pair<int, int> pii;
+typedef std::pair<ll, ll > pll;
+using namespace std;
+const int MAX = 101;
+const double PI = 3.1415926535897932384;
+
+template<class T, class U>
+void convert(T &t, U &u){
+	stringstream ss;
+	ss << t;
+	ss >> u;
+}
+
+bool mark[12][12];
+int dx[] = {1, -1, 0, 0};
+int dy[] = {0, 0, 1, -1};
+
+void dfs(int y, int x, vector<string> &tb){
+	mark[y][x] = true;
+
+	FOR(i, 4){
+		if (x + dx[i] < 0 || x + dx[i] >= 12 || y + dy[i] < 0 || y + dy[i] >= 12) continue;
+		if (tb[y + dy[i]][x + dx[i]] == '1' && !mark[y + dy[i]][x + dx[i]]){
+			dfs(y + dy[i], x + dx[i], tb);
+		}
+	}
+	return;
+}
+
+int main(){
+	while (1){
+		if (cin.eof()) break;
+		memset(mark, false, sizeof(mark));
+
+		vector<string> tb(12, "");
+		FOR(i, 12) cin >> tb[i];
+
+		int ans = 0;
+		FOR(i, 12){
+			FOR(j, 12){
+				if (tb[i][j] == '1' && !mark[i][j]){
+					dfs(i, j, tb);
+					ans++;
+				}
+			}
+		}
+
+		cout << ans << endl;
+	}
+	return 0;
+}

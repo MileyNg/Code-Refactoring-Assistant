@@ -1,0 +1,66 @@
+#include<iostream>
+
+using namespace std;
+
+#define MAX 100
+
+int main(){
+
+	int M,N;
+	int choco[MAX][MAX];
+	int cnt=0;
+	int max,sum;
+
+	cin>>M>>N;
+
+	for(int i=0;i<M;i++){
+		for(int j=0;j<N;j++){
+			cin>>choco[i][j];
+		}
+	}
+
+	for(int i=1;i<M;i++){
+		for(int j=0;j<N;j++){
+			if(choco[i][j]==0) choco[i][j]=1;
+			else choco[i][j]=0;
+		}
+	}
+
+	max=0;
+
+	for(int i=0;i<M;i++){
+		max=0;
+		for(int j=0;j<N;j++){
+			sum=0;
+			if(j==0){
+				if(choco[i][N-1]==0) sum++;
+				for(int k=0;k<N-1;k++){
+					if(choco[i][k]==1) sum++;
+				}
+			}
+			else if(j==N-1){
+				if(choco[i][0]==0) sum++;
+				for(int k=1;k<N;k++){
+					if(choco[i][k]==1) sum++;
+				}
+			}
+			else{
+				if(choco[i][j]==0) sum++;
+				if(choco[i][0]==0) sum++;
+				if(choco[i][N-1]==0) sum++;
+				for(int k=1;k<j;k++){
+					if(choco[i][k]==1) sum++;
+				}
+				for(int k=N-1;k>j;k--){
+					if(choco[i][k]==1) sum++;
+				}
+			}
+			if(max<sum) max=sum;
+		}
+		cnt+=max;
+	}
+
+	cout<<cnt<<endl;
+
+	return 0;
+}

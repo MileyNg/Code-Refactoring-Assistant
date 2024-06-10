@@ -1,0 +1,100 @@
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+int main(){
+
+  int card[3][12],m,n,o,i;
+  char mark;
+  
+  for(i=0; i<4; i++){
+    for(m=0; m<13; m++){
+      card[i][m]=0;
+    }
+  }
+
+  i=0,m=0,n=0;
+  cin>>o;
+
+  for(i=0; i<o; i++){
+
+    m=0;
+    cin>>mark>>m;
+
+    switch(mark){
+ 
+   case 'S':
+      card[0][m-1]=1;
+      m=0;
+      break;
+
+    case 'H':
+      card[1][m-1]=1;
+      m=0;
+      break;
+
+    case 'C':
+      card[2][m-1]=1;
+      m=0;
+      break;
+
+    case 'D':
+      card[3][m-1]=1;
+      m=0;
+      break;
+    }
+
+  }
+
+  cout<<"\n";
+
+  for(i=0; i<4; i++){
+
+    switch(i){
+
+    case 0:
+      for(n=0; n<13; n++){
+
+	if(card[i][n]!=1){
+	  printf("S %d\n",n+1);
+	}
+
+      }
+      break;
+
+    case 1:
+      for(n=0; n<13; n++){
+
+	if(card[i][n]!=1){
+	  printf("H %d\n",n+1);
+	}
+
+      }
+      break;
+
+    case 2:
+      for(n=0; n<13; n++){
+
+	if(card[i][n]!=1){
+	  printf("C %d\n",n+1);
+	}
+
+      }
+      break;
+
+    case 3:
+      for(n=0; n<13; n++){
+
+	if(card[i][n]!=1){
+	  printf("D %d\n",n+1);
+	}
+
+      }
+      break;
+
+    }
+
+  }
+
+  cout<<"\n";
+
+}

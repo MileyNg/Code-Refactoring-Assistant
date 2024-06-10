@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string.h>
+#include <cstdio>
+using namespace std;
+char str1[82];
+char str2[82];
+void trans(char *orj,char *dest)
+{
+    int k=0,len=strlen(orj);
+    bool ischk=false;
+    for(int y=1;y<=26&&!ischk;y++)
+    {
+        for(int x=0;x<len;x++)
+        {
+            if(orj[x]>='a'&&orj[x]<='z')k=orj[x]-'a';
+            else if(orj[x]>='A'&&orj[x]<='Z')k=orj[x]-'A';
+            k=(k+y)%26;
+            if(orj[x]>='a'&&orj[x]<='z')dest[x]='a'+k;
+            else if(orj[x]>='A'&&orj[x]<='Z')dest[x]='A'+k;
+            else dest[x]=orj[x];
+        }
+        if(strstr(dest,"the")!=NULL||strstr(dest,"this")!=NULL||strstr(dest,"that"))ischk=true;
+    }
+
+}
+int main()
+{
+    while(gets(str1))
+    {
+        memset(str2,'\0',sizeof(str2));
+        trans(str1,str2);
+        printf("%s\n",str2);
+    }
+    return 0;
+}

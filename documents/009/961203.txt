@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <limits.h>
+#include <math.h>
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <algorithm>
+#include <functional>
+#include <utility>
+#include <bitset>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
+
+using namespace std;
+
+#define FOR(i,s,e) for((i)=(s);(i)<(int)(e);(i)++)
+
+typedef pair<int, int> P;
+typedef struct edge_Def {
+	int to;
+	int dist;
+	int cost;
+	edge_Def(int _to, int _dist, int _cost) {to = _to; dist = _dist; cost = _cost;}
+} edge;
+
+const int INF = 1000000000;
+const int MAX_N = 10000;
+const int MAX_M = 20000;
+int N, M;
+int d[MAX_N];
+vector<edge> g[MAX_N];
+
+void Dijkstra(int s) {
+	int i, j;
+	priority_queue<P, vector<P>, greater<P> > q;
+
+	for (i=0; i<N; i++) d[i] = INF;
+	d[s] = 0;
+	q.push(P(0, s));
+
+	while (q.size()) {
+		P p = q.top(); q.pop();
+		int v = p.second;
+
+		if (d[v] < p.first) continue;
+
+		for (i=0; i<g[v].size(); i++) {
+			edge e = g[v][i];
+			if (d[e.to] > d[v] + e.dist) {
+				d[e.to] = d[v] + e.dist;
+				q.push(P(d[e.to], e.to));
+			}
+		}
+	}
+}
+
+int minCost() {
+	int res = 0;
+	int i, j;
+	for (i=1; i<N; i++) {
+		int m = INF;
+		for (j=0; j<g[i].size(); j++) {
+			edge e = g[i][j];
+			if (d[e.to] + e.dist == d[i] && e.cost < m)
+				m = e.cost;
+		}
+		res += m;
+	}
+	return res;
+}
+
+int main() {
+	int i, j;
+
+	while (1) {
+		scanf("%d%d ", &N, &M);
+
+		if (!N && !M) break;
+
+		for (i=0; i<N; i++)
+			g[i].clear();
+
+		for (i=0; i<M; i++) {
+			int f, t, d, c;
+			scanf("%d%d%d%d ", &f, &t, &d, &c);
+			f--; t--;
+			g[f].push_back(edge(t, d, c));
+			g[t].push_back(edge(f, d, c));
+		} 
+
+		Dijkstra(0); 
+		printf("%d\n", minCost());
+	}
+
+	return 0;
+}

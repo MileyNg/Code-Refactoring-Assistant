@@ -1,0 +1,73 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<algorithm>
+using namespace std;
+const int INF = 0xfffffff;
+const int MAXN = 2010;
+const int MAXM = 50010;
+struct Edge{
+    int u, v, f, nxt;
+};
+int N, M;
+int nume;
+int g[MAXN];
+Edge e[MAXM];
+int fa[MAXN];
+void addEdge(int u, int v, int c)
+{
+    e[++nume].v = v;
+    e[nume].u = u;
+    e[nume].f = c;
+    e[nume].nxt = g[u];
+    g[u] = nume;
+}
+
+bool cmp(Edge a, Edge b)
+{
+    return a.f < b.f;
+}
+int getfather(int x)
+{
+    if(x == fa[x])
+        return x;
+    else
+        return fa[x] = getfather(fa[x]);
+}
+int kruscal() {
+    vector<int> vec;
+    sort(e+1, e+nume+1, cmp);
+    int cnt = N;
+    for(int i = 1; i <= N; i++)  fa[i] = i;
+    for(int i = 1; i <= nume; i++) {
+        int t1 = getfather(e[i].u);
+        int t2 = getfather(e[i].v);
+        if(t1 != t2) {
+            fa[t1] = t2;
+            cnt--;
+            vec.push_back(e[i].f);
+            if(cnt==1)
+                break;
+        }
+    }
+    //for(int i = 0; i < vec.size(); i++)
+    //    cout<<vec[i]<<endl;
+    //sort(vec.begin(), vec.end());
+    return vec[vec.size()/2];
+    //if(vec.)
+}
+int main()
+{
+    while(cin>>N>>M&&N&&M) {
+        nume = 0;
+        memset(g, 0, sizeof(g));
+        for(int i = 1; i <= M; i++) {
+            int x, y, xy;
+            cin>>x>>y>>xy;
+            addEdge(x, y, xy);
+            addEdge(y, x, xy);
+        }
+        cout<<kruscal()<<endl;
+    }
+    return 0;
+}

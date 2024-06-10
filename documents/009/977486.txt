@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+void scan(int []);
+void hit_blow(int []);
+
+int main(void){
+	int a[4],b[4],i;
+
+	scan(a);
+	hit_blow(a);
+	scan(b);
+	hit_blow(b);
+	
+	return 0;
+}
+
+void scan(int x[4]){
+	int i;
+
+	for(i = 0; i < 4;i ++){
+		scanf("%d",&x[i]);
+	}
+}
+
+void hit_blow(int x[4]){
+	int i,j,ans[4],hit,blow;
+
+	hit = blow = 0;
+	for(i = 0;i < 4; i ++){
+		scanf("%d",&ans[i]);
+	}
+
+	for(i = 0;i < 4;i ++){
+		for(j = 0;j < 4;j ++){
+			if(x[i] == ans[i]){
+				hit ++;
+				break;
+			}else if(x[i] == ans[j]){
+				blow ++;
+				break;
+			}
+		}
+	}
+	printf("%d %d\n",hit,blow);
+}

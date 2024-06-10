@@ -1,0 +1,49 @@
+#include <iostream>
+//#include <string>
+//#include <iomanip>
+
+using namespace std;
+//#define
+
+int main() {
+	int gyou, retsu;
+	int count_yoko = 0;
+	int count_tate = 0;
+	cin >> gyou >> retsu;
+	int hyou[gyou+1][retsu+1];
+	for(int i = 0; i <= gyou-1; ++i){
+		for(int j = 0; j <= retsu-1; ++j){
+			cin >> hyou[i][j];
+		}
+	}
+	for(int i = 0; i <= gyou-1; ++i){
+		count_yoko = 0;
+		for(int j = 0; j <= retsu; ++j){
+			if(j == retsu){
+				hyou[i][j] = count_yoko;
+			}
+		count_yoko += hyou[i][j];
+		}
+	}
+
+	for(int i = 0; i <= retsu; ++i){
+		count_tate = 0;
+		for(int j = 0; j <= gyou; ++j){
+			if(j == gyou){
+				hyou[j][i] = count_tate;
+			}
+			count_tate += hyou[j][i];
+		}
+	}
+
+	for(int i = 0; i <= gyou; ++i){
+		for(int j = 0; j <= retsu; ++j){
+			if(j == retsu){
+				cout << hyou[i][j] << endl;
+			} else {
+				cout << hyou[i][j] << " ";
+			}
+		}
+	}
+	return 0;
+}

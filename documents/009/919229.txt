@@ -1,0 +1,70 @@
+/*
+	0071:Bombs Chain
+*/
+#include	<iostream>
+#include	<queue>
+#include	<utility>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+char map[8][8];
+
+int vx[4] = { 1, 0, -1, 0 };
+int vy[4] = { 0, 1, 0, -1 };
+
+void bomb(int sx, int sy);
+
+int main(void) {
+	int dt;
+	cin >> dt;
+	for(int s = 0; s < dt; s++) {
+		int sx, sy;
+		
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				char c;
+				cin >> c;
+				map[i][j] = c;
+			}
+		}
+		
+		cin >> sy >> sx;
+		bomb(sx - 1, sy - 1);
+		
+		cout << "Data " << s + 1 << ":" << endl;
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				cout << map[i][j];
+			}
+			cout << endl;
+		}
+	}
+	
+	return 0;
+}
+
+void bomb(int sx, int sy) {
+	queue<P> que;
+	que.push( P(sx, sy) );
+	map[sx][sy] = '0';
+	
+	while( que.size() ) {
+		P point = que.front();
+		que.pop();
+		
+		for(int i = 0; i < 4; i++) {
+			for(int j = 1; j < 4; j++) {
+				int nx = point.first + vx[i] * j;
+				int ny = point.second + vy[i] * j;
+				if(8 > nx && nx >= 0 && 8 > ny && ny >= 0) {
+					if(map[nx][ny] == '1') {
+						que.push(P(nx, ny));
+						map[nx][ny] = '0';
+					}
+				}
+			}
+		}
+	}
+}

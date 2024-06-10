@@ -1,0 +1,17 @@
+#include <stdio.h>
+int main(void) {
+    long long N,i,min,profit,temp;
+    scanf("%lld",&N);
+    scanf("%lld",&temp);
+    scanf("%lld",&profit);
+    min=temp;
+    if (min>profit) min=profit;
+    profit-=temp;
+    for (i=0; i<N-2; i++) {
+        scanf("%lld",&temp);
+        if (temp-min>profit) profit=temp-min;
+        if (temp<min) min=temp;
+    }
+    printf("%lld\n",profit);
+    return 0;
+}

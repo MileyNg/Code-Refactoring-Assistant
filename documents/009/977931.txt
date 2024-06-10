@@ -1,0 +1,39 @@
+m = gets.chomp.to_i
+n = gets.chomp.to_i
+
+ordrs = (0..m).map{(0..m).map{false}}
+
+for x in (1..m)
+  if x != 2
+    ordrs[x][2] = true
+  end
+end
+
+n.times.each do
+  x, y = gets.chomp.split(" ").map{|s| s.to_i}
+  ordrs[x][y] = true
+
+  for x0 in (1..m)
+    ordrs[x0][y] = true if ordrs[x0][x]
+    ordrs[x][x0] = true if ordrs[y][x0]
+    for y0 in (1..m)
+      ordrs[x0][y0] = true if ordrs[x0][x] && ordrs[y][y0]
+    end
+  end
+end
+
+nums = []
+for x in (1..m)
+  min_id = 0
+
+  for y in (1..m)
+    if ordrs[y][x]
+      id_y = nums.index(y)
+      id = id_y.nil? ? 0 : id_y + 1
+      min_id = id if min_id < id
+    end
+  end
+
+  nums[min_id, 0] = x
+end
+puts nums

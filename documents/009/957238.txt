@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  int masu[10][10]={0};
+  int i,j;
+  int x,y,size;
+  int max=0;
+  int c=0;
+
+  while(scanf("%d,%d,%d",&x,&y,&size)!=EOF){
+    switch(size){
+    case 1:{
+      masu[x][y]+=1;
+      masu[x-1][y]+=1;
+      masu[x+1][y]+=1;
+      masu[x][y-1]+=1;
+      masu[x][y+1]+=1;
+      break;
+    }
+    case 2:{
+      for(i=-1;i<2;i++){
+	for(j=-1;j<2;j++)
+	  masu[x+i][y+j]+=1;
+      }
+      break;
+    }
+    case 3:{
+      for(i=-1;i<2;i++){
+	for(j=-1;j<2;j++)
+	  masu[x+i][y+j]+=1;
+      }
+      masu[x+2][y]+=1;
+      masu[x-2][y]+=1;
+      masu[x][y-2]+=1;
+      masu[x][y+2]+=1;
+      break;
+    } 
+    }
+  }
+
+  for(i=0;i<10;i++){
+    for(j=0;j<10;j++){
+      if(masu[i][j]==0)
+	c++;
+      if(max<masu[i][j])
+	max=masu[i][j];
+    }
+  }
+  
+  printf("%d\n%d\n",c,max);
+  
+
+  return 0;
+}

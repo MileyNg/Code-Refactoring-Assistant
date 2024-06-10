@@ -1,0 +1,28 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+#define PI acos(-1)
+using namespace std;
+int main(){
+  int a,b,c;
+  int x=0,y=0,z=0,w=0;
+  while(cin>>a>>b>>c){
+    vector<int>in(3);
+    in[0]=a;in[1]=b;in[2]=c;
+    sort(all(in));
+    if(in[0]+in[1]<=in[2])break;
+    x++;    
+    if(in[0]*in[0]+in[1]*in[1]==in[2]*in[2])y++;
+    if(in[0]*in[0]+in[1]*in[1]>in[2]*in[2])z++;
+    if(in[0]*in[0]+in[1]*in[1]<in[2]*in[2])w++;
+  }
+  cout<<x<<" "<<y<<" "<<z<<" "<<w<<endl;
+}

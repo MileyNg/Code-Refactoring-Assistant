@@ -1,0 +1,22 @@
+def takein(p):
+    s = 0
+    track = 1
+    for i in range(n):
+        if s + w[i] <= p:
+            s += w[i]
+        else:
+            track += 1
+            if track > k: return False
+            s = w[i]
+    return True
+
+n, k = map(int, input().strip().split())
+w = []
+for i in range(n):
+    w.append(int(input()))
+
+p = max(max(w), sum(w) // k)
+while not takein(p):
+    p += 1
+
+print(p)

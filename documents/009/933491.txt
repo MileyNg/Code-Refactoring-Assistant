@@ -1,0 +1,148 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<sstream>
+#include<algorithm>
+
+std::string find(std::vector<std::string>&v, int a, bool b){
+
+	std::string res;
+
+	if (b){
+		for (int i = a - 1; i >= 0; i--){
+			if (v[i] != "T"){
+				res = v[i];
+				v[i] = "T";
+				break;
+			}
+		}
+	}
+
+	if (!b){
+		for (int i = a + 1; i < v.size(); i++){
+			if (v[i] != "T"){
+				res = v[i];
+				v[i] = "T";
+				break;
+			}
+		}
+	}
+
+	return res;
+}
+
+int toint(std::string str){
+
+	int res;
+	std::stringstream z;
+
+	z << str;
+	z >> res;
+
+	return res;
+
+}
+
+std::string tostring(int a){
+
+	std::string str;
+	std::stringstream z;
+
+	z << a;
+	z >> str;
+
+	return str;
+
+}
+
+std::string keisan(std::string lhs, std::string rhs, int t){
+
+	int a, b, c;
+
+	a = toint(lhs);
+	b = toint(rhs);
+
+	if (t == 1)c = a + b;
+	if (t == 2)c = a - b;
+	if (t == 3)c = a * b;
+	if (t == 4)c = a / b;
+
+	return tostring(c);
+
+}
+
+std::string keisan2(std::vector<std::string> &v){
+
+	int res = 0;
+
+	for (int i = 0, j = 0, k = 0; i < v.size(); i++){
+		if (v[i] == "(")j = i, k++;
+		if (v[i] == ")"){
+			k--;
+			if (k == 0){
+				std::vector<std::string>w;
+				for (int p = j + 1; p < i; p++)w.push_back(v[p]);
+				v[j] = keisan2(w);
+				for (int p = j + 1; p <= i; p++)v[p] = "T";
+			}
+		}
+	}
+
+
+	for (int i = 0; i < v.size(); i++){
+		if (v[i] == "*"){
+			v[i - 1] = keisan(find(v, i, 1), find(v, i, 0), 3);
+			v[i] = v[i + 1] = "T";
+		}
+		if (v[i] == "/"){
+			v[i - 1] = keisan(find(v, i, 1), find(v, i, 0), 4);
+			v[i] = v[i + 1] = "T";
+		}
+	}
+
+	for (int i = 0; i < v.size(); i++){
+		if (v[i] == "+"){
+			v[i - 1] = keisan(find(v, i, 1), find(v, i, 0), 1);
+			v[i] = v[i + 1] = "T";
+		}
+		if (v[i] == "-"){
+			v[i - 1] = keisan(find(v, i, 1), find(v, i, 0), 2);
+			v[i] = v[i + 1] = "T";
+		}
+	}
+
+	v[v.size() - 1] = "T";
+	for (int i = 0; i < v.size(); i++)if (v[i] != "T")res = toint(v[i]);
+
+	return tostring(res);
+
+}
+
+
+int main(){
+
+	int n;
+	std::cin >> n;
+
+	for (int i = 0; i < n; i++){
+
+		std::string str;
+
+		std::cin >> str;
+
+		std::vector<std::string> v;
+
+		for (int i = 0, j = 0; i < str.size(); i++){
+
+			if (!(str[i] >= '0'&&str[i] <= '9')){
+				if (i - j > 0)v.push_back(str.substr(j, i - j));
+				v.push_back(str.substr(i, 1));
+				j = i + 1;
+			}
+		}
+
+		std::cout << keisan2(v) << std::endl;
+	}
+
+	return 0;
+}

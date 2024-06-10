@@ -1,0 +1,51 @@
+//============================================================================
+// Name        : 10015.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	int a[4][13]={};
+	int n,i,k,j;
+	cin >>n;
+	for(i=0; i<n; i++){
+		string s;
+		cin>>s>>j;
+		if(s=="S"){
+			k=0;
+		}if(s=="H"){
+			k=1;
+		}if(s=="C"){
+			k=2;
+		}if(s=="D"){
+			k=3;
+		}
+		a[k][j-1]=1;
+
+	}for(k=0; k<4; k++){
+			for(j=1; j<=13; j++){
+				if(a[k][j-1]==0){
+					string s;
+					if(k==0){
+						s="S";
+					}if(k==1){
+						s="H";
+					}if(k==2){
+						s="C";
+					}if(k==3){
+						s="D";
+					}
+					cout<<s<<" "<<j<<endl;
+
+			}
+		}
+
+	}
+
+	return 0;
+}

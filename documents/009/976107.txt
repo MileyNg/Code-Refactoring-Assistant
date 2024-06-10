@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int num[30];
+
+int gcd(int a, int b){ return a?gcd(b%a,a):b; }
+
+int main(){
+  string s;
+  cin >> s;
+
+  for(int i=0;i<s.size();i++){
+    num[s[i]-'a']++;
+  }
+
+  int cnt = 0, sum = 0;;
+  for(int i=0;i<26;i++){
+    if(num[i] & 1)cnt++;
+    num[i] /= 2;
+    sum += num[i];
+  }
+
+  if(cnt>1){
+    cout << 0 << endl;
+  }else{
+    vector<int> up;
+    for(int i=2;i<=sum;i++)up.push_back(i);
+    
+    for(int i=0;i<26;i++){
+      for(int j=2;j<=num[i];j++){
+	int tmp = j;
+	for(int k=0;k<up.size() && tmp!=1;k++){
+	  int g = gcd(tmp,up[k]);
+	  tmp /= g; up[k] /= g;
+	}
+      }
+    }
+    
+    long long ans = 1;
+    for(int i=0;i<up.size();i++)ans *= up[i];
+    cout << ans << endl;
+  }
+}

@@ -1,0 +1,149 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<sstream>
+#include<map>
+using namespace std;
+int dx[4]={0,1,0,-1};
+int dy[4]={-1,0,1,0};
+int INF=(1<<24);
+int c2i(char ch){return ch-'a';}
+int str2i(string str){
+  stringstream ss;
+  int res;
+  ss<<str;
+  ss>>res;
+  return res-1;  
+}
+struct State{
+  int cost,y,x,dir;
+  State (int cost=0,int y=0,int x=0,int dir=0):cost(cost),y(y),x(x),dir(dir){
+    
+  }
+  bool operator < (const State &p) const{
+    return cost > p.cost;
+  }
+};
+
+int M,N,D,ns,nc,nj,Sy,Sx,Gy,Gx;
+int t[20][20][4];
+int k[20][20];
+
+priority_queue <State> Q;
+map <State,bool> vd;
+
+void input();
+void init();
+void solve();
+void dijkstra();
+
+int main(){
+  while(1){
+    cin>>N>>M;
+    if(M==0&&N==0)break;
+    cin>>D;
+    init();
+    input();
+    solve();
+  }
+  return 0;
+}
+
+void dijkstra(){
+  State now=State(0,Sy,Sx,1),next;
+  Q.push(now);
+
+  while(!Q.empty()){
+    now=Q.top();Q.pop();
+    vd[now]=true;
+    if(k[now.y][now.x]>0&&now.dir%2==0&&(now.cost/k[now.y][now.x])%2==1)continue;
+    if(k[now.y][now.x]>0&&now.dir%2==1&&(now.cost/k[now.y][now.x])%2==0)continue;
+    if(now.y==Gy&&now.x==Gx){
+      cout<<now.cost<<endl;return;
+    }
+    for(int i=0;i<4;i++){
+      if((now.dir+2)%4==i)continue;
+      next.y=now.y+dy[i];next.x=now.x+dx[i];
+      next.cost=now.cost+t[now.y][now.x][i];
+      next.dir=i;
+      if(next.y<0||next.x<0||next.y>=N||next.x>=M)continue;
+      if(vd[next]==true||next.cost>100)continue;
+      Q.push(next);
+    }
+  }
+}
+
+void solve(){
+  dijkstra();
+
+}
+
+void input(){
+  string str;
+  int y,x,Y,X,d;
+
+  cin>>ns;
+  for(int i=0;i<ns;i++){
+    cin>>str;
+    y=c2i(str[0]);
+    x=str2i(str.substr(2));
+    cin>>k[y][x];
+  }
+  cin>>nc;
+
+  for(int i=0;i<nc;i++){
+    cin>>str;
+    y=c2i(str[0]);
+    x=str2i(str.substr(2));
+    cin>>str;
+    Y=c2i(str[0]);
+    X=str2i(str.substr(2));
+    for(int j=0;j<4;j++){
+      if(y+dy[j]==Y&&x+dx[j]==X){
+	t[y][x][j]=INF;
+	t[Y][X][(j+2)%4]=INF;
+	break;
+      }
+    }
+  }
+
+  cin>>nj;
+  for(int i=0;i<nj;i++){
+    cin>>str;
+    y=c2i(str[0]);
+    x=str2i(str.substr(2));
+    cin>>str;
+    Y=c2i(str[0]);
+    X=str2i(str.substr(2));
+    cin>>d;
+    for(int j=0;j<4;j++){
+      if(y+dy[j]==Y&&x+dx[j]==X){
+	t[y][x][j]+=d;
+	t[Y][X][(j+2)%4]+=d;
+	break;
+      }
+    }
+  }
+  
+  cin>>str;
+  Sy=c2i(str[0]);
+  Sx=str2i(str.substr(2));
+  cin>>str;
+  Gy=c2i(str[0]);
+  Gx=str2i(str.substr(2));
+
+}
+
+void init(){
+  vd.clear();
+  while(!Q.empty())Q.pop();
+  for(int i=0;i<20;i++){
+    for(int j=0;j<20;j++){
+      for(int K=0;K<4;K++){
+	t[i][j][K]=D;
+      }
+      k[i][j]=0;
+    }
+  }
+  
+}

@@ -1,0 +1,41 @@
+#include<iostream>
+#include<sstream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<stack>
+#include<queue>
+#include<deque>
+#include<map>
+#include<set>
+#include<bitset>
+#include<algorithm>
+#include<cmath>
+#include<cstdlib>
+#include<string>
+#include<cstring>
+using namespace std;
+
+bool isPrime(int p){
+	
+	if(p<2)return false;
+	if(p==2)return true;
+	if((p&1)==0)return false;
+	
+	for(int x=2;x<=sqrt(p);++x)if(p%x==0)return false;
+
+	return true;
+}	
+
+int main(){
+	int n;
+	while(cin>>n){
+		int j = n-1;
+		while(!isPrime(j))j--;
+		cout<<j<<" ";
+		j = n+1;
+		while(!isPrime(j))j++;
+		cout<<j<<endl;
+	}
+	return 0;
+}		

@@ -1,0 +1,44 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+int main()
+{
+        int num;
+        bool cards[4][14];
+        char a;
+        int b;
+
+        for(int i=0; i<4; i++){
+                for(int j=0; j<14; j++){
+                        cards[i][j] = false;
+                }
+        }
+
+        scanf("%d\n", &num);
+
+        for(int i=0; i<num; i++){
+                scanf("%c %d\n", &a, &b);
+                switch(a){
+                case 'S' :{ cards[0][b] = true; break; }
+                case 'H' :{ cards[1][b] = true; break; } 
+                case 'C' :{ cards[2][b] = true; break; }
+                case 'D' :{ cards[3][b] = true; break; }
+                }
+        }
+
+        for(int i=0; i<4; i++){
+                for(int j=1; j<14; j++){
+                        if( cards[i][j] == false ){ 
+                                switch(i){
+                                case 0 :{ cout << "S" << " " << j << endl; break; }
+                                case 1 :{ cout << "H" << " " << j << endl; break; } 
+                                case 2 :{ cout << "C" << " " << j << endl; break; }
+                                case 3 :{ cout << "D" << " " << j << endl; break; }
+                                }
+                        }
+                }
+        }
+
+        return 0;
+}

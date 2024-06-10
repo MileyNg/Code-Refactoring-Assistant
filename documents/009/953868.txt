@@ -1,0 +1,25 @@
+#include<stdio.h>
+void func_fact(int n, int *result);
+main()
+{
+	int input = 0, result = 1;
+	scanf("%d", &input);
+	func_fact(input, &result);
+	printf("%d\n", result);
+	return 0;
+}
+void func_fact(int n, int *result)
+{
+	static int i = 1;
+	*result = *result * i;
+	i++;
+	
+	if(i > n)
+	{
+		return;
+	}
+	else
+	{
+		func_fact(n, result);
+	}
+}

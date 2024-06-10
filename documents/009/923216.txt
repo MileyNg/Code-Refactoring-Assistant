@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <ctype.h>
+
+#define MAX 200
+
+int e = 0;
+int stack[MAX];
+
+void push(int a) {
+	if (e < MAX) {
+		stack[e++] = a;
+	} else {
+		fprintf(stderr, "push error\n");
+	}
+}
+
+int pop() {
+	if (e > 0) {
+		return stack[--e];
+	} else {
+		fprintf(stderr, "pop error\n");
+		return 0;
+	}
+}
+
+int main(void) {
+	char s[MAX];
+
+	while (scanf("%s", s) != EOF) {
+		if (isdigit(s[0])) {
+			push(atoi(s));
+		} else {
+			switch (s[0]) {
+			case '+':
+				push(pop() + pop());
+				break;
+			case '-':
+				push(pop() - pop());
+				break;
+			case '*':
+				push(pop() * pop());
+				break;
+			default:
+				fprintf(stderr, "error\n");
+				break;
+			}
+		}
+	}
+
+	printf("%d\n", pop());
+
+	return 0;
+}

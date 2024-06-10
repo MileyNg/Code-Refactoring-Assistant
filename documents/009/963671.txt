@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+void recall( int n[31] )
+{
+	int i;
+	int j;
+	int index;
+	int result;
+	for( i = 0; n[i] != 0; i++ )
+	{
+		printf( "%s%d", i == 0 ? "" : " ", n[i] );
+	}
+	puts("");
+	
+	result = 1;
+	for( i = 0; n[i] != 0; i++ )
+	{
+		result *= n[i];
+	}
+	if( result == 1 )return;
+	
+	for( i = 30; i >= 0; i-- )
+	{
+		if( n[i] > 1 )
+		{
+			n[i]--;
+			for( j = i + 1; n[j] + 1 > n[i]; j++ );
+			n[j]++;
+			
+			i = 0;
+		}
+	}
+	recall( n );
+}
+
+void init(int array[31])
+{
+	int i;
+	for( i = 0; i < 31; i++ )
+	{
+		array[i] = 0;
+	}
+}
+
+int main(void)
+{
+	int i;
+	int j;
+	int n;
+	int array[31];
+	while( 1 )
+	{
+		scanf( "%d", &n );
+		if( n == 0 )break;
+		init( array );
+		array[0] = n;
+		recall( array );
+	}
+	
+	return (0);
+}

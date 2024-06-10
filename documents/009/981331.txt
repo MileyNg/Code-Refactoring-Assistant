@@ -1,0 +1,20 @@
+#include <iostream>
+#include <algorithm>
+#include <cassert>
+using namespace std;
+
+const int MAX = 1000000;
+
+int main(){
+  int n, x, sum = 0, maxi = -MAX, mini = MAX;
+  cin >> n;
+  assert(n <= 10000);
+  for(int i=0;i<n;i++){
+    cin >> x;
+    maxi = max(maxi, x);
+    mini = min(mini, x);
+    assert((long long)sum + (long long)x < INT_MAX);
+    sum += x;
+  }
+  cout << mini << ' ' << maxi << ' ' << sum << endl;
+}

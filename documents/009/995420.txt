@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+
+using namespace std;
+
+char decode(int alph, int n)
+{
+	if(n == 0){
+		return alph;
+	}
+	if(alph == 'a'){
+		return decode('Z', n-1);
+	}
+	if(alph == 'A'){
+		return decode('z', n-1);
+	}
+	return decode(alph-1, n-1);
+}
+
+int main()
+{
+	int n, l;
+	int k[108];
+	char s[108];
+	
+	while(scanf("%d", &n) != EOF){
+		if(n == 0) break;
+		for(int i = 0; i < n; i++){
+			cin >> k[i];
+		}
+		cin >> s;
+		l = strlen(s);
+		
+		for(int i = 0; i < l; i++){
+			cout << decode(s[i], k[i % n]);
+		}
+		cout << endl;
+	}
+	return 0;
+}	

@@ -1,0 +1,23 @@
+#include <iostream>
+#include <cmath>
+
+int judgeIntersection(double distance, double ra, double rb){
+    if(distance > (ra + rb))
+        return 0;
+    else if((distance + ra) < rb)
+        return -2;
+    else if((distance + rb) < ra)
+        return 2;
+    else
+        return 1;
+}
+
+int main(void){
+    double xa, ya, ra, xb, yb, rb; 
+    int N;
+    std::cin >> N;
+    while(std::cin >> xa >> ya >> ra >> xb >> yb >> rb){
+        double distance = std::sqrt((xa - xb) * (xa - xb) + (ya - yb) * (ya - yb));
+        std::cout << judgeIntersection(distance, ra, rb) << std::endl;
+    }
+}

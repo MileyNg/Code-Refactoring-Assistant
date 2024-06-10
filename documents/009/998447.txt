@@ -1,0 +1,179 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+#include <cstdio>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+#define up mkp(0,1)
+#define right mkp(1,0)
+#define left mkp(-1,0)
+#define down mkp(0,-1)
+#define no mkp(2,2)
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<vector<pii> > vpp;
+typedef vector<int> vint;
+typedef pair<pii,int> piii;
+static const int INF=1<<24;
+
+template <class T>
+void initvv(vector<vector<T> > &v,int a,int b, const T  &t = T()){
+	v.assign(a,vector<T>(b,t));
+}
+
+vpp vv;
+// int v[4][2]={0,1,0,-1,1,0,-1,0};
+vector<pii> ta[7][7];
+vector<pii> ne[7][7];
+void solve(int a,int b,int x,int y){
+	// vector<pii> tmp,tt;
+	//cout<<a<<" "<<b<<endl;
+	if(ta[a][b].empty()){
+		vv[x][y]=mkp(a,vv[x][y].S+1);
+		cout<<"empty\n";
+		return;
+	}
+	rep(i,3){
+		int xx=x,yy=y;
+		bool f=false;
+		if(ta[a][b][i]==up){
+			yy++;
+			f=true;
+		}
+		else if(ta[a][b][i]==right){
+			xx++;
+			//cout<<"right\n";
+			f=true;
+		}
+		else if(ta[a][b][i]==left){
+			xx--;
+			f=true;
+		}
+		else if(ta[a][b][i]==down){
+			//cout<<"down\n";
+			yy--;
+			f=true;
+		}
+		else if(ta[a][b][i]==no){
+			continue;
+		}
+		if(f&&vv[x][y].S>vv[xx][yy].S){
+			// cout<<"x y xx yy vvx vvxx "<<x<<" "<<y<<" "<<xx<<" "<<yy<<" "<<vv[x][y].S<<" "<<vv[xx][yy].S<<endl;
+			solve(ne[a][b][i].F,ne[a][b][i].S,xx,yy);
+			return;
+		}
+	}
+	// cout<<x<<" "<<y<<" "<<a<<" "<<vv[x][y].S+1<<endl;
+	vv[x][y]=mkp(a,vv[x][y].S+1);
+	return;
+}
+
+int main(){
+	ta[1][2].PB(no); ta[1][2].PB(up); ta[1][2].PB(left);
+	ta[1][3].PB(no); ta[1][3].PB(right); ta[1][3].PB(up);
+	ta[1][4].PB(no); ta[1][4].PB(left); ta[1][4].PB(down);
+	ta[1][5].PB(no); ta[1][5].PB(down); ta[1][5].PB(right);
+	
+	ne[1][2].PB(no); ne[1][2].PB(mkp(2,6)); ne[1][2].PB(mkp(3,2));
+	ne[1][3].PB(no); ne[1][3].PB(mkp(2,3)); ne[1][3].PB(mkp(3,6));
+	ne[1][4].PB(no); ne[1][4].PB(mkp(2,4)); ne[1][4].PB(mkp(3,1));
+	ne[1][5].PB(no); ne[1][5].PB(mkp(2,1)); ne[1][5].PB(mkp(3,5));
+
+	ta[2][1].PB(up); ta[2][1].PB(no); ta[2][1].PB(right);
+	ta[2][3].PB(left); ta[2][3].PB(no); ta[2][3].PB(up);
+	ta[2][4].PB(right); ta[2][4].PB(no); ta[2][4].PB(down);
+	ta[2][6].PB(down); ta[2][6].PB(no); ta[2][6].PB(left);
+	
+	ne[2][1].PB(mkp(1,5)); ne[2][1].PB(no); ne[2][1].PB(mkp(3,1));
+	ne[2][3].PB(mkp(1,3)); ne[2][3].PB(no); ne[2][3].PB(mkp(3,5));
+	ne[2][4].PB(mkp(1,4)); ne[2][4].PB(no); ne[2][4].PB(mkp(3,2));
+	ne[2][6].PB(mkp(1,2)); ne[2][6].PB(no); ne[2][6].PB(mkp(3,6));
+
+	ta[3][1].PB(up); ta[3][1].PB(left); ta[3][1].PB(no); 
+	ta[3][2].PB(right); ta[3][2].PB(up); ta[3][2].PB(no); 
+	ta[3][5].PB(left); ta[3][5].PB(down); ta[3][5].PB(no); 
+	ta[3][6].PB(down); ta[3][6].PB(right); ta[3][6].PB(no); 
+
+	ne[3][1].PB(mkp(1,4)); ne[3][1].PB(mkp(2,1)); ne[3][1].PB(no);
+	ne[3][2].PB(mkp(1,2)); ne[3][2].PB(mkp(2,4)); ne[3][2].PB(no);
+	ne[3][5].PB(mkp(1,5)); ne[3][5].PB(mkp(2,3)); ne[3][5].PB(no);
+	ne[3][6].PB(mkp(1,3)); ne[3][6].PB(mkp(2,6)); ne[3][6].PB(no);
+
+	ta[4][1].PB(up); ta[4][1].PB(right); ta[4][1].PB(no);
+	ta[4][2].PB(left); ta[4][2].PB(up); ta[4][2].PB(no);
+	ta[4][5].PB(right); ta[4][5].PB(down); ta[4][5].PB(no);
+	ta[4][6].PB(down); ta[4][6].PB(left); ta[4][6].PB(no);
+
+	ne[4][1].PB(mkp(1,3)); ne[4][1].PB(mkp(2,1)); ne[4][1].PB(no);
+	ne[4][2].PB(mkp(1,2)); ne[4][2].PB(mkp(2,3)); ne[4][2].PB(no);
+	ne[4][5].PB(mkp(1,5)); ne[4][5].PB(mkp(2,4)); ne[4][5].PB(no);
+	ne[4][6].PB(mkp(1,4)); ne[4][6].PB(mkp(2,6)); ne[4][6].PB(no);
+
+	ta[5][1].PB(up); ta[5][1].PB(no); ta[5][1].PB(left);
+	ta[5][3].PB(right); ta[5][3].PB(no); ta[5][3].PB(up);
+	ta[5][4].PB(left); ta[5][4].PB(no); ta[5][4].PB(down);
+	ta[5][6].PB(down); ta[5][6].PB(no); ta[5][6].PB(right);
+
+	ne[5][1].PB(mkp(1,2)); ne[5][1].PB(no); ne[5][1].PB(mkp(3,1));
+	ne[5][3].PB(mkp(1,3)); ne[5][3].PB(no); ne[5][3].PB(mkp(3,2));
+	ne[5][4].PB(mkp(1,4)); ne[5][4].PB(no); ne[5][4].PB(mkp(3,5));
+	ne[5][6].PB(mkp(1,5)); ne[5][6].PB(no); ne[5][6].PB(mkp(3,6));
+
+	ta[6][2].PB(no); ta[6][2].PB(up); ta[6][2].PB(right);
+	ta[6][3].PB(no); ta[6][3].PB(left); ta[6][3].PB(up);
+	ta[6][4].PB(no); ta[6][4].PB(right); ta[6][4].PB(down);
+	ta[6][5].PB(no); ta[6][5].PB(down); ta[6][5].PB(left);
+	
+	ne[6][2].PB(no); ne[6][2].PB(mkp(2,1)); ne[6][2].PB(mkp(3,2));
+	ne[6][3].PB(no); ne[6][3].PB(mkp(2,3)); ne[6][3].PB(mkp(3,1));
+	ne[6][4].PB(no); ne[6][4].PB(mkp(2,4)); ne[6][4].PB(mkp(3,6));
+	ne[6][5].PB(no); ne[6][5].PB(mkp(2,6)); ne[6][5].PB(mkp(3,5));
+
+
+	int n;
+
+
+
+	while(cin>>n,n){
+		initvv(vv,200,200);
+		rep(i,200) rep(j,200) vv[i][j]=mkp(0,0);
+		rep(i,n){
+			int a,b;
+			cin>>a>>b;
+			solve(a,b,100,100);
+		}
+		vint a(8,0);
+		rep(i,200){
+			rep(j,200){
+				if(vv[i][j].F) a[vv[i][j].F]++;
+			}
+		}
+		rep(i,6){
+			if(i) cout<<" ";
+			cout<<a[i+1];
+		}
+		cout<<endl;		
+	}
+}

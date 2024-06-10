@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+pair<bool,vi> solve(const vvi& g,int u,const vi& ls,const vi& rs,const vvi& ps)
+{
+	vi t=ps[u];
+	for(int v:g[u]){
+		auto p=solve(g,v,ls,rs,ps);
+		if(!p.first) return mp(false,vi());
+		int sum=0,size=p.second.size();
+		for(int x:p.second) sum+=x;
+		// if((sum+size/2)/size<=ls[v] || rs[v]<=(sum+size/2)/size) return mp(false,vi())
+		if(2*sum+size<=ls[v]*2*size || rs[v]*2*size<=2*sum+size) return mp(false,vi());
+		t.insert(end(t),all(p.second));
+	}
+	return mp(true,t);
+}
+
+int main()
+{
+	for(int w,h;cin>>w>>h && w|h;){
+		vs grid(h);
+		rep(i,h) cin>>grid[i];
+		
+		grid.push_back(string(w,'0'));
+		h++;
+		
+		vi prev(10,-1),ls(10,INF),rs(10,-INF);
+		ls[0]=0,rs[0]=w;
+		rep(i,h-1) rep(j,w){
+			if(isdigit(grid[i][j]) && isdigit(grid[i+1][j]) && grid[i][j]!=grid[i+1][j]){
+				int u=grid[i+1][j]-'0',v=grid[i][j]-'0';
+				prev[v]=u;
+				ls[v]=min(ls[v],j);
+				rs[v]=max(rs[v],j+1);
+			}
+		}
+		
+		vvi ps(10);
+		rep(i,h) rep(j,w) if(isdigit(grid[i][j]))
+			ps[grid[i][j]-'0'].push_back(j);
+		
+		vvi g(10);
+		rep(i,10) if(prev[i]!=-1)
+			g[prev[i]].push_back(i);
+		
+		cout<<(solve(g,0,ls,rs,ps).first?"STABLE":"UNSTABLE")<<endl;
+	}
+}

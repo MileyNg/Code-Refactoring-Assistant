@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int stack[1000],point=0;
+
+
+int fstack(int com,int num){
+	int data;
+	if(com==0){
+		data=stack[point];
+		stack[point]=num;
+		point--;
+		return data;
+	}
+	if(com==1){
+		point++;
+		stack[point]=num;
+		return 0;
+	}else{
+		return -1;
+	}
+}
+
+int main(){
+	int a;
+
+	while(scanf("%d",&a)!=EOF){
+		if(a==0){
+			a=fstack(0,0);
+			printf("%d\n",a);
+		}else{
+			fstack(1,a);
+		}
+	}
+
+	return 0;
+}

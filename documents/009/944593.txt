@@ -1,0 +1,51 @@
+//============================================================================
+// Name        : aoj0107.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+
+// f(x) = x
+// x ^ 2 + y ^ 2 = r ^ 2
+// x ^ 2 + x ^ 2 = r ^ 2
+// x ^ 2 = r ^ 2 / 2
+// x = r / root(2)
+
+// case height <= r * root(2) && width <= r * root(2)
+
+int main() {
+	int height, width, depth, n, r;
+	while(true){
+		cin >> height >> width >> depth;
+		if(height == 0 && width == 0 && depth == 0){
+			break;
+		}
+		cin >> n;
+		for(int i = 0;i < n;i++){
+			cin >> r;
+			string ans = "NA";
+			int cnt = 0;
+			if(width * width < 2 * r * r){
+				cnt++;
+			}
+			if(height * height < 2 * r * r){
+				cnt++;
+			}
+			if(depth * depth < 2 * r * r){
+				cnt++;
+			}
+			if(2 <= cnt){
+				ans = "OK";
+			}
+			cout << ans << endl;
+		}
+	}
+	return 0;
+}

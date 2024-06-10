@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+typedef long long lint;
+
+int main(void) {
+	lint max_sum;
+	int n;
+	int i;
+	int array[5000];
+
+	scanf("%d", &n);
+	while (n != 0){
+		max_sum = 0;
+		for (i = 0; i < n; i++){
+			scanf("%d", &array[i]);
+		}
+		for (i = 0; i < n; i++){
+			int j;
+			int sum = 0;
+			for (j = i; j < n; j++){
+				sum += array[j];
+				if (sum > max_sum){
+					max_sum = sum;
+				}
+			}
+		}
+
+		printf("%lld\n", max_sum);
+		scanf("%d", &n);
+	}
+	return 0;
+}

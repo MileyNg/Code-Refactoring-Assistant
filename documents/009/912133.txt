@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main(){
+    int n, k;
+    while(cin >> n >> k, n+k){
+        vector<int>s;
+        for(int i=0; i < k; i++){
+            int num;
+            cin >> num;
+            s.push_back(num);
+        }
+        for(int i=0; i < n; i++){
+            for(int j=0; j < k; j++){
+                int num;
+                cin >> num;
+                s[j]-=num;
+            }
+        }
+        bool isPossible = true;
+        for(int i=0; i < s.size(); i++){
+            if(s[i] < 0) isPossible = false;
+        }
+        if(isPossible) cout << "Yes" << endl;
+        else cout << "No" << endl;
+    }
+}

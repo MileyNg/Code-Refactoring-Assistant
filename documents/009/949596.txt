@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool solve(map<int, int> &mp){
+  if(mp[1] % 2 == 0 || mp[2] % 2 == 0) return false;
+  for(map<int, int>::iterator it = mp.begin() ; it != mp.end() ; it++){
+    if(it->first == 1 || it->first == 2) continue;
+    if(it->second % 2 == 1) return false;
+  }
+  return true;
+}
+
+int main(){
+  int from, to;
+  while(cin >> from >> to){
+    map<int, int> mp;
+    mp[from]++;
+    mp[to]++;
+    
+    while(cin >> from >> to, from|to){
+      mp[from]++;
+      mp[to]++;
+    }
+    cout << (solve(mp) ? "OK" : "NG") << endl;
+  }
+  
+  return 0;
+}

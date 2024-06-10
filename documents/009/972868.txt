@@ -1,0 +1,37 @@
+#include<stdio.h>
+
+int differ(int y){
+  return 4280-y;
+}
+
+int fee(int w){
+  int a[4]={0,125,140,160};
+  int basic=1150;
+  int addition=0;
+  int i;
+  int n=w;
+
+  for(i=3;i>=0;i--){
+    if(n>10*i){
+      addition+=a[i]*(n-10*i);
+      n=10*i;
+    }
+  }
+
+  return basic+addition;
+}
+
+void doit(){
+  int w;
+
+  scanf("%d",&w);
+  if(w!=-1){
+    printf("%d\n",differ(fee(w)));
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

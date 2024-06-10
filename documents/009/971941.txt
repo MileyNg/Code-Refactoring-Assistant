@@ -1,0 +1,22 @@
+periods = [
+  ["heisei",    1989, 1, 8],
+  ["showa",     1926, 12, 25],
+  ["taisho",    1912, 7, 30],
+  ["meiji",     1868, 9, 8],
+]
+
+while (line = gets)
+  y, m, d = line.chomp.split(" ").map{|s| s.to_i}
+
+  era = "pre-meiji"
+
+  for p in periods
+    if y > p[1] ||
+        y == p[1]&& (m > p[2] || m == p[2] && d >= p[3])
+      era = [p[0], y - p[1] + 1, m, d].join(" ")
+      break
+    end
+  end
+
+  puts era
+end

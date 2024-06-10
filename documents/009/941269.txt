@@ -1,0 +1,50 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int a[2][10010];
+vector<pair<pair<int, int>, int> > v;
+
+int main() {
+  while (true) {
+    int n, r;
+    cin >> n >> r;
+    if (n == 0 && r == 0) break;
+    memset(a, 0, sizeof(a));
+    v.clear();
+    rep (i, n) {
+      int x1, y1, x2, y2;
+      cin >> x1 >> y1 >> x2 >> y2;
+      ++x1, ++y1, ++x2, ++y2;
+      v.push_back(make_pair(make_pair(y1, x1), -1));
+      v.push_back(make_pair(make_pair(y1, x2), 1));
+      v.push_back(make_pair(make_pair(y2, x1), 1));
+      v.push_back(make_pair(make_pair(y2, x2), -1));
+    }
+    sort(v.begin(), v.end());
+    int res1 = 0, res2 = 0;
+    int t = 0;
+    rep (i, 10010) {
+      rep (j, 10010) a[1][j] = 0;
+      for (; t < (int)v.size(); ++t) {
+	if (v[t].first.first != i) break;
+	a[1][v[t].first.second] -= v[t].second;
+      }
+      rep (j, 10009) a[1][j + 1] += a[1][j];
+      rep (j, 10010) a[1][j] += a[0][j];
+      rep (j, 10010) if (a[1][j]) ++res1;
+      if (r == 2) rep (j, 10009) if (j > 0) {
+	  if (!a[0][j] != !a[1][j]) ++res2;
+	  if (!a[1][j] != !a[1][j - 1]) ++res2;
+	}
+      rep (j, 10010) a[0][j] = a[1][j];
+    }
+    cout << res1 << endl;
+    if (r == 2) cout << res2 << endl;
+  }
+}

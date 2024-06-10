@@ -1,0 +1,48 @@
+#include <iomanip>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int N, T, L, B;
+
+int next(int cur, int dice) {
+    int ret = cur + dice;
+    if (N < ret) ret = N - (ret - N);
+    return ret;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    while (cin >> N >> T >> L >> B && ( N || T || L || B )) {
+        string LB(' ', 101);
+        int k;
+        for (int i=0; i<L; ++i) {
+            cin >> k;
+            LB[k] = 'L';
+        }
+        for (int i=0; i<B; ++i) {
+            cin >> k;
+            LB[k] = 'B';
+        }
+
+        double p[101][101][2] = {};
+        p[0][0][0] = 1.0;
+        for (int i=0; i<T; ++i) {
+            for (int j=0; j<N; ++j) {
+                for (int k=1; k<=6; ++k) {
+                    int ne = next(j, k);
+                    if (LB[ne] == 'B') ne = 0;
+                    p[i+1][ne][LB[ne] == 'L'] += p[i][j][0] / 6.0;
+                }
+                p[i+1][j][0] += p[i][j][1];
+            }
+        }
+
+        double ans = 0;
+        for (int i=0; i<=T; ++i) ans += p[i][N][1] + p[i][N][0];
+        cout << setprecision(6) << fixed << ans << endl;
+    }
+    return 0;
+}

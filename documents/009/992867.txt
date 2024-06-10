@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main(void){
+  char c;
+  int w, n, a, b;
+  vector<int> v;
+  vector<pair<int, int> > p;
+
+  cin >> w;
+  cin >> n;
+  for(int i=1; i<=w; i++){
+    v.push_back(i);
+  }
+
+  for(int i=0; i<n; i++){
+    cin >> a >> c >> b;
+    p.push_back(make_pair(a, b));
+  }
+
+  for(int i=0; i<n; i++){
+    swap(v[p[i].first-1], v[p[i].second-1]);
+  }
+
+  for(int i=0; i<w; i++){
+    cout << v[i] << endl;
+  }
+  return 0;
+}

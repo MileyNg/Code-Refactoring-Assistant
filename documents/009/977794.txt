@@ -1,0 +1,21 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+import std.datetime;
+
+void main() {
+  string[] days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                   "Friday", "Saturday"];
+
+  foreach (string line; stdin.lines) {
+    if (line == "0 0\n") break;
+    int m, d;
+    line.formattedRead("%d %d", &m, &d);
+    int day = Date(2004, m, d).dayOfWeek;
+    days[day].writeln;
+  }
+}

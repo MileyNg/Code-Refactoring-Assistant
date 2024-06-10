@@ -1,0 +1,28 @@
+#include<stdio.h>
+
+int main(){
+  int i;
+  int a[10];
+  for(i=0;i<10;i++) scanf("%d",&a[i]);
+  int f=s=t=0;
+  for(i=0;i<10;i++)
+    {
+      if(a[i]>=a[f])
+	{
+	  t=s;
+	  s=f;
+	  f=i;
+	}
+      else if(a[i]>=a[s])
+	{
+	  t=s;
+	  s=i;
+	}
+      else if(a[i]>=a[t])
+	{
+	  t=i;
+	}
+    }
+  printf("%d\n%d\n%d\n",a[f],a[s],a[t]);
+  return 0;
+}

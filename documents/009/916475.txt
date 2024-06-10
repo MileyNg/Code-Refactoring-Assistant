@@ -1,0 +1,23 @@
+#include<stdio.h>
+#define N 1000
+
+int main(){
+  int a[N], n, k, ans, w, j, an;
+  scanf("%d", &n);
+  for(k=0; k < n; k++) scanf("%d", &a[k]); 
+
+  for(k=0; k < n; k++){
+
+    for(j=1; j <= a[k]; j++) {
+      an = a[k] % j;
+      if(an == 0) w++;
+      if(w == 2 && j != a[k]) break;
+      else if(w == 2) ans++;
+    }
+
+    w=0;
+  }
+
+  printf("%d\n", ans);
+  return 0;
+}

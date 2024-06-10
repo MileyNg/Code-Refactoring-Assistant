@@ -1,0 +1,52 @@
+#include<stdio.h>
+int main(){
+  int i,j,n;
+  char c;
+  int a=0;
+  int score=0;
+  int runner[3];
+  int ining=0;
+  int out=0;
+  int event=1;
+  char s[10];
+  scanf("%d",&n);
+
+  for(i=0; i < 3; i++) runner[i] = 0;
+  for(;event<=n;){
+    scanf("%s", s);
+
+    if(s[1]=='I'/*HIT*/){ 
+      if(runner[2]==1){
+	score++;
+	runner[2]--;
+      }if(runner[1]==1){
+	runner[2]++;
+	runner[1]--;
+      }
+      if(runner[0]==1)
+	{
+	  runner[0]--;
+	  runner[1]++;
+	}
+      runner[0]++;    
+    }
+    else if(s[1]=='O'/*HOMERUN*/){ 
+      if(runner[2]==1){runner[2]--;score++;}	
+      if(runner[1]){runner[1]--;score++;}
+      if(runner[0]){runner[0]--;score++;}
+      score++;
+    }
+    else if(s[1]=='U'/*OUT*/){
+      out++;
+      if(out==3){
+	ining++;
+	event++;
+	out=0;
+	runner[2]=0;runner[1]=0;runner[0]=0;
+	printf("%d\n",score);
+	score = 0;
+      }
+    }
+  }
+  return 0;
+}

@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int INF = (1<<24);
+int dp[2][10002];
+int t[2][10002];
+string str;
+int n;
+char ch;
+
+void init();
+
+int main(){
+  int Tc;
+  int y,x;
+  cin>>Tc;
+  while(Tc--){
+    cin>>n>>str;
+    init();
+    for(int i=0;i<4*n;i++){
+      if(str[i]=='N')continue;
+      y=i/(2*n);
+      x=(  i%(2*n)  +1)/2;
+      t[y][x]=1;
+    }
+    
+    if(t[0][0]==1&&t[1][0]==1){
+      dp[0][0]=3;
+      dp[1][0]=2;  
+    }else if(t[0][0]==1&&t[1][0]==0){
+      dp[0][0]=1;
+      dp[1][0]=1;  
+    }else if(t[0][0]==0&&t[1][0]==1){
+      dp[0][0]=3;
+      dp[1][0]=2;  
+    }else{
+      dp[0][0]=0;  
+      dp[1][0]=1;  
+    }
+
+    for(int i=1;i<=n;i++){
+      if(t[0][i]==1&&t[1][i]==1){
+	dp[0][i]=min(dp[0][i-1]+4,dp[1][i-1]+3);
+	dp[1][i]=min(dp[0][i-1]+3,dp[1][i-1]+3);  
+      }else if(t[0][i]==1&&t[1][i]==0){
+	dp[0][i]=min(dp[0][i-1]+2,dp[1][i-1]+2);
+	dp[1][i]=min(dp[0][i-1]+2,dp[1][i-1]+2);  
+      }else if(t[0][i]==0&&t[1][i]==1){
+	dp[0][i]=min(dp[0][i-1]+4,dp[1][i-1]+3);
+	dp[1][i]=min(dp[0][i-1]+3,dp[1][i-1]+2);  
+      }else{
+	dp[0][i]=min(dp[0][i-1]+1,dp[1][i-1]+2);  
+	dp[1][i]=min(dp[0][i-1]+2,dp[1][i-1]+1);  
+      }
+    }
+    cout<<dp[0][n]<<endl;
+  }
+  return 0;
+}
+
+void init(){
+  for(int i=0;i<10002;i++){
+    dp[0][i]=dp[1][i]=INF;
+    t[0][i]=t[1][i]=0;
+  }
+}

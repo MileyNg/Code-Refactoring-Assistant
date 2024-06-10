@@ -1,0 +1,95 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<map>
+#include<queue>
+#include<string>
+using namespace std;
+typedef pair< int, int > Pi;
+int m, n, t[100];
+Pi car[10][2]; //車が出る時間
+
+#define UE 1
+#define ST 0
+const int INF = 1 << 30;
+
+void pop(int& in, const int& time, queue< int >& ans){ //自明でしょ
+  for(int i = 0; i < m; i++){
+    if(car[i][ST] != Pi(-1,-1) && car[i][ST].first < time){
+      ans.push( car[i][ST].second);
+      car[i][ST] = Pi( -1, -1);
+      in--;
+    }
+    if(car[i][ST] == Pi(-1,-1) && car[i][UE] != Pi(-1,-1) && car[i][UE].first < time){
+      ans.push( car[i][UE].second);
+      car[i][UE] = Pi( -1, -1);
+      in--;
+    }
+  }
+}
+
+bool push(int pos, const int& time){
+  for(int i = 0; i < m; i++){
+    if(car[i][UE] == Pi(-1,-1)) {
+      car[i][UE] = Pi(time + t[pos], pos);
+      return true;
+    }
+  }
+  int hoge = -1, ret = INF ; //時間の最大値でしょ(?)
+  for(int i = 0; i < m; i++) {
+    if(car[i][ST] == Pi(-1,-1)) {
+      if(t[pos] <= car[i][UE].first - time) {
+        if(ret > time - car[i][UE].first - t[pos]){
+          ret = car[i][UE].first;
+          hoge = i;
+        }
+      }
+    }
+  }
+  if(hoge == -1){
+    for(int i = 0; i < m; i++){
+      if(car[i][ST] == Pi(-1,-1)) {
+        if(ret > abs(car[i][UE].first - time - t[pos])){
+          ret = abs(car[i][UE].first - time - t[pos]);
+          hoge = i;
+        }
+      }
+    }
+    if(hoge == -1) return false;
+
+  }
+  car[hoge][ST] = Pi( time + t[pos], pos);
+  return true;
+}
+int main(){
+
+  while( cin >> m >> n, m){
+    fill_n( *car, 10 * 2, Pi(-1,-1));
+    for(int i = 0; i < n; i++){
+      cin >> t[i];
+    }
+
+    int time = 0, pos = 0, in = 0;
+    queue< int > prev, ret;
+    for( ; pos < n || !prev.empty() || in ; time++ ){
+      pop( in, time, ret);
+      if(time % 10 == 0 && pos < n){
+        prev.push( pos);
+        pos++;
+      }
+      while(!prev.empty() && push(prev.front(), time)) {
+        prev.pop();
+        in++;
+      }
+      
+      //cout << time << endl;
+      // for(int i = 0 ; i < m ; i++ ) cout << '(' << car[i][ST].first << "," << car[i][ST].second << ") (" << car[i][UE].first << "," << car[i][UE].second << ")" << endl;
+
+    }
+
+    for(int i = 0 ; i < n ; i++ ){
+      cout <<  ret.front() + 1 << (i != n - 1 ? ' ' : '\n');
+      ret.pop();
+    }
+  }
+}

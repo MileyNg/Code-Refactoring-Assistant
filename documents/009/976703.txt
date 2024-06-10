@@ -1,0 +1,71 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+
+class edge {
+public:
+    int no;
+    int nord1;
+    int nord2;
+    int value;
+    edge(int a, int b, int c, int d) : no(a), nord1(b), nord2(c), value(d) {}
+};
+
+bool operator< (const edge& edge1, const edge& edge2) {
+    return edge1.value < edge2.value;
+}
+bool operator> (const edge& edge1, const edge& edge2) {
+    return edge1.value > edge2.value;
+}
+
+int main(void) {
+    int V, E; // V:頂点の数 E:辺の数
+    int ans = 0;
+    cin >> V >> E;
+    bool is_in[V];
+    bool is_used[E];
+    priority_queue<edge, vector<edge>, greater<edge> > EDGE;
+    for (int i = 0; i < V; i++) is_in[i] = false;
+    for (int i = 0; i < E; i++) is_used[i] = false;
+    for (int i = 0; i < E; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        EDGE.push(edge(i, a, b, c));
+    }
+    while (1) {
+        // 新しい辺を追加
+        while (1) {
+            if (!is_used[EDGE.top().no]) {
+                ans += EDGE.top().value;
+                is_in[EDGE.top().nord1] = true; is_in[EDGE.top().nord2] = true;
+                EDGE.pop();
+                break;
+            } else {
+                EDGE.pop();
+            }
+        }
+        // 終了判定
+        int flag = 1;
+        for (int i = 0; i < V; i++) {
+            if (!is_in[i]) {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag == 1) break;
+    }
+    cout << ans << endl;
+    return 0;
+}

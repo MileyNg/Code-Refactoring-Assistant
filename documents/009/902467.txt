@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int const MP = 999983;
+
+bool is_prime[MP+100];
+void Sieve() {
+  
+  fill(is_prime, is_prime+MP+100, true);
+  is_prime[0] = is_prime[2] = false;
+  
+  for(int i=2; (long long)i*i <= MP; i++) {
+    if(is_prime[i]) {
+      for(int j=2*i; j<=MP; j+=i) {
+	is_prime[j] = false;
+      }
+    }
+  }
+  
+}
+
+int main() {
+  
+  Sieve();
+  
+  int N;
+  while(cin >> N && N) {
+    int X = 0;
+    for(int i=0; i<N; i++) {
+      int p, m; cin >> p >> m;
+      int L = max(p-m, 0), R = min(p+m, MP);
+      int cnt = 0;
+      for(int i=L; i<=R; i++) {
+	cnt += is_prime[i];
+      }
+      if(cnt == 0) cnt --;
+      cnt --;
+      X += cnt;
+    }
+    cout << X << endl;
+  }
+  
+  return 0;
+}

@@ -1,0 +1,57 @@
+#pragma warning(disable:4996)
+#include<stdio.h>
+#include<algorithm>
+#define INF 9999999
+using namespace std;
+int n;
+struct A{
+	int x, y;
+}w[100010];
+int main(){
+	int i, a, b, mx, my, Mx, My, B = 0, E, R, M;
+	int mmx, mmy, MMx, MMy;
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+	scanf("%d", &n);
+	mx = my = INF, Mx = My = -INF;
+	for (i = 0; i < n; i++){
+		scanf("%d%d", &a, &b);
+		w[i].x = a + b, w[i].y = b - a;
+		mx = min(w[i].x, mx);
+		my = min(w[i].y, my);
+		Mx = max(w[i].x, Mx);
+		My = max(w[i].y, My);
+	}
+	E = max(Mx - mx, My - my);
+	while (B <= E){
+		M = (B + E) >> 1;
+		mmx = mmy = INF, MMx = MMy = -INF;
+		for (i = 0; i < n; i++){
+			if (mx + M < w[i].x || my + M < w[i].y){
+				mmx = min(w[i].x, mmx);
+				mmy = min(w[i].y, mmy);
+				MMx = max(w[i].x, MMx);
+				MMy = max(w[i].y, MMy);
+			}
+		}
+		if (MMx - mmx <= M && MMy - mmy <= M){
+			R = M, E = M - 1;
+			continue;
+		}
+		mmx = mmy = INF, MMx = MMy = -INF;
+		for (i = 0; i < n; i++){
+			if (mx + M < w[i].x || My - M > w[i].y){
+				mmx = min(w[i].x, mmx);
+				mmy = min(w[i].y, mmy);
+				MMx = max(w[i].x, MMx);
+				MMy = max(w[i].y, MMy);
+			}
+		}
+		if (MMx - mmx <= M && MMy - mmy <= M){
+			R = M, E = M - 1;
+			continue;
+		}
+		B = M + 1;
+	}
+	printf("%d\n", R);
+}

@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+double S(int x, int y, double z) {
+
+  return x * y * sin(z /180 * M_PI) / 2;
+
+}
+
+double res1(int x , int y , double z) {
+
+  return sqrt(x * x + y * y - 2 * x * y * cos(z / 180 * M_PI));
+
+ }
+
+double L(int x, int y, int z) {
+
+  return x + y + z;
+
+  }
+
+double h(int x, double y) {
+
+  return 2 * y / x;
+
+}
+
+int main() {
+
+  double a , b , c , C;
+
+  cin >> a >> b >> C;
+
+  c = res1(a, b, C);
+
+  printf("%.13lf\n",S(a, b, C));
+
+  printf("%.13lf\n",L(a, b, c));
+
+  printf("%.13lf\n",h(a, S(a, b, C)));
+
+  return 0;
+
+}

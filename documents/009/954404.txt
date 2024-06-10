@@ -1,0 +1,43 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+using namespace std;
+
+typedef vector<int> vi;
+
+const int inf=1<<29;
+
+int graph[110][110];
+
+int main(void){
+	rep(i,110)rep(j,110) graph[i][j]=inf;
+	int n;
+	cin >> n;
+	rep(i,n){
+		int f;
+		cin >> f; f--;
+		int num;
+		cin >> num;
+		rep(j,num){
+			int t;
+			cin >> t; t--;
+			graph[f][t]=1;
+		}
+	}
+	rep(k,n)rep(i,n)rep(j,n) graph[i][j]=min( graph[i][j] , graph[i][k]+ graph[k][j]);
+	int p;
+	cin >> p;
+	rep(i,p){
+		int s,t,v;
+		cin >> s >> t >> v;
+		int res=graph[s-1][t-1]+1;
+		if(v>=res)
+			cout << res <<endl;
+		else
+			cout << "NA" << endl;
+	}
+	return 0;
+}

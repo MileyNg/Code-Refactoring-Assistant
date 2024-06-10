@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<math.h>
+#define compile 1
+#define FIRST_PRIME 2
+#define TRUE 1
+#define FALSE 0
+void func_init_array(int array[], int n);
+int func_prime(int array[], int n);
+int func_prime_counter(int array[], int n);
+void func_output(int array[], int n);
+main()
+{
+	int n = 0, result = 0;
+	while(scanf("%d", &n) != EOF)
+	{
+		int number[n];
+		func_init_array(number, n);
+		result = func_prime(number, n);
+		printf("%d\n", result);
+	}
+	//func_output(number, n);
+	return 0;
+}
+void func_init_array(int array[], int n) //デバッグ済み
+{
+	int i = FIRST_PRIME;
+	for(i = FIRST_PRIME; i <= n; i++)
+	{
+		array[i] = TRUE;
+	}
+}
+void func_output(int array[], int n)
+{
+#if compile == 1
+	int i = FIRST_PRIME;
+	for(i = FIRST_PRIME; i < n; i++)
+	{
+		printf("array[%d] = %d\n", i, array[i]);
+	}
+#endif
+}
+int func_prime(int array[], int n)
+{
+	int root_n = sqrt(n);
+	int i = FIRST_PRIME, j = 0;
+	int result = 0;
+	for(i = FIRST_PRIME; i <= root_n; i++)
+	{
+		if(array[i] == TRUE)
+		{
+			j = i;
+			for(j += i; j < n; j += i)
+			{
+				if((j % i) == 0)
+				{
+					array[j] = FALSE;
+				}
+			}
+		}
+	}
+	result = func_prime_counter(array, n);
+	return result;
+}
+int func_prime_counter(int array[], int n)
+{
+	int counter = 0, i = FIRST_PRIME;
+	for(i = FIRST_PRIME; i < n; i++)
+	{
+		if(array[i] == TRUE)
+		{
+			counter++;
+		}
+	}
+	return counter;
+}

@@ -1,0 +1,24 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int z;
+
+    while (cin >> z, z) {
+        int max_xy = 0;
+        int z3 = z * z * z;
+
+        for (int x = 1; x * x * x <= z3; ++x) {
+            int x3 = x * x * x;
+            for (int y = 1; y * y * y <= z3 - x3; ++y)
+                max_xy = max(max_xy, x3 + y * y * y);
+        }
+
+        cout << z3 - max_xy << endl;
+    }
+
+    return 0;
+}

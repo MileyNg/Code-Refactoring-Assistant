@@ -1,0 +1,27 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+#define INF 10000000
+int dp[21][50001];
+int main( void )
+{
+  int n,m;
+  cin >> n >> m;
+  dp[0][0] = 0;
+  for( int i=1; i<=n; i++ ){
+    dp[0][i] = INF;
+  }
+  for( int i=1; i<=m; i++ ){
+    int d;
+    cin >> d;
+    for( int j=0; j<=n; j++ ){
+      if( j-d < 0 ){
+        dp[i][j] = dp[i-1][j];
+      } else {
+        dp[i][j] = min( dp[i-1][j], dp[i][j-d]+1 );
+      }
+    }
+  }
+  cout << dp[m][n] << endl;
+  return 0;
+}

@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+#include <queue>
+#include <vector>
+#include <functional>
+
+using namespace std;
+
+typedef pair<int, string> P;
+
+int main() {
+	int n, q;
+	string name;
+	int year;
+	bool hantei = false;
+	P kari;
+	priority_queue< P, vector<P>, greater<P> > pq;
+	cin >> n >> q;
+	for (int i = 0; i < n; i++) {
+		cin >> year >> name;
+		pq.push(P(year, name));
+	}
+	kari = pq.top();
+	pq.pop();
+	if (kari.first > q) {
+		cout << "kogakubu10gokan" << endl;
+		hantei = true;
+	}
+	while (!pq.empty()) {
+		if (hantei == true) {
+			break;
+		}
+		P p = pq.top();
+		pq.pop();
+		if (p.first > q) {
+			cout << kari.second << endl;
+			hantei = true;
+			break;
+		} else {
+			kari = p;
+		}
+	}
+	if (hantei == false) {
+		cout << kari.second << endl;
+	}
+	return 0;
+}

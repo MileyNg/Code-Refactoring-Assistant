@@ -1,0 +1,39 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	int cnt;
+	int i1,i2,i3,i4;
+	int temp1,temp2,temp3,temp4;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		cnt=0;
+		for(i1=floor(sqrt(n));i1>0;i1--){
+			temp1=n-i1*i1;
+			if(temp1==0){cnt++;continue;}
+			for(i2=i1;i2>0;i2--){
+				temp2=temp1-i2*i2;
+				if(temp2==0) {cnt++; continue;}
+				else if(temp2<0) continue;
+				for(i3=i2;i3>0;i3--){
+					temp3=temp2-i3*i3;
+					if(temp3==0) {cnt++; continue;}
+					else if(temp3<0) continue;
+					for(i4=i3;i4>0;i4--){
+						temp4=temp3-i4*i4;
+						if(temp4==0) {cnt++; break;}
+					}
+				}
+			}
+		}
+		cout<<cnt<<endl;
+	}
+	return 0;
+}

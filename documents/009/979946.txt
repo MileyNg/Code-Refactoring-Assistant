@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int consume(vector<int> &S, int L, int l, int r) {
+    int ret = 0;
+    for (int i=l-1; i<=r-1; ++i) {
+        ret += S[i];
+    }
+    return ret / L;
+}
+
+int main() {
+    int N, M, L;
+    cin >> N >> M >> L;
+
+    vector<int> K(N);
+    for (int i=0; i<N; ++i) cin >> K[i];
+
+    vector<int> S(M);
+    for (int i=0; i<M; ++i) cin >> S[i];
+
+    sort(K.begin(), K.end());
+
+    int ans = 0;
+    int n = K.size();
+    for (int i=0; i<n; ++i) {
+        if (i == n - 1) {
+            ans += consume(S, L, K[0], K[n-1]);
+        } else {
+            ans += consume(S, L, K[i], K[i+1]);
+        }
+    }
+    cout << ans << endl;
+
+    return 0;
+}

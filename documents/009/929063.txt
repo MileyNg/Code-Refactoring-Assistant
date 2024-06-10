@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+  while(1){
+    int n,a,b;
+    cin>>n>>a>>b;
+    if(!n)break;
+    vector<bool> v(n+1,false);
+    v[0]=true;
+    for(int i=0;i<n;++i){
+      if(v[i]){
+        if(i+a<=n){
+          v[i+a]=true;
+        }
+        if(i+b<=n){
+          v[i+b]=true;
+        }
+      }
+    }
+    cout<<count(begin(v),end(v),false)<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,33 @@
+var SUITS = ['S', 'H', 'C', 'D'];
+function getIndex(suit) {
+	return SUITS.indexOf(suit);
+}
+function getSuit(index) {
+	return SUITS[index];
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+var n = +lines.shift();
+
+var cards = [];
+for (var i = 0; i < 4; i++) {
+	var tmp = [];
+	for (var j = 0; j < 13; j++) {
+		tmp.push(true);
+	}
+	cards.push(tmp);
+}
+
+for (var i = 0; i < n; i++) {
+	var card = lines.shift().split(' ');
+	cards[getIndex(card[0])][card[1] - 1] = false;
+}
+
+for (var i = 0; i < 4; i++) {
+	for (var j = 0; j < 13; j++) {
+		if (cards[i][j]) {
+			console.log(getSuit(i) + ' ' + (j + 1));
+		}
+	}
+}

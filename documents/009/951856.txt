@@ -1,0 +1,24 @@
+#include<iostream>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int dp[50][3001];
+const int MOD = 100000;
+
+int main() {
+  while (true) {
+    int n, m, s;
+    cin >> n >> m >> s;
+    if (n == 0) break;
+    n = n * n;
+    rep (i, 50) rep (j, 3001) dp[i][j] = 0;
+    dp[0][0] = 1;
+    rep (i, m + 1) if (i > 0) for (int j = n; j > 0; --j) for (int k = j; k <= s; ++k) {
+	  dp[j][k] += dp[j - 1][k - i];
+	  dp[j][k] %= MOD;
+    }
+    cout << dp[n][s] << endl;
+  }
+}

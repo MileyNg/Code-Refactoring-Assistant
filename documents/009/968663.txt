@@ -1,0 +1,20 @@
+n = gets.chop.to_i
+
+n.times do
+  xa, ya, ra, xb, yb, rb = gets.chop.split(" ").map { |s| s.to_f }
+  #p [xa, ya, ra, xb, yb, rb].join(", ")
+
+  od2 = (xa - xb) ** 2 + (ya - yb) ** 2
+  rp2 = (ra + rb) ** 2
+  rm2 = (ra - rb) ** 2
+
+  ans = 1
+
+  if od2 > rp2
+    ans = 0
+  elsif od2 < rm2
+    ans = (ra > rb) ? 2 : -2
+  end
+
+  puts ans
+end

@@ -1,0 +1,18 @@
+while (n = gets().to_i()) != 0
+  staff = Array.new(4e3, 0);
+  flag = false
+  n.times() do
+    str = gets().split()
+    id = str[0].to_i()
+    price = str[1].to_i()
+    num = str[2].to_i()
+    staff[id - 1] += price * num
+  end
+  staff.each_with_index() do |total, id|
+    if total.to_s().length() > 6
+      puts(id + 1)
+      flag = true
+    end
+  end
+  puts("NA") if !flag
+end

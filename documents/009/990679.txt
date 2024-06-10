@@ -1,0 +1,74 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<string>
+#include<cmath>
+#include<map>
+#include <utility>
+#include <algorithm>
+#include <stack>
+
+#define rep(i,n) for( int i=0; i<n; i++) 
+#define mp make_pair
+#define hyp(a,b) (a*a)+(b*b)
+using namespace std;
+
+/*
+対角線の長さが同じならば，高さの低いほうが小さい．
+w>h
+入力例より高さを高くして同じ値にするか
+最小の範囲内で横を伸ばす。
+*/
+
+int h,w,h1,w1; 
+int ans_h,ans_w;
+
+
+void all_loop( int n )
+{
+	stack<int> st;
+	h=1;
+	rep(i,150)
+	{
+		w=0;
+		rep(j,150){
+			w++;
+		if( h1 == h){
+			if( w1 == w ){
+				continue;
+			}
+		}
+		if( 150 < w) break;
+		if( w > h && n <= h*h+w*w  ){
+			//printf(" h=%d w=%d\n",h,w);
+			if( st.empty() ){
+				st.push( hyp(h,w) );
+				ans_h = h;
+				ans_w = w;
+			}
+			else if( st.top() > hyp(h,w) ){
+				st.push( hyp(h,w) );
+				ans_h = h;
+				ans_w = w;
+			}
+			else if( (st.top() == hyp(h,w) ) && ans_h < h ){
+				ans_h = h;
+				ans_w = w;
+			}
+		}
+		}
+		w = 1;
+		h++;
+	}
+}
+
+int main()
+{
+	while(cin >> h1 >> w1,h1,w1)
+	{
+		ans_h=0,ans_w=0;
+		all_loop( h1*h1+w1*w1 );
+		cout << ans_h << " " << ans_w << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,134 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <cstdio>
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+#define reps(i,s,n) for(int i=s; i<n; i++)
+#define all(x) x.begin(), x.end()
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+
+ll calc( string in, int index, bool& invalid ) {
+	ll res = -1, a=0, b=0;
+	rep(i, in.length()) if(in[i]=='_') in[i]='-';
+	char c = in[index];
+	if( c == '+' ) {
+		sscanf( in.c_str(), "%lld+%lld", &a, &b );
+		res = a + b;
+	} else if( c == '-' ) {
+		sscanf( in.c_str(), "%lld-%lld", &a, &b );
+		res = a - b;
+	} else if( c == '*' ) {
+		sscanf( in.c_str(), "%lld*%lld", &a, &b );
+		res = a * b;
+	} else if( c == '/' ) {
+		sscanf( in.c_str(), "%lld/%lld", &a, &b );
+		if( b != 0 ) {
+			res = a / b;
+		} else {
+			invalid = true;
+		}
+	}
+	return res;
+}
+
+void solve( string e, vector<ll>& v ) {
+//	cout << e << endl;
+	bool br = false;
+	int brBeg = 0;
+	rep(i, e.length()) {
+		if( e[i] == '(' ) {
+			br = true;
+			brBeg = i;
+		}
+	}
+	if( br ) {
+		int cnt = 0;
+		int brEnd = 0;
+		for(int i=brBeg+1; i<e.length(); i++) {
+			if( e[i]==')' ) {
+				if( cnt==0 ) {
+					brEnd = i;
+					break;
+				} else {
+					cnt--;
+				}
+			} else if( e[i]=='('){
+				cnt++;
+			}
+		}
+		string ne = e.substr(brBeg+1, brEnd-brBeg-1);
+		vector<ll> vi;
+		solve( ne, vi );
+		rep(i, vi.size()) {
+			string out = e;
+			stringstream ss;
+			ss << vi[i];
+			string rep;
+			ss >> rep;
+			if(rep[0] == '-') rep[0] = '_';
+			out.replace( brBeg, brEnd-brBeg+1, rep.c_str(), rep.length() );
+			solve( out, v );
+		}
+	} else {
+		int pos[10], cnt=0;
+		rep(i, e.length()) {
+			if( e[i]=='+' || e[i]=='-' || e[i]=='*' || e[i]=='/' ) {
+				pos[cnt++] = i;
+			}
+		}
+		rep(i, cnt) {
+			int ps=pos[i]-1, pe=pos[i]+1;
+			while( 0<=ps && (('0'<=e[ps] && e[ps]<='9') || e[ps]=='_') ) ps--;
+			ps++;
+			while( pe<e.length() && (('0'<=e[pe] && e[pe]<='9') || e[pe]=='_') ) pe++;
+			pe--;
+			bool invalid = false;
+			ll res = calc( e.substr( ps, pe-ps+1 ), pos[i]-ps, invalid );
+			if( invalid ) {
+				continue;
+			}
+			stringstream ss;
+			ss << res;
+			string o;
+			ss >> o;
+			if(o[0]=='-') o[0] = '_';
+//			cout << "start : " << ps << endl;
+//			cout << "end : " << pe-ps+1 << endl;
+			string out = e;
+//			cout << "o : " << o << endl;
+//			cout << "out : " << out << " -> ";
+			out.replace( ps, pe-ps+1, o.c_str(), o.length() );
+//			cout << out << endl;
+			solve( out, v );
+		}
+		if( cnt == 0 ) {
+			stringstream ss;
+			ss << e;
+			if(e[0]=='_') e[0]='-';
+			ll ans;
+			ss >> ans;
+			v.push_back(ans);
+		}
+	}
+}
+
+int main() {
+	string expr;
+	while( cin >> expr, expr[0]!='#' ) {
+		vector<ll> vi;
+		solve(expr, vi);
+		sort( vi.begin(), vi.end() );
+		vi.erase( unique( vi.begin(), vi.end()), vi.end() );
+		cout << vi.size() << endl;
+	}
+	return 0;
+}

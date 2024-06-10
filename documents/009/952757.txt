@@ -1,0 +1,167 @@
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <array>
+#include <unordered_map>
+#include <algorithm>
+#include <utility>
+#include <vector>
+#include <iostream>
+#include <sstream>
+using namespace std;
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+#define tpl(...) make_tuple(__VA_ARGS__)
+#define double long double
+const int INF = 1<<29;
+const double EPS = 1e-10;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+template<class T> bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T> bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
+template<class T> bool chmin2(T &a, const T &b) { if (a.size() == 0 || a>b) { a=b; return 1; } return 0; }
+
+template<class T> ostream& operator<<(ostream &os, const vector<T> &t) {
+  os<<"["; FOR(it,t) {if(it!=t.begin()) os<<","; os<<*it;} os<<"]"; return os;
+}
+template<class S, class T> ostream& operator<<(ostream &os, const pair<S,T> &t) { return os<<"("<<t.first<<","<<t.second<<")";}
+template<int N,class Tuple> void out(ostream&,const Tuple&) {}
+template<int N,class Tuple,class,class ...Ts> void out(ostream &os,const Tuple &t) {
+	if(N)os<<","; os<<get<N>(t); out<N+1,Tuple,Ts...>(os,t);
+}
+template<class ...Ts> ostream& operator<<(ostream &os, const tuple<Ts...> &t) {
+  os<<"("; out<0,tuple<Ts...>,Ts...>(os,t); os<<")"; return os;
+}
+template<class T>void output(T *a, int n) {REP(i,n){if(i)cout<<",";cout<<a[i];}cout<<endl;}
+template<class T>void output(T *a, int n,int m) { REP(i,n) output(a[i],m);}
+
+typedef array<int,3> P;
+
+ostream& operator<<(ostream &os, const P &t) {
+  os<<"["; FOR(it,t) {if(it!=t.begin()) os<<","; os<<*it;} os<<"]"; return os;
+}
+
+namespace ClosestPair {
+const double INF = 1e20;
+P p[200000];
+int m;
+
+double abs(const P &p){
+  return sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
+}
+double dist(int a, int b) { 
+  double res = 0;
+  double al = abs(p[a]);
+  double bl = abs(p[b]);
+  REP(i,m) {
+    double t = (p[a][i]/al-p[b][i]/bl);
+    res += t*t;
+  }
+  return sqrt(res);
+}
+typedef unordered_map<ll, vector<int> > Map;
+double d;
+ll get_key(int a) {
+  ll res = 0;
+  double al = abs(p[a]);
+  REP(i,m) {
+    res |= (res<<21) | ll(p[a][i]/al/d);
+  }
+  return res;
+}  
+void build_map(Map &mp, int n) {
+  mp.clear();
+  REP(i,n) {    
+    mp[get_key(i)].push_back(i);
+  }
+}
+vector<P> ans;
+int cnt;
+bool adjacent(int cur, Map &mp, int a, ll &key) {
+  bool res = 0;
+  if (cur == m) {
+    if (mp.count(key))
+      FOR(it, mp[key]) {
+        cnt++;
+        double td = dist(*it, a);
+        if (td <= EPS) continue;
+        
+        if (d >= td - EPS) {
+          P t1(p[*it]);
+          P t2(p[a]);
+          if (t1 > t2) swap(t1, t2);
+          if (d > td+EPS) {
+            res = 1;
+            ans = vector<P>{t1,t2};
+          }
+          else chmin2(ans, vector<P>{t1,t2});
+          d = td;
+        }
+      }
+    return res;
+  }
+  for (int i=-1; i<=1; ++i) {
+    key += i*(1LL<<cur*21);
+    res |= adjacent(cur+1, mp, a, key);
+    key -= i*(1LL<<cur*21);
+  }
+  return res;
+}
+
+double closest_pair(int n) {
+  if (n <= 1) return INF;
+  ans.clear();
+  m = p[0].size();
+  Map mp;
+  random_shuffle(p,p+n);
+  
+  d = dist(0,1);
+  P t1(p[0]);
+  P t2(p[1]);
+  if (t1 > t2) swap(t1, t2);
+  ans = vector<P>{t1,t2};
+
+  build_map(mp, 2);
+  for (int i=2; i<n; ++i) {
+    ll key = get_key(i);
+    cnt = 0;
+    bool f = adjacent(0,mp,i,key);
+    if (f) {
+      build_map(mp,i+1);
+    }
+    else mp[key].push_back(i);
+  }
+  return d;
+}
+}
+
+int main() {
+  int m,n,S,W;
+  while(cin>>m>>n>>S>>W, m+n) {
+    REP(i,m) {
+      P t;
+      scanf("%d%d%d", &t[0],&t[1],&t[2]);
+      ClosestPair::p[i] = t;
+    }
+    int g = S;    
+    for (int i=m; i<m+n; ++i) {
+      P t;
+      t[0] = g/7 % 100 + 1;
+      t[1] = g/700 % 100 + 1;
+      t[2] = g/70000 % 100 + 1;
+      if (g&1) g = (g/2) ^ W;
+      else g = g/2;
+      ClosestPair::p[i] = t;
+    }
+
+    double a = ClosestPair::closest_pair(m+n);
+    // printf("%.10Lf\n", a);
+    P p1 = ClosestPair::ans[0];
+    P p2 = ClosestPair::ans[1];
+    cout << p1[0] << " " << p1[1] << " " << p1[2] << " " << p2[0] << " " << p2[1] << " " << p2[2] << endl;
+  }
+}

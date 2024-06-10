@@ -1,0 +1,82 @@
+#include <cstdio>
+#include <iomanip>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+int N;
+#define MV 10
+#define INF 0x7F7F7F7F
+int G[MV][MV];
+bool input() {
+    scanf("%d", &N);
+    if (N == 0) return false;
+    memset(G, 0x7F, sizeof(G));
+    for (int i = 0; i < N; i++) {
+        int a, b, c; scanf("%d %d %d", &a, &b, &c);
+        G[a][b] = G[b][a] = c;
+        G[a][a] = 0;
+        G[b][b] = 0;
+    }
+    return true;
+}
+
+void solve() {
+    for (int k = 0; k < MV; k++) {
+        for (int i = 0; i < MV; i++) {
+            for (int j = 0; j < MV; j++) {
+                if (G[i][k] == INF || G[k][j] == INF) continue;
+                G[i][j] = min(G[i][j], G[i][k] + G[k][j]);
+            }
+        }
+    }
+#ifdef DEBUG
+    for (int i = 0; i < MV; i++) {
+        for (int j = 0; j < MV; j++) {
+            if (G[i][j] == INF) {
+                cout << setw(5) << "x";
+            } else {
+                cout << setw(5) << G[i][j];
+            }
+        }
+        cout << endl;
+    }
+#endif
+    int index = 0, min1 = INF; 
+    for (int i = 0; i < MV; i++) {
+        bool NOSUCHTOWN = true;
+        for (int j = 0; j < MV; j++) {
+            if (G[i][j] != INF) {
+                NOSUCHTOWN = false;
+                break;
+            }
+        }
+        if (NOSUCHTOWN) break;
+        int total = 0;
+        for (int j = 0; j < MV; j++) {
+            if (G[i][j] == INF) break;
+            total += G[i][j];
+        }
+        if (total < min1) {
+            index = i;
+            min1 = total;
+        }
+    }
+    printf("%d %d\n", index, min1);
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

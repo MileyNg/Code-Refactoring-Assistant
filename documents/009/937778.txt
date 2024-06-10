@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define INF 1 << 30
+using namespace std;
+
+int dis(int a, int b, int n){
+  //  printf("%d\n", n);
+  int ax = a % n, ay = a / n;
+  int bx = b % n, by = b / n;
+//  printf("%d %d %d %d\n", ax, ay, bx, by);
+  return abs(ax-bx) + abs(ay-by);
+}
+
+int main(){
+  int n, a, b, c, d, res = INF;
+  scanf("%d%d%d%d%d", &n, &a, &b, &c, &d);
+  for(int i = 1; i <= n+1; i++)
+    res = min(res, dis(a, b, i) + dis(c, d, i));
+  printf("%d\n", res);
+  return 0;
+}

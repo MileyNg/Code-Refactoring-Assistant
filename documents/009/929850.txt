@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct _taple{
+	int index;
+	int value;
+}taple;
+
+#define MAX 1000000
+int result[MAX];
+int ri;
+
+int taple_sort( const void* pa, const void* pb) {
+	taple a = *(taple*)pa;
+	taple b = *(taple*)pb;
+    return a.value - b.value;
+}
+
+int int_sort( const void* pa, const void* pb) {
+	int a = *(int*)pa;
+	int b = *(int*)pb;
+    return b - a;
+}
+
+void solve(int depth, taple* data, int size, int left, int right) {
+	if(left >= right) return;
+	if(ri >= MAX-1) return;
+	
+	if(data[left].index < data[right].index) {
+		if(data[right].value-data[left].value > 0) {
+			result[ri] = data[right].value-data[left].value;
+			ri ++;
+		}
+	}
+	solve(depth+1, data, size, left, right-1);
+	solve(depth+1, data, size, left+1, right);
+}
+
+int main(void) {
+	int i, n, val;
+	taple data[200000];
+	memset((void*)data, 0x00, sizeof(data));
+	memset((void*)result, 0x00, sizeof(result));
+	ri = 0;
+	
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%d\n", &val);
+		data[i].index = i;
+		data[i].value = val;
+	}
+	
+	qsort((void*)data , n , sizeof(data[0]), taple_sort);
+	solve(0, data, n, 0, n-1);
+	qsort((void*)result, ri, sizeof(result[0]), int_sort);
+
+	printf("%d\n", result[0]);
+
+	return 0;
+}

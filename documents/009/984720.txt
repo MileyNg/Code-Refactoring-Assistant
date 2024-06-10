@@ -1,0 +1,34 @@
+#include<iostream>
+#include<string>
+#include<cstdio>
+
+#define REP(i, n) for (int i = 0; i < (int)(n); i++)
+#define FOR(i, s, n) for (int i = (s); i < (int)(n); i++)
+
+using namespace std;
+
+int main(){
+	int n,m;
+	char target[1000][100];
+	int money[100];
+	char str[100];
+	while(scanf("%d %d",&n,&m), n){
+		REP(i,n){
+			scanf("%s %d",target[i],&money[i]);
+		}
+		int sum=0;
+		while(m--){
+			scanf("%s",str);
+			for(int i=0;i<n;i++){
+				for(int j=0;j<8;j++){
+					if(target[i][j]!='*'&&target[i][j]!=str[j]){goto next;}
+			
+				}
+				sum+=money[i];
+				break;
+				next:;
+			}
+		}
+			printf("%d\n",sum);
+	}
+}

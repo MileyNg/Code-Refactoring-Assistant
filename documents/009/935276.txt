@@ -1,0 +1,150 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int MOD=100000;
+char str[20][21];
+int dp[2][3][1<<20];
+int main(){
+	int a,b;
+	scanf("%d%d",&a,&b);
+	for(int i=0;i<a;i++)scanf("%s",str[i]);
+	int q=0;
+	for(int i=0;i<a;i++)
+		for(int j=0;j<b;j++)
+			if(str[i][j]=='?')q++;
+	if(str[0][0]=='J')dp[1][0][0]=1;
+	if(str[0][0]=='O')dp[1][1][0]=1;
+	if(str[0][0]=='I')dp[1][2][0]=1;
+	if(str[0][0]=='?')dp[1][0][0]=dp[1][1][0]=dp[1][2][0]=1;
+	for(int i=0;i<a;i++){
+		if(i){
+			int e=(i*(b-1)+1)%2;
+			for(int k=0;k<(1<<(b-1));k++){
+				if(str[i][0]=='J'){
+					dp[e][0][k]=dp[e][0][k]+dp[e][1][k]+dp[e][2][k];
+				}
+				else if(str[i][0]=='O'){
+					dp[e][1][k]=dp[e][0][k]+dp[e][1][k]+dp[e][2][k];
+				}
+				else if(str[i][0]=='I'){
+					if(k%2==0)dp[e][2][k]=dp[e][0][k]+dp[e][1][k]+dp[e][2][k];
+				}
+				else if(str[i][0]=='?'){
+					int v=dp[e][0][k]+dp[e][1][k]+dp[e][2][k];
+					int w=dp[e][0][k]+dp[e][1][k]+dp[e][2][k];
+					if(k%2==0)dp[e][2][k]=dp[e][0][k]+dp[e][1][k]+dp[e][2][k];
+					dp[e][0][k]=v;
+					dp[e][1][k]=w;
+				}
+			}
+			//for(int k=0;k<(1<<(b-1));k++)printf("[%d,%d,%d] ",dp[e][0][k],dp[e][1][k],dp[e][2][k]);
+			//printf("\n");
+			for(int k=0;k<(1<<(b-1));k++){
+				dp[e][0][k]%=MOD;
+				dp[e][1][k]%=MOD;
+				dp[e][2][k]%=MOD;
+			}
+		}
+		for(int j=0;j<b-1;j++){
+			int e=(i*(b-1)+j)%2;
+			for(int k=0;k<(1<<(b-1));k++)dp[e][0][k]=dp[e][1][k]=dp[e][2][k]=0;
+			for(int k=0;k<(1<<(b-1));k++){
+				if(dp[!e][0][k]+dp[!e][1][k]+dp[!e][2][k]==0)continue;
+				int t=k/2;
+				if(str[i][j]=='J'&&dp[!e][0][k]){
+					if(str[i][j+1]=='J'){
+						dp[e][0][t]+=dp[!e][0][k];
+					}
+					else if(str[i][j+1]=='O')dp[e][1][(1<<(b-2))+t]+=dp[!e][0][k];
+					else if(str[i][j+1]=='I'){
+						dp[e][2][t]+=dp[!e][0][k];
+					}
+					else if(str[i][j+1]=='?'){
+						dp[e][1][(1<<(b-2))+t]+=dp[!e][0][k];
+						dp[e][0][t]+=dp[!e][0][k];
+						dp[e][2][t]+=dp[!e][0][k];
+					}
+				}else if(str[i][j]=='O'&&dp[!e][1][k]){
+					if(str[i][j+1]=='J'){
+						dp[e][0][t]+=dp[!e][1][k];
+					}
+					else if(str[i][j+1]=='O'){
+						dp[e][1][t]+=dp[!e][1][k];
+					}
+					else if(str[i][j+1]=='I'){
+						dp[e][2][t]+=dp[!e][1][k];
+					}
+					else if(str[i][j+1]=='?'){
+						dp[e][0][t]+=dp[!e][1][k];
+						dp[e][1][t]+=dp[!e][1][k];
+						dp[e][2][t]+=dp[!e][1][k];
+					}
+				}
+				else if((k&1)&&str[i][j]=='?'){
+					if(str[i][j+1]=='J'){
+						dp[e][0][t]+=dp[!e][0][k]+dp[!e][1][k];
+					}
+					else if(str[i][j+1]=='O'){
+						dp[e][1][t]+=dp[!e][1][k];
+						dp[e][1][(1<<(b-2))+t]+=dp[!e][0][k];
+					}
+					else if(str[i][j+1]=='I'){
+						dp[e][2][t]+=dp[!e][0][k]+dp[!e][1][k];
+					}
+					else if(str[i][j+1]=='?'){
+						dp[e][0][t]+=dp[!e][0][k]+dp[!e][1][k];
+						dp[e][1][(1<<(b-2))+t]+=dp[!e][0][k];
+						dp[e][1][t]+=dp[!e][1][k];
+						dp[e][2][t]+=dp[!e][0][k]+dp[!e][1][k];
+					}
+				}else if(str[i][j]=='?'){
+					if(str[i][j+1]=='J'){
+						dp[e][0][t]+=dp[!e][0][k]+dp[!e][1][k]+dp[!e][2][k];
+					}
+					else if(str[i][j+1]=='O'){
+						dp[e][1][t]+=dp[!e][1][k]+dp[!e][2][k];
+						dp[e][1][(1<<(b-2))+t]+=dp[!e][0][k];
+					}
+					else if(str[i][j+1]=='I'){
+						dp[e][2][t]+=dp[!e][0][k]+dp[!e][1][k]+dp[!e][2][k];
+					}
+					else if(str[i][j+1]=='?'){
+						dp[e][0][t]+=dp[!e][0][k]+dp[!e][1][k]+dp[!e][2][k];
+						dp[e][1][(1<<(b-2))+t]+=dp[!e][0][k];
+						dp[e][1][t]+=dp[!e][1][k]+dp[!e][2][k];
+						dp[e][2][t]+=dp[!e][0][k]+dp[!e][1][k]+dp[!e][2][k];
+					}
+				}else if((!(k&1))&&dp[!e][2][k]){
+					if(str[i][j+1]=='J'){
+						dp[e][0][t]+=dp[!e][2][k];
+					}
+					else if(str[i][j+1]=='O'){
+						dp[e][1][t]+=dp[!e][2][k];
+					}
+					else if(str[i][j+1]=='I'){
+						dp[e][2][t]+=dp[!e][2][k];
+					}
+					else if(str[i][j+1]=='?'){
+						dp[e][0][t]+=dp[!e][2][k];
+						dp[e][1][t]+=dp[!e][2][k];
+						dp[e][2][t]+=dp[!e][2][k];
+					}
+				}
+			}
+			//for(int k=0;k<(1<<(b-1));k++)printf("[%d,%d,%d] ",dp[e][0][k],dp[e][1][k],dp[e][2][k]);
+			//printf("\n");
+			for(int k=0;k<(1<<(b-1));k++){
+				dp[e][0][k]%=MOD;
+				dp[e][1][k]%=MOD;
+				dp[e][2][k]%=MOD;
+			}
+		}
+	}
+	int ret=0;
+	for(int i=0;i<(1<<(b-1));i++)ret=(ret+dp[(a*(b-1)-1)%2][0][i]+dp[(a*(b-1)-1)%2][1][i]+dp[(a*(b-1)-1)%2][2][i])%MOD;
+	int pow=1;
+	for(int i=0;i<q;i++)pow=pow*3%MOD;
+	ret=(pow-ret)%MOD;
+	if(ret<0)ret+=MOD;
+	printf("%d\n",ret);
+}

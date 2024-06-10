@@ -1,0 +1,29 @@
+while (line = gets)
+  rpn = line.chomp.split(" ")
+
+  stack = []
+
+  for ch in rpn
+    if /\d+/ =~ ch
+      stack.push ch.to_f
+    elsif ch == '+'
+      n1 = stack.pop
+      n0 = stack.pop
+      stack.push n0 + n1
+    elsif ch == '-'
+      n1 = stack.pop
+      n0 = stack.pop
+      stack.push n0 - n1
+    elsif ch == '*'
+      n1 = stack.pop
+      n0 = stack.pop
+      stack.push n0 * n1
+    elsif ch == '/'
+      n1 = stack.pop
+      n0 = stack.pop
+      stack.push n0 / n1
+    end
+  end
+
+  printf("%.6f\n", stack.pop)
+end

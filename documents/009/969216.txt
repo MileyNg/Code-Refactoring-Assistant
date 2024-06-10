@@ -1,0 +1,49 @@
+$MAX_DAY = 3_652_425
+
+def main
+  n,q = gets.chomp.split(' ').map(&:to_i)
+  days = Array.new($MAX_DAY + 1, 0)
+
+  prev = 0
+  n.times do
+    w,t,x = gets.chomp.split(' ').map(&:to_i)
+    prev.upto(days.size) do |i|
+      if i == $MAX_DAY + 1
+        puts 'Many years later'
+        break
+      end
+
+      d = days[i] + (i == 0 ? 0 : days[i-1])
+      if d + i >= w
+        puts i
+        break if i == $MAX_DAY
+        x.times do |j|
+          break if (i + 1 + j) > $MAX_DAY
+          days[i+1+j] += begin
+            case t
+            when 0; 1
+            when 1; j+1
+            when 2; (j+1) ** 2
+            end
+          end
+        end
+        prev = i
+        break
+      end
+      days[i] = d
+    end
+  end
+
+  q.times do
+    target = gets.chomp.to_i
+    if prev <= target
+      prev.upto(target) do |i|
+        days[i] += days[i-1]
+      end
+      prev = target + 1
+    end
+    puts days[target] + target
+  end
+end
+
+main

@@ -1,0 +1,39 @@
+#include <cctype>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int s2i(string s){
+	stringstream ss(s);
+	int d;
+	ss >> d;
+	return d;
+}
+
+int main(){
+	string s;
+	double a, b, x;
+	while (getline(cin, s)){
+		stack<double>X;
+		stringstream ss(s);
+		while(ss>>s){
+			if (s=="+"||s=="-"||s=="*"||s=="/"){
+				b = X.top(); X.pop();
+				a = X.top(); X.pop();
+				if (s == "+") x = a + b;
+				else if (s == "-") x = a - b;
+				else if (s == "*") x = a * b;
+				else if (s == "/") x = a / b;
+				X.push(x);
+			}
+			else{
+				X.push(s2i(s));
+			}
+		}
+		printf("%.6f\n", X.top());
+	}
+}

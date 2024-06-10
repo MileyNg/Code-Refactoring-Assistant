@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  for(int q1, b, c1, c2, q2; cin >> q1 >> b >> c1 >> c2 >> q2 && q1;) {
+    try {
+      for(int s = q2; s > 0; --s) {
+        int rem = b - s * c1;
+        if(rem < 0) continue;
+        int t = rem / c2;
+        if(s+t >= q1) {
+          cout << s << " " << t << endl;
+          throw 0;
+        }
+      }
+      cout << "NA" << endl;
+    } catch(...) {}
+  }
+  return 0;
+}

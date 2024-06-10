@@ -1,0 +1,97 @@
+#include <stdio.h>
+#define NIL -1
+#define N 100006
+
+
+
+struct Node{
+  int p,l,r;
+};
+struct Node A[N];
+
+int deep(int);
+int child(int);
+
+
+main()
+{
+
+
+  int i,j;
+  int n,id,deg,c,k;
+
+
+
+  scanf("%d",&n);
+  
+  for(i = 0; i < n; i++){
+   A[i].p = NIL;
+   A[i].l = NIL;
+   A[i].r = NIL;
+  }
+  for(i = 0; i < n; i++){
+    scanf("%d %d",&id,&deg);
+    for(j = 0; j < deg; j++){
+      scanf("%d",&c);
+      
+      A[c].p = id;
+      
+      if(j == 0){
+	A[id].l = c;
+      }
+      else {
+	A[k].r = c;
+      }
+      k = c;
+    }
+  }
+
+  for(i = 0; i < n; i++){
+
+    printf("node %d: parent = %d, depth = %d, ",i,A[i].p,deep(i));
+    
+   
+    if(A[i].p == NIL){
+      printf("root, [");
+    }
+    else if(A[i].l == NIL){
+      printf("leaf, [");
+    }
+    else {
+	printf("internal node, [");
+    }
+    child(A[i].l);
+    printf("]\n");
+  }
+  return 0;
+}
+
+
+int deep(int s)
+{
+  int a;
+  
+  if(A[s].p == NIL){
+    return 0;
+  }
+  else {
+    a = deep(A[s].p) + 1;
+    return a;
+  }
+}
+
+int child(int s)
+{
+  if(s == NIL){
+    return 0;
+  }
+  else {
+    if(A[s].r == NIL){
+      printf("%d",s);
+    }
+    else {
+      printf("%d ",s);
+      child(A[s].r);
+    }
+  }
+}

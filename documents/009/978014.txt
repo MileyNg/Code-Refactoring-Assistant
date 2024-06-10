@@ -1,0 +1,18 @@
+# ユークリッドの互除法 => 最大公約数
+def gcd(a, b)
+  a, b = b, a if a < b
+  until b == 0
+    a, b = b, a%b
+  end
+  return a
+end
+
+# 最小公倍数
+def lcm(a, b)
+  a*b/gcd(a, b)
+end
+
+while gets do
+  a, b = $_.split(' ').map(&:to_i)
+  puts "#{gcd(a, b)} #{lcm(a, b)}"
+end

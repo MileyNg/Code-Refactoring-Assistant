@@ -1,0 +1,48 @@
+#include<iostream>
+
+using namespace std;
+
+#define MAX 100
+
+int main(void){
+	
+	int n;
+	int sq[MAX][MAX];
+	int sumsq[MAX][MAX];
+	int sum;
+	int max=-1;
+
+	cin>>n;
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			cin>>sq[i][j];
+		}
+	}
+
+	for(int i=0;i<n;i++){
+		sumsq[i][0]=sq[i][0];
+		for(int j=1;j<n;j++){
+			sumsq[i][j]=sumsq[i][j-1]+sq[i][j];
+		}
+	}
+
+	for(int i=0;i<n;i++){  /*x座標*/
+		for(int j=0;j<n;j++){  /*y座標*/
+			for(int k=i;k<n;k++){  /*dy*/
+				for(int l=0;l<=j;l++){  /*-dx*/
+					sum=0;
+					for(int m=i;m<=k;m++){ /*回数*/
+						if(l==j) sum+=sumsq[m][j];
+						else sum+=sumsq[m][j]-sumsq[m][l];
+					}
+					/*cout<<sumsq[i][j]<<","<<i<<","<<j<<","<<k<<","<<l<<","<<sum<<","<<max<<endl;*/
+					if(max<sum) max=sum;
+				}
+			}
+		}
+	}
+
+	cout<<max<<endl;
+
+	return 0;
+}

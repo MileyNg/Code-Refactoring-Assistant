@@ -1,0 +1,26 @@
+#include<iostream>
+#include<map>
+using namespace std;
+int main(){
+  map<string,int> m;
+  string s;
+  while(cin>>s){
+    int& count = m[s];
+    if(count==0) count=1;
+    else count++;
+  }
+  int max_count=0,max_length=0;
+  string max_count_s;
+  string max_length_s;
+  for(auto p:m){
+    if(p.second>max_count){
+      max_count=p.second;
+      max_count_s=p.first;
+    }
+    if((int)p.first.size()>max_length){
+      max_length=(int)p.first.size();
+      max_length_s=p.first;
+    }
+  }
+  cout << max_count_s << " " << max_length_s << "\n";
+}

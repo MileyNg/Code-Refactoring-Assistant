@@ -1,0 +1,15 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+auto main ( ) -> int
+{
+    const std::string table = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+    std::string input ;
+    std::getline ( std::cin , input ) ;
+    for ( auto ch : input )
+    {
+        auto find_iter = std::find ( table.begin ( ) , table.end ( ) , ch ) ;
+        std::cout.put ( ( find_iter != table.end ( ) ) ? table [ ( find_iter - table.begin ( ) + 26 ) % 52 ] : ch ) ;
+    }
+    std::cout << std::endl ;
+}

@@ -1,0 +1,30 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+using namespace std;
+
+int main() {
+
+  long long int in;
+
+  while( true ) {
+
+    cin >> in;
+
+    if ( in == -1 ) break;
+
+    double x = 0.50 * in;
+
+    while( abs( x * x * x - in ) >= 0.00001 * in ) {
+
+      x = x - ( x * x * x - in ) / ( x * x * 3 );
+
+    }
+
+    cout << fixed << setprecision(8) << x << endl;
+
+  }
+
+  return 0;
+
+}

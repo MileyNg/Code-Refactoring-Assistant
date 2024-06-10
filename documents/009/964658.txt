@@ -1,0 +1,99 @@
+#include<iostream>
+#include<cmath>
+#include<cstdio>
+#include<sstream>
+#include<cstdlib>
+#include<string>
+#include<string.h>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<map>
+#include<set>
+#include<utility>
+#include<stack>
+#include<list>
+#include<queue>
+#include<ctime>
+#include<bitset>
+#include<cmath>
+#define eps 1e-6
+#define INF 0x3f3f3f3f
+#define PI acos(-1.0)
+#define ll __int64
+#define LL long long
+#define lson l,m,(rt<<1)
+#define rson m+1,r,(rt<<1)|1
+#define M 1000000007
+
+using namespace std;
+
+#define Maxn 110000
+
+int dp[2][Maxn]; //dp[0][i]:表示当消耗的能量&#20026;i&#26102;，使用all&#23545;&#27599;个怪物所造成的&#20260;害的最大&#20540;
+//dp[1][i]:表示当消耗的能量&#20026;i&#26102;，使用single&#23545;&#21333;个怪物造成的最大的&#20260;害
+vector<pair<int,int> >myv[2]; //表示消耗的能量和能造成的&#20260;害
+int n,m,hp[110];
+char save[110];
+
+int main()
+{
+
+   while(cin>>n)
+   {
+       if(!n)
+            break;
+       memset(dp,0,sizeof(dp));
+       myv[0].clear();
+       myv[1].clear();
+
+       for(int i=1;i<=n;i++)
+            scanf("%d",&hp[i]);
+       scanf("%d",&m);
+       bool flag=false;
+
+       while(m--)
+       {
+           int en,h;
+           scanf("%s%d%s%d",save,&en,save,&h);
+           myv[*save=='S'].push_back(make_pair(en,h));
+           flag|=(en==0&&h);
+       }
+
+       for(int i=0;i<2;i++)
+       {
+           for(int j=0;j<myv[i].size();j++)
+           {
+               //printf("i:%d j:%d %d %d\n",i,j,myv[i][j].first,myv[i][j].second);
+              // system("pause");
+               for(int k=myv[i][j].first;k<=100000;k++)
+                   dp[i][k]=max(dp[i][k],dp[i][k-myv[i][j].first]+myv[i][j].second);
+               //printf("i:%d k:%d %d\n",i,142,dp[i][142]);
+
+           }
+       }
+
+       LL ans=(1LL<<62);
+
+       for(int i=0;i<ans;i++)
+       {
+           LL temp=i;    //枚&#20030;需要的使用的all的&#24635;&#20540; 
+
+           for(int j=1;j<=n;j++)  //求出最少的sigle&#24635;&#20540;
+           {
+               temp+=lower_bound(dp[1],dp[2],hp[j]-dp[0][i])-dp[1];
+               //printf("temp:%lld\n",temp);
+               //system("pause");
+           }
+
+          //printf("i:%d %lld\n",i,temp);
+           ans=min(ans,temp); //不断&#20943;少范&#22260;
+           //printf("%lld\n",ans);
+          // system("pause");
+       }
+
+       printf("%lld\n",ans);
+
+   }
+   return 0;
+}

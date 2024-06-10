@@ -1,0 +1,142 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <string>
+#include <cctype>
+#include <algorithm>
+using namespace std;
+#define rep(i,n) for(int i=0;i<n;++i)
+#define rep1(i,n) for(int i=1;i<=n;++i)
+#define all(c) (c).begin(),(c).end()
+typedef long long ll;
+typedef string::const_iterator State;
+string s;
+void consume(State &be, char exp);
+void ok(State &be);
+void eq(State &be);
+ll ex(State &be);
+ll term(State &be);
+ll num(State &be);
+void consume(State &be, char exp){
+	if(*be==exp) be++;
+	else throw 0;
+}
+void ok(State &be){
+	while(be!=s.end()){
+		while(*be=='#') be++;
+		if(be==s.end()) return;
+		if(*(be+1)=='#'){
+//			cout << be-s.begin() << endl;
+			be++;
+			continue;
+		}
+//		cout << "eq" << be-s.begin() << endl;
+		eq(be);
+		consume(be,'#');
+	}
+}
+void eq(State &be){
+	ll l=ex(be);
+	consume(be,'=');
+	ll r=ex(be);
+	if(l!=r) throw 0;
+}
+ll ex(State &be){
+	ll ret=term(be);
+	while(true){
+		if(*be=='+'){
+			be++;
+			ret+=term(be);
+		}else if(*be=='-'){
+			be++;
+			ret-=term(be);
+		}else{
+			break;
+		}
+	}
+	return ret;
+}
+ll term(State &be){
+	ll ret=num(be);
+	while(true){
+		if(*be=='*'){
+			be++;
+			ret*=num(be);
+		}else if(*be=='/'){
+			be++;
+			ll div=num(be);
+			if(ret%div) throw 0;
+			else ret/=div;
+		}else{
+			break;
+		}
+	}
+	return ret;
+}
+ll num(State &be){
+	ll ret=0;
+	bool fs0=false;
+	if(!isdigit(*be) || (*be=='0' && isdigit(*(be+1)) )) throw 0;
+	while(isdigit(*be)){
+		ret*=10;
+		ret+=*be-'0';
+		be++;
+	}
+	return ret;
+}
+int main(){
+	while(true){
+		int h,w,n,cnt=0,doth[10],dotw[10];
+		bool flag=false;
+		scanf("%d%d",&h,&w);
+		if(h==0) break;
+		vector<string> mp;
+		rep(i,h){
+			string st;
+			cin >> st;
+			mp.push_back(st);
+			rep(j,w){
+				if(st[j]=='.') doth[cnt]=i,dotw[cnt]=j,cnt++;
+			}
+		}
+		scanf("%d",&n);
+		string var;
+		rep(i,n){
+			char c;
+			cin >> c;
+			var+=c;
+		}
+		int a[10]={};
+		rep(i,n) a[i]=i;
+		do{
+			rep(i,n){
+//				cout << i << " " << doth[i] << " " << dotw[i] << " " << a[i] << endl;
+				mp[doth[i]][dotw[i]]=var[a[i]];
+			}
+			try{
+				rep(i,h){
+					s=mp[i]+"#";
+					State be=s.begin();
+					ok(be);
+				}
+				rep(i,w){
+					s="";
+					rep(j,h) s+=mp[j][i];
+					s+='#';
+					State be=s.begin();
+					ok(be);
+				}
+				cout << "Yes\n";
+				flag=true;
+/*				rep(i,h){
+					rep(j,w) cout << mp[i][j];
+					cout << endl;
+				}*/
+				break;
+			}
+			catch(int error){}
+		}while(next_permutation(a,a+n));
+		if(!flag) printf("No\n");
+	}
+	return 0;
+}

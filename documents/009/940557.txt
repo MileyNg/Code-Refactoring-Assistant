@@ -1,0 +1,46 @@
+def calcmax c,k
+    pr = 1
+    max = 0
+    (c.length-k+1).times do |i|
+        k.times do |j|
+            pr *= c[i+j]
+        end
+        if  pr > max
+            max = pr
+        end
+        pr = 1
+    end
+    return max
+end
+def swap c,i,j
+    t = c[i]
+    c[i] = c[j]
+    c[j] = t
+    return c
+end
+
+loop do
+    n, k = gets.split.map(&:to_i)
+    if n==0 && k==0
+        break
+    end
+    c = Array.new(n)
+    n.times do |i|
+        c[i] = gets.to_i
+    end
+    d = calcmax c, k
+    max = d
+    b = false
+    (n-1).times do |i|
+        for j in i+1..n-1
+            c = swap c,i,j
+            m = calcmax c,k
+            if m >= max
+                b = true
+                max = m
+            end
+            c = swap c,i,j
+        end
+    end
+    puts b ? max-d : "NO GAME"
+end

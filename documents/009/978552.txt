@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+long long int flag[200000] = {0};
+
+int main() {
+
+  long long int cnt = 1;
+
+  vector< long long int > sosu;
+
+  for ( long long int i = 2; i < 200000; i++ ) {
+
+    if ( flag[i] == 0 ) {
+      sosu.push_back( i );
+      flag[i] = cnt;
+      cnt++;
+      for ( long long int j = 2; j * i < 200000; j++ ) {
+	flag[j*i] = -1;
+      }
+    }
+
+  }
+
+  long long int n, p;
+
+  while( true ) {
+
+    cin >> n >> p;
+
+    if ( n == -1 ) break;
+
+    cnt = 1;
+
+    while( true ) {
+      if ( flag[n+cnt] > 0 ) {
+	cnt = flag[n+cnt] - 1;
+	break;
+      }
+      cnt++;
+    }
+
+    vector< long long int > ans;
+
+    for ( long long int i = 0; i < p; i++ ) {
+      for ( long long int j = i; j < p; j++ ) {
+	ans.push_back( sosu[ cnt+i ] + sosu[ cnt+j ] );
+      }
+    }
+    sort( ans.begin(), ans.end() );
+
+    cout << ans[p-1] << endl;
+
+  }
+
+  return 0;
+
+}

@@ -1,0 +1,26 @@
+def check_sum(k, n, s, used = (0..9).map{false})
+  if k >= n
+    return s == 0 ? 1 : 0
+  end
+
+  count = 0
+
+  for i in (0..9)
+    ki = (k + 1 ) * i
+    if ! used[i] && s >= ki
+      used[i] = true
+      count += check_sum(k + 1, n, s - ki, used)
+      used[i] = false
+    end
+  end
+
+  return count
+end
+
+### main
+
+while (line = gets)
+  n, s = line.chomp.split(" ").map{|s| s.to_i}
+
+  puts check_sum(0, n, s)
+end

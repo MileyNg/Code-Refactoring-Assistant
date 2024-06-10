@@ -1,0 +1,33 @@
+#include <cstdio>
+#include <iostream>
+using namespace std;
+int p, q, a, n;
+
+int dfs(int i, int last, int prod, int c, int d)
+{
+    int count = 0;
+    if (c * q == d * p) {
+        return 1;
+    }
+    if (i >= n) {
+        return 0;
+    }
+    for (int y = last; prod * y <= a; y++) {
+        if ((q * (c * y + d)) <= ((d * y) * p))
+            count += dfs(i+1, y, prod*y, c*y+d, d*y);
+    }
+    return count;
+}
+
+int main()
+{
+    while (true) {
+        scanf("%d %d %d %d", &p, &q, &a, &n);
+        if (p == 0) {
+            break;
+        }
+        cout << dfs(0, 1, 1, 0, 1) << endl;
+    }
+
+    return 0;
+}

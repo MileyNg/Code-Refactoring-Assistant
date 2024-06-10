@@ -1,0 +1,24 @@
+r = 1000001
+p = [1]*r
+p[0] = p[1] = 0
+for i in range(int(r**0.5)):
+	if p[i]:
+		p[2*i::i] = [0]*len(p[2*i::i])
+
+while 1:
+	n,x = map(int,raw_input().split())
+	if n == 0: break
+	dp = [0]*(x+1)
+	menu = [int(raw_input()) for i in range(n)]
+	for cost in menu:
+		try:dp[cost] = 1
+		except: pass
+	for cost in menu:
+		for i in range(min(menu),x-cost+1):
+			dp[i+cost] += dp[i]
+	for i in range(x,0,-1):
+		if p[i] and dp[i]:
+			print i
+			break
+	else:
+		print "NA"

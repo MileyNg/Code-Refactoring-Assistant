@@ -1,0 +1,187 @@
+#include<stdio.h>
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<functional>
+#include<map>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+const long long INF = 1000000000000;
+//&#146;&#172;,&#145;&#186;&#130;&#204;&#144;&#148;
+int n;
+//&#147;&#185;&#130;&#204;&#144;&#148;
+int m;
+//&#143;W&#148;z&#144;&#230;&#130;&#204;&#144;&#148;
+int R;
+
+//&#143;W&#148;z&#143;&#135;&#143;&#152;
+int z[1003];
+
+typedef pair<long long,long long> P;
+typedef pair<pair<long long,long long>,pair<long long,long long> > PP;
+
+struct edge
+{
+	int to;
+	//&#151;&#164;&#130;&#200;&#130;&#231;1
+	int mode;
+	long long cost;
+	edge(int to,int mode,long long cost) {
+		this->to = to;
+		this->mode = mode;
+		this->cost = cost;
+	}
+
+};
+
+vector<edge> G[207];
+// &#140;&#187;&#141;&#221;&#130;&#204;&#146;&#184;&#147;_,&#145;D&#130;&#204;&#130;&#160;&#130;&#233;&#146;&#184;&#147;_,&#130;&#199;&#130;賊&#130;&#220;&#130;&#197;&#143;W&#148;z&#130;&#181;&#130;&#189;&#130;&#169;
+long long dist[203][203][1003];
+
+long long dijkstra() {
+	for (int i = 0; i < 203; i++)
+	{
+		for (int j = 0; j < 203; j++)
+		{
+			fill(dist[i][j],dist[i][j]+1003,INF);
+		}
+	}
+	priority_queue<PP,vector<PP>, greater<PP> > que;
+
+	dist[0][0][0]=0;
+
+	que.push(PP(P(0,0),P(0,0)));
+
+	while (!que.empty())
+	{
+		PP pp = que.top(); que.pop();
+
+		long long cost = pp.first.first;
+		long long v=pp.first.second;
+		long long u=pp.second.first;
+		long long index = pp.second.second;
+		
+
+		if(z[index] == v) {
+			dist[v][u][index+1]=dist[v][u][index];
+			index++;
+		}
+
+		if(index == R) {
+			//dist[v][u][index+1]=dist[v][u][index];
+			break;
+		}
+
+		if(dist[v][u][index] < cost) {
+			continue;
+		}
+
+
+		//printf("[debug] %d %d %d %d\n",cost,v,u,index);
+		for (int i = 0; i < G[v].size(); i++)
+		{
+			edge e = G[v][i];
+			//printf("        %d %d %d\n",e.to,e.mode,e.cost);
+
+			//&#145;D&#130;&#240;&#142;g&#130;&#164;
+			if(u==v && e.mode == 0) {
+				//printf("%d,%d\n",dist[e.to][e.to][index],dist[v][u][index]);
+				if(dist[e.to][e.to][index] > dist[v][u][index] + e.cost) {
+					dist[e.to][e.to][index] = dist[v][u][index] + e.cost;
+					que.push(PP(P(dist[e.to][e.to][index],e.to),P(e.to,index)));
+				}
+			}
+			if(e.mode == 1) {
+				if(dist[e.to][u][index] > dist[v][u][index] + e.cost) {
+					dist[e.to][u][index] = dist[v][u][index] + e.cost;
+					que.push(PP(P(dist[e.to][u][index],e.to),P(u,index)));
+				}
+			}
+
+		}
+	}
+
+	long long ans=INF;
+
+	for (int i = 0; i < 203; i++)
+	{
+		ans=min(ans,dist[z[R-1]][i][R-1]);
+	} 
+
+	return ans;
+
+
+}
+
+
+void solve() {
+    map<pair<P,char>,int> input;
+	for (int i = 0; i < m; i++)
+	{
+		long x,y,t;
+		char c;
+		//x-y &#130;&#205;&#131;R&#131;X&#131;g t &#130;&#197; c &#130;&#201;&#130;&#230;&#130;&#193;&#130;&#196;&#140;&#139;&#130;&#206;&#130;&#234;&#130;&#196;&#130;&#162;&#130;&#233;
+		
+		cin>>x>>y>>t>>c;
+		x--;
+		y--;
+        if(y<x) swap(x,y);
+        
+        pair<P,char> tmp = pair<P,char>(P(x,y),c);
+
+        if(input.find(tmp) == input.end()) {
+            input[tmp]=t;
+        }
+        else {
+            if(input[tmp] > t) {
+                input.erase(tmp);
+                input[tmp]=t;
+            }
+        }
+        
+	}
+    map<pair<P,char>,int>::iterator it = input.begin();
+    while(it!=input.end()) {
+        long long x,y,t;
+        char c;
+        x = it->first.first.first;
+        y = it->first.first.second;
+        c = it->first.second;
+        t = it->second;
+        //printf("[debug] %d %d %d %c\n",x,y,t,c);
+        G[x].push_back(edge(y,c=='L',t));
+        G[y].push_back(edge(x,c=='L',t));
+
+        ++it;
+    }
+
+	cin>>R;
+
+	for (int i = 0; i < R; i++)
+	{
+		cin>>z[i];
+		z[i]--;
+	}
+
+	cout<<dijkstra()<<endl;
+	
+	for (int i = 0; i < 207; i++)
+	{
+		G[i].clear();
+	}
+}
+
+int main() {
+
+	while (cin>>n>>m)
+	{
+		if(n+m==0) return 0;
+		solve();
+
+	}
+
+	return 0;
+}

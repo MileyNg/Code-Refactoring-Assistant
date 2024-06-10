@@ -1,0 +1,42 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<map>
+#include<set>
+using namespace std;
+int N,R=0;
+char S[1500];
+string f;
+map<string,vector<string> >E;
+set<string>G;
+
+void dfs(string g)
+{
+	for(vector<string>::iterator I=E[g].begin();I!=E[g].end();I++)
+	{
+		if(E.find(*I)!=E.end())dfs(*I);
+		else G.insert(*I);
+	}
+}
+
+int main()
+{
+	for(;scanf("%d\n",&N),N;)
+	{
+		for(int i=R=0;i<N;i++)
+		{
+			gets(S);
+			char *p=strtok(S,":");
+			string s=string(p);
+			if(i==0)f=s;
+			E[s];
+			for(;p=strtok(NULL,",.");)
+				E[s].push_back(string(p));
+		}
+		dfs(f);
+		printf("%d\n",G.size());
+		E.clear();
+		G.clear();
+	}
+}

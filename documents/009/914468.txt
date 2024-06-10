@@ -1,0 +1,45 @@
+/*
+	0031:Weight
+*/
+#include	<iostream>
+#include	<cmath>
+
+using namespace std;
+
+int main(void) {
+	while(1) {
+		int w;
+		int bundo[2][10] = { 0 };
+		
+		cin >> w;
+		if( cin.eof() ) { break; }
+		
+		for(int i = 0; i < 10; i++) {
+			bundo[0][i] = pow(2, i);
+		}
+		
+		for(int i = 0; i < 10; i++) {
+			if(w >= bundo[0][9 - i]) {
+				w -= bundo[0][9 - i];
+				bundo[1][9 - i] = 1;
+			}
+		}
+		
+		for(int i = 0; i < 9; i++) {
+			if(bundo[1][i] == 1) {
+				cout << bundo[0][i];
+				for(int j = i + 1; j < 10; j++) {
+					if(bundo[1][j] == 1) {
+						cout << ' ';
+						break;
+					}
+				}
+			}
+		}
+		if(bundo[1][9] == 1) {
+			cout << bundo[0][9];
+		}
+		cout << endl;
+	}
+	return 0;
+}

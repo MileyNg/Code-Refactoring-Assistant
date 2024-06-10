@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int
+main ()
+{
+  int w, n;
+  cin >> w >> n;
+  vector < int >list (w);
+  vector < int >::iterator it;
+  int i = 1;
+  for (it = list.begin (); it != list.end (); ++it)
+    *it = i++;
+  for (w = 0; w < n; w++)
+    {
+      int b, a;
+      scanf ("%d%*c%d", &b, &a);
+      swap (list[b - 1], list[a - 1]);
+    }
+  for_each (list.begin (), list.end (),[](int n)
+	    {
+	    cout << n << endl;});
+
+}

@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+typedef pair<int,int> pii;
+
+const int inf = 1e9;
+int s,r,a,b,q,c,d,u,v,w;
+vector<pii> g[100100];
+vector<int> ming[100100];
+int dis[100100];
+bool vis[100100];
+
+bool dfs(int now,int goal){
+  if(now == goal)return true;
+  if(vis[now])return false;
+  vis[now] = true;
+
+  rep(i,ming[now].size()){
+    if(dfs(ming[now][i],goal))return true;
+  }
+  return false;
+}
+
+int main(){
+  scanf("%d%d",&s,&r);
+  rep(i,r){
+    scanf("%d%d%d",&u,&v,&w); u--; v--;
+    g[u].push_back(pii(w,v));
+    g[v].push_back(pii(w,u));
+  }
+  
+  scanf("%d%d%d",&a,&b,&q); a--; b--;
+  memset(dis,-1,sizeof(dis));
+  dis[a] = 0;
+  priority_queue<pii,vector<pii>,greater<pii> > que;
+  que.push(pii(0,a));
+
+  while(que.size()){
+    pii p = que.top(); que.pop();
+    int cost = p.first, pos = p.second;
+    if(dis[pos]<cost)continue;
+
+    rep(i,g[pos].size()){
+      int ncost = cost + g[pos][i].first, npos = g[pos][i].second;
+      if(dis[npos]< 0 || dis[npos] > ncost){
+	dis[npos] = ncost;
+	que.push(pii(ncost,npos));
+      }
+    }
+  }
+
+  memset(vis,0,sizeof(vis));
+  vis[b] = true;
+  queue<int> state;
+  state.push(b);
+
+  while(state.size()){
+    int p = state.front(); state.pop();
+
+    rep(i,g[p].size()){
+      int np = g[p][i].second, nc = g[p][i].first;
+      if(dis[p] == dis[np] + nc){
+	ming[np].push_back(p);
+	if(!vis[np]){
+	  state.push(np);
+	  vis[np] = true;
+	}
+      }
+    }
+  }
+
+  map<pii,bool> memo;
+  rep(i,q){
+    scanf("%d%d",&c,&d); c--; d--;
+
+    bool f;
+    if(memo.find(pii(c,d))!=memo.end())f = memo[pii(c,d)];
+    else{
+      memset(vis,0,sizeof(vis));
+      memo[pii(c,d)] = f = dfs(c,d);
+    }
+
+    if(f)printf("Yes\n");
+    else printf("No\n");
+  }
+}

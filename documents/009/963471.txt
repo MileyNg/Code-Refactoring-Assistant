@@ -1,0 +1,65 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <set>
+#include <utility>
+using namespace std;
+#define foreach(i, n) for (typeof(n) i = 0; i < (n); ++i)
+typedef vector<int> veci;
+
+#define MAX_PAZZLE 1000
+int dirctions[4] = { -4, 4, -1, 1 };
+bool on_board(int n) { return 0 <= n && n < 8; }
+
+struct state {
+    veci pzl;
+    int zero;
+    int cnt;
+};
+
+bool solved(const veci & pzl) {
+    foreach (i, 8) if (pzl[i] != i) return false;
+    return true;
+}
+int serialize(const veci & pzl) {
+    int n = 0;
+    foreach (i,8) n += pzl[i] << (i * 3);
+    return n;
+}
+
+int main() {
+    while (true) {
+        state stt; stt.pzl = veci(8);
+        foreach (i, 8) cin >> stt.pzl[i];
+        if (cin.fail()) break;
+        if (solved(stt.pzl)) { cout << 0 << endl; continue; }
+        stt.zero = find(stt.pzl.begin(), stt.pzl.end(), 0) - stt.pzl.begin();
+        stt.cnt = 0;
+        queue<state> que = queue<state>();
+        que.push(stt);
+        set<int> searched = set<int>();
+
+        while (not que.empty()) {
+            stt = que.front(); que.pop();
+            int serialized = serialize(stt.pzl);
+            if (searched.find(serialized) != searched.end()) continue; else searched.insert(serialized);
+            foreach (d, 4) {
+                state nxt = stt;
+                ++ nxt.cnt;
+                nxt.zero += dirctions[d];
+                if (not on_board(nxt.zero) || stt.zero * nxt.zero == 3 * 4) { continue; }
+                nxt.pzl[stt.zero] = stt.pzl[nxt.zero];
+                nxt.pzl[nxt.zero] = 0;
+                if (solved(nxt.pzl)) {
+                    cout << nxt.cnt << endl;
+                    que = queue<state>();
+                    break;
+                } else {
+                    que.push(nxt);
+                }
+            }
+        }
+    }
+    return 0;
+}

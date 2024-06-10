@@ -1,0 +1,56 @@
+import java.util.*;
+
+public class Main {
+	static Scanner in = new Scanner(System.in);
+	static void doIt(String input){
+		int n=input.length();
+		System.out.println(input); 
+		ArrayList<String> list = new ArrayList<String>();
+		String a = "";
+		for(int i=0;i<n;i++){
+//			System.out.println(i);
+			char s = input.charAt(i);
+			if(s=='a'||s=='i'||s=='u'||s=='e'||s=='o'){
+				if(i+1<n){
+					if((s=='o'&&input.charAt(i+1)=='u')||(s=='a'&&input.charAt(i+1)=='a')||(s=='i'&&input.charAt(i+1)=='i')&&
+						(s=='u'&&input.charAt(i+1)=='u')||(s=='e'&&input.charAt(i+1)=='i'))a+=s;
+					else{
+						list.add(a+s);
+						a = "";
+					}
+				}else{
+					list.add(a+s);
+					a = "";
+				}
+			}else if(s=='n'){
+				if(i+1==n)list.add(a+s);
+				else if(input.charAt(i+1)=='\''){
+					list.add(a+s);
+					a="";
+					i++;
+				}
+				else if(input.charAt(i+1)=='n'){
+					list.add(a+s);
+					a="";
+				}else a+=s;
+			}else a+=s;
+		}
+		System.out.println(list);
+		
+		//ここから判定　
+		
+		
+		
+		
+		
+	}
+
+	public static void main(String[] args) {
+		while(true){
+			String input = in.next();
+			if(input.equals("#"))break;
+			doIt(input);
+		}
+	}
+
+}

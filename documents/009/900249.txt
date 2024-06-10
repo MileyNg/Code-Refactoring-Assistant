@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<string.h>
+#define MP 10005
+int x1,y1,x2,y2,N,R,i,j,M[MP][MP],a[2],t,mx,my,ma,mb;
+int main()
+{
+	for(;scanf("%d%d",&N,&R),N;)
+	{
+		memset(M,0,sizeof(M));
+		ma=mb=10005;mx=my=-1;
+		for(i=0;i<N;i++)
+		{
+			scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+			M[x1][y1]++;
+			M[x2][y2]++;
+			M[x1][y2]--;
+			M[x2][y1]--;
+			mx=mx<x2?x2:mx;
+			my=my<y2?y2:my;
+			ma=ma>x1?x1:ma;
+			mb=mb>y1?y1:mb;
+		}
+		mx++,my++;
+		for(i=ma,a[0]=a[1]=0;i<=mx;i++)
+			for(j=mb,t=0;j<=my;j++)
+				M[i][j]=(t+=M[i][j]);
+		for(j=mb;j<=mx;j++)
+			for(i=ma,t=0;i<=mx;i++)
+			{
+				M[i][j]=(t+=M[i][j]);
+				if(M[i][j]>0)a[0]++;
+				if(M[i-1][j]==0&&M[i][j]>0)a[1]++;
+				if(M[i][j]==0&&M[i-1][j]>0)a[1]++;
+				if(M[i][j-1]==0&&M[i][j]>0)a[1]++;
+				if(M[i][j]==0&&M[i][j-1]>0)a[1]++;
+			}
+		for(i=0;i<R;i++)printf("%d\n",a[i]);
+	}
+	return 0;
+}

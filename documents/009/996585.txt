@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+long long dp[99][21];
+
+int main(void) {
+    int N, d, i, j;
+
+    scanf("%d", &N);
+    for (i = 0; i < 21; i++) dp[0][i] = 0;
+    scanf("%d", &d);
+    dp[0][d] = 1;
+    for (i = 1; i < N - 1; i++) {
+        scanf("%d", &d);
+        for (j = 0; j < 21; j++) { // op: +
+            if (j - d >= 0) dp[i][j] = dp[i-1][j-d];
+            else dp[i][j] = 0;
+        }
+        for (j = 0; j < 21 - d; j++) {
+            dp[i][j] += dp[i-1][j+d];
+        }
+    }
+    scanf("%d", &d);
+    printf("%lld\n", dp[N-2][d]);
+
+    return 0;
+}

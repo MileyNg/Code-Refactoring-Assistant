@@ -1,0 +1,157 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+/*
+	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2401
+	
+	ACM-ICPC Japan Alumni Group Practice Contest for Japan Domestic 2012, 2012-06-17 
+
+	Equation
+
+	構文解析の問題
+
+	定数: T, F
+	変数: a, b, c, d, e, f, g, h, i, j, k
+	論理否定: -X
+	論理積: (X*Y)
+	論理和: (X+Y)
+	論理包含: (X->Y)
+
+
+	x	y	-x	(x*y)	(x+y)	(x->y)
+	T	T	F	T	T	T
+	T	F	F	F	T	F
+	F	T	T	F	T	T
+	F	F	T	F	F	T
+
+	<equation> ::= <formula> "=" <formula>
+	<formula>  ::= "T" | "F" |
+	"a" | "b" | "c" | "d" | "e" | "f" |
+	"g" | "h" | "i" | "j" | "k" |
+	"-" <formula> |
+	"(" <formula> "*" <formula> ")" |
+	"(" <formula> "+" <formula> ")" |
+	"(" <formula> "->" <formula> ")"
+
+*/
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+int idx = 0;
+string eq;
+bool formula (void ){
+
+	bool f1 = false, f2 = false;
+	if (eq[idx] == '-' ){
+		idx++;
+		f1 = !formula ();
+		return f1;
+	}else
+	if (eq[idx] == '(' ){
+		idx++;
+		f1 = formula ();
+		if (eq[idx] == '*' ){
+			idx++;
+			f2 = formula ();
+			idx++;	// omit ')'
+			return f1 & f2;
+		}else
+		if (eq[idx] == '+' ){
+			idx++;
+			f2 = formula ();
+			idx++;	// omit ')'
+			return f1 | f2;
+		}else
+		if (eq[idx] == '-' && idx + 1 < eq.size() && eq[idx+1] == '>' ){
+			idx += 2;
+			f2 = formula ();
+			idx++;	// omit ')'
+			return !(f1 & !f2 );
+		} // end if
+	}else{
+		if (eq[idx] == 'T' ){
+			f1 = true;
+		}else{
+			f1 = false;
+		} // end if
+		idx++;
+		return f1;
+	} // end if
+
+	return false;
+}
+
+bool equation (void ){
+	bool f1 = formula ();
+	if (eq[idx] == '=' ) idx++;
+	bool f2 = formula ();
+
+	return (f1 == f2 );
+}
+
+bool parse (string s ){
+	eq = s;
+	idx = 0;
+	bool res = equation ();
+
+	return res;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	string s = "";
+	while (cin >> s && s != "#" ){
+		int n = s.length();
+		vector<int> val; val.clear();
+		rep (i, n ){
+			if (s[i] >= 'a' && s[i] <= 'k' ) val.push_back (i );
+		} // end rep
+		sort (ALL (val ) );
+		val.erase (unique (ALL (val ) ), val.end() );
+
+		bool res = true;
+
+		if (val.empty() ){
+			res = parse (s );
+		}else{
+			rep (i, 1<<val.size() ){
+				string t = s;
+				rep (j, val.size() ){
+					if (i&(1<<j) ){
+						rep (k, t.size() ) if (t[k] == val[j] ) t[k] = 'T';
+					} // end if
+				} // end rep
+				rep (k, t.size() ) if (islower (t[k] ) ) t[k] = 'F';;
+				res &= parse (t );
+			} // end rep
+		} // edn if
+		cout << (res ? "YES" : "NO" ) << endl;
+	} // end while
+	
+	return 0;
+}

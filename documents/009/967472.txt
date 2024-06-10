@@ -1,0 +1,23 @@
+def count_primes(n)
+  primes = (n + 1).times.map { 1 }
+  primes[0] = primes[1] = 0
+
+  count = 0
+
+  for p in (2..n)
+    if (primes[p] != 0)
+      count += 1
+      (p * p).step(n, p) do |q|
+        #puts "q = #{q}"
+        primes[q] = 0
+      end
+    end
+  end
+
+  return count
+end
+
+while (line = gets)
+  n = line.chop.to_i
+  puts count_primes(n)
+end

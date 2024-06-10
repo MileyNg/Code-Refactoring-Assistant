@@ -1,0 +1,19 @@
+def comb(k, n)
+  if (k == 0)
+    return (n == 0) ? 1 : 0
+  end
+
+  n0 = [9, n].min
+  count = 0
+
+  for i in (0..n0)
+    count += comb(k - 1, n - i)
+  end
+
+  return count
+end
+
+while (line = gets)
+  n = line.chop.to_i
+  puts comb(4, n)
+end

@@ -1,0 +1,140 @@
+#define _USE_MATH_DEFINES
+#include<iostream>
+#include<sstream>
+#include<cstdlib>
+#include<cmath>
+using namespace std;
+
+class Biv {
+private:
+  void set(Biv v) {
+    x = v.x; y = v.y;
+  }
+public:
+  string toString() {
+    stringstream ss;
+    ss << "(" << x << ", " << y << ")";
+    return ss.str();
+  }
+  double x, y;
+  Biv(double xx, double yy) {
+    x = xx; y = yy;
+  }
+  Biv() {
+    x = 0; y = 0;
+  }
+  void operator=(Biv v) { set(v); }
+  Biv operator-() {
+    return Biv(-x, -y);
+  }
+  Biv operator+(Biv v) {
+    return Biv(x + v.x, y + v.y);
+  }
+  Biv operator-(Biv v) {
+    return *this + (-v);
+  }
+  Biv multiple(double k) {
+    return Biv(k * x, k * y);
+  }
+  Biv operator+=(Biv v) {
+    set(*this + v); return *this;
+  }
+  Biv operator-=(Biv v) {
+    set(*this - v); return *this;
+  }
+  friend ostream& operator<<(ostream& os, const Biv& v);
+  double length() {
+    return sqrt(x * x + y * y);
+  }
+  double arg() {
+    if (x == 0) { return (y < 0) ? - M_PI: M_PI; }
+    return atan(y / x);
+  }
+};
+
+double dot(Biv a, Biv b) {
+  return a.x * b.x + a.y * b.y;
+}
+
+double cross(Biv a, Biv b) {
+  return a.x * b.y - a.y * b.x;
+}
+
+class Ttm {
+private:
+  void set(Ttm m) {
+    a = m.a; b = m.b; c = m.c; d = m.d;
+  }
+public:
+  double a, b, c, d;
+  string toString() {
+    stringstream ss;
+    ss << "[" << a << "," << b << "," << c << "," << d << "]";
+    return ss.str();
+  }
+  Ttm(double aa, double bb, double cc, double dd) {
+    a = aa; b = bb; c = cc; d = dd;
+  }
+  Ttm() {
+    a = 0; b = 0; c = 0; d = 0;
+  }
+  void operator=(Ttm m) { set(m); }
+  Ttm operator-() {
+    return Ttm(-a, -b, -c, -d);
+  }
+  Ttm operator+(Ttm m) {
+    return Ttm(a+m.a, b+m.b, c+m.c, d+m.d);
+  }
+  Ttm operator-(Ttm m) {
+    return *this + (-m);
+  }
+  Ttm operator*(Ttm m) {
+    return Ttm(a*m.a+b*m.c, a*m.b+b+m.d, c*m.a+d*m.c, c*m.d+d*m.d);
+  }
+  Biv operator*(Biv v) {
+    return Biv(a * v.x + b * v.y, c * v.x + d * v.y);
+  }
+  Ttm multiple(double k) {
+    return Ttm(k*a, k*b, k*c, k*d);
+  }
+  Ttm operator+=(Ttm m) {
+    set(*this + m); return *this;
+  }
+  Ttm operator-=(Ttm m) {
+    set(*this - m); return *this;
+  }
+};
+
+Ttm Rotate(double t) {
+  return Ttm(cos(t), -sin(t), sin(t), cos(t));
+}
+
+bool in(Biv a, Biv b, Biv c, Biv p) {
+  b -= a;
+  c -= a;
+  p -= a;
+  
+  if (cross(b,p) * cross(c,p) > 0) {
+    /*cout << "cross(" << b.toString() << "," << p.toString()
+      << ") * cross(" << c.toString() << "," << p.toString() << ") > 0" << endl;*/
+    return false; }
+  
+  double t = b.arg();
+  /*cout << t << " "<< Rotate(-t).toString() << endl;*/
+  c = Rotate(-t) * c;
+  p = Rotate(-t) * p;
+  /*cout << "c="<<c.toString() << " ,p=" <<p.toString();*/
+
+  return (p.x < c.x);
+}
+
+
+int main() {
+  Biv p1, p2, p3, pp;
+
+  while(cin >> p1.x >> p1.y >> p2.x >> p2.y >> p3.x >> p3.y >> pp.x >> pp.y) {
+    bool yes = in(p1, p2, p3, pp);
+
+    cout << ( yes ? "YES" : "NO") << endl;
+  }
+}

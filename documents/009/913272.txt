@@ -1,0 +1,50 @@
+#include<cstdio>
+#include<cstring>
+#include<queue>
+#include<utility>
+using namespace std;
+typedef struct P{int x,y,t;};
+int M[10][10],MX[13]={0,-2,-2,-2,-1,-1,0,0,1,1,2,2,2},MY[13]={0,-1,0,1,-2,2,-2,2,-2,2,-1,0,1};
+int lim(int y,int x){return y>=0&&x>=0&&x<10&&y<10;}
+int main()
+{
+	int N,f=0;
+	P tmp;
+	for(;scanf("%d%d",&tmp.x,&tmp.y),tmp.x+tmp.y;)
+	{
+		tmp.t=f=0;
+		memset(M,0,sizeof(M));
+		scanf("%d",&N);
+		for(int i=0;i<N;i++)
+		{
+			int x,y;
+			scanf("%d%d",&x,&y);
+			for(int my=-1;my<2;my++)
+				for(int mx=-1;mx<2;mx++)
+					if(lim(y+my,x+mx))
+						M[y+my][x+mx]|=1<<i;
+		}
+		queue<P> Q;
+		Q.push(tmp);
+		for(;!Q.empty();)
+		{
+			tmp=Q.front();Q.pop();
+			if(tmp.t==N)
+			{
+				f=1;
+				break;
+			}
+			for(int i=0;i<13;i++)
+			{
+				int nx=tmp.x+MX[i],ny=tmp.y+MY[i];
+				if(lim(nx,ny)&&M[ny][nx]&(1<<tmp.t))
+				{
+					P next={nx,ny,tmp.t+1};
+					Q.push(next);
+				}
+			}
+		}
+		puts(f?"OK":"NA");
+	}
+	return 0;
+}

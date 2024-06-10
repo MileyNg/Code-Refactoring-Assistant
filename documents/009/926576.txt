@@ -1,0 +1,48 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n, m;
+	while (cin >> n >> m) {
+		if (n == 0 && m == 0) {
+			break;
+		}
+		int taro[100];
+		int hanako[100];
+		int taros = 0;
+		int hanakos = 0;
+		int sa;
+		for (int i = 0; i < n; i++) {
+			cin >> taro[i];
+			taros += taro[i];
+		}
+		for (int i = 0; i < m; i++) {
+			cin >> hanako[i];
+			hanakos += hanako[i];
+		}
+		sa = taros-hanakos;
+		int taroo , hanakoo;
+		taroo = hanakoo = -1;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				int tem = taro[i]*2-hanako[j]*2;
+				if (sa == tem) {
+					if (taroo == -1 && hanakoo == -1) {
+						taroo = taro[i];
+						hanakoo = hanako[j];
+					} else if (taroo+hanakoo > taro[i]+hanako[j]){
+						taroo = taro[i];
+						hanakoo = hanako[j];
+					}
+				}
+			}
+		}
+		if (taroo != -1 && hanakoo != -1) {
+		cout << taroo << " " << hanakoo << endl;
+		} else {
+			cout << -1 << endl;
+		}
+	}
+	return 0;
+}

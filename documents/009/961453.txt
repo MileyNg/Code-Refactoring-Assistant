@@ -1,0 +1,32 @@
+#include<iostream>
+#include<functional>
+#include<string>
+#include<algorithm>
+#include<sstream>
+using namespace std;
+int main(){
+
+  string in;
+  int n;
+  cin >> n;
+
+
+  for(int i=0;i<n;i++){
+    cin >> in;
+    int a,b;
+    //cout << (int)in[0];
+    stable_sort(in.begin(),in.end());
+    //cout << in[0] << endl;
+    istringstream istr(in);
+    istr >> a;
+    //cout << a << endl;
+
+    stable_sort(in.begin(),in.end(),greater<char>());
+    istringstream str(in);
+    str >> b;
+    //>>cout << b << endl;
+    cout << (b-a) << endl;
+  }
+
+
+}

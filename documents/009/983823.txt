@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <map>
+#include <array>
+ 
+#define rep(i,a,b)(long long i=a;i<b;i++)
+ 
+int beki(int n){
+    int ans=1;
+    for(int i=0;i<n;i++)
+        ans*=10;
+    return ans;
+}
+ 
+using namespace std;
+ 
+ 
+struct POINT {
+    int x;
+    int y;
+    POINT(int X, int Y){
+        x = X;y = Y;
+    }
+};
+ 
+    unsigned long num;
+    string str[12];
+    int kirei[10][3]={0};
+    int kr;
+    bool suji[10]={0};
+    int nakaji=0;
+	array<int,26> mm;
+ 
+
+    int cul(){
+        int number[12]={0};
+        int sum=0;
+
+        for(int i=0;i<num;i++){
+			int len=str[i].length();
+            for(int j=len;j>0;j--){
+
+                //for(int k=0;k<kr;k++)
+                //    if(str[i][len-j]==kirei[k][0]){
+                //        number[i]+=((beki(j-1))*kirei[k][2]);
+                //        break;
+                //    }
+
+					number[i]+=((beki(j-1))*kirei[mm[str[i][len-j]-'A']][2]);
+
+            }
+            sum+=number[i];
+        }
+ 
+        if(sum==(number[num-1]*2)){
+            //for(int i=0;i<num;i++)
+            //  cout << "num=" <<i<< ": "<<number[i]<<endl;
+            //cout<<endl;
+            return 1;
+        }else
+            return 0;
+    }
+ 
+
+ 
+void saiki(int itr){
+    for(int x=0;x<10;x++){
+        if(!suji[x]&&!(x==0&&kirei[itr][1]==true)){
+ 
+            int tmp=kirei[itr][2];
+            kirei[itr][2]=x;
+            suji[x]=true;
+ 
+            if(itr+1==kr)
+                nakaji+=cul();
+            else
+                saiki(itr+1);
+ 
+            kirei[itr][2]=tmp;
+            suji[x]=false;
+        }
+    }
+}
+ 
+int main(void){
+ 
+    while(1){
+ 
+    bool abc[26][2]={0};
+    kr=0;
+ 
+    nakaji=0;
+ 
+    for(int i=0;i<10;i++){
+        for(int j=0;j<3;j++){
+            kirei[i][j]=0;
+        }
+        suji[i]=0;
+    }
+ 
+    cin >> num;
+    if(num==0)
+        break;
+ 
+    for(int i=0;i<num;i++){
+        cin >> str[i];
+        if(str[i].length()!=1)
+            abc[str[i][0]-'A'][1]=true;
+        for(int j=0;j<str[i].length();j++){
+            abc[str[i][j]-'A'][0]=true;
+        }
+    }
+ 
+    for(int i=0;i<26;i++){
+        if(abc[i][0]){
+            kirei[kr][0]=i+'A';
+            kirei[kr++][1]=abc[i][1];
+			mm[i]=kr-1;
+        }
+    }
+ 
+    saiki(0);
+ 
+    cout << nakaji <<endl;
+ 
+}
+ 
+    return 0;
+}

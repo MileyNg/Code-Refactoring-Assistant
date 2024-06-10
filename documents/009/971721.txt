@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <algorithm>
+#include <sstream>
+#include <cstdlib>
+#include <unordered_map>
+#include <map>
+#include <climits>
+
+using namespace std;
+
+typedef long long ll;
+
+int N;
+unordered_map<string, int> umap[2];
+
+void bfs(const string& start, const int idx) {
+
+  umap[idx][start] = 0;
+  queue<string> Q;
+  Q.push(start);
+  umap[idx][start] = 0;
+  while(!Q.empty()) {
+    
+    const string now = Q.front(); Q.pop();
+    const int ncost = umap[idx][now]+1;
+    if(ncost >= 5) continue;
+    
+    for(int i=0; i<N; i++) {
+      for(int j=i+1; j<=N; j++) {
+        string next = now;
+        reverse(next.begin()+i, next.begin()+j);
+        unordered_map<string, int>::iterator it = umap[idx].find(next);
+        if(it != umap[idx].end()) {
+          if(it->second < ncost) {
+            continue;
+          }
+        }
+        umap[idx][next] = ncost;
+        Q.push(next);
+      }
+    }
+  }
+}
+
+int main() {
+  
+  cin >> N;
+  string str; str.resize(N);
+  for(int i=0; i<N; i++) {
+    int in; cin >> in;
+    str[i] = 'a'+in;
+  }
+  
+  bfs(str, 0);
+
+  sort(str.begin(), str.end());
+  bfs(str, 1);
+  
+  int ans = N-1;
+  for(auto i : umap[0]) {
+    unordered_map<string, int>::iterator it = umap[1].find(i.first);
+    if(it != umap[1].end()) {
+      ans = min(ans, i.second+it->second);
+    }
+  }
+  
+  cout << ans << endl;
+  
+  return 0;
+}

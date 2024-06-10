@@ -1,0 +1,20 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+  string line;
+  int s[2];
+  while (1) {
+    getline(cin, line);
+    if (line == "0") break;
+    s[0] = s[1] = 0;
+    for (int i=1; i<line.length(); i++) {
+      ++s[line.at(i) - 'A'];
+    }
+    if (s[0] > s[1]) ++s[0];
+    else ++s[1];
+    cout << s[0] << " " << s[1] << endl;
+  }
+  return 0;
+}

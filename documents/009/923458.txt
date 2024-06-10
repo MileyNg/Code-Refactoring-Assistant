@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+int main(void){
+	
+	int i, j, n = 0;
+	
+	char mark[] ={'S', 'H', 'C', 'D'};
+	
+	int card[4][13];
+	
+	char m;
+	int c;
+	
+	for(i = 0; i < 4; i++){
+		for(j = 0; j < 13; j++){
+			card[i][j] = j +1;
+		}
+	}
+	
+	scanf("%d", &n);
+	
+	for(i = 0; i < n; i++){
+		printf("i = %d\n", i);
+		scanf("%c %d", &m, &c);
+		
+		if(m == mark[0]){
+			card[0][c-1] = 0;
+		}
+		else if(m == mark[1]){
+			card[1][c-1] = 0;
+		}
+		else if(m == mark[2]){
+			card[2][c-1] = 0;
+		}
+		else {
+			card[3][c-1] = 0;
+		}
+		
+		
+	}
+	
+	for(i = 0; i < 4; i++){
+		for(j = 0; j < 13; j++){
+			
+			if(card[i][j] != 0){
+				
+				if(i == 0){
+					printf("S %d\n", card[i][j]);
+				}
+				else if(i == 1){
+					printf("H %d\n", card[i][j]);
+				}
+				else if(i == 2){
+					printf("C %d\n", card[i][j]);
+				}
+				else{
+					printf("D %d\n", card[i][j]);
+				}
+				
+			}
+			
+		}
+	}
+	
+	return 0;
+
+}

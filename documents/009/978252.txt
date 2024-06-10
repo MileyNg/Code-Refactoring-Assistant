@@ -1,0 +1,34 @@
+#include<iostream>
+#include<map>
+using namespace std;
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      map<int,int> data;
+      bool no = true;
+      int max_cnt =0;
+      int max_num =-1;
+      for(int i=0;i<n;i++)
+	{
+	  int tmp;
+	  cin>>tmp;
+	  data[tmp]++;
+	  if(data[tmp]==max_cnt)
+	    {
+	      //	      no=true;
+	    }
+	  else if(data[tmp]>max_cnt)
+	    {
+	      //	      no=false;
+	      max_cnt=data[tmp];
+	      max_num=tmp;
+	    }
+	}
+      if(max_cnt*2<=n)
+	cout<<"NO COLOR"<<endl;
+      else
+	cout<<max_num<<endl;
+    }
+}

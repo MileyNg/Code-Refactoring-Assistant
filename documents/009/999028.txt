@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+void buildMaxHeap(int *);
+void MaxHeapify(int *,int);
+void swap(int*,int,int);
+
+int size;
+
+int main(void){
+	int *A;
+	int i;
+	scanf("%d",&size);
+
+	A=(int*)malloc(sizeof(int)*(size+1));
+
+	for(i=1;i<=size;i++) scanf("%d",&A[i]);
+
+	buildMaxHeap(A);
+
+	for(i=1;i<=size;i++) printf(" %d",A[i]);
+	printf("\n");
+
+	free(A);
+
+	return 0;
+}
+
+void buildMaxHeap(int *A){
+	int i,j;
+
+	for(i=size/2;i>0;i--){
+		MaxHeapify(A,i);
+	}
+}
+
+void MaxHeapify(int *A,int num){
+	int large;
+
+	if(2*num <= size && A[num] < A[2*num]) large=2*num;
+	else large=num;
+	if(2*num+1 <= size && A[large] < A[2*num+1]) large=2*num+1;
+
+	if(large!=num){
+		swap(A,num,large);
+		MaxHeapify(A,large);
+	}
+
+}
+
+void swap(int *A,int a,int b){
+	int work;
+
+	work=A[a];
+	A[a]=A[b];
+	A[b]=work;
+}

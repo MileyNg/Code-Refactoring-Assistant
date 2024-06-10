@@ -1,0 +1,45 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+void strToLower(string& str);
+void getAlpha(string& str);
+
+int main()
+{
+        string str, tmp;
+        int total=0;
+
+        cin >> str;
+ 
+        strToLower(str);
+//        getAlpha(str);
+        while(cin>>tmp){
+                if(tmp=="END_OF_TEXT"){break;}
+                strToLower(tmp);
+                //              getAlpha(tmp);
+                cout << tmp << endl;
+                if(tmp==str){total++;}
+        }
+        cout << total << endl;
+        return 0;
+}
+
+void strToLower(string& str)
+{
+        int size=str.length();
+        for(int i=0; i<size; i++){
+                str[i] = tolower(str[i]);
+        }
+}
+
+// void getAlpha(string& str)
+// {
+//         int size=str.length();
+//         int pos=0;
+//         for(int i=0; i<size; i++){
+//                 if(isalpha(str[i])){str[pos++]=str[i];}
+//         }
+//         str[pos]='\0';
+// }

@@ -1,0 +1,41 @@
+def insertionSort(a, n, g)
+  g.upto(n-1) do |i|
+    v = a[i]
+    j = i - g
+    while 0 <= j && v < a[j]
+      a[j+g] = a[j]
+      j = j - g
+      $cnt += 1
+    end
+    a[j+g] = v
+  end
+end
+
+def shellSort(a, n)
+  h = 1
+  while h < n / 3
+    h = 3 * h + 1
+    $g.unshift(h)
+  end
+  $m = $g.size
+
+  0.upto($m-1) do |i|
+    insertionSort(a, n, $g[i])
+  end
+end
+
+$cnt = 0
+$m = 0
+$g = [1]
+
+a = []
+(n = gets.to_i).times do
+  a << gets.to_i
+end
+
+shellSort(a, n)
+
+puts $m
+puts $g * ' '
+puts $cnt
+puts a * "\n"

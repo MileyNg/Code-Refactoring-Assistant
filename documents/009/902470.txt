@@ -1,0 +1,108 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+ 
+using namespace std;
+ 
+#define FOR(i, a, b) for(int i = (a); i < (b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define in(x, y) (0 <= (x) && (x) < w && 0 <= (y) && y < h)
+#define f(x, y) (y*w+x)
+ 
+typedef pair<int, int> P;
+ 
+const int N = 55;
+char field[N][N];
+bool ng[N][N];
+bool tmp[N][N];
+ 
+struct UnionFind{
+    int par[N*N];
+    UnionFind(){
+        rep(i, N*N) par[i] = i;
+    }
+    int find(int x){
+        if (x == par[x]) return x;
+        return par[x] = find(par[x]);
+    }
+    void unite(int x, int y){
+        par[find(x)] = find(y);
+    }
+    bool same(int x, int y){
+        return find(x) == find(y);
+    }
+};
+ 
+int dx[] = {0, 1, 0, -1};
+int dy[] = {1, 0, -1, 0};
+ 
+int r[N];
+ 
+int main(){
+    int h, w, d, n;
+    cin >> h >> w >> d >> n;
+    int sx, sy;
+    rep(i, h) rep(j, w){
+        cin >> field[i][j];
+        if (field[i][j] == 'D') sx = j, sy = i;
+        if (field[i][j] == '#') ng[i][j] = true;
+    }
+ 
+    UnionFind uf;
+    rep(i, h) rep(j, w) rep(d, 4){
+        if (field[i][j] == '#') continue;
+        int nx = j + dx[d], ny = i + dy[d];
+        if (in(nx, ny) && field[ny][nx] != '#'){
+            uf.unite(f(nx, ny), f(j, i));
+        }
+    }
+ 
+    rep(i, d) cin >> r[i];
+    r[d] = N;
+ 
+    while (n--){
+        int x, y, s;
+        cin >> x >> y >> s;
+ 
+        for (int i = y - r[s]; i <= y + r[s]; ++i){
+            for (int j = x - r[s]; j <= x + r[s]; ++j){
+                if (!in(j, i)) continue;
+                tmp[i][j] = ng[i][j];
+            }
+        }
+ 
+        rep(i, h) rep(j, w) ng[i][j] = true;
+ 
+        for (int i = y - r[s]; i <= y + r[s]; ++i){
+            for (int j = x - r[s]; j <= x + r[s]; ++j){
+                if (!in(j, i)) continue;
+                ng[i][j] = tmp[i][j];
+            }
+        }
+ 
+        if (s){
+            for (int i = y - r[s - 1]; i <= y + r[s - 1]; ++i){
+                for (int j = x - r[s - 1]; j <= x + r[s - 1]; ++j){
+                    if (!in(j, i)) continue;
+                    ng[i][j] = true;
+                }
+            }
+        }
+    }
+ 
+    bool yes = false;
+    bool no = false;
+    rep(i, h) rep(j, w){
+        if (!ng[i][j]){
+            if (uf.same(f(j, i), f(sx, sy))) yes = true;
+            else no = true;
+        }
+    }
+    if (yes && no) cout << "Unknown" << endl;
+    else if (yes) cout << "Yes" << endl;
+    else if (no) cout << "No" << endl;
+    else cout << "Broken" << endl;
+ 
+    return 0;
+}

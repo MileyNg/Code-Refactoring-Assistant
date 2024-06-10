@@ -1,0 +1,28 @@
+while 1:
+	try:
+		s,t = raw_input(),raw_input()
+		Ls,Lt = len(s),len(t)
+		if Ls < Lt:
+			s,t,Ls,Lt = t,s,Lt,Ls
+		ans = 0
+		for d in range(Lt+1):
+			L = 0
+			for i in range(d):
+				if s[i] == t[-d+i]:
+					L += 1
+				elif L > 0:
+					ans = max(ans,L)
+					L = 0
+			ans = max(ans,L)
+		for d in range(Ls):
+			L = 0
+			for i in range(min(Lt,Ls-d)):
+				if s[i+d] == t[i]:
+					L += 1
+				elif L > 0:
+					ans = max(ans,L)
+					L = 0
+			ans = max(ans,L)
+		print ans
+	except:
+		break

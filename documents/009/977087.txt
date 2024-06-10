@@ -1,0 +1,39 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+#include <stack>
+#include <queue>
+using namespace std;
+
+
+int main(int argc, const char * argv[])
+{
+    while(true){
+        int n, m, a;
+        cin >> n >> m >> a;
+        if(n == 0) return 0;
+        
+        bool line[1001][102];
+        for(int i = 0; i < 1001; i++)
+            for(int j = 0; j < 102; j++)
+                line[i][j] = false;
+        
+        for(int i = 0; i < m; i++){
+            int h, p, q;
+            cin >> h >> p >> q;
+            line[h][p] = true;
+        }
+        
+        
+        for(int y = 1000; y >= 0; y--){
+            if(line[y][a-1]){
+                a--;
+            }else if(line[y][a]){
+                a++;
+            }
+        }
+        
+        cout << a << endl;
+    }
+}

@@ -1,0 +1,96 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define MIN -1
+
+void Insert(int);
+void Extract();
+void Increase(int);
+void Swap(int,int);
+void MaxHeapify(int);
+
+int *A,size;
+
+int main(void){
+	char in[10];
+	int key;
+
+	size=0;
+
+	A=(int*)malloc(sizeof(int));
+
+	while(1){
+		scanf("%s",in);
+		
+		if(in[0]=='i'){
+			scanf("%d",&key);
+			Insert(key);
+		}
+
+		else{
+			if(in[1]=='x'){
+				Extract();
+			}
+			else break;
+		}
+	}
+
+	free(A);
+
+	return 0;
+}
+
+void Insert(int key){
+	size++;
+	A=(int*)realloc(A,sizeof(int)*(size+1));
+	A[size]=MIN;
+	Increase(key);
+}
+
+void Increase(int key){
+	int num;
+	
+	num=size;
+
+	if(key<A[num]) return;
+
+	A[num]=key;
+	while(num>1 && A[num/2]<A[num]){
+		Swap(num/2,num);
+		num=num/2;
+	}
+}
+
+void Extract(){
+	
+	if(size<1) return;
+
+	printf("%d\n",A[1]);
+
+	Swap(1,size);
+
+	size--;
+
+	MaxHeapify(1);
+}
+
+void MaxHeapify(int num){
+	int large;
+
+	if(2*num<=size && A[num]<A[2*num]) large=2*num;
+	else large=num;
+	if(2*num+1<=size && A[large]<A[2*num+1]) large=2*num+1;
+
+	if(large!=num){
+		Swap(num,large);
+		MaxHeapify(large);
+	}
+}
+
+void Swap(int a,int b){
+	int work;
+
+	work=A[a];
+	A[a]=A[b];
+	A[b]=work;
+}

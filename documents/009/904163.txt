@@ -1,0 +1,56 @@
+//include---------------------------------------------------------------------------
+#include<cstdio>
+#include<cmath>
+#include<cstdlib>
+#include<cstring>
+#include<string>
+#include<cctype>
+#include<string>
+#include<vector>
+#include<stack>
+#include<list>
+#include<queue>
+#include<deque>
+#include<bitset>
+#include<map>
+#include<algorithm>
+#include<memory>
+
+//using namespace-------------------------------------------------------------------
+using namespace std;
+
+//define,const----------------------------------------------------------------------
+#define rep(i, n) for(int i = 0; i < n; i++)
+const int INF = 1 << 25;
+#define MAX_N 1000
+
+//global----------------------------------------------------------------------------
+bool menbar[MAX_N];
+int n, m;
+
+//function--------------------------------------------------------------------------
+int solve(int check, int i, int alive){
+	if(check == n)
+		check = 0;
+	if(i == m - 1 && menbar[check]){
+		i = 0;
+		menbar[check] = false;
+		alive--;
+		if(alive == 0)
+			return check + 1;
+	}
+	if(menbar[check])
+		return solve(check + 1, i + 1, alive);
+	else 
+		return solve(check + 1, i, alive);
+}
+
+int main(){
+	while(scanf("%d %d", &n, &m)){
+		if(n == 0 && m == 0) return 0;
+		for(int i = 0; i < n; i++)
+			menbar[i] = true;
+		printf("%d\n", solve(0, 0, n));
+	}
+	return 0;
+}

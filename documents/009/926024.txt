@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+	int line,n;
+	char c;
+	cin >> line;
+	cin >> n;
+
+	int values[31];
+	for(int i=0;i<line;i++)
+	{
+		values[i] = i+1;
+	}
+
+	for(int i=0;i<n;i++)
+	{
+		int a,b;
+		cin >> a >> c >> b ;
+
+		int value = values[a-1];
+		values[a-1] = values[b-1];
+		values[b-1] = value;
+	}
+
+	for(int i=0;i<line;i++)
+	{
+		cout << values[i] << endl; 
+	}
+	return 0;
+}

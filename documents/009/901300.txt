@@ -1,0 +1,57 @@
+//	Combinatorial - Coin Changing Problem
+//	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_A
+//
+//	を二十分くらいで練習として解こうと思ってたんだけど2時間経っても解けない。
+//	9個目のテストケースでWEが出て止まってしまう。
+//	
+//　たすけて
+
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <cstring>
+
+using namespace std;
+
+int Coins[20];
+int Dest,hmCoins;
+
+short int Memo[50000][20];
+
+const int INF = 999999;
+
+int dfs(int DestMoney,int LeftCoins){
+	if(Memo[DestMoney][LeftCoins] >= 0)
+		return Memo[DestMoney][LeftCoins];
+
+	if(DestMoney == 0){
+		return Memo[DestMoney][LeftCoins] = 0;
+	}else if(LeftCoins < 0 || DestMoney < 0){
+		return Memo[DestMoney][LeftCoins] = INF;
+	}else{
+		int MinAns = INF;
+		for(int i = 0;i <= DestMoney / Coins[LeftCoins];i++){
+			MinAns = min(dfs(DestMoney - Coins[LeftCoins] * i,LeftCoins - 1) + i,MinAns);
+		}
+		return Memo[DestMoney][LeftCoins] = MinAns;
+	}
+}
+
+int main()
+{
+	for(int i = 0;i < 50000;i++){
+		for(int j = 0;j < 20;j++)
+			Memo[i][j] = -1;
+	}
+
+	cin >> Dest >> hmCoins;
+
+	for(int i = 0;i < hmCoins;i++){
+		cin >> Coins[i];
+	}
+
+	cout << dfs(Dest,hmCoins - 1) << endl;
+
+	return 0;
+}

@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+using namespace std;
+#define loop(i,a,b) for(int i=int(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+typedef vector<int> vi;
+
+int np(const vi& w, const vi& v, int W){
+    vi cur(W+1);
+    int n=w.size();
+    rep(i,n){
+        vi next = cur;
+        rep(j,W+1){
+            if(j-w[i]>=0) next[j]=max({cur[j-w[i]]+v[i],next[j-w[i]]+v[i],cur[j]});
+        }
+        swap(cur,next);
+    }
+    return cur[W];
+}
+
+int main(){
+    int n,C;
+    while(cin>>n>>C){
+        vi c(n), s1(n), s2(n), s3(n);
+        rep(i,n){
+            string s;
+            cin.ignore();
+            getline(cin,s);
+            cin >> c[i] >> s1[i] >> s2[i] >> s3[i];
+        }
+
+        int ans =-1;
+        ans = max(ans, np(c,s1,C));
+        ans = max(ans, np(c,s2,C));
+        ans = max(ans, np(c,s3,C));
+        cout << ans << endl;
+    }
+}

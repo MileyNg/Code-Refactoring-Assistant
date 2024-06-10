@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest14
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                var read_line_origin = Console.ReadLine();
+                if (read_line_origin == null)
+                {
+                    break;
+                } 
+                
+                int input = int.Parse(read_line_origin);
+
+                // y = x^2 の x=600
+                //600の約数チェック
+                if (600 % input != 0) return;
+                if (input == 0) return;
+
+                //横がd で　縦が(600 - d)^2 の面積
+                int s = 0;//面積
+
+                int loop = (600 / input);
+
+                for (int i = 0; i < loop; i++)
+                {
+                    s += input * (i * input) * (i * input);
+                }
+
+                Console.WriteLine(s.ToString());
+            }
+        }
+    }
+}

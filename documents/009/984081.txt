@@ -1,0 +1,105 @@
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <vector>
+#include <queue>
+#include <string>
+#include <complex>
+#include <stack>
+#include <set>
+#include <map>
+#
+
+#define REP(i,n) for (int i = 0; i < (n); i++)
+#define RREP(i,n) for (int i = (n)-1; i >= 0; i--)
+#define FOR(i,s,n) for (int i = (s); i < (n); i++)
+#define ALLOF(c) c.begin(), c.end()
+#define RANGEOF(c,i,n) c.begin() + (i), c.begin() + (i) + (n)
+#define EPS 1e-9
+#define INF 1000000000
+using namespace std;
+
+typedef complex<int> POINT;
+template <class T>
+class vevector : public vector<vector<T>>
+{
+public:
+	using vector<vector<T>>::operator []; 
+	T& operator [](const POINT &index) { return (*this)[index.real()][index.imag()]; }
+};
+
+template <class T> T read() { T t; cin >> t; return t; }
+template <> POINT read<POINT>() { int x, y; cin >> x >> y; return POINT(x, y); }
+template <class T> vector<T> read(int n) { vector<T> v; REP(i,n) { v.push_back(read<T>()); } return v; }
+template <class T> vevector<T> read(int n, int m) { vevector<T> v; REP(i,n) v.push_back(read<T>(m)); return v; }
+template <class T> void write(const T &t) { cout << t << endl; }
+template <class T> void write(const T &t, const T &t2) { cout << t << ' ' << t2 << endl; }
+
+template <class T> void write(const vector<T> &v)
+{
+	ostringstream ss; 
+	for (auto x : v) ss << x << ' ';
+	auto s = ss.str();
+	cout << s.substr(0, s.length() - 1) << endl;
+}
+
+template <class T> string toString(const T &t) { stringstream ss; ss << t; return ss.str(); }
+
+struct _Reader { template <class T> _Reader operator ,(T &rhs) { cin >> rhs; return *this; } };
+#define READ(t,...) t __VA_ARGS__; _Reader(), __VA_ARGS__
+
+void solve();
+int main() { solve(); return 0; }
+
+vector<unsigned char> isPrime;
+vector<int> primes;
+void initPrimes(int n)
+{
+	isPrime = vector<unsigned char>(n + 1, true);
+	isPrime[0] = isPrime[1] = false;
+	FOR(i, 2, n)
+	{
+		if (!isPrime[i]) continue;
+		primes.push_back(i);
+		for (int j = i * 2; j <= n; j += i)
+			isPrime[j] = false;
+	}
+}
+
+/// template end ///
+
+void solve()
+{
+	while (true)
+	{
+		READ(int, a0, L);
+		if (!(a0|L)) { break; }
+		vector<int> list;
+		list.push_back(a0);
+		
+		FOR(i, 1, 30)
+		{
+			string xx = toString(list.back());
+			string x = string(L, '0');
+			string y;
+			copy(ALLOF(xx), x.begin()); 
+			sort(ALLOF(x)); 
+			reverse_copy(ALLOF(x), back_inserter(y));
+
+			int n = atoi(y.c_str()) - atoi(x.c_str());
+			auto j = find(ALLOF(list), n) - list.begin();
+			if (j != list.size())
+			{
+				cout << j << ' ' << n << ' ' << i - j << endl;
+				break;
+			}
+			list.push_back(n);
+		}
+
+	}
+}

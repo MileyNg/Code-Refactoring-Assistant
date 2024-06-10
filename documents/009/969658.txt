@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+
+int map[50][50] = {};
+int w,h;
+int ans;
+int dx[4] = {0,-1,0,1};
+int dy[4] = {-1,0,1,0};
+
+void search(int y, int x){
+
+  map[y][x] = 0;
+  for(int t = 0; t < 4 ; t++){ 
+    int ny = y + dy[t], nx = x + dx[t]; 
+    if(nx >= 0 && ny >= 0 && nx < w && ny < h && map[ny][nx] == 1){
+      //cout << "IN ";
+      ans++;
+      search(ny,nx);
+    }
+  }
+}
+
+
+int main(){
+  
+  while(1){
+    for(int j = 0; j < 50 ; j++){
+      for(int i = 0; i < 50 ; i++){
+	map[j][i] = 0;
+      }
+    }
+    
+    ans = 1;
+
+    cin >> w >> h;
+    if(w == 0 && h == 0) break;
+
+    int stx,sty;
+    for(int k = 0; k < h ; k++){
+      string s;
+      cin >> s;
+      for(int i = 0; i < w ; i++){
+	if(s[i] == '.') map[k][i] = 1;
+	if(s[i] == '#') map[k][i] = 0;
+	if(s[i] == '@') {
+	  map[k][i] = 2;
+	  stx = i;
+	  sty = k;
+	}
+      }
+    }
+
+
+ 
+    //竪臓即巽造尊
+    /*
+    for(int j = 0; j < h ; j++){
+      for(int i = 0; i < w ; i++){
+	cout << map[j][i];
+      }
+      cout << endl;
+    }
+    cout << endl;
+    */
+    search(sty,stx);
+    cout << ans << endl;
+	  
+  }
+  return 0;
+}

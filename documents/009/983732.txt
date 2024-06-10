@@ -1,0 +1,42 @@
+#include<iostream>
+using namespace std;
+int main(){
+
+  int N,num[3][200],score[200],counter;
+
+  for(int i=0 ; i < 200 ; i++){
+    score[i]=0;
+  }
+  
+  cin >>N;
+
+  for(int i=0 ; i < N ;i++){
+    for(int j=0 ; j < 3 ; j++){
+      cin >>num[j][i];
+    }
+  }
+  
+  for(int i=0 ; i < 3 ;i++){
+    for(int j=0 ; j < N ;j++){
+      counter=0;
+      for(int k=0 ; k < N ; k++){
+	
+	if( j == k )continue;
+	
+	if(num[i][j] == num[i][k])counter++;
+	
+      }
+
+	if(counter == 0){
+	  score[j]+=num[i][j];	  
+	}
+    
+    }
+  }
+
+  for(int i=0 ; i < N ; i++){
+    cout <<score[i]<<endl;
+  }
+
+  return 0;
+}

@@ -1,0 +1,97 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 35;
+const int MAX_C = 35;
+const int INF = 1e9 + 7;
+const int D_INF = (double)1e5;
+
+class C{
+  public:
+    int now, bef, c;
+    double sum;
+    C(int _n, int _b, int _c, double _s){ now = _n; bef = _b; c = _c; sum = _s; }
+    C(){}
+    bool operator > (const C &cc) const { return sum > cc.sum; }
+};
+
+int N, M, S, G;
+// P(距離, 制限速度), P(INF, INF)で無し
+P v[MAX_N][MAX_N];
+
+double dij(){
+  priority_queue<C, vector<C>, greater<C> > open;
+  open.push( C(S, MAX_N - 1, 1, 0.0) );
+  double closed[MAX_N][MAX_N][MAX_C];
+  REP(i, MAX_N) REP(j, MAX_N) REP(k, MAX_C) closed[i][j][k] = D_INF;
+  while(!open.empty()){
+    C tmp = open.top(); open.pop();
+    int now = tmp.now, bef = tmp.bef, c = tmp.c;
+    double sum = tmp.sum;
+    //cout <<"now = " <<now + 1 <<", bef = " <<bef + 1 <<", c = " <<c <<", sum = " <<sum <<endl;
+    if(c == 1 && now == G){
+      closed[now][bef][c] = min(closed[now][bef][c], sum);
+      break;
+    }
+    //if(closed[now][bef][c] <= sum) continue;
+    REP(i, N){
+      if(v[now][i].first == INF || i == bef) continue;
+      for(int pls = -1; pls <= 1; ++pls){
+        int next_c = c + pls;
+        if(bef == MAX_N - 1 && pls != 0) continue;
+        double next_sum = sum + ((double)(v[now][i].first) / next_c);
+        if(next_c > v[now][i].second || next_c <= 0 || closed[i][now][next_c] <= next_sum) continue;
+        closed[i][now][next_c] = next_sum;
+        open.push( C(i, now, next_c, next_sum) );
+      }
+    }
+  }
+  double ret = D_INF;
+  REP(i, N) ret = min(ret, closed[G][i][1]);
+  return ret;
+}
+
+int main() {
+  while(cin >>N >>M && N){
+    cin >>S >>G;
+    --S; --G;
+    REP(i, N) REP(j, N) v[i][j] = P(INF, INF);
+    REP(i, M){
+      int x, y, d, c; cin >>x >>y >>d >>c;
+      --x; --y;
+      v[x][y] = P(d, c);
+      v[y][x] = P(d, c);
+    }
+    //REP(i, N){
+    //  cout <<i <<": ";
+    //  REP(j, N) cout <<v[i][j].first <<", " <<v[i][j].second <<endl;
+    //  cout <<endl;
+    //}
+    double ans = dij();
+    if(ans == D_INF) cout <<"unreachable" <<endl;
+    else printf("%.5lf\n", ans);
+  }
+  return 0;
+}

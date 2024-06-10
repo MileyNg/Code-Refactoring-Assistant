@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int data[100],size=0;
+void push(int n){data[size++] = n;}
+int pop(){return data[--size];}
+
+int main(){
+  char c;
+  int num=-1;
+  while(scanf("%c",&c) != EOF){
+    if(c == ' '){
+      if(num >= 0) push(num);
+      num = -1;
+    }
+    
+    if(c == '+') push(pop()+pop());
+    if(c == '-'){
+      int a = pop(), b = pop();
+      push(b-a);
+      // push(-(pop()-pop()));
+    }
+    if(c == '*') push(pop()*pop());
+    if('0' <= c && c <= '9') num = (num<0?c-'0':10*num+c-'0');
+  }
+  printf("%d\n",pop());
+  return 0;
+}

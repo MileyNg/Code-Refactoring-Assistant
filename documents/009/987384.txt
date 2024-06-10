@@ -1,0 +1,127 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <sstream>
+#include <numeric>
+#include <bitset>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <climits>
+#include <cctype>
+#include <cassert>
+using namespace std;
+
+typedef long long ll;
+static const double EPS = 1e-8;
+static const double PI = 4.0 * atan(1.0);
+bool ISINT(double x){return fabs(x-(int)x)<EPS;}
+bool ISEQ(double x,double y){return fabs(x-y)<EPS;}
+string itos(ll x){stringstream ss;ss<<x;return ss.str();}
+#define REP(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,n) REP(i,0,n)
+#define EREP(i,a,b) for(int i=a;i<=b;i++)
+#define erep(i,n) EREP(i,0,n)
+#define foreach(itr,c) for(__typeof(c.begin()) itr=c.begin();itr!=c.end();itr++)
+
+typedef pair<int,int> P;
+
+int n; //ノード数
+int start,goal; //スタート地点, ゴール地点のノード番号
+vector<P> node; //ノードの座標を列挙
+vector<P> g[2502]; //グラフ情報（座標ではなく, ノード番号で管理）
+int t[102][102]; //文字列マップを整数値マップに変換したもの
+
+void solve(){
+  priority_queue<P,vector<P>,greater<P> > open;
+  bool closed[2502];
+  memset(closed,0,sizeof(closed));
+  open.push(P(0,start));
+
+  while(!open.empty()){
+    P p = open.top(); open.pop();
+    if(closed[p.second]) continue;
+    closed[p.second] = true;
+
+    if(p.second == goal){
+      cout<<p.first<<endl;
+      return;
+    }
+
+    rep(i,g[p.second].size()){
+      P edge = g[p.second][i];
+      open.push(P(p.first+edge.second,edge.first));
+    }
+  }
+}
+
+int main(void){
+  int w,h;
+
+  while(cin>>h>>w){
+    if(w == 0 && h == 0) break;
+
+    node.clear();
+
+    //整数値マップへの変換
+    int maxVal = 0;
+    int gx,gy;
+
+    rep(i,h){
+      rep(j,w){
+        string ss;
+        cin>>ss;
+
+        if(ss == "."){
+          t[i][j] = INT_MIN;
+          continue;
+        }
+
+        if(ss == "S"){
+          t[i][j] = 0;
+          start = node.size();
+        }
+        else if(ss == "G"){
+          goal = node.size();
+          gx = j;
+          gy = i;
+        }
+        else{
+          t[i][j] = atoi(ss.c_str());
+          maxVal = max(maxVal,t[i][j]);
+        }
+
+        node.push_back(P(j,i));
+      }
+    }
+
+    t[gy][gx] = maxVal + 1;
+
+    //隣接リストを作成
+    n = node.size();
+    rep(i,n) g[i].clear();
+    rep(i,n){
+      P a = node[i];
+
+      rep(j,n){
+        if(i == j) continue;
+
+        P b = node[j];
+        if(t[a.second][a.first] + 1 == t[b.second][b.first]){
+          int dist = abs(a.second - b.second) + abs(a.first - b.first);
+          g[i].push_back(P(j,dist));
+        }
+      }
+    }
+
+    solve();
+  }
+}

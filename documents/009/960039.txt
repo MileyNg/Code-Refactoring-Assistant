@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int height[10], i, max=0, m[10];
+    int temp, j;
+    for(i=0; i<10; i++)
+    {
+        scanf("%d", &height[i]);
+    }
+
+    for(j=8; j>=0; j--)
+    {
+        for(i=0; i<=j; i++)
+        {
+            if(height[i+1]<height[i])
+            {
+                temp = height[i];
+                height[i] = height[i+1];
+                height[i+1] = temp;
+            }
+        }
+    }
+
+    for(i=9; i>=7; i--)
+    {
+        printf("%d ", height[i]);
+    }
+    return 0;
+}

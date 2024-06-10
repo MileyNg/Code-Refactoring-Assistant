@@ -1,0 +1,37 @@
+#include<iostream>
+#include<vector>
+
+int calc(std::vector<std::vector<char> >&v, int sx, int sy){
+
+	v[sx][sy] = '#';
+
+	int res = 1;
+	if (sx - 1 >= 0 && v[sx - 1][sy] == '.')res += calc(v, sx - 1, sy);
+	if (sx + 1 < v.size() && v[sx + 1][sy] == '.')res += calc(v, sx + 1, sy);
+	if (sy - 1 >= 0 && v[sx][sy - 1] == '.')res += calc(v, sx, sy - 1);
+	if (sy + 1 < v[sx].size() && v[sx][sy + 1] == '.')res += calc(v, sx, sy + 1);
+
+	return res;
+
+}
+
+int main(){
+
+	int w, h;
+	while (std::cin >> w >> h){
+		if (w == 0 && h == 0)break;
+
+		std::vector<std::vector<char> >v(h, std::vector<char>(w));
+
+		int sx, sy;
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++){
+				std::cin >> v[i][j];
+				if (v[i][j] == '@')sx = i, sy = j;
+			}
+		}
+
+		std::cout << calc(v, sx, sy) << std::endl;
+	}
+	return 0;
+}

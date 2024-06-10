@@ -1,0 +1,35 @@
+r=1000000
+sqrt=int(r**0.5)
+prime=[1]*(r+1)
+prime[0:2]=[0,0]
+prime[4::2]=[0 for i in range(3,r+1,2)]
+for i in range(2,sqrt+1):
+	if prime[i]:
+		prime[2*i::i]=[0 for x in range(2*i,r+1,i)]
+
+while 1:
+	try:
+		n,x=map(int,raw_input().split())
+		if n==0:break
+		menu=[int(raw_input()) for i in range(n)]
+		p=[0]*(x+1)
+		for price in menu:
+			p[price]=1
+		i=1
+		mm=min(menu)
+		while i<x-mm:
+			if p[i]:
+				for price in menu:
+					try:p[i+price]=1
+					except:break
+			i+=1
+		i=x
+		while i>=mm:
+			if p[i] and prime[i]:
+				print i
+				break
+			i-=1
+		else:
+			print "NA"
+	except:
+		pass

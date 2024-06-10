@@ -1,0 +1,35 @@
+#include<stdio.h>
+#define  true 1;
+#define false (-1)
+int n,cnt;
+
+void bubbleSort(long a[]){
+	long i,j,key;
+	int han;
+	for(i=0;i<n;i++){
+		han=true;
+		for(j=n-1;j>i;j--){
+			if(a[j]<a[j-1]){
+			key=a[j-1];
+				a[j-1]=a[j];
+				a[j]=key;
+				cnt++;
+			han=false;
+			}}
+		if(han==1) break;
+	}
+	return;
+		}
+
+		
+int main(){
+	long a[200000];
+	long i,count;
+	
+	scanf("%d",&n);
+	for(i=0;i<n;i++) scanf("%ld",&a[i]);
+	bubbleSort(a);
+	printf("%ld\n",cnt);
+
+return 0;
+}

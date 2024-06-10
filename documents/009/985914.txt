@@ -1,0 +1,136 @@
+#include <iostream>
+#define MAX 20
+#define INF 1000000
+using namespace std;
+
+struct Eg{
+	int from;
+	int to;
+	int time;
+//	int kind; //1なら親、-1なら子
+};
+
+int SB[MAX];//こいつらグローバル
+int SG[MAX];
+
+Eg br[MAX];
+
+int counter=0,flag=0;
+int ans[1000];
+
+int solve_back(int n,int N){//出発点,Eg本数+1 //メモ化
+	if(SB[n]!=INF) return SB[n];
+	int X=0;
+	bool check=false;
+	for(int i=0;i<N-1;i++){
+		if(br[i].from==n) { check=true;
+			X+=(solve_back(br[i].to,N)+br[i].time*2);
+		}
+	}
+	if(check) {SB[n]=X; return X;}//子を持つとき
+	else for(int i=0;i<N-1;i++){
+		if(br[i].to==n) {SB[n]=br[i].time*(-2); return SB[n];}
+	}
+	return 0; 
+}
+
+int solve_gone(int n,int N){//出発点,Eg本数+1 //メモ化
+	if(SG[n]!=INF) return SG[n];//メモされているとき
+	
+	
+	int count=0;//countは子の数
+	for(int i=0;i<N-1;i++){
+		if(br[i].from==n) count++;
+	}
+	
+	if(count==0) for(int i=0;i<N-1;i++){
+		if(br[i].to==n) {SG[n]=br[i].time*(-1); return SG[n];}//子を持たないとき
+	}
+	
+	
+	int min=INF;//子を持つとき
+	for(int k=1;k<count+1;k++){
+		int ct=k,X=0;
+		for(int i=0;i<N-1;i++){
+			if(br[i].from==n) {
+				ct--;
+				if(ct==0) X+=(solve_gone(br[i].to,N)+br[i].time*1);
+				else	X+=(solve_back(br[i].to,N)+br[i].time*2);
+			}
+		}
+		if (min>X) min=X;
+	}
+	SG[n]=min; return SG[n];
+}
+
+
+
+void solve (){
+	int N;
+	cin >>N;
+	if(N==0) {flag=1; return;}
+	//Eg br[MAX];//橋の情報(N-1本しか無い)
+	//int F[MAX][MAX]={0};//島ごとの橋の情報管理、0で初期化
+	int dis[MAX];//根からの次数
+			
+	for(int i=0;i<N-1;i++){//入力
+		int a,b,t;
+		cin >>a>>b>>t;
+		br[i].from=--a;//番号をずらす
+		br[i].to=--b;
+		br[i].time=t;
+	//	F[a][b]=F[b][a]=t;
+	}
+	
+	//木として扱いたい,根からの距離必要
+	for(int i=1;i<N;i++){
+		dis[i]=INF;
+	}
+	dis[0]=0;//
+	while(true){
+		bool update=false; //updateあればtrue
+		
+		for(int j=0;j<N-1;j++){//エッジでまわす
+			Eg es=br[j];
+			if(dis[es.from]!=INF && 
+						dis[es.to]>dis[es.from]+1){
+				dis[es.to]=dis[es.from]+1;
+				update=true;
+			}
+		}
+		for(int j=0;j<N-1;j++){//エッジでまわす
+			Eg es=br[j];
+			if(dis[es.to]!=INF && 
+						dis[es.from]>dis[es.to]+1){
+				dis[es.from]=dis[es.to]+1;
+				update=true;
+			}
+		}
+		
+		if(!update) break;
+	}
+	
+	for(int j=0;j<N-1;j++){//fromとtoの関係を直す
+		if (dis[br[j].from]>dis[br[j].to]){
+			int x;
+			x=br[j].from; br[j].from=br[j].to; br[j].to=x;
+		}
+	}
+	
+	//disは用済み
+	for (int i=0;i<MAX;i++){
+		SB[i]=SG[i]=INF;
+	}
+	ans[counter]=solve_gone(0,N);
+	counter++;
+}
+	
+	
+int main(){
+	while(flag==0){
+		solve();}
+	
+	for(int i=0;i<counter;i++)
+	cout << ans[i]<<"\n";
+}
+	

@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+int inv[3] = {2, 1, 0};
+
+int mul[3][3] = {
+	{ 0, 0, 0 },
+	{ 0, 1, 1 },
+	{ 0, 1, 2 }
+};
+
+int pul[3][3] = {
+	{ 0, 1, 2 },
+	{ 1, 1, 2 },
+	{ 2, 2, 2 }
+};
+
+string s;
+
+int parse(int p, int q, int r) {
+	stack<char> oper;
+	stack<int> var;
+	
+	for (int i=0; i<(int)s.size(); i++) {
+		if (s[i]=='(') oper.push('(');
+		if (s[i]==')') {
+			char op = oper.top(); oper.pop();
+			while (op!='(') {
+				while (op=='-') {
+					int v = var.top(); var.pop();
+					var.push(inv[v]);
+					op = oper.top(); oper.pop();
+				}
+				
+				if (op!='(') {
+					int v1 = var.top(); var.pop();
+					int v2 = var.top(); var.pop();
+					char nop = oper.top();
+					while (nop=='-') {
+						v2 = inv[v2];
+						oper.pop(); nop = oper.top();
+					}
+					if (op=='+') var.push(pul[v1][v2]);
+					if (op=='*') var.push(mul[v1][v2]);
+					op = oper.top(); oper.pop();
+				}				
+			}
+		}
+		if (s[i]=='-' || s[i]=='+' || s[i]=='*') oper.push(s[i]);
+		if (s[i]=='P') var.push(p);
+		if (s[i]=='Q') var.push(q);
+		if (s[i]=='R') var.push(r);
+		if ('0' <= s[i] && s[i] <= '2') var.push(s[i] - '0');
+	}
+	
+	return var.top();
+}
+
+int main() {
+	while (1) {
+		cin >> s; if (s[0] == '.') break;
+		int ans = 0;
+		for (int p=0; p<3; p++)
+			for (int q=0; q<3; q++)
+				for (int r=0; r<3; r++)
+					ans += (parse(p, q, r) == 2) ? 1 : 0;
+		cout << ans << endl;
+	}
+}

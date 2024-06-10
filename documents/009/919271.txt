@@ -1,0 +1,112 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cmath>
+#include <ctime>
+#include <cassert>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <complex>
+#include <string>
+#include <vector>
+#include <list>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <bitset>
+#include <iterator>
+#include <functional>
+#include <utility>
+#include <algorithm>
+#include <numeric>
+#include <typeinfo>
+
+using namespace std;
+
+#define dump(n) cerr<<"# "<<#n<<"="<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+typedef pair<int,int> pii;
+
+void solve(){
+    string t; getline(cin,t);
+    list<char> s(t.begin(),t.end());
+
+    auto it=s.begin();
+    int n; cin>>n; cin.get();
+    while(n--){
+        string cmd; getline(cin,cmd);
+        if(cmd=="forward char")
+            if(it!=s.end())
+                ++it;
+        if(cmd=="forward word"){
+            while(it!=s.end() && *it==' ')
+                ++it;
+            while(it!=s.end() && *it!=' ')
+                ++it;
+        }
+        if(cmd=="backward char")
+            if(it!=s.begin())
+                --it;
+        if(cmd=="backward word"){
+            while(it!=s.begin() && *--it==' ')
+                ;
+            while(it!=s.begin()){
+                --it;
+                if(*it==' '){
+                    ++it;
+                    break;
+                }
+            }
+        }
+        if(cmd.substr(0,6)=="insert"){
+            int i=cmd.find('"')+1,j=cmd.find('"',i);
+            s.insert(it,cmd.begin()+i,cmd.begin()+j);
+        }
+        if(cmd=="delete char")
+            if(it!=s.end())
+                it=s.erase(it);
+        if(cmd=="delete word"){
+            auto it2=it;
+            while(it2!=s.end() && *it2==' ')
+                ++it2;
+            if(it2==s.end())
+                continue;
+            while(it2!=s.end() && *it2!=' ')
+                ++it2;
+            it=s.erase(it,it2);
+        }
+    }
+    for(auto i=s.begin();;++i){
+        if(i==it)
+            cout<<'^';
+        if(i==s.end())
+            break;
+        cout<<*i;
+    }
+    cout<<endl;
+}
+
+int main()
+{
+    int t; cin>>t; cin.get();
+    while(t--)
+        solve();
+
+    return 0;
+}

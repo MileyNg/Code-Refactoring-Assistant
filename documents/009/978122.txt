@@ -1,0 +1,38 @@
+n = gets.chomp.to_i
+
+for i in (0...n)
+  sdk = []
+
+  c_hline = (0..8).map{[0] * 10}
+  c_vline = (0..8).map{[0] * 10}
+  c_smbox = (0..8).map{[0] * 10}
+
+  for y in (0..8)
+    hl = gets.chomp.split(" ").map{|s| s.to_i}
+    sdk.push hl
+
+    for x in (0..8)
+      k = sdk[y][x]
+      c_hline[y][k] += 1
+      c_vline[x][k] += 1
+      c_smbox[(y / 3) * 3 + (x / 3)][k] += 1
+    end
+  end
+
+  puts if i > 0
+
+  for y in (0..8)
+    str = ''
+    for x in (0..8)
+      k = sdk[y][x]
+      mark = " "
+      if c_hline[y][k] > 1 || c_vline[x][k] > 1 ||
+          c_smbox[(y / 3) * 3 + (x / 3)][k] > 1
+        mark = "*"
+      end
+
+      str += mark + k.to_s
+    end
+    puts str
+  end
+end

@@ -1,0 +1,79 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, string>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int A = 26;
+
+class C{
+  public:
+    string s;
+    int cnt;
+    C(string _s, int _c){ s = _s; cnt = _c; }
+    C(){}
+    bool operator < (const C &c) const{
+      if(cnt != c.cnt) return cnt > c.cnt;
+      else return s < c.s;
+    }
+};
+
+void push_ans(vector<C> &v, string s){
+  REP(i, v.size()){
+    if(v[i].s == s){
+      ++v[i].cnt;
+      return ;
+    }
+  }
+  v.push_back(C(s, 1));
+}
+
+void getline_string(vector<string> &s){
+  string o;
+  getline(cin, o);
+  stringstream ss(o);
+  string tmp;
+  while(getline(ss, tmp, ' ')) s.push_back(tmp);
+}
+
+int main() {
+  int N;
+  while(cin >>N && N){
+    vector< vector<C> > ans(A, vector<C>());
+    vector<string> s;
+    string tmp;
+    getline(cin, tmp);
+    REP(i, N) getline_string(s);
+    REP(i, s.size()) push_ans(ans[s[i][0] - 'a'], s[i]);
+    char c; cin >>c;
+    int ci = c - 'a';
+    SORT(ans[ci]);
+    if(ans[ci].size() == 0) cout <<"NA" <<endl;
+    else{
+      int lim = min(5, (int)(ans[ci].size()));
+      REP(i, lim) printf("%s%c", ans[ci][i].s.c_str(), (i + 1 == lim ? '\n' : ' '));
+    }
+
+
+  }
+  return 0;
+}

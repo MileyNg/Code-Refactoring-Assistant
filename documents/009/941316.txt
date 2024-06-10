@@ -1,0 +1,79 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+
+using namespace std;
+/** Problem0088 : The Code A Doctor Loved **/
+int main()
+{
+	string s;
+	map<string, string> list1, list2;
+	list1[" "] = "101";		list1["'"] = "000000";
+	list1[","] = "000011";	list1["-"] = "10010001";
+	list1["."] = "010001";	list1["?"] = "000001";
+	list1["A"] = "100101";	list1["B"] = "10011010";
+	list1["C"] = "0101";	list1["D"] = "0001";
+	list1["E"] = "110";		list1["F"] = "01001";
+	list1["G"] = "10011011";list1["H"] = "010000";
+	list1["I"] = "0111";	list1["J"] = "10011000";
+	list1["K"] = "0110";	list1["L"] = "00100";
+	list1["M"] = "10011001";list1["N"] = "10011110";
+	list1["O"] = "00101";	list1["P"] = "111";
+	list1["Q"] = "10011111";list1["R"] = "1000";
+	list1["S"] = "00110";	list1["T"] = "00111";
+	list1["U"] = "10011100";list1["V"] = "10011101";
+	list1["W"] = "000010";	list1["X"] = "10010010";
+	list1["Y"] = "10010011";list1["Z"] = "10010000";
+	
+	list2["00000"] = "A";	list2["00001"] = "B";
+	list2["00010"] = "C";	list2["00011"] = "D";
+	list2["00100"] = "E";	list2["00101"] = "F";
+	list2["00110"] = "G";	list2["00111"] = "H";
+	list2["01000"] = "I";	list2["01001"] = "J";
+	list2["01010"] = "K";	list2["01011"] = "L";
+	list2["01100"] = "M";	list2["01101"] = "N";
+	list2["01110"] = "O";	list2["01111"] = "P";
+	list2["10000"] = "Q";	list2["10001"] = "R";
+	list2["10010"] = "S";	list2["10011"] = "T";
+	list2["10100"] = "U";	list2["10101"] = "V";
+	list2["10110"] = "W";	list2["10111"] = "X";
+	list2["11000"] = "Y";	list2["11001"] = "Z";
+	list2["11010"] = " ";	list2["11011"] = ".";
+	list2["11100"] = ",";	list2["11101"] = "-";
+	list2["11110"] = "'";	list2["11111"] = "?";
+
+
+	
+	while (1) {
+		getline(cin, s);
+		if (cin.eof()) break;
+		
+		string code, sc, tmp, ans;
+		rep(i, s.length()) {
+			sc = s[i];
+			code+=list1[sc];
+		}
+		
+		int i=0; tmp="00000";
+		while (code.length()>i) {
+			tmp[i%5] = code[i];
+			if (i%5==4 || code.length()-1==i) {
+				ans+=list2[tmp];
+				tmp="00000";
+			}
+			i++;
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,20 @@
+#include<iostream>
+#include<vector>
+#include<cstdio>
+using namespace std;
+
+int main()
+{
+    int id;
+    double weight, height;
+    vector<int> table;
+    while(scanf("%d,%lf,%lf", &id, &weight, &height)!=EOF){
+        double bmi = weight/(height*height);
+        if(bmi>=25) table.push_back(id);
+    }
+
+    vector<int>::iterator i;
+    for(i=table.begin(); i!=table.end(); i++) cout << *i << endl;
+    
+    return 0;
+}

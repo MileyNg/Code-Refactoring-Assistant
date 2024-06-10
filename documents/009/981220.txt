@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(){
+  int a, b, c;
+  vector<int> div;
+
+  cin >> a >> b >> c;
+  for(int i = 1 ; i <= c ; i++){
+    if(c % i == 0){
+      div.push_back(i);
+    }
+  }
+
+  int ans = 0;
+  for(int i = a ; i <= b ; i++){
+    for(int j = 0 ; j < div.size() ; j++){
+      if(i == div[j]){
+        ans++;
+        break;
+      }
+    }
+  }
+  cout << ans << endl;
+
+  return 0;
+}

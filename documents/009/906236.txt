@@ -1,0 +1,145 @@
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <fstream>
+#include <list>
+using namespace std;
+inline int toInt(string s) { int v; istringstream sin(s); sin >> v; return v;}
+template<class T> inline string toStr(T x) { ostringstream sout; sout << x; return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi>  vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define FOR(i,a,b) for(int i=(a);i<=(b);++i)
+#define REP(i,n) FOR(i,0,(n)-1)
+const double EPS = 1e-10;
+const double PI = acos(-1.0);
+const int INF = INT_MAX/10;
+
+int dx[] = {1, 0, -1, 0, 2, 0, -2, 0};
+int dy[] = {0, 1, 0, -1, 0, 2, 0, -2};
+int cx[] = {0, 1, 0, 1};
+int cy[] = {0, 0, 1, 1};
+
+typedef vector<vvi> vvvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef vector<vvb> vvvb;
+typedef vector<vvvb> vvvvb;
+typedef vector<vvvvb> vvvvvb;
+typedef vector<vvvvvb> vvvvvvb;
+typedef vector<vvvvvvb> vvvvvvvb;
+
+struct state {
+	int d, x, y, f00, f03, f30, f33;
+	state(int d, int x, int y, int f00, int f03, int f30, int f33) : 
+		d(d), x(x), y(y), f00(f00), f03(f03), f30(f30), f33(f33) {};
+};
+
+bool isProperXY(int x, int y) {
+	return 0<=x && x<=2 && 0<=y && y<=2;
+}
+
+bool isProperF(int f00, int f03, int f30, int f33) {
+	return f00<7 && f03<7 && f30<7 && f33<7;
+}
+
+int conv(int x, int y) {
+	return 3*x+y;
+}
+
+int main() {
+	int N;
+	while(cin >> N, N) {
+		vvvi f(N, vvi(4, vi(4)));
+		REP(i, N) {
+			REP(j, 4) {
+				REP(k, 4) {
+					cin >> f[i][j][k];
+				}
+			}
+		}
+
+		stack<state> S;
+		vvvvvvb visited(N+1, vvvvvb(9, vvvvb(7, vvvb(7, vvb(7, vb(7, false))))));
+		bool ok = true;
+		REP(c, 4) {
+			if(f[0][1+cy[c]][1+cx[c]]) {
+				ok = false;
+				break;
+			}
+		}
+		if(ok) {
+			S.push(state(1, 1, 1, 1, 1, 1, 1));
+			int p = conv(1, 1);
+			visited[1][p][1][1][1][1] = true;
+		}
+		bool finished = false;
+		while(!S.empty()) {
+			state st = S.top();
+			S.pop();
+			
+			if(st.d == N) {
+				finished = true;
+				break;
+			}
+
+			int nd = st.d+1;
+			REP(d, 8) {
+				int nx = st.x+dx[d], ny = st.y+dy[d];
+				if(isProperXY(nx, ny)) {
+					ok = true;
+					REP(c, 4) {
+						if(f[st.d][ny+cy[c]][nx+cx[c]]) {
+							ok = false;
+							break;
+						}
+					}
+					int nf00 = st.f00+1, nf03 = st.f03+1, nf30 = st.f30+1, nf33 = st.f33+1;
+					if(nx == 0) {
+						if(ny == 0) {
+							nf00 = 0;
+						} else if(ny == 2) {
+							nf30 = 0;
+						}
+					} else if(nx == 2) {
+						if(ny == 0) {
+							nf03 = 0;
+						} else if(ny == 2) {
+							nf33 = 0;
+						}
+					}
+					if(ok && isProperF(nf00, nf03, nf30, nf33)) {
+						int p = conv(nx, ny);
+						if(!visited[nd][p][nf00][nf03][nf30][nf33]) {
+							visited[nd][p][nf00][nf03][nf30][nf33] = true;
+							S.push(state(nd, nx, ny, nf00, nf03, nf30, nf33));
+						}
+					}
+				}
+			}
+		}
+
+		cout << (finished ? 1 : 0 ) << endl;
+	}
+
+	return 0;
+}

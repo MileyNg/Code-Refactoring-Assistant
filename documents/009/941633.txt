@@ -1,0 +1,119 @@
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+class Node{
+    public:
+        unsigned int key;
+        Node *next;
+        Node *prev;
+};
+
+typedef struct Node *NodePointer;
+
+NodePointer nil;
+
+NodePointer listSearch(int key){
+    for(auto t = nil->next;t!=nil;t=t->next){
+        if(t->key==key)
+            return t;
+    }
+    return nil;
+}
+
+int getSize(){
+    int count=0;
+    for(auto t = nil->next;t!=nil;t=t->next){
+        count++;
+    };
+    return count;
+}
+
+void init(){
+      nil = new Node();
+      nil->next = nil;
+      nil->prev = nil;
+}
+
+void printList(){
+
+//   cout<<getSize()<<endl;
+
+    NodePointer cur = nil->next;
+    int isf = 1;
+    while(1){
+        if ( cur == nil ) break;
+        if ( isf == 0)  printf(" ");
+        cout<<cur->key;
+        cur = cur->next;
+        isf = 0;
+    }
+    cout<<endl;
+}
+
+void deleteNode(NodePointer t){
+    t->next->prev=t->prev;
+    t->prev->next=t->next;
+}
+
+void deleteFirst(){
+      NodePointer t = nil->next;
+      if ( t == nil ) return;
+      deleteNode(t);
+}
+
+void deleteLast(){
+      NodePointer t = nil->prev;
+      if( t == nil )return;
+      deleteNode(t);
+}
+
+void Delete(int key){
+    if(listSearch(key)!=nil){
+        deleteNode(listSearch(key));
+    }
+}
+
+
+void insert(int key){
+      NodePointer x;
+      x = new Node();
+      x->key = key;
+      x->next=nil->next;
+      nil->next->prev=x;
+      x->prev=nil;
+      nil->next=x;
+
+}
+
+int main(){
+      int key, n, i;
+      int size = 0;
+      string com;
+      int np = 0, nd = 0;
+      cin>>n;
+      init();
+      for ( i = 0; i < n; i++ ){
+        cin>>com>>key;
+        if ( com[0] == 'i' ) {
+//            cout<<"insert"<<endl;
+            insert(key); np++; size++;
+        }else if ( com[0] == 'd' ){
+//            cout<<"delete"<<endl;
+            if (com.size() > 6){
+                if ( com[6] == 'F' ) deleteFirst();
+                else if ( com[6] == 'L' ) deleteLast();
+            } else {
+                    Delete(key); nd++; 
+            }
+            size--;
+        }
+//       cout<<"["<<i<<"]"<<endl;
+      }
+//      cout<<"print"<<endl;
+      printList();
+      return 0;
+}

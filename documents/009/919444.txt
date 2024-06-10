@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<string.h>
+
+char StrCount();
+
+main(void){
+    int i = 0, m, num, cnt = 0;
+    char str[100], target;
+    
+    scanf("%d", &num);
+    scanf("%s", str);
+    
+    for( ; num > 0; num--){
+        str = StrCount(str);
+    }
+    
+    return 0;
+}
+
+char StrCount(char str[100]){
+    int i =0, m, cnt = 0;
+    char target,restr[100];
+    
+    target = str[0];
+    for( m = strlen(str); i <= m; i++){
+        if( target == str[i]){
+            cnt++;
+        }else{
+            if( i == 0){
+                strncat(restr, '1', 101);
+                strncat(restr, str[0], 101);
+                target = str[1];
+            }else{
+                strncat(restr, (char)cnt, 101);
+                strncat(restr, str[0],101);
+                target = str[i];
+            }
+        }
+    }
+    
+    return restr;
+}

@@ -1,0 +1,35 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+int main(){
+  int x,A[100],c=0,y;
+  char s[100];
+  
+  while(1){
+   y=scanf("%s",s);
+   if(y==EOF) break;
+
+ if ( s[0] == '+' ){ //演算子+
+      A[c-2]+=A[c-1];
+      c--;
+    } 
+    else if ( s[0] == '-' ){ //演算子-
+      A[c-2]-=A[c-1];
+      c--;
+    } 
+  
+    else if ( s[0] == '*' ){ //演算子*
+      A[c-2]*=A[c-1];
+      c--;
+    } 
+    else {
+      //配列に数字をつっこむ
+      x = atoi(s);
+      A[c]=x;
+      c++;
+    }
+   
+  }
+  printf("%d\n",A[c-1]);
+  return 0;
+}

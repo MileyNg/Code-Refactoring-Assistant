@@ -1,0 +1,23 @@
+#include <cstring>
+#include <iostream>
+using namespace std;
+
+int dp[5][4001];
+
+int main() {
+    dp[0][0] = 1;
+    for (int i = 1; i <= 4; i++) {
+        for (int j = 0; j <= 4000; j++) {
+            for (int k = 0; k <= 1000; k++) {
+                if (j - k >= 0) {
+                    dp[i][j] += dp[i - 1][j - k];
+                }
+            }
+        }
+    }
+    int n;
+    while (cin >> n) {
+        cout << dp[4][n] << endl;
+    }
+    return 0;
+}

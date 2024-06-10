@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cmath>
+#define MAX 1000001
+using namespace std;
+
+int p[MAX];
+
+int main(){
+	int counter = 0;
+	p[1] = 0;
+	for (int i = 2; i < MAX; i++){
+		int sqrti = (int)sqrt(i);
+		counter++;
+		p[i] = counter;
+		for (int j = 2; j <= sqrti; j++){
+			if (i % j == 0){
+				counter--;
+				p[i] = counter;
+				break;
+			}
+		}
+	}
+	int n;
+	while (cin >> n){
+		cout << p[n] << endl;
+	}
+	return 0;
+}

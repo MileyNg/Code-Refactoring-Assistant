@@ -1,0 +1,33 @@
+#include<stdio.h>
+  
+int main(){
+    long int i,j,n,Max,key=0,count=0;
+    long int A[200001];
+      
+    scanf("%d",&n);
+    for(i=1;i<=n;i++){
+        scanf("%d",&A[i]);
+    } 
+    
+   Max=A[2]-A[1];
+
+for(i=n;i>=2;i--){
+         for(j=i;j>1;j--){
+  if(count==0){
+ if(Max<A[i]-A[j-1]){
+            Max=A[i]-A[j-1];
+key=A[j-1];
+ count++;}
+else{
+	if(key>A[j-1]){
+if(Max<A[i]-A[j-1]){
+ Max=A[i]-A[j-1];
+key=A[j-1];}}
+}
+count=0;}
+         }}
+        
+            printf("%d\n",Max);
+            return 0;
+        }
+	

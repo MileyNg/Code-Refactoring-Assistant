@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+  
+  string game;
+  while(1) {
+    bool flag = 0;
+    
+    for(int I=0; I<3; I++) {
+      
+      cin >> game;
+      if(game == "0") { flag = 1; break; }
+    
+      int cntA = 0, cntB = 0;
+      
+      game = game.substr(1);
+      
+      int const N = game.size();
+      for(int i=0; i<N; i++) {
+	cntA += game[i] == 'A';
+	cntB += game[i] == 'B';
+      }
+      
+      if(cntA > cntB) {
+	if(cntA >= 11) {
+	  cntA = cntB + 2;
+	}
+	else {
+	  cntA = 11;
+	}
+      }
+      else {
+	if(cntB >= 11) {
+	  cntB = cntA + 2;
+	}
+	else {
+	  cntB = 11;
+	}
+      }
+    
+      cout << cntA << ' ' << cntB << endl;
+      
+    }
+    
+    if(flag) break;
+  }
+  
+  return 0;
+}

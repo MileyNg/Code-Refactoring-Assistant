@@ -1,0 +1,32 @@
+#include<stdio.h>
+#define MAX 200000
+void swap(int A,int B){
+  int tmp;
+  tmp=A;
+  A=B;
+  B=tmp;
+}
+
+int bubbleSort(int A[],int n){
+  int cnt=1;
+  int i,j;
+  for(i=0;i<n;i++){
+    for(j=n-1;j>i;j--){
+      if(A[j]<A[j-1]){
+	swap(A[j],A[j-1]);
+	cnt++;
+      }
+    }  
+  }
+  return cnt;
+}
+
+int main(){
+  int n,c,i;
+  int A[MAX];
+  scanf("%d",&n);
+  for(i=0;i<n;i++)scanf("%d",&A[i]);
+  c=bubbleSort(A,n);
+  printf("%d\n",c);
+return 0;
+}

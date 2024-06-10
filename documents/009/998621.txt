@@ -1,0 +1,168 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main(){
+
+  int Q,men[3],menb[3],tmp=0;
+  cin >> Q;
+
+  for(int i = 0; i < Q;i++){
+
+  for(int k=0 ; k < 3 ; k++){
+    cin >> men[k]; //C:0,A:1,N:2
+    menb[k] = men[k];
+  }
+    int ans = 0;
+    tmp = 0;
+  while(1){ //CAN,CCA,CCC
+    int judge = 0;
+    if(men[0] >= 1 && men[1] >= 1 && men[2] >= 1) {   //CAN
+      men[0]--;
+      men[1]--;
+      men[2]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 2 && men[1] >= 1){   //CCA
+      men[0] -= 2;
+      men[1]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 3){    //CCC
+      men[0] -= 3;
+      tmp++;
+      judge++;
+    }
+    if(judge == 0) break;
+  }
+  ans = max(tmp,ans);
+  tmp = 0;
+  for(int j = 0; j < 3;j++){ //テゥツ?催・ツ按療・ツセツゥテ・ツ??
+    men[j] = menb[j];
+  } 
+  while(1){ //CAN,CCC,CCA
+    int judge = 0;
+    if(men[0] >= 1 && men[1] >= 1 && men[2] >= 1) {   //CAN
+      men[0]--;
+      men[1]--;
+      men[2]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 3){    //CCC
+      men[0] -= 3;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 2 && men[1] >= 1){   //CCA
+      men[0] -= 2;
+      men[1]--;
+      tmp++;
+      judge++;
+    }
+    if(judge == 0) break;
+  }
+  ans = max(tmp,ans);
+  tmp = 0;
+  for(int j = 0; j < 3;j++){ //テゥツ?催・ツ按療・ツセツゥテ・ツ??
+    men[j] = menb[j];
+  } 
+  while(1){ //CCA,CCC,CAN
+    int judge = 0;
+    if(men[0] >= 2 && men[1] >= 1){   //CCA
+      men[0] -= 2;
+      men[1]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 3){    //CCC
+      men[0] -= 3;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 1 && men[1] >= 1 && men[2] >= 1) {   //CAN
+      men[0]--;
+      men[1]--;
+      men[2]--;
+      tmp++;
+      judge++;
+    }
+    if(judge == 0) break;
+  }
+  ans = max(tmp,ans);
+  tmp = 0;
+  for(int j = 0; j < 3;j++){ //テゥツ?催・ツ按療・ツセツゥテ・ツ??
+    men[j] = menb[j];
+  } 
+  while(1){ //CCA,CAN,CCC
+    int judge = 0;
+    if(men[0] >= 2 && men[1] >= 1){   //CCA
+      men[0] -= 2;
+      men[1]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 3){    //CCC
+      men[0] -= 3;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 1 && men[1] >= 1 && men[2] >= 1) {   //CAN
+      men[0]--;
+      men[1]--;
+      men[2]--;
+      tmp++;
+      judge++;
+    }
+    if(judge == 0) break;
+  }
+  ans = max(tmp,ans);
+  tmp = 0;
+  for(int j = 0; j < 3;j++){ //テゥツ?催・ツ按療・ツセツゥテ・ツ??
+    men[j] = menb[j];
+  } 
+  while(1){ //CCC,CAN,CCA
+    int judge = 0;
+    if(men[0] >= 3){    //CCC
+      men[0] -= 3;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 1 && men[1] >= 1 && men[2] >= 1) {   //CAN
+      men[0]--;
+      men[1]--;
+      men[2]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 2 && men[1] >= 1){   //CCA
+      men[0] -= 2;
+      men[1]--;
+      tmp++;
+      judge++;
+    }
+    if(judge == 0) break;
+  }
+  ans = max(tmp,ans);
+  tmp = 0;
+  for(int j = 0; j < 3;j++){ //テゥツ?催・ツ按療・ツセツゥテ・ツ??
+    men[j] = menb[j];
+  } 
+  while(1){ //CCC,CCA,CAN
+    int judge = 0;
+    if(men[0] >= 3){    //CCC
+      men[0] -= 3;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 2 && men[1] >= 1){   //CCA
+      men[0] -= 2;
+      men[1]--;
+      tmp++;
+      judge++;
+    }else if(men[0] >= 1 && men[1] >= 1 && men[2] >= 1) {   //CAN
+      men[0]--;
+      men[1]--;
+      men[2]--;
+      tmp++;
+      judge++;
+    }
+    if(judge == 0) break;
+  }
+  cout << ans << endl;
+
+  }
+
+  return 0;
+}

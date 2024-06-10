@@ -1,0 +1,41 @@
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+struct S{
+	int stay_time;
+	string stay_name;
+};
+
+int main(){
+
+	int N,T;
+	int fhh,fmm,thh,tmm;
+	char gav;
+	string fname,tname;
+	int stay;
+	S tmp;
+	vector<S> ans;
+
+	cin>>N>>T;
+
+	cin>>fhh>>gav>>fmm>>fname;
+	for(int i=0;i<N-1;i++){
+		cin>>fhh>>gav>>fmm>>fname>>thh>>gav>>tmm>>tname;
+		stay=(thh-fhh)*60+tmm-fmm;
+		if(stay>=T){
+			tmp.stay_time=stay;
+			tmp.stay_name=fname;
+			ans.push_back(tmp);
+		}
+	}
+
+	cout<<ans.size()<<endl;
+	for(int i=0;i<ans.size();i++){
+		cout<<ans[i].stay_name<<" "<<ans[i].stay_time<<endl;
+	}
+
+	return 0;
+}

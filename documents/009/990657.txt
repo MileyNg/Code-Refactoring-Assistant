@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int buf[500000];
+
+void merge(int a[],int as,int b[],int bs,int c[]);
+void merge_sort(int data[],int first,int last);
+double log2(double n){ return log(n)/log(2.f); }
+int main(){
+	int n,i=0;
+	int data[500000];
+	scanf("%d",&n);
+	while(i<n) scanf("%d",data[i++]);
+	merge_sort(data,0,n-1);
+	i=0;
+	while(i<n) printf("%d ",data[i]);printf("\n");
+	printf("%d\n",(int)log2((double)n));
+	return 0;
+}
+
+void merge(int a[],int as,int b[],int bs,int c[]){
+	int pa=0;	//配列aの現在地に用いる
+	int pb=0;	//配列bの現在地に用いる
+	int pc=0;	//配列cの現在地に用いる
+	while(as!=pa && bs!=pb) c[pc++] = (a[pa]<b[pb]) ? a[pa++] : b[pb++];
+	while(as!=pa) c[pc++] = a[pa++];  
+	while(bs!=pb) c[pc++] = b[pb++];
+	return;
+}
+
+
+void merge_sort(int data[],int first,int last){
+	if(first<last){
+		int center =(first+last)/2;
+		merge_sort(data,first,center);
+		merge_sort(data,center+1,last);
+		for(int i=first;i<=last;i++) buf[i-first] = data[i]; //bufにコピー
+		merge(buf,center-first+1,&buf[center+1-first],last-center,&data[first]);
+	}
+}

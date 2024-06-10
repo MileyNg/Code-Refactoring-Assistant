@@ -1,0 +1,60 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<map>
+using namespace std;
+typedef pair<int,int> P;
+#define MAX_V 100
+#define INF (1<<24)
+int V,E,a;
+vector<int> G[MAX_V];
+vector<int> g[MAX_V];
+map<string,int> change;
+string str;
+int t[MAX_V];
+
+void dijkstra(){
+  priority_queue< P , vector<P> , greater<P> > Q;
+  for(int i=0;i<V;i++)Q.push(P(t[i],i));
+  while(!Q.empty()){
+    P p=Q.top();Q.pop();
+    int pos=p.second,cost=p.first;
+    if(cost>t[pos])continue;
+    for(int i=0;i<(int)g[pos].size();i++){
+      int w=g[pos][i];
+      int sum=0;
+      for(int j=0;j<(int)G[w].size();j++)sum+=t[G[w][j]];
+      if(sum<t[w]){
+	t[w]=sum;
+	Q.push(P(t[w],w));
+      }
+    }
+  }
+}
+
+int main(){
+  while(cin>>V&&V){
+    for(int i=0;i<V;i++){
+      cin>>str>>t[i];
+      G[i].clear();
+      g[i].clear();
+      change[str]=i;
+    }
+    cin>>E;
+    for(int i=0;i<E;i++){
+      cin>>str;
+      int v=change[str];
+      cin>>a;
+      for(int j=0;j<a;j++){
+	cin>>str;
+	G[v].push_back(change[str]);
+	g[change[str]].push_back(v);
+      }
+    }
+    dijkstra();
+    cin>>str;
+    cout<<t[change[str]]<<endl;
+  }
+  return 0;
+}

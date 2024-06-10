@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+double dp[111][3][3];
+int const dx[]={1,0,0,-1};
+int const dy[]={0,1,-1,0};
+
+bool ok(int x, int y, int b){
+    return 0<=x&&x<3&&0<=y&&y<3 && x*3+y!=b;
+}
+
+int main(){
+    int n;;
+    while(cin>>n && n){
+        char s,t,b;
+        cin>>s>>t>>b;
+        memset(dp,0,sizeof(dp));
+        int S=s-'A';
+        int T=t-'A';
+        int B=b-'A';
+        dp[0][S/3][S%3]=1;
+        rep(i,n){
+            rep(x,3)rep(y,3){
+                rep(d,4){
+                    int nx=x+dx[d];
+                    int ny=y+dy[d];
+                    if(!ok(nx,ny,B)) dp[i+1][x][y]+=dp[i][x][y]/4;
+                    else dp[i+1][nx][ny] += dp[i][x][y]/4;
+                }
+            }
+        }
+        printf("%.10lf\n",dp[n][T/3][T%3]);
+    }
+}

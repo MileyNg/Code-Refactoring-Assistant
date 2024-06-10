@@ -1,0 +1,30 @@
+#include<iostream>
+#include<numeric>
+
+using namespace std;
+
+int main(){
+  int m[128];
+  m['J']=0;
+  m['O']=1;
+  m['I']=2;
+  int n;
+  char s[1001];
+  cin>>n>>s;
+  int dp[1001][8]={};
+  dp[0][1]=1;
+  for(int i=0;i<n;i++){
+    for(int j=0;j<8;j++){
+      for(int k=0;k<8;k++){
+	if(j&k&&k>>m[s[i]]&1){
+	  dp[i+1][k]=(dp[i+1][k]+dp[i][j])%10007;
+	}
+      }
+    }
+  }
+  int sum=0;
+  for(auto e:dp[n]){
+    sum=(sum+e)%10007;
+  }
+  cout<<sum<<endl;
+}

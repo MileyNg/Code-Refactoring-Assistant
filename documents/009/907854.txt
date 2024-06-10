@@ -1,0 +1,165 @@
+#include <algorithm>
+#include <climits>
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+constexpr double EPS = 1e-9;
+
+struct point {
+	double x, y;
+	point(double x_ = 0.0, double y_ = 0.0):x(x_), y(y_) {}
+	point(const point& p):x(p.x), y(p.y) {}
+
+	point operator+ (const point& p) const {
+		return point(x + p.x, y + p.y);
+	}
+
+	point operator- (const point& p) const {
+		return point(x - p.x, y - p.y);
+	}
+
+	point operator* (double s) const {
+		return point(x * s, y * s);
+	}
+
+	point operator* (const point& p) const {
+		return point(x * p.x - y * p.y, x * p.y + y * p.x);
+	}
+
+	point operator/ (double s) const {
+		return point(x / s, y / s);
+	}
+
+	bool operator< (const point& p) const {
+		return x + EPS < p.x || (abs(x - p.x) < EPS && y + EPS < p.y);
+	}
+
+	bool operator== (const point& p) const {
+		return abs(x - p.x) < EPS && abs(y - p.y) < EPS;
+	}
+};
+
+point rotate(const point& p, double theta) {
+	const double s = sin(theta), c = cos(theta);
+	return point(c * p.x - s * p.y, s * p.x + c * p.y);
+}
+
+double angle(const point& p) {
+	return atan2(p.y, p.x);
+}
+
+double norm(const point& p) {
+	return p.x * p.x + p.y * p.y;
+}
+
+double abs(const point& p) {
+	return sqrt(norm(p));
+}
+
+double dot(const point& a, const point& b) {
+	return a.x * b.x + a.y * b.y;
+}
+
+double cross(const point& a, const point& b) {
+	return a.x * b.y - a.y * b.x;
+}
+
+struct circle {
+	point c;
+	double r;
+	circle(point c_, double r_):c(c_), r(r_){}
+};
+
+typedef vector<point> polygon;
+
+int ccw(const point& a, point b, point c) {
+	b = b - a;
+	c = c - a;
+	const double tmp = cross(b, c);
+	if(tmp > EPS) return 1; // ccw
+	if(tmp < -EPS) return -1; // cw
+	if(dot(b, c) < 0) return 2; // c, a, b 順に一直線上
+	if(norm(b) < norm(c)) return -2; // a, b, c 順に一直線上
+	return 0; //a, c, b 順で一直線上
+}
+
+bool intersect(const circle& c, const circle& d) {
+	return abs(c.c - d.c) < c.r + d.r + EPS && abs(c.c - d.c) + EPS > abs(c.r - d.r);
+}
+
+double dist(const point& a, const point& b) {
+	return abs(a - b);
+}
+
+//先に，intersectを用いて交差判定を行うこと
+vector<point> crosspoint(const circle &c, const circle& d) {
+	vector<point> res;
+	if(abs(c.c - d.c) < EPS) return res; // 中心の座標が同じ
+
+	const double tmp = abs(c.c - d.c);
+	const double rc = (tmp * tmp + c.r * c.r - d.r * d.r) / (tmp + tmp);
+	const double rs = sqrt(c.r * c.r - rc * rc);
+	const point diff = (d.c - c.c) / tmp;
+	res.emplace_back(c.c + diff * point(rc, rs));
+	res.emplace_back(c.c + diff * point(rc, -rs));
+	return res;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+	cout.precision(12);
+	cout.setf(ios::fixed);
+
+	const point O(0, 0);
+	for(int n, r, q; cin >> n >> r >> q && n;) {
+		const circle c(O, r);
+
+		polygon plate;
+		plate.reserve(n);
+		for(int i = 0; i < n; ++i) {
+			int x, y;
+			cin >> x >> y;
+			plate.emplace_back(x, y);
+		}
+
+		int tp;
+		for(tp = 0; tp < n; ++tp) {
+			if(abs(dist(plate[tp], O) - r) < EPS) break;
+		}
+
+		while(q--) {
+			int next_tp;
+			double theta = INT_MAX;
+
+			for(int i = 0; i < n; ++i) {
+				if(i == tp) continue;
+				const auto cp = crosspoint(c, circle(plate[tp], dist(plate[tp], plate[i])));
+				for(const auto &p : cp) {
+					if(ccw(plate[tp], O, p) == 1) {
+						double phi = angle(p - plate[tp]) - angle(plate[i] - plate[tp]);
+						if(phi < EPS) phi += 2 * M_PI;
+						if(theta > phi + EPS) {
+							next_tp = i;
+							theta = phi;
+						}
+						break;
+					}
+				}
+			}
+
+			for(int i = 0; i < n; ++i) {
+				if(i == tp) continue;
+				plate[i] = rotate(plate[i] - plate[tp], theta) + plate[tp];
+			}
+
+			tp = next_tp;
+			cout << plate[tp].x << " " << plate[tp].y << endl;
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

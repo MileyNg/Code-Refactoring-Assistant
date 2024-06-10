@@ -1,0 +1,15 @@
+input = gets(nil).chomp
+
+c = {}
+c["A"] = true
+c["B"] = false
+c["C"] = false
+
+input.split("\n").each do |line|
+  c1, c2 = line.split(",")
+  c[c1], c[c2] = c[c2], c[c1]
+end
+
+c.each do |k, v|
+  puts k if v
+end

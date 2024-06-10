@@ -1,0 +1,16 @@
+import std.stdio;
+import std.conv;
+import std.string;
+
+void main(string[] args){
+	int n = to!int(readln().chomp());
+	for(int i = 0; i < n; i ++){
+		string[] cs = readln().chomp().split(" ");
+		// x1 y1 x2 y2 x3 y3 x4 y4
+		long dx1 = to!int(to!float(cs[0]) * 1000000.0 + 0.1) - to!int(to!float(cs[2]) * 1000000.0 + 0.1);
+		long dx2 = to!int(to!float(cs[4]) * 1000000.0 + 0.1) - to!int(to!float(cs[6]) * 1000000.0 + 0.1);
+		long dy1 = to!int(to!float(cs[1]) * 1000000.0 + 0.1) - to!int(to!float(cs[3]) * 1000000.0 + 0.1);
+		long dy2 = to!int(to!float(cs[5]) * 1000000.0 + 0.1) - to!int(to!float(cs[7]) * 1000000.0 + 0.1);
+		if(dx1 * dy2 == dx2 * dy1) writeln("YES"); else writeln("NO");
+		}
+	}

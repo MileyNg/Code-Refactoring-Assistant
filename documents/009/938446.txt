@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <assert.h>        //assert螳?#include <sstream>
+#define PI 3.1415926535898
+#define MAXN 10+1000
+
+using namespace std;
+
+int i,j,k;
+
+int comp ( const void *a, const void *b )
+{
+    return * ( int * ) a - * ( int * ) b;   //莉主ー丞芦螟ァ謗貞コ?    //return *(int *)b-*(int *)a;           //莉主、ァ蛻ー蟆乗賜蠎?}
+//qsort(a,sizeof(a),sizeof(int),comp);
+//memset(a,0,MAXN);
+
+int greatest_common_divisor(int x,int y)    //豎Ｙ蜥軽逧?怙螟ァ蜈ャ郤ヲ謨ー
+{
+    int t;
+    if(x>y)
+    {
+        t=x;
+        x=y;
+        y=t;
+    }
+    while(y%x)
+    {
+        t=y%x;
+        y=x;
+        x=t;
+    }
+    return x;
+}
+int main()
+{
+    //freopen("in.txt","r",stdin);
+
+int T;
+int p,n;
+char c;
+int sum;
+   while(scanf("%d",&T)!=EOF)
+   {
+       sum=0;
+       while(T--)
+       {
+           scanf("%d %c %d",&p,&c,&n);
+           if(c=='(')
+                sum-=n;
+           else
+            sum+=n;
+       // printf("p=%d\nc=%d\nn=%d\n",p,c,n);
+        if(sum==0)
+        printf("Yes\n");
+       else
+        printf("No\n");
+       }
+
+   }
+    return 0;
+}

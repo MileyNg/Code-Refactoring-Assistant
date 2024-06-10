@@ -1,0 +1,34 @@
+#include<iostream>
+#include<vector>
+
+typedef std::pair<int, int> P;
+
+int main(){
+
+	int n;
+	std::cin >> n;
+
+	std::vector<P>v(n);
+
+	for (int i = 0; i < n; i++){
+		int a, b;
+		std::cin >> a >> b;
+		v[i].first = a;
+		v[i].second = b;
+	}
+
+	int q;
+	std::cin >> q;
+
+	for (int i = 0; i < q; i++){
+		int sx, tx, sy, ty;
+		std::cin >> sx >> tx >> sy >> ty;
+
+		for (int j = 0; j < n; j++){
+			if (sx <= v[j].first&&v[j].first <= tx&&sy <= v[j].second&&v[j].second <= ty)std::cout << j << std::endl;
+		}
+		std::cout << std::endl;
+	}
+
+	return 0;
+}

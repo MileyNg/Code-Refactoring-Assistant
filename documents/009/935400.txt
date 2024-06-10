@@ -1,0 +1,21 @@
+while gets
+  cards = $_.split(',').map(&:to_i)
+  count_list = Array.new(13, 0)
+  cards.each { |i| count_list[i-1] += 1 }
+
+  if count_list.select { |n| n == 4 }.count == 1
+    puts 'four pair'
+  elsif count_list.select { |n| n == 3 }.count == 1 and count_list.select { |n| n == 2 }.count == 1
+    puts 'full house'
+  elsif count_list.select { |n| n == 3 }.count == 1
+    puts 'three pair'
+  elsif count_list.select { |n| n == 2 }.count == 2
+    puts 'two pair'
+  elsif count_list.select { |n| n == 2 }.count == 1
+    puts 'one pair'
+  elsif count_list.join('') =~ /(11111|^10{8}1111$)/
+    puts 'straight'
+  else
+    puts 'null'
+  end
+end

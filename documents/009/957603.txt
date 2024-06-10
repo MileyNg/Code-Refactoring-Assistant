@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	char c[3][4],a;
+	int i;
+	while(cin >> c[0]) {
+		if (c[0][0]=='0') break;
+		cin >> c[1]  >> c[2];
+		a='+';
+	  if (((c[0][0]==c[1][1] && c[1][1]==c[2][2]) || (c[0][2]==c[1][1] && c[1][1]==c[2][0])) && c[1][1]!='+') a=c[1][1];
+		else {	
+		for (i=0;i<3;i++) {
+			if (c[i][0]==c[i][1] && c[i][1]==c[i][2]) a=c[i][0];
+			if (c[0][i]==c[1][i] && c[1][i]==c[2][i]) a=c[0][i];
+			if (a!='+') break;
+		}  
+	}	
+	if (a!='+') cout << a << endl; else cout << "NA" << endl;
+}
+return 0;
+}		

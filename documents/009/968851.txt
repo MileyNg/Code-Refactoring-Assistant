@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int main(){
+  int X, Y;
+  while(scanf("%d%d", &X, &Y) && X+Y){
+    int board[15][15], dp[17][15] = {};
+    rep(i, Y) rep(j, X) if(scanf("%d", &board[i][j])  && board[i][j] == 1) dp[i][j] = -1;
+
+    rep(i, X) if(!dp[0][i]) dp[0][i] = 1;
+
+    rep(i, Y-1) rep(j, X){
+      if(board[i][j] == 1) continue;
+      else if(board[i][j] == 2 && board[i+2][j] != 1) dp[i+2][j] += dp[i][j];
+      else if(board[i][j] == 0){
+	for(int k = -1; k < 2; k++){
+	  if(j+k < 0 || j+k >= X) continue;
+	  if(dp[i+1][j+k] == -1) continue;
+	  if(board[i+1][j+k] == 2){
+	    if(k != 0) continue;
+	    dp[i+1][j+k] += dp[i][j];
+	  }else{
+	    dp[i+1][j+k] += dp[i][j];
+	  }
+	}
+      }
+    }
+
+    ll res = 0;
+    REP(i, Y-1, Y+2)
+      rep(j, X)
+      if(dp[i][j] != -1)
+	res += dp[i][j];
+  
+    /*    rep(i, 17){ 
+      rep(j, 15) printf("%d ", dp[i][j]);
+      puts("");
+      }*/
+
+    printf("%lld\n", res);
+  }
+  return 0;
+}

@@ -1,0 +1,18 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main(void){
+	int e,ans;
+	while(cin>>e,e){
+		int ans = 1e8;
+		for(int z=0;z*z*z<=e;++z){
+			for(int y=0;y*y<=e-z*z*z;++y){
+				int x = e-y*y-z*z*z;
+				ans = min(x + y + z, ans);
+			}
+		}
+		cout<<ans<<endl;
+	}
+	return 0;
+}

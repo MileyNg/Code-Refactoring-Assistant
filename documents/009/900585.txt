@@ -1,0 +1,18 @@
+#include <cstdio>
+
+int main(){
+  int h[5], c[4];
+
+  while(scanf("%d", h) && h[0]){
+    c[0] = c[1] = c[2] = c[3] = 0;
+    c[h[0]]++;
+    for(int i = 1; i < 5; ++i){ scanf("%d", h + i); c[h[i]]++;}
+
+    if(c[1] && c[2] && c[3]) for(int i = 0; i < 5; ++i) puts("3");
+    else if(c[1] && c[2]) for(int i = 0; i < 5; ++i) puts(h[i] == 1 ? "1" : "2");
+    else if(c[2] && c[3]) for(int i = 0; i < 5; ++i) puts(h[i] == 2 ? "1" : "2");
+    else if(c[3] && c[1]) for(int i = 0; i < 5; ++i) puts(h[i] == 3 ? "1" : "2");
+    else for(int i = 0; i < 5; ++i) puts("3");
+  }
+  return 0;
+}

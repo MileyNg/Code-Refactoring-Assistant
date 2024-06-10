@@ -1,0 +1,19 @@
+input = gets(nil).chomp
+
+o = {}
+
+input.split("\n").each do |line|
+  ws = line.split(" ")
+  ws.each do |w|
+    o[w] = 0 unless o[w]
+    o[w] += 1
+  end
+end
+
+m = 0
+o.each {|k,v| m = v if v > m}
+
+a1 = o.select{|k,v| v == m}.keys[0]
+a2 = o.keys.max_by{|v| v.size}
+
+puts "#{a1} #{a2}"

@@ -1,0 +1,70 @@
+#include<stdio.h>
+#define MAX 10000
+#define NIL -1
+
+struct Node{int p,l,r;};
+struct Node T[MAX];// tree
+int n;
+
+
+ int depthIs(int n){
+ 	int depth = 0,i;
+ 	for(i = n;T[i].p!=NIL;i=T[i].p,depth++){}
+
+ return depth;
+ }
+ 	void output(int n){
+ 	int a,depth;
+ 	depth = depthIs(n);
+ 	a = T[n].l;
+ 	printf("node %d: parent = %d, depth = %d, ",n,T[n].p,depth);
+ 	if(depth == 0){printf("root, ");}
+ 		else if(T[n].l!=NIL){
+ 			printf("internal node, ");
+ 			}else printf("leaf, ");
+ 	if(T[n].l == NIL){
+ 		printf("[]\n");
+ 	}else{
+ 	printf("[");
+ 	while(1){
+ 	printf("%d",a);
+ 	if(T[a].r == NIL){
+ 	printf("]\n");
+ 	break;
+ 	}
+ 	else {
+ 	printf(", ");
+ 	}
+ 	a = T[a].r;
+ 	}
+ 	}
+ 	}
+ 	main(){
+	int i,j,id,child,children,left;
+	scanf("%d",&n);
+	for(i=0;i<n;i++){
+		T[i].p = NIL;
+		T[i].l = NIL;
+		T[i].r = NIL;
+	}
+	for(i=0;i<n;i++){
+	scanf("%d %d",&id,&child);
+	for(j=0;j<child;j++){
+		scanf("%d",&children);
+		T[children].p = id;
+		if(j==0){
+			T[id].l = children;
+		}else {
+			T[left].r = children;
+			left = children;
+		//t = children;
+		
+		}
+	}
+	}
+
+	for(i = 0;i< n;i++){
+		output(i);
+	}
+	return 0;
+}		

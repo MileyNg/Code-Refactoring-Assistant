@@ -1,0 +1,11 @@
+until [0,0] == (num,max = gets.split.map &:to_i)
+  next if num.nil?
+  ary = gets.split.map &:to_i
+  ary.sort!{|a, b| b <=> a }
+  c,sum = 0,0
+  ary.each do |x|
+    c+=1
+    sum+=x if ((c%max)!=0) 
+  end
+  p sum
+end

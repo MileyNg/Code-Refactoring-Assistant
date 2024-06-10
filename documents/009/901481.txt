@@ -1,0 +1,37 @@
+#include <iostream>
+#include <utility>
+#include <vector>
+#include <string>
+#include <limits>
+
+using namespace std;
+
+int main(){
+  vector<pair<double,string> > RankData(12);
+  RankData[ 0].first= 0.0,RankData[ 0].second="light fly"; 
+  RankData[ 1].first=48.0,RankData[ 1].second="fly";
+  RankData[ 2].first=51.0,RankData[ 2].second="bantam";
+  RankData[ 3].first=54.0,RankData[ 3].second="feather";
+  RankData[ 4].first=57.0,RankData[ 4].second="light";
+  RankData[ 5].first=60.0,RankData[ 5].second="light welter";
+  RankData[ 6].first=64.0,RankData[ 6].second="welter";
+  RankData[ 7].first=69.0,RankData[ 7].second="light middle";
+  RankData[ 8].first=75.0,RankData[ 8].second="middle";
+  RankData[ 9].first=81.0,RankData[ 9].second="light heavy";
+  RankData[10].first=91.0,RankData[10].second="heavy";
+  RankData[11].first=numeric_limits<double>::max(),RankData[11].second="limit";
+  vector<double> weightdata;
+  double weight;
+  while(cin>>weight){
+    weightdata.push_back(weight);
+  }
+
+  for(auto weight:weightdata){
+    for(int i=0;i<RankData.size()-1;i++){
+      if(RankData[i].first<weight&&weight<=RankData[i+1].first){
+        cout<<RankData[i].second<<endl;
+      }
+    }
+  }
+}
+      

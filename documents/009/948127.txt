@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<math.h>
+#define pi M_PI
+
+typedef struct xy{
+double x;
+double y;
+}P;
+
+P koch(P pre,P nex,int n){
+P PREV,MID,NEXT,DIS;
+if(n == 0)printf("%f %f\n",pre.x,pre.y);
+else{
+DIS.x = nex.x - pre.x;
+DIS.y = nex.y - pre.y;
+PREV.x = pre.x + DIS.x/3.0;
+NEXT.x = pre.x + DIS.x*2.0/3.0;
+PREV.y = pre.y + DIS.y/3.0;
+NEXT.y = pre.y + DIS.y*2.0/3.0;
+MID.x = PREV.x + (DIS.x/3.0)*cos(pi/3.0) - (DIS.y/3.0)*sin(pi/3.0);
+MID.y = PREV.y + (DIS.x/3.0)*sin(pi/3.0) + (DIS.y/3.0)*cos(pi/3.0);
+
+koch(pre,PREV,n - 1);
+koch(PREV,MID,n - 1);
+koch(MID,NEXT,n - 1);
+koch(NEXT,nex,n - 1);
+}
+}
+
+int main(int argc,char argv[]){
+P pre={0,0},nex={100,0};
+int n;
+scanf("%d",&n);
+koch(pre,nex,n);
+printf("%f %f\n",nex.x,nex.y);
+return 0;
+}

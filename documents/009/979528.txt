@@ -1,0 +1,89 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map>
+#include<algorithm>
+#include<set>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 16;
+const int M = 16;
+const int T = (1<<N);
+const double INF = (1<<30);
+
+int n,m;
+double cat[N][M];
+
+bool edged[T];
+vector<char> edge[T];
+
+double memo[M][T][N];
+void init(){
+	rep(i,M)rep(j,T)rep(k,N)memo[i][j][k]=INF;
+	rep(i,T)edged[i]=false;
+}
+void input(){
+	cin>>n>>m;
+	rep(i,n)rep(j,m)cin>>cat[i][j];
+}
+
+bool has(int state, int i){
+	return (state&(1<<i))>0;
+}
+
+string strbit(int state, int n){
+	string ret = "";
+	rep(i,n)ret += has(state,i)?'1':'0';
+	return ret;
+}
+
+void setEdge(int state){
+	if(edged[state])return;
+	for(int i=0;i<n;i++){
+		if(has(state, i))edge[state].push_back(i);
+	}
+	edged[state]=true;
+}
+
+double req(int p, int state, int c){
+	if(memo[p][state][c] != INF) return memo[p][state][c];
+	
+	double ret = 0;
+	
+	if(p==m)ret=1.0;
+	else{
+		//setEdge(state);
+		
+		double winrate = cat[c][p];
+		double win = winrate * req(p+1, state, c);
+		//rep(i,edge[state].size()){
+		rep(i,n){
+			if(!has(state,i))continue;
+			//char e = edge[state][i];
+			char e = i;
+			ret = max(ret, win + (1-winrate)*req(p, state^(1<<e), e)); 
+		}
+	}
+	
+	//printf("%d %s %d %lf\n",p,strbit(state,n).c_str(),c,ret);
+	return memo[p][state][c] = ret;
+}
+
+double solve(){
+	double ans = 0;
+	rep(i,n){
+		ans = max(ans, req(0, (1<<n)-1, i));
+	}
+	return ans;
+}
+
+int main(){
+	init();
+	input();
+	printf("%.12lf\n",solve());
+}

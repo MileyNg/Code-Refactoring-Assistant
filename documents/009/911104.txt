@@ -1,0 +1,16 @@
+#include <cmath>
+#include <iostream>
+int main(){
+	int q;
+	while (1){
+		std::cin>>q;
+		if(q==-1)break;
+		double x=q/2,a;
+		while(1){
+			a=x*x*x-q;
+			if(fabs(a)<1e-5*q)break;
+			x-=a/3/x/x;
+		}
+		std::cout<<x<<"\n";
+	}
+}

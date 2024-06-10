@@ -1,0 +1,37 @@
+#include <iostream> 
+#include <vector>
+using namespace std;
+const int MAX = 1299710;
+int prime[MAX];
+
+int cal(int n){
+  int l = 0;
+  int f = 0;
+  for(l = n;!prime[l];l++){
+  }
+  for(f = n;!prime[f];f--){
+  }
+  return l - f;
+  
+}
+int main(){
+  prime[1] = 0;
+  prime[2] = 1;
+  fill(prime,prime+MAX,1);
+  for(int i = 2;i < MAX;i++){
+    if(prime[i]){
+      for(int j = i+i;j < MAX;j+=i){
+	prime[j] = 0;
+      }
+    }
+  }
+  /*  for(int i = 1;i < 100;i++){
+    if(prime[i])cout << i << endl;
+    }*/
+  int n;
+  while(cin >> n,n != 0){
+    cout << cal(n) << endl;
+  }
+
+  return 0;
+}

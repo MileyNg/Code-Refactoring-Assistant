@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+main() {
+  int i, j, n, q, count = 0;
+  int s[10000], t[10000];
+
+  scanf("%d", &n);
+  for(i = 0; i < n; i++) {
+    scanf("%d", &s[i]);
+  }
+  scanf("%d", &q);
+  for(i = 0; i < q; i++) {
+    scanf("%d", &t[i]);
+  }
+
+  for(i = 0; i < n; i++) {
+    for(j = 0; j < q; j++) {
+      if(s[i] == t[j]) {
+	count++;
+	break;
+      }
+    }
+  }
+  printf("%d\n", count);
+
+  return 0;
+}

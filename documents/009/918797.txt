@@ -1,0 +1,117 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct{
+    int num;
+    char alp;
+}data;
+
+void output(data *,data *,int);
+void bubble(data *,int);
+void selection(data *,int);
+void swap(data *,data *);
+int check_stable(data *,data *,int);
+
+int main(void){ 
+  int N;
+  int i,j;
+  data *start_data,*sort_data;
+
+  /* input */
+  scanf("%d",&N);
+
+  start_data=(data *)malloc(sizeof(data)*N);
+  sort_data=(data *)malloc(sizeof(data)*N);
+
+  for(i=0;i<N;i++){
+    //入力バッファのゴミを捨てる
+    getchar();
+    start_data[i].alp=getchar();
+    scanf("%d",&start_data[i].num);
+    sort_data[i]=start_data[i];
+  }
+
+
+  /* bubble sort */
+  bubble(sort_data,N);
+  output(sort_data,start_data,N);
+
+  /* selection sort */
+  for(i=0;i<N;i++) sort_data[i]=start_data[i];
+  selection(sort_data,N);
+  output(sort_data,start_data,N);
+
+  free(sort_data);
+  free(start_data);
+
+  return 0;
+}
+
+
+void output(data *sort_data,data *start_data,int N){
+  int i;
+
+  printf("%c%d",sort_data[0].alp,sort_data[0].num);
+  for(i=1;i<N;i++){
+    printf(" %c%d",sort_data[i].alp,sort_data[i].num);
+  }
+  if(check_stable(sort_data,start_data,N)==-1) printf("\nNot stable\n");
+  else printf("\nStable\n");
+}
+
+
+void bubble(data *data,int N){
+  int i,j;
+
+  for(i=0;i<N-1;i++){
+    for(j=N-1;j>i;j--){
+      if(data[j-1].num>data[j].num) swap(&data[j-1],&data[j]);
+    }
+  }
+}
+
+
+void selection(data *data,int N){
+  int i,j;
+  int min;
+
+  for(i=0;i<N-1;i++){
+    min=i;
+    for(j=i+1;j<N;j++){
+      if(data[min].num>data[j].num) min=j;
+    }
+    if(min!=i) swap(&data[i],&data[min]);
+  }
+}
+
+
+void swap(data *a,data *b){
+  data work;
+  
+  work=*a;
+  *a=*b;
+  *b=work;
+}
+
+
+int check_stable(data *sort,data *start,int N){
+  int i,j=0,k;
+
+  for(i=0;i<N-1;i++){
+    if(sort[i].num==sort[i+1].num){
+      while(start[j].num!=sort[i].num) j++;
+      for(k=j+1;k<N;k++){
+	if(start[k].num==start[j].num) break;
+      }
+      if(k==N) return -1;
+      //この時点で
+      //i,i+1=sort配列の連続する同じ数
+      //j=start配列でのiと同じ数、kより前
+      //k=start配列でのiと同じ数、jより後
+      if(sort[i].alp!=start[j].alp || sort[i+1].alp!=start[k].alp) return -1;
+      j++;
+    }
+  }
+
+  return 0;
+}

@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#define INF 10000000
+using namespace std;
+typedef pair<int,int> P;
+
+void swap(char *a,char *b){
+  char temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+int main(){
+  string input = "";
+  char temp;
+  for(int i=0;i<8;i++){
+    cin >> temp;
+    input.push_back(temp);
+  }
+
+  vector<string> que;
+  queue<int> dist;
+
+  que.push_back(input);
+  dist.push(0);
+  while(que.size()){
+    string q = que[0];
+    que.erase(que.begin());
+    if(q=="01234567"){
+      break;
+    }
+    int d = dist.front(); dist.pop();
+    for(int i=0;i<3;i++){
+      string next = q;
+      swap(&next[i],&next[i+1]);
+      if(find(que.begin(),que.end(),next)==que.end()){
+        que.push_back(next);
+        dist.push(d+1);
+      }
+
+      next = q;
+      swap(&next[i+4],&next[i+5]);
+      if(find(que.begin(),que.end(),next)==que.end()){
+        que.push_back(next);
+        dist.push(d+1);
+      }
+    }
+    for(int i=0;i<4;i++){
+      string next = q;
+      swap(&next[i],&next[i+4]);
+      vector<string>::iterator pos;
+      if(find(que.begin(),que.end(),next)==que.end()){
+        que.push_back(next);
+        dist.push(d+1);
+      }
+    }
+  }
+  cout << dist.front() << endl;
+}

@@ -1,0 +1,18 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  while(true) {
+    int e; cin >> e;
+    if(e == 0) break;
+    int res = (int)1e9;
+    for(int z = 0; z*z*z <= e; z++) {
+      for(int y = 0; y*y + z*z*z <= e; y++) {
+        int x = e - z*z*z - y*y;
+        res = min(res, x+y+z);
+      }
+    }
+    cout << res << endl;
+  }
+}

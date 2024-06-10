@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+int main(){
+
+  int cards[4][13]={0},a,b;
+  char m;
+
+  cin >>b;
+
+  for(int i=0;(b-i)>0;i++){
+
+    cin >>m>>a;
+
+    if(m == 'S'){
+      cards[0][a-1]=1;
+    }else if(m == 'H'){
+      cards[1][a-1]=1;
+    }else if(m == 'C'){
+      cards[2][a-1]=1;
+    }else if(m == 'D'){
+      cards[3][a-1]=1;
+    }
+  }
+  
+  for(int j=0;(13-j)>0;j++){
+    if(cards[0][j] == 0){
+      cout <<"S"<<" "<<j+1<<"\n";
+    }
+  }
+  for(int k=0;(13-k)>0;k++){
+    if(cards[1][k] == 0){
+      cout <<"H"<<" "<<k+1<<"\n";
+    }
+  }
+  for(int l=0;(13-l)>0;l++){
+    if(cards[2][l] == 0){
+      cout <<"C"<<" "<<l+1<<"\n";
+    }
+  }
+  for(int n=0;(13-n)>0;n++){
+    if(cards[3][n] == 0){
+      cout <<"D"<<" "<<n+1<<"\n";
+    }
+  }
+  
+  return 0;
+}

@@ -1,0 +1,26 @@
+x=[]
+for i in 0..9
+  print "山の高さ"+(i+1).to_s+"(整数)>"
+  x[i]=gets.chomp.to_i
+end
+max=0
+for i in 0..9
+  if x[i] > max && x[i]>=0 && x[i]<=10000
+    max = x[i]
+  end
+end
+puts "最も高い山の高さ="+ max.to_s
+max2=0
+for i in 0..9
+  if x[i]<max && x[i]>max2 && x[i]>=0 && x[i]<=10000
+    max2 = x[i]
+  end
+end
+puts "2番目に高い山の高さ=" + max2.to_s
+max3=0
+for i in 0..9
+  if x[i]<max2 && x[i]>max3 && x[i]>=0 && x[i]<=10000
+    max3=x[i]
+  end
+end
+puts "3番目に高い山の高さ=" + max3.to_s

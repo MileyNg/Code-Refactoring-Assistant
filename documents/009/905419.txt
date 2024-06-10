@@ -1,0 +1,141 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+
+const bool D = false;
+
+auto createGenerator(int A, int B) {
+    static const C = ~(1<<31), M = (1<<16)-1;
+    int a = A, b = B;
+    return delegate() {
+        a = 36969 * (a & M) + (a >> 16);
+        b = 18000 * (b & M) + (b >> 16);
+        return (C & ((a << 16) + b)) % 1000000;
+    };
+}
+
+struct P {
+    int x, y, z;
+}
+
+struct Q {
+    int y, z;
+    int opCmp(const ref Q q) const {
+        return y - q.y;
+    }
+}
+ 
+void main() {
+    int m, n, A, B; 
+    while (readf("%d %d %d %d\n", &m, &n, &A, &B), m || n || A || B) {
+        auto gen = createGenerator(A, B);
+        int N = n + m;
+        P[] ps = new P[N];
+        foreach (i; 0 .. m) {
+            readf("%d %d %d\n", &ps[i].x, &ps[i].y, &ps[i].z);
+        }
+        foreach (i; 0 .. n) {
+            ps[m + i].x = gen();
+            ps[m + i].y = gen();
+            ps[m + i].z = gen();
+        }
+        ps.sort!((a, b) => a.x < b.x);
+
+        auto X = new RedBlackTree!Q [N];
+        foreach (ref x; X) x = new RedBlackTree!Q;
+
+        void I(int x, const ref P p) {
+            auto r = X[x].upperBound(Q(p.y - 1, p.z));
+            //writeln("x: ", x, " y: ", p.y, " r: ", r);
+            if (r.empty) {
+                if (X[x].empty || X[x].back.z > p.z) {
+                    //writeln([p.y, p.z]);
+                    auto q = Q(p.y, p.z);
+                    if (q in X[x] && X[x].equalRange(q).front.z > p.z) X[x].removeKey(q);
+                    X[x].insert(q);
+                }
+            } else {
+                auto q = Q(p.y, p.z);
+                auto r1 = X[x].lowerBound(q);
+                if (!r1.empty && r1.back.z <= p.z) return;
+                Q[] del;
+                foreach (e; r) {
+                    if (e.z >= p.z) del ~= e;
+                    else break;
+                }
+                foreach (e; del) {
+                    X[x].removeKey(e);
+                }
+                //writeln([p.y, p.z]);
+                //writeln("del: ", del);
+                if (q in X[x] && X[x].equalRange(q).front.z > p.z) X[x].removeKey(q);
+                X[x].insert(q);
+            }
+        }
+
+        int f(const ref P p) {
+
+            bool C(int x) {
+                if (X[x].empty) return false;
+                auto r = X[x].lowerBound(Q(p.y, p.z));
+                //writeln("lowerBound. x: ", x, " X: ", X[x][], " p: ", p, " r: ", r);
+                if (r.empty) return false;
+                return r.back.z < p.z;
+            }
+
+            if (!C(0)) {
+                return 0;
+            }
+
+            int lb = 0, ub = N;
+            while (lb + 1 < ub) {
+                int mid = (lb + ub) / 2;
+                if (C(mid)) {
+                    lb = mid;
+                } else {
+                    ub = mid;
+                }
+            }
+            return ub;
+        }
+
+        int[] v = new int[N];
+        for (int i = 0; i < N; ) {
+            int j;
+            for (j = 0; i + j < N && ps[i].x == ps[i + j].x; j++) {
+                v[i + j] = f(ps[i + j]);
+            }
+            for (j = 0; i + j < N && ps[i].x == ps[i + j].x; j++) {
+                I(v[i + j], ps[i + j]);
+            }
+            i += j;
+        }
+
+        static if (D) {
+            foreach (x; X) {
+                if (x.empty) break;
+                write("TREE: ");
+                foreach (e; x) e.write;
+                writeln;
+            }
+        }
+
+        int ans = 0;
+        foreach (i; 0 .. N) {
+            if (X[i].empty) break;
+            ans++;
+        }
+        writeln(ans);
+    }
+}

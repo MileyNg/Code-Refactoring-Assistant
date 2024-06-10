@@ -1,0 +1,21 @@
+#include<stdio.h>
+#include<string.h>
+
+int main(){
+  char target[11],word[1001];
+  int ans=0;
+  scanf("%s",target);
+  while(1){
+    scanf("%s",word);
+    if(strchr(word,'.')){
+      word[strchr(word,'.')-word]='\0';
+    }
+    if(strcmp(word,"END_OF_TEXT")==0){
+      break;
+    }else if(strcmp(target,word)==0){
+      ans++;
+    }
+  }
+  printf("%d\n",ans);
+  return 0;
+}

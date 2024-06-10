@@ -1,0 +1,26 @@
+import std.stdio;
+import std.string;
+import std.conv;
+import std.math;
+
+int main()
+{
+	double x=0.0,y=0.0,angle=90;
+
+	while(true)
+	{
+		string[] s = readln.chomp.split(",");
+		if(s[0] == "0" && s[1] == "0") break;
+
+		int value = s[0].to!int;
+		int value_2 = s[1].to!int;
+
+		x += cos(angle*PI/180)*value;
+		y += sin(angle*PI/180)*value;
+		angle -= value_2;
+	}
+	writeln(cast(int)x);
+	writeln(cast(int)y);
+
+	return 0;
+}

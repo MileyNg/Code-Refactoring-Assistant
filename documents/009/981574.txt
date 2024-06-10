@@ -1,0 +1,36 @@
+#include <stdio.h>
+#define MAX(a,b) ((a) > (b) ? (a) : (b));
+
+int countTree(int a1,int b1,int c1,int d1,int e1[][]);
+
+int main(){
+	int N;
+	int i,j;
+	while(1){
+		int maxNumber=0;
+		scanf("%d",&N); if(N==0) break;
+		scanf("%d%d",&W,&H);
+		int map[H][W]={};
+		int x,y;
+		for(i=0;i<N;i++){
+			scanf("%d%d",&x,&y);
+			map[y][x]=1;
+		}
+		scanf("%d%d",&S,&T);
+		for(i=0;i<H-T+1;i++){
+			for(j=0;j<W-S+1;j++) maxNumber=MAX(maxNumber,countTree(i,j,T,S,map));
+		}
+		printf("%d\n",maxNumber);
+	}
+}
+
+int countTree(int a1,int b1,int c1,int d1,int e1[][]){
+	int k,l;
+	int countSum=0;
+	for(k=a1;k<a1+c1;k++){
+		for(l=b1;l<b1+d1;l++){
+			if(e1[k][l]==1) countSum++;
+		}
+	}
+	return countSum;
+}

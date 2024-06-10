@@ -1,0 +1,26 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int n, a, b;
+bool nr[1000003];
+
+int main(){
+    cin >> n >> a >> b;
+    while( n+a+b > 0 ){
+        fill( nr+1, nr+n+1, 1 );
+        for(int i = 0; i <= n; i++){
+            if( !nr[i] ){
+                if( i + a <= n ) nr[i+a] = 0;
+                if( i + b <= n ) nr[i+b] = 0;
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < n+1; i++){
+            ans += nr[i];
+        }
+        cout << ans << endl;
+        cin >> n >> a >> b;
+    }
+    return 0;
+}

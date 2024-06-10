@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void Sort(int*,int,int);
+int Cost_Sort(int*,int,int);
+
+int sum=0;
+
+main(){
+  int i,n,*A;
+
+  scanf("%d",&n);
+
+  A=(int *)malloc(sizeof(int)*n);
+
+  for(i=0;i<n;i++){
+    scanf("%d",&A[i]);
+  }
+
+  Sort(A,0,n);
+
+  printf("%d\n",sum);
+
+  return 0;
+}
+
+void Sort(int *A,int i,int n){
+  int p;
+  
+  if(i<n){
+    p=Cost_Sort(A,i,n);
+    Sort(A,p,n);
+  }
+}
+
+int Cost_Sort(int *A,int i,int n){
+  int k,j,tmp,min=A[i];
+
+  for(j=i+1;j<n;j++){
+    if(min>A[j]){
+      min=A[j];
+      k=j;
+    }
+  }
+
+  if(A[i]>min){
+    sum+=A[i]+A[k];
+    tmp=A[i];
+    A[i]=A[k];
+    A[k]=tmp;
+  }
+  return i+1;
+}

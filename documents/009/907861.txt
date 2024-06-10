@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+using namespace std;
+
+int main()
+{
+  int sx,sy;
+  for(;cin>>sx>>sy,sx||sy;)
+    {
+      //      bool map[10][10];
+      //      memset(map,false,sizeof(map));
+      int dx[]={-2,-2,-1,0,1,2,2,2,1,0,-1,-2};
+      int dy[]={0,-1,-2,-2,-2,-1,0,1,2,2,2,1};
+      int n;
+      cin>>n;
+      int px,py;
+      vector<pair<int,int> >pos;
+      vector<pair<int,int> >pos2;
+      pos.push_back(make_pair(sx,sy));
+      bool  flag = true;
+      for(int i=0;i<n;i++)
+	{
+	  cin>>px>>py;
+
+	  for(int j=0;j<pos.size()&&flag;j++)
+	    {
+	      int x=pos[j].first;
+	      int y=pos[j].second;
+	      for(int k=0;k<12;k++)
+		{
+		  if(x+dx[k]>=0 &&x+dx[k]<10 &&
+		     y+dy[k]>=0 &&y+dy[k]<10 &&
+		     x+dx[k]>=px-1 &&x+dx[k]<=px+1 &&
+		     y+dy[k]>=py-1 &&y+dy[k]<=py+1
+		     )
+		    pos2.push_back(make_pair(x+dx[k],y+dy[k]));
+		}
+	    }
+	  if(pos2.size()<=0)
+	    flag=false;
+	  else
+	    {
+	      pos.clear();
+	      for(int xx=0;xx<pos2.size();xx++)
+		pos.push_back(pos2[xx]);
+	      pos2.clear();
+	    }
+	}
+      if(flag)
+	cout<<"OK"<<endl;
+      else
+	cout<<"NA"<<endl;
+    }
+}

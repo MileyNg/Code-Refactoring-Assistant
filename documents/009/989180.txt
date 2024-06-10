@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+
+int N;
+vector<string> str;
+
+void merge(string &s, string t){
+    for(int i=max(0, (int)(s.size() - t.size())); (int)s.size(); ++i){
+        if(s.substr(i) == t.substr(0, (int)s.size() - i)){
+            s += t.substr((int)s.size() - i);
+            return;
+        }
+    }
+    s += t;
+}
+
+string solve(){
+    string res(100, 'z');
+    do{
+        string SSS = str[0];
+        rep(i, N){
+            if(res.size() < SSS.size())break;
+            if(SSS.find(str[i]) != string::npos)continue;
+            else merge(SSS, str[i]);
+        }
+        if(SSS.size() < res.size() || (SSS.size() == res.size() && SSS < res))res = SSS;
+    }while(next_permutation(all(str)));
+    return res;
+}
+
+int main(){
+    while(cin >> N, N){
+        str.assign(N, "");
+        rep(i, N)cin >> str[i];
+        cout << solve() << '\n';
+    }
+    return 0;
+}

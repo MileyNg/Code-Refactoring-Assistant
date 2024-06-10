@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int n;	//参加者数
+	cin >> n;
+
+	int* a; //参加者番号
+	int* v; //匹数
+	a = new int[n];
+	v = new int[n];
+	for (int i = 0; i < n; i++){
+		cin >> a[i] >> v[i];
+	}
+
+	int winner = a[0];
+	int max = v[0];
+
+	for (int i = 1; i < n; i++){
+		if (v[i]>max){
+			winner = a[i];
+			max = v[i];
+		}
+		else if (v[i] == max && a[i] < winner){
+			winner = a[i];
+		}
+	}
+
+	cout << winner << " " << max << endl;
+	return 0;
+}

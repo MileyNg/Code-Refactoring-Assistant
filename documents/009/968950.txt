@@ -1,0 +1,19 @@
+while (line = gets)
+  lv = line.chop.split(",").map{|s| s.to_i}
+
+  ls = lv[0..9]
+  vs = lv[10..11]
+
+  total = ls.inject{|s, k| s + k}
+  d0 = total.to_f * vs[0] / (vs[0] + vs[1])
+  #p dist0
+
+  sum = 0
+  for i in (0..9)
+    sum += ls[i]
+    if d0 <= sum
+      puts i + 1
+      break
+    end
+  end
+end

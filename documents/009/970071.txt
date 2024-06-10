@@ -1,0 +1,140 @@
+#include <iostream>
+#include <algorithm>
+#define MAX 100
+
+using namespace std;
+
+int main()
+{
+	int n;
+	while (cin >> n, n){
+
+		//初期化
+		int edge[MAX][2], oppedge[MAX][2], ledge[MAX][2], redge[MAX][2];
+		int endedge[MAX][2], endoppedge[MAX][2], endledge[MAX][2], endredge[MAX][2];
+		for (int i = 0; i < MAX; i++){
+			for (int j = 0; j < 2; j++){
+				edge[i][j] = oppedge[i][j] = ledge[i][j] = redge[i][j] = 0;
+				endedge[i][j] = endoppedge[i][j] = endledge[i][j] = endredge[i][j] = 0;
+			}
+		}
+
+		//基準図形の頂点の座標を入力
+		int m;
+		cin >> m;
+		int x[MAX], y[MAX];
+		for (int i = 0; i < m; i++){
+			cin >> x[i] >> y[i];
+		}
+
+		//基準図形の取得
+		for (int i = 0; i < m - 1; i++){
+			if (x[i] != x[i + 1]){
+				edge[i][0] = x[i + 1] - x[i];
+			}
+			else{
+				edge[i][1] = y[i + 1] - y[i];
+			}
+		}
+
+		//基準図形を逆向きに辿ったもの
+		for (int i = 0; i < m - 1; i++){
+			endedge[i][0] = edge[m - 2 - i][0];
+			endedge[i][1] = edge[m - 2 - i][1];
+		}
+
+		//基準図形を左90度回転したもの
+		for (int i = 0; i < m - 1; i++){
+			ledge[i][0] = edge[i][1] * (-1);
+			ledge[i][1] = edge[i][0];
+			endledge[i][0] = endedge[i][1] * (-1);
+			endledge[i][1] = endedge[i][0];
+
+		}
+
+		//基準図形を右90度回転したもの
+		for (int i = 0; i < m - 1; i++){
+			redge[i][0] = edge[i][1];
+			redge[i][1] = edge[i][0] * (-1);
+			endredge[i][0] = endedge[i][1];
+			endredge[i][1] = endedge[i][0] * (-1);
+
+		}
+
+		//基準図形を180度回転したもの
+		for (int i = 0; i < m - 1; i++){
+			oppedge[i][0] = edge[i][0] * (-1);
+			oppedge[i][1] = edge[i][1] * (-1);
+			endoppedge[i][0] = endedge[i][0] * (-1);
+			endoppedge[i][1] = endedge[i][1] * (-1);
+		}
+
+
+		//対象図形
+		for (int i = 0; i < n; i++){
+			cin >> m;
+
+			//初期化
+			bool edgeflag, redgeflag, ledgeflag, oppedgeflag;
+			bool endedgeflag, endredgeflag, endledgeflag, endoppedgeflag;
+			edgeflag = redgeflag = ledgeflag = oppedgeflag = true;
+			endedgeflag = endredgeflag = endledgeflag = endoppedgeflag = true;
+			int under[MAX][2];
+			for (int j = 0; j < MAX; j++){
+				for (int k = 0; k < 2; k++){
+					under[j][k] = 0;
+				}
+			}
+
+
+			// 対象図形の頂点の座標を入力
+			for (int j = 0; j < m; j++){
+				cin >> x[j] >> y[j];
+			}
+
+			//対象図形の取得
+			for (int j = 0; j < m - 1; j++){
+				if (x[j] != x[j + 1]){
+					under[j][0] = x[j + 1] - x[j];
+				}
+				else{
+					under[j][1] = y[j + 1] - y[j];
+				}
+			}
+
+
+			//対象図形の判定
+			for (int j = 0; j < m - 1; j++){
+
+				if (edge[j][0] != under[j][0] || edge[j][1] != under[j][1]){
+					edgeflag = false;
+				}
+				if (redge[j][0] != under[j][0] || redge[j][1] != under[j][1]){
+					redgeflag = false;
+				}
+				if (ledge[j][0] != under[j][0] || ledge[j][1] != under[j][1]){
+					ledgeflag = false;
+				}
+				if (oppedge[j][0] != under[j][0] || oppedge[j][1] != under[j][1]){
+					oppedgeflag = false;
+				}
+				if (endedge[j][0] != under[j][0] || endedge[j][1] != under[j][1]){
+					endedgeflag = false;
+				}
+				if (endredge[j][0] != under[j][0] || endredge[j][1] != under[j][1]){
+					endredgeflag = false;
+				}
+				if (endledge[j][0] != under[j][0] || endledge[j][1] != under[j][1]){
+					endledgeflag = false;
+				}
+				if (endoppedge[j][0] != under[j][0] || endoppedge[j][1] != under[j][1]){
+					endoppedgeflag = false;
+				}
+			}
+			if (edgeflag || redgeflag || ledgeflag || oppedgeflag || endedgeflag || endredgeflag || endledgeflag || endoppedgeflag)
+				cout << i + 1 << endl;
+		}
+		cout << "+++++" << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,24 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    char field[3][3];
+    while(cin >> field[0], field[0][0] != '0'){
+        char win = ' ';
+        for(int i=1; i < 3; i++){
+            cin >> field[i];
+        }
+
+        if(field[0][0] == field[1][1] && field[1][1] == field[2][2] && field[0][0] != '+')win = field[0][0];
+
+        if(field[2][0] == field[1][1] && field[1][1] == field[0][2] && field[2][0] != '+')win = field[2][0];
+
+        for(int i=0; i < 3; i++){
+            if(field[i][0] == field[i][1] && field[i][1] == field[i][2] && field[i][0] != '+')win = field[i][0];
+            if(field[0][i] == field[1][i] && field[1][i] == field[2][i] && field[0][i] != '+')win = field[0][i];
+
+        }
+        if(win == ' ') cout << "NA" << endl;
+        else cout << win << endl;
+    }
+}

@@ -1,0 +1,17 @@
+#include <cstdio>
+#define min(a,b) ((a)<=(b)?(a):(b))
+int main() {
+    int Q;
+    scanf("%d",&Q);
+    for(int i=0;i<Q;i++) {
+        int c,a,n;
+        scanf("%d %d %d",&c,&a,&n);
+        int CAN,CCA,CCC;
+        CAN=min(c,min(a,n));
+        c-=CAN,a-=CAN;
+        CCA=min(c/2,a);
+        c-=CCA*2;
+        CCC=c/3;
+        printf("%d\n",CAN+CCA+CCC);
+    }
+}

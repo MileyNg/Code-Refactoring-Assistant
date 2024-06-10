@@ -1,0 +1,139 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+const int W=100,H=50,D=30;
+
+bool equal(double x,double y)
+{
+	return abs(x-y)<EPS;
+}
+
+double solve(vi xs,vi hs,vi qs,int qx,int qt)
+{
+	if(accumulate(all(qs),0)*qt>=W*H*D) return H;
+	
+	double t=0;
+	vd ys(xs.size()-1);
+	
+	for(;;){
+		int n=xs.size()-1;
+		//dump(t); dump(n); dump(xs); dump(ys); dump(qs);
+		vd es(n);
+		rep(i,n){
+			if(qs[i]==0){
+				es[i]=INF;
+				continue;
+			}
+			double s=(xs[i+1]-xs[i])*D;
+			double v=qs[i]/s;
+			es[i]=(min(hs[i],hs[i+1])-ys[i])/v;
+		}
+		
+		int i=min_element(all(es))-begin(es);
+		if(t+es[i]>qt){
+			int j=lower_bound(all(xs),qx)-begin(xs)-1;
+			return ys[j]+(qt-t)*qs[j]/((xs[j+1]-xs[j])*D);
+		}
+		
+		//dump(es[i]);
+		t+=es[i];
+		rep(j,n) ys[j]+=es[i]*qs[j]/((xs[j+1]-xs[j])*D);
+		
+		if(hs[i]<hs[i+1]){
+			if(equal(ys[i-1],ys[i])){
+				//printf("merge %d %d\n",i-1,i);
+				qs[i-1]+=qs[i];
+				xs.erase(begin(xs)+i);
+				ys.erase(begin(ys)+i);
+				hs.erase(begin(hs)+i);
+				qs.erase(begin(qs)+i);
+			}
+			else{
+				//printf("leak %d -> %d\n",i,i-1);
+				qs[i-1]+=qs[i];
+				qs[i]=0;
+			}
+		}
+		else{
+			if(equal(ys[i],ys[i+1])){
+				//printf("merge %d %d\n",i,i+1);
+				qs[i]+=qs[i+1];
+				xs.erase(begin(xs)+i+1);
+				ys.erase(begin(ys)+i+1);
+				hs.erase(begin(hs)+i+1);
+				qs.erase(begin(qs)+i+1);
+			}
+			else{
+				//printf("leak %d -> %d\n",i,i+1);
+				qs[i+1]+=qs[i];
+				qs[i]=0;
+			}
+		}
+	}
+	
+	return -1;
+}
+
+void solve()
+{
+	int n; cin>>n; n++;
+	vi xs(n+1),hs(n+1);
+	rep(i,n-1) cin>>xs[i+1]>>hs[i+1];
+	xs[n]=W; hs[0]=hs[n]=H;
+	
+	int m; cin>>m;
+	vi qs(n);
+	rep(i,m){
+		int f,a; cin>>f>>a;
+		int j=lower_bound(all(xs),f)-begin(xs)-1;
+		qs[j]+=a;
+	}
+	
+	int l; cin>>l;
+	vi ps(l),ts(l);
+	rep(i,l) cin>>ps[i]>>ts[i];
+	
+	rep(i,l) printf("%f\n",solve(xs,hs,qs,ps[i],ts[i]));
+}
+
+int main()
+{
+	int tc; cin>>tc;
+	rep(i,tc) solve();
+}

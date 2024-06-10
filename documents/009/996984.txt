@@ -1,0 +1,317 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+typedef double D;
+const D EPS = 1e-8;
+struct P {
+  D x, y;
+  P() { }
+  P(D x_, D y_) : x(x_), y(y_) { }
+};
+struct L {
+  P a, b;
+  L() { }
+  L(P a_, P b_) : a(a_), b(b_) { }
+};
+struct C {
+  P p; D r;
+  C() { }
+  C(P p_, D r_) : p(p_), r(r_) { }
+};
+P operator +(P a, P b) { return P(a.x + b.x, a.y + b.y); }
+P operator -(P a, P b) { return P(a.x - b.x, a.y - b.y); }
+P operator *(P a, D b) { return P(a.x * b, a.y * b); }
+P operator /(P a, D b) { return P(a.x / b, a.y / b); }
+P vec(P from, P to) { return to - from; }
+D inp(P a, P b) { return a.x*b.x + a.y*b.y; }
+D outp(P a, P b) { return a.x*b.y - a.y*b.x; }
+D norm(P p) { return inp(p, p); }
+D abs(P p) { return sqrt(norm(p)); }
+int sig(D a, D b) {
+  if(a < b - EPS) return -1;
+  if(a > b + EPS) return +1;
+  return 0;
+}
+// !!! とりあえずここまで写してください !!!
+D arg(P p) { return atan2(p.y, p.x); }
+P rot90(P p) { return P(-p.y, p.x); }
+P rot(P p, D radian) {
+  P q;
+  q.x = cos(radian)*p.x - sin(radian)*p.y;
+  q.y = sin(radian)*p.x + cos(radian)*p.y;
+  return q;
+}
+int ccw(P a, P b, P c) { // 重なっている点があるとうまく動かないと思われる
+  b = vec(a, b); c = vec(a, c);
+
+  // a - b - c が折れ曲がるとき
+  if(sig(outp(b, c), 0.0) > 0) return +1; // 反時計回り
+  if(sig(outp(b, c), 0.0) < 0) return -1; // 時計回り
+
+  // a - b - c が直線上に並ぶとき
+  if(sig(inp(b, c), 0.0) < 0) return +2; // c - a - b
+  if(norm(b) < norm(c))       return -2; // a - b - c
+  return 0;                              // a - c - b
+}
+P projection(L l, P p) { // 直線lに対する点pの写像
+  P a = vec(l.a, l.b);
+  P b = vec(l.a, p);
+  D t = inp(a, b) / norm(a);
+  return l.a + a * t;
+}
+P reflection(L l, P p) { // 直線lに対する点pの反射
+  return p + vec(p, projection(l, p)) * 2;
+}
+
+// 線分と点
+bool iSP(L s, P p) {
+  return ccw(s.a, s.b, p) == 0;
+}
+D dSP(L s, P p) {
+  P r = projection(s, p);
+  if(iSP(s, r)) return abs(p - r); // 写像がs上にある
+  return min(abs(p - s.a), abs(p - s.b)); // 写像がs上にない
+}
+
+// 直線と点
+bool iLP(L l, P p) {
+  return abs(ccw(l.a, l.b, p)) != 1;
+}
+D dLP(L l, P p) {
+  return abs(p - projection(l, p));
+}
+
+// 線分と線分
+bool iSS(L s, L t) { // 端を含む
+  return ccw(s.a, s.b, t.a) * ccw(s.a, s.b, t.b) <= 0 &&
+    ccw(t.a, t.b, s.a) * ccw(t.a, t.b, s.b) <= 0;
+}
+D dSS(L s, L t) {
+  if(iSS(s, t)) return 0;
+  return min(min(dSP(s, t.a), dSP(s, t.b)),
+      min(dSP(t, s.a), dSP(t, s.b)));
+}
+// P cSS(L s, L t) はiSS(s,t)を確認してからcLLを使う
+
+// 直線と直線
+bool iLL(L l, L m) {
+  return sig(outp(vec(l.a, l.b), vec(m.a, m.b)), 0.0) != 0 || // 平行でない
+    sig(outp(vec(l.a, l.b), vec(l.a, m.a)), 0.0) == 0;   // 同じ直線
+}
+D dLL(L l, L m) {
+  return iLL(l, m) ? 0.0 : dLP(l, m.a);
+}
+P cLL(L l, L m) {
+  D d = outp(vec(m.a, m.b), vec(l.a, l.b));
+  return l.a + vec(l.a, l.b) * outp(vec(m.a, m.b), vec(l.a, m.b)) / d;
+}
+
+// 直線と線分
+bool iLS(L l, L s) {
+  return sig(outp(vec(l.a, l.b), vec(l.a, s.a)), 0.0) *
+    sig(outp(vec(l.a, l.b), vec(l.a, s.b)), 0.0) <= 0;
+}
+D dLS(L l, L s) {
+  if(iSS(l, s)) return 0.0;
+  return min(dLP(l, s.a), dLP(l, s.b));
+}
+// P cLS(L s, L t) はiSS(s,t)を確認してからcLLを使う
+
+// 円と直線
+int iCL(C c, L l) {
+  D d = dLP(l, c.p);
+  int s = sig(d, c.r);
+  if(s < 0) return 2;
+  if(s == 0) return 1;
+  return 0;
+}
+vector<P> cCL(C c, L l) {
+  P a = projection(l, c.p);
+  D s = abs(c.p - a);
+  D t = sqrt(c.r*c.r-s*s);
+  P v = vec(l.a,l.b)/abs(l.a-l.b);
+  vector<P> res;
+  res.push_back(a+v*t);
+  res.push_back(a-v*t);
+  return res;
+}
+
+// 円と点
+vector<P> tCP(C c, P p) {
+  vector<P> res;
+  D d = abs(c.p - p);
+  if(sig(d,c.r) < 0) return res;
+  D rc = c.r*c.r/d;
+  D rs = sqrt(max(0.0, c.r*c.r - rc*rc));
+  P v = (p - c.p) / abs(p - c.p);
+  res.emplace_back(c.p + v*rc + rot90(v)*rs);
+  res.emplace_back(c.p + v*rc - rot90(v)*rs);
+  return res;
+}
+
+// 円と線分
+int iCS(C c, L s) {
+  if(sig(abs(c.p - s.a), c.r) <= 0 && sig(abs(c.p - s.b), c.r) <= 0)
+    return -2; // 線分の両端が円の内側にある
+  if(sig(abs(c.p - s.a), c.r) <= 0 || sig(abs(c.p - s.b), c.r) <= 0)
+    return -1; // 線分の端の一方が円の内側、他方が円の外側にある
+  if(sig(dLP(s, c.p), c.r) < 0) // dSPじゃなくてdLPで十分だと思う
+    return +2; // 線分と円周が2点で交わる
+  if(sig(dLP(s, c.p), c.r) == 0)
+    return +1; // 線分と円周が1点で交わる
+  return 0;
+}
+// vector<P> cCS(C c, L s) はiCSの状態によって定義が難しいが、
+// p <- cCL(c,s)からiSP(s,p)==trueのものだけを抜き出せば良い気がする
+
+// 円と円
+// int iCC(C a, C b) はaがbの内側にある場合などもあるので定義が難しい
+// 2点で接していることを確認すること
+vector<P> cCC(C a, C b) {
+  D d = abs(b.p - a.p);
+  D x = (d*d + a.r*a.r - b.r*b.r) / (2*d);
+  D y = sqrt(a.r*a.r - x*x);
+  P v = (b.p - a.p) / d;
+  vector<P> res;
+  res.emplace_back(a.p + v*x + rot90(v)*y);
+  res.emplace_back(a.p + v*x - rot90(v)*y);
+  return res;
+}
+// tCCinに同じ円を食わせたり、
+// tCCoutにどちらかが他方に囲まれている円を食わせたりすると破綻することは分かっているが、
+// そのあたりが厳密にverifyできていない (AOJ 2201でACすることは確認した)
+vector<L> tCCout(C a, C b) {
+  vector<L> res;
+  if(sig(abs(a.r - b.r), abs(a.p - b.p)) >= 0) return res;
+  if(sig(a.r, b.r) == 0) {
+    P v = (b.p - a.p) / abs(b.p - a.p);
+    v = rot90(v);
+    res.emplace_back(a.p + v*a.r, b.p + v*b.r);
+    res.emplace_back(a.p - v*a.r, b.p - v*b.r);
+    return res;
+  }
+  P p = (a.p*b.r - b.p*a.r) / (b.r - a.r);
+  vector<P> at = tCP(a, p);
+  vector<P> bt = tCP(b, p);
+  for(int i = 0; i < (int)min(at.size(), bt.size()); ++i) {
+    res.emplace_back(at[i], bt[i]);
+  }
+  return res;
+}
+vector<L> tCCin(C a, C b) {
+  vector<L> res;
+  if(sig(abs(a.r + b.r), abs(a.p - b.p)) >= 0) return res;
+  P p = (a.p*b.r + b.p*a.r) / (a.r + b.r);
+  vector<P> at = tCP(a, p);
+  vector<P> bt = tCP(b, p);
+  for(int i = 0; i < (int)min(at.size(), bt.size()); ++i) {
+    res.emplace_back(at[i], bt[i]);
+  }
+  return res;
+}
+vector<L> tCC(C a, C b) {
+  vector<L> res;
+  for(L l : tCCout(a, b)) res.push_back(l);
+  for(L l : tCCin(a, b)) res.push_back(l);
+  return res;
+}
+
+// 多角形
+typedef vector<P> G;
+P at(G g, int i) { return g[i % g.size()]; }
+// 半時計回りを仮定している (時計回りならabsを取る)
+D areaG(G g) {
+  D res = 0.0;
+  for(int i = 0; i < (int)g.size(); i++) {
+    res += outp(at(g, i), at(g, i + 1));
+  }
+  return res / 2.0;
+}
+// ON = 0, IN = 1, OUT = -1
+int containsGP(G g, P p) {
+  int side = -1;
+  for(int i = 0; i < (int)g.size(); i++) {
+    if(ccw(at(g, i), at(g, i + 1), p) == 0) return 0;
+    P a = vec(p, at(g, i));
+    P b = vec(p, at(g, i + 1));
+    if(a.y > b.y) swap(a, b);
+    if(sig(a.y, 0.0) <= 0 && sig(b.y, 0.0) > 0 && sig(outp(a, b), 0.0) > 0) side *= -1;
+  }
+  return side;
+}
+bool operator <(P a, P b) {
+  if(sig(a.x, b.x) != 0) return a.x < b.x;
+  return a.y < b.y;
+}
+// 凸包を構成する点を得る。半時計回り
+// 辺上の点も含めるときは ccw(..) == -1 とすること
+G convex_hull(vector<P> ps) {
+  int N = ps.size();
+  int k = 0; // 凸包を構成する点の数
+  sort(ps.begin(), ps.end());
+  G res(N * 2);
+  for(int i = 0; i < N; i++) {
+    // 時計回りの折れ曲がりがあったら、折れ点を削除
+    while(k >= 2 && ccw(res[k - 2], res[k - 1], ps[i]) <= 0) k--;
+    res[k++] = ps[i];
+  }
+  int t = k + 1;
+  // 右端は取らない (重複するから)
+  // 左端は取る (重複するけど、あとから取り除いたほうが楽)
+  for(int i = N - 2; i >= 0; i--) {
+    while(k >= t && ccw(res[k - 2], res[k - 1], ps[i]) <= 0) k--;
+    res[k++] = ps[i];
+  }
+  res.resize(k - 1);
+  return res;
+}
+// l.a -> l.b の厳密に右側の領域を切り落とす
+G convex_cut(G g, L l) {
+  G res;
+  for(int i = 0; i < (int)g.size(); ++i) {
+    P a = g[i%g.size()];
+    P b = g[(i+1)%g.size()];
+    if(ccw(l.a, l.b, a) != -1) res.push_back(a);
+    // 端の点を含まないiLS
+    if(ccw(l.a, l.b, a)*ccw(l.a, l.b, b) < 0) {
+      res.push_back(cLL(L(a, b), l));
+    }
+  }
+  return res;
+}
+// aとbの垂直二等分線をaが左側に来るように計算する
+L bisector(P a, P b) {
+  P p = (a + b) / 2;
+  return L(p, p + rot90(vec(a,b)));
+}
+// 外枠をgとして点集合vのk番目の点のボロノイ領域を返す
+G voronoi_cell(G g, vector<P> v, int k) {
+  for(int i = 0; i < (int)v.size(); ++i) {
+    if(i == k) continue;
+    g = convex_cut(g, bisector(v[k], v[i]));
+  }
+  return g;
+}
+int main() {
+  while(true) {
+    int N, M; cin >> N >> M;
+    if(N == 0 && M == 0) break;
+    G g;
+    for(int i = 0; i < N; ++i) {
+      int x, y; cin >> x >> y;
+      g.emplace_back(x, y);
+    }
+    vector<P> v;
+    for(int i = 0; i < M; ++i) {
+      int x, y; cin >> x >> y;
+      v.emplace_back(x, y);
+    }
+    cout.setf(ios::fixed);
+    cout.precision(5);
+    for(int i = 0; i < M; ++i) {
+      cout << areaG(voronoi_cell(g, v, i)) << endl;
+    }
+  }
+}

@@ -1,0 +1,186 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+const double PI=acos(-1);
+
+int Signum(double x){
+	return x<-EPS?-1:x>EPS?1:0;
+}
+
+struct Point{
+	double x,y;
+	Point(){}
+	Point(double x,double y):x(x),y(y){}
+	Point& operator+=(Point p){
+		x+=p.x,y+=p.y;
+		return *this;
+	}
+	Point& operator-=(Point p){
+		x-=p.x,y-=p.y;
+		return *this;
+	}
+	Point& operator*=(double c){
+		x*=c,y*=c;
+		return *this;
+	}
+	Point& operator/=(double c){
+		x/=c,y/=c;
+		return *this;
+	}
+};
+Point operator+(Point a,Point b){
+	return a+=b;
+}
+Point operator-(Point a,Point b){
+	return a-=b;
+}
+Point operator*(Point a,double c){
+	return a*=c;
+}
+Point operator*(double c,Point a){
+	return a*=c;
+}
+Point operator/(Point a,double c){
+	return a/=c;
+}
+bool operator==(Point a,Point b){
+	return abs(a.x-b.x)<EPS && abs(a.y-b.y)<EPS;
+}
+bool operator!=(Point a,Point b){
+	return !(a==b);
+}
+
+double Abs(Point p){
+	return sqrt(p.x*p.x+p.y*p.y);
+}
+double Abs2(Point p){
+	return p.x*p.x+p.y*p.y;
+}
+double Arg(Point p){
+	return atan2(p.y,p.x);
+}
+double Dot(Point a,Point b){
+	return a.x*b.x+a.y*b.y;
+}
+double Cross(Point a,Point b){
+	return a.x*b.y-a.y*b.x;
+}
+Point Rot(Point p,double t){
+	return Point(cos(t)*p.x-sin(t)*p.y,sin(t)*p.x+cos(t)*p.y);
+}
+
+struct Line{
+	Point pos,dir;
+	Line(){}
+	Line(Point p,Point d):pos(p),dir(d){}
+	Line(double px,double py,double dx,double dy):pos(px,py),dir(dx,dy){}
+};
+
+struct Segment{
+	Point pos,dir;
+	Segment(){}
+	Segment(Point p,Point d):pos(p),dir(d){}
+	Segment(double px,double py,double dx,double dy):pos(px,py),dir(dx,dy){}
+	explicit Segment(Line l):pos(l.pos),dir(l.dir){}
+	explicit operator Line()const{return Line(pos,dir);}
+};
+
+int CCW(Point a,Point b,Point c){
+	b-=a,c-=a;
+	if(int sign=Signum(Cross(b,c)))
+		return sign; // 1:ccw,-1:cw
+	if(Dot(b,c)<-EPS)
+		return -2;   // c-a-b
+	if(Abs2(b)<Abs2(c)-EPS)
+		return 2;    // a-b-c
+	return 0;        // a-c-b (inclusive)
+}
+
+// aとbは必ず交差していること
+// 同一直線上にある場合，a.posを返す
+Point InterPointLL(Line a,Line b){
+	if(abs(Cross(a.dir,b.dir))<EPS) return a.pos;
+	return a.pos+Cross(b.pos-a.pos,b.dir)/Cross(a.dir,b.dir)*a.dir;
+}
+// 同一直線上にある場合，s.posを返す
+Point InterPointLS(Line l,Segment s){
+	return InterPointLL(Line(s),l);
+}
+
+vector<Point> ConvexCut(const vector<Point>& ps,Line l){
+	int n=ps.size();
+	vector<Point> res;
+	rep(i,n){
+		int c1=CCW(l.pos,l.pos+l.dir,ps[i]);
+		int c2=CCW(l.pos,l.pos+l.dir,ps[(i+1)%n]);
+		if(c1!=-1)
+			res.push_back(ps[i]);
+		if(c1*c2==-1)
+			res.push_back(InterPointLS(l,Segment(ps[i],ps[(i+1)%n]-ps[i])));
+	}
+	return res;
+}
+
+double Area(const vector<Point>& ps){
+	double res=0;
+	repi(i,2,ps.size())
+		res+=Cross(ps[i-1]-ps[0],ps[i]-ps[0])/2;
+	return res;
+}
+
+int main()
+{
+	for(int n,m;cin>>n>>m && n|m;){
+		vector<Point> ps(n);
+		for(auto& p:ps) cin>>p.x>>p.y;
+		vector<Point> cs(m);
+		for(auto& p:cs) cin>>p.x>>p.y;
+		
+		vd res(m);
+		rep(i,m){
+			vector<Point> territory=ps;
+			rep(j,m) if(j!=i){
+				Line border((cs[i]+cs[j])/2,Rot(cs[j]-cs[i],PI/2));
+				territory=ConvexCut(territory,border);
+			}
+			res[i]=Area(territory);
+		}
+		rep(i,m) printf("%.10f\n",res[i]);
+	}
+}

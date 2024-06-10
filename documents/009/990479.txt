@@ -1,0 +1,26 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+  int n;
+  vector<int> v;
+  while (1) {
+    cin >> n;
+    if (n == -1) break;
+    v.clear();
+    while (n) {
+      v.push_back(n%4);
+      n /= 4;
+    }
+    if (!v.size()) {
+      cout << "0" << endl;
+    } else {
+      for (vector<int>::reverse_iterator it=v.rbegin(); it!=v.rend(); ++it) {
+        cout << *it;
+      }
+      cout << endl;
+    }
+  }
+  return 0;
+}

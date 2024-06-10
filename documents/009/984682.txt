@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <vector>
+#include <algorithm>
+#include <map>
+using std::vector;
+using std::sort;
+
+int main(){
+	int n;
+	scanf("%d",&n);
+	while( n > 0 ){
+		int x=0, y=0;
+		for(int i=0;i<n;++i){
+			int tx, ty;
+			scanf("%d%d",&tx,&ty);
+			if( tx == ty )
+				x+=tx, y+=tx;
+			else
+				tx>ty?x+=tx+ty:y+=tx+ty;
+		}
+		printf("%d %d\n", x, y);
+		scanf("%d",&n);
+	}
+	return 0;
+}

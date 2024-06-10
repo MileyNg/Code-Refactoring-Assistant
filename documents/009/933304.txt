@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+
+using namespace std;
+
+
+
+int main() {
+  int n;
+  cin >> n;
+
+  int a, b;
+  cin >> a >> b;
+
+  int maxProfit = b - a;
+  int minPrice  = min(a, b);
+
+  for (int i = 2; i < n; i++) {
+    int input;
+    cin >> input;
+
+    maxProfit = max(maxProfit, input - minPrice);
+    minPrice  = min(minPrice, input);
+  }
+
+  cout << maxProfit << endl;
+}

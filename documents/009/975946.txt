@@ -1,0 +1,23 @@
+array = []
+loop do
+  data = gets.chomp.split.map {|s| s.to_i}
+  break if data[0] == 0 && data[1]
+  array << data
+end
+
+array.each do |data|
+  n = data[0]
+  x = data[1]
+
+  cnt = 0
+  1.upto(n - 1) do |i|
+    (i + 1).upto(n - 1) do |j|
+      (j + 1).upto(n) do |k|
+        if x == i + j + k then
+          cnt += 1
+        end
+      end
+    end
+  end
+  puts cnt
+end

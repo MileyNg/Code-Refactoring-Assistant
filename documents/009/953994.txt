@@ -1,0 +1,83 @@
+////   template  ///////////////////////////////////////////////////////
+#include <stdlib.h>
+#include <sys/time.h>
+#include <stdio.h>
+#include <sys/resource.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+class timer{
+	enum KIND{ REAL, CPU }; // real_time or cpu_time
+	double t0; // start
+	double t1; // end
+	KIND kind_of_time; // default is real_time
+	double get_realtime(){struct timeval tv; gettimeofday(&tv, NULL);
+		return tv.tv_sec + (double)tv.tv_usec*1e-6;}
+	double get_cputime(){struct rusage RU; getrusage(RUSAGE_SELF, &RU); 
+		return RU.ru_utime.tv_sec + (double)RU.ru_utime.tv_usec*1e-6;}
+public:
+	timer(){kind_of_time = REAL;}
+	void set(KIND k){kind_of_time = k;}
+	void start(){t0 = get_realtime();}
+	void stop(){t1 = get_realtime();}
+	void print(){printf("TotalTime : %.3fsec\n", t1-t0);}
+};
+////////////////////////////////////////////////////////////////////////
+
+void createPrimeTable(vector<int> *v, int size);
+int eulerPhi(int n);
+
+int main()
+{
+	int n;
+	cin >> n;
+	timer T;
+	T.start();
+	cout << eulerPhi(n) << endl;
+	T.stop();
+	T.print();
+
+	return 0;
+}
+
+
+ /*
+   与えられた自然数ｎを素因数分解した時, それぞれ異なる素因数 a, b, c,...,z が得られたとすると, 
+   φ(n) = n*(1-1/a)*(1-1/b)*...*(1-1/z) となる.
+ */
+ int eulerPhi(int n)
+ {
+	 if( n == 1 ) return 1;
+
+	 vector<int> v;
+	 int sn = (int)sqrt(n)+1;
+	 createPrimeTable(&v, sn+1);
+
+	 double ret = n;
+	 vector<int>::iterator i;
+	 for(i=v.begin(); i!=v.end() && n!=1; i++){
+		 if(!(n%(*i))){
+			 ret *=  ((double)(*i)-1)/(double)(*i) ;
+			 if(n==*i){n /= *i; break;}
+			 while(!(n%(*i))) n /= *i;
+		 }
+	 }
+
+	 if(n!=1) ret = ret*((double)(n)-1)/(double)(n);
+
+	 return ret;
+ }
+
+ void createPrimeTable(vector<int> *v, int size)
+ {
+	 int table[size]; 
+	 for(int i=0; i<size; i++) table[i] = 1;
+	 table[0] = table[1] = 0;
+	 for(int i=2; i<size; i++)
+		 if( table[i] ) for(int j=i+i;j<size; j+=i ){ table[j] = 0; }
+
+	 for(int i=0; i<size; i++)
+		 if( table[i] ) v->push_back(i);
+ }    

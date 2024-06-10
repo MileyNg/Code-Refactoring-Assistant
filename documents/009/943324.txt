@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+void rippleShuffle(int (&cards)[50], int n, int c){
+    int a_end = n / 2,
+        a_pos = 0, b_pos = a_end, pos = 0;
+    int _cards[50];
+
+    while(pos < n){
+        for(int i=0;i<c&&b_pos<n;i++){
+            _cards[pos++] = cards[b_pos++];
+        }
+
+        for(int i=0;i<c&&a_pos<a_end;i++){
+            _cards[pos++] = cards[a_pos++];
+        }
+    }
+
+    std::copy(_cards, _cards+50, cards);
+}
+
+int main(){
+    int N, R;
+    while(std::cin >> N >> R, !std::cin.eof()){
+        int cards[50], cs[50];
+        REP(i, N){
+            cards[i] = i;
+        }
+
+        REP(i, R){
+            std::cin >> cs[i];
+        }
+
+        REP(i, R){
+            rippleShuffle(cards, N, cs[i]);
+        }
+
+        printf("%d\n", cards[N-1]);
+        // REP(i, N){
+        //     printf("%d\n", cards[i]);
+        // }
+    }
+}

@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+struct list{
+  int number;
+  list *next;
+};
+
+void Insertlist(list ** ptr, int newnumber){
+  if( *ptr == NULL || (*ptr)->number < newnumber){
+    list *newcell;
+    newcell = (list *)malloc(sizeof(list));
+    newcell->number = newnumber;
+    newcell->next = *ptr;
+    *ptr = newcell;
+  }else{
+    Insertlist(&(*ptr)->next, newnumber);
+  }
+}
+
+int main(){
+
+  int n, r;
+
+  while( cin >> n >> r ){
+
+    if( n == 0 && r == 0) break;
+
+    list *root = NULL;
+    for(int i = n ; i > 0 ; i--){
+      Insertlist(&root,i);
+    }
+ 
+    while( r ){
+      int p,c;
+      cin >> p >> c;
+
+      list *ptr1 = root, *ptr2 = root,*ptr3,*ptr4;
+      
+      for(int i = 0 ; i < p-2; i++)
+	ptr1 = ptr1->next;
+      if(p > 1)
+	ptr2 = ptr1->next;
+      ptr3 = ptr2;
+      for(int i = 0; i < c-1 ; i++)
+	ptr3 = ptr3->next;
+      ptr4 = ptr3->next;
+      
+      if(p>1){
+	ptr1->next = ptr4;
+	ptr3->next = root;
+	root = ptr2;
+      } 
+      r--;
+    }
+    cout << root->number << endl;
+  }
+  return 0;
+}

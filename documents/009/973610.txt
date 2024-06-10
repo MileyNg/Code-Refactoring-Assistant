@@ -1,0 +1,27 @@
+# coding: utf-8
+
+import sys
+import math
+
+
+if __name__ == '__main__':
+	input_list = sys.stdin.readlines()
+
+	for num in input_list:
+		target_number = int(num.replace('\n', ''))
+		serial_number_list = [r for r in range(2, target_number + 1)]
+		multiple_list = []
+
+		while math.sqrt(target_number) >= serial_number_list[0]:
+			serial_number = serial_number_list[0]
+			i = 1
+			multiple_list.append(serial_number)
+
+			while target_number >= serial_number * i:
+				
+				if serial_number * i in serial_number_list:
+					serial_number_list.pop(serial_number_list.index(serial_number * i))
+
+				i += 1
+
+		print(len(multiple_list + serial_number_list))

@@ -1,0 +1,79 @@
+#include<stdio.h>
+#define N 100000001
+int c[N],a[N],b[N];
+char t[N],t1[N];
+
+int Partition(int* A,int p,int r,char* t){
+  int x=A[r],i=p-1,j,tmp;
+  char tmpc;
+  for(j=p;j<r;j++){
+    if(A[j]<=x){
+      i++;
+      tmp=A[i];
+      A[i]=A[j];
+      A[j]=tmp;
+
+      tmpc=t[i];
+      t[i]=t[j];
+      t[j]=tmpc;
+    }
+  }
+    tmp=A[i+1];
+    A[i+1]=A[r];
+    A[r]=tmp;
+
+    tmpc=t[i+1];
+    t[i+1]=t[r];
+    t[r]=tmpc;
+
+    return i+1;
+}
+void Quicksort(int* A,int p,int r,char* t){  
+  int q;
+if(p<r){
+  q=Partition(A,p,r,t);
+  Quicksort(A,p,q-1,t);
+  Quicksort(A,q+1,r,t);
+ }
+}
+
+
+int main(){
+  int i,k=0,j,m,n,flag=0;
+
+  scanf("%d",&n);
+ 
+  for(i=0;i<n;i++){
+    scanf(" %c %d",&t[i],&a[i]);
+    if(k<a[i])k=a[i];
+    c[a[i]]++;
+  }
+
+
+ 
+  
+for(i=1;i<=k;i++){
+    c[i]+=c[i-1];
+  }
+
+  for(i=n-1;i>=0;i--){
+    b[c[a[i]]-1]=a[i];
+    t1[c[a[i]]-1]=t[i];
+    c[a[i]]--;
+  }
+ Quicksort(a,0,n-1,t);
+  for(i=0;i<n;i++){
+    if(!(t1[i]==t[i]&&a[i]==b[i]))flag=-1;
+}
+
+  if(flag==0)printf("Stable\n");
+  else printf("Not stable\n");
+
+  for(i=0;i<n;i++){
+    printf("%c %d\n",t[i],a[i]);
+  }
+  
+  
+  
+  return 0;
+}

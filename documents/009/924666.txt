@@ -1,0 +1,158 @@
+#include <cstdio>
+#include <cstring>
+int m[110][110];
+long long ha[50010];
+struct
+{
+    int x,y,face;
+}ss[50010];
+int main()
+{
+    int h,w,j,i,sx,sy,start,x,y,face,tt,hash;
+    long long l,ll,ans;
+    char c[1000];
+    while (scanf("%d%d%lld",&h,&w,&l)&&h&&w&&l)
+    {
+        memset(ha,-1,sizeof ha);
+        memset(ss,0,sizeof ss);
+        for (i=1;i<=h;i++)
+        {
+            scanf("%s",c);
+            for (j=1;j<=w;j++)
+            {
+                if (c[j-1]=='#')
+                m[i][j]=0;
+                else if (c[j-1]=='.')
+                m[i][j]=1;
+                else
+                {
+                    m[i][j]=1;
+                    sx=i,sy=j;
+                    if (c[j-1]=='W')
+                        start=1;
+                    if (c[j-1]=='N')
+                        start=2;
+                    if (c[j-1]=='E')
+                        start=3;
+                    if (c[j-1]=='S')
+                        start=4;
+                }
+            }
+        }
+        ll=l;
+       // printf("ll = %lld\n",ll);
+        x=sx;y=sy;
+        face=start;
+        tt=0;
+        while (ll)
+        {   hash=(face-1)*10000+(x-1)*100+y-1;
+         //   printf("%d %d %d %d   %lld\n",x,y,face,hash,ha[hash]);
+            if (ha[hash]==-1)
+            {
+                ha[hash]=l-ll;
+                if(ss[l-ll].face == 0){ss[l-ll].x=x,ss[l-ll].y=y,ss[l-ll].face=face;
+             //   printf("%d : %d %d %d\n",l-ll,ss[l-ll].x,ss[l-ll].y,ss[l-ll].face);
+                }
+            }
+            else
+            {
+                tt=1;
+                ss[ha[hash]].face = face;
+              //  printf("l = %lld\n,l - ll = %lld\n ll = %lld\n",l,l-ll,ll);
+               // printf("ha[hash] = %d, hash = %d, l-ll = %lld\n",ha[hash],hash,l-ll-ha[hash]);
+
+           //     printf("l-ll = %lld %lld  ~%lld\n",l,ll,l-ll);
+                ans=ha[hash]+(l-ha[hash])%(l-ll-ha[hash]);
+            //    while (ss[ans].x==ss[ans-1].x&&ss[ans].y==ss[ans-1].y)
+           //         ans--;
+          // printf("%d\n",ans);
+                printf("%d %d ",ss[ans].x,ss[ans].y);
+                if (ss[ans].face==1)
+                printf("W\n");
+                if (ss[ans].face==2)
+                printf("N\n");
+                if (ss[ans].face==3)
+                printf("E\n");
+                if (ss[ans].face==4)
+                printf("S\n");
+               // printf("%d %d %d",ss[ans-1].x,ss[ans-1].y,ss[ans-1],face);
+                break;
+            }
+            if (face==1)
+            {
+                if (y-1>=1&&m[x][y-1])
+                {
+                    y--;
+                    ll--;
+                    continue;
+                }
+                else
+                {
+                    face++;
+                    continue;
+                }
+            }
+            else if (face==2)
+            {
+                if (x-1>=1&&m[x-1][y])
+                {
+                    x--;
+                    ll--;
+                    continue;
+                }
+                else
+                {
+                    face++;
+                    continue;
+                }
+            }
+            else if (face==3)
+            {
+                if (y+1<=w&&m[x][y+1])
+                {
+                    y++;
+                    ll--;
+                    continue;
+                }
+                else
+                {
+                    face++;
+                    continue;
+                }
+            }
+            else if (face==4)
+            {
+                if (x+1<=h&&m[x+1][y])
+                {
+                    x++;
+                    ll--;
+                    continue;
+                }
+                else
+                {
+                    face=1;
+                    continue;
+                }
+            }
+        }
+        if (tt==0)
+        {
+            printf("%d %d ",x,y);
+            if (face==1)
+                printf("W\n");
+            if (face==2)
+                printf("N\n");
+            if (face==3)
+                printf("E\n");
+            if (face==4)
+                printf("S\n");
+        }
+    }
+    return 0;
+}
+
+/*
+2 2 8
+W.
+..
+*/

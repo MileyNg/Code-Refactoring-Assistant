@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+double get_convex(double ox, double oy, double ax, double ay, double bx, double by) {
+	double oax = ax-ox;
+	double oay = ay-oy;
+	double obx = bx-ox;
+	double oby = by-oy;
+
+	return oax*oby-obx*oay;
+}
+
+int main(void) {
+	double xa,ya,xb,yb,xc,yc,xd,yd;
+	double deg[4];
+	
+	while(scanf("%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", &xa, &ya, &xb, &yb, &xc, &yc, &xd, &yd)==8) {
+		deg[0] = get_convex(xa, ya, xb, yb, xd, yd);
+		deg[1] = get_convex(xb, yb, xc, yc, xa, ya);
+		deg[2] = get_convex(xc, yc, xd, yd, xb, yb);
+		deg[3] = get_convex(xd, yd, xa, ya, xc, yc);
+		
+		if(deg[0] < 0 && deg[1] < 0 && deg[2] < 0 && deg[3] < 0) {
+			printf("YES\n");
+		} else if(deg[0] > 0 && deg[1] > 0 && deg[2] > 0 && deg[3] > 0) {
+			printf("YES\n");
+		} else {
+			printf("NO\n");
+		}
+	}
+	
+	return 0;
+}

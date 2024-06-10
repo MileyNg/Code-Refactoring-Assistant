@@ -1,0 +1,43 @@
+#include "stdio.h"
+
+int table[5555][5555];
+
+int main()
+{
+	int n,m;
+	scanf("%d %d",&n,&m);
+	for(int i = 0; i < n; i++)
+	{
+		for(int ii = 0; ii < n; ii++)
+		{
+			table[i][ii] = 0;
+		}
+	}
+	for(int i = 0; i < m; i++)
+	{
+		int a,b,x;
+		scanf("%d %d %d",&a,&b,&x);
+		a--;
+		b--;
+		for(int ii = 0; ii <= x; ii++)
+		{
+			table[a + ii][b]++;
+			table[a + ii][b + ii + 1]--;
+		}
+	}
+	int all = 0;
+	for(int i = 0; i < n; i++)
+	{
+		int now = 0;
+		for(int ii = 0; ii <= n; ii++)
+		{
+			now += table[i][ii];
+			if(now > 0)
+			{
+				all++;
+			}
+		}
+	}
+	printf("%d\n",all);
+	return 0;
+}

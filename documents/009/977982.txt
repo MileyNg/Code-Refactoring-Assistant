@@ -1,0 +1,54 @@
+edges = {}
+
+for ns in (0..7).to_a.permutation(8)
+  key = ns.join("")
+  edges[key] = []
+
+  i = ns.index(0)
+  x = i % 4
+  y = i / 4
+
+  if x > 0
+    ns0 = ns.clone
+    tmp = ns0[i]; ns0[i] = ns0[i - 1]; ns0[i - 1] = tmp
+    edges[key].push ns0.join("")
+  end
+  if x < 3
+    ns0 = ns.clone
+    tmp = ns0[i]; ns0[i] = ns0[i + 1]; ns0[i + 1] = tmp
+    edges[key].push ns0.join("")
+  end
+  if y > 0
+    ns0 = ns.clone
+    tmp = ns0[i]; ns0[i] = ns0[i - 4]; ns0[i - 4] = tmp
+    edges[key].push ns0.join("")
+  end
+  if y < 1
+    ns0 = ns.clone
+    tmp = ns0[i]; ns0[i] = ns0[i + 4]; ns0[i + 4] = tmp
+    edges[key].push ns0.join("")
+  end
+end
+
+start = "01234567"
+
+dists = {start => 0}
+queue = [start]
+
+while ! queue.empty?
+  v = queue.shift
+
+  for i in edges[v]
+    if dists[i].nil?
+      dists[i] = dists[v] + 1
+      queue.push i
+    end
+  end
+end
+
+while (line = gets)
+  key = line.chomp.gsub(/ /, '')
+
+  d = dists[key]
+  puts d.nil? ? "NA" : d
+end

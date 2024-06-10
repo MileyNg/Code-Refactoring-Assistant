@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<math.h>
+struct circle{
+    double x;
+    double y;
+    double r;
+};
+int main(void){
+    struct circle a,b,hoge;
+    int n,i,pattern=0;
+    double d_x,d_y,d;
+    scanf("%d",&n);
+    for(i=0;i<n;i++){
+        scanf("%lf%lf%lf%lf%lf%lf"
+              ,&a.x,&a.y,&a.r,&b.x,&b.y,&b.r);
+        if(a.r<b.r){
+            hoge=a;
+            a=b;
+            b=hoge;
+            pattern=1;
+            //puts("test1");
+        }
+        d_x=a.x-b.x;
+        if(d_x<0)d_x*=-1;
+        d_y=a.y-b.y;
+        if(d_y<0)d_y*=-1;
+        d=d_x*d_x+d_y*d_y;
+        d=sqrt(d);
+        //printf("%lf",d);
+        if(d>a.r+b.r)printf("0\n");
+        else if((a.r-d)>b.r){
+            if(pattern==0)printf("2\n");
+            else printf("-2\n");
+        }
+        else printf("1\n");
+    }
+    return 0;
+}

@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+const int IINF = INT_MAX;
+
+int n,found,len;
+vector<string> buf[30],seq;
+string tmp,sequence,answer;
+char transfer[26];
+
+bool comp(const string& a,const string& b) {
+  set<char> A,B;
+  rep(i,a.size()) A.insert(a[i]);
+  rep(i,b.size()) B.insert(b[i]);
+  return A.size() > B.size();
+}
+
+void dfs(int cur){
+
+  if( found >= 2 ) return;
+
+  if( cur >= len ){
+    ++found;
+    rep(i,answer.size()) if( isupper(answer[i]) ) answer[i] = transfer[answer[i]-'A'];
+    return;
+  }
+
+  int word_size = seq[cur].size();
+
+  rep(i,(int)buf[word_size].size()){
+    string word = buf[word_size][i];
+
+    int *backtrack = new int[word_size+1];
+    backtrack[0] = -1; // sentinel
+    bool error = false;
+    rep(j,word_size){
+      if( transfer[word[j]-'A'] == '?' && transfer[seq[cur][j]-'A'] == '?' ) {
+        backtrack[j] = 1, backtrack[j+1] = -1;
+        transfer[word[j]-'A'] = seq[cur][j];
+        transfer[seq[cur][j]-'A'] = word[j];
+      } else if( transfer[word[j]-'A'] == seq[cur][j] && transfer[seq[cur][j]-'A'] == word[j] ) {
+        backtrack[j] = 0;
+      } else {
+        backtrack[j] = -1;
+        error = true;
+        break;
+      }
+    }
+
+    if( !error ) dfs( cur+1 );
+
+    int j = 0;
+    while( backtrack[j] != -1 && j < word_size) {
+      if( backtrack[j] == 1 ) transfer[word[j]-'A'] = transfer[seq[cur][j]-'A'] = '?';
+      ++j;
+    }
+
+  }
+
+}
+
+int main(){
+  while( cin >> n, n ){
+    seq.clear();
+    rep(i,30) buf[i].clear();
+    rep(i,n) {
+      cin >> tmp;
+      buf[(int)tmp.size()].push_back(tmp);
+    }
+    cin.ignore();
+    getline(cin,sequence);
+    stringstream ss(sequence.substr(0,(int)sequence.size()-1));
+    while( !( ss >> tmp ).fail() ) seq.push_back(tmp);
+    sort(seq.begin(),seq.end(),comp);
+
+    answer = sequence;
+    found = 0, len = (int)seq.size();
+    rep(i,26) transfer[i] = '?';
+    dfs(0);
+
+    cout << ((found==1)?answer:"-.") << endl;
+
+  }
+  return 0;
+}

@@ -1,0 +1,82 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+
+using namespace std;
+
+typedef vector<int> vi;
+
+bool solve2(vi v){
+  vi tmp = v;
+  for(int i = 1; i <= 9; ++i){
+    if(tmp[i] > 2) tmp[i]-=3;
+    while(tmp[i] > 0 && i < 8){
+      tmp[i]--; tmp[i+1]--; tmp[i+2]--;
+    }
+    //    REP(i, 1, tmp.size()) printf("%d ", tmp[i]);
+    //    puts("");
+    if( tmp[i+1] < 0 ||tmp[i+2] < 0) return false;
+  }
+  REP(i, 1, tmp.size()) if(tmp[i]) return false;
+  //  REP(i, 1, tmp.size()) printf("%d ", tmp[i]);
+  //  puts("");
+  return true;
+}
+
+bool solve(vi v){
+  vi tmp = v;
+  for(int i = 1; i <= 9; ++i){
+    if(tmp[i] < 2) continue;
+    tmp[i] -= 2;
+    //    puts("");
+    //    REP(i, 1, tmp.size()) printf("%d ", tmp[i]);
+    //    puts("");
+    if(solve2(tmp)){
+      //      REP(i, 1, tmp.size()) printf("%d ", tmp[i]);
+      //      puts("");
+   
+      return true;
+    }
+    tmp[i] += 2;
+  }
+  return false;
+}
+
+int main(){
+  char in[14];
+  while(scanf("%s", in) != EOF){
+    vi c(10, 0);
+    rep(i, 13) c[in[i]-'0']++;
+    //    rep(i, c.size()) printf("%d ", c[i]);
+    //    puts("");
+    vector<int> res;
+    for(int i = 1; i <= 9; ++i){
+      //      if(i != 8) continue;      
+      if(c[i] > 3) continue;
+      c[i]++;
+      //      REP(i, 1, c.size()) printf("%d ", c[i]);
+      //      puts("");
+      if(solve(c)){
+	res.push_back(i);
+      }
+      c[i]--;
+    }
+    //    printf("res\n");
+    if(res.empty()) res.push_back(0);
+    rep(i, res.size()) printf(i?" %d":"%d", res[i]);
+    puts("");
+  }
+  return 0;
+}

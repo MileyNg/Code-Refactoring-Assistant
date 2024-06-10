@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstring>
+#include<cmath>
+using namespace std;
+
+bool prime[1000000];
+
+int main()
+{
+    int i,j,k,l,m,n;
+    int count;
+    while(cin>>n)
+    {
+        memset(prime,0,sizeof(prime));
+        prime[1]=1;
+        prime[2]=0;
+
+        count=0;
+
+        for(j=2;j*j<=n;j++)
+        {
+            if(prime[j]==0)
+            {
+                for(k=2;k*j<=n;k++)
+                {
+                   prime[j*k]=1;
+                }
+            }
+        }
+        for(i=1;i<=n;i++)
+        {
+            if(prime[i]==0)
+            count++;
+        }
+        cout << count << endl;
+    }
+    return 0;
+}

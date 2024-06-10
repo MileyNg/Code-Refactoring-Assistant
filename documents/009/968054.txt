@@ -1,0 +1,49 @@
+#include <iostream>
+
+#define NUM_MAX 4000
+
+using namespace std;
+
+int main(void){
+  int s[NUM_MAX];
+  bool ss[NUM_MAX + 1];
+  int n;
+  int in1, in2, in3;
+
+  while(true){
+    
+    cin >> n;
+
+    if(n == 0) break;
+
+    for(int i = 0; i < NUM_MAX; i++){
+      s[i] = 0;
+    }
+
+    for(int i = 0; i < NUM_MAX + 1; i++){
+      ss[i] = false;
+    }
+
+    for(int i = 0; i < n; i++){
+      cin >> in1 >> in2 >> in3;
+      s[in1] += in2 * in3;
+      if(s[in1] >= 1000000){
+	ss[in1] = true;
+	ss[NUM_MAX] = true;
+      }
+    }
+    
+    if(!ss[NUM_MAX]){
+      cout << "NA" << endl;
+      continue;
+    }
+    
+    for(int i = 0; i < NUM_MAX; i++){
+      if(ss[i]){
+	cout << i << endl;
+      }
+    }
+  }
+
+  return 0;
+}

@@ -1,0 +1,27 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var line = lines.shift();
+var tmp = line.split(' ');
+var n = tmp[0];
+var q = tmp[1] - 0;
+
+var queue = [];
+lines.forEach(function(l) {
+	tmp = l.split(' ');
+	queue.push({name: tmp[0], time: tmp[1] - 0});
+});
+
+var passed = 0;
+while (queue.length > 0) {
+	var process = queue.shift();
+
+	if (process.time <= q) {
+		passed += process.time;
+		console.log(process.name + ' ' + passed);
+	} else {
+		passed += q;
+		process.time -= q;
+		queue.push(process);
+	}
+}

@@ -1,0 +1,67 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<queue>
+#include<algorithm>
+
+using namespace std;
+
+struct S{
+  char v[10];
+  int size;
+  int c,d,e;
+  long long b;
+  S(const vector<int> &pv,int pc):c(pc){
+    size=pv.size();
+    copy(begin(pv),end(pv),begin(v));
+    eval();
+  }
+  void eval(){
+    b=0;
+    for(int i=0;i<size;i++){
+      b=(b<<4)+v[i];
+    }
+    d=(v[0]!=1)+(v[size-1]!=size);
+    for(int i=0;i+1<size;i++){
+      d+=abs(v[i]-v[i+1])>1;
+    }
+    e=c+(d+1)/2;
+  }    
+  void reverse(int a,int b){
+    c++;
+    std::reverse(begin(v)+a,begin(v)+b+1);
+    eval();
+  }
+  bool operator<(const S &s)const{
+    return e>s.e;
+  }
+};
+
+int main(){
+  int N;
+  cin>>N;
+  vector<int> v(N);
+  for(auto &e:v){
+    cin>>e;
+  }
+  S is(v,0);
+  priority_queue<S> que;
+  que.push(is);
+  unordered_map<long long,int> m;
+  m[is.b]=0;
+  for(;;){
+    S c=que.top();
+    if(c.d==0)break;
+    que.pop();
+    for(int i=0;i<N;i++){
+      for(int j=i+1;j<N;j++){
+	S n=c;
+	n.reverse(i,j);
+	if(m.count(n.b)&&m[n.b]<=n.c)continue;
+	m[n.b]=n.c;
+	que.push(n);
+      }
+    }
+  }
+  cout<<que.top().c<<endl;
+}

@@ -1,0 +1,78 @@
+//O(nlogn+mlogm)解
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 100000;
+
+int main(){
+	int n,m;//太郎、花子のそれぞれのカードの枚数
+	while(true){
+		cin >> n >> m;
+		if(n==0 && m==0){
+			break;
+		}
+		int *card1 = new int[n];//太郎
+		int *card2 = new int[m];//花子のカード
+		int sum1=0;//交換する前のcard1の和
+		int sum2=0;//            card2の和
+		for(int i=0;i<n;i++){
+			cin >> card1[i];
+			sum1 += card1[i];
+		}
+		for(int i=0;i<m;i++){
+			cin >> card2[i];
+			sum2 += card2[i];
+		}
+
+		if((sum1-sum2) %2 == 1 || (sum1-sum2) %2 == -1){//下コメ参照、(1-2)%2は-1になるので注意
+			cout << -1 << endl;
+		}else{
+			sort(card1,card1+n);//昇順 O(nlogn)
+			sort(card2,card2+m);
+			//交換して組み合わせが等しい場合に代入。組み合わせがない場合はずっとINF
+			int change1 = INF;
+			int change2 = INF;
+			int idx1 = 0;
+			int idx2 = 0;
+			int dst = (sum1-sum2)/2;//e1-e2の目標の値(下コメ参照)
+			bool check = false;//満たすe1とe2の組み合わせが見つかったかどうか
+			while(idx1 != n && idx2 != m){//O(n+m)
+				if(card1[idx1] - card2[idx2] > dst){
+					idx2++;//card2[idx2]を増やす
+				}else if(card1[idx1] - card2[idx2] < dst){
+					idx1++;//card1[idx1]を増やす
+				}else if(card1[idx1] - card2[idx2] == dst){
+					//交換して和が等しい
+					change1 = card1[idx1];
+					change2 = card2[idx2];
+					check = true;
+					break;//これより先のものを調べても、idxを足していくので、交換するカードが大きくなってしまう。
+				}
+			}
+
+
+			if(check == false){//見つからなかった
+				cout << -1 << endl;
+			}else{
+				cout << change1 << ' ' << change2 << endl;
+			}
+		}//else終わり
+
+		delete[] card1;
+		delete[] card2;
+	}//while終わり
+	return 0;
+}
+/*
+太郎が渡すカードe1
+花子が渡すカードe2
+交換して和が等しいとき
+sum1-e1+e2 = sum2-e2+e1
+⇔sum1 - sum2 = 2*(e1 - e2)
+⇔(sum1 - sum2)/2 = e1 - e2
+を満たすe1、e2を探せばよい。カードの値は整数なので、sum1-sum2が奇数のとき解なし
+sum1-sum2の値はO(n+m)で求まる
+e1-e2の値を全探索するときO(nm)
+*/

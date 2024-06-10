@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define NOT_CHECK 0
+#define CHECK 1
+
+typedef struct element_ {
+	int idx, val;
+} element;
+
+int element_sort(void *a, void *b) {
+	return (*(element*)a).val - (*(element*)b).val;
+}
+
+int main(void) {
+	int i, n, costs;
+	int A[1005];
+	int W[10005];
+	int chk[1005];
+	element sortedA[1005];
+
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%d\n", &A[i]);
+		sortedA[i].idx = i;
+		sortedA[i].val = A[i];
+		W[A[i]] = i;
+		chk[i] = NOT_CHECK;
+	}
+
+	qsort((void*)sortedA, n, sizeof(element), element_sort);
+
+	for(i=0;i<n;i++) {
+		int p, cost, min;
+		p = i;
+		min = sortedA[p].val;
+
+		if(sortedA[i].idx == i) {
+			// ソート後と同じ位置のため入れ替える必要がない
+			chk[i] = CHECK;
+			continue;
+		}
+
+		// 軽い荷物を使って、正しい場所に入れ替えていく
+		cost = 0;
+		// 相互に置き換え可能かどうか
+		while(!chk[p] && !chk[W[sortedA[p].val]]) {
+			chk[p] = CHECK;
+			cost = cost + A[p] + min;
+			p = W[sortedA[p].val];
+		}
+		costs += cost;
+	}
+
+	printf("%d\n", costs);
+	return 0;
+}

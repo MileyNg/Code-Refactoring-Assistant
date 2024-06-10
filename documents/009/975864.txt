@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define EPS (1e-8)
+#define equals(a,b) (fabs((a)-(b)) < EPS)
+
+
+using namespace std;
+
+const int IINF = INT_MAX;
+
+// Library
+
+class Point{
+public:
+  double x,y;
+  Point(double x = -IINF,double y = -IINF): x(x),y(y){}
+  Point operator - (Point p){return Point(x-p.x,y-p.y);}
+};
+
+double norm(Point a){ return a.x*a.x+a.y*a.y; }
+double abs(Point a){ return sqrt(norm(a)); }
+
+struct Circle{
+  Point p;
+  double r;
+  Circle(Point p=Point(),double r=IINF):p(p),r(r){}
+};
+
+pair<Point, Point> intersectCC( Point C1, double r1, Point C2, double r2) {
+  complex<double> c1(C1.x,C1.y);
+  complex<double> c2(C2.x,C2.y);
+  complex<double> A = conj(c2-c1), B = (r2*r2-r1*r1-(c2-c1)*conj(c2-c1)), C = r1*r1*(c2-c1);
+  complex<double> D = B*B-4.0*A*C;
+  complex<double> z1 = (-B+sqrt(D))/(2.0*A)+c1, z2 = (-B-sqrt(D))/(2.0*A)+c1;
+  return pair<Point, Point>(Point(z1.real(),z1.imag()),Point(z2.real(),z2.imag()));
+}
+
+// Library
+
+bool insideCC(Circle a,Circle b){
+  double d = sqrt(norm(a.p-b.p));
+  double r1 = max(a.r,b.r);
+  double r2 = min(a.r,b.r);
+ 
+  if(!equals(d,r1-r2) && d < r1-r2) return a.r < b.r; 
+  return false;
+}
+
+bool insideCP(Circle c,Point p){
+  double dist = abs(c.p-p);
+  return equals(dist,c.r) || dist < c.r;
+}
+
+int n;
+Point ps[11];
+double ls[11];
+
+bool check(double h){
+  vector<Circle> cs;
+  bool out[n];
+  rep(i,n) out[i] = false;
+
+  rep(i,n) {
+    if( equals(h,ls[i]) || h >= ls[i] ) return false;
+    rep(j,n){
+      if( i == j ) continue;
+      double r1 = sqrt( pow(ls[i],2) - pow(h,2) ), r2 = sqrt( pow(ls[j],2) - pow(h,2) );
+      if(insideCC((Circle){ps[i],r1},(Circle){ps[j],r2})) out[j] = true;
+    }
+  }
+
+  rep(i,n) if( !out[i] ) {
+    double r = sqrt( pow(ls[i],2) - pow(h,2) );
+    cs.push_back(Circle(ps[i],r));
+  }
+
+  if( cs.size() == 1 ) return true;
+  vector<Point> cps;
+
+  rep(i,cs.size()) REP(j,i+1,cs.size()){
+    pair<Point,Point> pp = intersectCC(cs[i].p,cs[i].r,cs[j].p,cs[j].r);
+    cps.push_back(pp.first);    
+    cps.push_back(pp.second);
+  }
+
+  rep(i,cps.size()){
+    rep(j,cs.size()) if( !insideCP(cs[j],cps[i]) ) goto Skip;
+    return true;
+  Skip:;
+  }
+  return false;
+}
+
+int main(){
+  while( cin >> n, n ){
+    rep(i,n) cin >> ps[i].x >> ps[i].y >> ls[i];
+
+    double L = 0, R = 1e10;
+    rep(_,60){
+      double M = ( L + R ) * 0.5;
+      if( check(M) ) L = M;
+      else           R = M;
+    }
+    printf("%.7f\n",R);
+  }
+  return 0;
+}

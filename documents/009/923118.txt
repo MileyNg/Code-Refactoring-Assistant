@@ -1,0 +1,45 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+char cor[4]="RGB";
+int main(){
+    int T;
+    scanf("%d\n",&T);
+    int ns[9];
+    char c;
+    for(int ix=0;ix<T;ix++){
+        vector<int> cs[3];
+        for(int i=0;i<9;i++){
+            scanf("%d",ns+i);
+        }
+        for(int i=0;i<9;i++){
+            scanf(" %c",&c);
+            for(int j=0;j<3;j++){
+                if(c==cor[j]) cs[j].push_back(ns[i]);
+            }
+        }
+        bool is=true;
+        for(auto ar : cs) if(ar.size()%3>0) is=false;
+        if(!is){
+            printf("0\n");
+            continue;
+        }
+        for(auto ar : cs){
+            sort(begin(ar),end(ar));
+            bool isex=false;
+            if(ar.size()==0) isex=true;
+            do{
+                bool is2=true;
+                for(int i=0;i<ar.size()/3;i++){
+                    if(!((ar[i*3]==ar[i*3+1] && ar[i*3]==ar[i*3+2]) || (ar[i*3]+1==ar[i*3+1] && ar[i*3]+2==ar[i*3+2]))) is2=false;
+                }
+                if(is2) isex=true;
+            }while(next_permutation(begin(ar),end(ar)));
+            if(!isex) is=false;
+        }
+        if(is) printf("1\n");
+        else printf("0\n");
+    }
+}

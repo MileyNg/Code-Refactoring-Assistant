@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX 100
+
+int calc(char,int,int);
+int ctoi(char*);
+
+int main() {
+  char s[MAX];
+  int array[MAX] , pos = 0 , a , b , res;
+
+  memset(array,-1,sizeof(array));
+
+  while ( scanf("%s" ,s) != EOF ) {
+    if (!isdigit(s[0])) {
+      a = array[pos-2]; array[pos-2] = -1;
+      b = array[pos-1]; array[pos-1] = -1;
+      pos -= 2;
+
+      res = calc(s[0],a,b);
+      array[pos++] = res;
+    } else {
+      array[pos++] = ctoi(s);
+    }
+  }
+  printf("%d\n" ,array[0]);
+
+  return 0;
+}
+
+int calc (char op , int a , int b){
+  int res;
+
+  switch (op) {
+  case '+':
+    res = a + b;
+    break;
+  case '-':
+    res = a - b;
+    break;
+  case '*':
+    res = a * b;
+    break;
+  }
+
+  return res;
+}
+
+int ctoi(char str[]){
+  int res = 0 , i , power = 1;
+
+  for(i = strlen(str)-1 ; i >= 0 ; i--){
+    res += (str[i]-'0')*power;
+    power *= 10;
+  }
+
+  return res;
+}

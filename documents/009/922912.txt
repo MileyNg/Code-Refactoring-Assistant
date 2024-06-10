@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+int n,r,p,d;
+while(cin>>n>>r){
+	if(n==0&&r==0){
+		break;
+	}
+	int a[50]={},b[50]={},c[50]={};
+	for(int k=0;k<n;k++){
+		a[k]=n-k;
+	}
+	for(int i=0;i<r;i++){
+		cin>>p>>d;
+		for(int l=0;l<p-1;l++){
+			b[l]=a[l];
+		}
+		for(int m=0;m<d;m++){
+			c[m]=a[p+m-1];
+		}
+		for(int o=0;o<d;o++){
+			a[o]=c[o];
+		}
+		for(int z=0;z<p-1;z++){
+			a[d+z]=b[z];
+		}
+	}
+		cout<<a[0]<<endl;
+	}
+	return 0;
+}

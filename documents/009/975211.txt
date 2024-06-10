@@ -1,0 +1,28 @@
+n = gets.chomp.to_i
+
+max_s = -10000 * 100 * 100
+
+csmat = [(0..n).map{0}]
+
+for y in (1..n)
+  cs = 0
+  hl = [0] + gets.chomp.split(" ").map{|s| cs += s.to_i}
+
+
+  csmat.push (0..n).map{|x| hl[x] + csmat[y - 1][x]}
+
+  for x in (1..n)
+    for y0 in (0...y)
+      for x0 in (0...x)
+        s = csmat[y][x] - csmat[y][x0] - csmat[y0][x] + csmat[y0][x0]
+        if max_s < s
+          max_s = s
+          #puts "[#{x}, #{y}] - [#{x0}, #{y0}] = #{max_s}"
+        end
+      end
+    end
+  end
+end
+#p csmat
+
+puts max_s

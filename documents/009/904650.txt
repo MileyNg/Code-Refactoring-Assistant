@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+void add_vec(vector<pair<int,int> > &cake,pair<int,int> f,pair<int,int> s){
+  if(f.first*f.second < s.first*s.second){
+    cake.push_back(f);
+    cake.push_back(s);
+  }else{
+    cake.push_back(s);
+    cake.push_back(f);
+  }
+}
+int main(){
+  int n,w,d;
+  while(cin >> n >> w >> d,n||w||d){
+    vector<pair<int,int> > cake(1,pair<int,int>(w,d));
+    
+    for(int i = 0;i < n;i++){
+      int sir = 0;
+      cin >> sir;
+      int tmp;
+      cin >> tmp;
+      pair<int,int> cake_size = cake[sir-1];
+      /*      cout << cake_size.first*cake_size.second << "dddddd" << endl;
+      cout << "---------------" << endl;
+      for(int j =0 ;j < cake.size();j++){
+	cout << cake[j].first*cake[j].second << endl;
+      }
+      cout << "---------------" << endl;
+      */
+      vector<pair<int,int> >::iterator it = cake.begin();
+      it += sir-1;
+      cake.erase(it);
+      /*
+      cout << "%%%%%%%%%%%" << endl;
+      for(int j =0 ;j < cake.size();j++){
+	cout << cake[j].first*cake[j].second << endl;
+      }
+      cout << "%%%%%%%%%%%" << endl;
+      */
+      int cnt = 0;
+      int flag =0;
+      while(cnt <= tmp){
+	for(int j = 0;j < cake_size.first;j++){
+	  if(cnt == tmp){
+	    add_vec(cake,pair<int,int>(j,cake_size.second),pair<int,int>(cake_size.first-j,cake_size.second));
+	    flag = 1;
+	    break;
+	  }
+	  cnt++;
+	}
+	if(flag == 1)break;
+	for(int j = 0;j < cake_size.second;j++){
+	  if(cnt == tmp){
+	    add_vec(cake,pair<int,int>(cake_size.first,j),pair<int,int>(cake_size.first,cake_size.second-j));
+	    flag = 1;
+	    break;
+	  }
+	  cnt++;
+	}
+	if(flag == 1)break;
+      }
+    }
+    vector<int> ans(cake.size(),0);
+    for(int i = 0;i < cake.size();i++){
+      ans[i] = cake[i].first*cake[i].second;
+    }
+    sort(ans.begin(),ans.end());
+    for(int i = 0;i < ans.size();i++){
+      cout << ans[i] << " ";
+    }
+    cout << endl;
+      
+      
+  
+  }
+  return 0;
+}

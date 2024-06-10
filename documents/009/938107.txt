@@ -1,0 +1,77 @@
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+#define MH 1000
+int H, W, N;
+string F[MH];
+
+void input() {
+    cin >> H >> W >> N;
+    for (int i = 0; i < H; i++) {
+        cin >> F[i];
+    }
+}
+
+struct P {
+    int y, x, t;
+    P(int y, int x, int t = 0) : y(y), x(x), t(t) {}
+};
+P pos(char x) {
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            if (F[i][j] == x) return P(i, j);
+        }
+    }
+    assert(0);
+}
+
+int bfs(char from, char to) {
+    P init = pos(from);
+    queue<P> Q; Q.push(init);
+    static const int dy[] = {0, 1, 0, -1},
+                     dx[] = {1, 0, -1, 0};
+    bool used[H][W]; memset(used, 0, sizeof(used));
+    while (!Q.empty()) {
+        P cur = Q.front(); Q.pop();
+        int y = cur.y,
+            x = cur.x;
+        if (F[y][x] == to) return cur.t;
+        for (int i = 0; i < 4; i++) {
+            int ny = y + dy[i],
+                nx = x + dx[i];
+            if (ny < 0 || ny >= H) continue;
+            if (nx < 0 || nx >= W) continue;
+            if (used[ny][nx]) continue;
+            used[ny][nx] = true;
+            if (F[ny][nx] != 'X') {
+                Q.push(P(ny, nx, cur.t + 1));
+            }
+        }
+    }
+    assert(0);
+}
+
+void solve() {
+    char N1 = N + '0';
+    int ans = bfs('S', '1');
+    for (char n = '1'; n < N1; n++) {
+        ans += bfs(n, n +1);
+    }
+    cout << ans << endl;
+}
+
+int main() {
+    input();
+    solve();
+    return 0;
+}

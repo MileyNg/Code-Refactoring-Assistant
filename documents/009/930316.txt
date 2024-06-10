@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int W,n,v[1001],w[1001];
+int dp[1001];
+
+int main(){
+   int a = 0;
+   while(cin >> W,W){
+      cin >> n;
+      for(int i=0;i<n;i++) scanf("%d,%d",&v[i],&w[i]);
+      
+      memset(dp,-1,sizeof(dp)); dp[0] = 0;
+      for(int i=0;i<=W;i++){
+         if(~dp[i]){
+            for(int j=0;j<n;j++){
+               if(i + w[j] <= W) dp[i + w[j]] = max(dp[i],dp[i] + v[j]);
+            }
+         }
+      }
+      
+      cout << "Case " << ++a << ":" << endl;
+      int maxi = 0,maxp;
+      for(int i=0;i<=W;i++){
+         if(maxi < dp[i]){
+            maxi = dp[i]; maxp = i;
+         }
+      }
+      cout << maxi << endl << maxp << endl;
+   }
+}

@@ -1,0 +1,75 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+typedef pair<string, int> P;
+/** Problem0179 : Mysterious Worm **/
+int bfs(string in)
+{
+	queue<P> Q;
+	map<string, int> d;
+	
+	Q.push(P(in, 0));
+	
+	while (Q.size()) {
+		P p = Q.front(); Q.pop();
+		string s = p.first;
+		
+		if (d[s]) continue;
+		
+		bool flag=true;
+		rep(i, s.length()-1) {
+			if (s[i] != s[i+1]) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag)
+			return p.second;
+		
+		d[s] = 1;
+		
+		rep(i, s.length()-1) {
+			string ns = s;
+			if (s[i] != s[i+1]) {
+				char c1 = s[i], c2 = s[i+1], nc;
+				if (c1 != 'r' && c2 != 'r')
+					nc = 'r';
+				else if (c1 != 'g' && c2 != 'g')
+					nc = 'g';
+				else if (c1 != 'b' && c2 != 'b')
+					nc = 'b';
+				
+				ns[i]=nc;
+				ns[i+1]=nc;
+				
+				Q.push(P(ns, p.second+1));
+			}
+		}
+	}
+	return -1;
+}
+
+int main()
+{
+	string s;
+	int ans;
+	while (cin>>s, s!="0") {
+		ans = bfs(s);
+		if (ans >= 0)
+			cout << ans << endl;
+		else
+			cout << "NA" << endl;
+	}
+	return 0;
+}

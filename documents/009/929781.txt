@@ -1,0 +1,55 @@
+int main() {
+    
+    char input[1001]; //命令の入力用
+    int i; int k=0;
+    
+    char color[1001]; //最後に出力する取り除いたカードの格納
+    
+    int card_num; //山札自体の合計数
+    int card_num2; //moveで使用。２個目の移動先
+    
+    scanf("%d",&card_num); //山札の数決定
+    char box[101][1001];
+    int num[101]; //山札のトップの番号
+
+    
+    
+    //本番
+    while(1){
+        scanf("%s",&input); //命令文　入力
+        
+        if(strcmp(input,"quit") == 0){ //終了
+            break;
+            
+            
+        }else if(strcmp(input,"push") == 0){ //色がｃであるブロックを山に積む
+            scanf("%d",&card_num); //push aの"a"とかを取る。
+            scanf("%s",&box[card_num-1][num[card_num]-1]);
+            
+            num[card_num]++; //箱の最後尾（つまり箱の個数）
+            
+            
+        }else if(strcmp(input,"pop") == 0){ //上の奴を取り除く
+            scanf("%d",&card_num);
+            color[k] = box[card_num-1][num[card_num]-2]; //取り除いた色の順 ＝　実際に取り除く箱　　代入
+            
+            num[card_num]--; //箱の個数が１個減る
+            k++; //取った色の総数が増える
+            
+            
+        }else if(strcmp(input,"move") == 0){ //トップの山札A から 山札Bに移動
+            scanf("%d",&card_num);
+            scanf("%d",&card_num2);
+            
+            box[card_num2-1][num[card_num2]-1] = box[card_num-1][num[card_num]-2];
+            
+            num[card_num]--; //箱の個数が１個減る
+            num[card_num2]++; //箱の個数が１個減る
+        }
+        
+    }
+    for(i=0; i<k; i++){ //取った色の総数だけ繰り返す
+        printf("%c\n",color[i]); //取った色の順番に吐き出す
+    }
+    return 0;
+}

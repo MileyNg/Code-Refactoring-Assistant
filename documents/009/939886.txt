@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef complex<double> P;
+
+const double eps = 1e-8;
+
+bool equals(double a, double b) {
+  return abs(a-b) < eps;
+}
+
+namespace std {
+  bool operator < (const P &a, const P &b) {
+    if(!equals(a.real(), b.real())) return a.real() < b.real();
+    if(!equals(a.imag(), b.imag())) return a.imag() < b.imag();
+    return false;
+  }
+  bool operator == (const P &a, const P &b) {
+    return !(a < b) && !(b < a);
+  }
+}
+
+double cross(P a, P b) {
+  return a.real()*b.imag() - a.imag()*b.real();
+}
+
+double dot(P a, P b) {
+  return a.real()*b.real() + a.imag()*b.imag();
+}
+
+int ccw(P p, P a, P b) {
+  a -= p;
+  b -= p;
+  if(cross(a,b) > eps) return 1;
+  if(cross(a,b) < -eps) return -1;
+  if(dot(a,b) < -eps) return 2;
+  if(norm(b)-norm(a) > eps) return -2;
+  return 0;
+}
+
+bool isParallel(P a, P b) {
+  return equals(cross(a,b), 0);
+}
+
+bool isIntersect(P a1, P a2, P b1, P b2) {
+  return ( ccw(a1,a2,b1) * ccw(a1,a2,b2) <= 0 &&
+           ccw(b1,b2,a1) * ccw(b1,b2,a2) <= 0 );
+}
+
+P getCrossP(P a1, P a2, P b1, P b2) {
+  P a = a2 - a1;
+  P b = b2 - b1;
+  return a1 + a * cross(b, b1 - a1)/cross(b, a);
+}
+
+double heron(double a, double b, double c) {
+  double s = (a+b+c)/2;
+  return sqrt(s*(s-a)*(s-b)*(s-c));
+}
+
+double heron(P a, P b, P c) {
+  return heron(abs(a-b), abs(a-c), abs(b-c));
+}
+
+int main() {
+  while(1) {
+    vector<P> a(3), b(3);
+    for(int i = 0; i < 3; ++i) {
+      cin >> a[i].real() >> a[i].imag() >> b[i].real() >> b[i].imag();
+      if(a[i].real() == 0 && a[i].imag() == 0 && b[i].real() == 0 && b[i].imag() == 0) return 0;
+    }
+    vector<P> ps;
+    for(int i = 0; i < 3; ++i) {
+      for(int j = i+1; j < 3; ++j) {
+        P s = b[i] - a[i];
+        P t = b[j] - a[j];
+        if(!isParallel(s,t) && isIntersect(a[i],b[i],a[j],b[j])) {
+          ps.push_back(getCrossP(a[i],b[i],a[j],b[j]));
+        }
+      }
+    }
+    sort(ps.begin(), ps.end());
+    ps.erase(unique(ps.begin(), ps.end()), ps.end());
+    double S = -1;
+    if(ps.size() == 3) S = heron(ps[0], ps[1], ps[2]);
+    if(S < 0) cout << "kyo" << endl;
+    else if(S < 100000) cout << "syo-kichi" << endl;
+    else if(S < 1000000) cout << "kichi" << endl;
+    else if(S < 1900000) cout << "chu-kichi" << endl;
+    else cout << "dai-kichi" << endl;
+  }
+  return 0;
+}

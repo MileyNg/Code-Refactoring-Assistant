@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(){
+	int count[4][3][10] = {0}, b, f, n, r, v, i, j, k;
+	scanf("%d", &n);
+	for(i = 0; i < n; i++){
+		scanf("%d %d %d %d", &b, &f, &r, &v);
+		count[b - 1][f - 1][r - 1] = v;
+	}
+	for(i = 0; i < 4; i++){
+		for(j = 0; j < 4; j++){
+			for(k = 0; k < 10; k++){
+				if(i == 3) break;
+				if(i != 3 && j == 3){
+					printf("##");
+				} else {
+					printf("%d ", count[i][j][k]);
+				}
+			}
+			printf("\n");
+		}
+	}
+	return 0;
+}

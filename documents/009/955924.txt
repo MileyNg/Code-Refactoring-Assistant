@@ -1,0 +1,98 @@
+#include<iostream>
+#include<vector>
+
+#define INF 100000
+
+int n = 6;
+
+std::vector<std::vector<int> >cost;
+std::vector<int>min_cost;
+std::vector<bool>used;
+
+void dijkstra(int i){
+
+	used[i] = true;
+
+	bool flg = true;
+	for (int j = 0; j < n; j++){
+		if (!used[j])flg = false;
+	}
+	if (flg)return;
+
+	for (int j = 0; j < n; j++){
+		if (cost[i][j] != INF){
+			if (min_cost[j] > min_cost[i] + cost[i][j]){
+				min_cost[j] = min_cost[i] + cost[i][j];
+			}
+		}
+	}
+
+	int min;
+	for (int j = 0; j < n; j++){
+		if (min_cost[j] != INF&&j != i&&!used[j]){
+			min = j;
+			break;
+		}
+	}
+
+	for (int j = 0; j < n; j++){
+		if (min_cost[j] != INF&&j != i&&!used[j]){
+			if (min_cost[min]>min_cost[j])min = j;
+		}
+	}
+
+	dijkstra(min);
+}
+
+int main(){
+
+	std::cin >> n;
+
+	for (int i = 0; i < n; i++){
+		min_cost.push_back(INF);
+		used.push_back(false);
+		cost.push_back(std::vector<int>());
+		for (int j = 0; j < n; j++){
+			cost[i].push_back(INF);
+		}
+	}
+
+	int m;
+	std::cin >> m;
+
+	for (int i = 0; i < m; i++){
+		int a, b, c, d;
+		char ch;
+		std::cin >> a >> ch >> b >> ch >> c >> ch >> d;
+
+		a--; b--;
+		cost[a][b] = c;
+		cost[b][a] = d;
+	}
+
+	int res = 0;
+	int x1, x2, y1, y2;
+	char ch;
+	std::cin >> x1 >> ch >> x2 >> ch >> y1 >> ch >> y2;
+
+	x1--; x2--;
+
+	min_cost[x1] = 0;
+	dijkstra(x1);
+
+	res = y1 - y2 - min_cost[x2];
+
+	for (int i = 0; i < n; i++){
+		min_cost[i] = INF;
+		used[i] = false;
+	}
+	
+	min_cost[x2] = 0;
+	dijkstra(x2);
+
+	res -= min_cost[x1];
+
+	std::cout << res << std::endl;
+
+	return 0;
+}

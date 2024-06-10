@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+int main(void){
+    int i,j,k;
+    char input[100],cpyinput[100],key[3][5]={"the","this","that"};
+    while(gets(input)!=NULL){
+        for(i=0;i<26;i++){
+            for(j=0;j<strlen(input);j++){
+                if('a'<=input[j] && input[j]<='z'){
+                    input[j]+=1;
+                    if(input[j]>'z')
+                        input[j]-=26;
+                }
+                //printf("%c",input[j]);
+            }
+            //puts("");
+            //printf("%s\n",input);
+            //puts("test");
+            for(j=0;j<3;j++){
+                if(strstr(input,key[j])!=NULL){
+                    //printf("test");
+                    goto next;
+                }
+            }
+        }
+        next:
+        printf("%s\n",input);
+    }
+    return 0;
+}

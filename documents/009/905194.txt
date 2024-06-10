@@ -1,0 +1,136 @@
+#include<iostream>
+#include<cmath>
+#include<stdio.h>
+using namespace std;
+
+#define LIMIT 20
+
+struct Puzzle {
+  int cont[25];
+  int space[2];
+};
+
+int limit;
+
+Puzzle puzzle;
+
+int tx[12]={0,1,2,3,0,1,2,3,4,1,2,3};
+int ty[12]={0,1,1,1,2,2,2,2,2,3,3,3};
+int dx[4]={0,1,0,-1};
+int dy[4]={-1,0,1,0};
+
+int heuris[12][25];
+
+int getHeuristic(){
+  int res=0;
+  for(int i=0;i<25;i++){
+    if(puzzle.cont[i]==-1||puzzle.cont[i]==0)continue;
+    res+=heuris[puzzle.cont[i]][i];
+  }
+  return res;
+}
+
+bool dfs(int depth,int prev0,int prev1){
+  /*
+  cout<<depth<<endl;
+  for(int i=0;i<5;i++){
+    for(int j=0;j<5;j++){
+      if(puzzle.cont[i*5+j]!=-1)printf("%3d",puzzle.cont[i*5+j]);
+      else cout<<"???";
+    }
+    cout<<endl;
+  }
+  */
+  int heuri;
+  heuri=getHeuristic();
+  if(heuri==0){
+    cout<<depth<<endl;
+    return true;
+  }
+  if(depth + heuri>limit)return false;
+
+  int px,py,nx,ny;
+  Puzzle tmp=puzzle;
+
+  py=puzzle.space[0]/5;px=puzzle.space[0]%5;
+
+  for(int i=0;i<4;i++){
+    if(max(prev0,i)-min(prev0,i)==2)continue;
+    ny=py+dy[i];nx=px+dx[i];
+    if(ny<0||ny>=5||nx<0||nx>=5)continue;
+    if(puzzle.cont[ny*5+nx]==-1)continue;
+    if(puzzle.cont[ny*5+nx]==0)continue;
+    puzzle.cont[py*5+px]=puzzle.cont[ny*5+nx];
+    puzzle.cont[ny*5+nx]=0;
+    puzzle.space[0]=ny*5+nx;
+    if(dfs(depth+1,i,prev1))return true;
+    puzzle=tmp;
+  }
+  py=puzzle.space[1]/5;px=puzzle.space[1]%5;
+  for(int i=0;i<4;i++){
+    if(max(prev1,i)-min(prev1,i)==2)continue;
+    ny=py+dy[i];nx=px+dx[i];
+    if(ny<0||ny>=5||nx<0||nx>=5)continue;
+    if(puzzle.cont[ny*5+nx]==-1)continue;
+    if(puzzle.cont[ny*5+nx]==0)continue;
+    puzzle.cont[py*5+px]=puzzle.cont[ny*5+nx];
+    puzzle.cont[ny*5+nx]=0;
+    puzzle.space[1]=ny*5+nx;
+    if(dfs(depth+1,prev0,i))return true;
+    puzzle=tmp;
+  }
+  return false;
+}
+
+void solve(){
+  Puzzle tmp=puzzle;
+  for(limit=getHeuristic();limit<=LIMIT;limit+=2){
+    puzzle=tmp;
+    if(dfs(0,-100,-100))return;
+  }
+  cout<<"NA"<<endl;
+}
+
+int main(){
+  int x,y,c=0;
+
+  for(int i=1;i<=11;i++){
+    for(int j=0;j<25;j++){
+      y=j/5;
+      x=j%5;
+      heuris[i][j]=abs(tx[i]-x)+abs(ty[i]-y);
+    }
+  }
+
+
+  for(int i=0;i<25;i++)puzzle.cont[i]=-1;
+
+  while(1){
+    c=0;
+    for(int i=0;i<25;i++)puzzle.cont[i]=-1;
+    cin>>puzzle.cont[2];
+    if(puzzle.cont[2]==-1)break;
+    if(puzzle.cont[2]==0)puzzle.space[c++]=2;
+    
+    
+    for(int i=6;i<=8;i++){
+      cin>>puzzle.cont[i];
+      if(puzzle.cont[i]==0)puzzle.space[c++]=i;
+    }
+    for(int i=10;i<=14;i++){
+      cin>>puzzle.cont[i];
+      if(puzzle.cont[i]==0)puzzle.space[c++]=i;
+    }
+    
+    for(int i=16;i<=18;i++){
+      cin>>puzzle.cont[i];
+      if(puzzle.cont[i]==0)puzzle.space[c++]=i;
+    }
+    
+    cin>>puzzle.cont[22];
+    if(puzzle.cont[22]==0)puzzle.space[c++]=22;
+    solve();
+  }
+
+  return 0;
+}

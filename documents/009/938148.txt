@@ -1,0 +1,18 @@
+len = gets.to_i
+nums = gets.split.map(&:to_i)
+cnt = 0
+0.upto(len-1) do |i|
+  min = i
+  (i).upto(len-1) do |j|
+    if nums[j] < nums[min]
+      min = j
+    end
+  end
+
+  if i != min
+    nums[i], nums[min] = nums[min], nums[i]
+    cnt += 1
+  end
+end
+puts nums * ' '
+puts cnt

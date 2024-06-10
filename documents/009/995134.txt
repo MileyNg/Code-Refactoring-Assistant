@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+  int q,a,b;
+  string str,order,s;
+
+  cin >> str >> q;
+  while(q--){
+    cin >> order >> a >> b;
+    if(order == "replace"){
+      cin >> s;
+      str.replace(str.begin()+a, str.begin()+b+1, s);
+    }else if(order == "reverse"){
+      reverse(str.begin()+a, str.begin()+b+1);
+    }else{
+      cout << str.substr(a,a+b+1) << endl;
+    }
+  }
+
+  return 0;
+}

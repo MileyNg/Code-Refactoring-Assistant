@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct _list_node list_node;
+struct _list_node {
+    int value;
+    list_node *next;
+};
+
+list_node *root_node(list_node *node);
+
+void union_tree(list_node *nodes, const int x, const int y) {
+    if (elm_in_tree(nodes, x, y)) return;
+    list_node *node = root_node(&nodes[x]);
+    node->next = &nodes[y];
+}
+
+list_node *root_node(list_node *node) {
+    while (node->next != NULL) {
+        node = node->next;
+    }
+    return node;
+}
+
+int elm_in_tree(list_node *nodes, const int x, const int y) {
+    // if (nodes[x].next == nodes[y].next) return 1;
+    list_node *nx, *ny;
+    nx = root_node(&nodes[x]);
+    ny = root_node(&nodes[y]);
+    return nx == ny;
+}
+
+int main(void) {
+    int n, q, op, x, y, i;
+    list_node *node;
+    list_node *nodes;
+
+    scanf("%d %d", &n, &q);
+    nodes = (list_node *)malloc(sizeof(list_node) * n);
+
+    for (i = 0; i < n; i++) {
+        node = &(nodes[i]);
+        node->value = i;
+        node->next = NULL;
+    }
+    while (q--) {
+        scanf("%d %d %d", &op, &x, &y);
+        if (op == 0) {
+            union_tree(nodes, x, y);
+        }
+        else { // op == 1
+            printf("%d\n", elm_in_tree(nodes, x, y));
+        }
+    }
+
+    free(nodes);
+
+    return 0;
+}

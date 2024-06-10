@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <queue>
+#include <stack>
+#include <set>
+#include <ctime>
+#include <iterator>
+#include <sstream>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+ 
+ 
+long long pgcd(long long a,long long b)
+{
+    return a==0?b:pgcd(b%a,a);
+}
+ 
+long long ppcm(long long a,long long b)
+{
+    return a*b/pgcd(a,b);
+}
+ 
+int main()
+{
+    long long a,b;
+    while(cin>>a>>b)
+    {
+        cout<<pgcd(a,b)<<" "<<ppcm(a,b)<<endl;
+    }
+}

@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <utility>
+#include <cstdio>
+using namespace std;
+
+#define sqr(x) ((x) * (x))
+
+struct sphere {
+	double x, y, r;
+	sphere(double x_, double y_, double r_) {
+		x = x_; y = y_; r = r_;
+	}
+};
+
+const double EPS = 1e-10;
+
+int main() {
+	int n;
+	while(cin >> n, n) {
+		vector<sphere> v;
+		for(int i = 0; i < n; i++) {
+			double x, y, r;
+			cin >> x >> y >> r;
+			v.push_back(sphere(x, y, r));
+		}
+
+		double top, bottom;
+		top = 300; bottom = 0;
+		for(int i = 0; i < 40; i++) {
+			bool flag = true;
+			double z = (top + bottom) / 2;
+			for(int j = 0; j < v.size(); j++) {
+				if(z > v[j].r)
+					flag = false;
+			}
+			vector<pair<double,double> > points;
+			for(int j = 0; j < v.size() && flag; j++) {
+				points.push_back(pair<double,double>(v[j].x, v[j].y));
+				for(int k = j + 1; k < v.size(); k++) {
+					double r0, r1;
+					r0 = sqrt(sqr(v[j].r) - sqr(z));
+					r1 = sqrt(sqr(v[k].r) - sqr(z));
+					double d;
+					d = sqrt(sqr(v[j].x - v[k].x) + sqr(v[j].y - v[k].y));
+
+					if(!(r0 + r1 < d || r1 + d < r0 || d + r0 < r1)) {
+						double theta, phi;
+						theta = atan2(v[k].y - v[j].y, v[k].x - v[j].x);
+						phi = acos((sqr(r0) + sqr(d) - sqr(r1)) / (2 * r0 * d));
+
+						if(isnan(theta) || isnan(phi))
+							cout << "viss" << endl;
+
+						double x0, y0, x1, y1;
+						x0 = v[j].x + r0 * cos(theta + phi);
+						y0 = v[j].y + r0 * sin(theta + phi);
+						x1 = v[j].x + r0 * cos(theta - phi);
+						y1 = v[j].y + r0 * sin(theta - phi);
+						points.push_back(pair<double,double>(x0, y0));
+						points.push_back(pair<double,double>(x1, y1));
+					}
+				}
+			}
+
+			if(flag) {
+				for(int j = 0; j < points.size(); j++) {
+					bool sub_flag = true;
+					flag = false;
+					for(int k = 0; k < v.size(); k++) {
+						if(sqrt(sqr(points[j].first - v[k].x) + sqr(points[j].second - v[k].y)) > sqrt(sqr(v[k].r) - sqr(z)) + EPS) {
+							sub_flag = false;
+						}
+					}
+					if(sub_flag) {
+						flag = true;
+						break;
+					}
+				}
+			}
+			if(!flag)
+				top = z;
+			else
+				bottom = z;
+		}
+
+		printf("%.10f\n", (top + bottom) / 2);
+	}
+}

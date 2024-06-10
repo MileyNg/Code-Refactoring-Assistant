@@ -1,0 +1,33 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+int prime[10001];
+int main(){
+  prime[0] = prime[1] = 1;
+  FOR(i, 2, 5001){
+    for(int j = 2 * i; j < 10001; j += i) prime[j] = 1;
+  }
+  int n, dec[10001]; 
+  while(~scanf("%d", &n)){
+    for(int i = 1; i <= n; ++i) dec[i] = n-i+1; 
+    int c = 0;
+    //    FOR(i, 1, n+1) printf("%d ", i); puts("");
+    //    FOR(i, 1, n+1) printf("%d ", dec[i]); puts("");
+    FOR(i, 1, n+1) if(prime[i] == 0 && prime[dec[i]] == 0) c++;
+
+    printf("%d\n", c);
+  }
+  return 0;
+}

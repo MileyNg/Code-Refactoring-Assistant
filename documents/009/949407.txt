@@ -1,0 +1,19 @@
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+int getGcd(int x, int y){
+  if(y==0) return x;
+  getGcd(y,x%y);
+}
+
+int getLcm(int x, int y){
+  for(int i=1;;i++)
+    if(i%x==0 && i%y==0) return i;
+}
+
+int main(){
+  int a,b;
+  while(scanf("%d%d",&a,&b)!=EOF)
+    printf("%d %d\n",getGcd(a,b),getLcm(a,b));
+}

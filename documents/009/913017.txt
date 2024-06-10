@@ -1,0 +1,47 @@
+require "pp"
+
+def read(arr)
+  m = arr.shift.to_i
+  sets = m.times.map do |i| 
+    start_money = arr.shift.to_i
+    year = arr.shift.to_i
+    n = arr.shift.to_i
+    ways = []
+    n.times do |j| 
+      ways << arr.shift.split.map(&:to_f)
+    end 
+    [start_money, year, ways]
+  end 
+end
+
+def result(dataset)
+  start_money = dataset[0]
+  year = dataset[1]
+  ways = dataset[2]
+  #pp [start_money, year, ways]
+  re = ways.map do |i| 
+    #pp i
+    result = 0 
+    a = start_money
+    b = 0 
+    if i[0] == 0.0 
+      year.times do |j| 
+        b = (a * i[1]).floor
+        a = a + b - i[2]
+      end 
+      result = a 
+    else
+      year.times do |j| 
+        b += (a * i[1]).floor
+        a = a - i[2]
+      end 
+      result = a + b 
+    end 
+    result
+  end 
+  #pp re
+  re.max.to_i
+end
+
+#pp result([1000000, 5, [[0.0, 0.03125, 3000], [1.0, 0.03125, 3000]]])
+read(STDIN.readlines).each{|i| pp (result i)}

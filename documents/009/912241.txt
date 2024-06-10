@@ -1,0 +1,79 @@
+#include<iostream>
+#define MAX 1000000
+using namespace std;
+string a,b,z;
+int d;
+string ans;
+bool flgA[MAX];
+bool flgB[MAX];
+
+void rec(int x){
+
+  ans.push_back('(');
+
+  if(flgA[x*2]==true){
+    rec(x*2);
+  }
+  ans.push_back(',');
+  if(flgA[x*2+1]==true){
+    rec(x*2+1);
+  }
+
+  ans.push_back(')');
+}
+
+
+int main(){
+  while(cin>>z){
+
+    cin>>a;
+    for(int i=0;i<MAX;i++)flgA[i]=flgB[i]=false;
+    flgA[1]=flgB[1]=true;
+    
+    d=1;
+    for(int i=0;i<(int)a.size();i++){
+      if(d>=MAX)continue;
+      if(a[i]=='('){
+	flgA[d]=true;
+	d*=2;
+      }else if(a[i]==','){
+	d=d+1;
+      }else{
+	d/=2;
+      }
+    }
+    
+      cin>>b;
+      d=1;
+      for(int i=0;i<(int)b.size();i++){
+	if(d>=MAX)continue;
+      if(b[i]=='('){
+	flgB[d]=true;
+	d*=2;
+      }else if(b[i]==','){
+	d=d+1;
+      }else{
+	d/=2;
+      }
+    }
+    
+
+    for(int i=0;i<MAX;i++){
+      if(flgB[i]==false){
+	if(z=="i"){
+	  flgA[i]=false;
+	}
+      }else{
+	if(z=="u"){
+	  flgA[i]=true;
+	}
+      }
+    }
+
+    ans="";
+    rec(1);
+    cout<<ans<<endl;
+
+  }
+  return 0;
+}

@@ -1,0 +1,28 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int main(){
+
+	string pass;
+	string odata("QWERTYUIOPASDFGHJKLZXCVBNM");
+	string kdata("qwertyuiopasdfghjklzxcvbnm");
+	string sdata("1234567890");
+
+	bool o,k,s;
+
+	cin>>pass;
+
+	o=false,k=false,s=false;
+	for(int i=0;i<pass.size();i++){
+		if(odata.find(pass[i])!=-1) o=true;
+		if(kdata.find(pass[i])!=-1) k=true;
+		if(sdata.find(pass[i])!=-1) s=true;
+	}
+
+	if(o&&k&&s&&pass.size()>=6) cout<<"VALID"<<endl;
+	else cout<<"INVALID"<<endl;
+	
+	return 0;
+}

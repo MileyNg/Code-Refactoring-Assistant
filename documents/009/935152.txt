@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <string.h>
+#define N 100000
+
+struct Process
+{
+  char name[100];
+  int time;
+};
+
+struct Process Q[N];
+int head, tail, n;
+
+void enqueue(struct Process);
+struct Process dequeue(void);
+
+main()
+{
+  int i, q, sumtime = 0, count = 0;
+  struct Process u;
+  scanf("%d %d", &n, &q);
+
+  for(i = 0; i < n; i++)
+    {
+      scanf("%s", Q[i].name);
+      scanf("%d", &Q[i].time);
+    }
+
+  head = 0;
+  tail = n;
+  while(count < n)
+    {
+      if(Q[head].time <= q)
+	{
+	  sumtime = sumtime + Q[head].time;
+	  u = dequeue();
+	  printf("%s %d\n", u.name, sumtime);
+	  count++;
+	}
+      else
+	{
+	  sumtime = sumtime + q;
+	  Q[head].time = Q[head].time - q;
+	  u = dequeue();
+	  enqueue(u);
+	}
+    }
+  return 0;
+}
+
+void enqueue(struct Process x)
+{
+  Q[tail] = x;
+  if(tail + 1 == N)
+    {
+      tail = 0;
+    }
+  else
+    {
+      tail = tail + 1;
+    } 
+}
+
+struct Process dequeue(void)
+{
+  struct Process x;
+  x = Q[head];
+  if(head + 1 == N)
+    {
+      head = 0;
+    }
+  else
+    {
+      head = head + 1;
+    }
+  return x;
+}

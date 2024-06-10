@@ -1,0 +1,43 @@
+////   template  ///////////////////////////////////////////////////////
+#include <stdlib.h>
+#include <sys/time.h>
+#include <stdio.h>
+#include <sys/resource.h>
+#include <iostream>
+using namespace std;
+
+class timer{
+	enum KIND{ REAL, CPU }; // real_time or cpu_time
+	double t0; // start
+	double t1; // end
+	KIND kind_of_time; // default is real_time
+	double get_realtime(){struct timeval tv; gettimeofday(&tv, NULL);
+		return tv.tv_sec + (double)tv.tv_usec*1e-6;}
+	double get_cputime(){struct rusage RU; getrusage(RUSAGE_SELF, &RU); 
+		return RU.ru_utime.tv_sec + (double)RU.ru_utime.tv_usec*1e-6;}
+public:
+	timer(){kind_of_time = REAL;}
+	void set(KIND k){kind_of_time = k;}
+	void start(){t0 = get_realtime();}
+	void stop(){t1 = get_realtime();}
+	void print(){printf("TotalTime : %.3fsec\n", t1-t0);}
+};
+////////////////////////////////////////////////////////////////////////
+
+/*
+  v = 9.8t
+  y = 4.9t*t
+*/
+
+int main()
+{
+	double v;
+	while(cin>>v)
+	{
+		double y = v*v/19.6;
+		int n = (int)(y/5.0) + 2 ;
+		cout << n << endl;
+	}
+
+    return 0;
+}

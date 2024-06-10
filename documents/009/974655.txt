@@ -1,0 +1,36 @@
+MAX_SUM = 4000
+MAX_I = 1000
+K = 4
+
+### global variables
+
+$sn_cache = (0..K).map{[]}
+
+### subroutines
+
+def check_sum(k, n)
+  if $sn_cache[k][n].nil?
+    count = 0
+    max_i = [MAX_I, n].min
+
+    for i in (0..max_i)
+      count += check_sum(k - 1, n - i)
+    end
+
+    $sn_cache[k][n] = count
+  end
+
+  #puts "(#{k}, #{n}) = #{$sn_cache[k][n]}"
+  return $sn_cache[k][n]
+end
+
+### main
+
+$sn_cache[1] = (0..MAX_I).map{1} + ((MAX_I + 1)..MAX_SUM).map{0}
+#p $sn_cache[1]
+
+while (line = gets)
+  n = line.chomp.to_i
+
+  puts check_sum(K, n)
+end

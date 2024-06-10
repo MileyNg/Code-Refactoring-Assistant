@@ -1,0 +1,36 @@
+#include <iostream>
+#include <math.h>
+#define MAX 1000000
+using namespace std;
+
+int main(){
+	int n;
+	int *prime,i,j;
+	prime = new int[80000];
+	int *answer = new int[MAX];
+	int count;
+	bool flag;
+
+	count = 1;
+	answer[1] = 0;
+	answer[2] = 1;
+	for(i = 3; i <= 1000000; i+=2){
+		flag = true;
+		for(j = 0; j < count; j++){
+			if(i % prime[j] == 0){
+				flag = false;
+				break;
+			}
+			if(prime[j] * prime[j] > i) break;
+		}
+		if(flag == true){
+			prime[count++] = i;
+		}
+		answer[i] = count;
+		answer[i+1] = count;
+	}
+	while((cin >> n)!= NULL){
+		cout << answer[n] << endl;
+	}
+	return 0;
+}

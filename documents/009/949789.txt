@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+int sum(int n){
+    return n*(n+1)/2;
+}
+int sum_up(int s,int t){
+    // s <= t and 0 <= s.
+    if(s == 0){
+        return sum(t);
+    }else{
+        return sum(t) - sum(s-1);
+    }
+}
+
+int solve(int n){
+    int ret = 0;
+    for(int s=1;s<=n;s++){
+        for(int t=s+1;t<=n;t++){
+            if(sum_up(s,t) == n){
+                ret++;
+            }
+        }
+    }
+    return ret;
+}
+
+int main(int argc,char** argv){
+    while(true){
+        int n;cin >> n;
+        if(n == 0) break;
+        cout << solve(n) << endl;
+    }
+    return 0;
+}

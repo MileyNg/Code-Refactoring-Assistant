@@ -1,0 +1,23 @@
+#include<iostream> 
+using namespace std; 
+int main() 
+{ 
+	int a, b, c, max, med, min;
+	cin >> a >> b >> c;
+	if (a > b) {
+		max = a; med = b;
+	}
+	else { max = b; med = a; }
+	if (c > max) { min = med; med = max; max = c; }
+	else if (c > med) { min = med; med = c; }
+	else min = c;
+	for (a = 0; a < 7; a++)
+	{
+		cin >> c;
+		if (c > max) { min = med; med = max; max = c; }
+		else if (c > med) { min = med; med = c; }
+		else if (c>min) min = c;
+	}
+	cout << max << '\n' << med << '\n' << min << endl;
+	return 0; 
+}

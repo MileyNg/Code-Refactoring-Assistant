@@ -1,0 +1,25 @@
+import math
+
+def L(x1,y1,x2,y2):
+  return math.sqrt((x1-x2)**2+(y1-y2)**2)
+
+def S(a,b,c):
+  s=(a+b+c)/2
+  return math.sqrt(s*(s-a)*(s-b)*(s-c))
+
+while True:
+  try:
+    x1, y1, x2, y2, x3, y3, xp, yp = map(float, raw_input().split(' '))
+    a = L(x1, y1, x2, y2)
+    b = L(x2, y2, x3, y3)
+    c = L(x3, y3, x1, y1)
+    p1 = L(x1, y1, xp, yp)
+    p2 = L(x2, y2, xp, yp)
+    p3 = L(x3, y3, xp, yp)
+
+    if S(a,b,p1)+S(b,c,p2)+S(c,a,p3) - S(a,b,c) > 0.00001:
+      print "NO"
+    else:
+      print "YES"
+  except:
+    break

@@ -1,0 +1,28 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	long long int x, y;
+	long long int kari;
+	while (cin >> x >> y) {
+		if (x == 0 && y == 0) {
+			break;
+		}
+		if (x < y) {
+			kari = x;
+			x = y; 
+			y = kari;
+		}
+		int counter = 0;
+		while (y != 0) {
+			counter++;
+			x = x % y;
+			kari = y;
+			y = x;
+			x = kari;
+		}
+		cout << x << " " << counter << endl;
+	}
+	return 0;
+}

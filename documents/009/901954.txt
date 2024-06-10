@@ -1,0 +1,41 @@
+#include <iostream>
+#include <stack>
+#include <map>
+#include <algorithm>
+#include <sstream>
+#include <queue>
+#include <string>
+#include <iomanip>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+#define F first
+#define S second
+const int INF=100000000;
+
+int dp[50][3001];
+const int mod=100000;
+
+int main(){
+	double n[6];
+	while(cin>>n[0]>>n[1]>>n[2]>>n[3]>>n[4]>>n[5]){
+		double tmp[6];
+		for(int i=0; i<6; ++i){
+			tmp[i]=n[i];
+		}
+
+		double p=n[1]/n[4];
+		for(int i=3; i<6; ++i) tmp[i]=n[i]*p;
+		double x=(tmp[2]-tmp[5])/(tmp[0]-tmp[3]);
+		
+		double q=n[0]/n[3];
+		for(int i=3; i<6; ++i) tmp[i]=n[i]*q;
+		double y=(tmp[2]-tmp[5])/(tmp[1]-tmp[4]);
+
+		printf("%.3f %.3f\n",x,y);
+		//cout << setprecision(3)  << x << " " << y << endl;
+	}
+	return 0;
+}

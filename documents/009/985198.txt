@@ -1,0 +1,135 @@
+#include<iostream>
+
+using namespace std;
+
+
+class Goods{
+public:
+	int left;
+	int right;
+	int top;
+	int bottom;
+	char material;
+
+	void check(int h, int w);
+};
+
+void Goods::check(int h, int w){
+	if (w < left){
+		left = w;
+	}
+	if (w > right){
+		right = w;
+	}
+	if (h < top){
+		top = h;
+	}
+	if (h > bottom){
+		bottom = h;
+	}
+	return;
+}
+
+
+int main(){
+	int N;	//データセット数
+	int H;	//縦
+	int W;	//横
+
+	const int num = 7;	//材質数上限
+	int m;	//登場材質数
+	int g;
+	char read;
+
+	cin >> N;
+
+	for (int n = 0; n < N; n++){
+		m = 0;
+
+		cin >> H >> W;
+
+		Goods goods[num];
+		int** image = new int*[H];
+		
+		for (int h = 0; h < H; h++){
+			image[h] = new int[W];
+			for (int w = 0; w < W; w++){
+				cin >> read;
+				
+				if (read == '.'){
+					image[h][w] = -1;
+				}
+				else{
+					g = 0;
+					while (g < m){
+						if (read == goods[g].material){
+							image[h][w] = g;
+							goods[g].check(h, w);
+							break;
+						}
+						g++;
+					}
+					if (g == m){
+						image[h][w] = g;
+						goods[m].material = read;
+						goods[m].left = w;
+						goods[m].right = w;
+						goods[m].top = h;
+						goods[m].bottom = h;
+						m++;
+					}
+				}
+			}
+		}//読み取り終了
+
+
+		//for (int h = 0; h < H; h++){
+		//	for (int w = 0; w < W; w++){
+		//		cout.width(2);
+		//		cout << image[h][w];
+		//	}
+		//	cout << endl;
+		//}
+
+		//チェック
+		bool** near = new bool*[m];	//手前にあるか(長方形だとしたときに, 行より列が手前ならtrue)
+		for (g = 0; g < m; g++){
+			near[g] = new bool[m];
+			for (int g2 = 0; g2 < m; g2++){
+				near[g][g2] = false;
+			}
+		}
+		
+		for (g = 0; g < m; g++){
+			for (int h = goods[g].top; h <= goods[g].bottom; h++){
+				for (int w = goods[g].left; w <= goods[g].right; w++){
+					if (image[h][w] == -1){
+						goto SUSPICIOUS;
+					}
+					else if(image[h][w] != g){
+						if (near[g][image[h][w]] == false){
+							near[g][image[h][w]] = true;
+							for (int g2 = 0; g2 < m; g2++){
+								near[g][g2] = (near[g][g2] || near[image[h][w]][g2]);
+								near[g2][image[h][w]] = (near[g2][g] || near[g2][image[h][w]]);
+							}
+						}
+					}
+				}
+			}//1材質あたりのチェック
+		}//全アイテムチェック
+		for (g = 0; g < m; g++){
+			if (near[g][g] == true){
+				goto SUSPICIOUS;
+			}
+		}
+		cout << "SAFE" << endl;
+		continue;
+		
+	SUSPICIOUS:
+		cout << "SUSPICIOUS" << endl;
+		continue;
+		
+
+	}//1データセット
+}

@@ -1,0 +1,34 @@
+def knapsack(w, ts)
+  ms = [0] * (w + 1)
+
+  for t in ts
+    vi, wi = t
+
+    ms0 = []
+
+    for j in (0..w)
+      ms0[j] = (wi <= j) ? [ms[j], ms[j - wi] + vi].max : ms[j]
+    end
+
+    ms = ms0
+  end
+
+  return ms[w], (0..w).map.select{|k| ms[k] == ms[w]}.min
+end
+
+### main
+
+dn = 1
+
+while true
+  w = gets.chomp.to_i
+  break if w == 0
+
+  n = gets.chomp.to_i
+  ts = n.times.map{gets.chomp.split(",").map{|s| s.to_i}}
+
+  puts "Case #{dn}:"
+  puts knapsack(w, ts)
+
+  dn += 1
+end

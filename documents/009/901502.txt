@@ -1,0 +1,53 @@
+#include<iostream>
+using namespace std;
+int m,g,a,sum;
+int t[8],u[8];
+int dp[8][1001];
+void init();
+void make_table();
+int main(){
+  while(cin>>m&&m){
+    for(int i=1;i<=m;i++)cin>>t[i]>>u[i];
+    make_table();
+    cin>>g;
+    for(int i=0;i<g;i++){
+      cin>>a;
+      cout<<dp[m][a]<<endl;
+    }
+  }
+  return 0;
+}
+void init(){
+  for(int i=0;i<8;i++){
+    for(int j=0;j<1001;j++){
+      if(i==0||j==0)dp[i][j]=1;
+      else dp[i][j]=0;
+    }
+  }
+  
+}
+void make_table(){
+  init();
+  
+  for(int i=1;i<=u[1];i++)dp[1][t[1]*i]=1;
+
+
+  for(int i=2;i<=m;i++){
+    for(int j=1;j<=1000;j++){
+      
+      for(int k=0;k<=u[i];k++){
+	if(j-t[i]*k>=0)dp[i][j]+=dp[i-1][j- t[i]*k ];
+      }
+      
+    }
+  }
+  /*
+  for(int i=1;i<=m;i++){
+    for(int j=1;j<=30;j++){
+      if(dp[i][j]<10)cout<<' ';
+      cout<<dp[i][j]<<' ';
+    }
+    cout<<endl;
+  }
+  */
+}

@@ -1,0 +1,56 @@
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <stack>
+#include <list>
+#include <vector>
+
+using namespace std;
+int N;
+vector<int> chain[101];
+bool arrive[101];
+int cnt;
+int MAX;
+void solve(int i){
+  vector<int>::iterator it;
+  for(it = chain[i].begin(); it != chain[i].end(); ++it){
+    if(arrive[*it] == false){
+      
+      arrive[*it] = true;
+      cnt++;
+//      cout << "now:" <<i << "-" <<  *it <<  ", count:" << cnt << endl;
+      MAX = max(MAX, cnt);
+      solve(*it);
+      cnt--;
+      arrive[*it] = false;
+    }
+  }
+}
+
+int main(){
+  while(cin >> N && N){
+    MAX = 0;
+    for(int i=0; i<101; ++i){
+      chain[i].clear();
+      arrive[i] = false;
+    }
+    
+    for(int i=0; i<N; ++i){
+      int a,b;
+      cin >> a >> b;
+      chain[a].push_back(b);
+      chain[b].push_back(a);
+    }
+
+    for(int i=0; i<101; ++i){
+      cnt = 1;
+      arrive[i] = true;
+      solve(i);
+      arrive[i] = false;
+    }
+    cout << MAX << endl;
+  }
+  return 0;
+}

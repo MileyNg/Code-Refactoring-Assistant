@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void)
+{
+    char a[1000];
+    char pop[5];
+    char color;
+    int i=0;
+    
+    fscanf(stdin, "%s", &pop);
+    while(strcmp(pop, "quit")!=0){
+        if(strcmp(pop, "push")==0){
+            fscanf(stdin, "%s", &color);
+            a[i]=color;
+            i++;
+        }else if(strcmp(pop, "pop")==0){
+            printf("%c\n",a[i-1]);
+            i--;
+        }
+        fscanf(stdin, "%s", &pop);
+    }
+    return 0;
+}

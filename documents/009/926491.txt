@@ -1,0 +1,26 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main(){
+  
+  int n;
+
+  while(cin >> n){
+    bool Prime[1000000] = {};
+    int i,j,count;
+    count = n;
+    for(i = 2; i <= sqrt(n) ; i++){
+      if(Prime[i] == false){        
+	for(j = 2; i*j <= n ; j++){
+	  if(!Prime[i*j]){
+	    Prime[i*j] = true;
+	    count--;
+	  }
+	}
+      }
+    }
+    cout << count-1 << endl;
+  }
+  return 0;
+}

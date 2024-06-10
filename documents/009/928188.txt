@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+
+using namespace std;
+
+/*テンプレートのほうがかんたんだったでおじゃる〜〜〜〜〜〜〜んひ〜〜〜〜*/
+int main(){
+  char s[100];
+  int stack[1000];
+  int p=0;
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+        int tmp=stack[p-2]+stack[p-1];
+        stack[p-1]=0;
+        p-=2;
+        stack[p]=tmp;
+        p++;
+    } else if ( s[0] == '-' ){
+        int tmp=stack[p-2]-stack[p-1];
+        stack[p-1]=0;
+        p-=2;
+        stack[p]=tmp;
+        p++;
+    } else if ( s[0] == '*' ){
+        int tmp=stack[p-2]*stack[p-1];
+        stack[p-1]=0;
+        p-=2;
+        stack[p]=tmp;
+        p++;
+    } else {
+        int x = atoi(s);
+        stack[p]=x;
+        p++;
+    }
+/*
+    for(int i=0;i<p;i++){
+        cout<<stack[i]<<" ";
+    }cout<<endl;
+*/
+  }
+  cout<<stack[p-1]<<endl;
+  return 0;
+}

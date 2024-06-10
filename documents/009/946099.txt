@@ -1,0 +1,104 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+#include <complex>
+
+using namespace std;
+
+// figure
+typedef long long ll;
+typedef double D;
+
+// repeat
+#define for_(i, a, b) for (int i=a; i<b; i++)
+#define for_d(i, b, a) for (int i=b-1; i>=a; i++)
+#define FOR(it, c) for(__typeof((c).begin())it=(c).begin(); it!=(c).end(); it++)
+
+// for STL
+#define pb push_back
+#define sz size()
+#define all(x) x.begin(), x.end()
+typedef vector<int> veci;
+typedef vector<string> vecs;
+typedef map<int, int> mapii;
+typedef map<char, int> mapci;
+typedef pair<int, int> P;
+
+// memory
+#define minit(a, i) memset(a, i, sizeof(a));
+
+// inf
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+// eps
+D EPS = 1e-9;
+/***
+ structure Point
+ */
+struct Point {
+	D x, y;
+	Point(D _x=0, D _y=0) : x(_x),y(_y) {}
+};
+typedef Point Vector;	// Point similar to Vector
+
+// operator
+Point operator + (const Point& a, const Point& b) { return Point(a.x+b.x, a.y+b.y); }
+Point operator - (const Point& a, const Point& b) { return Point(a.x-b.x, a.y-b.y); }
+Point operator * (const Point& a, const Point& b) { return Point(a.x*b.x, a.y*b.y); }
+Point operator / (const Point& a, const Point& b) { return Point(a.x/b.x, a.y/b.y); }
+bool operator < (const Point& a, const Point& b) { return a.x != b.x ? a.x < b.x : a.y < b.y; }
+bool operator > (const Point& a, const Point& b) { return b.x != a.x ? b.x < a.x : b.y < a.y; }
+bool operator == (const Point& a, const Point& b) { return fabs(a.x-b.x)<EPS && fabs(a.y-b.y)<EPS; }
+
+// basic function
+D norm(const Point& a) { return a.x*a.x + a.y*a.y; }
+D dot(const Vector& a, const Vector& b) { return a.x*b.x + a.y*b.y; }
+D cross(const Vector& a, const Vector& b) { return a.x*b.y - a.y*b.x; }
+D dist(const Point& a, const Point& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y)); }
+bool isVertical(const Vector& a, const Vector& b) { return fabs(dot(a,b))<EPS; }
+bool isParrallel(const Vector& a, const Vector& b) { return fabs(cross(a,b))<EPS; }
+
+struct Rectangle {
+	D left, top, right, bottom;
+	#define l left
+	#define t top
+	#define r right
+	#define b bottom
+	
+	Rectangle (D _l=0, D _t=0, D _r=0, D _b=0):left(_l),top(_t),right(_r),bottom(_b) {}
+};
+
+// rectangle collision
+bool rectCollision(Rectangle& A, Rectangle& B) {
+	Point ac((A.r - A.l)/2., (A.t - A.b)/2.), bc((B.r - B.l)/2., (B.t - B.b)/2.);
+	D x_dist = fabs(ac.x - bc.x), y_dist = fabs(ac.y - bc.y);
+	if (x_dist <= (ac.x - A.l) + (bc.x - B.l)
+		&& y_dist <= (A.t - ac.y) + (B.t - bc.y)) return true;
+	return false;
+}
+
+int main() {
+	Rectangle A, B;
+	
+	while (cin>>A.l) {
+		cin>>A.b>>A.r>>A.t>>B.l>>B.b>>B.r>>B.t;
+		if (rectCollision(A, B)) cout << "YES" << endl;
+		else cout << "NO" << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <math.h>
+#include <cctype>
+#include <stdlib.h>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <iterator>
+
+#define rep(i,n) for(i=1;i<=n;i++)
+#define Rep(i,n) for(i=0;i<n;i++)
+#define For(i,a,b) for(i=a;i<=b;i++)
+
+#define pb(x) push_back(x)
+#define sz(x) x.size()
+
+#define mem(ara,val) memset(ara,val,sizeof(ara))
+#define eps 1e-9
+
+#define si(x) scanf("%d",&x)
+#define sii(x,y) scanf("%d %d",&x,&y)
+#define sl(x) scanf("%lld",&x)
+#define sll(x,y) scanf("%lld %lld",&x,&y)
+#define ss(ch) scanf("%s",ch)
+#define pi(x) printf("%d",x)
+#define pii(x,y) printf("%d %d",x,y)
+#define pl(x) printf("%lld",x)
+#define pll(x,y) printf("%lld %lld",x,y)
+#define ps(ch) printf("%s",ch)
+#define NL printf("\n")
+#define debug(x) printf("wow %d !!\n",x)
+
+typedef long long LL;
+
+using namespace std;
+
+bool array[1000010];
+int ans[1000010];
+int main()
+{
+    int i,j;
+    array[1]=1;
+    for(i=2; i*i<=1000005; i++)
+    {
+
+        if(!array[i])for(j=i*i; j<=1000005; j=j+i)array[j]=1;
+    }
+    int cnt=0;
+    rep(i,1000005)
+    {
+        if(array[i]==0)cnt++;
+        ans[i]=cnt;
+    }
+    int n;
+    while(si(n) !=EOF)
+    {
+        pi(ans[n]);
+        NL;
+    }
+    return 0;
+}

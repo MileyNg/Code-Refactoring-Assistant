@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+static const int ABSENCE = -1;
+
+char JudgeGrade(int mid, int final, int retest) {
+	if ((mid == ABSENCE) || (final == ABSENCE)) {
+		return 'F';
+	}
+	int sum = mid + final;
+	if (sum >= 80) {
+		return 'A';
+	}
+	if (sum >= 65) {
+		return 'B';
+	}
+	if (sum >= 50) {
+		return 'C';
+	}
+	if (sum >= 30) {
+		return (retest >= 50) ? 'C' : 'D';
+	}
+	return 'F';
+}
+
+int main(void) {
+	int m = 0, f = 0, r = 0;
+	
+	for (;;) {
+		scanf("%d %d %d", &m, &f, &r);
+		if ((m == -1) && (f == -1) && (r == -1)) {
+			break;
+		}
+		printf("%c\n", JudgeGrade(m, f, r));
+	}
+	return 0;
+}

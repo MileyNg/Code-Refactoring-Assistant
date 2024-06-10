@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <stack>
+using namespace std;
+
+int main() {
+
+  string in;
+
+  while( true ) {
+    if ( cin.eof() ) break;
+
+    getline( cin, in );
+    if ( in.size() == 0 ) break;
+
+    stack<double> s;
+
+    long long int k = 0;
+
+    for ( int i = 0; i < in.size(); i++ ) {
+      if ( in[i] >= '0' && in[i] <= '9' ) {
+	k *= 10;
+	k += in[i] - '0';
+      }else if ( in[i] == ' ' ) {
+	s.push(1.00 * k);
+	k = 0;
+      }else {
+	double a, b;
+	a = s.top();
+	s.pop();
+	b = s.top();
+	s.pop();
+	if ( in[i] == '+' ) {
+	  //	  cout << a << " + " << b << endl;
+	  a += b;
+	}else if ( in[i] == '-' ) {
+	  //cout << a << " - " << b << endl;
+	  a -= b;
+	}else if ( in[i] == '*' ) {
+	  //cout << a << " * " << b << endl;
+	  a *= b;
+	}else if ( in[i] == '/' ) {
+	  //cout << a << " / " << b << endl;
+	  a /= b;
+	}
+	s.push( a );
+	i++;
+      }
+    }
+
+    cout << s.top() << endl;
+
+  }
+
+  return 0;
+
+}

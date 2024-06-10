@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+
+
+
+int main (void) {
+    int n, n2, m, k, bh, bt, c, i, j;
+    int card[100], buf[100];
+
+    scanf("%d\n", &n);
+    scanf("%d\n", &m);
+    n2 = n * 2;
+    for (i = 0; i < n2; i++) {
+        card[i] = i + 1;
+    }
+    for (i = 0; i < m; i++) {
+        scanf("%d", &k);
+        if (k) { // cut
+            for (j = 0; j < k; j++) {
+                buf[j] = card[j];
+            }
+            for (j = 0; j < n2 - k; j++) {
+                card[j] = card[j + k];
+            }
+            for (j = 0; j < k; j++) {
+                card[j + n2 - k] = buf[j];
+            }
+        }
+        else { // riffle shuffle
+            for (j = 1, c = n, bh = 0, bt = 0; j < n2 - 1; j+=2) {
+                buf[bt++] = card[j];
+                card[j] = card[c++];
+                buf[bt++] = card[j+1];
+                card[j+1] = buf[bh++];
+            }
+        }
+    }
+    for (i = 0; i < n2; i++) {
+        printf("%d\n", card[i]);
+    }
+    return 0;
+}

@@ -1,0 +1,23 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  ns = n.times.map{gets.strip.to_i}
+
+  count = 0
+
+  (n - 1).step(1, -1).each do |i|
+    for j in (0...i)
+      if ns[j] > ns[j + 1]
+        tmp = ns[j]
+        ns[j] = ns[j + 1]
+        ns[j + 1] = tmp
+        count += 1
+      end
+    end
+  end
+
+  puts count
+end

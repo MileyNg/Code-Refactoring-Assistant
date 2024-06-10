@@ -1,0 +1,92 @@
+#include <algorithm>
+#include <iostream>
+#include <queue>
+#include <string>
+#include <map>
+using namespace std;
+
+map<string,int> puzzle;
+
+struct state{
+	string str;
+	int num;
+};
+
+int main(void){
+	state init;
+
+	init.str="01234567";
+	init.num=0;
+
+	queue<state> q;
+	q.push(init);
+
+	while(!q.empty()){
+		state now=q.front();q.pop();
+
+		string cur=now.str;
+		//cout << cur << endl;
+
+		if(puzzle.find(cur)!=puzzle.end())
+			continue;
+
+		puzzle[cur]=now.num;
+
+		int i;
+		for(i=0;i<8;i++)
+			if(cur[i]=='0')
+				break;
+
+		int r=i/4;
+		int c=i%4;
+		
+		// row
+		if(r){
+			state next;
+			next.str=cur;
+			swap(next.str[i],next.str[i-4]);
+			next.num=now.num+1;
+			q.push(next);
+		}else{
+			state next;
+			next.str=cur;
+			swap(next.str[i],next.str[i+4]);
+			next.num=now.num+1;
+			q.push(next);
+		}
+		// column
+
+		if(c!=3){
+			state next;
+			next.str=cur;
+			swap(next.str[i],next.str[i+1]);
+			next.num=now.num+1;
+			q.push(next);
+		}
+		if(c!=0){
+			state next;
+			next.str=cur;
+			swap(next.str[i],next.str[i-1]);
+			next.num=now.num+1;
+			q.push(next);
+		}
+	}
+
+	while(true){
+		int a[8];
+		for(int i=0;i<8;i++)
+			cin >> a[i];
+
+		if(cin.eof())
+			break;
+		
+		string query;
+		for(int i=0;i<8;i++){
+			char cur=a[i]+'0';
+			query+=cur;
+		}
+		//cout << query << endl;
+		cout << puzzle[query] << endl;
+	}
+	return 0;
+}

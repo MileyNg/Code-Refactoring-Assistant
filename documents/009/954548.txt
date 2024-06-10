@@ -1,0 +1,85 @@
+#include <stdio.h>
+
+int recscan(double x[2][2], double y[2][2])
+{
+	int i, j;
+	
+	for (i = 0; i < 2; i++){
+		for (j = 0; j < 2; j++){
+			if (scanf("%lf %lf", &x[i][j], &y[i][j]) == EOF){
+				return EOF;
+			}
+		}
+	}
+	return 0;
+}
+
+void swap(double x[2][2], double y[2][2])
+{
+	double tmp;
+	int i;
+	
+	for (i = 0; i < 2; i++){
+		tmp = x[0][i];
+		x[0][i] = x[1][i];
+		x[1][i] = tmp;
+		tmp = y[0][i];
+		y[0][i] = y[1][i];
+		y[1][i] = tmp;
+	}
+}
+
+int main(void)
+{
+	double x[2][2];
+	double y[2][2];
+	
+	while (recscan(x, y) != EOF){
+		int i;
+		
+		for (i = 0; i < 2; i++){
+			if (x[i][0] > x[i][1]){
+				double tmp = x[i][0];
+				x[i][0] = x[i][1];
+				x[i][1] = tmp;
+			}
+			if (y[i][0] > y[i][1]){
+				double tmp = y[i][0];
+				y[i][0] = y[i][1];
+				y[i][1] = tmp;
+			}
+		}
+		
+		if (x[0][0] >= x[1][0]){
+			swap(x, y);
+		}
+		
+		if (x[0][0] <= x[1][0] && x[1][0] <= x[0][1]){
+			for (i = 0; i < 2; i++){
+				if (y[0][0] <= y[1][i] && y[1][i] <= y[0][1]){
+					puts("YES");
+					break;
+				}
+			}
+			if (i == 2){
+				puts("NO");
+			}
+		}
+		else if (x[0][0] <= x[1][1] && x[1][1] <= x[1][1]){
+			for (i = 0; i < 2; i++){
+				if (y[0][0] <= y[1][i] && y[1][i] <= y[0][1]){
+					puts("YES");
+					break;
+				}
+			}
+			if (i == 2){
+				puts("NO");
+			}
+		}
+		else {
+			puts("NO");
+		}
+	}
+	
+	return 0;
+}

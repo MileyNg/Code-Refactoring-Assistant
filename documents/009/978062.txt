@@ -1,0 +1,28 @@
+prev = false
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  teams = []
+
+  for i in (0...n)
+    name, cw, cl, cd = gets.chomp.split(" ")
+
+    pt = cw.to_i * 3 + cd.to_i
+
+    teams.push([pt, i, name])
+  end
+
+  teams.sort! do |a, b|
+    cmppt = b[0] <=> a[0]
+    (cmppt != 0) ? cmppt : a[1] <=> b[1]
+  end
+
+  puts if prev
+  prev = true
+
+  for t in teams
+    puts [t[2], t[0]].join(",")
+  end
+end

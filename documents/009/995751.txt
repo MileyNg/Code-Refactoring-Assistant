@@ -1,0 +1,22 @@
+while str = gets do
+	a = str.split(" ")
+	b = Array.new
+	a.each do |_a|
+		begin
+			b.push Integer(_a)
+		rescue
+			n1,n2 = b.pop,b.pop
+			if _a == '+'
+				b.push n2+n1
+
+			elsif _a == '-'
+				b.push n2-n1
+			elsif _a == '*'
+				b.push n2*n1
+			elsif _a == '/'
+				b.push n2/n1
+			end
+		end
+	end
+	puts b.pop.to_f
+end

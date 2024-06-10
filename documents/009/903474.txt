@@ -1,0 +1,43 @@
+//include---------------------------------------------------------------------------
+#include<cstdio>
+#include<cmath>
+#include<cstdlib>
+#include<cstring>
+#include<string>
+#include<cctype>
+#include<vector>
+#include<stack>
+#include<list>
+#include<queue>
+#include<deque>
+#include<bitset>
+#include<map>
+#include<algorithm>
+#include<memory>
+
+//using namespace-------------------------------------------------------------------
+using namespace std;
+
+//define,const----------------------------------------------------------------------
+#define rep(i, n) for(int i = 0; i < n; i++)
+const int INF = 1 << 25;
+#define MAX_N 100
+
+//global----------------------------------------------------------------------------
+int numbar_A, numbar_B;
+int a, b;
+
+//function--------------------------------------------------------------------------
+int main(){
+	scanf("%d %d", &numbar_A, &numbar_B);
+	if(numbar_A < numbar_B)
+		swap(numbar_A, numbar_B);
+	a = numbar_A;
+	b = numbar_B;
+	while(a % b != 0){
+		a = a % b;
+		swap(a, b);
+	}
+	printf("%d\n", b);
+	return 0;
+}

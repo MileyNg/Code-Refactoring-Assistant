@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <memory.h>
+
+int main(void) {
+	int i, j, n, m;
+	int x, y, d;
+	char t;
+	int p_x, p_y;
+	int table[21][21];
+	
+	while(1) {
+		scanf("%d\n", &n);
+		if(n==0) break;
+		memset((void*)table, 0x00, sizeof(table));
+		
+		for(i=0;i<n;i++) {
+			scanf("%d %d\n", &x, &y);
+			table[y][x] = 1;
+		}
+		
+		p_x = p_y = 10;
+		table[p_y][p_x] = 0;
+		scanf("%d\n", &m);
+		for(i=0;i<m;i++) {
+			scanf("%c %d\n", &t, &d);
+			switch(t) {
+				case 'N':
+					for(j=0;j<d;j++) {
+						table[++p_y][p_x] = 0;
+					}
+				break;
+				case 'S':
+					for(j=0;j<d;j++) {
+						table[--p_y][p_x] = 0;
+					}
+				break;
+				case 'W':
+					for(j=0;j<d;j++) {
+						table[p_y][--p_x] = 0;
+					}
+				break;
+				case 'E':
+					for(j=0;j<d;j++) {
+						table[p_y][++p_x] = 0;
+					}
+				break;
+				default:
+				break;
+			}
+		}
+		
+		m = 0;
+		for(i=0;i<21;i++) {
+			for(j=0;j<21;j++) {
+				if(table[i][j] != 0) {
+					m = 1;
+					break;
+				}
+			}
+			if(m==1) break;
+		}
+
+		if(m==1) {
+			printf("No\n");
+		} else {
+			printf("Yes\n");
+		}
+		
+	}
+	
+	return 0;
+}

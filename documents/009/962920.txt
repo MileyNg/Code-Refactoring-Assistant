@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+
+
+unsigned long long F[20] = {1, 1};
+
+unsigned long long DeQuy(int N)
+{
+	unsigned long long Temp = 0;
+	if (F[N])
+		Temp = F[N];
+	else
+		Temp = N * F[N - 1];
+	return Temp;
+}
+
+int main()
+{
+	int N = 0;
+	while (cin >> N)
+		cout << DeQuy(N) << endl;
+	return 0;
+}

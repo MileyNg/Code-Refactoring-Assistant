@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+string table[66];
+
+void solve()
+{
+	table[11] = "a";
+	table[12] = "b";
+	table[13] = "c";
+	table[14] = "d";
+	table[15] = "e";
+
+	table[21] = "f";
+	table[22] = "g";
+	table[23] = "h";
+	table[24] = "i";
+	table[25] = "j";
+
+	table[31] = "k";
+	table[32] = "l";
+	table[33] = "m";
+	table[34] = "n";
+	table[35] = "o";
+
+	table[41] = "p";
+	table[42] = "q";
+	table[43] = "r";
+	table[44] = "s";
+	table[45] = "t";
+
+	table[51] = "u";
+	table[52] = "v";
+	table[53] = "w";
+	table[54] = "x";
+	table[55] = "y";
+
+	table[61] = "z";
+	table[62] = ".";
+	table[63] = "?";
+	table[64] = "!";
+	table[65] = " ";
+	string s;
+	while(cin >> s)
+	{
+		if(s.size() % 2 == 1)
+		{
+			cout << "NA" << endl;
+			continue;
+		}
+		string ans = "";
+		for(int i = 0; i < s.size() - 1; i += 2)
+		{
+			int a = (s[i] - '0') * 10 + (s[i + 1] - '0');
+			if(!((11 <= a && a <= 15) || (21 <= a && a <= 25) || (31 <= a && a <= 35) ||(41 <= a && a <= 45) ||(51 <= a && a <= 55) ||(61 <= a && a <= 65)))
+			{
+				ans = "";
+				break;
+			}
+			ans += table[a];
+		}
+		if(ans == "")
+		{
+			cout << "NA" << endl;
+		}
+		else
+		{
+			cout << ans << endl;
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

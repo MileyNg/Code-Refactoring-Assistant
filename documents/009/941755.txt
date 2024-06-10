@@ -1,0 +1,39 @@
+#include<iostream>
+using namespace std;
+
+bool isLeepYear(int year) {
+	return year%4==0 && (year%100!=0 || year%400==0);
+}
+
+int days[] =  { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int sdays[] = { 0, 31, 59, 90,120,151,180,212,243,273,304,334,365};
+int FromNewYear(int year, int month, int day) {
+	int count = 0;
+	count += sdays[month-1];
+	if(isLeepYear(year) && month>2) count += 1;
+	count += day;
+	return count;
+}
+
+int DaysInYear(int year) {
+	return (isLeepYear(year) ? 366 : 365);
+}
+
+int main() {
+	int y1, m1, d1, y2, m2, d2, ans;
+	while(cin >> y1 >> m1 >> d1 >> y2 >> m2 >> d2) {
+		ans = 0;
+		if(y1==-1 && m1==-1 && d1==-1 && y2==-1 && m2==-1 && d2==-1) break;
+		for(int y = y1+1; y<y2; ++y) {
+			ans += DaysInYear(y);
+		}
+		if(y1!=y2) {
+			ans += DaysInYear(y1)-FromNewYear(y1, m1, d1);
+			ans += FromNewYear(y2, m2, d2);
+		}else {
+			ans += FromNewYear(y2, m2, d2) - FromNewYear(y1, m1, d1);
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

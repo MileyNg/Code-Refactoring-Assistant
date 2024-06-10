@@ -1,0 +1,39 @@
+class Point
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_f)
+  end
+  def +(p)
+    Point.new(x + p.x, y + p.y, z + p.z)
+  end
+  def -(p)
+    Point.new(x - p.x, y - p.y, z - p.z)
+  end
+end
+
+def determinant(p, q, r)
+  p.x * q.y * r.z +
+  q.x * r.y * p.z +
+  r.x * p.y * q.z -
+  r.x * q.y * p.z -
+  q.x * p.y * r.z -
+  p.x * r.y * q.z
+end
+
+UAZ = Point.new(*gets.split)
+ENEMY = Point.new(*gets.split)
+BARRIER = 3.times.map{Point.new(*gets.split)}
+
+beam = ENEMY - UAZ
+edge = 3.times.map{|i| BARRIER[(i + 1) % 3] - BARRIER[i] - UAZ}
+
+count = 0
+BARRIER.each do |p|
+  count += 1 if determinant(UAZ, ENEMY, p) < 0
+end
+
+if count == 0 || count == 3
+  puts "HIT"
+else
+  puts "MISS"
+end

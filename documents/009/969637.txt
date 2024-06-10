@@ -1,0 +1,38 @@
+#include <iostream>
+#include <set>
+#include <string>
+
+using namespace std;
+
+string reverse(string str){
+    int length = str.size();
+    string ret("");
+    for (int i = 0; i < length; i++) { ret += str[length-i-1]; }
+    return ret;
+}
+
+int main(){
+    int n; cin >> n;
+    for (int i = 0; i < n; i++) {
+        string str; cin >> str;
+        set<string> s;
+        s.insert(str);
+        for (int j = 1; j < str.size(); j++) {
+            string a = str.substr(0, j);
+            string b = str.substr(j);
+            string ra = reverse(a);
+            string rb = reverse(b);
+            s.insert(a+rb);
+            s.insert(ra+b);
+            s.insert(ra+rb);
+            s.insert(b+a);
+            s.insert(b+ra);
+            s.insert(rb+a);
+            s.insert(rb+ra);
+        }
+        cout << s.size() << endl;
+    }
+    
+
+    return 0;
+}

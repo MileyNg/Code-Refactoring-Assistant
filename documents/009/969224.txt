@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+#define N 100000
+
+int A[N],q;
+
+int Partition(int ,int);
+void Print(int n);
+
+main(){
+  
+  int i,n=0,p=0,r=0;
+ 
+  scanf("%d",&n);
+  
+  if(N < n || n < 0) return 0;
+  
+  r = n-1;
+  
+  for(i=0;i < n;i++){
+    scanf("%d",&A[i]);
+  }
+  
+  q = Partition(p,r);
+  
+  Print(n);
+  
+  return 0;
+}
+
+Partition(int p,int r){
+  int x=0,j;
+  x = A[r];
+  int i = p-1;
+  int tmp=0;
+  
+  for(j=p;j <= r-1;j++){
+    if(A[j] <= x){
+      i=i+1;
+      tmp = A[j];
+      A[j] = A[i];
+      A[i] = tmp;
+    }
+  }
+  tmp =0;
+  tmp = A[i+1];
+  A[i+1] = A[r];
+  A[r] = tmp;
+  
+  return i+1;
+}
+
+void Print(int n){
+  int i;
+  
+  for(i=0;i < n;i++){
+    if(i == q) printf("[%d] ",A[i]);
+    else printf("%d ",A[i]);
+  }
+  printf("\n");
+}

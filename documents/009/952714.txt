@@ -1,0 +1,38 @@
+include Math
+
+def overwrap(arr,x2,y2,r2)
+	ans = 0
+	arr.each{|cir|
+		x1,y1,r1 = cir
+		d2 = ((x1-x2)**2 + (y1-y2)**2)
+		if ((r1 - r2) ** 2) < d2 and (d2 < ((r1 + r2) ** 2)) then
+			d = sqrt(d2)
+			r12 = r1**2
+			r22 = r2**2
+			theta1 = Math.acos((d2+r12-r22)/(2*d*r1))
+			theta2 = Math.acos((d2-r12+r22)/(2*d*r2))
+			ans += (r1 * theta1 + r2 * theta2) * 2
+		elsif (((r1-r2)**2) >= d2 ) then
+			ans += [r1,r2].min * 2 * PI
+		end
+	}
+	
+	return ans
+end
+
+loop do
+	n = gets.to_i
+	if (n == 0) then
+		exit
+	end
+	
+	arr = []
+	sum = 0
+	n.times{|i|	
+		x,y,r = gets.chomp.split.map(&:to_i)
+		sum += r * 2 * PI
+		sum -= overwrap(arr,x,y,r)
+		arr.push([x,y,r])
+	}
+	p sum
+end

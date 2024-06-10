@@ -1,0 +1,24 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int in[128], out[128];
+
+int main() {
+  while(true) {
+    int N; cin >> N;
+    if(N == 0) break;
+    fill(in, in + 128, 0);
+    fill(out, out + 128, 0);
+    for(int i = 0; i < N; ++i) {
+      string s; cin >> s;
+      in[s[0]]++; out[s[s.size()-1]]++;
+    }
+    bool ok = true;
+    for(int i = 0; i < 128; ++i) {
+      if(in[i] != out[i]) ok = false;
+    }
+    cout << (ok ? "OK" : "NG") << endl;
+  }
+}

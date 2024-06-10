@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void compare( int *a, int *b);
+
+int main( int argc, char *argv[] ){
+   int x, y, z;
+
+   if ( scant( "%d*%d*%d", x, y, z ) != 3 ){
+      exit( 1 );
+   }
+
+   compare( &x, &y );
+   compare( &y, &z );
+   compare( &z, &x );
+}
+
+void compare( int *a, int *b ){
+   int tmp;
+
+   if ( *a > *b){
+      *a = tmp;
+      *a = *b;
+      *b = tmp;
+   }
+}

@@ -1,0 +1,23 @@
+#include <vector>
+
+struct S {
+    int a, b, c;
+
+    bool f() const {
+        return a + b + c;
+    }
+};
+
+void f(std::vector<S> &v) {
+    if(v.size() == 0) return;
+    v.back().f();
+    v.pop_back();
+    f(v);
+    v.push_back(S());
+}
+
+int main() {
+    std::vector<S> v(100);
+    f(v);
+    return 0;
+}

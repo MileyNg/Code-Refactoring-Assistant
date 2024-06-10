@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+
+int main(){
+  int n, page;
+  vector< int >p;
+  while(scanf("%d", &n) && n){
+    p.clear();
+    rep(i, n){
+      scanf("%d", &page); 
+      p.push_back(page);
+    }
+    p.push_back(0);
+    int cnt = 0, start = 0, f = 1;
+    rep(i, n){
+      if(!start) start = p[i];
+      if(p[i] + 1 == p[i+1]) cnt++;
+      else{
+	printf(f?"%d":" %d", start);
+	if(cnt) printf("-%d", p[i]);
+	cnt = start = f = 0;
+      }
+    }
+    puts("");
+  }
+  return 0;
+}

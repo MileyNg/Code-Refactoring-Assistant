@@ -1,0 +1,56 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+ll N,M,L,K[2010],S[100010],sum[100010];
+ll dp[2010][2010];
+
+ll f(int a,int b){
+	if(K[a] > K[b]) swap(a,b);
+	return (sum[K[b]+1] - sum[K[a]])/L;
+}
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	cin>>N>>M>>L;
+	rep(i,N)cin>>K[i],K[i]--;
+	sum[0] = 0;
+	rep(i,M){
+		cin>>S[i];
+		sum[i+1] = sum[i] + S[i];
+	}
+	sort(K,K+N);
+	rep(i,N)rep(j,i) dp[i][j] = INF*INF;
+	dp[1][0] = f(0,1);
+	rep(i,N)rep(j,i){
+		dp[i+1][j] = min(dp[i+1][j], dp[i][j] + f(i,i+1));
+		dp[i+1][i] = min(dp[i+1][i], dp[i][j] + f(j,i+1));
+	}
+	ll ans = INF*INF;
+	rep(j,N-1) ans = min(ans, dp[N-1][j] + f(j,N-1));
+	cout<<ans<<endl;
+}

@@ -1,0 +1,43 @@
+/*
+	0583:Common Divisors
+*/
+#include	<iostream>
+#include	<algorithm>
+
+using namespace std;
+
+int main(void) {
+	int num;
+	int a, b, c;
+	int kmin;
+	
+	cin >> num;
+	
+	if(num == 2) {
+		cin >> a >> b;
+		
+		kmin = min(a, b);
+		for(int i = 1; i < kmin; i++) {
+			if(a % i == 0 && b % i == 0) {
+				cout << i << endl;
+			}
+		}
+		if(a % kmin == 0 && b % kmin == 0) {
+			cout << kmin << endl;
+		}
+	} else {
+		cin >> a >> b >> c;
+		
+		kmin = min(a, min(b, c));
+		for(int i = 1; i < kmin; i++) {
+			if(a % i == 0 && b % i == 0 && c % i == 0) {
+				cout << i << endl;
+			}
+		}
+		if(a % kmin == 0 && b % kmin == 0 && c % kmin == 0) {
+			cout << kmin << endl;
+		}
+	}
+	
+	return 0;
+}

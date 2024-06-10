@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+int main(void){
+
+  int n, i, a, b, ans = 0;
+
+
+  scanf("%d%d",&n,&a);
+  for(i = 1 ; i < n ; i++){
+    scanf("%d",&b);
+    if(b - a > ans) ans = b - a;
+    if(b - a < 0)a = b;
+    if(n == 1) a = b;
+  }
+  printf("%d\n", ans);
+  return 0;
+}

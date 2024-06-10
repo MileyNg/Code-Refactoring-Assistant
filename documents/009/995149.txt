@@ -1,0 +1,33 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  for(int N;cin>>N,N;){
+    int r[1000],w[1000];
+    int rsum=0,wsum=0;
+    for(int i=0;i<N;i++){
+      cin>>r[i]>>w[i];
+      rsum+=r[i];
+      wsum+=w[i];
+    }
+    auto it=max_element(begin(r),begin(r)+N);
+    if(*it*2<=rsum){
+      cout<<rsum+wsum<<endl;
+    }else{
+      bool dp[1001]={true};
+      for(int i=0;i<N;i++){
+	if(*it==r[i])continue;
+	for(int j=1000;j-w[i]>=0;j--){
+	  dp[j]|=dp[j-w[i]];
+	}
+      }
+      int x=*it*2-rsum;
+      while(!dp[x]){
+	x--;
+      }
+      cout<<*it*2+wsum-x<<endl;
+    }
+  }
+}

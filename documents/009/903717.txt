@@ -1,0 +1,88 @@
+#include <stdio.h>
+
+int paper[10][10];
+
+void add(int x, int y)
+{
+	if( x < 0 || x > 9 || y < 0 || y > 9 )return;
+	paper[x][y]++;
+}
+
+void smallAdd(int x, int y)
+{
+	add( x, y );
+	add( x - 1, y     );
+	add( x    , y - 1 );
+	add( x + 1, y     );
+	add( x    , y + 1 );
+}
+
+void midAdd(int x, int y)
+{
+	smallAdd(x, y);
+	add( x - 1, y - 1 );
+	add( x + 1, y - 1 );
+	add( x - 1, y + 1 );
+	add( x + 1, y + 1 );
+}
+
+void bigAdd(int x, int y)
+{
+	midAdd(x, y);
+	add( x    , y - 2 );
+	add( x - 2, y     );
+	add( x    , y + 2 );
+	add( x + 2, y     );
+}
+
+void drop(int x, int y, int size)
+{
+	int i;
+	int j;
+	switch( size )
+	{
+		case 1:
+			smallAdd( x, y );
+			break;
+		case 2:
+			midAdd( x, y );
+			break;
+		case 3:
+			bigAdd( x, y );
+			break;
+	}
+}
+
+int main(void)
+{
+	int x;
+	int y;
+	int size;
+	int numOfWhite = 0;
+	int mostBlack = 0;
+	int i;
+	int j;
+	
+	while( scanf( "%d,%d,%d", &x, &y, &size ) != EOF )
+	{
+		drop( x, y, size );
+	}
+	
+	for( i = 0; i < 10; i++ )
+	{
+		for( j = 0; j < 10; j++ )
+		{
+			if( paper[i][j] == 0 )
+			{
+				numOfWhite++;
+			}
+			if( paper[i][j] > mostBlack )
+			{
+				mostBlack = paper[i][j];
+			}
+		}
+	}
+	printf( "%d\n%d\n", numOfWhite, mostBlack );
+	
+	return (0);
+}

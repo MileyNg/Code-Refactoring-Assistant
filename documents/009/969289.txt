@@ -1,0 +1,79 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+bool dfs(vs& grid,int i,int j,int d,int rest,string& res)
+{
+	if(rest==1) return true;
+	grid[i][j]='.';
+	
+	int h=grid.size(),w=grid[0].size();
+	rep(k,4) if(k!=(d^1)){
+		const int di[]={-1,1,0,0},dj[]={0,0,-1,1};
+		for(int ni=i,nj=j;0<=ni && ni<h && 0<=nj && nj<w;ni+=di[k],nj+=dj[k])
+			if(grid[ni][nj]=='o'){
+				res.push_back("UDLR"[k]);
+				if(dfs(grid,ni,nj,k,rest-1,res))
+					return true;
+				//res.pop_back();
+				res.erase(res.size()-1);
+				break;
+			}
+	}
+	
+	grid[i][j]='o';
+	return false;
+}
+
+int main()
+{
+	for(int h,w;cin>>h>>w && h|w;){
+		vs grid(h);
+		rep(i,h) cin>>grid[i];
+		
+		int cnt=0;
+		rep(i,h) rep(j,w) cnt+=grid[i][j]!='.';
+		rep(i,h) rep(j,w) if(isupper(grid[i][j])){
+			int d=string("UDLR").find(grid[i][j]);
+			grid[i][j]='o';
+			string res;
+			assert(dfs(grid,i,j,d,cnt,res));
+			cout<<res<<endl;
+		}
+	}
+}

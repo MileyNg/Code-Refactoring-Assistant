@@ -1,0 +1,32 @@
+// AOJ 1019
+#include<cstdio>
+#define rep( i, a ) for( int i = 0; i != (a); ++i )
+
+int N, K;
+int S[100];
+int B[100][100];
+
+int main()
+{
+	while( scanf( "%d%d", &N, &K ), N|K )
+	{
+		rep( i, K )
+			scanf( "%d", S+i );
+		rep( i, N )
+			rep( j, K )
+				scanf( "%d", &B[i][j] );
+
+		bool fl = true;
+		rep( i, K )
+		{
+			int sum = 0;
+			rep( j, N )
+				sum += B[j][i];
+			if( sum > S[i] ) { fl = false; break; }
+		}
+
+		puts( fl ? "Yes" : "No" );
+	}
+
+	return 0;
+}

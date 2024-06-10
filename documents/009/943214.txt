@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<algorithm>
+#include<cstring>
+#define INF 1<<28
+#define F first
+#define S second
+using namespace std;
+
+int sx, sy, gx, gy;
+typedef pair < int, int > P;
+vector < P > p[5];
+int memo[5][5][1111];
+int a, b;
+
+int solve(int k, int t, int q){
+
+  if(memo[k][t][q]) return memo[k][t][q];
+  if(k == 4) return abs(p[t][q].F-gx) + abs(p[t][q].S-gy);
+
+  int ans = INF, d = (t+1)%5, s;
+  for(int i=0;i<p[d].size();i++){
+    if(!k) s = abs(sx-p[d][i].F) + abs(sy-p[d][i].S);
+    else s = abs(p[t][q].F-p[d][i].F) + abs(p[t][q].S-p[d][i].S);
+    ans = min(ans, solve(k+1, d, i) + s);
+  }
+
+  return memo[k][t][q] = ans;
+}
+
+int main(){
+
+  int w,h;
+  char c;
+
+  while(true){
+    cin >> w >> h;
+    if(!w && !h) break;
+
+    for(int i=0;i<5;i++) p[i].clear();
+    
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++){
+	cin >> c;
+	if(c == 'S') sx = j, sy = i;
+	if(c == 'G') gx = j, gy = i;
+	else if(c != '.') p[c-'1'].push_back(P(j,i));
+      }
+    }
+    
+    b = INF;
+    for(int i=0;i<5;i++){
+      memset(memo, 0, sizeof(memo));
+      if(b > solve(0,i,0)) a = i, b = solve(0,i,0);
+    }
+
+    if(b == INF) cout << "NA\n";
+    else cout << a+1 << " " << b << endl;
+
+  }
+}

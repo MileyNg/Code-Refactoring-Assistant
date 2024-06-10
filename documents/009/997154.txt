@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const double EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> PII;
+
+/** Problem0201 : Wrought Gold Master **/
+map<string, int> item;
+map<string, vector<string> > recipe;
+
+int min_price(string t)
+{
+	int res = item[t];
+	if (recipe[t].size()) {
+		int tmp=0;
+		rep(i, recipe[t].size()) {
+			tmp += min_price(recipe[t][i]);
+		}
+		res = min(res, tmp);
+	}
+	return res;
+}
+
+int main()
+{
+	int N, M;
+	while (cin>>N, N) {
+		item.clear(); recipe.clear();
+		
+		rep(i, N) {
+			string s; int a;
+			cin>>s>>a;
+			item[s]=a;
+		}
+		cin>>M;
+		rep(i, M) {
+			string s; int k;
+			cin>>s>>k;
+			rep(j, k) {
+				string ss; cin>>ss;
+				recipe[s].push_back(ss);
+			}
+		}
+		
+		string target;
+		cin >> target;
+		cout << min_price(target) << endl;
+	}
+}

@@ -1,0 +1,57 @@
+// 2014/06/03 Tazoe
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+	while(true){
+		int m;
+		cin >> m;
+
+		if(m==0)
+			break;
+
+		double S1 = 0.0;
+		int V1 = 360;
+
+		for(int i=0; i<m-1; i++){
+			int v;
+			cin >> v;
+
+			S1 += sin((double)v*M_PI/180.0);
+			V1 -= v;
+		}
+
+		S1 += sin((double)V1*M_PI/180.0);
+
+		int n;
+		cin >> n;
+
+		double S2 = 0.0;
+		int V2 = 360;
+
+		for(int i=0; i<n-1; i++){
+			int v;
+			cin >> v;
+
+			S2 += sin((double)v*M_PI/180.0);
+			V2 -= v;
+		}
+
+		S2 += sin((double)V2*M_PI/180.0);
+
+		if(S1==S2){
+			cout << 0 << endl;
+		}
+		else if(S1>S2){
+			cout << 1 << endl;
+		}
+		else{
+			cout << 2 << endl;
+		}
+	}
+
+	return 0;
+}

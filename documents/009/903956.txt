@@ -1,0 +1,52 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+char **v;
+
+int visit(char **a,int i,int j)
+{
+  v[i][j]++;
+  if(v[i][j]==2){
+    printf("LOOP\n");
+    return -1;
+  }
+  if(a[i][j]=='.'){
+    printf("%d %d\n",i,j);
+  }else if(a[i][j]=='>')
+    visit(a,i,j+1);
+  else if(a[i][j]=='<')
+    visit(a,i,j-1);
+  else if(a[i][j]=='v')
+    visit(a,i+1,j);
+  else if(a[i][j]=='^')
+    visit(a,i-1,j);
+  return 0;
+
+}
+
+int main(void)
+{
+  int m,n,i,j;
+  char **a,buf[1024];
+  scanf("%d %d",&m,&n);
+  a=malloc(sizeof(char *)*m);
+  for(i=0;i<m;i++)
+    a[i]=malloc(sizeof(char)*n);
+  v=malloc(sizeof(char *)*m);
+  for(i=0;i<m;i++)
+    v[i]=malloc(sizeof(char)*n);
+  for(i=0;i<m;i++)
+    for(j=0;j<n;j++)
+      v[i][j]=0;
+ 
+  rewind(stdin);
+  for(i=0;i<m;i++){
+    fgets(buf,sizeof(char)*n,stdin);
+    for(j=0;j<n;j++){
+      a[i][j]=getc(stdin);  
+    }
+    rewind(stdin);
+  }
+  visit(a,0,0);
+  return 0;
+}

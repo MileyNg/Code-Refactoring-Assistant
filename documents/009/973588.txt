@@ -1,0 +1,51 @@
+#include <bits/stdc++.h> // only for GCC
+
+using namespace std;
+
+//typedef
+//------------------------------------------
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vbb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+//container util
+//------------------------------------------
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+
+//repetition
+//------------------------------------------
+#define loop(i,a,b) for(int i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+
+bool p[1299710];
+
+void erato(){
+    fill(p, p+1299710, true);
+    p[0] = p[1] = false;
+    rep(i, 1299710){
+        if(!p[i]) continue;
+        for(int j=i+i; j < 1299710; j+=i){
+            p[j] = false;
+        }
+    }
+}
+
+int main(){
+    long long n;
+    erato();
+    while(cin >> n, n){
+        int ans = 0;
+        for(long long i = n; !p[i]; i--) ans++;
+        if(!p[n]) for(long long i = n+1; !p[i]; i++) ans++;
+        if(ans != 0) cout << ans+1 << endl;
+        else cout << 0 << endl;
+    }
+}

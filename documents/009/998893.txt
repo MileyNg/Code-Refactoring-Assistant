@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 255 //ヒープの個数
+ 
+int Parent(int i){ //親のアドレス番号ッスね
+  return i/2;
+}
+ 
+int Left(int i){　//左側の子のアドレス番号ッス
+  return 2*i;
+}
+ 
+int Right(int i){ //右側の子のアドレス番号ッス
+  return 2*i+1;
+}
+ 
+int check(int n,int i){//プリントするパターンをここで分岐させるッス
+  if(n>=Right(i)) return 1;//左側と右側の子供がいる
+  else if(n>=Left(i) && n<Right(i)) return 2;//左の子供は居るけど、右側の子供がいない
+  else if(n<Left(i)) return 3;//左側すらないのか…（困惑）
+}
+ 
+main(){
+  int n,i;
+  int A[N];
+ 
+  scanf("%d",&n);//スキャンする個数ッス
+ 
+  for(i=1;i<=n;i++){//for文回して頭も回すで！
+	 scanf("%d",&A[i]);
+ }
+
+  for(i=1;i<=n;i++){//for文回してプリントするやでー
+    if(i==1){//最初は親無いから場合分けするやでー
+      if(check(n,i)==1) printf("node %d: key = %d, left key = %d, right key = %d, \n",i,A[i],A[Left(i)],A[Right(i)]);
+      else if(check(n,i)==2) printf("node %d: key = %d, left key = %d, \n",i,A[i],A[Left(i)]);
+      else if(check(n,i)==3) printf("node %d: key = %d, \n",i,A[i]);
+    }
+    else{//一番最初以外はこの３つのパターンでプリントするやでー
+      if(check(n,i)==1) printf("node %d: key = %d, parent key = %d, left key = %d, right key = %d, \n",i,A[i],A[Parent(i)],A[Left(i)],A[Right(i)]);
+      else if(check(n,i)==2) printf("node %d: key = %d, parent key = %d, left key = %d, \n",i,A[i],A[Parent(i)],A[Left(i)]);
+      else if(check(n,i)==3)printf("node %d: key = %d, parent key = %d, \n",i,A[i],A[Parent(i)]);
+    }
+  }
+ 
+  return 0;
+}

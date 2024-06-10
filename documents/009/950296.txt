@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+	int n;
+	string b;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int out = 0;
+		int sco = 0;
+		int rui[3] = {0};
+		while (out != 3) {
+			cin >> b;
+			if (b == "OUT") {
+				out++;
+			} else if (b == "HIT") {
+				for (int j = 2; j >= 0; j--) {
+					if (rui[j] == 1) {
+						if (j == 2) {
+							sco++;
+							rui[j] = 0;
+						} else {
+							rui[j+1] = 1;
+							rui[j] = 0;
+						}
+					}
+				}
+				rui[0] = 1;
+			} else {
+				sco++;
+				for (int j = 0; j < 2; j++) {
+					if (rui[j] == 1) {
+						rui[j] = 0;
+						sco++;
+					}
+				}
+			}
+		}
+		cout << sco << endl;
+	}
+	return 0;
+}

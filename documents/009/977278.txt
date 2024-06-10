@@ -1,0 +1,58 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#define MAX 100005
+#define NIL -1
+
+/*
+p: parent
+l: left-child
+r: right sibling
+*/
+struct Node{ int p, l, r; };
+struct Node T[MAX]; // Tree
+
+void pre(int u){
+printf(" %d",u);
+	if (T[u].l != -1)
+		pre(T[u].l);
+	if (T[u].r != -1)
+		pre(T[u].r);
+}
+void in(int u){
+	if (T[u].l != -1)
+		in(T[u].l);
+	printf(" %d", u);
+	if (T[u].r != -1)
+		in(T[u].r);
+}
+void pos(int u){
+	if (T[u].l != -1)
+		pos(T[u].l);
+	if (T[u].r != -1)
+		pos(T[u].r);
+	printf(" %d", u);
+}
+
+main(){
+	int i, d, v, c, n;
+
+	scanf("%d", &n);
+
+	for (i = 0; i < n; i++) {
+		T[i].p = T[i].l = T[i].r = NIL;
+	}
+
+	for (i = 0; i < n; i++){
+		scanf("%d %d %d", &v, &d, &c);
+		T[v].l = d;
+		T[v].r = c;
+		T[d].p = T[c].p = v;
+	}
+	printf("Preorder\n");
+	pre(0);
+	printf("\nInorder\n");
+	in(0);
+	printf("\nPostorder\n");
+	pos(0);
+	return 0;
+}

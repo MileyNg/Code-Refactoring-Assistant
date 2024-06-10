@@ -1,0 +1,40 @@
+#include<stdio.h>
+int main(){
+
+
+  int g,n,k;
+  int d1,d2;
+  int i,j,t,l;
+  int sam,sa[100000];
+  if( scanf("%d",&g)!=EOF){
+    for(l=0;l<g;l++){
+      sam=0;
+      scanf("%d %d",&n,&k);
+    
+      for(j=0;j<n;j++){
+	scanf("%d",&d2);
+	if(j==0)d1=d2;
+	else{
+	  sa[j-1]=d2-d1;
+	  sam+=d2-d1;
+	  d1=d2;
+	}
+      }
+      for(i=0;i<n;i++){
+	for(j=1;j+i<n;j++){
+	  if(sa[j]>sa[j-1]){
+	    t=sa[j-1];
+	    sa[j-1]=sa[j];
+	    sa[j]=t;
+	  }
+	}
+      }
+      for(i=0;i<k-1;i++){
+	sam-=sa[i];
+      }
+      if(sam<0)sam=0;
+      printf("%d\n",sam);   
+    }
+  }
+  return 0;
+}

@@ -1,0 +1,70 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+#define MAXH 1010
+#define MAXW 1010
+#define MAXN 11
+#define INF 10000000
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+int H, W, N;
+char field[MAXH][MAXW];
+pair<int, int> goal[MAXN];
+int main(void) {
+    cin >> H >> W >> N;
+    for (int i = 0; i < H; i++)
+        for (int j = 0; j < W; j++)
+            cin >> field[i][j];
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            int x = field[i][j] - '0';
+            if (1 <= x && x <= N) {
+                goal[x] = make_pair(i, j);
+            } else if (field[i][j] == 'S') {
+                goal[0] = make_pair(i, j);
+            }
+        }
+    }
+    int ret = 0;
+    for (int a = 0; a < N; a++) {
+        int d[H][W];
+        for (int i = 0; i < H; i++)
+            for (int j = 0; j < W; j++)
+                d[i][j] = INF;
+        queue<int> X;
+        queue<int> Y;
+        X.push(goal[a].second); Y.push(goal[a].first);
+        d[goal[a].first][goal[a].second] = 0;
+        while (!X.empty()) {
+            int x = X.front(); X.pop();
+            int y = Y.front(); Y.pop();
+            if (x == goal[a+1].second && y == goal[a+1].first) {
+                ret += d[y][x];
+                break;
+            }
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (0 <= nx && nx < W && 0 <= ny && ny < H && d[ny][nx] == INF && field[ny][nx] != 'X') {
+                    d[ny][nx] = d[y][x] + 1;
+                    X.push(nx);
+                    Y.push(ny);
+                }
+            }
+        }
+    }
+    cout << ret << endl;
+    return 0;
+}

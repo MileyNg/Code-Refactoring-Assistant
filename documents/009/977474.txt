@@ -1,0 +1,24 @@
+def loop(a, m)
+  k = 0
+  x = 1
+  while true
+    k += 1
+    x = (a * x) % m
+    break if x == 1
+  end
+
+  return k
+end
+
+### main
+
+while true
+  a1, m1, a2, m2, a3, m3 = gets.chomp.split(" ").map{|s| s.to_i}
+  break if (a1 | m1 | a2 | m2 | a3 | m3) == 0
+
+  k1 = loop(a1, m1)
+  k2 = loop(a2, m2)
+  k3 = loop(a3, m3)
+
+  puts k1.lcm(k2).lcm(k3)
+end

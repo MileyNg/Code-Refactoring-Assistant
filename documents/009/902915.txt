@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <math.h>
+
+#define PI	(3.14159265358979323846264338)
+
+void calcPoint( double* x, double* y, int* dir, int len, int deg )
+{
+	double dirRad = *dir * PI / 180.0;
+	
+	*x += sin( dirRad ) * len;
+	*y += cos( dirRad ) * len;
+	
+	*dir += deg;
+}
+
+int main(void)
+{
+	double x = 0;
+	double y = 0;
+	int dir = 0;
+	int len;
+	int deg;
+	
+	while( 1 )
+	{
+		scanf( "%d,%d", &len, &deg );
+		if( len == 0 && deg == 0 )break;
+		
+		calcPoint( &x, &y, &dir, len, deg );
+	}
+	printf( "%d\n%d\n", (int)x, (int)y );//*/
+	
+	return (0);
+}

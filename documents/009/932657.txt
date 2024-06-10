@@ -1,0 +1,88 @@
+#include<cstdio>
+#include<cstdlib>
+#include<ctime>
+#include<cmath>
+#include<cstring>
+#include<cctype>
+#include<complex>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<vector>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+#include<set>
+#include<bitset>
+#include<numeric>
+using namespace std;
+const int dx[]={1,0,-1,0};
+const int dy[]={0,1,0,-1};
+#define INF 1e+8
+#define EPS 1e-7
+#define PB push_back
+#define fi first
+#define se second
+#define ll long long
+#define MOD 26
+#define reps(i,j,k) for(int i = (j); i < (k); i++)
+#define rep(i,j) reps(i,0,j)
+typedef pair<int,int> Pii;
+typedef vector<int> vi;
+int main(){
+	int n;
+	scanf("%d",&n);
+	while(n--){
+		char str[258];
+		getchar();
+        fgets(str, 258, stdin);
+		set < string > target;
+		stringstream stre(str);
+		string tmp;
+		while(stre >> tmp){
+			if(tmp.size() == 4){
+				target.insert(tmp);
+			}
+		}
+		string ans = "";
+		int i = 1;
+		int alpha;
+		int beta;
+		while(i){
+			if(i%13 == 0)continue;
+			rep(j,26){
+				rep(k,2){
+					string sub;
+					if(k == 0){
+						sub = "this";
+					}
+					if(k == 1){
+						sub = "that";
+					}
+					rep(l,4){
+						sub[l] = ((i*(sub[l]-'a')+j) % MOD)+'a';
+					}
+					if(target.count((string)sub)){
+						alpha = i;
+						beta = j;
+						goto end;
+					}
+				}
+			}
+			i += 2;
+		}
+		end:;
+		map < char , char > memo;
+		rep(i,26){
+			memo[((alpha*i+beta) % MOD)+'a'] = i+'a';
+		}
+		rep(i,strlen(str)){
+			if(str[i] == ' ')ans += " ";
+			else ans += memo[str[i]];
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

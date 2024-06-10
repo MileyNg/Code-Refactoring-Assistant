@@ -1,0 +1,87 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <algorithm>
+#include <iomanip>
+using namespace std;
+
+const int MAX_N = 100;
+const int MAX_M = 100;
+
+double g[ MAX_M + 1 ][ MAX_N + 1 ][ MAX_N + 1 ];
+
+int main()
+{
+	int n, m;
+
+	while( cin >> n >> m && n != 0 && m != 0 ){
+		memset( g, 0, sizeof(g) );
+		for( int i = 0; i < n; ++i ){
+			for( int j = 0; j < n; ++j ){
+				cin >> g[ 2 ][ i ][ j ];
+			}
+		}
+		for( int i = 0; i < n; ++i ){
+			double beginMax = 0.0;
+			double endMax = 0.0;
+			for( int j = 0; j < n; ++j ){
+				beginMax = max( beginMax, g[ 2 ][ i ][ j ] );	//最初に撒く肥料を固定したときの最大成長値
+				endMax = max( endMax, g[ 2 ][ j ][ i ] );		//最後に撒く肥料を固定したときの最大成長値
+				//1回目撒いたときは1.0倍とみなして初期化
+				g[ 1 ][ i ][ j ] = 1.0;
+			}
+			g[ 1 ][ i ][ MAX_N ] = 1.0;
+			g[ 1 ][ MAX_N ][ i ] = 1.0;
+			g[ 2 ][ i ][ MAX_N ] = beginMax;
+			g[ 2 ][ MAX_N ][ i ] = endMax;
+		}
+
+		for( int t = 3; t <= m; ++t ){	//t回目の肥料撒き
+			for( int k = 0; k < n; ++k ){	//ワーシャルフロイド、肥料kを経由
+				for( int i = 0; i < n; ++i ){	//一番最初に撒いた肥料i
+					for( int j = 0; j < n; ++j ){	//一番最後に撒いた肥料j
+						for( int s = 2; s < t ; ++s ){	//肥料巻きs回目の時点で肥料kを経由する
+							double bv = 0.0;	//経由直前までの成長値
+							double av = 0.0;	//経由直後からの成長値
+							int bg = 0;	//経由直前の肥料の種類
+							int ag = 0;	//経由直後の肥料の種類
+							for( int u = 0; u < n; ++u ){	//経由肥料kの前後にあたる肥料u
+								double bbv, aav;
+								if( s - 1 > 2 ){
+									bbv = g[ s - 1 ][ MAX_N ][ u ] * g[ 2 ][ u ][ k ];
+								}else{
+									bbv = g[ 2 ][ i ][ k ];
+								}
+								if( bv < bbv ){
+									bv = bbv;
+									bg = u;
+								}
+								if( t - s > 2 ){
+									aav = g[ 2 ][ k ][ u ] * g[ t - s ][ u ][ MAX_N ];
+								}else{
+									aav = g[ 2 ][ k ][ j ];
+								}
+								if( av < aav ){
+									av = aav;
+									ag = u;
+								}
+							}
+							double total = bv * av;
+							g[ t ][ i ][ j ] = max( g[ t ][ i ][ j ],  total );
+							g[ t ][ i ][ MAX_N ] = max( g[ t ][ i ][ MAX_N ], g[ t ][ i ][ j ] );
+							g[ t ][ MAX_N ][ j ] = max( g[ t ][ MAX_N ][ j ], g[ t ][ i ][ j ] );
+						}
+					}
+				}
+			}
+		}
+
+		double ans = 0.0;
+		for( int i = 0; i < n; ++i ){
+			ans = max( ans, g[ m ][ i ][ MAX_N ] );
+		}
+
+		cout << fixed << setprecision( 2 ) << ans << endl;
+	}
+	return 0;
+}

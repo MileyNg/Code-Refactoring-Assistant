@@ -1,0 +1,44 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+const int limit=200;
+char st[limit];
+int a[limit];
+int main()
+{
+	//freopen("input.txt","r",stdin);
+	//freopen("output.txt","w",stdout);
+	int aa;
+	gets(st);
+	int n=strlen(st);
+	while (!((st[0]=='.')&&(n==1)))
+	{
+		for(int i=0;i<=n;i++)
+		{
+			if(st[i]=='[') a[++aa]=1;
+			else if(st[i]==']') a[++aa]=2;
+			else if(st[i]=='(') a[++aa]=3;
+			else if(st[i]==')') a[++aa]=4;	
+		}	
+		bool ok=true;
+		while ((ok)&&(aa>0))
+		{
+			ok=false;
+			for (int i=1;i<=aa-1;i++) if(((a[i]==1)&&(a[i+1]==2))||((a[i]==3)&&(a[i+1]==4)))
+			{
+				for(int j=i;j<=aa-2;j++) a[j]=a[j+2];
+				a[aa]=0; a[aa-1]=0;
+				aa=aa-2;
+				ok=true;
+				break;
+			}
+		}
+		if(aa==0) cout<<"yes";
+		else cout<<"no";
+		cout<<endl;
+		for(int i=1;i<=aa;i++) a[i]=0;
+		aa=0;
+		gets(st);
+		n=strlen(st);
+	}		
+}

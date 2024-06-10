@@ -1,0 +1,34 @@
+#include<iostream>
+#include<sstream>
+using namespace std;
+long long f(string a, int x){
+  long long ret=0,m=1;
+  for(int i=a.length()-1;i>=0;i--){
+    ret+=((a[i]=='X')?x:a[i]-'0')*m;
+    m*=10;
+  }
+  return ret;
+}
+int main(){
+  string str;
+  while(cin>>str){
+    string a,b,c;
+    int flg=0;
+    for(int i=0;i<(int)str.length();i++){
+      if(str[i]=='+'){
+        a = str.substr(0,i);
+      }else if(str[i]=='='){
+        b=str.substr(a.length()+1, i-a.length()-1);
+        c=str.substr(i+1, str.length()-i);
+      } 
+    }
+    for(int i=0;i<=9;i++){
+      if(i==0&&(a[0]=='X'||b[0]=='X'||c[0]=='X'))continue;
+      if(f(a,i)+f(b,i)==f(c,i)){
+        cout<<i<<endl;flg=1;
+      }
+    }
+    if(!flg)cout<<"NA"<<endl;
+  }
+  return 0;
+}

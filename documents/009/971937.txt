@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    while(cin >> n, n){
+        cin.ignore();
+        map<string, int> dic;
+        for(int i=0; i < n; i++){
+            string s;
+            getline(cin, s);
+            s += " ";
+            while(s.size() != 0){
+                string word = s.substr(0, s.find_first_of(" "));
+                s = s.substr(s.find_first_of(" ")+1);
+                dic[word]--;
+            }
+        }
+        vector<pair<int, string> > v;
+        map<string, int>::iterator it = dic.begin();
+        while(it != dic.end()){
+            v.push_back(make_pair((*it).second, (*it).first));
+            it++;
+        }
+        sort(v.begin(), v.end());
+
+        string initial;
+        cin >> initial;
+        bool isFirst = true;
+        int count = 0;
+        for(int i=0; i < v.size(); i++){
+            if(v[i].second.substr(0, 1) == initial){
+                if(isFirst){ cout << v[i].second; isFirst = false;}
+                else cout << " " << v[i].second;
+                count++;
+            }
+        }
+        if(count == 0) cout << "NA" << endl;
+        else cout << endl;
+
+        dic.clear();
+    }
+}

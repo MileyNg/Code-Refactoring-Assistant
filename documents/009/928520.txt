@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+
+bool samenum(int a,int b,int c)
+{
+return a==b && b==c ;
+}
+
+
+bool renban(int a,int b,int c){
+return a+2==b+1 && b+1==c; 
+}
+bool ok(int a,int b,int c){
+	return samenum(a,b,c)|| renban(a,b,c);
+}
+bool clear(int a1,int a2,int a3,int a4,int a5,int a6,int a7,int a8,int a9){
+return ok(a1,a2,a3)&&ok(a4,a5,a6)&&ok(a7,a8,a9);
+}
+
+
+
+int main() {
+int n,num[9];
+string col;
+cin>>n;
+
+for (int kk=0;kk<n;kk++){
+	for(int k=0;k<9;k++){
+		cin>>num[k];
+	}
+	for(int k=0;k<9;k++){
+		cin>>col;
+		if(col=="R"){
+			num[k]=num[k]+10;
+		}
+		if(col=="G"){
+		num[k]=num[k]+20;	
+		}
+		if(col=="B"){
+			num[k]=num[k]+30;
+		}
+	}
+	int j=0;
+	sort (num,num+9);
+	do{
+		if(clear(num[0],num[1],num[2],num[3],num[4],num[5],num[6],num[7],num[8])) j=1;
+	}while(next_permutation(num,num+9));
+	cout<<j<<endl;
+}
+	return 0;
+}

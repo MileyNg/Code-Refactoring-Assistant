@@ -1,0 +1,23 @@
+#include<iostream>
+#include<stack>
+#include<algorithm>
+using namespace std;
+int main(){
+&#160;&#160;int n,m;
+&#160;&#160;bool judge = true;
+&#160;&#160;stack<bool> st;
+&#160;&#160;cin >> n;
+&#160;&#160;cin >> m;
+&#160;&#160;for(int i=0;i<m;i++) st.push(1);
+&#160;&#160;int a,b,ma = m;
+&#160;&#160;for(int i=0;i<n;i++){
+&#160;&#160;&#160;&#160;cin >> a >> b;
+&#160;&#160;&#160;&#160;for(int j=0;j<a;j++) st.push(1);
+&#160;&#160;&#160;&#160;for(int j=0;j<b;j++){
+&#160;&#160;&#160;&#160;&#160;&#160;if(st.empty()) judge = false;
+&#160;&#160;&#160;&#160;&#160;&#160;else st.pop();
+&#160;&#160;&#160;&#160;}
+&#160;&#160;&#160;&#160;ma = max(ma,(int)st.size());
+&#160;&#160;}
+&#160;&#160;cout << judge * ma << endl;
+}

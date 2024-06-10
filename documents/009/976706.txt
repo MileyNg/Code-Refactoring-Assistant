@@ -1,0 +1,121 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+using namespace std;
+
+enum FACE { TOP, BOTTOM, NORTH, SOUTH, WEST, EAST };
+
+class dice {
+private:
+  int num[6];
+
+  void roll(FACE a, FACE b, FACE c, FACE d) {
+	const int tmp = num[a];
+	num[a] = num[b];
+	num[b] = num[c];
+	num[c] = num[d];
+	num[d] = tmp;
+  }
+
+public:
+  dice() {
+	num[TOP] = 1;
+	num[BOTTOM] = 6;
+	num[NORTH] = 4;
+	num[SOUTH] = 3;
+	num[WEST] = 2;
+	num[EAST] = 5;
+  }
+
+  void set(int top, int front) {
+	if(num[EAST] == top || num[WEST] == top) west();
+	while(num[TOP] != top) north();
+	while(num[NORTH] != front) cw();
+  }
+
+  int operator[](FACE f) const { return num[f]; }
+
+  void north() { roll(TOP, SOUTH, BOTTOM, NORTH); }
+  void south() { roll(TOP, NORTH, BOTTOM, SOUTH); }
+  void east() { roll(TOP, WEST, BOTTOM, EAST); }
+  void west() { roll(TOP, EAST, BOTTOM, WEST); }
+  void ccw() { roll(SOUTH, WEST, NORTH, EAST); }
+  void cw() { roll(SOUTH, EAST, NORTH, WEST); }
+
+  void move(int d) {
+	switch(d) {
+	case 0:
+	  east();
+	  break;
+	case 1:
+	  south();
+	  break;
+	case 2:
+	  west();
+	  break;
+	case 3:
+	  north();
+	  break;
+	default:
+	  assert(false);
+	}
+  }
+};
+
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+const FACE get_idx[] = {EAST, SOUTH, WEST, NORTH};
+const int offset_x = 50;
+const int offset_y = 50;
+#define height first
+#define top_face second
+void cal(vector<vector<pair<int,int> > > &field,int x,int y,dice &die){
+  
+  for(int i = 6;i >= 4;i--){
+	for(int dir = 0;dir < 4;dir++){
+	  int nx = x+dx[dir],ny = y+dy[dir];
+	  if(die[get_idx[dir]] == i && field[ny][nx].height < field[y][x].height){
+		die.move(dir);
+		cal(field,nx,ny,die);
+		return;
+	  }
+	}
+  }
+  field[y][x].height++;
+  field[y][x].top_face = die[TOP];
+}
+int main(){
+  int n;
+  while(cin >> n && n!=0){
+	
+	vector<vector<pair<int,int> > >field(100,vector<pair<int,int> > (100,pair<int,int>(0,0)));
+	for(int i = 0;i < n;i++){
+	  int t,f;
+	  cin >> t >> f;
+	  int x = offset_x,y = offset_y;
+	  dice die = dice();
+	  die.set(t,f);
+	  assert(t == die[TOP] && f == die[NORTH]);
+	  cal(field,x,y,die);
+	}
+
+	vector<int> cnt(7,0);
+	for(int i = 0;i < 100;i++){
+	  for(int j = 0;j < 100;j++){
+		cnt[field[i][j].top_face]++;
+	  }
+	}
+
+	for(int i =1;i < 7;i++){
+	  cout << cnt[i] << (i == 6 ? "\n" : " ");
+	}
+  }
+ 
+  
+  return 0;
+}

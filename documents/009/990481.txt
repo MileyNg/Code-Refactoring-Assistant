@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+int main()
+{
+	int n, sum;
+	double avg, a;
+
+	while(cin >> n)
+	{
+		int *test = new int[n];
+		sum = 0;
+		a = 0;
+
+		for (int i = 0; i < n; ++i) 
+		{
+			cin >> test[i];
+			sum += test[i];
+		}
+
+		avg = (double) sum / n;
+
+		for (int i = 0; i < n; ++i)
+			a += (test[i] - avg) * (test[i] - avg);
+
+		printf("%.8f\n", sqrt(a/n));
+
+		delete [] test;
+	}
+
+	return 0;
+}

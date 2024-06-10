@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int const MAX_N = (123456+10)*2;
+int ps[MAX_N/2];
+bool isp[MAX_N+1];
+int p_cnt = 0;
+void es(){
+    rep(i,MAX_N) isp[i]=true;
+    isp[0]=isp[1]=false;
+    ps[p_cnt++] = 2;
+    isp[2]=true;
+    for(int i=4; i<MAX_N; i+=2) isp[i]=false;
+    for(int i=3; i<MAX_N; i+=2){
+        if(!isp[i]) continue;
+        ps[p_cnt++] = i;
+        for(int j=i+i; j<MAX_N; j+=i){
+            isp[j] = false;
+        }
+    }
+}
+
+int main(){
+    es();
+    int n;
+    while(cin>>n, n){
+        auto it1 = upper_bound(ps,ps+p_cnt,n+n);
+        auto it2 = lower_bound(ps,ps+p_cnt,n);
+        if(*it2==n) ++it2;
+        // for(auto it = it2; it!=it1; ++it){
+        //     cout << *it << " ";
+        // }
+        cout << it1 - it2 << endl;
+    }
+}

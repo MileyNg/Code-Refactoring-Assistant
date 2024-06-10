@@ -1,0 +1,41 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int main() {
+	int ans,i,j,k,f,e,u[60000],v;
+	string c,a,b,z1,z2,z3;
+	stack<string> s[2];
+	while(cin >> c) {
+		if (c[0]=='0') break;
+		for (i=0;i<60000;i++) u[i]=0; v=f=0; ans=-1;
+		z1=z2=z3=""; z1.append(c.size(),'r'); z2.append(c.size(),'g'); z3.append(c.size(),'b');
+		s[f].push(c);
+		while(!s[f].empty()) {
+			ans++;
+			while(!s[f].empty()) {
+				c=s[f].top(); s[f].pop();
+				if (c==z1 || c==z2 || c==z3) { v=1; break;} 
+				for (i=0; i<c.size()-1; i++) {
+				  a=c[i]; b=c[i+1];
+			      if (c[i]==c[i+1]) continue;
+			      if ((a=="r" && b=="g") || (a=="g" && b=="r")) c[i]=c[i+1]='b';
+			      if ((a=="b" && b=="r") || (a=="r" && b=="b")) c[i]=c[i+1]='g';	 	
+			      if ((a=="b" && b=="g") || (a=="g" && b=="b")) c[i]=c[i+1]='r';
+			      for (j=0,k=1,e=0;j<c.size();j++,k*=3) if (c[j]=='g') e+=k; else if (c[j]=='b') e+=2*k;
+			      if (u[e]==0) { u[e]=1; s[1-f].push(c);}
+			      c[i]=a[0]; c[i+1]=b[0];
+				  }
+				}
+				if (v==1) {
+					 while(!s[f].empty()) s[f].pop();
+					 while(!s[1-f].empty()) s[1-f].pop();
+					 break;
+				 } 
+				f=1-f;
+		 }
+		 if (v==1) cout << ans << endl; else cout << "NA" << endl;
+	 }
+	return 0;
+}

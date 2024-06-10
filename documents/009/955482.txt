@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <set>
+
+using namespace std;
+
+int dx[] = {-1, -1, 0, 1, 1, 0};
+int dy[] = {-1, 0, 1, 1, 0, -1};
+
+vector<pair<int, int>> make_set(string &s, int i){
+	vector<pair<int, int>> ret;
+	auto pos = make_pair(0, 0);
+
+	ret.push_back(pos);
+	for (auto c : s){
+		pos.first += dx[(c - 'a' + i) % 6];
+		pos.second += dy[(c - 'a' + i) % 6];
+		ret.push_back(pos);
+	}
+	sort(ret.begin(), ret.end());
+	return ret;
+}
+
+bool check(string &s, string &t){
+	vector<pair<int, int>> s1 = make_set(s, 0);
+	vector<vector<pair<int, int>>> s2(6);
+	for (int i = 0; i < 6; ++i) s2[i] = make_set(t, i);
+
+	for (auto p : s1){
+		for (int i = 0; i < 6; ++i){
+			bool ok = true;
+			for (int j = 0; j < s1.size(); ++j){
+				int x = s1[j].first - p.first;
+				int y = s1[j].second - p.second;
+				if (make_pair(x, y) != s2[i][j]) ok = false;
+			}
+
+			if (ok) return true;
+		}
+	}
+	return false;
+}
+
+int main(){
+	int n;
+	cin >> n;
+	cin.ignore();
+	for (int i = 0; i < n; ++i){
+		string s, t, u;
+		getline(cin, s);
+		getline(cin, t);
+		getline(cin, u);
+		if (s.size() == t.size() && check(s, t)) cout << "true" << '\n';
+		else cout << "false" << '\n';
+	}
+
+	return 0;
+}

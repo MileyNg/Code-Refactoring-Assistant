@@ -1,0 +1,112 @@
+#include<iostream>
+#include<cmath>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+const double EPS = 1e-10;
+enum POSITION {FORWARD = -2, UNDER, ON, ABOVE, BACKWARD};
+
+// classes
+class Point;
+class Segment;
+class Circle;
+
+// members
+class Point {
+public:
+    double x, y;
+    Point(double x, double y) :x(x), y(y) {}
+    const Point& operator=(const Point& p) {x = p.x; y = p.y; return *this;}
+    const Point operator+(const Point& p) const {return Point(x + p.x, y + p.y);}
+    const Point operator-(const Point& p) const {return Point(x - p.x, y - p.y);}
+    const Point operator*(const Point& p) const {return Point(x * p.x, y * p.y);}
+    double distance(const Point& p) const;
+    double distance(const Segment& s) const;
+    double dot(const Point& p) const;
+    double cross(const Point& p) const;
+    const Point projection(const Segment& s) const;
+};
+class Segment {
+public:
+    Point start, end;
+    Segment(const Point& s, const Point& e) :start(s), end(e) {}
+    POSITION ccw(const Point& p) const {
+        const Point& a = start;
+        const Point& b = end;
+        Point v1 = b - a;
+        Point v2 = p - a;
+        double d = v1.cross(v2);
+        if(d < 0.0) return ABOVE;
+        if(d > 0.0) return UNDER;
+        return ON;
+    }
+};
+class Circle {
+public:
+    Point center;
+    double r;
+    Circle(double x, double y, double r) :center(Point(x, y)), r(r * r) {}
+    bool include(const Point& p) const {return center.distance(p) < r;}
+    bool include(const Segment& s) const {return center.distance(s) < r;}
+};
+
+// implements
+double Point::distance(const Point& p) const {return (x - p.x) * (x - p.x) + (y - p.y) * (y - p.y);}
+double Point::distance(const Segment& s) const {
+    Point p = projection(s);
+    if(s.ccw(p) == ON) return distance(p);
+    return min(distance(s.start), distance(s.end));
+}
+double Point::dot(const Point& p) const {return x * p.x - y * p.y;}
+double Point::cross(const Point& p) const {return x * p.y - y * p.x;}
+const Point Point::projection(const Segment& s) const {
+    Point v1 = *this - s.start;
+    Point v2 = s.start - s.end;
+    double t = v1.dot(v2) / s.start.distance(s.end);
+    return s.start + Point(t, t) * v2;
+}
+
+// main
+string check(const vector<Point>& triangle, const Circle& circle) {
+    vector<Segment> edge;
+    for(int i = 0; i < 3; ++i) edge.push_back(Segment(triangle[i], triangle[(i + 1) % 3]));
+
+    bool triangleInCircle = true;
+    for(auto& p: triangle) triangleInCircle &= circle.include(p);
+    if(triangleInCircle) return "b";
+
+//     for(auto& e: edge) if(circle.include(e)) return "c";
+    double minimum = 1e10;
+    for(auto& e: edge) minimum = min(minimum, circle.center.distance(e));
+
+    bool centerInTriangle = true;
+    POSITION ccw = (*edge.begin()).ccw(circle.center);
+    for(auto& e: edge) if(ccw != e.ccw(circle.center)) centerInTriangle = false;
+
+    if(centerInTriangle && minimum >= circle.r) return "a";
+    if(!centerInTriangle && minimum > circle.r) return "d";
+    return "c";
+
+//     if(cw == 3 || ccw == 3) return "a";//     for(auto& e: edge) {
+//         if(e.ccw(circle.center) > 0) ++ccw;
+//         if(e.ccw(circle.center) < 0) ++cw;
+//     }
+//     if(cw == 3 || ccw == 3) return "a";
+// 
+//     return "d";
+}
+
+int main() {
+    double x[4], y[4], r;
+    while(cin >> x[0] >> y[0], x[0] + y[0]) {
+        cin >> x[1] >> y[1] >> x[2] >> y[2] >> x[3] >> y[3] >> r;
+        vector<Point> triangle = {
+            Point(x[0], y[0]),
+            Point(x[1], y[1]),
+            Point(x[2], y[2]),
+        };
+        Circle circle(x[3], y[3], r);
+        cout << check(triangle, circle) << endl;
+    }
+}

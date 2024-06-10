@@ -1,0 +1,23 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+template <typename T> double round(const T r, const int n = 0){
+    if(r>=0){
+        return floor(r * pow(10, -n) + 0.5) * pow(10, n);
+    }
+    else{
+        return ceil(r * pow(10, -n) - 0.5) * pow(10, n);
+    }
+}
+
+int main(){
+    double a, b, c, d, e, f;
+	while(std::cin >> a){
+		std::cin >> b >> c >> d >> e >> f;
+		std::cout << std::fixed << std::setprecision(3)
+			<< round((c * e - b * f) / (a * e - b * d), -3) << ' '
+			<< round((a * f - c * d) / (a * e - b * d), -3) << std::endl;
+	}
+	return 0;
+}

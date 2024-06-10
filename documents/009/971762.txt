@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin >> n;
+    for(int p=0; p < n; p++){
+        string input;
+        cin >> input;
+
+        bool firstIsNatural = true;
+        for(int i=0; i < input.size(); i++){
+            if(i%2 == 0 && input.substr(i,1) == "L") firstIsNatural = false;
+            else if(i%2 == 1 && input.substr(i,1) == "R") firstIsNatural = false;
+
+            if(i != 0) if(input[i] == input[i-1]) firstIsNatural = false;
+        }
+        bool secondIsNatural = true;
+        for(int i=0; i < input.size(); i++){
+            if(i%2 == 1 && input.substr(i,1) == "L") secondIsNatural = false;
+            else if(i%2 == 2 && input.substr(i,1) == "R") secondIsNatural = false;
+            if(i != 0) if(input[i] == input[i-1]) secondIsNatural = false;
+        }
+        if(firstIsNatural || secondIsNatural) cout << "Yes" << endl;
+        else cout << "No" << endl;
+    }
+}

@@ -1,0 +1,26 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+
+int main()
+{
+	string s,key_1 = "the",key_2 = "this",key_3 = "that";
+	while((s = readln.chomp).length != 0)
+	{
+		int number = s.length;
+		foreach(int i;0..26){
+			string _s;
+			foreach(int j;0..number){
+				char c = s[j];
+				if(c >= 'a' && c + i <= 'z') _s ~= c + i;
+				else if(c + i > 'z' && c <= 'z') _s ~= c - 26 + i;
+				else _s ~= c;
+			}
+			if(_s.indexOf(key_1) >= 0) writeln(_s);
+			else if(_s.indexOf(key_2) >= 0) writeln(_s);
+			else if(_s.indexOf(key_2) >= 0) writeln(_s);
+		}
+	}
+	return 0;
+}

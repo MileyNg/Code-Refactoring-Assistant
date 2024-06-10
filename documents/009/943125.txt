@@ -1,0 +1,22 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+using namespace std;
+
+int main()
+{
+    map<string,set<int>> p;
+    string str;
+    int t;
+    while (cin >> str >> t) p[str].insert(t);
+    for (auto it = p.begin(); it != p.end(); it++) {
+        auto s = it->second.begin();
+        cout << it->first  << endl << *s;
+        for (++s; s != it->second.end(); s++)
+            cout << " " << *s;
+        cout << endl;
+    }
+
+    return 0;
+}

@@ -1,0 +1,41 @@
+#include<stdio.h>
+
+int rec(int,int);
+
+int n,A[20],M;
+
+int main(void){
+  int q;
+  int i;
+
+  scanf("%d",&n);
+
+  for(i=0;i<n;i++) scanf("%d",&A[i]);
+
+  scanf("%d",&q);
+
+  for(i=0;i<q;i++){
+    scanf("%d",&M);
+    
+    if(rec(0,0)==1) printf("yes\n");
+    else printf("no\n");
+  }
+
+  return 0;
+}
+
+
+int rec(int sum,int cnt){
+  if(cnt==n){
+    if(M==sum) return 1;
+    else return 0;
+  }
+  else{
+    if(rec(sum+A[cnt],cnt+1)==1 || rec(sum,cnt+1)==1){
+      return 1;
+    }
+    else{
+      return 0;
+    }
+  }
+}

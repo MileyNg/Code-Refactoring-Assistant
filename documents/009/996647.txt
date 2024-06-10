@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int main(){
+
+	int a[2][30] = {}, w = 0, y = 0, i, t[30] = {};
+
+	scanf("%d%d", &w, &y);
+
+	for (i = 0; i < y; i++){
+		scanf("%d,%d", &a[0][i], &a[1][i]);
+	}
+
+	for (i = 0; i < w; i++){
+		t[i] = i+1;
+	}
+	for (i = 0; i < y; i++){
+		w = t[a[0][i]-1];
+		t[a[0][i]-1] = t[a[1][i]-1];
+		t[a[1][i]-1] = w;
+
+	}
+	for (i = 0; i <= y; i++){
+		printf("%d\n",t[i]);
+	}
+
+	return 0;
+}

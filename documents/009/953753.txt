@@ -1,0 +1,39 @@
+#include<stdio.h>
+int solve(int, int);
+int A[2001],M[2001],n;
+
+int main(){
+  int i,j, q,value=0,value2=0;
+
+  scanf("%d", &n);
+  for(i=0;i<n;i++){
+    scanf("%d",&A[i+1]);
+}
+
+  scanf("%d",&q);
+for(j=0;j<q;j++){
+  scanf("%d",&M[j+1]);
+ }
+for(j=0;j<q;j++){
+  value =solve(1, M[j+1]);
+
+  if(value==1) printf("yes\n");
+  else printf("no\n"); 
+
+ }
+
+
+  return 0;
+}
+
+
+ int solve(int key,int key2){
+    
+   
+   if(key2==0)return 1;
+   if(key>n)return 0;
+   if(solve(key+1,key2-A[key]) == 1) return 1;
+   if(solve(key+1,key2) == 1) return 1;
+
+   return 0;
+ }

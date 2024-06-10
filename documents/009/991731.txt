@@ -1,0 +1,98 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int m, n, table[20][20];
+
+bool ifcrossed(){
+    bool flg = false;
+    for(int j = 0; j < m-1 && !flg; j++){
+        for(int k = 0; k < n-1 && !flg; k++){
+            if( table[j][k] != table[j+1][k] &&
+                    table[j][k] != table[j][k+1] &&
+                    table[j+1][k] != table[j+1][k+1] &&
+                    table[j][k+1] != table[j+1][k+1] ){
+                flg = true;
+            }
+        }
+    }
+    return flg;
+}
+
+int tatami(int d){
+    int i;
+    bool cross;
+    for(i = 0; i < m*n; i++){
+        if( table[i/n][i%n] == 0 ) break;
+    }
+    int ans = 0;
+    if( i%n < n-1 && !table[i/n][i%n]  && !table[i/n][i%n+1] ){
+        table[i/n][i%n] = d;
+        table[i/n][i%n+1] = d;
+        if( d == m*n/2 ){
+            bool flg = ifcrossed();
+            if( !flg ) ans++;
+            /*
+            if( !flg ){
+                for(int j = 0; j < m; j++){
+                    for(int k = 0; k < n; k++){
+                        cout << setw(3) << table[j][k];
+                    }
+                    cout << '\n';
+                }
+                cout << '\n';
+            }
+            */
+        }else{ 
+            if( !ifcrossed() ){
+                ans += tatami(d+1);
+            }
+        }
+        table[i/n][i%n] = 0;
+        table[i/n][i%n+1] = 0;
+    }
+    if( i/n < m-1 && table[i/n][i%n] == 0 && table[i/n+1][i%n] == 0){
+        table[i/n][i%n] = d;
+        table[i/n+1][i%n] = d;
+        if( d == m*n/2 ){
+            bool flg = ifcrossed();
+            if( !flg ) ans++;
+            /*
+            if( !flg ){
+                for(int j = 0; j < m; j++){
+                    for(int k = 0; k < n; k++){
+                        cout << setw(3) << table[j][k];
+                    }
+                    cout << '\n';
+                }
+                cout << '\n';
+            }
+            */
+        }else{
+            if( !ifcrossed() ){
+                ans += tatami(d+1);
+            }
+        }
+        table[i/n][i%n] = 0;
+        table[i/n+1][i%n] = 0;
+    }
+    return ans;
+}
+
+int main(){
+    cin >> m >> n;
+    while(m + n > 0){
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                table[i][j] = 0;
+            }
+        }
+        if( m%2 && n%2 ){
+            cout << 0 << endl;
+        }else{
+            cout << tatami(1) << endl;
+        }
+        cin >> m >> n;
+    }
+    return 0;
+}

@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+#define MAX_H 110
+#define MAX_W 110
+
+char field[MAX_H][MAX_W];
+
+
+void dfs(int y, int x)
+{
+	char c = field[y][x];
+	field[y][x] = 0;
+	
+	if (c == field[y][x + 1]){
+		dfs(y, x + 1);
+	}
+	if (c == field[y][x - 1]){
+		dfs(y, x - 1);
+	}
+	if (c == field[y + 1][x]){
+		dfs(y + 1, x);
+	}
+	if (c == field[y - 1][x]){
+		dfs(y - 1, x);
+	}
+}
+	
+
+int main(void)
+{
+	int i, j;
+	int w, h;
+	int count = 0;
+	
+	scanf("%d %d", &h, &w);
+	
+	for (i = 0; i < h; i++){
+		for (j = 0; j < w; j++){
+			scanf(" %c", &field[i][j]);
+		}
+	}
+	
+	for (i = 0; i < h; i++){
+		for (j = 0; j < w; j++){
+			if (field[i][j] != 0){
+				dfs(i, j);
+				count++;
+			}
+		}
+	}
+	
+	printf("%d\n", count);
+	
+	return (0);
+}

@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <limits.h>
+
+int table[6][2] = {{1500,2244},{1000,1520},{1200,1870},{500,850},{300,550},{200,380}};
+
+int val;
+
+void solve(int depth, int gram, int total) {
+	int i;
+	
+	if(gram == 0) {
+		if(val > total) {
+			val = total;
+			return;
+		}
+	}
+
+	if(depth > 7) {
+		return;
+	}
+	
+	if(gram < 0) return;
+	
+	for(i=0;i<6;i++) {
+		solve(depth+1, gram-table[i][0], total+table[i][1]);
+	}
+}
+
+
+int main(void) {
+	int i, n, t, value;
+	
+	while(scanf("%d\n", &n) == 1) {
+		if(n == 0) break;
+		val = INT_MAX;
+		solve(0, n, 0);
+		
+		printf("%d\n", val);
+	}
+	
+	return 0;
+}

@@ -1,0 +1,161 @@
+/*
+Algorithm to determine the Voronoi diagrams of a set of points within a convex polygon that bounds the plane.
+
+Time complexity: O((N + M)^2)
+Space complexity: O(N + M)
+*/
+
+#include <cmath>
+
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <algorithm>
+
+#define x first
+#define y second
+
+using namespace std;
+
+typedef pair<double, double> Point;
+
+const double EPS = 1e-9;
+const double PI = acos(-1.0);
+
+class Line {
+  public:
+    double a, b, c;
+
+    Line(const double _a = 0.0, const double _b = 0.0, const double _c = 0.0):
+      a(_a),
+      b(_b),
+      c(_c) {}
+
+    Line(const Point &p1, const Point &p2):
+      a(p1.y - p2.y),
+      b(p2.x - p1.x),
+      c(p1.x * p2.y - p1.y * p2.x) {}
+};
+
+vector<Point> Plane, Points;
+vector<double> Areas;
+
+inline double Det(const Point &a, const Point &b, const Point &c) {
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
+
+inline double Alpha(const Point &a, const Point &b, const Point &c) {
+    Point u = Point(a.x - b.x, a.y - b.y), v = Point(c.x - b.x, c.y - b.y);
+    double alpha = acos((u.x * v.x + u.y * v.y) / sqrt((u.x * u.x + u.y * u.y) * (v.x * v.x + v.y * v.y)));
+    if (Det(a, b, c) < -EPS)
+        alpha += 2 * PI;
+    return alpha;
+}
+
+inline Point Dualize(const Line &l) {
+    if (abs(l.c) < EPS)
+        return Point(0.0, 0.0);
+    return Point(l.a / l.c, l.b / l.c);
+}
+
+inline Line Dualize(const Point &p) {
+    return Line(p.x, p.y, 0.0);
+}
+
+inline Point Translate(const Point &p, const Point &shift) {
+    return Point(p.x + shift.x, p.y + shift.y);
+}
+
+inline Line Translate(const Line &l, const Point &shift) {
+    return Line(l.a, l.b, l.c - l.a * shift.x - l.b * shift.y);
+}
+
+vector<Point> GetConvexHull(vector<Point> points) {
+    int n = int(points.size()), origin = 0;
+    for (int i = 1; i < n; ++i)
+        if (points[i] < points[origin])
+            origin = i;
+    swap(points[0], points[origin]);
+    vector<Point> hull;
+    hull.push_back(points[0]);
+    hull.push_back(points[1]);
+    for (int i = 2; i < n; ++i)
+        if (Det(hull[0], hull[1], points[i]) < -EPS)
+            hull[1] = points[i];
+    do {
+        int next = -1;
+        double alpha = -2 * PI;
+        for (int i = 0; i < n; ++i) {
+            double currentAlpha = Alpha(hull[int(hull.size()) - 2], hull[int(hull.size()) - 1], points[i]);
+            if (currentAlpha > alpha) {
+                next = i;
+                alpha = currentAlpha;
+            }
+        }
+        hull.push_back(points[next]);
+    } while (hull.back() != hull.front());
+    hull.pop_back();
+    return hull;
+}
+
+vector< vector<Point> > GetVoronoiDiagrams(const vector<Point> &plane, const vector<Point> &points) {
+    vector< vector<Point> > voronoiDiagrams = vector< vector<Point> >(int(points.size()), vector<Point>());
+    for (int i = 0; i < int(points.size()); ++i) {
+        Point shiftTo = Point(-points[i].x, -points[i].y), shiftFrom = points[i];
+        vector<Point> dualizedLines;
+        for (int j = 0; j < int(plane.size()); ++j)
+            dualizedLines.push_back(Dualize(Translate(Line(plane[j], plane[(j + 1) % int(plane.size())]), shiftTo)));
+        for (int j = 0; j < int(points.size()); ++j) {
+            if (i != j) {
+                Point a = points[i], b = points[j];
+                dualizedLines.push_back(Dualize(Translate(Line(2 * (b.x - a.x), 2 * (b.y - a.y), a.x * a.x + a.y * a.y - b.x * b.x - b.y * b.y), shiftTo)));
+            }
+        }
+        vector<Point> hull = GetConvexHull(dualizedLines);
+        for (int j = 0; j < int(hull.size()); ++j)
+            voronoiDiagrams[i].push_back(Translate(Dualize(Line(hull[j], hull[(j + 1) % int(hull.size())])), shiftFrom));
+    }
+    return voronoiDiagrams;
+}
+
+inline double Area(const vector<Point> &polygon) {
+    double area = 0.0;
+    for (int i = 0; i < int(polygon.size()); ++i)
+        area += polygon[i].x * polygon[(i + 1) % int(polygon.size())].y - polygon[(i + 1) % int(polygon.size())].x * polygon[i].y;
+    area *= 0.5;
+    return abs(area);
+}
+
+void Solve() {
+    vector< vector<Point> > voronoiDiagrams = GetVoronoiDiagrams(Plane, Points);
+    Areas = vector<double>(int(Points.size()), 0.0);
+    for (int i = 0; i < int(Points.size()); ++i)
+        Areas[i] = Area(voronoiDiagrams[i]);
+}
+
+bool Read() {
+    int m, n;
+    cin >> m >> n;
+    if (m == 0 && n == 0)
+        return false;
+    Plane = vector<Point>(m);
+    for (int i = 0; i < m; ++i)
+        cin >> Plane[i].x >> Plane[i].y;
+    Points = vector<Point>(n);
+    for (int i = 0; i < n; ++i)
+        cin >> Points[i].x >> Points[i].y;
+    return true;
+}
+
+void Print() {
+    for (int i = 0; i < int(Points.size()); ++i)
+        cout << fixed << setprecision(9) << Areas[i] << "\n";
+}
+
+int main() {
+    while (Read()) {
+        Solve();
+        Print();
+    }
+    return 0;
+}

@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+int m, n;
+int ans;
+
+void binarySearch(int count, double left, double right, const vector<int>& page)
+{
+	double width = (left + right) / 2.0;
+	if(count >= 100)
+	{
+		ans = width;
+		return;
+	}
+	vector<int> bookShelf(m);
+	int numOfStage = 0;
+	bool isSmall = false;
+	for(int i = 0; i < page.size(); ++i)
+	{
+		if(bookShelf[numOfStage] + page[i] > width)
+		{
+			++numOfStage;
+			if(numOfStage >= m)
+			{
+				isSmall = true;
+				break;
+			}
+		}
+		bookShelf[numOfStage] += page[i];
+	}
+	if(isSmall)
+	{
+		binarySearch(count + 1, width, right, page);
+	}
+	else
+	{
+		binarySearch(count + 1, left, width, page);
+	}
+}
+
+void solve()
+{
+	while(cin >> m >> n, m || n)
+	{
+		if(m > n)
+		{
+			m = n;
+		}
+		vector<int> page(n);
+		for(int i = 0; i < n; ++i)
+		{
+			cin >> page[i];
+		}
+		binarySearch(0, 0, 3000000, page);
+		cout << ans << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

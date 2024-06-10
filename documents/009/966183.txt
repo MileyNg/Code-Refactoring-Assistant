@@ -1,0 +1,32 @@
+ void sw(int *x, int *y){
+  int tmp;
+  tmp = *x;
+  *x = *y;
+  *y = tmp;
+}
+void part(int P, int R){
+  int x = arr[R];
+  int i = P - 1, j;
+  for(j = P;j < R;j++){
+    if(arr[j] <= x){
+      i++;
+      sw(&arr[i], &arr[j]);
+    }
+  }
+  sw(&arr[i+1], &arr[R]);
+  for(j = P;j <= R;j++){
+    if(j != P) printf(" ");
+    if(j == i+1) printf("[%d]", arr[j]);
+    else printf("%d", arr[j]);
+  }
+  printf("\n");
+}
+ 
+int  main(int argc,char *argv[]){
+  int n, i;
+  scanf("%d", &n);
+  for(i = 0;i < n;i++) scanf("%d", &arr[i]);
+  part(0, n-1);
+
+  return 0;
+}

@@ -1,0 +1,18 @@
+#include<stdio.h>
+main(){
+  int mount[11],i,j,k,tmp;
+  for(i=0;i<10;i++){
+    scanf("%d",&mount[i]);
+  }
+  for(i=0;i<10;i++){
+    for(j=9;j>i;j--){
+      if(mount[j]<mount[j-1]){
+	tmp=mount[j];
+	mount[j]=mount[j-1];
+	mount[j-1]=tmp;
+      }
+    }
+  }
+  printf("%d\n%d\n%d\n",mount[9],mount[8],mount[7]);
+  return 0;
+}

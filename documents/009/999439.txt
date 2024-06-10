@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
+int main(void)
+{
+	char str[512];
+	int array[102][101] = {0};
+	int count = 1;
+	int i, j;
+	
+	while (scanf("%s", str) != EOF){
+		int num;
+		
+		for (i = num = 0; str[i] != 0; i++, num++){
+			while ('0' <= str[i] && str[i] <= '9'){
+				array[count][num] *= 10;
+				array[count][num] += str[i] - '0';
+				i++;
+			}
+			if (str[i] == 0) i--;
+		}
+		count++;
+	}
+	for (i = 2; i < count / 2; i++){
+		for (j = 0; j < i; j++){
+			array[i][j] += max(array[i - 1][j - 1], array[i - 1][j]);
+		}
+	}
+	for (i = 0; i < count / 2; i++){
+		for (j = 0; j < count / 2 - i; j++){
+			array[count / 2 +  i][j] += max(array[count / 2 + i - 1][j], array[count / 2 + i - 1][j + 1]);
+		}
+	}/*
+	for (i = 2; i < count / 2; i++){
+		for (j = 0; j < i; j++){
+			printf("%d ", array[i][j]);
+		}
+		puts("");
+	}
+	for (i = 0; i < count / 2; i++){
+		for (j = 0; j < count / 2 - i; j++){
+			printf("%d ", array[count / 2 + i][j]);
+		}
+		puts("");
+	}*/
+	printf("%d\n", array[count - 1][0]);
+	
+	return 0;
+}

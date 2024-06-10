@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Era
+{
+public:
+	string eraName;
+	int eraBasedYear;
+	int westernYear;
+};
+
+void solve()
+{
+	int N, Q;
+	while(cin >> N >> Q, N || Q)
+	{
+		vector<Era> era(N);
+		for(int i = 0; i < N; ++i)
+		{
+			cin >> era[i].eraName >> era[i].eraBasedYear >> era[i].westernYear;
+		}
+		for(int i = 0; i < Q; ++i)
+		{
+			int query;
+			cin >> query;
+			bool known = false;
+			for(int j = 0; j < N; ++j)
+			{
+				if(era[j].westernYear - era[j].eraBasedYear + 1 <= query && query <= era[j].westernYear)
+				{
+					cout << era[j].eraName << " " << query - (era[j].westernYear - era[j].eraBasedYear) << endl;
+					known = true;
+					break;
+				}
+			}
+			if(!known)
+			{
+				cout << "Unknown" << endl;
+			}
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

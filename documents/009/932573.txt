@@ -1,0 +1,35 @@
+loop do
+  n, m = gets.split.map(&:to_i)
+  break if n == 0 && m == 0
+  m += 1
+
+  inf = 1000000000
+  cost = {}
+  time = {}
+  m.times do |i|
+    m.times do |j|
+      cost[[i,j]] = inf
+      time[[i,j]] = inf
+    end
+  end
+
+  n.times do
+    a, b, c, t = gets.split.map(&:to_i)
+    cost[[a,b]] = cost[[b,a]] = [c, cost[[a,b]]].min
+    time[[a,b]] = time[[b,a]] = [t, time[[a,b]]].min
+  end
+
+  m.times do |k|
+    m.times do |i|
+      m.times do |j|
+        cost[[i,j]] = [cost[[i, j]], cost[[i,k]] + cost[[k,j]]].min
+        time[[i,j]] = [time[[i, j]], time[[i,k]] + time[[k,j]]].min
+      end
+    end
+  end
+
+  gets.to_i.times do
+    a, b, r = gets.split.map(&:to_i)
+    puts [cost,time][r][[a,b]]
+  end
+end

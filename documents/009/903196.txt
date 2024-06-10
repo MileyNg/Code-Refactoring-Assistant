@@ -1,0 +1,49 @@
+
+
+#define MAX 100
+
+main(){
+  int in_num;
+  int i, put, j, k = 0, l;
+  int count = 0;
+  int res;
+  int pres[MAX], flag = 0;
+
+  while(1){
+  res = scanf("%d", &in_num);
+
+  if(res == EOF) break;
+
+  for(i = 1 ; i <= in_num ; i++){
+    /* iが現在まで判明している素数の倍数でないかを調べる */
+    for(l = 0 ; pres[l] != NULL ; l++){
+      if(i % pres[l] != 0){
+        flag = 1;
+      }
+    }
+    /* そうでなかったら以下を実行 */
+    if(flag == 1){
+      for(j = 2 ; j <= i ; j++){
+        put = i % j;
+
+        if(put == 0 && i != j) break;
+
+        if(put == 0){
+	  if(k < MAX){
+	    /* kが最高格納数以下なら素数を保存 */
+	    pres[k] = i;
+	    k++;
+	  }
+	  printf("%d\n", i);
+          count++;
+          break;
+        }
+      }
+    }
+  }
+
+  printf("%d\n", count);
+  count = 0;
+  }
+  return 0;
+}

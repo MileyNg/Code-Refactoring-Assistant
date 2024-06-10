@@ -1,0 +1,75 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+typedef pair<char, int>Command;//first:方向,second:長さ
+
+//見つかった宝石はmapをfalseにする。
+bool solve(int n, bool map[21][21], int m, Command *comlist){
+	int count = 0;//見つかった宝石の個数
+	int posx = 10;
+	int posy = 10;
+	for(int i=0;i<m;i++){
+		for(int j=0;j<comlist[i].second;j++){//移動する回数
+			switch(comlist[i].first){
+			case 'N':
+				posy++;
+				break;
+			case 'E':
+				posx++;
+				break;
+			case 'S':
+				posy--;
+				break;
+			case 'W':
+				posx--;
+				break;
+			}
+			if(map[posy][posx]==true){//宝石がある
+				count++;
+				map[posy][posx] = false;//回収して、そこに宝石がなくなった
+			}
+		}
+	}
+	if(count == n){//すべて見つけた
+		return true;
+	}else{
+		return false;
+	}
+}
+
+int main(){
+	while(true){
+		int n;
+		cin >> n;
+		if(n == 0){
+			break;
+		}
+		bool map[21][21];//x,yともに[0,20]。trueの場所に宝石がある。
+		//boolの初期値はtrue?false?
+		for(int i=0;i<21;i++){
+			for(int j=0;j<21;j++){
+				map[i][j] = false;
+			}
+		}
+		for(int i=0;i<n;i++){
+			int x,y;
+			cin >> x >> y;
+			map[y][x] = true;
+		}
+		int m;//命令回数
+		cin >> m;
+		Command *comlist = new Command[m];
+		for(int i=0;i<m;i++){
+			cin >> comlist[i].first >> comlist[i].second;
+		}
+		bool result = solve(n,map,m,comlist);
+		if(result==true){
+			cout << "Yes" << endl;
+		}else {
+			cout << "No" << endl;
+		}
+		delete[] comlist;
+	}
+}

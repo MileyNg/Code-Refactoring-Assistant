@@ -1,0 +1,85 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+#include <complex>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+int vert[1024];
+int csize[2][1024];
+
+int main() {
+	int n;
+	
+	while (1) {
+		cin >> n; if (n==0) break;
+		
+		int ans = 0;
+		minit(vert, 0); minit(csize, 0);
+		string line;
+		
+		for_(i, 0, n) {
+			cin >> line;
+			int horiz = 0;
+			int *can = csize[i&1];
+			int *prev = csize[(i+1)&1];
+			
+			for_(j, 0, n) {
+				if (line[j]=='.') {
+					horiz++;
+					vert[j]++;
+					
+					can[j] = min(prev[j]+1, min(horiz, vert[j]));
+					ans = max(ans, can[j]);
+				} else {
+					can[j] = vert[j] = horiz = 0;
+				}
+			}
+		}
+		
+		cout << ans << endl;
+	}
+	
+	return 0;
+}

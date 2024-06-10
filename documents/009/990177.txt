@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+int fig[7][4][2] = {{{0, 0}, {1, 0}, {0, 1}, {1, 1}}, 
+					{{0, 0}, {0, 1}, {0, 2}, {0, 3}}, 
+					{{0, 0}, {1, 0}, {2, 0}, {3, 0}}, 
+					{{1, 0}, {0, 1}, {1, 1}, {0, 2}}, 
+					{{0, 0}, {1, 0}, {1, 1}, {2, 1}}, 
+					{{0, 0}, {0, 1}, {1, 1}, {1, 2}}, 
+					{{1, 0}, {2, 0}, {0, 1}, {1, 1}}};
+
+int main(void)
+{
+	int a[8][8];
+	int i, j, k, l;
+	char str[8][9];
+	int flag;
+
+	i = 0;
+	while (1){
+		flag = 0;
+		for (i = 0; i < 8; i++){
+			if (scanf("%s", str[i]) == EOF){
+				flag = 1;
+			}
+		}
+
+		if (flag)break;
+
+		flag = 0;
+		for (i = 0; i < 8; i++){
+			for (j = 0; j < 8; j++){
+				for (k = 0; k < 7; k++){
+					if (fig[k][0][1] + i < 8 && fig[k][0][0] + j < 8 &&
+						str[fig[k][0][1] + i][fig[k][0][0] + j] == '1'){
+						for (flag = 1, l = 1; l < 4; l++){
+							if ((fig[k][l][1] + i >= 8 || fig[k][l][0] + j >= 8) ||
+								str[fig[k][l][1] + i][fig[k][l][0] + j] == '0'){
+								flag = 0;
+								break;
+							}
+						}
+					}
+					if (flag)break;
+				}
+				if (flag)break;
+			}
+			if (flag)break;
+		}
+
+		printf("%c\n", 'A' + k);
+	}
+
+	return (0);
+}

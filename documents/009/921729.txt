@@ -1,0 +1,24 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+        int n;
+        cin >> n;
+        int array[n];
+        for(int i=0; i<n; i++){ cin >> array[i]; }
+
+        int max, tmp;
+        int posi, posj; // posj > posi
+
+        max = 0;
+        for(int i=0; i<n; i++){
+                for(int j=i+1; j<n; j++){
+                        tmp = array[j] - array[i];
+                        if(max < tmp){ posi = i, posj = j, max = tmp; }
+                }
+        }
+        cout << max << endl;
+
+        return 0;
+}

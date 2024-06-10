@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+  int N;
+  
+  while(cin >> N && N) {
+    vector<string> grid(N);
+    for(int i=0; i<N; i++) {
+      cin >> grid[i];
+    }
+    
+    int ans = 0;
+    
+    for(int i=0; i<N; i++) {
+      for(int j=0; j<N; j++) {
+	for(int k=1; k<=N; k++) {
+	  if(j+k > N) continue;
+	  bool ok = 1;
+	  for(int l=0; l<k; l++) {
+	    if(grid[i][j+l] != '1') ok = 0;
+	  }
+	  if(ok) {
+	    ans = max(ans, k);
+	  }
+	}
+      }
+    }
+    
+    for(int j=0; j<N; j++) {
+      for(int i=0; i<N; i++) {
+	for(int k=1; k<=N; k++) {
+	  if(i+k > N) continue;
+	  bool ok = 1;
+	  for(int l=0; l<k; l++) {
+	    if(grid[i+l][j] != '1') ok = 0;
+	  }
+	  if(ok) {
+	    ans = max(ans, k);
+	  }
+	}
+      }
+    }
+
+    // right down
+    for(int i=0; i<N; i++) {
+      for(int j=0; j<N; j++) {
+	for(int k=1; k<=N; k++) {
+	  
+	  if(i+k > N || j+k > N) continue;
+	  
+	  bool ok = 1;
+	  for(int l=0; l<k; l++) {
+	    if(grid[i+l][j+l] != '1') ok = 0;
+	  }
+	  if(ok) {
+	    ans = max(ans, k);
+	  }
+	}
+      }
+    }
+    
+    // right up
+    for(int i=0; i<N; i++) {
+      for(int j=0; j<N; j++) {
+	for(int k=1; k<=N; k++) {
+	  if(i-k+1<0 || j+k>N) continue;
+	  
+	  bool ok = 1;
+	  for(int l=0; l<k; l++) {
+	    if(grid[i-l][j+l] != '1') ok = 0;
+	  }
+	  if(ok) {
+	    ans = max(ans, k);
+	  }
+	}
+      }
+    }
+    
+    cout << ans << endl;
+  }
+  
+  return 0;
+}

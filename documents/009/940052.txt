@@ -1,0 +1,10 @@
+for r in range(input()):
+	if r > 0: print
+	A = [raw_input().split() for i in range(9)]
+	P = [[" "]*9 for i in range(9)]
+	for h in range(9):
+		for w in range(9):
+			if A[h].count(A[h][w]) > 1 or [A[hi][w] for hi in range(9)].count(A[h][w]) > 1:
+				P[h][w] = "*"
+	for h in range(9):
+		print "".join([P[h][w]+A[h][w] for w in range(9)])

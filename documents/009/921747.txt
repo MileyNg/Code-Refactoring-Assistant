@@ -1,0 +1,13 @@
+while True:
+  N = input()
+  if not N:
+    break
+  m = dict()
+  for i in range(N):
+    a, b, c = map(int, raw_input().split())
+    m[a] = (m[a] if a in m else 0) + b * c
+  l = [str(k) for k, v in m.items() if v >= 1000000 ]
+  for i in l:
+    print(i)
+  if not len(l):
+    print('NA')

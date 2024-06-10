@@ -1,0 +1,107 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <stack>
+using namespace std;
+
+const int MAX_N = 100000;
+const int MAX_Q = 100000;
+
+int mark[MAX_N+5];
+
+int N;
+int Q;
+
+// union-fold tree
+int par[MAX_N+5];
+int union_rank[MAX_N+5];
+
+void init(int n) {
+    for(int i = 0; i < n; i++) {
+        par[i] = i;
+        union_rank[i] = 0;
+    }
+}
+
+int find(int x) {
+    if(par[x] == x) {
+        return x;
+    } else {
+        return par[x] = find(par[x]);
+    }
+}
+
+void unite(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if(x == y) return;
+
+    if(union_rank[x] < union_rank[y]) {
+        par[x] = y;
+    } else {
+        par[y] = x;
+        if(union_rank[x] == union_rank[y]) union_rank[x]++;
+    }
+}
+
+bool same(int x, int y) {
+    return find(x) == find(y);
+}
+
+int main() {
+    int p;
+    while(true) {
+        cin >> N >> Q;
+        if(!N && !Q) break;
+
+        init(N);
+        map<int, vector<int> > child;
+        for(int i = 0; i < N; i++) {
+            mark[i] = 0;
+        }
+
+        for(int i = 0; i < N-1; i++) {
+            cin >> p;
+            p--;
+            if(child.find(p) == child.end()) {
+                vector<int> v;
+                v.push_back(i+1);
+                child[p] = v;
+            } else {
+                child[p].push_back(i+1);
+            }
+        }
+        char q;
+        int o;
+        int ans = 0;
+        for(int i = 0; i < Q; i++) {
+            cin >> q >> o;
+            o--;
+            if(q == 'Q') {
+                ans += mark[find(o)] + 1;
+            } else {
+                if(child.find(o) == child.end()) {
+                    mark[o] = o;
+                } else {
+                    stack<vector<int> > s;
+                    vector<int> c;
+                    c = child[o];
+                    s.push(c);
+                    while(s.size()) {
+                        c = s.top(); s.pop();
+                        for(int j = 0; j < c.size(); j++) {
+                            unite(o, c[j]);
+                            if(child.find(c[j]) != child.end()) {
+                                s.push(child[c[j]]);
+                            }
+                        }
+                    }
+                    mark[find(o)] = o;
+                }
+            }
+        }
+        cout << ans << endl;
+    }
+
+    return 0;
+}

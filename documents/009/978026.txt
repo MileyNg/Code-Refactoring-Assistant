@@ -1,0 +1,61 @@
+HOPS =
+  [[-1, -2], [0, -2], [1, -2], [-1, 2], [0, 2], [1, 2],
+   [-2, -1], [-2, 0], [-2, 1], [2, -1], [2, 0], [2, 1]]
+
+while true
+  x, y = gets.chomp.split(" ").map{|s| s.to_i}
+  break if x == 0 && y == 0
+
+  n = gets.chomp.to_i
+  xys = gets.chomp.split(" ").map{|s| s.to_i}
+
+  spkl = (0..n).map{[]}
+
+  for id in (1..n)
+    x0 = xys.shift
+    y0 = xys.shift
+
+    min_x1 = [x0 - 1, 0].max
+    max_x1 = [x0 + 1, 9].min
+    min_y1 = [y0 - 1, 0].max
+    max_y1 = [y0 + 1, 9].min
+
+    for y1 in (min_y1..max_y1)
+      for x1 in (min_x1..max_x1)
+        spkl[id].push [x1, y1]
+      end
+    end
+  end
+
+  id = 1
+  path = [[0, x, y]]
+
+  while id > 0 && id <= n
+    path[id] = [-1, 0, 0] if path[id].nil?
+
+    di0, x, y = path[id - 1]
+
+    di = path[id][0] + 1
+    while di < HOPS.length
+      x0 = x + HOPS[di][0]
+      y0 = y + HOPS[di][1]
+      path[id] = [di, x0, y0]
+
+      if x0 >= 0 && x0 <= 9 && y0 >= 0 && y0 <= 9 &&
+          spkl[id].include?([x0, y0])
+        break
+      end
+
+      di += 1
+    end
+
+    if di >= HOPS.length
+      path.pop
+      id -= 1
+    else
+      id += 1
+    end
+  end
+
+  puts (id > n) ? "OK" : "NA"
+end

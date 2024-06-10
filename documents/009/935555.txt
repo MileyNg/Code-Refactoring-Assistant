@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void)
+{
+    char oder[5];
+    char color;
+    int i=0;// for文用
+    int n=0;//山の数とか
+    int mt_num=0,mt_num2=0;
+    
+    
+    scanf("%d",&n);
+    
+    char yama[n][1000];
+    int mt_cnt[n];
+    
+    for(i=0;i<n;i++){
+        mt_cnt[n]=0;
+    }
+    
+    fscanf(stdin, "%s", &oder);
+    while(strcmp(oder, "quit")!=0){
+        if(strcmp(oder, "push")==0){
+            fscanf(stdin, " %d %c",&mt_num, &color);
+            yama[mt_num][mt_num]=color;
+            mt_cnt[mt_num]++;
+        }else if(strcmp(oder, "pop")==0){
+            fscanf(stdin, " %d",&mt_num);
+            printf("%c\n",yama[mt_num][mt_cnt[mt_num]-1]);
+            mt_cnt[mt_num]--;
+        }else if(strcmp(oder, "move")==0){
+            fscanf(stdin, " %d %d",&mt_num, &mt_num2);
+            yama[mt_num2][mt_cnt[mt_num2]] = yama[mt_num][mt_cnt[mt_num]-1];
+            mt_cnt[mt_num2]++;
+            mt_cnt[mt_num]--;
+        }
+        fscanf(stdin, "%s", &oder);
+    }
+    
+    return 0;
+}

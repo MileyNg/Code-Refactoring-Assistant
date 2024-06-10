@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1<<28;
+
+int N, E, T;
+vector<int> W;
+vector<int> C;
+vector<vector<int> > S;
+int main() {
+  cin >> N >> E >> T;
+  W.resize(N);
+  for(int i = 0; i < N; ++i) cin >> W[i];
+  for(int i = 0; i < N; ++i) if(W[i] == 0) W[i] = INF;
+  S.resize(E);
+  C.resize(E);
+  for(int i = 0; i < E; ++i) {
+    int G;
+    cin >> C[i] >> G;
+    C[i] -= 1;
+    S[i].resize(G);
+    for(int j = 0; j < G; ++j) {
+      cin >> S[i][j];
+      S[i][j] -= 1;
+    }
+  }
+
+  bool update = true;
+  while(update) {
+    update = false;
+    for(int i = 0; i < E; ++i) {
+      int maxi = -1;
+      for(int j = 0; j < S[i].size(); ++j) {
+	maxi = max(maxi, W[S[i][j]]);
+      }
+      int newvalue = max(maxi, (int)S[i].size());
+      if(W[C[i]] > newvalue) {
+	update = true;
+	W[C[i]] = newvalue;
+      }
+    }
+  }
+  cout << W[T-1] << endl;
+  return 0;
+}

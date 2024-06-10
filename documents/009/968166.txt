@@ -1,0 +1,19 @@
+x = 0.0
+y = 0.0
+dir = 90
+
+while (line = gets)
+  d, t = line.chop.split(",").map { |s| s.to_i }
+
+  if (d == 0 && t == 0)
+    break
+  end
+
+  rad = Math::PI * dir / 180
+  x += d * Math.cos(rad)
+  y += d * Math.sin(rad)
+
+  dir = (dir + 360 - t) % 360
+end
+
+puts x.to_i, y.to_i

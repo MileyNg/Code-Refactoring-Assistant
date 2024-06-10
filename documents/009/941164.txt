@@ -1,0 +1,16 @@
+while 1:
+	n = input()
+	if n == 0: break
+	item = {}
+	for i in range(n):
+		name,cost = raw_input().split()
+		item[name] = int(cost)
+	m = input()
+	recipes = [raw_input().split() for i in range(m)]
+	for recipe in recipes:
+		name = recipe[0]
+		cost = 0
+		for need in recipe[2:]:
+			cost += item[need]
+		item[name] = min(cost, item[name])
+	print item[raw_input()]

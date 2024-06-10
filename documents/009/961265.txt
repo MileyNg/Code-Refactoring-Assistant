@@ -1,0 +1,118 @@
+//Name: Railroad
+//Level:
+//Category:
+//Note:
+
+/**
+ */
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <array>
+
+using namespace std;
+
+typedef long long LL;
+typedef unsigned long long ULL;
+const LL INF = 100000LL * 1000 * 10;
+
+bool solve() {
+    int S, R;
+    if(!(cin >> S >> R)) return false;
+    if(!S && !R) return false;
+
+    array<vector<pair<int,LL>>, 100000> graph;
+    array<vector<int>, 100000> dag;
+    for(int i = 0; i < R; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        --u; --v;
+        graph[u].push_back(make_pair(v, w));
+        graph[v].push_back(make_pair(u, w));
+    }
+    int A, B, Q;
+    cin >> A >> B >> Q;
+    --A; --B;
+
+    // Find shortest path
+    array<LL, 100000> memo;
+    priority_queue<pair<LL,int>> q;
+    LL best_cost = INF;
+    fill(memo.begin(), memo.end(), INF);
+    q.push(make_pair(0, A));
+    memo[A] = 0;
+    while(!q.empty()) {
+        const LL cost = -q.top().first;
+        const int cur = q.top().second;
+        q.pop();
+        if(cost > best_cost) break;
+        if(cur == B && best_cost == INF) {
+            best_cost = cost;
+        }
+        if(memo[cur] < cost) continue;
+        for(const auto &next : graph[cur]) {
+            const LL nc = cost + next.second;
+            if(nc < memo[next.first]) {
+                dag[next.first].clear();
+                dag[next.first].push_back(cur);
+                memo[next.first] = nc;
+                q.push(make_pair(-nc, next.first));
+            } else if(memo[next.first] == nc) {
+                dag[next.first].push_back(cur);
+            }
+        }
+    }
+
+    array<int, 100000> ref_cnt;
+    fill(ref_cnt.begin(), ref_cnt.end(), 0);
+    for(int i = 0; i < S; ++i) {
+        for(int to : dag[i]) {
+            ref_cnt[to]++;
+        }
+    }
+    // Determine reachability for each query
+    array<ULL, 100000> reachable;
+    array<int, 70> dest;
+    for(int i = 0; i < Q; ) {
+        fill(reachable.begin(), reachable.end(), 0);
+        int cnt = 0;
+        for(int j = 0; j < 64 && i < Q; ++i, ++j) {
+            int c, d;
+            cin >> c >> d;
+            --c; --d;
+            reachable[d] |= 1<<j;
+            dest[j] = c;
+            ++cnt;
+        }
+        auto rem_cnt = ref_cnt;
+        queue<int> q;
+        q.push(B);
+        while(!q.empty()) {
+            const int cur = q.front();
+            q.pop();
+            for(int next : dag[cur]) {
+                reachable[next] |= reachable[cur];
+                if(--rem_cnt[next] == 0) {
+                    q.push(next);
+                }
+            }
+        }
+        for(int j = 0; j < cnt; ++j) {
+            if(reachable[dest[j]] & (1<<j)) {
+                cout << "Yes" << endl;
+            } else {
+                cout << "No" << endl;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

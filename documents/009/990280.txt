@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+int main()
+{
+	int counter[26];
+	for (int i = 0; i < 26; ++i) counter[i] = 0;
+
+	string x;
+	while (cin >> x)
+	{
+		for (string::size_type i; i < x.size(); i++)
+		{
+			if (isupper(x[i])) x[i] = tolower(x[i]);
+			if (isalpha(x[i])) counter[x[i]-'a']++;
+		}
+	}
+
+	for (int i = 0; i < 26; ++i)
+		cout << (char)(i + 'a') << " : " << counter[i] << endl;
+	return 0;
+}

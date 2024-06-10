@@ -1,0 +1,97 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include <ctime>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+
+#include <string>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+
+#include <cmath>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+
+#define MAX_V 110
+#define INF 1000000
+
+using namespace std;
+
+template<typename T> ostream& operator<<(ostream& os, const vector<T>& v){
+    os << "{ ";
+    for(typename vector<T>::const_iterator it=v.begin(); it!=v.end(); ++it)
+        os << '\"' << *it << '\"' << (it+1==v.end() ? "" : ", ");
+    os << " }";
+    return os;
+}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+#define vv(type,w,h,init) vector<vector<type>>(h,vector<type>(w,init))
+typedef vector<string> vs;
+typedef long long ll;
+typedef unsigned uint;
+typedef unsigned long ul;
+typedef unsigned long long ull;
+
+#define all(c) (c).begin(), (c).end()
+#define rall(c) (c).rbegin(), (c).rend()
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define pb push_back
+#define mp make_pair
+
+string const resstr[] = {"Impossible","Possible","No","Yes"};
+
+int cost[MAX_V][MAX_V];
+int mincost[MAX_V];
+bool used[MAX_V];
+int V;
+
+int prom(){
+	for(int i=0; i < V; ++i){
+		mincost[i] = INF;
+		used[i] = false;
+	}
+	mincost[0] = 0;
+	int res = 0;
+	
+	while(true){
+		int v = -1;
+		for(int u=0; u < V; u++){
+			if(!used[u] && (v == -1 || mincost[u] < mincost[v])) v = u;
+		}
+		if(v == -1) break;
+		used[v] = true;
+		res += mincost[v];
+		
+		rep(u,V)
+			mincost[u] = min(mincost[u], cost[v][u]);	
+	}
+	return res;
+}
+
+int main(){
+	int E;
+	while(cin >> V >> E, V+E){
+		rep(i, V)
+			rep(j, V) cost[i][j] = INF;
+	
+		rep(i, E){
+			int a, b ,c;
+			cin >> a >> b >> c;
+			cost[a][b] = c;
+			cost[b][a] = c;
+		}
+		cout << prom() << endl;
+	}
+}

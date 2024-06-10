@@ -1,0 +1,27 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+int main()
+{
+	string s;
+	int i= 0;
+	int stack[];
+	stack.length = 10;
+	while((s = readln()).length != 0)
+	{
+		int line = s.chomp.to!int;
+
+		if(line == 0)
+		{
+			i--;
+			writeln(stack[i]);
+		}
+		else
+		{
+			stack[i] = line;
+			i++;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,75 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+const int maxn=110;
+int H,W,cnt;
+int sx,sy,sd;
+long long L;
+char grid[maxn][maxn];
+int vis[maxn][maxn][4],id[maxn][maxn][4];
+int di[][2]={{-1,0},{0,1},{1,0},{0,-1}};
+int DIR(char d)
+{
+    if(d=='S')return 2;
+    if(d=='W')return 3;
+    if(d=='N')return 0;
+    return 1;
+}
+int move(int &x,int &y,int &d)
+{
+    int tx,ty;
+    for(int i=0;i<4;i++)
+    {
+        tx=x+di[d][0];
+        ty=y+di[d][1];
+        if(tx<1||tx>H||ty<1||ty>W||grid[tx][ty]=='#'){d=(d+1)%4;continue;}
+        break;
+    }
+    x=tx,y=ty;
+    if(vis[x][y][d])return id[x][y][d];
+    vis[x][y][d]=1;
+    id[x][y][d]=cnt++;
+    return 0;
+}
+int main()
+{
+    //freopen("in.txt","r",stdin);
+    while(scanf("%d%d%lld",&H,&W,&L)!=EOF,H+W+L)
+    {
+        for(int i=1;i<=H;i++)
+        {
+            scanf("%s",grid[i]+1);
+            for(int j=1;j<=W;j++)
+            {
+                if(grid[i][j]=='.'||grid[i][j]=='#')continue;
+                sx=i,sy=j;
+                sd=DIR(grid[i][j]);
+            }
+        }
+        memset(vis,0,sizeof(vis));
+        memset(id,0,sizeof(id));
+        bool flag=true;
+        vis[sx][sy][sd]=1;
+        id[sx][sy][sd]=1;
+        cnt=-1;
+        while(L)
+        {
+            int tv=move(sx,sy,sd);
+            if(tv&&flag)
+            {
+                flag=false;
+                L=L%(cnt-tv)+cnt-tv;
+            }
+            L--;
+        }
+        char ansd;
+        if(sd==0)ansd='N';
+        else if(sd==1)ansd='E';
+        else if(sd==2)ansd='S';
+        else ansd='W';
+        printf("%d %d %c\n",sx,sy,ansd);
+    }
+    return 0;
+}

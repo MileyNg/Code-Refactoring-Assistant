@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main(void)
+{
+    long i;
+    int cnt = 0;
+    char word[11];
+    char text[1001];
+
+    scanf("%s", word);
+
+    while (1){
+        scanf("%s", text);
+        if (strcmp(text, "END_OF_TEXT") == 0){
+            break;
+        }else{
+            for (i = 0; i < (long)strlen(text); i++){
+                text[i] = tolower(text[i]);
+            }
+            if (strcmp(text, word) == 0){
+                cnt++;
+            }
+        }
+    }
+    
+    printf("%d\n", cnt);
+
+    return 0;
+}

@@ -1,0 +1,58 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+using namespace std;
+
+int main()
+{
+	char b[100][100];
+	int n, d, dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+	
+	cin >> d;
+	rep(t, d) {
+		memset(b, ' ', sizeof(b));
+		
+		cin >> n;
+		rep(i, n) b[0][i]='#';
+		int x=0, y=0, nn = n, direct=0;
+		
+		while (1) {
+			for (int i=0; i<nn; i++) {
+				b[x][y] = '#';
+				x+=dx[direct]; y+=dy[direct];
+			}
+			x-=dx[direct]; y-=dy[direct];
+			direct++; direct%=4;
+			
+			if (n%2==0 && nn<=2) break;
+			
+			for (int i=0; i<nn; i++) {
+				b[x][y] = '#';
+				x+=dx[direct]; y+=dy[direct];
+			}
+			x-=dx[direct]; y-=dy[direct];
+			direct++; direct%=4;
+			nn-=2;
+			
+			if (nn<=1)
+				break;
+		}
+		rep(y, n) {
+			rep(x, n)
+			cout << b[x][y];
+			cout << endl;
+		}
+
+	}
+	return 0;
+}

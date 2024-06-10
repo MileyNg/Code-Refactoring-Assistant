@@ -1,0 +1,70 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<queue>
+#include<stack>
+#include<cstdlib>
+
+
+#define rep(n,cnt) for(int cnt=0;cnt<n;++cnt)
+
+using namespace std;
+
+template <typename TYPE>
+void printArray(TYPE* array, int size){
+  rep(size,i) cout << array[i] << "\t" << flush;
+  cout << endl;
+}
+
+int StringToInt(string str){
+  return atoi(str.c_str());
+}
+
+#define MAX_W 50
+#define MAX_H 50
+
+class State{
+public:
+  int y;
+  int x;
+  int island_count;
+};
+
+int w,h,c[MAX_W][MAX_H];
+int count = 0;
+
+void dfs(int sy, int sx){
+  c[sy][sx] = 0;
+
+  for(int vy=-1;vy<=1;++vy){
+    for(int vx=-1;vx<=1;++vx){
+      int y = sy + vy;
+      int x = sx + vx;
+      if(c[y][x] == 1) dfs(y,x);
+    }
+  }
+}
+
+int main(){
+  while(true){
+    count = 0;
+    cin >> w;
+    cin >> h;
+    if(w == 0 && h == 0) break;
+    rep(h,y){
+      rep(w,x){
+	cin >> c[y][x];
+      }
+    }
+    
+    rep(h,y){
+      rep(w,x){
+	if(c[y][x] == 1){
+	  dfs(y,x);
+	  count++;
+	}
+      }
+    }
+    cout << count << endl;
+  }
+}

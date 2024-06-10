@@ -1,0 +1,23 @@
+figs = []
+
+8.times.each do
+  figs.push gets.strip.split('')
+end
+
+deg = 90
+
+3.times.each do
+  figs1 = 8.times.map{[]}
+
+  for y in (0..7)
+    for x in (0..7)
+      figs1[y][x] = figs[7 - x][y]
+    end
+  end
+
+  puts deg
+  figs1.each{|hl| puts hl.join('')}
+
+  deg += 90
+  figs = figs1
+end

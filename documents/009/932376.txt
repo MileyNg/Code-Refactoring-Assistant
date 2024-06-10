@@ -1,0 +1,102 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+using namespace std;
+#define INF	100000000
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define sec second
+#define lb lower_bound
+#define ub upper_bound
+#define SS stringstream
+#define rep(i,n) for(int i = 0; i < n; i++)
+#define sz(x) ((int)(x).size())
+#define SORT(x) sort((x).begin(), (x).end())
+#define RSORT(x) sort((x).begin(), (x).end(), greater<int>() )
+#define clr(a,b) memset((a),(b),sizeof(a))
+typedef pair<int, int> P;
+typedef long long int ll;
+typedef vector<int> Vi;
+typedef vector<ll> Vll;
+typedef vector<P> Vp;
+typedef priority_queue<P, vector<P>, greater<P> > PQ;
+
+struct edge{int to, cost; };
+struct road{int from, to, dis, cost;};
+int n, m;
+/*
+bool asc( const road& left, const road& right ) {
+    return left.from == right.from ? left.to < right.to : left.from < right.from;
+}
+*/
+
+int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	while(cin >> n >> m){
+		int d[10000], city[10000];
+		vector<edge> G[10000];
+		vector<road> vec;
+		ll ans = 0;
+		if(n == 0 && m == 0) break;
+		fill(city,city+n,INF);
+		rep(i,m){
+			int u,v,d,c; cin >> u >> v >> d >> c;
+			u--; v--;
+			edge e1 = {v,d}, e2 = {u,d};
+			road r1 = {u,v,d,c}, r2 = {v,u,d,c};
+			G[u].pb(e1); G[v].pb(e2);
+			vec.pb(r1); vec.pb(r2);
+		}
+		
+		PQ que;
+		fill(d,d+n,INF);
+		d[0] = 0;
+		que.push(P(0,0));
+		while(!que.empty()){
+			P p = que.top(); que.pop();
+			int v = p.sec;
+			if(d[v] < p.fi) continue;
+			rep(i,G[v].size()){
+				edge e = G[v][i];
+				if(d[e.to] > d[v]+e.cost){
+					d[e.to] = d[v]+e.cost;
+					que.push(P(d[e.to],e.to));
+				}
+			}
+		}
+		//sort(vec.begin(), vec.end(), asc);
+		
+		rep(i,2*m){
+			road r = vec[i];
+			//cout << r.from << " " << r.to << " " << r.dis << " " << r.cost << endl;
+			if(d[r.from] == d[r.to]+r.dis){
+				//cout << d[r.from] << " " << d[r.to] << " " << r.dis << endl;
+				if(city[r.from] == INF){
+					city[r.from] = r.cost;
+					ans += r.cost;
+				}
+				else if(city[r.from] > r.cost){
+					ans += r.cost-city[r.from];
+					city[r.from] = r.cost;
+				}
+			}
+			//cout << ans << endl;
+		}
+		
+		cout << ans << endl;
+	}
+}

@@ -1,0 +1,69 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<cctype>
+using namespace std;
+typedef string::const_iterator Cursol;
+int num(Cursol&);
+string calc(Cursol&);
+string expr(Cursol&);
+
+int pos ;
+
+int num(Cursol& p){
+  int ret = 0;
+  while(isdigit(*p)){
+    ret = ret * 10 + *p - '0';
+    p++;
+  }
+  return ret;
+}
+
+string calc(Cursol& p){
+  string ret;
+  if(isdigit(*p)){
+    int number = num(p);
+    if( *p == '(') {
+      p++;
+      string res = expr(p);
+      p++;
+      while(number--){
+        ret += res;
+        if(pos < ret.size()) break;
+      }
+    } else {
+      char c = *p;
+      p++;
+      while(number--){
+        ret += c;
+        if(pos < ret.size()) break;
+      }
+    }
+  }else{
+    while(isalpha(*p)){
+      ret += *p;
+      p++;
+      if(pos < ret.size()) break;
+    }
+  }
+  return ret;
+}
+
+
+string expr(Cursol& p){
+  string ret;
+  while( isalpha(*p) || isdigit(*p)){
+    ret += calc(p);
+    if(pos < ret.size()) break;
+  }
+  return ret;
+}
+int main(){
+  string str;
+  while(cin >> str >> pos, str!="0"||pos){
+    Cursol idx = str.begin();
+    string ret = expr(idx);
+    if(pos < ret.size()) cout << ret[pos] << endl;
+    else cout << 0 << endl;
+  }
+}

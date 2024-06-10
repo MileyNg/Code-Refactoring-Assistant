@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAX 100001
+#define QMAX 1000
+ 
+//構造体
+typedef struct {
+  char name[10];
+  int t;
+}Process;
+  
+//グローバル変数
+Process Q[MAX];
+int head = 0;
+int tail = 0;
+
+//プロトタイプ宣言
+void enqueue(Process);
+Process dequeue(void);
+  
+int main(void){
+  Process u;
+  int n,q;
+  int ttime = 0;
+  int i;
+
+  scanf("%d %d", &n, &q);
+  
+  //プロセスをエンキューする
+  for ( i = 0; i < n; i++){
+    scanf("%s %d", u.name, &u.t);
+    enqueue(u);
+  }
+
+  while(n > 0){
+      u = dequeue();
+      if(u.t <= q){
+        ttime += u.t;
+        printf("%s %d\n", u.name, ttime);
+        n--;
+      }
+      else{
+        u.t -= q;
+        ttime += q;
+        enqueue(u);
+      }
+  }
+  return 0;
+}
+
+    //プロセスを１つずつ入れていく    
+void enqueue(Process x){
+  
+  Q[tail] = x;
+  if(tail + 1 == MAX){
+    tail = 0;
+  }
+  else{
+    tail++;
+  }
+}
+  
+//プロセスを１つずつ返す
+Process dequeue(void){
+    
+  Process x = Q[head];
+
+  if(head + 1 == MAX){
+    head = 0;
+  }
+  else{
+    head++;
+  }
+
+  return x;        
+}

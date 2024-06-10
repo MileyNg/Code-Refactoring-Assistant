@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int Linear(int T[],int S[]);
+
+int C=0;
+int n,q,S[10000],T[500];
+  int NIL;
+
+main(){
+
+  int i,j,k;
+
+
+  scanf("%d",&n); //n integers
+
+  for(i=0;i<n;i++){
+    scanf("%d",&S[i]);
+  }
+  
+  scanf("%d",&q); //q integers
+
+  for(i=0;i<q;i++){
+    scanf("%d",&T[i]);
+  }
+
+  k=Linear(&T[0],&S[0]);
+  if(k==NIL){
+    printf("0");  
+    printf("\n");
+  }else{
+    printf("%d",T[k]);  
+    printf("\n");
+  }
+  return 0;
+}
+
+int Linear(int T[],int S[]){
+  int key;
+  int i,j;
+
+  for(i=0;i<q;i++){ //T loop
+    key = T[i];
+    for(j=0;j<n;j++){ // S loop
+      if(S[j]==key)
+	return i;
+    } 
+  }
+  
+  return NIL;
+  
+}

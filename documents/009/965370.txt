@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+bool is_draw(int* first, int* last) {
+    bool used[3] = {false, false, false};
+    for (int* p = first; p != last; p++) {
+        used[*p - 1] = true;
+    }
+    return all_of(used, used + 3, [used](bool x) {return x;});
+}
+
+int get_win(int* first, int* last) {
+    int mi = 5, ma = 0;
+    for (int*p = first; p != last; p++) {
+        mi = min(mi, *p);
+        ma = max(ma, *p);
+    }
+    if (ma - mi == 1) return mi;
+    return ma;
+}
+
+int main() {
+    int hands[5];
+    while (cin >> hands[0], hands[0]) {
+        for (int i = 1; i < 5; i++) {
+            cin >> hands[i];
+        }
+        if (is_draw(hands, hands + 5)) {
+            for (int i = 0; i < 5; i++) {
+                cout << 3 << endl;
+            }
+        }
+        else {
+            int win = get_win(hands, hands + 5);
+            for (int i = 0; i < 5; i++) {
+                if (hands[i] == win) {
+                    cout << 1 << endl;
+                }
+                else {
+                    cout << 2 << endl;
+                }
+            }
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+  int p[8];
+  int d[8] = { 4, 1, 4, 1, 2, 1, 2, 1 };
+
+  while ( cin >> p[0] >> p[1] >> p[2] >> p[3] >> p[4] >> p[5] >> p[6] >> p[7] ) {
+
+    int ans = -1;
+    long long int ans2 = -1;
+    int ans3;
+    for ( int i = 0; i < 8; i++ ) {
+
+      int k = 0;
+      long long int k2 = 0;
+
+      for ( int j = 0; j < 8; j++ ) {
+
+	int x = max( 0, p[j] - d[ (j+i)%8 ] );
+	k += x;
+	k2 = k2 * 10 + d[ (j+i)%8 ];
+
+      }
+      if ( ans == -1 || ans > k || ( ans == k && ans2 > k2 ) ) {
+	ans = k;
+	ans2 = k2;
+	ans3 = i;
+      }
+
+    }
+
+    for ( int i = 0; i < 8; i++ ) {
+
+      if ( i > 0 ) cout << " ";
+      cout << d[ (i+ans3)%8 ];
+
+    }
+    cout << endl;
+
+  }
+
+  return 0;
+
+}

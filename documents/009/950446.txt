@@ -1,0 +1,27 @@
+#include<stdio.h>
+int main(void){
+    while(1){
+        long long int ans=0;
+        int i,hoge,hogehoge=1000;
+        char input;
+        while(1){
+            if(scanf("%c",&input)==EOF)goto END;
+            else if(input=='\n')break;
+            if(input=='I')hoge=1;
+            else if(input=='V')hoge=5;
+            else if(input=='X')hoge=10;
+            else if(input=='L')hoge=50;
+            else if(input=='C')hoge=100;
+            else if(input=='D')hoge=500;
+            else if(input=='M')hoge=1000;
+            ans+=hoge;
+            if(hoge>hogehoge){
+                ans-=hogehoge*2;
+            }
+            hogehoge=hoge;
+        }
+        printf("%d\n",ans);
+    }
+    END:
+    return 0;
+}

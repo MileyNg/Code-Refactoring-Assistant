@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <cassert>
+#include <cstring>
+
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {-1, 0, 1, 0};
+int field[5][5];
+using namespace std;
+enum FACE{TOP,BOTTOM,NORTH,SOUTH,WEST,EAST};
+struct dice{
+  int num[6];
+
+  int &operator[](FACE f) { return num[f]; }
+
+  void roll(FACE a, FACE b, FACE c, FACE d) {
+    const int tmp = num[a];
+    num[a] = num[b];
+    num[b] = num[c];
+    num[c] = num[d];
+    num[d] = tmp;
+  }
+
+  void move(int d) {
+    switch(d) {
+    case 0: roll(TOP, SOUTH, BOTTOM, NORTH); break;
+    case 1: roll(TOP, WEST, BOTTOM, EAST);   break;
+    case 2: roll(TOP, NORTH, BOTTOM, SOUTH); break;
+    case 3: roll(TOP, EAST, BOTTOM, WEST);   break;
+    default: assert(false);
+    }
+  }
+};
+bool valid(int x,int y){
+  return x >= 0 && x < 5 && y >= 0 && y < 5;
+}
+void dfs(int x,int y,dice &die){
+  
+  die[BOTTOM] = field[y][x];
+  field[y][x] = 0;
+  for(int i =0 ;i < 4;i++){
+    int nx = x + dx[i];
+    int ny = y + dy[i];
+    if(valid(nx,ny)){
+      if(field[ny][nx]){
+		die.move(i);
+		dfs(nx,ny,die);
+		die.move((i+2)%4);
+      }
+    }
+  }
+  
+}
+bool solve(){
+  int cnt[7] = {};
+  for(int i = 0;i < 5;i++){
+    for(int j = 0;j < 5;j++){
+      cin >> field[i][j];
+      cnt[field[i][j]]++;
+    }
+  }
+  for(int i = 1;i <= 6;i++){
+    if(cnt[i] != 1)return false;
+  }
+  dice die;
+  
+  for(int i = 0;i < 5;i++){
+    for(int j = 0;j < 5;j++){
+      if(field[i][j] != 0){
+		dfs(j,i,die);
+		goto unloop;
+      }
+    }
+  }
+unloop:;
+
+  return die[TOP] + die[BOTTOM] == 7 && die[EAST] + die[WEST] == 7 && die[NORTH] + die[SOUTH] == 7;
+}
+int main(){
+  int n;
+  cin >> n;
+  while(n--){
+    cout << (solve() ? "true" : "false") << endl;
+  }
+  return 0;
+}

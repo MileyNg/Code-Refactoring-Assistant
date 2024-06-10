@@ -1,0 +1,49 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int N = 1000;
+
+int X[2], Y[2], Z[2], W[2];
+int x, y, z, w;
+
+void calc(){
+  x = X[0] * X[1] + (Y[0] * Y[1] * -1) + (Z[0] * Z[1] * -1) + (W[0] * W[1] * -1);
+  y = X[0] * Y[1] + Y[0] * Z[1] + Z[0] * W[1] + (W[0] * Z[1] * -1);
+  z = X[0] * Z[1] + (Y[0] * W[1] * -1) + Z[0] * X[1] + W[0] * Y[1];
+  w = X[0] * W[1] + Y[0] * X[1] + (Z[0] * Y[1] * -1) + W[0] * Z[1];
+}
+
+int main() {
+  int T;
+  while(cin >>T && T != 0){
+    REP(t, T){
+      cin >>X[0] >>Y[0] >>Z[0] >>W[0];
+      cin >>X[1] >>Y[1] >>Z[1] >>W[1];
+      calc();
+      printf("%d %d %d %d\n", x, y, z, w);
+    }
+  }
+  return 0;
+}

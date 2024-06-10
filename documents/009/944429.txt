@@ -1,0 +1,22 @@
+loop do
+    n,s = gets.split.map(&:to_i)
+    if n==0 && s == 0
+        break
+    end
+    r = Array.new(101,0)
+    n.times do |i|
+        r[gets.to_i] += 1
+    end
+    count = 0
+    for i in 1..100
+        if i*2 > s
+            count += r[i]**2/2
+        end
+        for j in i+1..100
+            if i+j > s
+                count += r[i]*r[j]
+            end
+        end
+    end
+    puts count
+end

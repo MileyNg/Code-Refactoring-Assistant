@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int n, p, rest;
+	while(cin>> n >> p , n){
+		int player[50];
+		for(int i = 0; i< n; i++)
+			player[i] = 0;
+		int i = 0;
+		rest = p;
+		while(1){
+			if(rest > 0){
+				player[i % n]++;
+				if(player[i % n] == p)
+					break;
+				rest--;
+			}else if(player[i % n] > 0){
+				rest += player[i % n];
+				player[i % n] = 0;
+			}
+			i ++ ;
+		}
+		cout << i % n << endl;
+	}
+	return 0;
+}

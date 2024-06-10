@@ -1,0 +1,23 @@
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+
+using namespace std;
+
+int main(){
+
+	int tri[3];
+	int s = 0, e = 0, t = 0, d = 0;
+
+	while (cin >> tri[0] >> tri[1] >> tri[2]){
+		sort(tri, tri + 3);
+		if (tri[2] >= tri[0] + tri[1]) break;
+		s++;
+		if (pow(tri[2], 2) == pow(tri[0], 2) + pow(tri[1], 2)) t++;
+		if (pow(tri[2], 2) > pow(tri[0], 2) + pow(tri[1], 2)) d++;
+		if (pow(tri[2], 2) < pow(tri[0], 2) + pow(tri[1], 2)) e++;
+	}
+
+	cout << s << " " << t << " " << e << " " << d << endl;
+	return 0;
+}

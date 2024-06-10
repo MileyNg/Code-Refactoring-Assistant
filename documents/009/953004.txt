@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<complex>
+#include<string>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+string z;
+string y;
+
+bool isaz(int p,string str){
+	
+	const int C = 333;
+	int sum[C]={0};
+	int sum2[C]={0};
+	
+	rep(i,z.size())sum[z[i]]++;
+	reps(i,p,p+z.size())sum2[str[i]]++;
+	
+	
+	rep(i,C){
+		if(sum[i]!=sum2[i])return false;
+	}
+	return true;
+}
+
+string setaz(int p,string str){
+	rep(i,z.size()){
+		str[i+p] = y[i];
+	}
+	return str;
+}
+
+int main(){
+	string str;
+	cin>>str;
+	z = "AIDUNYAN";
+	y = "AIZUNYAN";
+	
+	rep(i,str.size()-z.size()+1){
+		if(isaz(i,str)){
+			str = setaz(i,str);
+			i+=z.size();
+		}
+	}
+	
+	cout<<str<<endl;
+}

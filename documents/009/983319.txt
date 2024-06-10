@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+
+using namespace std;
+
+#define MAX 100000
+
+int main(){
+	int N; cin >> N;
+	int map[MAX];
+	for (int i = 0; i < N; i++) cin >> map[i];
+	int dp[MAX];
+	for (int i = 0; i < N; i++) dp[i] = 1<<10; // -1: unreachable, -2: not visited
+	dp[0] = 0;
+
+	vector<int> prev(N);
+	for (int i = 0; i < N; i++) { prev[i] = dp[i]; }
+	
+	for (int i = 0; i < N; i++) {
+		if (dp[i] == -1 || map[i]) { continue; }
+		int cur = i;
+		for (int j = 1; j <= 6; j++) {
+			if (dp[cur+j] == -1) { continue; }
+			int sta = map[cur+j];
+			if (sta) {
+				int ctmp = cur+j;
+				set<int> loop;
+				int flag = 0;
+				while (map[ctmp]) {
+					if (!map[ctmp]) { flag = 0; break; }
+					if (loop.find(ctmp) != loop.end()) { flag = 1; break; }
+					loop.insert(ctmp);
+					ctmp += map[ctmp];
+				}
+				loop.insert(ctmp);
+				if (flag) {
+					//cout << "ctmp1:" << ctmp << " " << map[ctmp] <<  endl;
+					for (set<int>::iterator it = loop.begin(); it != loop.end(); it++) {
+							dp[*it] = -1;
+					}
+				} else {
+					//cout << "ctmp2:" << ctmp << " " << map[ctmp] <<  endl;
+					for (set<int>::iterator it = loop.begin(); it != loop.end(); it++) {
+						if (map[cur]) {
+							dp[*it] = min(dp[cur], dp[*it]);
+						} else {
+							dp[*it] = min(dp[cur]+1, dp[*it]);
+						}
+					}
+				}
+			} else {
+				dp[cur+j] = min(dp[cur+j], dp[cur]+1);
+			}
+		}
+	}
+	cout << dp[N-1] << endl;
+
+	return 0;
+}

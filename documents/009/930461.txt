@@ -1,0 +1,41 @@
+#include <string>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cstdio>
+
+class MyTransform {
+private :
+   int shift ;
+public :
+   MyTransform( int s ) : shift( s ) { }
+
+  char operator( )( char c ) {
+      if ( isspace( c ) )
+	 return ' ' ;
+	 else if(ispunct(c))
+              return c;
+      else {
+	 static std::string letters( "abcdefghijklmnopqrstuvwxyz" ) ;
+	 std::string::size_type found = letters.find(tolower( c )) ;
+	 int shiftedpos = ( static_cast<int>( found ) + shift ) % 26 ;
+	 if ( shiftedpos < 0 ) //in case of decryption possibly
+	    shiftedpos = 26 + shiftedpos ;
+	 char shifted = letters[shiftedpos] ;
+	 return shifted ;
+      }
+  }
+} ;
+
+int main( ) {
+        
+   std::string input ;
+   while(getline( std::cin , input )) {
+   int myshift = 4 ;
+   myshift *= -1 ; //decrypting again
+   std::transform ( input.begin( ) , input.end( ) , input.begin( ) ,
+	 MyTransform( myshift ) ) ;
+   std::cout << input << std::endl ;
+   }
+   return 0 ;
+}

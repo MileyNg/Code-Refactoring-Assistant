@@ -1,0 +1,31 @@
+/*
+	0059:Intersection of Ractangles
+*/
+#include	<iostream>
+
+using namespace std;
+
+typedef struct sq_doublePoint {
+	double DLX;
+	double DLY;
+	double URX;
+	double URY;
+} SQP;
+
+int main(void) {
+	while(1) {
+		/*Square A{ (X[0],Y[0]),(X[1],Y[1]) }, Square B{ (X[2],Y[2]),(X[3],Y[3]) }*/
+		SQP sqA, sqB;
+		
+		cin >> sqA.DLX >> sqA.DLY >> sqA.URX >> sqA.URY >> sqB.DLX >> sqB.DLY >> sqB.URX >> sqB.URY;
+		if( cin.eof() ) { break; }
+		
+		if(sqA.DLX < sqB.URX && sqB.DLX < sqA.URX && sqA.DLY < sqB.URY && sqB.DLY < sqA.URY ) {
+			cout << "YES" << endl;
+		} else {
+			cout << "NO" << endl;
+		}
+	}
+	
+	return 0;
+}

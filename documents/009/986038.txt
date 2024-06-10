@@ -1,0 +1,27 @@
+### constant
+
+STD_BMI = 22
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  min_diff = 1000
+  min_i = nil
+
+  n.times.each do
+    i, h, w = gets.strip.split(' ').map{|s| s.to_i}
+
+    bmi = 10000.0 * w / (h * h)
+    diff = (bmi - STD_BMI).abs
+
+    if min_diff > diff
+      min_diff = diff
+      min_i = i
+    end
+  end
+
+  puts min_i
+end

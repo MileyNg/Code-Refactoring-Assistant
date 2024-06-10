@@ -1,0 +1,50 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define INF (1<<29)
+#define EPS (1e-10)
+#define mp make_pair
+#define pb push_back
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef pair<int,int> pii;
+
+int dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+
+int main(){
+	int n, m;
+	cin >> n >> m;
+	vector<pii> treasure;
+	for( int i = 0; i < n; i++ ){
+		int x, y;
+		cin >> x >> y;
+		treasure.pb( mp(x,y) );
+	}
+	sort(treasure.begin(), treasure.end());
+	for( int i = 0; i < m; i++ ){
+		int x1, y1, x2, y2;
+		cin >> x1 >> y1 >> x2 >> y2;
+		// search
+		int ans = 0;
+		vector<pii>::iterator it = lower_bound(treasure.begin(),treasure.end(),mp(x1,y1));
+		while( 1 ){
+			if( it == treasure.end() || *it > mp(x2,y2) ) break;
+			if( x1 <= (*it).first && (*it).first <= x2 && y1 <= (*it).second && (*it).second <= y2 ) ans++;
+			it++;
+		}
+		cout << ans << endl;
+	}
+}

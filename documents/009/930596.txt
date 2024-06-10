@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 16;
+const double inf = 1e20;
+int n;
+int id[MAXN], x[MAXN], num[MAXN];
+double dp[1<<MAXN][MAXN];
+int prev[1<<MAXN][MAXN];
+
+int main() {
+  cin >> n;
+  for(int i = 0; i < n; ++i) {
+    cin >> id[i] >> x[i] >> num[i];
+  }
+  fill(dp[0], dp[1<<MAXN], inf);
+  for(int i = 0; i < n; ++i) dp[1<<i][i] = 0.0;
+  for(int b = 0; b < (1<<n); ++b) {
+    for(int i = 0; i < n; ++i) {
+      if(dp[b][i] == inf) continue;
+      double w = 0;
+      for(int j = 0; j < n; ++j) if(b & (1<<j)) w += num[j];
+      for(int ni = 0; ni < n; ++ni) {
+        if(b & (1<<ni)) continue;
+        int nb = b | (1<<ni);
+        double dist = abs(x[ni] - x[i]);
+        double ncost = dp[b][i] + dist * (70.0 + w) / 2000.0;
+        if(dp[nb][ni] > ncost) {
+          dp[nb][ni] = ncost;
+          prev[nb][ni] = i;
+        }
+      }
+    }
+  }
+  int k = 0;
+  for(int i = 1; i < n; ++i) {
+    if(dp[(1<<n)-1][k] > dp[(1<<n)-1][i]) k = i;
+  }
+  int b = (1<<n)-1;
+  vector<int> ans;
+  while(b) {
+    ans.push_back(k);
+    int tmp = k;
+    k = prev[b][k];
+    b &= ~(1<<tmp);
+  }
+  reverse(ans.begin(), ans.end());
+  for(int i = 0; i < n; ++i) {
+    if(i) cout << " ";
+    cout << id[ans[i]];
+  }
+  cout << endl;
+  return 0;
+}

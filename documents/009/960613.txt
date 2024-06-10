@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int p, a, b, c, d;
+  while(scanf("%d", &p) && p){
+    scanf("%d%d%d%d", &a, &b, &c, &d);
+    int e, f, g, h;
+    e = f = g = h = 0;
+    int res = INF;
+    rep(i, a+1) rep(j, b+1) rep(k, c+1) rep(l, d+1){
+      int change = i*10 + j*50 + k*100 + l*500 - p;
+      //      if(j != 20) continue;
+      if(change < 0) continue;
+      if(((change % 50) && i) || ((change % 100)/50 && j) || ((change % 500)/100 && k) || ((change / 500) && l)) continue;
+      if(res > a-i+(change%50)/10+b-j+(change%100)/50+c-k+(change%500)/100+d-l+(change/500)){
+	//	printf("price: %d, s %d\n", p, i*10+j*50+k*100+l*500);
+	//	printf("shiharai %d %d %d %d\n", i, j, k, l);
+	//	printf("change %d\n", change);
+
+	//	printf("maisuu %d %d\n", a-e+b-f+c-g+d-h, (a-i+(change%50)/10)+(b-j+(change%100)/50)+(c-k+(change%500)/100)+(d-l+(change/500)));
+	//	printf("kokono maisuu%d %d %d %d\n", a-i+(change%50)/10, b-j+(change%100)/50, c-k+(change%500)/100, d-l+change/500);
+
+	e = i;
+	f = j;
+	g = k;
+	h = l;
+	res = a-e+b-f+c-g+d-h;
+      }
+    }
+
+    if(e) printf("10 %d\n", e);
+    if(f) printf("50 %d\n", f);
+    if(g) printf("100 %d\n", g);
+    if(h) printf("500 %d\n", h);
+  }
+  return 0;
+}

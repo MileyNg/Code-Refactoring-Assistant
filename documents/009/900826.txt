@@ -1,0 +1,45 @@
+#include <string>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <cmath>
+
+using namespace std;
+
+int Max(const string &data){
+  string buf(data);
+  sort(buf.begin(),buf.end());
+  int maxval=0;
+  for(int i=0;i<buf.size();i++){
+    buf[i]-='0';
+    maxval+=buf[i]*pow(10,i);
+  }
+  return maxval;
+}
+
+int Min(const string &data){
+  string buf(data);
+  sort(buf.begin(),buf.end(),greater<char>());
+  int minval=0;
+  for(int i=0;i<buf.size();i++){
+    buf[i]-='0';
+    minval+=buf[i]*pow(10,i);
+  }
+  return minval;
+}
+
+int main(){
+  string strdata;
+  int n;
+  cin>>n;
+  vector<int> diff(n);
+  for(int i=0;i<n;i++){
+    cin>>strdata;
+    diff[i]=Max(strdata)-Min(strdata);
+  }
+  for(int i=0;i<n;i++){
+    cout<<diff[i]<<endl;
+  }
+
+}

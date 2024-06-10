@@ -1,0 +1,36 @@
+
+#include<iostream>
+#include<string.h>
+#define rep(i,n) for(i = 0;i < n;i++)
+using namespace std;
+
+int main()
+{
+	char s1[5],s2[5];
+	int i,j;
+	while( cin >> s1 >> s2 )
+	{
+		bool flag[4] = {false};
+		int hit = 0,blow = 0;
+		if( strlen(s1) == 1 && strlen(s2) == 1 )
+			break;
+		rep(i,4){
+			if( s1[i] == s2[i] ){
+				hit++;
+				flag[i] = true;
+			}
+		}
+		rep(i,4){
+			if( flag[i] )continue;
+			rep(j,4){
+				if( i == j )continue;
+				if( s1[i] == s2[j] ){
+					blow++;
+					break;
+				}
+			}
+		}
+		cout << hit << " " << blow << endl;
+	}
+	return 0;
+}

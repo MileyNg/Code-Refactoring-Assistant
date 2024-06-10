@@ -1,0 +1,35 @@
+
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int number,i;
+	char deck[200];
+
+	while(1)
+	{
+		scanf("%s",deck);
+		if(strcmp(deck,"-") == 0)
+		{
+			return 0;
+		}
+
+		scanf("%d",&number);
+		int value = 0;
+		for(i=0 ;i<number ;i++)
+		{
+			int number_2;
+			scanf("%d",&number_2);
+			value += number_2;
+		}
+		value %= strlen(deck);
+		for(i=0 ;i<strlen(deck) ;i++)
+		{
+			printf("%c",deck[(value + i) % strlen(deck)]);
+		}
+		printf("\n");
+
+	}
+	return 0;
+}

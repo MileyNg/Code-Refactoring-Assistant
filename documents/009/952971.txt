@@ -1,0 +1,86 @@
+#include <cstdio>
+#include <queue>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+#define MN 2000
+#define whole(xs) xs.begin(), xs.end()
+#define INF (1<<28)
+
+int N, M;
+
+struct Edge {
+    int u, v;
+    int dist, cost;
+    Edge(int u, int v, int dist, int cost) : 
+        u(u), v(v), dist(dist), cost(cost) {}
+};
+typedef vector<Edge> Vertex;
+
+vector<Vertex> Graph;
+bool input() {
+    scanf("%d %d", &N, &M);
+    if (N == 0 && M == 0) return false;
+    Graph.clear(); Graph.resize(N);
+    for (int i = 0; i < M; i++) {
+        int u, v, d, c; scanf("%d %d %d %d", &u, &v, &d, &c);
+        u--; v--;
+        Graph[u].push_back(Edge(u, v, d, c));
+        Graph[v].push_back(Edge(v, u, d, c));
+    }
+    return true;
+}
+
+struct S {
+    int v;
+    int dist, cost, prev;
+    S(int v, int dist, int cost, int prev) : v(v), dist(dist), cost(cost), prev(prev) {}
+};
+bool operator<(const S& a, const S& b) {
+    return (a.dist == b.dist ? a.cost > b.cost : a.dist < b.dist);
+}
+bool operator>(const S& a, const S& b) {
+    return (!(a < b));
+}
+ostream& operator<<(ostream& os, const S& s) {
+    os << "v: " << s.v << " dist: " << s.dist << " cost: " << s.cost << " prev: " << s.prev;
+    return os;
+}
+vector<S> CalcDist() {
+    vector<S> V(N, S(0, INF, INF, -1));
+    for (int i = 0; i < N; i++) V[i].v = i;
+    priority_queue< S, vector<S>, greater<S> > PQ;
+    PQ.push(S(0, 0, 0, -1));
+    V[0].dist = 0; V[0].cost = 0; V[0].prev = -1;
+    while (!PQ.empty()) {
+        S cur = PQ.top(); PQ.pop();
+        for (int i = 0; i < Graph[cur.v].size(); i++) {
+            Edge& next = Graph[cur.v][i];
+            if (V[next.v].dist == V[cur.v].dist + next.dist && V[next.v].cost > next.cost) {
+                V[next.v].cost = next.cost;
+                V[next.v].prev = cur.v;
+                PQ.push(V[next.v]);
+            } else if (V[next.v].dist > V[cur.v].dist + next.dist) {
+                V[next.v].dist = V[cur.v].dist + next.dist;
+                V[next.v].cost = next.cost;
+                V[next.v].prev = cur.v;
+                PQ.push(V[next.v]);
+            }
+        }
+    }
+    return V;
+}
+
+int main() {
+    while (input()) {
+        vector<S> V = CalcDist();
+        int Ans = 0;
+        for (int i = 0; i < N; i++) {
+            Ans += V[i].cost;
+        }
+        cout << Ans << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <bitset>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <tuple>
+#include <set>
+#include <functional> 
+#include <string.h>
+
+#define X first
+#define Y second
+#define MP make_pair
+#define MT make_tuple
+#define FOR(i, n) for(int (i) = 0; (i) < (n); (i)++)
+#define REP(i, a, n) for(int (i) = (a); (i) < (n); (i)++)
+typedef long long ll;
+typedef std::pair<int, int> pii;
+typedef std::pair<ll, ll > pll;
+using namespace std;
+const int MAX = 101;
+const double PI = 3.1415926535897932384;
+
+template<class T, class U>
+void convert(T &t, U &u){
+	stringstream ss;
+	ss << t;
+	ss >> u;
+}
+int dp[401];
+
+
+int main(){
+	int n, m; cin >> n >> m;
+	vector<vector<int> > edge(n, vector<int>(n, 0));
+	FOR(i, m){
+		int s, t, d; cin >> s >> t >> d;
+		edge[s][t] = d;
+	}
+
+	vector<int> s;
+	s.push_back(0);
+	while (1){
+		vector<int> c;
+		FOR(i, s.size()){
+			FOR(j, n){
+				if (edge[s[i]][j]){
+					dp[j] = max(dp[j], dp[s[i]] + edge[s[i]][j]);
+					c.push_back(j);
+				}
+			}
+		}
+		
+		s = c;
+
+		if (!s.size()) break;
+	}
+
+	cout << dp[n - 1] << endl;
+	return 0;
+}

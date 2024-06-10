@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+  int n;
+  char taro[100 + 1];
+  char hanako[100 + 1];
+  int i, tmp;
+  int taro_score, hanako_score;
+
+  taro_score = 0;
+  hanako_score = 0;
+
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%s %s", taro, hanako);
+    tmp = strcmp(taro, hanako);
+    if (tmp < 0) {
+      hanako_score += 3;
+    } else if (tmp > 0) {
+      taro_score += 3;
+    } else {
+      taro_score++;
+      hanako_score++;
+    }
+  }
+
+  printf("%d %d\n", taro_score, hanako_score);
+
+  return 0;
+}

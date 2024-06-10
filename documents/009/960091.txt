@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(),(c).end()
+#define iter(it,c) for(auto it=c.begin(); it!=c.end(); ++it)
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+struct team {
+    team(){}
+    team(int id) : id(id), pena(0), solved(0){
+        rep(i,20) submit[i].clear();
+    }
+    int id;
+    int pena;
+    vi submit[20];
+    int solved;
+};
+
+int main(){
+    int T,P,R;
+    while(cin>>T>>P>>R, T|P|R){
+        vector<team> ts(T);
+        rep(i,T){
+            ts[i] = i+1;
+        }
+        rep(i,R){
+            int who, prob, when;
+            string res;
+            cin >> who >> prob >> when >> res;
+            team & t = ts[who-1];
+            t.submit[prob].push_back(when);
+            if(res[0]=='C'){
+                t.solved++;
+                t.pena += (t.submit[prob].size()-1) * 1200 + when;
+            }
+        }
+
+        sort(all(ts),[](team const& a, team const& b){
+                if(a.solved != b.solved) return a.solved > b.solved;
+                if(a.pena != b.pena) return a.pena < b.pena;
+                return a.id < b.id;
+            });
+
+        iter(it, ts){
+            printf("%d %d %d\n",
+                   it->id,
+                   it->solved,
+                   it->pena);
+        }
+    }
+}

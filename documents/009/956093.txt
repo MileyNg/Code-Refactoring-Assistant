@@ -1,0 +1,224 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+char tmp[1000];
+#define nextInt(n) scanf("%d",&n)
+#define nextLong(n) scanf("%lld",&n)//I64d
+#define nextDouble(n) scanf("%lf",&n)  
+#define nextChar(n) scanf("%c",&n)
+#define nextString(n) scanf("%s",tmp);n=tmp
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+
+typedef int Cost;Cost CINF=1<<28;
+namespace EGraph{
+	struct Edge{
+		int from,to;Cost cost;
+		Edge(int from,int to,Cost cost)
+		: from(from),to(to),cost(cost) {};
+		bool operator<(Edge r) const{
+			return cost<r.cost;
+		}
+		bool operator>(Edge r) const{
+			return cost>r.cost;
+		}
+	};
+	typedef vector<vector<Edge> >  Graph;
+}
+namespace MGraph{
+	typedef  vector<vector<Cost> > Mat;
+}
+namespace ShortestPath{
+    using namespace MGraph;
+    // O(n^3) n≦100
+    void warshall_floyd(Mat& d){
+        const int V=d.size();
+        REP(k,V)
+            REP(i,V)REP(j,V){
+                if(d[i][j]>d[i][k] + d[k][j]){
+                    d[i][j]=d[i][k] + d[k][j];
+                }
+            }
+    }
+}
+using namespace ShortestPath;
+using namespace EGraph;
+
+namespace MaximamFlows{
+    typedef int Flow;
+    const int INF = 1 << 28;
+    struct Edge{
+        int to;Flow cap;int rev;
+        Edge(int to,Flow cap,int rev) : to(to),cap(cap),rev(rev) {};
+    };
+    typedef vector<vector<Edge> > Graph;
+
+    //dinic O(V^2*E)
+    class MaximamFlow{
+    private:
+            //iter　次に調べる時の開始位置 距離
+        vector<int> iter,dist;
+            //sからのbfs距離の計算
+        void bfs_dist(int s){
+            fill(ALL(dist),-1);dist[s]=0;
+            queue<int> que;que.push(s);
+            while(!que.empty()){
+                int v=que.front();que.pop();
+                EACH(e,G[v]){
+                    if(e->cap>0 && dist[e->to] == -1){
+                        dist[e->to]=dist[v]+1;
+                        que.push(e->to);
+                    }
+                }
+            }
+        }
+            //増加パス
+        Flow dfs_best_path(int v,int t,Flow f){
+            if(v==t)return f;
+            for(int &i =iter[v];i<(int)G[v].size();i++){
+                Edge& e=G[v][i];
+                if(e.cap>0 && dist[v]<dist[e.to]){
+                    Flow d=dfs_best_path(e.to,t,min(f,e.cap));
+                    if(d>0){
+                        e.cap-=d;G[e.to][e.rev].cap+=d;
+                        return d;
+                    }
+                }
+            }
+            return 0;
+        }
+    public:
+        int V;Graph G;
+        MaximamFlow(int V):V(V){
+            G=Graph(V);
+            dist=vector<int>(V);iter=vector<int>(V);
+        }
+
+        void add_edge(int from,int to,int cap){
+            int fromrev=G[to].size(),torev=G[from].size();
+            G[from].push_back(Edge(to,cap,fromrev));G[to].push_back(Edge(from,0,torev));
+        }
+        int max_flow(int s,int t){
+            Flow flow=0;
+            while(true){
+                bfs_dist(s);
+                if(dist[t]<0)return flow;
+                fill(ALL(iter),0);
+                Flow f;
+                while((f=dfs_best_path(s,t,INF))>0)flow+=f;
+            }return -1;
+        }
+    };
+}
+using namespace MaximamFlows;
+
+
+//dagの最小パス被覆＝最大反鎖
+class Main{
+public:
+	int N,M,L;
+	Mat g;
+	vector<int> ps,ts;
+	bool input(){
+		nextInt(N);nextInt(M);nextInt(L);if(N==0)return false;
+		g=Mat(N,vector<Cost>(N,CINF));
+		REP(i,N)g[i][i]=0;
+		REP(i,M){
+			int u,v,d;nextInt(u);nextInt(v);nextInt(d);
+			g[u][v]=g[v][u]=d;
+		}
+		ps=vector<int>(L);ts=vector<int>(L);
+		REP(i,L){
+			nextInt(ps[i]);nextInt(ts[i]);
+		}
+		return true;
+	}
+
+	void run(){
+		while(input()){
+			warshall_floyd(g);
+			MaximamFlow mf(2*L+2);
+			REP(i,L)REP(j,L)if(g[ps[i]][ps[j]]<=ts[j]-ts[i] &&i!=j){
+				mf.add_edge(i, L+j,1);
+			}
+			REP(i,L)mf.add_edge(2*L,i,1);
+			REP(j,L)mf.add_edge(L+j,2*L+1,1);
+
+			cout <<L-mf.max_flow(2*L, 2*L+1)<<endl;
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

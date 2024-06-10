@@ -1,0 +1,25 @@
+#include<iostream>
+#define MAX 10001
+using namespace std;
+bool isP[MAX];
+void make_table(){
+  for(int i=0;i<MAX;i++)isP[i]=true;
+  isP[0]=isP[1]=false;
+  for(int i=2;i*i<=MAX;i++){
+    if(!isP[i])continue;
+    for(int j=i*i;j<MAX;j+=i){
+      isP[j]=false;
+    }
+  }
+}
+
+int main(){
+  make_table();
+  int n,a,cnt=0;
+  cin>>n;
+  for(int i=0;i<n;i++){
+    cin>>a;
+    cnt+=isP[a];
+  }
+  cout<<cnt<<endl;
+}

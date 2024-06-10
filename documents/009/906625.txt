@@ -1,0 +1,38 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int n, t, s;
+	cin >> n >> t >> s;
+
+	vector<int> a(n), b(n);
+	for(int i = 0; i < n; ++i) {
+		cin >> a[i] >> b[i];
+	}
+
+	vector<int> dp(t + 1, -1);
+	dp[0] = 0;
+	for(int i = 0; i < n; ++i) {
+		for(int x = t - b[i]; x >= 0; --x) {
+			if(dp[x] == -1) continue;
+			if(x < s && s < x + b[i]) {
+				if(s + b[i] <= t) chmax(dp[s + b[i]], dp[x] + a[i]);
+			}
+			else {
+				chmax(dp[x + b[i]], dp[x] + a[i]);
+			}
+		}
+	}
+
+	cout << *max_element(dp.begin(), dp.end()) << endl;
+
+	return EXIT_SUCCESS;
+}

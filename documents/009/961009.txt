@@ -1,0 +1,52 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class DisjointSet {
+public:
+    vector<int> p, rank;
+
+    DisjointSet(int n) {
+        p.resize(n, 0);
+        iota(p.begin(), p.end(), 0);
+        rank.resize(n, 0);
+    }
+
+    int root(int x) {
+        return (p[x] == x ? x : root(p[x]));
+    }
+
+    bool same(int x, int y) {
+        return (root(x) == root(y));
+    }
+
+    void unite(int x, int y) {
+        int xroot = root(x), yroot = root(y);
+        if (rank[xroot] < rank[yroot]) {
+            p[xroot] = yroot;
+        } else {
+            p[yroot] = xroot;
+            if (rank[xroot] == rank[yroot]) rank[xroot] ++;
+        }
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    int n, q, com, x, y;
+    cin >> n >> q;
+
+    DisjointSet obj(n);
+    while (q --) {
+        cin >> com >> x >> y;
+        if (com == 0) {
+            obj.unite(x, y);
+        } else {
+            cout << (int)obj.same(x, y) << endl;
+        }
+    }
+
+    return 0;
+}

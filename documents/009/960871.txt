@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+int main(void) {
+	int t[20][20];
+	int i, j;
+	int x, y, q;
+	char c;
+	int no_c = 0;
+	int qmax = 0;
+	int O = 5;
+	for(i=0;i<20;i++) {
+		for(j=0;j<20;j++) {
+			t[i][j] = 0;
+		}
+	}
+	
+	while(scanf("%d%c%d%c%d\n", &x, &c, &y, &c, &q) == 5) {
+		if(q == 1) {
+			t[O+x][O+y]++;
+			t[O+x-1][O+y]++;
+			t[O+x+1][O+y]++;
+			t[O+x][O+y-1]++;
+			t[O+x][O+y+1]++;
+		} else if(q == 2) {
+			for(i=O+x-1;i<=O+x+1;i++) {
+				for(j=O+y-1;j<=O+y+1;j++) {
+					t[i][j]++;
+				}
+			}
+		} else if(q == 3) {
+			for(i=O+x-1;i<=O+x+1;i++) {
+				for(j=O+y-1;j<=O+y+1;j++) {
+					t[i][j]++;
+				}
+			}
+			t[O+x-2][O+y]++;
+			t[O+x+2][O+y]++;
+			t[O+x][O+y-2]++;
+			t[O+x][O+y+2]++;
+		}
+	}
+	
+	for(i=O;i<O+10;i++) {
+		for(j=O;j<O+10;j++) {
+			if(t[i][j] == 0) {
+				no_c++;
+			}
+			if(qmax < t[i][j]) qmax = t[i][j];
+		}
+	}
+	
+	printf("%d\n%d\n", no_c, qmax);
+	
+	return 0;
+}

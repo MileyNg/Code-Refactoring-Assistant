@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    int i=0,n=0,sum=0;
+    double a2=0,a=0,m=0;
+    int s[1000]={0};
+    
+    while(1){
+        
+        n=0;m=0;a2=0;a=0;sum=0;
+        
+        scanf("%d",&n);   //何回か n を入力
+        if(n==0)break;
+        
+        for(i=0;i<n;i++){
+            scanf("%d",&s[i]);
+            sum=sum+s[i];
+        }
+        
+        m=1.0*sum/n;
+        
+        for(i=0;i<n;i++){
+            a2=a2+( (s[i]-m)*(s[i]-m) )/n;
+        }
+        
+        a=sqrt(a2);
+        printf("%.8lf\n",a);
+        
+    }
+    return 0;
+}

@@ -1,0 +1,81 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+using namespace std;
+
+int main(void)
+{
+  for(;;){
+    int x;
+    cin >> x;
+
+    if(x==0)
+      break;
+
+    int count=0;
+    int count_ki=0;
+    int tmp;
+    int ans_tmp=0;
+    int ans2_tmp=0;
+
+    int coin[100000];
+    int coin_ki[100000];
+   
+    int tmp2=0;
+  
+    for(int i=1;i<x;i++){
+      tmp=i*(i+1)*(i+2)/6;
+      if(tmp>x)break;
+      coin[i-1]=tmp;
+      count=i;
+      if(coin[i-1]%2==1){
+	coin_ki[tmp2++]=coin[i-1];
+	count_ki=tmp2;
+      }
+    }
+    int dp[100000];
+    
+    for(int i=0;i<100000;i++)
+      dp[i]=100000;
+
+    dp[0]=0;
+    for(int i = 0;i<x;i++){
+      for(int j=0;j<count-1;j++){
+	if(i+coin[j]<=x){
+	  //dp[i+coin[j]]=min(dp[i+coin[j]],dp[i]+1);
+	  ans_tmp=min(dp[i+coin[j]],dp[i]+1);
+	  dp[i+coin[j]]=ans_tmp;
+	}
+      }
+    }
+
+
+    int ans1=ans_tmp;
+
+    int dp2[100000];
+    
+    for(int i=0;i<100000;i++)
+      dp2[i]=100000;
+
+
+
+    dp2[0]=0;
+    for(int i = 0;i<x;i++){
+      for(int j=0;j<count_ki;j++){
+	if(i+coin_ki[j]<=x){
+	  //dp2[i+coin_ki[j]]=min(dp2[i+coin_ki[j]],dp2[i]+1);
+	  ans2_tmp=min(dp2[i+coin_ki[j]],dp2[i]+1);
+	  dp2[i+coin_ki[j]]=ans2_tmp;
+	}
+      }
+    }
+   
+    
+    int ans2=ans2_tmp;
+    
+    printf("%d %d\n",ans1,ans2);
+  }
+  return 0;
+}
+
+  

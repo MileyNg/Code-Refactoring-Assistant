@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair< int , int > Pi;
+#define INF 1 << 30
+
+int a, b, d;
+
+int main(){
+  while( cin >> a >> b >> d, a){
+
+    //なんか頭良さそうな式使うんじゃ
+    int a_sum , b_sum, all_sum = INF;
+    //右のほうがdグラム多いとき
+
+    for(int a_price = 0, b_price = 0; a_price / a < all_sum ; a_price += a){
+      b_price = 0;
+      while(a_price - b_price >= d) {
+        if(a_price / a + b_price / b > all_sum) break;
+        if(abs(b_price - a_price) == d) {
+          if(all_sum > b_price / b + a_price / a){
+            a_sum = a_price / a;
+            b_sum = b_price / b;
+            all_sum = a_sum + b_sum;
+          }
+          break;
+        }
+        b_price += b;
+      }
+    }
+
+    for(int a_price = 0, b_price = 0; a_price / a < all_sum ; a_price += a){
+      b_price = 0;
+      while(a_price + b_price < d) {
+        b_price += b;
+      }
+      if(a_price + b_price == d) {
+        if(all_sum > b_price / b + a_price / a){
+            a_sum = a_price / a;
+            b_sum = b_price / b;
+            all_sum = a_sum + b_sum;
+        }
+      }
+    }
+
+    swap( a, b);
+    for(int a_price = 0, b_price = 0; a_price / a < all_sum ; a_price += a){
+      b_price = 0;
+      while(a_price - b_price >= d) {
+        if(a_price / a + b_price / b > all_sum) break;
+        if(abs(b_price - a_price) == d) {
+          if(all_sum > b_price / b + a_price / a){
+            b_sum = a_price / a;
+            a_sum = b_price / b;
+            all_sum = a_sum + b_sum;
+          }
+          break;
+        }
+        b_price += b;
+      }
+    }
+
+    cout << a_sum << " " << b_sum << endl;
+  }
+
+  return(0);
+}

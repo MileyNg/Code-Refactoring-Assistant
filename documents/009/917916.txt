@@ -1,0 +1,79 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define IINF (INT_MAX)
+#define MAX 1010
+
+using namespace std;
+
+typedef pair<int,int> ii;
+
+struct Edge{
+  int to,index;
+  Edge(int to=IINF,int index=IINF):to(to),index(index){}
+};
+
+struct Data{
+  int cur,cost,rev;
+  Data(int cur=IINF,int cost=IINF,int rev=IINF):cur(cur),cost(cost),rev(rev){}
+  bool operator < (const Data& data)const{
+    if( cost != data.cost ) return cost > data.cost;
+    return rev > data.rev;
+  }
+};
+
+int N,M,S,T,a,b;
+vector<Edge> G[MAX][2];
+ii mincost[MAX][2];
+
+inline void dijkstra(){
+  priority_queue<Data> Q;
+
+  Q.push(Data(S,0,IINF));
+  mincost[S][0] = ii(0,IINF);
+  while(!Q.empty()){
+    Data data = Q.top(); Q.pop();
+    int cur = data.cur;
+    bool r = (data.rev!=IINF);
+    if( mincost[cur][r].first < data.cost ) continue;
+    rep(j,2){
+      if( j && r ) break;
+      if( j )r = true;
+      rep(i,(int)G[cur][j].size()){
+        if( j )data.rev = G[cur][j][i].index;
+        int to = G[cur][j][i].to;
+        int ncost = data.cost + 1;
+        if( mincost[to][r].first == ncost && r && data.rev < mincost[to][r].second ){
+          mincost[to][r].second = data.rev;
+          Q.push(Data(to,ncost,data.rev));
+        } else if( mincost[to][r].first > ncost ){
+          mincost[to][r] = ii(ncost,data.rev);
+          Q.push(Data(to,ncost,data.rev));
+        }
+      }
+    }
+  }
+
+  int answer_cost = min(mincost[T][0].first,mincost[T][1].first);
+  int answer_rev = mincost[T][1].second;
+  if( mincost[T][0].first <= mincost[T][1].first ) answer_rev = -1;
+  cout << answer_cost << ' ' << answer_rev+1 << endl;
+}
+
+int main(){
+  while(cin>>N,N){
+    rep(i,N)rep(j,2)G[i][j].clear(),mincost[i][j] = ii(IINF,IINF);
+    cin >> S >> T;
+    --S, --T;
+    cin >> M;
+    rep(i,M){
+      cin >> a >> b;
+      --a,--b;
+      G[a][0].push_back(Edge(b,i));
+      G[b][1].push_back(Edge(a,i));
+    }
+    dijkstra();
+  }
+  return 0;
+}

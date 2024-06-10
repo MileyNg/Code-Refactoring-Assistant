@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstring>
+#include<climits>
+#include<cmath>
+using namespace std;
+
+#define MAX_N 100000
+#define FIND 1
+#define UPDATE 0
+
+int n, q;
+int a[MAX_N+1];
+// 区間sqrt(MAX_N)で区切られた幅の中の最小値
+int range;
+int sqra_min[MAX_N+1];
+
+int find(int s, int t);
+void update(int i, int x);
+
+int main()
+{
+	cin >> n >> q;
+	for(int i=0; i<=MAX_N; i++) a[i] = INT_MAX;
+	range = (int)sqrt(n);
+	for(int i=0; i<=MAX_N; i++) sqra_min[i] = INT_MAX;
+	int com, x, y;
+	for(int i=0; i<q; i++){
+		cin >> com >> x >> y;
+		switch(com){
+		case UPDATE:{update(x, y);break;}
+		case FIND:{cout<<find(x, y)<<endl;break;}
+		}
+	}
+	return 0;
+}
+
+
+int find(int s, int t)
+{
+
+	int	start = (int)floor(s/range);
+	int end = (int)floor(t/range);
+	int min = a[start];
+	for(int i=start+1; i<=end; i++)
+		if(sqra_min[i]<min) min = sqra_min[i];
+
+	return min;
+}
+
+void update(int i, int x)
+{
+	a[i] = x;
+	int pos = (int)floor(i/range);
+	if( sqra_min[pos] > x ) sqra_min[pos] = x;
+}

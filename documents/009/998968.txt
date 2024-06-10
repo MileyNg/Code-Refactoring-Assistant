@@ -1,0 +1,44 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+#define MAXN 50010
+#define MAXM 30
+#define INF 1000000
+int dp[MAXM][MAXN];
+int n, m;
+int C[MAXM];
+int main(void) {
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        cin >> C[i];
+    }
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            dp[i][j] = INF;
+        }
+    }
+    dp[0][0] = 0;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (j < C[i]) {
+                dp[i+1][j] = dp[i][j];
+            } else {
+                dp[i+1][j] = min(dp[i][j], dp[i][j-C[i]]+1);
+            }
+        }
+    }
+    cout << dp[m][n] << endl;
+    return 0;
+}

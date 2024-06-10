@@ -1,0 +1,48 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n, m;
+	while (cin >> n >> m) {
+		if (n == 0 && m == 0) {
+			break;
+		}
+		int student[501] = {0};
+		int student2[501] = {0};
+		int a, b;
+		int count = 0;
+
+		for (int i = 0; i < m; i++) {
+			cin >> a >> b;
+			if (a == 1) {
+				student[b] = 1;
+			} else {
+				student2[a] = b;
+			}
+		}
+
+		for (int i = 2; i <= n; i++) {
+			if (student[i] == 1) {
+				if (student[student2[i]] != 1) {
+					student[student2[i]] = 2;
+				}
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			if (student[i] == 1 || student[i] == 2) {
+				count++;
+			}
+		}
+		/*for (int i = 0; i <= n; i++) {
+			cout << student[i] << " ";
+		}
+		cout << endl;
+		for (int i = 0; i <= n; i++) {
+			cout << student2[i] << " ";
+		}
+		cout << endl;*/
+		cout << count << endl;
+	}
+	return 0;
+}

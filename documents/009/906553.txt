@@ -1,0 +1,54 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int D, x; readf("%d\n%d\n", &D, &x);
+    int[] xs, ys;
+    foreach (i; 0 .. x) {
+        string a; int p;
+        readf("%s %d\n", &a, &p);
+        if (a == "D") xs ~= p;
+    }
+    int y; readf("%d\n", &y);
+    foreach (i; 0 .. y) {
+        string a; int q;
+        readf("%s %d\n", &a, &q);
+        if (a == "DD") ys ~= q;
+    }
+
+    x = cast(int) xs.length;
+    y = cast(int) ys.length;
+
+    xs.sort!("a > b");
+    ys.sort!("a > b");
+
+    int sum(int[] xs, int k) {
+        int ret = 0;
+        foreach (i; 0 .. k) {
+            ret += xs[i];
+        }
+        return ret;
+    }
+
+    int ans = 0;
+    foreach (i; 0 .. y + 1) {
+        foreach (j; 0 .. x + 1) {
+            if (i * 2 + j <= D) {
+                ans = max(ans, sum(ys, i) + sum(xs, j));
+            }
+        }
+    }
+    ans.writeln;
+}

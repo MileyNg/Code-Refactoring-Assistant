@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+
+namespace AOJ
+{
+    class AOJ203
+    {
+        public string solve(int x,int y)
+        {
+            string[][] cource;
+            int[][] sum;
+            cource = new string[y][];
+            sum = new int[y][];
+            for (int i = 0; i < y; i++)
+            {
+                sum[i] = new int[x];
+            }
+
+            for (int i = 0; i < y; i++)
+            {
+                char[] delimi = new char[] { ' ' };
+                string[] row = Console.ReadLine().Split(delimi);
+                cource[i] = row;
+            }
+
+
+            for (int i = 0; i < x; i++)
+            {
+                if (cource[0][i].Equals("0"))
+                {
+                    sum[0][i] = 1;
+                }
+            }
+
+            for (int i = 0; i < y - 1; i++)
+            {
+                for (int j = 0; j < x; j++)
+                {
+                    switch (cource[i][j])
+                    {
+                        case "0":
+                            if (!cource[i + 1][j].Equals("1"))
+                            {
+                                sum[i + 1][j] += sum[i][j];
+                            }
+
+                            if (j < x - 1)
+                            {
+                                if (cource[i + 1][j + 1].Equals("0"))
+                                {
+                                    sum[i + 1][j + 1] += sum[i][j];
+                                }
+                            }
+
+                            if (j > 0)
+                            {
+                                if (cource[i + 1][j - 1].Equals("0"))
+                                {
+                                    sum[i + 1][j - 1] += sum[i][j];
+                                }
+                            }
+
+                            break;
+                        case "2":
+                            if (i < y - 2)
+                            {
+                                sum[i + 2][j] += sum[i][j];
+                            }
+                            break;
+                    }
+                }
+            }
+
+            int total = 0;
+            for (int i = 0; i < x; i++)
+            {
+                total += sum[y - 1][i];
+                total += (cource[y - 2][i].Equals("2")) ? sum[y - 2][i] : 0;
+            }
+
+            return total.ToString();
+        }
+    }
+    class Program
+    {
+        
+        static void Main(string[] args)
+        {
+            AOJ203 obj = new AOJ203();
+            while (true)
+            {
+                char[] delimi = { ' ' };
+                string[] str = Console.ReadLine().Split(delimi);
+                int n = int.Parse(str[0]);
+                int x = int.Parse(str[1]);
+                if (n == 0 && x == 0) break;
+
+                Console.WriteLine(obj.solve(n,x));
+            }
+        }
+    }
+}

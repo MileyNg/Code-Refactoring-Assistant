@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+// i個の数でjを作る数
+int dp[11][1001];
+
+int main() {
+    dp[0][0] = 1;
+    for (int i = 0; i <= 100; i++) { // 0, 1, 2, ... を使う場合についての総和を考える
+        for (int j = 9; j >= 0; j--) {
+            for (int k = 0; k <= 1000 - i; k++) {
+                // i未満の数字を使ってj個の数でkを作れる分だけ
+                // i以下の数字を使ってk+iを作れる
+                dp[j + 1][k + i] += dp[j][k];
+            }
+        }
+    }
+
+    int n, s;
+    while (cin >> n >> s, n || s) {
+        cout << dp[n][s] << endl;
+    }
+    return 0;
+}

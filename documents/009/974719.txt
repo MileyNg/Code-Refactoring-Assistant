@@ -1,0 +1,22 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+long long GCD(long long a, long long b){
+	long long r,temp;
+	if(a<b)swap(a,b);
+	while(b!=0){
+		temp=b;
+		b=a%b;
+		a=temp;
+	}
+	return a;
+}
+
+int main(){
+	long long a,b,r;
+	while(cin>>a>>b){
+		cout<<GCD(a,b)<<' '<<a*b/GCD(a,b)<<endl;
+	}
+	return 0;
+}

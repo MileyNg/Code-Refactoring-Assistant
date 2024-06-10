@@ -1,0 +1,89 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 32;
+const int MAX_C = 32;
+const int PATTERN = (1 << 16);
+
+int dp[MAX_N + 1][PATTERN];
+
+string disp(int bit){
+  stringstream ss;
+  //cout <<bit <<endl;
+  REP(i, 16){
+    ss << (bit & 1);
+    bit >>= 1;
+  }
+  string s = ss.str();
+  REVERSE(s);
+  return s;
+}
+
+int main() {
+  int N, C;
+  while(cin >>N >>C && N){
+    static int a[MAX_N], b[MAX_C];
+    REP(i, N){
+      a[i] = 0;
+      REP(j, 16){
+        int tmp; cin >>tmp;
+        a[i] = (a[i] << 1);
+        a[i] += tmp;
+      }
+    }
+    REP(i, C){
+      b[i] = 0;
+      REP(j, 16){
+        int tmp; cin >>tmp;
+        b[i] = (b[i] << 1);
+        b[i] += tmp;
+      }
+    }
+    //REP(i, N) cout <<disp(a[i]) <<" "; cout <<endl;
+    //REP(i, C) cout <<disp(b[i]) <<" "; cout <<endl;
+
+    //cout <<"----" <<endl;
+    int ans = 0;
+    memset(dp, -1, sizeof(dp));
+    dp[0][0] = 0;
+    REP(i, N){
+      REP(j, PATTERN){
+        if(dp[i][j] == -1) continue;
+        //cout <<i <<", " <<disp(j) <<endl;
+        int bef_delete = (j | a[i]);
+        dp[i + 1][bef_delete] = max(dp[i + 1][bef_delete], dp[i][j]);
+        REP(k, C){
+          int aft_delete = (~(b[k]) & bef_delete);
+          int cnt = __builtin_popcount(b[k] & bef_delete);
+          dp[i + 1][aft_delete] = max(dp[i + 1][aft_delete], cnt + dp[i][j]);
+          ans = max(ans, dp[i + 1][aft_delete]);
+        }
+      }
+    }
+    cout <<ans <<endl;
+    
+  }
+  return 0;
+}

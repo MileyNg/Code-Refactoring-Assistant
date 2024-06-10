@@ -1,0 +1,53 @@
+#include <iostream>
+#include <queue>
+#include <array>
+#include <utility>
+#include <string>
+#include <regex>
+#include <vector>
+
+using namespace std;
+
+int
+main ()
+{
+  queue < pair < int, int >>data;
+  array < bool, 3 > cup =
+  {
+  true, false, false};
+  string str;
+  while (cin >> str)
+    {
+      vector < string > buf;
+      buf.push_back (str.substr (0, 1));
+      buf.push_back (str.substr (2, 1));
+    for (auto & e:buf)
+	{
+	  if (e.find ("A") != string::npos)
+	    e = "0";
+	  else if (e.find ("B") != string::npos)
+	    e = "1";
+	  else
+	    e = "2";
+	}
+      data.push (make_pair (stoi (buf[0]), stoi (buf[1])));
+    }
+  while (!data.empty ())
+    {
+      auto buf = data.front ();
+      data.pop ();
+      swap (cup[buf.first], cup[buf.second]);
+    }
+  switch (find (cup.begin (), cup.end (), true) - cup.begin ())
+    {
+    case 0:
+      cout << "A" << endl;
+      break;
+    case 1:
+      cout << "B" << endl;
+      break;
+    case 2:
+      cout << "C" << endl;
+      break;
+    }
+}

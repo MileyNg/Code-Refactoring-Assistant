@@ -1,0 +1,48 @@
+require 'set'
+
+### main
+
+while true
+  n, m = gets.strip.split(' ').map{|s| s.to_i}
+  break if n == 0 && m == 0
+
+  edges = []
+
+  m.times.each do
+    edge = gets.strip.split(' ').map{|s| s.to_i}
+    edges << edge
+  end
+
+  edges.sort! do |a, b|
+    (cmp2 = a[2] <=> b[2]) != 0 ? cmp2 :
+      (cmp0 = a[0] <=> b[0]) != 0 ? cmp0 : a[1] <=> b[1]
+  end
+
+  nd0, nd1, c = edges.shift
+
+  con = Set.new([nd0, nd1])
+  cost = c
+
+  while con.length < n && ! edges.empty?
+    for e in edges
+      nd0, nd1, c = e
+
+      inc0 = con.include? nd0
+      inc1 = con.include? nd1
+
+      if inc0 || inc1
+        if ! inc0
+          con << nd0
+          cost += c
+        elsif ! inc1
+          con << nd1
+          cost += c
+        end
+        edges.delete e
+        break
+      end
+    end
+  end
+
+  puts cost
+end

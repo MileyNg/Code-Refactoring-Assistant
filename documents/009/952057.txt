@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#define rep(i,n) for (int i = 0; i < int(n); i++)
+
+struct matrix_bit {
+    vector<vector<int> > a;
+    matrix_bit(int n, int m) : a(n, vector<int>(m)) { }
+    int size1() const { return a.size(); }
+    int size2() const { return a[0].size(); }
+    int& operator()(int i, int j) { return a[i][j]; }
+    int  operator()(int i, int j) const { return a[i][j]; }
+    matrix_bit operator*(matrix_bit const& rhs) {
+        matrix_bit r(size1(), rhs.size2());
+        rep (i,size1()) rep (j,size2()) rep (k,rhs.size2()) r(i,k) |= a[i][j] & rhs(j,k);
+        return r;
+    }
+    matrix_bit& operator*=(matrix_bit const& rhs) {
+        return *this = operator*(rhs);
+    }
+};
+
+matrix_bit pow(matrix_bit x, int n) {
+    matrix_bit r(x.size1(), x.size1());
+    rep (i,x.size1()) r(i,i) = 1;
+    for ( ; n > 0; x *= x, n >>= 1) if (n & 1) r *= x;
+    return r;
+}    
+
+int main() {
+    int N, M, Z;
+    int s[100], d[100];
+    while (cin >> N >> M >> Z && N > 0) {
+        rep (i,M) {
+            cin >> s[i] >> d[i];            
+            if (s[i] > d[i]) swap(s[i], d[i]);
+            s[M+i] = d[i];
+            d[M+i] = s[i];
+        }
+
+        matrix_bit v(1,2*M), A(2*M,2*M), u(2*M,1);
+        rep (i,2*M) {
+            if (s[i] == 1) u(i,0) = 1;
+            if (d[i] == N) v(0,i) = 1;
+        }
+        rep (i,2*M) rep (j,2*M) {
+            if (d[i] == s[j] && s[i] != d[j]) A(j,i) = 1;
+        }
+
+        auto r = v*pow(A,Z-1)*u;
+        cout << (r(0,0) > 0 ? "yes" : "no") << endl;
+    }
+}

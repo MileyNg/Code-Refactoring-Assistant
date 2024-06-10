@@ -1,0 +1,35 @@
+import std.stdio;
+import std.c.stdio;
+import std.algorithm;
+
+		struct P { 
+			int x, y;
+			int opCmp(ref const P p) const {
+				return p.x - x;
+			}
+		}
+
+void main() {
+	int n, m;
+	while (scanf("%d %d\n", &n, &m), n || m) {
+		int[] s = new int[m];
+		foreach (i; 0 .. n) {
+			foreach (j; 0 .. m) {
+			int x; scanf("%d", &x);
+			s[j] += x;
+			}
+		}
+
+		P[] a;
+		foreach (int i; 0 .. m) {
+			a ~= P(s[i], i);
+		}
+		a.sort;
+		write(a[0].y + 1);
+		foreach (i; 1 .. m) {
+			write(" ", a[i].y + 1);
+		}
+		writeln("");
+	}
+
+}

@@ -1,0 +1,138 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		Sol mySol =new Sol();
+		mySol.Solve();
+	}
+}
+
+class Sol{
+	public void Solve(){
+		
+		LinearAlg LA=new LinearAlg();
+		
+		double[][] A=new double[4][];
+		for(int i=0;i<4;i++){
+			A[i]=new double[4];
+		} 
+		
+		double[] V=new double[4];
+		
+		//
+		//	X=sP+tQ*uR;
+		//	s+t+u=1;
+		//	X=rS
+		//
+		
+		A[0][0]=1.0;			A[0][1]=1.0;			A[0][2]=1.0;			A[0][3]=0.0;			V[0]=1.0;
+		A[1][0]=Barrier[0][0]-UAZ[0];	A[1][1]=Barrier[1][0]-UAZ[0];	A[1][2]=Barrier[2][0]-UAZ[0];	A[1][3]=-(Enemy[0]-UAZ[0]);	V[1]=0.0;
+		A[2][0]=Barrier[0][1]-UAZ[1];	A[2][1]=Barrier[1][1]-UAZ[1];	A[2][2]=Barrier[2][1]-UAZ[1];	A[2][3]=-(Enemy[1]-UAZ[1]);	V[2]=0.0;
+		A[3][0]=Barrier[0][2]-UAZ[2];	A[3][1]=Barrier[1][2]-UAZ[2];	A[3][2]=Barrier[2][2]-UAZ[2];	A[3][3]=-(Enemy[2]-UAZ[2]);	V[3]=0.0;
+/*
+for(int ii=0;ii<4;ii++){
+	for(int jj=0;jj<4;jj++){Console.Write("{0}\t",A[ii][jj]);}
+	Console.WriteLine("{0}",V[ii]);
+}
+Console.WriteLine("");
+*/
+		double[] sol=LA.GaussElimination(A,V);
+		
+		bool chk=true;
+		if(sol==null){
+			chk=true;
+		} else if(sol[0]>=0.0 && sol[0]<=1.0 &&sol[1]>=0.0 && sol[1]<=1.0 &&sol[2]>=0.0 && sol[2]<=1.0 && sol[3]<=1.0 && sol[3]>=0.0){
+			chk=false;
+		}
+		
+		Console.WriteLine(chk?"HIT":"MISS");
+	}
+	
+	double[][] Barrier;
+	double[] Enemy;
+	double[] UAZ;
+	
+	public Sol(){
+		UAZ=rda();
+		Enemy=rda();
+		Barrier=new double[3][];
+		for(int i=0;i<3;i++)Barrier[i]=rda();
+	}
+
+
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}
+
+
+class LinearAlg{
+	
+	public double[] GaussElimination(double[][] A,double[] V){
+		//  solving  Ax = V in double
+		if(A.Length!=A[0].Length)return null;
+		if(A.Length!=V.Length)return null;
+		int N=A.Length;
+		
+		double[][] L=new double[N][];
+		for(int i=0;i<N;i++){
+			L[i]=new double[N+1];
+			for(int j=0;j<N;j++)L[i][j]=A[i][j];
+			L[i][N]=V[i];
+		}
+
+		for(int i=0;i<N;i++){
+			int pibot=i;
+			double buf=Math.Abs(L[i][i]);
+			for(int j=i+1;j<N;j++){
+				if(Math.Abs(L[j][i])>buf){
+					pibot=j;
+					buf=Math.Abs(L[j][i]);
+				}
+			}
+			
+			if(L[pibot][i]==0)return null;
+			swap(ref L[i],ref L[pibot]);
+
+			double d=L[i][i];
+			for(int j=0;j<=N;j++){L[i][j]/=d;}
+			
+			for(int j=i+1;j<N;j++){
+				d=L[j][i];
+				for(int k=0;k<=N;k++){
+					L[j][k]-=L[i][k]*d;
+				}
+			}
+
+		}
+				
+		for(int i=N-1;i>=0;i--){
+			for(int j=i-1;j>=0;j--){
+				double d=L[j][i];
+				for(int k=0;k<=N;k++){
+					L[j][k]-=L[i][k]*d;
+				}
+			}
+		}
+
+
+		double[] Ret=new double[N];
+		for(int i=0;i<N;i++)Ret[i]=L[i][N];
+		return Ret;
+		
+	}
+	
+	void swap(ref double[] A,ref double[] B){
+		double[] C;
+		C=A;A=B;B=C;
+	}
+}

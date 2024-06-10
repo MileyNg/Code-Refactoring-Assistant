@@ -1,0 +1,115 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <tuple>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+typedef tuple<int, int, int> T;
+const int MN = 100010;
+bool used[MN];
+int n;
+int x[MN], y[MN];
+P p[MN], p1[MN], p2[MN];
+
+bool solve(int m) {
+    fill_n(used, MN, false);
+    int mx = p1[0].first, my = p2[0].first;
+    for (int i = 0; i < n; i++) {
+        P pp = p[i];
+        if (pp.first <= mx+m && pp.second <= my+m) {
+            used[i] = true;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (!used[p1[i].second]) {
+            mx = p1[i].first;
+            break;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (!used[p2[i].second]) {
+            my = p2[i].first;
+            break;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        P pp = p[i];
+        if (pp.first <= mx+m && pp.second <= my+m) {
+            used[i] = true;
+        }
+    }
+    bool f = true;
+    for (int i = 0; i < n; i++) {
+        f &= used[i];
+    }
+    if (f) return true;
+    fill_n(used, MN, false);
+    mx = p1[0].first, my = p2[n-1].first;
+    for (int i = 0; i < n; i++) {
+        P pp = p[i];
+        if (pp.first <= mx+m && pp.second >= my-m) {
+            used[i] = true;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (!used[p1[i].second]) {
+            mx = p1[i].first;
+            break;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (!used[p2[i].second]) {
+            my = p2[i].first;
+            break;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        P pp = p[i];
+        if (pp.first <= mx+m && pp.second <= my+m) {
+            used[i] = true;
+        }
+    }
+    f = true;
+    for (int i = 0; i < n; i++) {
+        f &= used[i];
+    }
+    if (f) return true;
+    return false;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x2, y2;
+        scanf("%d %d", &x2, &y2);
+        x[i] = x2; y[i] = y2;
+        p[i] = P(x2+y2, x2-y2);
+        p1[i] = P(x2+y2, i);
+        p2[i] = P(x2-y2, i);
+    }
+    sort(p1, p1+n); sort(p2, p2+n);
+    int l = 1, r = 100010*3;
+    while (r - l > 1) {
+        int md = (l+r)/2;
+        if (solve(md)) {
+            r = md;
+        } else {
+            l = md;
+        }
+    }
+    printf("%d\n", r);
+    return 0;
+}

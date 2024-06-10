@@ -1,0 +1,29 @@
+while True:
+
+    n = list(map(int, input().split()))
+    if not n[0] and not n[1]:
+        break
+
+    data = [[1 if a == 0 or b == 0 else 0 for a in range(n[0])] for b in range(n[1])]
+
+    # m = int(input())
+    for i in range(int(input())):
+        c = list(map(lambda x: int(x)-1, input().split()))
+        data[c[1]][c[0]] = -1
+
+    for j in range(1, n[0]):
+        for i in range(1, n[1]):
+            if data[i][j] < 0:
+                continue
+
+            elif data[i-1][j] < 0:
+                data[i][j] = data[i][j-1]
+
+            elif data[i][j-1] < 0:
+                data[i][j] = data[i-1][j]
+
+            else:
+                data[i][j] = data[i-1][j] + data[i][j-1]
+
+
+    print(data[-1][-1])

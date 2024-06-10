@@ -1,0 +1,52 @@
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+constexpr int MAX = 10000;
+
+int a, b, c;
+int p, q, r, s;
+int x, y;
+
+inline bool check_and_print(int p, int q, int r, int s) {
+	if(p * r != a || p * s + r * q != b || q * s != c) return false;
+	cout << p << " " << q << " " << r << " " << s << endl;
+	return true;
+}
+
+inline int calc(int p, int x) {
+	return (p * x) / (2 * a);
+}
+
+inline bool ok(int p, int r) {
+	if(check_and_print(p, calc(p, x), r, calc(r, y))) return true;
+	if(p > r && check_and_print(p, calc(p, y), r, calc(r, x))) return true;
+	return false;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	while(cin >> a >> b >> c && a) {
+		const int D = b * b - 4 * a * c;
+		const int sqrt_D = sqrt(D);
+
+		if(sqrt_D * sqrt_D == D) {
+			x = b + sqrt_D;
+			y = b - sqrt_D;
+
+			for(int i = 1; i * i <= a; ++i) {
+				if(a % i == 0 && ok(a / i, i)) goto success;
+			}
+		}
+
+		cout << "Impossible" << endl;
+		continue;
+
+	success:;
+	}
+
+	return EXIT_SUCCESS;
+}

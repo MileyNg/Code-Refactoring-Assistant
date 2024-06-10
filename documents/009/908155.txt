@@ -1,0 +1,43 @@
+#Longest Chain: O(NlogN + ??)
+
+def R(A, B):
+    a, b = A, B
+    C, M = ~(1 << 31), (1 << 16) - 1
+    while True:
+        a = 3696 * (a & M) + (a >> 16)
+        b = 1800 * (b & M) + (b >> 16)
+        yield (C & ((a << 16) + b)) % 1000000
+
+def compare(a, b):
+    return all(aa < bb for aa, bb in zip(a, b))
+
+def upper_bound(data, a, comp):
+    left, right = 0, len(data)
+    while True:
+        mid = (right + left) / 2        
+        if not left < mid < right:
+            return right
+        if comp(data[mid], a):
+            left = mid
+        else:
+            right = mid
+
+def solve(L):
+    A = [(0,0,0)]
+    val = {A[0]: 0}
+    count = 0
+    for n in L:
+        idx = upper_bound(A, n, compare)
+        A.insert(idx, n)
+        val[n] = val[A[idx - 1]] + 1
+    return max(val.values())
+
+while True:
+    m, n, A, B = map(int, raw_input().split())
+    if m | n | A | B == 0:
+        break
+    L = [tuple(map(int, raw_input().split())) for _ in xrange(m)]
+    r = R(A, B)
+    L += [(r.next(), r.next(), r.next()) for _ in xrange(n)]
+    L.sort()
+    print solve(L)

@@ -1,0 +1,65 @@
+/*
+	0266:Aka-beko and 40 Thieves
+*/
+#include	<iostream>
+#include	<string>
+
+using namespace std;
+
+int main(void) {
+	
+	while(1) {
+		char np = 'A';
+		
+		string str;
+		cin >> str;
+		
+		string::iterator it = str.begin();
+		bool frag = false;
+		
+		if(*it == '#') { break; }
+		
+		while( it != str.end() ) {
+			switch(np) {
+			case 'A':
+				if(*it == '0') { np = 'X'; }
+				else { np = 'Y'; }
+				break;
+				
+			case 'X':
+				if(*it == '0') { frag = true; np = '#'; }
+				else { np = 'Z'; }
+				break;
+				
+			case 'Y':
+				if(*it == '0') { np = 'X'; }
+				else { np = 'W'; }
+				break;
+				
+			case 'Z':
+				if(*it == '0') { np = 'W'; }
+				else { np = 'B'; }
+				break;
+				
+			case 'W':
+				if(*it == '0') { np = 'B'; }
+				else { np = 'Y'; }
+				break;
+				
+			case 'B':
+				if(*it == '0') { np = 'Y'; }
+				else { np = 'X'; }
+				break;
+			}
+			if(frag) { cout << "No" << endl; break; }
+			it++;
+		}
+		if(np != '#' && np != 'B') {
+			cout << "No" << endl;
+		} else if(np != '#') {
+			cout << "Yes" << endl;
+		}
+	}
+	
+	return 0;
+}

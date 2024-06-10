@@ -1,0 +1,192 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n) 
+#define EPS (1e-7)
+#define COUNTER_CLOCKWISE 1
+#define CLOCKWISE -1 
+#define ONLINE_BACK 2
+#define ONLINE_FRONT -2
+#define ON_SEGMENT 0
+#define equals(a,b) (fabs((a)-(b)) < EPS)
+
+using namespace std;
+
+const int IINF = INT_MAX;
+
+// Library - template - begin
+
+class Point{
+public:
+  double x,y;
+
+  Point(double x = -IINF,double y = -IINF): x(x),y(y){}
+
+  Point operator + (Point p){return Point(x+p.x,y+p.y);}
+  Point operator - (Point p){return Point(x-p.x,y-p.y);}
+  Point operator * (double a){return Point(a*x,a*y);}
+  Point operator / (double a){return Point(x/a,y/a);}
+  Point operator * (Point a){ return Point(x * a.x - y * a.y, x * a.y + y * a.x); }
+
+  bool operator < (const Point& p) const{ return !equals(x,p.x)?x<p.x:y<p.y; }
+
+  bool operator == (const Point& p)const{ return fabs(x-p.x) < EPS && fabs(y-p.y) < EPS; }
+
+};
+
+struct Segment{
+  Point p1,p2;
+  Segment(Point p1 = Point(),Point p2 = Point()):p1(p1),p2(p2){}
+  bool operator == (const Segment& p)const { return p.p1 == p1 && p.p2 == p2; }
+};
+
+typedef Point Vector;
+typedef Segment Line;
+
+typedef vector<Point> Polygon;
+
+ostream& operator << (ostream& os,const Point& a){ os << "(" << a.x << "," << a.y << ")"; }
+
+ostream& operator << (ostream& os,const Segment& a){ os << "( " << a.p1 << " , " << a.p2 << " )"; }
+
+double dot(Point a,Point b){ return a.x*b.x + a.y*b.y; }
+
+double cross(Point a,Point b){ return a.x*b.y - a.y*b.x; }
+
+double norm(Point a){ return a.x*a.x+a.y*a.y; }
+
+double abs(Point a){ return sqrt(norm(a)); }
+
+//rad は角度をラジアンで持たせること
+Point rotate(Point a,double rad){ return Point(cos(rad)*a.x - sin(rad)*a.y,sin(rad)*a.x + cos(rad)*a.y); }
+
+// 度をラジアンに変換
+double toRad(double agl){ return agl*M_PI/180.0; }
+
+// Library - template - end
+
+
+
+// Library - ccw - begin
+
+int ccw(Point p0,Point p1,Point p2){
+  Point a = p1-p0;
+  Point b = p2-p0;
+  if(cross(a,b) > EPS)return COUNTER_CLOCKWISE;
+  if(cross(a,b) < -EPS)return CLOCKWISE;
+  if(dot(a,b) < -EPS)return ONLINE_BACK;
+  if(norm(a) < norm(b))return ONLINE_FRONT;
+  return ON_SEGMENT;
+}
+
+// Library - ccw - end
+
+// Library - intersect begin
+
+bool intersectLL(Line l, Line m) {
+  return abs(cross(l.p2-l.p1, m.p2-m.p1)) > EPS || // non-parallel
+         abs(cross(l.p2-l.p1, m.p1-l.p1)) < EPS;   // same line
+}
+bool intersectLS(Line l, Line s) {
+  return cross(l.p2-l.p1, s.p1-l.p1)*       // s[0] is left of l
+         cross(l.p2-l.p1, s.p2-l.p1) < EPS; // s[1] is right of l
+}
+bool intersectLP(Line l,Point p) {
+  return abs(cross(l.p2-p, l.p1-p)) < EPS;
+}
+bool intersectSS(Line s, Line t) {
+  return ccw(s.p1,s.p2,t.p1)*ccw(s.p1,s.p2,t.p2) <= 0 &&
+         ccw(t.p1,t.p2,s.p1)*ccw(t.p1,t.p2,s.p2) <= 0;
+}
+bool intersectSP(Line s, Point p) {
+  return abs(s.p1-p)+abs(s.p2-p)-abs(s.p2-s.p1) < EPS; // triangle inequality
+}
+
+Point projection(Line l,Point p) {
+  double t = dot(p-l.p1, l.p1-l.p2) / norm(l.p1-l.p2);
+  return l.p1 + (l.p1-l.p2)*t;
+}
+Point reflection(Line l,Point p) {
+  return p + (projection(l, p) - p) * 2;
+}
+double distanceLP(Line l, Point p) {
+  return abs(p - projection(l, p));
+}
+double distanceLL(Line l, Line m) {
+  return intersectLL(l, m) ? 0 : distanceLP(l, m.p1);
+}
+
+double distanceLS(Line l, Line s) {
+  if (intersectLS(l, s)) return 0;
+  return min(distanceLP(l, s.p1), distanceLP(l, s.p2));
+}
+double distanceSP(Line s, Point p) {
+  Point r = projection(s, p);
+  if (intersectSP(s, r)) return abs(r - p);
+  return min(abs(s.p1 - p), abs(s.p2 - p));
+}
+
+double distanceSS(Line s, Line t) {
+  if (intersectSS(s, t)) return 0;
+  return min(min(distanceSP(s, t.p1), distanceSP(s, t.p2)),
+             min(distanceSP(t, s.p1), distanceSP(t, s.p2)));
+}
+
+// Library - intersect end
+
+
+int N;
+Point sp;
+Point poly[8];
+
+inline void flip(Segment &seg){
+  if( ccw(sp,seg.p1,seg.p2) != CLOCKWISE ) swap(seg.p1,seg.p2);
+}
+
+inline bool check(int *perm){
+
+  vector<Segment> segs;
+  rep(i,N) {
+    segs.push_back(Segment(poly[perm[i]],poly[(perm[i]+1)%N]));
+    flip(segs.back());
+  }
+
+  vector<Segment> rsegs;
+  rep(i,N){
+    rsegs.push_back(segs[i]);
+    REP(j,i+1,N){
+      Point p1 = reflection(segs[i],segs[j].p1);
+      Point p2 = reflection(segs[i],segs[j].p2);
+      segs[j] = Segment(p1,p2);
+      flip(segs[j]);
+    }
+  }
+
+  Point L = rsegs[0].p1, R = rsegs[0].p2;
+
+  REP(i,1,N){
+    if( ccw(sp,L,rsegs[i].p1) == CLOCKWISE ) L = rsegs[i].p1;
+    if( ccw(sp,R,rsegs[i].p2) == COUNTER_CLOCKWISE ) R = rsegs[i].p2;
+  }
+  return ccw(sp,L,R) == CLOCKWISE;
+}
+
+int main(){
+  while( cin >> N, N ){
+
+    cin >> sp.x >> sp.y;
+    rep(i,N) cin >> poly[i].x >> poly[i].y;
+
+    int perm[N];
+    rep(i,N) perm[i] = i;
+
+    int cnt = 0;
+    do{
+      if(check(perm)) cnt++;
+    }while(next_permutation(perm,perm+N));
+
+    cout << cnt << endl;
+
+  }
+  return 0;
+}

@@ -1,0 +1,74 @@
+$x=0
+$y=0
+$bord = []
+$cnt = 0
+
+
+def calc()
+
+	max = 0
+	for i in 0..$x-1
+		for j in 0..$y-1
+			if $bord[j][i] != -1 then
+				if j > 0 then
+					up = $bord[j-1][i]
+				else
+					up = -1
+				end
+			
+				if i > 0 then
+					left = $bord[j][i-1]
+				else
+					left = -1
+				end
+
+			
+				if up > left and up != -1 then
+					$bord[j][i] += up * 10
+					
+				elsif left != -1 then
+					$bord[j][i] += left * 10
+				end
+				if $bord[j][i] > max then
+					max = $bord[j][i]
+				end
+			end
+		end
+	end
+	return max
+end
+	
+loop{
+	line = gets
+	if line==nil then
+		break
+	end
+	sp = line.split(nil)
+	
+	if sp.count() != 2 then
+		break
+	else
+		$x = sp[0].to_i()
+		$y = sp[1].to_i()
+		if $x == 0 and $y == 0 then
+			break
+		end
+		
+		sx = 0
+		sy = 0
+		$cnt = 1 
+		$bord = Array.new($y).map{Array.new($x,0)}
+		for i in 0..$y-1
+			line = gets
+			for j in 0..$x-1
+				tmp = -1
+				if line[j] =~ /\d/ then
+					tmp = line[j].to_i() 
+				end
+				$bord[i][j] = tmp
+			end
+		end
+		print calc()
+		print("\n")
+	end
+}

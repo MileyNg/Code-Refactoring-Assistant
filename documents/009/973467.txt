@@ -1,0 +1,100 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+#include <bitset>
+using namespace std;
+
+#define dump(a) (cerr << #a << " = " << (a) << endl)
+constexpr double EPS = 1e-9;
+
+struct point {
+  double x, y;
+  point(double x_ = 0.0, double y_ = 0.0):x(x_), y(y_) {}
+  point(const point &p):x(p.x), y(p.y) {}
+
+  point operator+(const point &p) const {
+	return point(x + p.x, y + p.y);
+  }
+
+  point operator-(const point &p) const {
+	return point(x - p.x, y - p.y);
+  }
+};
+
+ostream &operator<<(ostream &os, const point &p) {
+  return os << '(' << p.x << ", " << p.y << ')';
+}
+
+double angle(const point &p) {
+  return atan2(p.y, p.x);
+}
+
+double norm(const point &p) {
+  return p.x * p.x + p.y * p.y;
+}
+
+double normalize(double theta) {
+  if(theta < -M_PI) return theta + 2 * M_PI;
+  if(theta > M_PI) return theta - 2 * M_PI;
+  return theta;
+}
+
+int main(){
+  cin.tie(nullptr);
+  ios::sync_with_stdio(false);
+  cout.precision(1);
+  cout.setf(ios::fixed);
+  constexpr double INF = 1e9;
+
+  for(int n; cin >> n && n;) {
+	vector<point> flags;
+	flags.reserve(n);
+
+	for(int i = 0; i < n; ++i) {
+	  double x, y;
+	  cin >> x >> y;
+	  flags.emplace_back(x, y);
+	}
+
+	double ans = 0.0;
+	point pos(0, 0);
+	double dir = M_PI / 2;
+	bitset<400> visited;
+
+	for(int i = 0; i < n; ++i) {
+	  pair<double, double> best(INF, INF);
+	  int next = -1;
+	  double next_angle;
+
+	  for(int v = 0; v < n; ++v) {
+		if(visited[v]) continue;
+
+		double dist2 = norm(flags[v] - pos);
+		double theta = normalize(dir - angle(flags[v] - pos));
+
+		pair<double, double> tmp(theta, dist2);
+
+		if(tmp < best) {
+		  best = tmp;
+		  next = v;
+		  next_angle = angle(flags[v] - pos);
+		}
+	  }
+
+	  assert(next != -1);
+
+	  ans += sqrt(best.second);
+	  pos = flags[next];
+	  dir = next_angle;
+	  visited.set(next);
+	}
+
+	cout << ans << endl;
+  }
+
+  return 0;
+}

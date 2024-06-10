@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+  int i , j , r , c , total , res , t;
+
+  int T[101][101] = {};
+
+  t = total = res = 0;
+
+  cin >> r >> c;
+
+  for(i = 0; i < r; i++) {
+
+    for(j = 0; j < c; j++) {
+
+      cin >> T[i][j];
+
+    }
+
+  }
+
+  for(i = 0; i < r; i++) {
+
+    for(j = 0; j < c; j++) {
+
+      total += T[i][j];
+
+      T[r][j] += T[i][j];
+
+      cout << T[i][j] << " ";
+
+    }
+
+    cout << total << "\n";
+
+    total = 0;
+
+  }
+
+  for(i = r; i < r + 1; i++) {
+
+    for(j = 0; j < c; j++) {
+
+      cout << T[i][j] << " ";
+
+      total += T[i][j];
+
+    }
+
+    cout << total << "\n";
+
+  }
+
+  return 0;
+
+}

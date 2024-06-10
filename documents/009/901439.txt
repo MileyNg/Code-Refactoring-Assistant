@@ -1,0 +1,33 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+
+int map[2][101][101];
+// 0...cost 1...time
+int main(){
+  int n, m;
+  while(scanf("%d%d", &n, &m) && n && m){
+    rep(i, 101) rep(j, 101) rep(k, 2) map[k][j][i] = 999999999;
+    int a, b, c, t;
+    rep(i, n){
+      scanf("%d%d%d%d", &a, &b, &c, &t);
+      a--;b--;
+      map[0][a][b] = map[0][b][a] = c;
+      map[1][a][b] = map[1][b][a] = t;
+    }
+    rep(k, m) rep(i, m) rep(j, m) rep(l, 2) map[l][i][j] = min(map[l][i][j], map[l][i][k] + map[l][k][j]);
+
+    int k, p, q, r;
+    scanf("%d", &k);
+    while(k--){
+      scanf("%d%d%d", &p, &q, &r);
+      p--;q--;
+      printf("%d\n", map[r][p][q]);
+    }
+  }
+  return 0;
+}

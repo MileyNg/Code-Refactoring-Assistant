@@ -1,0 +1,27 @@
+while (line = gets)
+  x1, y1, x2, y2, xq, yq = line.chomp.split(",").map{|s| s.to_f}
+
+  vx = x2 - x1
+  vy = y2 - y1
+
+  m00 = vx
+  m01 = vy
+  w0 = xq * vx + yq * vy
+  m10 = vy
+  m11 = -vx
+  w1 = vy * (2 * x1 - xq) - vx * (2 * y1 - yq)
+
+  if m00.abs < m01.abs
+    t = m00; m00 = m10; m10 = t
+    t = m01; m01 = m11; m11 = t
+    t = w0; w0 = w1; w1 = t
+  end
+
+  m01 /= m00; w0 /= m00; m00 = 1.0
+  m11 -= m01 * m10; w1 -= w0 * m10; m10 = 0.0
+
+  y = w1 / m11
+  x = w0 - m01 * y
+
+  printf("%.6f %.6f\n", x, y)
+end

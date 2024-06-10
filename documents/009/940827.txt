@@ -1,0 +1,33 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<functional>
+
+int main(){
+
+	int t;
+	std::cin >> t;
+
+	for (int i = 0; i < t; i++){
+		int n, k, res;
+		std::cin >> n >> k;
+
+		std::vector<int>x(n), sa(n - 1);
+		for (int j = 0; j < n; j++)std::cin >> x[j];
+		for (int j = 0; j < n - 1; j++)sa[j] = x[j + 1] - x[j];
+
+		if (n <= k)std::cout << 0 << std::endl;
+
+		else{
+			std::sort(sa.begin(), sa.end(), std::greater<int>());
+
+			res = x[x.size() - 1] - x[0];
+
+			for (int j = 0; j < k - 1; j++)res -= sa[j];
+
+			std::cout << res << std::endl;
+		}
+	}
+
+	return 0;
+}

@@ -1,0 +1,19 @@
+MAX = 123456*2
+$p = Array.new(MAX + 1, true)
+
+$p[0] = $p[1] = false
+(2..MAX).each do |i|
+  if $p[i]
+    j = i * i
+    while j <= MAX
+      $p[j] = false
+      j += i
+    end
+  end
+end
+
+loop do
+  n = gets.to_i
+  break if n == 0
+  puts $p[n+1..n*2].select{|x| x}.size
+end

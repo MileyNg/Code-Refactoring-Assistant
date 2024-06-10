@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef vector<int> vec;
+typedef vector<string> vecs;
+const int MAX_N = 10;
+const string DEFAULT = "0";
+
+string ans;
+vecs data(MAX_N);
+
+void dfs( string str, vector<bool> isUsed ){
+	//cout << str << endl;
+	bool end = true;
+	for( int i = 0; i < isUsed.size(); i++ ){
+		if( isUsed[i] ) continue;
+		else end = false;
+		//cout << "i:" << i << endl;
+		for( int j = 0; j <= min(str.size(),data[i].size()); j++ ){
+			//cout << "j:" << j << endl;
+			//cout << str.substr(str.size()-j,j) << "," << data[i].substr(0,j) << j << endl;
+			if( str.substr(str.size()-j,j) == data[i].substr(0,j) ){
+				//cout << i << "," << j << endl;
+				string nstr = str + data[i].substr(j,data[i].size()-j);
+				if( ans != DEFAULT && ans.size() <= nstr.size() ) continue;
+				isUsed[i] = true;
+				dfs(nstr,isUsed);
+				isUsed[i] = false;
+			}
+		}
+	}
+	if( end ){
+		if( ans == DEFAULT || str.size() < ans.size() ) ans = str;
+		else if( str.size() == ans.size() && str < ans ) ans = str;
+	}
+}
+
+int main(){
+	int n;
+	//while( cin >> n, n ){
+	while( scanf("%d", &n), n ){
+		for( int i = 0; i < n; i++ ){
+			//cin >> data[i];
+			char s[11];
+			scanf("%s", s);
+			data[i] = s;
+		}
+		ans = DEFAULT;
+		vector<bool> isUsed(n, false);
+		for( int i = 0; i < n; i++ ){
+			isUsed[i] = true;
+			dfs(data[i],isUsed);
+			isUsed[i] = false;
+		}
+		//cout << ans << endl;
+		printf("%s\n", ans.c_str());
+	}
+}

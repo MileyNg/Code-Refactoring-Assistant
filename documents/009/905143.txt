@@ -1,0 +1,211 @@
+#include<iostream>
+#include<cfloat>
+#include<cassert>
+#include<cmath>
+#include<vector>
+#include<algorithm>
+#include<stdio.h>
+using namespace std;
+ 
+#define EPS (1e-10)
+#define equals(a, b) (fabs((a) - (b)) < EPS )
+#define dle(a, b) (equals(a, b) || a < b )
+static const double PI = acos(-1);
+
+class Point{
+public:
+  double x, y;
+  
+  Point ( double x = 0, double y = 0): x(x), y(y){}
+  
+  Point operator + ( Point p ){ return Point(x + p.x, y + p.y); }
+  Point operator - ( Point p ){ return Point(x - p.x, y - p.y); }
+  Point operator * ( double a ){ return Point(x*a, y*a); }
+  Point operator / ( double a ){ return Point(x/a, y/a); }
+  
+  double abs() { return sqrt(norm());}
+  double norm() { return x*x + y*y; }
+  
+  bool operator < ( const Point &p ) const {
+    return x != p.x ? x < p.x : y < p.y;
+  }
+  
+  bool operator == ( const Point &p ) const {
+    return fabs(x-p.x) < EPS && fabs(y-p.y) < EPS;
+  }
+};
+
+class Segment{
+public:
+  Point p1, p2;
+  Segment ( Point p1 = Point(0.0,0.0), Point p2 = Point(0.0,0.0)): p1(p1), p2(p2){}
+  double abs() { return sqrt(norm());}
+  double norm() { return (p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y); }
+};
+typedef Segment Line;
+typedef Point Vector;
+typedef vector<Point> Polygon;
+double norm( Vector a ){ return a.x*a.x + a.y*a.y; }
+double abs( Vector a ){ return sqrt(norm(a)); }
+Point polar( double a, double r ){ return Point(cos(r)*a, sin(r)*a);}
+double getDistance( Vector a, Vector b ){ return abs(a - b); }
+double dot( Vector a, Vector b ){ return a.x*b.x + a.y*b.y; }
+double cross( Vector a, Vector b ){ return a.x*b.y - a.y*b.x; }
+bool isOrthogonal( Vector a, Vector b){
+  return equals(dot(a,b),0.0);
+}
+bool isOrthogonal(Segment s1,Segment s2){
+  return equals( dot(s1.p2-s1.p1 , s2.p2-s2.p1) ,0.0 );
+}
+bool isParallel(Vector a, Vector b){
+  return equals(cross(a,b),0.0);
+}
+bool isParallel(Point a1,Point a2,Point b1,Point b2){
+  return isParallel(a1-a2,b1-b2);
+}
+bool isParallel(Segment s1,Segment s2){
+  return equals(cross(s1.p2 - s1.p1 , s2.p2 - s2.p1),0.0);
+}
+Point project(Segment s,Point p){
+  Vector base = s.p2-s.p1;
+  double t = dot(p-s.p1,base)/norm(base);
+  return s.p1+base*t;
+}
+Point reflect(Segment s,Point p){
+  return p + (project(s,p)-p)*2.0;
+}
+
+static const int COUNTER_CLOCKWISE = 1;
+static const int CLOCKWISE = -1;
+static const int ONLINE_BACK = 2;
+static const int ONLINE_FRONT = -2;
+static const int ON_SEGMENT = 0;
+ 
+// EPS can be 0
+// need to check for 920, 833, 866
+int ccw( Point p0, Point p1, Point p2 ){
+    Vector a = p1 - p0;
+    Vector b = p2 - p0;
+    if ( cross(a, b) > EPS ) return COUNTER_CLOCKWISE;
+    if ( cross(a, b) < -EPS ) return CLOCKWISE;
+    if ( dot(a, b) < -EPS ) return ONLINE_BACK;
+    if ( norm(a) < norm(b) ) return ONLINE_FRONT;
+    return ON_SEGMENT;
+}
+
+bool isIntersect(Point p1, Point p2,Point p3,Point p4){
+  return (ccw(p1,p2,p3) * ccw(p1,p2,p4) <=0 &&
+	  ccw(p3,p4,p1) * ccw(p3,p4,p2) <=0);
+}
+
+bool isIntersect(Segment s1,Segment s2){
+  return isIntersect(s1.p1 , s1.p2 , s2.p1 , s2.p2);
+}
+
+Point getCrossPoint(Segment s1,Segment s2){
+  assert(isIntersect(s1,s2));
+  Vector base = s2.p2 - s2.p1;
+  double d1 = abs(cross(base, s1.p1-s2.p1));
+  double d2 = abs(cross(base, s1.p1-s2.p1));
+  double t = d1/(d1+d2);
+  return s1.p1 + (s1.p2 - s1.p1)*t;
+}
+
+double getDistanceLP(Line s,Point p){
+  return abs(cross(s.p2-s.p1,p-s.p1)/abs(s.p2-s.p1));
+}
+
+double getDistanceSP(Segment s,Point p){
+  if(dot(s.p2-s.p1,p-s.p1)<0.0)return abs(p-s.p1);
+  if(dot(s.p1-s.p2,p-s.p2)<0.0)return abs(p-s.p2);
+  return getDistanceLP(s,p);
+}
+
+double getDistance(Segment s1,Segment s2){
+  if(isIntersect(s1,s2))return 0.0;
+  return min(min(getDistanceSP(s1,s2.p1),getDistanceSP(s1,s2.p2)),
+	     min(getDistanceSP(s2,s1.p1),getDistanceSP(s2,s1.p2)));
+}
+
+bool isConvex( Point P[4] ){
+    int c = ccw(P[0], P[1], P[2]);
+    for ( int i = 1; i < 4; i++ ){
+      if ( c != ccw(P[i], P[(i+1)%4], P[(i+2)%4] )) return false;
+    }
+    return true;
+}
+bool isConvex( vector<Point> P ){
+    int c = ccw(P[0], P[1], P[2]);
+    for ( int i = 1; i < 4; i++ ){
+      if ( c != ccw(P[i], P[(i+1)%4], P[(i+2)%4] )) return false;
+    }
+    return true;
+}
+
+Polygon andrewScan(Polygon s){
+  Polygon u,l;
+  if(s.size()<3)return s;
+  sort(s.begin(),s.end());
+  u.push_back(s[0]);
+  u.push_back(s[1]);
+  l.push_back(s[s.size()-1]);
+  l.push_back(s[s.size()-2]);
+  
+  //int n;
+  for(int i=2;i<(int)s.size();i++){
+    for(int n=u.size();n>=2&&ccw(u[n-2],u[n-1],s[i])!=CLOCKWISE;n--){
+      u.pop_back();
+    }
+    u.push_back(s[i]);
+  }
+  
+  for(int i=s.size()-3;i>=0;i--){
+    for(int n=l.size();n>=2&&ccw(l[n-2],l[n-1],s[i])!=CLOCKWISE;n--){
+      l.pop_back();
+    }
+    l.push_back(s[i]);
+  }
+  
+  reverse(l.begin(),l.end());
+  for(int i=u.size()-2;i>=1;i--)l.push_back(u[i]);
+  
+  return l;
+}
+
+
+double getTriArea( double x1, double y1, double x2,double y2, double x3, double y3 ){
+  double sum = 0;
+  sum = ( x1*y2 - x2*y1 ) + ( x2*y3 - x3*y2 ) + ( x3*y1 - x1*y3 );
+  sum = abs(sum);sum /= 2;
+  return sum;
+}
+
+double getTriArea( Point a,Point b,Point c){
+  return getTriArea(a.x , a.y , b.x , b.y , c.x , c.y);
+}
+
+
+int main(){
+  Segment a,b,c;
+  Point d,e,f;
+  while(cin>>a.p1.x>>a.p1.y>>a.p2.x>>a.p2.y){
+    if(a.p1.x==0&&a.p1.y==0&&a.p2.x==0&&a.p2.y==0)break;
+    cin>>b.p1.x>>b.p1.y>>b.p2.x>>b.p2.y;
+    cin>>c.p1.x>>c.p1.y>>c.p2.x>>c.p2.y;
+    
+    if(!isIntersect(a,b)||!isIntersect(b,c)||!isIntersect(c,a)){
+      cout<<"kyo"<<endl;
+      continue;
+    }
+    
+    d=getCrossPoint(a,b);e=getCrossPoint(b,c);f=getCrossPoint(c,a);
+    double area = getTriArea(d,e,f);
+    if(area>=1900000.0-EPS)cout<<"dai-kichi"<<endl;
+    else if(area>=1000000.0-EPS)cout<<"chu-kichi"<<endl;
+    else if(area>=100000.0-EPS)cout<<"kichi"<<endl;
+    else if(area>=0.0)cout<<"syo-kichi"<<endl;
+    else cout<<"kyo"<<endl;
+    
+  }
+  return 0;
+}

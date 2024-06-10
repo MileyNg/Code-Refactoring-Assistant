@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int N;
+  cin >> N;
+  vector<int> R(N);
+  for(int i = 0; i < N; ++i) cin >> R[i];
+  int ans = INT_MIN;
+  for(int i = 0; i < N; ++i) {
+    for(int j = 0; j < N; ++j) {
+      if(j > i) ans = max(ans, R[j] - R[i]);
+    }
+  }
+  cout << ans << endl;
+  return 0;
+}

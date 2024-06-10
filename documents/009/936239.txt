@@ -1,0 +1,25 @@
+N,K,T,U,V,L = map(int,raw_input().split())
+VT = V*T
+D = [int(raw_input()) for i in range(N)] + [L]
+X = D[0]
+Q = D[0] + VT
+i,k = 1,0
+while i < N + 1:
+	if D[i] == Q:
+		Q += VT
+		i += 1
+	elif D[i] < Q:
+		if k == K:
+			Q = D[i] + VT
+		else:
+			k += 1 
+		i += 1
+	else:
+		if k > 0:
+			Q += VT
+			k -= 1
+		else:
+			X += D[i] - Q
+			Q = D[i]
+			i += 1
+print X*1.0/U + (L-X)*1.0/V

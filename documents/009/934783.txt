@@ -1,0 +1,23 @@
+r, c = gets.split.map(&:to_i)
+sheets = []
+r.times do
+  tmp = gets.split.map(&:to_i)
+  tmp.push (tmp.inject(0) {|sum, num| sum += num;})
+  sheets.push tmp
+end
+
+
+tmp = []
+(c + 1).times do |i|
+  sum = 0
+  r.times do |j|
+    sum += sheets[j][i]
+  end
+  tmp.push sum
+end
+
+sheets.push tmp
+
+sheets.each do |row|
+  puts row.join(' ')
+end

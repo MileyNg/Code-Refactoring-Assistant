@@ -1,0 +1,66 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int main(){
+  int n, m;
+  double dp[128][128];
+  double g[128][128];
+  while(scanf("%d%d", &n, &m) && n+m){
+    rep(i, n) rep(j, n) scanf("%lf", &g[i][j]);
+
+      memset(dp, 0, sizeof(dp));
+    rep(i, n) dp[i][0] = 1.0;
+
+    /*    rep(i, n){
+      rep(j, m) printf("%.2lf ", dp[i][j]);
+      puts("");
+      }*/
+
+    REP(i, 1, m){
+      rep(j, n){
+	rep(k, n){
+	  dp[j][i] = max(dp[j][i], dp[k][i-1]*g[k][j]);
+	  printf("%d %d %d %.2lf\n", i, j, k, g[k][j]);
+	}
+      }
+      /*      rep(i, n){
+	rep(j, m) printf("%.2lf ", dp[i][j]);
+	puts("");
+	}*/
+    }
+
+  /*    rep(i, n){
+      rep(j, m) printf("%.2lf ", dp[i][j]);
+      puts("");
+      }*/
+    double res = 0;
+    rep(i, n) res = max(res, dp[i][m-1]);
+    printf("%.2lf\n", res);
+  }
+  return 0;
+}

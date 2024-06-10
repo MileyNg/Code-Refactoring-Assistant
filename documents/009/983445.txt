@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+vector<vector<int64_t>> mul(const vector<vector<int64_t>>& lhs, const vector<vector<int64_t>>& rhs, int64_t mod, int64_t n) {
+  vector<vector<int64_t>> result(n, vector<int64_t>(n));
+  for (int i = 0; i < n; ++i)
+    for (int j = 0; j < n; ++j)
+      for (int k = 0; k < n; ++k) {
+        result[i][j] += lhs[i][k] * rhs[k][j];
+        result[i][j] %= mod;
+      }
+  return result;
+}
+
+vector<vector<int64_t>> pow(vector<vector<int64_t>>& mat, int64_t index, int64_t mod, int64_t n) {
+  if (index == 1) {
+    return mat;
+  } else {
+    auto half = pow(mat, index / 2, mod, n);
+    if ((index % 2) == 0) {
+      return mul(half, half, mod, n);
+    } else {
+      return mul(mat, mul(half, half, mod, n), mod, n);
+    }
+  }
+}
+
+int main() {
+  while(1) {
+    int64_t n,m;
+    int64_t z;
+    cin >> n >> m >> z;
+    if (!n) break;
+    vector<vector<int64_t>> t(2*m+1,vector<int64_t>(2*m+1));
+    vector<vector<int64_t>> t1n(n);
+    vector<pair<int64_t,int64_t>> r;
+    r.emplace_back(0,0);
+    for (int i = 0; i < m; ++i) {
+      int64_t s,d;
+      cin >> s >> d;
+      --s;--d;
+      t1n[s].push_back(2*i+1);
+      t1n[d].push_back(2*i+2);
+      r.emplace_back(s,d);
+      r.emplace_back(d,s);
+    }
+    for (int i = 1; i <= 2*m; ++i) {
+      int64_t s,d;
+      std::tie(s,d) = r[i];
+      for (int64_t to : t1n[d]) {
+        if (r[to].second == s) continue;
+        t[i][to] = 1;
+      }
+    }
+    for (int64_t to : t1n[0]) {
+      t[0][to] = 1;
+    }
+    auto res1 = pow(t, z, INT64_C(1000000007), 2*m+1);
+    bool ok = false;
+    for (int i = 1; i <= 2*m; ++i) {
+      if(res1[0][i] == 0) continue;
+      if(r[i].second == n-1){
+        ok = true;
+        break;
+      }
+    }
+    if (ok) {
+      cout <<"yes"<<endl;
+    } else {
+      cout <<"no"<<endl;
+    }
+  }
+  return 0;
+}

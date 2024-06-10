@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+int x[10];
+int type[10];
+string s;
+int num;
+
+int parse(int l, int r){
+	if (r-l == 1) return x[s[l] - '1'];
+
+	int sp;
+	for (int i = l; i < r; ++i){
+		if (s[i] == ' ') sp = i;
+	}
+
+	int res1 = parse(l + 1, sp);
+	int res2 = parse(sp + 1, r - 1);
+
+	int ret = -1;
+	if (type[num] == 0) ret = res1 | res2;
+	if (type[num] == 1) ret = res1 & res2;
+	if (type[num] == 2) ret = res1 ^ res2;
+	++num;
+	return ret;
+}
+
+
+int ans;
+int m;
+void rec(int n){
+	if (n == m){
+		num = 0;
+		//cout << parse(0, s.size()) << endl;
+		ans += parse(0, s.size()) == 15;
+		return;
+	}
+	rep(i, 3){
+		type[n] = i;
+		rec(n + 1);
+	}
+}
+
+int main(){
+	while (getline(cin, s), s != "END"){
+		int n;
+		cin >> n;
+
+		MEMSET(x, 0);
+		rep(i, n) rep(j, 4){
+			int t;
+			cin >> t;
+			x[i] |= (t << j);
+		}
+		ans = 0;
+		m = count(ALL(s), ' ');
+		rec(0);
+		cout << ans << endl;
+		cin.ignore();
+	}
+
+
+	return 0;
+}

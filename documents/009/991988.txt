@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <math.h>
+
+int check(double a, double b, double x, double y);
+
+int main(void)
+{
+  char i, nufo, nin;
+  short r, n, rufo[100], vufo[100];
+  double a, b, d, dmin, xufo[100], yufo[100];
+
+  while (1) {
+    scanf("%hd%hd", &r, &n);
+    if (!r && !n) break;
+
+    for (i = 0; i < n; i++)
+      scanf("%lf%lf%hd%hd", &xufo[i], &yufo[i], &rufo[i], &vufo[i]);
+
+    nufo = n;
+    nin = 0;
+    while (nufo) {
+      dmin = 10000;
+      // 移動
+      for (i = 0; i < n; i++) {
+        if (!vufo[i]) continue;
+        d = sqrt(xufo[i]*xufo[i]+yufo[i]*yufo[i]);
+        xufo[i] -= vufo[i]*(xufo[i]/d);
+        yufo[i] -= vufo[i]*(yufo[i]/d);
+        // 侵入しているか確認
+        d = sqrt(xufo[i]*xufo[i]+yufo[i]*yufo[i]);
+        if (d <= r) {
+          vufo[i] = 0;
+          nin++;
+          nufo--;
+        } else if (d < dmin) {
+        // 一番近いUFOを探す
+          dmin = d;
+          a = xufo[i];
+          b = yufo[i];
+        }
+      }
+      // レーザー発射
+      for (i = 0; i < n; i++) {
+        if (!vufo[i]) continue;
+        // レーザーの方向にいるか確認
+        if (check(a, b, xufo[i], yufo[i]))
+          if ((fabs(yufo[i]-(b/a)*xufo[i])/sqrt((b/a)*(b/a)+1)) <= rufo[i]) {
+            vufo[i] = 0;
+            nufo--;
+          }
+        else
+          if ((xufo[i]*xufo[i]+yufo[i]*yufo[i]) < rufo[i]*rufo[i]) {
+            vufo[i] = 0;
+            nufo--;
+          }
+      }
+    }
+    printf("%d\n", nin);
+  }
+  return 0;
+}
+
+int check(double a, double b, double x, double y)
+{
+  if (b > 0) {
+    if (y < -a/b*x) return 0;
+    else return 1;
+  } else if (b < 0) {
+    if (y > -a/b*x) return 0;
+    else return 1;
+  } else {
+    if ((a > 0 && x < 0) || (a < 0 && x > 0)) return 0;
+    else return 1;
+  }
+}

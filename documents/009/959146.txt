@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include<math.h>
+
+int gcd(int x, int y){
+    if(x < y){
+        int temp = x;
+        y = x;
+        y = temp;
+    }
+
+    while(y > 0){
+        int r = x % y;
+        x = y;
+        y = r;
+    }
+    return x;
+}
+
+
+int main(){
+    int x, y;
+    scanf("%d%d", &x, &y);
+    int ans = gcd(x, y);
+    printf("%d\n", ans);
+
+    return 0;
+}

@@ -1,0 +1,72 @@
+#include <algorithm>
+#include <numeric>
+#include <map>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+int sum[5200][5200];
+
+template <typename T,typename Func>
+	T satisfy_min(Func P,T l ,T r,T eps){
+		while(r-l>eps){
+			T m=(l+r)/2;
+			(P(m)?r:l)=m;
+		}
+		return r;
+	}
+
+
+int main() {
+	
+		int n, m;
+		scanf("%d%d", &n, &m);
+		
+		for (int i = 0; i < 5200; i++) {
+			for (int j = 0; j < 5200; j++) {
+				sum[i][j] = 0;
+			}
+		}
+
+		int x[n], y[n];
+		vector<int> xs, ys;
+		xs.push_back(-1100000000);
+		ys.push_back(-1100000000);
+		for (int i = 0; i < n; i++) {
+			cin >> x[i];
+			cin >> y[i];
+			xs.push_back(x[i]);
+			ys.push_back(y[i]);
+		}
+		xs.push_back(1100000000);
+		ys.push_back(1100000000);
+		sort(xs.begin(), xs.end());
+		sort(ys.begin(), ys.end());
+		xs.erase(unique(xs.begin(), xs.end()), xs.end());
+		ys.erase(unique(ys.begin(), ys.end()), ys.end());
+
+		for (int i = 0; i < n; i++) {
+			int nx = lower_bound(xs.begin(), xs.end(), x[i]) -xs.begin();
+			int ny = lower_bound(ys.begin(), ys.end(), y[i]) -ys.begin();
+			sum[nx][ny]++;
+		}
+
+		for (int i = 1; i < 5200; i++) {
+			for (int j = 1; j < 5200; j++) {
+				sum[i][j] += sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1];
+			}
+		}
+
+		for (int i = 0; i < m; i++) {
+			int x1, y1, x2, y2;
+			scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+			int nx2 = upper_bound(xs.begin(), xs.end(), x2) -xs.begin();
+			int nx1 = lower_bound(xs.begin(), xs.end(), x1) -xs.begin();
+			int ny2 = upper_bound(ys.begin(), ys.end(), y2) -ys.begin();
+			int ny1 = lower_bound(ys.begin(), ys.end(), y1) -ys.begin();
+			nx2--; ny2--;
+			ny1--; nx1--;
+			printf("%d\n", sum[nx2][ny2]-sum[nx2][ny1]-sum[nx1][ny2]+sum[nx1][ny1]);
+		}
+	
+}

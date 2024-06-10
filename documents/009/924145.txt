@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+int main()
+{
+    char cards[200] = {0}; //元
+    char card_left[200];
+    char card_right[200];
+    int m=0; //取る回数
+    int h=0; //取る枚数
+    int i=0;
+    
+    while(1) {
+        scanf("%s",&cards);
+        
+        if(cards[0] == '-'){
+            break;
+        }
+        
+        scanf("%d",&m);
+        
+        for(i=0; i<m; i++){
+            
+            scanf("%d",&h);
+            
+            strncpy( card_right, cards, h );
+            strcpy( card_left, cards+h);
+            
+            printf("left:%s\n\n",card_left);
+            printf("right:%s\n\n",card_right);
+            
+            for(int i=0; i<200; i++){
+                cards[i] = 0;
+            }
+            
+            strcat(cards,card_left);
+            strcat(cards,card_right);
+            printf("%s\n",cards);
+
+            for(int k=0; k<200; k++){
+                card_left[i] = 0;
+                card_right[i] = 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+
+#include<iostream>
+using namespace std;
+
+int b,r;
+int g,c,s;
+int t;
+
+int main()
+{
+	while( cin >> b >> r >> g >> c >> s >> t )
+	{
+		if( b == 0 && r == 0 && g == 0 && c == 0 && s == 0 && t == 0 )
+			break;
+
+		//メダルの増減
+		int diff = 0;
+		t -= s;				//スター回ノーカウント
+		diff += 12*b;
+		diff += 13*5*b;
+		diff += 12*r;
+		diff += 13*3*r;
+		t = t - 6*b - 4*r;
+		//残りですね
+		diff -= t*3;
+		diff += g*7 + c*2;
+		//答え
+		cout << 100 + diff << endl;
+	}
+	return 0;
+}

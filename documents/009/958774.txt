@@ -1,0 +1,71 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+pair<int,int> tree[1000000*2-1];
+int n,q;
+void update(int a,int v){
+  int num=((n*2-1)-(n-1))+a;
+  tree[num].first+=v;
+  tree[num].second=a;
+  
+  int pos=tree[num].first;
+  while(num>=0)
+    {
+      num=(num-1)/2;
+      
+      if(tree[num].first<pos ||( tree[num].first==pos && num%2==1))
+	tree[num]=tree[((n*2-1)-(n-1))+a];
+      else
+	break;
+    }
+  while(num>=0 && (tree[num].first!=max(tree[num*2+1].first,tree[num*2+2].first)))
+    {
+      if(tree[num*2+1].first<tree[num*2+2].first)
+	tree[num]=tree[num*2+2];
+      else
+	tree[num]=tree[num*2+1];
+      num=(num-1)/2;
+    }
+
+  num = 0;
+  while(num<((n*2-1)-(n-1)) && tree[num]!=tree[num*2+1] && tree[num*2+2]!=tree[num])
+    {
+      if(tree[2*num+1].first<tree[2*num+2].first)
+	num=2*num+2;
+      else
+	num=2*num+1;
+      tree[(num-1)/2]=tree[num];
+    }
+  
+}
+/*
+void output()
+{
+  int num=0;
+  while(num<((n*2-1)-(n-1)))
+    {
+      if(tree[num]==tree[2*num+1])
+	num=2*num+1;
+      else
+	num=2*num+2;
+    }
+  cout<<num-((n*2-1)-(n-1))+1<<" "<<tree[num]<<endl;
+}
+*/
+int main(){
+
+  for(;cin>>n>>q;)
+    {
+      memset(tree,0,sizeof(tree));
+      for(int i=0;i<q;i++)
+	{
+	  int a,v;
+	  cin>>a>>v;
+	  a--;
+	  update(a,v);
+	  cout<<tree[0].second+1<<" "<<tree[0].first<<endl;
+	  //	  output();
+	}
+    }
+}

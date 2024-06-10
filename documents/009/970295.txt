@@ -1,0 +1,35 @@
+#include<cstdio>
+#include<iostream>
+
+#define loop(lp) for(int i = 0; i < lp;i++)
+using namespace std;
+
+int main(){
+  int n,month,year,day,counter=0;
+  cin >> n;
+  loop(n){
+    counter = 0;
+    cin >> year >> month >> day;
+    while(year < 1000){
+      day++;
+      counter++;
+      if(year % 3 == 0 || month % 2 != 0){
+	if(day > 20){
+	  day = 1;
+	  month++;
+	}
+      }else{
+	if(day > 19){
+	  day = 1;
+	  month++;
+	}
+      }
+      if(month > 10){
+	month = 1;
+	year++;
+      }
+    }
+    cout << counter<<endl;
+  }
+  return 0;
+}

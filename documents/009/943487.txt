@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+#define rep(i,b) for(int i=0; i<int(b); i++)
+
+vector<vector<int> > G{
+    {1},{0,2},{1,3},{2,4},{3,5},{6},{7},{8},{9},{5}
+};
+
+void solve(int a, int b){
+    queue<pair<int,int>> q;
+
+    int prev[10], d[10];
+    rep(i,10) d[i]=1e9;
+    d[a]=0;
+    q.push(make_pair(a,0));
+    while(q.size()){
+        pair<int,int> s=q.front(); q.pop();
+        int v=s.first, dis=s.second;
+
+        for(int i=0; i<G[v].size(); i++){
+            int e=G[v][i];
+            if(d[e] > d[v]+1){
+                prev[e]=v;
+                d[e] = d[v]+1;
+                q.push(make_pair(e,d[e]));
+            }
+        }
+    }
+
+    vector<int> ans{b};
+    while(ans.back()!=a) ans.push_back(prev[ans.back()]);
+    for(int i=0; i<ans.size(); i++){
+        cout << ans[ans.size()-1-i] << (i+1==ans.size() ? '\n' : ' ');
+    }
+}
+
+int main(){
+    int n; cin>>n;
+    rep(i,n){
+        int a,b; cin>>a>>b;
+        solve(a,b);
+    }
+}

@@ -1,0 +1,83 @@
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+int w,h;
+int map[101][101];
+int xg,yg;
+
+int dx[]={1,-1,0,0};
+int dy[]={0,0,1,-1};
+void mapout()
+{
+  for(int xx=0;xx<h;xx++,cout<<endl)
+    for(int yy=0;yy<w;yy++)
+      if(map[xx][yy]!=-1)
+      cout<<map[xx][yy];
+      else
+	cout<<"X";
+}
+
+bool check(int x,int y)
+{
+  //  cout<<"check "<<x<<" "<<y<<";"<<map[x][y]<<endl;
+  if(x==xg&&y==yg)
+    return true;
+  int buf=map[x][y];
+  map[x][y]=-1;
+  for(int i=0;i<4;i++)
+    {
+      if(x+dx[i]>=0&&x+dx[i]<h&&
+	 y+dy[i]>=0&&y+dy[i]<w&&
+	 buf==map[x+dx[i]][y+dy[i]] &&
+	 map[x+dx[i]][y+dy[i]]!=-1 &&
+	 check(x+dx[i],y+dy[i]))
+	return true;
+    }
+
+  
+  return false;
+}
+
+int main()
+{
+  for(;cin>>w>>h,w;)
+    {
+      memset(map,-1,sizeof(map));
+      int xs,ys;
+      cin>>xs>>ys;
+      cin>>xg>>yg;
+      xs--;ys--;
+      xg--;yg--;
+      
+      int n;
+      cin>>n;
+      for(;n--;)
+	{
+	  int c,d,x,y;
+	  cin>>c>>d>>y>>x;
+	  x--;y--;
+	  if(d==0)
+	    {
+	      for(int xx=x;xx<x+2;xx++)
+		for(int yy=y;yy<y+4;yy++)
+		  map[xx][yy]=c;
+	    }
+	  else
+	    {
+	      for(int xx=x;xx<x+4;xx++)
+		for(int yy=y;yy<y+2;yy++)
+		  map[xx][yy]=c;
+	    }
+	}
+      ///   mapout();
+      if(check(xs,ys))
+	cout<<"OK"<<endl;
+      else 
+	cout<<"NG"<<endl;
+    }
+  
+  
+
+}

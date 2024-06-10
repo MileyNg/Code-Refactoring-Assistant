@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int i;
+	int j;
+	int n;
+	int m;
+	int question[101] = {0};
+	int maxPos;
+	int index;
+	
+	while( scanf( "%d%d", &n, &m ) != EOF )
+	{
+		for( i = 0; i < n; i++ )
+		{
+			for( j = 0; j < m; j++ )
+			{
+				int buf;
+				scanf( "%d", &buf );
+				if( buf == 1 )
+				{
+					question[j]++;
+				}
+			}
+		}
+		
+		for( i = 0; i < m; i++ )
+		{
+			maxPos = 0;
+			index = 0;
+			for( j = 0; j < m; j++ )
+			{
+				if( maxPos < question[j] )
+				{
+					maxPos = question[j];
+					index = j;
+				}
+			}
+			printf( "%s%d", i == 0 ? "" : " ", index + 1 );
+			question[index] = 0;
+		}
+		
+		puts("");
+	}
+	
+	return (0);
+}

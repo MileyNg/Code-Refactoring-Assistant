@@ -1,0 +1,87 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_Y = 11;
+const int MAX_X = 11;
+
+int Y, X;
+
+class C{
+  public:
+    int cnt;
+    vector< vector<int> > v;
+    C(int _cnt, vector< vector<int> > _v){ cnt = _cnt; v = _v; }
+    C(){}
+};
+
+bool isOK(vector< vector<int> > &v){
+  REP(y, Y) REP(x, X) if(v[y][x] != v[0][0]) return false;
+  return true;
+}
+
+void dfs(vector< vector<int> > &v, int y, int x, int bef, int aft){
+  v[y][x] = aft;
+  int my[] = {0, 0, 1, -1};
+  int mx[] = {1, -1, 0, 0};
+  REP(i, 4){
+    int ny = y + my[i];
+    int nx = x + mx[i];
+    if(ny < 0 || nx < 0 || ny >= Y || nx >= X || v[ny][nx] != bef) continue;
+    dfs(v, ny, nx, bef, aft);
+  }
+}
+
+int calc(){
+  vector< vector<int> > v(Y, vector<int>(X));
+  REP(y, Y){
+    REP(x, X){
+      char c; cin >>c;
+      if(c == 'R') v[y][x] = 0;
+      if(c == 'G') v[y][x] = 1;
+      if(c == 'B') v[y][x] = 2;
+    }
+  }
+  queue<C> open;
+  open.push(C(0, v));
+  while(!open.empty()){
+    C tmp = open.front(); open.pop();
+    int cnt = tmp.cnt;
+    vector< vector<int> > v = tmp.v;
+    if(isOK(v)) return cnt;
+    REP(next, 3){
+      if(v[0][0] == next) continue;
+      vector< vector<int> > tmp_v = v;
+      dfs(tmp_v, 0, 0, tmp_v[0][0], next);
+      open.push(C(cnt + 1, tmp_v));
+    }
+  }
+  return -1;
+}
+
+
+int main() {
+  while(cin >>X >>Y && X) cout <<calc() <<endl;
+  return 0;
+}

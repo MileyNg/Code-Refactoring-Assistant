@@ -1,0 +1,75 @@
+#include <iostream>
+using namespace std;
+
+int ans = 0;
+int w,h;
+int map[100][100] ={};
+
+
+void search(int y,int x){
+
+  //  cout << "search"<< y <<" " << x << endl;
+  map[y][x] = 0;
+
+  for(int dy = -1 ; dy <= 1 ; dy++){
+    for(int dx = -1 ; dx <= 1 ; dx++){
+      int nx = x + dx, ny = y + dy;
+      if(nx >= 0 && ny >= 0 && nx < w && ny < h && map[ny][nx] == 1 ){
+	search(ny,nx);
+      }
+    }
+  }
+  /*
+    if( map[y][x] == 0 ){
+    //テ・ツ渉ウテァツォツッ
+    if(x+1 == w){
+      //テヲツ慊?・ツセツ?
+      if(y+1 == h){
+      }
+      //テヲツ慊?」ツつづ、ツクツ凝」ツ?ョテヲツョツオ
+      else{
+	search(y+1,x);
+    }else{
+      search(y,x+1);
+    }
+  }
+  */
+}
+
+
+int main(){
+
+  while(1){
+
+    ans = 0;
+    cin >> w >> h ;
+
+    if(w == 0 && h == 0) break;
+
+    for(int i = 0 ; i < h ; i++){
+      for(int j = 0 ; j < w ; j++){
+	cin >> map[i][j];
+      }
+    }
+    //map テ・ツ?コテ・ツ環?
+    /*
+    for(int i = 0 ; i < h ; i++){
+      for(int j = 0 ; j < w ; j++){
+	cout << map[i][j];
+      }
+      cout << endl;
+    }
+    //    cout << endl;
+    */
+    for(int i = 0 ; i < h ; i++){
+      for(int j = 0 ; j < w ; j++){
+	if(map[i][j] == 1){
+	  ans++;
+	  search(i,j);
+	}
+      }
+    }
+    cout << ans << endl;
+  }
+  return 0;
+}

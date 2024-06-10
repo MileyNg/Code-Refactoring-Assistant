@@ -1,0 +1,32 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <stack>
+#include <string>
+using namespace std;
+stack<double>X;
+int s2i(string s){
+	stringstream ss(s);
+	int d;
+	ss>>d;
+	return d;
+}
+double f(string s){
+	double a,b;
+	b=X.top();X.pop();
+	a=X.top();X.pop();
+	if(s=="+")a+=b;
+	else if(s=="-")a-=b;
+	else if(s=="*")a*=b;
+	else if(s=="/")a/=b;
+	return a;
+}
+int main(){
+	string s;
+	while(getline(cin,s)){
+		stringstream ss(s);
+		while(ss>>s)X.push((s=="+"||s=="-"||s=="*"||s=="/")?f(s):s2i(s));
+		printf("%.6f\n", X.top());
+		X.pop();
+	}
+}

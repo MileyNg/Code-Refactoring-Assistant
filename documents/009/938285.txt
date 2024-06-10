@@ -1,0 +1,24 @@
+while 1:
+	try:
+		N,M = map(int,raw_input().split())
+		bidol = []
+		for i in range(N):
+			name = raw_input()
+			bidol.append(map(int,raw_input().split()))
+
+		ans = 0
+		for VDL in range(3):
+			bidol = sorted(bidol, key = lambda x:x[1+VDL]*1.0/x[0])
+			for i in range(N):
+				V = D = L = cost = 0
+				for j in range(i,N):
+					if cost + bidol[j][0] <= M:
+						num = (M-cost)/bidol[j][0]
+						cost += num*bidol[j][0]
+						V += num*bidol[j][1]
+						D += num*bidol[j][2]
+						L += num*bidol[j][3]
+				ans = max(ans,V,D,L)
+		print ans
+	except:
+		break

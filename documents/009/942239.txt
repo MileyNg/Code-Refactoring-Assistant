@@ -1,0 +1,49 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int R[30][30];
+int S[16][16];
+
+int main()
+{
+	int s, t;
+	for ( s = 0; s < 30; s++)
+	{
+		for (t = 0; t < 30; t++)
+		{
+			R[s][t]=0;
+		}
+	}
+	int p, q;
+	int N, gx, gy, M, i, j, t, x1, y1, x2, y2;
+	cin >> N;
+	for ( k = 0; k < N; k++)
+	{
+		cin >> gx >> gy;
+		cin >> M;
+		if ( M == 0) break;
+		for ( i = 0; i < M; i++)
+		{
+			cin >> x1 >> y1 >> x2 >> y2;
+			if ( x1 == x2) R[2*x1][2*max(y1,y2)-1]=1;
+			if ( y1 == y2) R[2*max(x1,x2)-1][2*y1]=1;
+		}
+		S[0][0]=1;
+		for ( j = 1; j < 16; j++)
+		{
+			for (t = 0; t < (j + 1); t++)
+			{
+				S[j-t][t]=0;
+				if ( t == 0 && R[(j-t)*2-1][t] == 0) S[j-t][t]=S[j-t-1][t];
+				if ( t == j && R[j-t][t*2-1] == 0) S[j-t][t]=S[j-t][t-1];
+				if ( t != 0 && t != j && R[(j-t)*2-1][t] == 0 && R[j-t][t*2-1] == 0) S[j-t][t]=S[j-t-1][t]+S[j-t][t-1];
+				if ( t != 0 && t != j && R[(j-t)*2-1][t] == 0 && R[j-t][t*2-1] == 1) S[j-t][t]=S[j-t-1][t];
+				if ( t != 0 && t != j && R[(j-t)*2-1][t] == 1 && R[j-t][t*2-1] == 0) S[j-t][t]=S[j-t][t-1];
+			}
+		}
+		cout << S[gx][gy] << endl;
+	}
+}

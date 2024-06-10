@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+/*
+void printArray(int array[], int n) {
+  for(int i=0; i<n; i++)
+    cout<<"array["<<i<<"] = "<<array[i]<<endl;
+  cout<<endl;
+}
+*/
+
+int main() {
+  int n, m;
+  int taro[101], hanako[101];
+
+  while(cin>>n>>m && n!=0 && m!=0) {
+    int sumT = 0, sumH = 0;
+    for(int i=0; i<n; i++) {
+      cin>>taro[i];
+      sumT += taro[i];
+    }
+    for(int i=0; i<m; i++) {
+      cin>>hanako[i];
+      sumH += hanako[i];
+    }
+    sort(taro, taro+n);
+    sort(hanako, hanako+m);
+
+    int swapT = 999, swapH = 999;
+    for(int i=0; i<n; i++) {
+      for(int j=0; j<m; j++) {
+	int nowT = sumT-taro[i]+hanako[j];
+	int nowH = sumH-hanako[j]+taro[i];
+	if(nowT == nowH) {
+	  if(taro[i]+hanako[j] < swapT+swapH) {
+	    swapT = taro[i];
+	    swapH = hanako[j];
+	    j = m; // 高速化
+	  }
+	}
+      }
+    }
+    if(swapT != 999) {
+      cout<<swapT<<" "<<swapH<<endl;
+    }
+    else {
+      cout<<"-1"<<endl;
+    }
+  }
+}

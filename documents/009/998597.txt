@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<algorithm>
+#include<set>
+using namespace std;
+int main(){
+  char s[16];
+  while(scanf("%s",s)>0){
+    int a[9]{0};
+    set<int> atari;
+    for(char c:s)
+      a[(int)(c-'1')]++;
+    for(int i=0;i<9;i++){//当たり牌
+      if(a[i]==4) continue;
+      int b[9]; copy(a,a+9,b);
+      b[i]++;
+      for(int j=0;j<9;j++){//頭
+	if(b[j]<2) continue;
+	int c[9]; copy(b,b+9,c);
+	c[j]-=2;
+	int k=0;
+	for(k=0;k<4;k++){
+	  bool found=false;
+	  for(int l=0;l<9;l++){
+	    if(l+2<9){
+	      if(c[l]>c[l+1]&&c[l]>=3){
+		c[l]-=3; found=true; break;
+	      }else if(c[l]>c[l+1]){
+		break;
+	      }else if(c[l]>0&&c[l+1]>0&&c[l+2]>0){
+		c[l]--; c[l+1]--; c[l+2]--;
+		found=true; break;
+	      }
+	    }else{
+	      if(c[l]==3){
+		c[l]-=3; found=true; break;
+	      }
+	    }
+	  }
+	  if(!found) break;
+	}
+	if(k==4)
+	  atari.insert(i);
+      }
+    }
+    int count=0;
+    for(int i:atari){
+      if(++count==atari.size())
+	printf("%d\n",i+1);
+      else
+	printf("%d ",i+1);
+    }
+    if(count==0) printf("0\n");
+  }
+}

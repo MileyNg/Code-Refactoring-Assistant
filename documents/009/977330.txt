@@ -1,0 +1,21 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+
+void main() {
+  foreach (char[] line; stdin.lines) {
+    if (line == "-\n") break;
+
+    char[] s = line.chomp;
+    int i = readln.chomp.to!int;
+
+    for (int x = 0; x < i; x++) {
+      int n = readln.chomp.to!int;
+      s = s[n..$] ~ s[0..n];
+    }
+
+    s.writeln;
+  }
+}

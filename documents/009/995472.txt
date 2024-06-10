@@ -1,0 +1,70 @@
+#include<iostream>
+#include<utility>
+#define N 10
+#define Pair pair<int,int>
+#define x first
+#define y second
+
+using namespace std;
+
+int X[] = {-2,-2,-2,2,2,2,-1,0,1,-1,0,1};
+int Y[] = {-1,0,1,-1,0,1,-2,-2,-2,2,2,2};
+bool tab[N][N], tab_[N][N];
+
+void init(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      tab[i][j]=false, tab_[i][j]=false;
+    }
+  }
+}
+void copy(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      tab[i][j]=tab_[i][j], tab_[i][j]=false;
+    }
+  }
+}
+void jump(const Pair& p1, const Pair& p2){
+  Pair p;
+  for(int i=0; i<12; ++i){
+    p.x=p1.x+X[i], p.y=p1.y+Y[i];
+    if(p.x>=0 && p.x<N && p.y>=0 && p.y<N &&
+       p.x >= p2.x-1 && p.x <= p2.x+1 &&
+       p.y >= p2.y-1 && p.y <= p2.y+1){
+      tab_[p.x][p.y]=true;
+    }
+  }
+}
+void check1(const Pair& p){
+  Pair p_;
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      if(tab[i][j]) p_.x=i, p_.y=j, jump(p_,p);
+    }
+  }
+}
+bool check2(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      if(tab[i][j]) return true;
+    }
+  }
+  return false;
+}
+
+int main(){
+  int n, x_, y_;
+  while(cin >> x_ >> y_ && x_ && y_){
+    cin >> n;
+    init();
+    tab[x_][y_]=true;
+    Pair p;
+    for(int i=0; i<n; ++i){
+      cin >> p.x >> p.y;
+      check1(p), copy();
+    }
+    cout << (check2() ? "OK" : "NA") << endl;
+  }
+  return 0;
+}

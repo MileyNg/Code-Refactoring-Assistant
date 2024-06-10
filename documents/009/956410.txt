@@ -1,0 +1,14 @@
+sm = 0
+try:
+    while True:
+        s = raw_input()
+        ix = -1
+        for i, c in enumerate(s):
+            if ix == -1 and c.isdigit():
+                ix = i
+            if ix != -1 and not c.isdigit():
+                sm += int(s[ix:i])
+                ix = -1
+except EOFError:
+    pass
+print sm

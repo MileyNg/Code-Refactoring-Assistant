@@ -1,0 +1,123 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Point{
+	double x,y,z;
+	Point(){}
+	Point(double x,double y,double z):x(x),y(y),z(z){}
+	Point& operator+=(Point p){x+=p.x,y+=p.y,z+=p.z; return *this;}
+	Point& operator-=(Point p){x-=p.x,y-=p.y,z-=p.z; return *this;}
+	Point& operator*=(double c){x*=c,y*=c,z*=c; return *this;}
+	Point& operator/=(double c){x/=c,y/=c,z/=c; return *this;}
+};
+Point operator+(Point a,Point b){return a+=b;}
+Point operator-(Point a,Point b){return a-=b;}
+Point operator*(Point a,double c){return a*=c;}
+Point operator*(double c,Point a){return a*=c;}
+Point operator/(Point a,double c){return a/=c;}
+double Dot(Point a,Point b){return a.x*b.x+a.y*b.y+a.z*b.z;}
+double Abs2(Point p){return Dot(p,p);}
+double Abs(Point p){return sqrt(Abs2(p));}
+
+struct Line{
+	Point pos,dir;
+	Line(){}
+	Line(Point p,Point d):pos(p),dir(d){}
+};
+
+struct Sphere{
+	Point center;
+	double radius;
+	Sphere(){}
+	Sphere(Point c,double r):center(c),radius(r){}
+	Sphere(double x,double y,double z,double r):center(x,y,z),radius(r){}
+};
+
+Point Proj(Line l,Point p){
+	Point a=p-l.pos,b=l.dir;
+	return l.pos+Dot(a,b)/Abs2(b)*b;
+}
+double DistLP(Line l,Point p){
+	return Abs(Proj(l,p)-p);
+}
+
+pair<double,double> InterPoint(Sphere s,Line l){
+	Point p=l.pos-s.center,d=l.dir;
+	double a=Abs2(d),b=Dot(p,d),c=Abs2(p)-pow(s.radius,2);
+	double t1=(-b-sqrt(b*b-a*c))/a;
+	double t2=(-b+sqrt(b*b-a*c))/a;
+	return mp(t1,t2);
+}
+
+ostream& operator<<(ostream& os,const Point& p){
+	return os<<'('<<p.x<<','<<p.y<<','<<p.z<<')';
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		Point d0; cin>>d0.x>>d0.y>>d0.z;
+		vector<Sphere> ss(n);
+		rep(i,n){
+			double x,y,z,r; cin>>x>>y>>z>>r;
+			ss[i]=Sphere(x,y,z,r);
+		}
+		
+		Line l(Point(0,0,0),d0);
+		for(;;){
+			vd ts(n,INF);
+			rep(i,n) if(DistLP(l,ss[i].center)<ss[i].radius){
+				double t1,t2; tie(t1,t2)=InterPoint(ss[i],l);
+				ts[i]=t1>EPS?t1:t2>EPS?t2:INF;
+			}
+			
+			int i=min_element(all(ts))-begin(ts);
+			if(ts[i]==INF){
+				printf("%.4f %.4f %.4f\n",l.pos.x,l.pos.y,l.pos.z);
+				break;
+			}
+			
+			// aから球面上の点bで跳ね返りcへ
+			Point a=l.pos,b=l.pos+l.dir*ts[i];
+			Point p=Proj(Line(ss[i].center,b-ss[i].center),a);
+			Point c=p+(p-a);
+			l=Line(b,c-b);
+		}
+	}
+}

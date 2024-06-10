@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int main() {
+  int n;
+  int car_num;
+  int car_max;
+  bool has_error = false;
+  cin >> n;
+  cin >> car_num;
+  car_max = car_num;
+
+  for( int i = 0; i < n; i++ ) {
+    int in_num, out_num;
+    cin >> in_num >> out_num;
+    car_num = car_num + in_num - out_num;
+    car_max = max( car_num, car_max );
+    if( car_num < 0 ) {
+      has_error = true;
+    }
+  }
+
+  cout << ( has_error ? 0 : car_max ) << endl;
+
+  return EXIT_SUCCESS;
+}

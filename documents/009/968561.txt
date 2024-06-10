@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin >> n;
+    for(int i=0; i < n; i++){
+        string input;
+        cin >> input;
+
+        string ans = input.substr(0, 1);
+        input = input.substr(1);
+        int pointer = 0;
+        while(input.size() != 0){
+            if(input.substr(0, 2) == "->"){
+                if(ans.size() > pointer+1) ans.replace(pointer+1, 1, input.substr(2, 1));
+                else ans += input.substr(2, 1);
+                pointer++;
+            }
+            else {
+                if(pointer == 0) ans = input.substr(2, 1) + ans;
+                else pointer--;
+            }
+            input = input.substr(3);
+        }
+        cout << ans << endl;
+    }
+}

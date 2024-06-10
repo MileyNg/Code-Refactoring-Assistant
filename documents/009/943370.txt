@@ -1,0 +1,53 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+const int MAX = 1000010;
+
+/** Problem0185 : Goldbach's Conjecture II **/
+int main()
+{
+	bool prime[MAX];
+	int  input, count;
+	
+	for (int i=0; i<MAX; i++)
+		prime[i] = true;
+	
+	prime[0] = false; prime[1] = false;
+	
+	for (int i=2; i<MAX; i++) {
+		if (prime[i]) {
+			for (int j=2; i*j<MAX; j++) {
+				prime[i*j] = false;
+			}
+		}
+	}
+	
+	while (1) {
+		cin >> input;
+		if (input == 0) break;
+		
+		count = 0;
+		for (int i=2; i<=input/2; i++) {
+			if (prime[i] && prime[input - i])
+				count++;
+		}
+		
+		cout << count << endl;
+	}
+	return 0;
+}

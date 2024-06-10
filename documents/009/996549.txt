@@ -1,0 +1,56 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+
+	int N,M;
+	int a;
+	int amida[10][10];
+	int h;
+	bool f;
+
+	cin>>N>>M;
+
+	for(int i=0;i<10;i++){
+		for(int j=0;j<10;j++){
+			amida[i][j]=0;
+		}
+	}
+
+	for(int i=1;i<=M;i++){
+		cin>>a;
+		amida[i][a]=1;
+	}
+
+	while(1){
+		f=false;
+		for(int i=1;i<=N;i++){
+			for(int j=1;j<=M;j++){
+				if(amida[j][i]==1){
+					h=j;
+					while(1){
+						if(amida[h-1][i]==0&&amida[h-1][i+1]==0&&amida[h-1][i-1]==0&&h!=1){
+							h--;
+							f=true;
+						}
+						else break;
+					}
+					amida[j][i]=0;
+					amida[h][i]=1;
+				}
+			}
+		}
+		if(!f) break;
+	}
+	for(int i=9;;i--){
+		for(int j=0;j<=9;j++){
+			if(amida[i][j]==1){
+				cout<<i<<endl;
+				return 0;
+			}
+		}
+	}
+
+	return 0;
+}

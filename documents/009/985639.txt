@@ -1,0 +1,3 @@
+gets.to_i.times{h=Hash.new{0}
+gets.to_i.times.map{gets}.map{|p|p.scan(/../).each_with_index{|s,i|h[Rational(i,p.size/2)]+=s.hex if"00"!=s}}
+puts (d=h.keys.map(&:denominator).inject(1){|r,l|r.lcm l})>1024?"Too complex.":d.times.map{|i|(f=h[Rational(i,d)])?"%02X"%f :"00"}*""}

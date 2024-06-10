@@ -1,0 +1,13 @@
+while 1:
+	n = input()
+	if n == 0: break
+	pxy = [map(float,raw_input().split()) for i in range(n)]
+	ans = 0
+	for y in range(100):
+		for x in range(100):
+			count = 0
+			for px,py in pxy:
+				if (x/10.0-px)**2+(y/10.0-py)**2 <= 1.0:
+					count += 1
+			ans = max(ans,count)
+	print ans

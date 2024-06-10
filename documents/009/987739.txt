@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+
+
+int main(){
+    int m,n;
+    while(cin>>m>>n){
+        
+        bool order[21][21]={0};
+        
+        for(int i=0; i<n; i++){
+            int x,y;
+            cin>>x>>y;
+            order[x][y]=1;
+        }
+        int outputted[21]={0};
+        for(int i=1; i<=m; i++){
+            bool flag = true;
+            for(int j=1; j<=m; j++){
+                if(order[j][i]){
+                    flag=false;
+                    break;
+                }
+            }
+            if(flag&&outputted[i]!=1){
+                cout<<i<<endl;
+                outputted[i]=1;
+                for(int j=1; j<=m; j++){
+                    order[i][j]=0;
+                }
+                i=0;
+            }
+        }
+    }
+    
+    
+
+}

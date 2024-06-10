@@ -1,0 +1,17 @@
+while (line = gets)
+  cs = line.chomp.split(" ").map{|s| s.to_i}
+
+  used = (1..10).map{false}
+  cs.each{|c| used[c] = true}
+
+  csum = cs[0] + cs[1]
+  cnum = 0
+
+  (1..10).select{|c| ! used[c]}.each do |c|
+    if csum + c <= 20
+      cnum += 1
+    end
+  end
+
+  puts (cnum >= 4) ? "YES" : "NO"
+end

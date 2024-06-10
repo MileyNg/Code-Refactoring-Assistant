@@ -1,0 +1,80 @@
+#include<iostream>
+#include<queue>
+#include<utility>
+#include<algorithm>
+#define N 32
+#define INF 100
+#define Pair pair<int,int>
+#define x first
+#define y second
+
+using namespace std;
+
+int h, w;
+int data[N][N];
+bool H[N][N], V[N][N];
+int X[]={-1, 0, 0, 1};
+int Y[]={0, -1, 1, 0};
+
+void init(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      data[i][j]=INF;
+      H[i][j]=true;
+      V[i][j]=true;
+    }
+  }
+}
+
+void input(){
+  for(int i=0; i<2*h-1; ++i){
+    if(i%2){
+      for(int j=0; j<w; ++j) cin >> H[i/2][j];
+    }else{
+      for(int j=0; j<w-1; ++j) cin >> V[i/2][j];
+    }
+  }
+}
+
+bool check(const Pair& p, int& k){
+  if(!(p.x>=0 && p.x<h)) return false;
+  if(!(p.y>=0 && p.y<w)) return false;
+  if(data[p.x][p.y]<INF) return false;
+  if(k==0) return !H[p.x][p.y];
+  if(k==1) return !V[p.x][p.y];
+  if(k==2) return !V[p.x][p.y-1];
+  if(k==3) return !H[p.x-1][p.y];
+  return false;
+}
+
+int bfs(){
+  queue<Pair> qu;
+  qu.push(Pair(0,0));
+  data[0][0]=1;
+  while(!qu.empty() && data[h-1][w-1]==INF){
+    int s=qu.size();
+    for(int i=0; i<s; ++i){
+      Pair p1=qu.front(); qu.pop();
+      for(int j=0; j<4; ++j){
+	Pair p2(p1.x+X[j], p1.y+Y[j]);
+	if(check(p2,j)){
+	  data[p2.x][p2.y] = data[p1.x][p1.y] + 1;
+	  qu.push(p2);
+	}
+      }
+    }
+  }
+  return data[h-1][w-1];
+}
+
+int main(){
+  while(1){
+    cin >> w >> h;
+    if(!w && !h) break;
+    init();
+    input();
+    int ans=bfs();
+    cout << (ans!=INF ? ans : 0) << endl;
+  }
+  return 0;
+}

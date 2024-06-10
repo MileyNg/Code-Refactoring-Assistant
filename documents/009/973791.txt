@@ -1,0 +1,39 @@
+def is_left(p)
+  _k = 0
+  cost = 0
+
+  $ws.each do |w|
+    cost += w
+    if cost > p
+      _k += 1
+      cost = w
+      return false if _k == $k
+    end
+  end
+  true
+end
+
+n, $k = gets.split.map(&:to_i)
+$ws = []
+n.times do
+  $ws << gets.to_i
+end
+
+l = $ws.max
+
+if is_left(l)
+  puts l
+else
+  r = 100000 * 10000
+
+  while l + 1 < r
+    m = (l + r) / 2
+    if is_left(m)
+      r = m
+    else
+      l = m
+    end
+  end
+
+  puts r
+end

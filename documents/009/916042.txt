@@ -1,0 +1,20 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+
+int main(string[] args) {
+	uint i;
+	uint[] hills;
+	hills.length = args.length - 1;
+	for (i = 1; i < args.length - 1; i++) {
+		hills[i] = to!(uint)(args[i]);
+	}
+
+	sort!("a > b")(hills);
+
+	for (i = 0; i < 3; i++) {
+		writeln(hills[i]);
+	}
+
+	return 0;
+}

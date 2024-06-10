@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string in;
+
+bool calc(string x){
+    return (int)x.size() <= 8? stoi(x) % 11 == 0: calc(to_string(stoi(x.substr(0, 8)) % 11) + x.substr(8));
+}
+
+int solve(){
+    int res = 0;
+    for(int i=2; i<=(int)in.size(); ++i){
+        for(int j=0; i+j<=(int)in.size(); ++j){
+            string x = in.substr(j, i);
+            if(x[0] == '0')continue;
+            res += calc(x);
+        }
+    }
+    return res;
+}
+
+int main(){
+    while(cin >> in, in != "0")cout << solve() << '\n';
+    return 0;
+}

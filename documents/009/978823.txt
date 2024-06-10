@@ -1,0 +1,20 @@
+double P[102][101];
+char L[101],B[101];
+main(){
+	int N,T,l,b,x,t,n,k;
+	for(;scanf("%d%d%d%d",&N,&T,&l,&b),N;){
+		memset(P,0,sizeof(P));
+		memset(B,0,sizeof(L)+sizeof(B));
+		for(;l--;)scanf("%d",&x),L[x]=1;
+		for(;b--;)scanf("%d",&x),B[x]=1;
+		for(P[t=0][0]=1;t<T;P[t+1][N]+=P[t][N],t++)for(n=0;n<N;n++){
+			for(k=1;k<=6;k++){
+				x=n+k;
+				if(x>N)x=2*N-x;
+				if(B[x])x=0;
+				P[t+1+L[x]][x]+=P[t][n]/6;
+			}
+		}
+		printf("%f\n",P[T][N]);
+	}
+exit(0);}

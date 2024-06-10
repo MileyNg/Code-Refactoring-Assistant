@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <stack>
+#include <deque>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i < ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 0, n )
+
+typedef long long ll;
+typedef pair< int, int > P;
+
+#define MAX_W 100
+#define MAX_H 100
+#define MAX_N 500
+
+bool Init( void );
+
+int N, W, H, S, T;
+int X[ MAX_N ], Y[ MAX_N ];
+int Count[ MAX_W + 1 ][ MAX_H + 1 ];
+
+int main()
+{
+	while( Init() ) {
+		REP( i, N ) {
+			int x = X[ i ], y = Y[ i ];
+			REP( dx, S ) REP( dy, T ) {
+				int xx = x - dx, yy = y - dy;
+				if( xx < 0 || yy < 0 ) continue;
+				++Count[ xx ][ yy ];
+			}
+		}
+		int ans = 0;
+		REP( x, W ) REP( y, H ) ans = max( ans, Count[ x ][ y ] );
+		cout << ans << endl;
+	}
+	return 0;
+}
+
+bool Init() {
+	// init
+	REP( i, MAX_W + 1 ) REP( j, MAX_H + 1 ) Count[ i ][ j ] = 0;
+	// input
+	cin >> N;
+	if( !N ) return false;
+	cin >> W >> H;
+	REP( i, N ) {
+		int x, y;
+		cin >> x >> y;
+		X[ i ] = x - 1;  Y[ i ] = y - 1;
+	}
+	cin >> S >> T;
+	return true;
+}

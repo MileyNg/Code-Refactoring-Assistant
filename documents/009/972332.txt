@@ -1,0 +1,31 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+
+  bool player[1010];
+  int n, m;
+
+  while(cin >> n >> m,n+m){
+    fill(player, player+1010, true);
+    int position = 0, num = n, countpotato  = m;
+    for(int i = 0; ; i++){
+      if(num == 1) break;
+      if(countpotato == 0 && player[i%n]){
+	//cout << i%n << endl;
+	player[i%n] = false;
+	countpotato = m-1;
+	num--;
+      }else if(player[i%n]){
+	countpotato--;
+      }
+    }
+    for(int i = 0; ; i++){
+      if(player[i]){
+	cout << i << endl;
+	break;
+      }
+    }
+  }
+}

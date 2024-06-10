@@ -1,0 +1,27 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int n,m;
+  cin >> n >> m;
+  int d[n][2];
+  int dis;
+  d[0][0] = d[0][1] = 0;
+  for(int i=1;i<n;i++){
+    cin >> dis;
+    d[i][0] = dis;
+  }
+  for(int i=1;i<n;i++) d[i][1] = d[i-1][1] + d[i][0];
+  //for(int i=0;i<n;i++) cout << d[i][1] << ' ';
+  //cout << endl;
+  int ans = 0;
+  int a,mema=0;
+  for(int i=0;i<m;i++){
+    cin >> a;
+    if(a>0) ans += d[mema+a][1] - d[mema][1];
+    else ans += d[mema][1] - d[mema+a][1];
+    ans %= 100000;
+    mema += a;
+  }
+  cout << ans << endl;
+  return 0;
+}

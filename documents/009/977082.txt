@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+typedef pair<int,int> P;
+
+bool involve(P a, P b) {
+  return (a.first<b.first && a.second<b.second);
+}
+
+int main() {
+  int n, m, s, t;
+  int a[200];
+  P dolls[201];
+  while (1) {
+    cin >> n;
+    if (!n) break;
+    dolls[0].first = dolls[0].second = 0;
+    for (int i=1; i<=n; i++) {
+      cin >> dolls[i].first >> dolls[i].second;
+    }
+    cin >> m;
+    for (int i=1; i<=m; i++) {
+      cin >> dolls[i+n].first >> dolls[i+n].second;
+    }
+    s = n+m;
+    sort(dolls, dolls+s);
+    for (int i=0; i<=s; i++) {
+      a[i] = 0;
+    }
+    for (int i=1; i<=s; i++) {
+      for (int j=i-1; j>=0; j--) {
+        if (involve(dolls[j], dolls[i])) {
+          a[i] = max(a[i], a[j]+1);
+        }
+      }
+    }
+    t = 0;
+    for (int i=1; i<=s; i++) {
+      if (t < a[i]) {
+        t = a[i];
+      }
+    }
+    cout << t << endl;
+  }
+  return 0;
+}

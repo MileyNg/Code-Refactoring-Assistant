@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int c1, c2, c3;
+	int sum, over_no;
+	int a, b;
+	int han[10];
+	
+	
+	sum = 0;
+	while (scanf("%d %d %d", &c1, &c2, &c3) != EOF){
+		over_no = 0;
+		for (a = 1; a <= 10; a++) {
+			if (a == c1 || a == c2 || a == c3) {
+				han[a-1] = 0;
+			}
+			han[a-1] = a;
+		}
+		sum = c1 + c2;
+		
+		for (a = 0; a < 10; a++) {
+			if (han[a] > 0) {
+				if ((sum + han[a]) <= 20) {
+					over_no++;
+				}
+			}
+		}
+		
+		if (over_no >= 4) {
+			printf("YES\n");
+		}
+		else {
+			printf("NO\n");
+		}
+	}
+	
+	return (0);
+}	
+		

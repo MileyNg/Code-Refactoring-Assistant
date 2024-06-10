@@ -1,0 +1,20 @@
+#include<stdio.h>
+
+int main(){ int i, aa, bb, cc, dd, ee, count[4][3][10];
+	for (aa=0; aa<4; aa++) for (bb=0; bb<3; bb++) for (cc=0; cc<10; cc++) count[aa][bb][cc] = 0;
+	scanf ("%d", &aa);
+	for (i=0; i<aa; i++) {
+		scanf ("%d %d %d %d", &bb, &cc, &dd, &ee);
+		count[bb-1][cc-1][dd-1] += ee;
+		if (count[bb-1][cc-1][dd-1] < 0) count[bb-1][cc-1][dd-1] = 0;
+		if (count[bb-1][cc-1][dd-1] > 9) count[bb-1][cc-1][dd-1] = 9;
+	}
+	for (aa=0; aa<4; aa++) {
+		for (bb=0; bb<3; bb++) {
+			for (cc=0; cc<10; cc++) printf (" %d", count[aa][bb][cc]);
+			printf ("\n");
+		}
+		if ( aa != 3) printf ("####################\n");
+	}
+	return 0;
+}

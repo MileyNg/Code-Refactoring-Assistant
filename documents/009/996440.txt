@@ -1,0 +1,139 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+const int di[4]={-1,1,0,0};
+const int dj[4]={0,0,-1,1};
+const int oo=1073741819;
+using namespace std;
+int d[2000],id[200][200],c[1005][1005],D[2][2000];
+int n,m,tot;
+struct point{
+    int i,j;
+}lot[2000];
+struct sta{
+    int x,y;
+}st[200000];
+int bfs(int sx,int sy,int tx,int ty)
+{
+    int h,r;
+    h=r=0;
+    for (int i=1;i<=tot;i++) d[i]=oo;
+    st[r=1].x=id[sx][sy],st[r=1].y=1,d[st[1].x]=0;
+    for (;h<r;) {
+        point ne=lot[st[++h].x];
+        for (int i=0;i<=3;i++) {
+            int ni=ne.i+di[i],nj=ne.j+dj[i];
+            if (1<=ni && ni<=n && 1<=nj && nj<=m) {
+                point na=lot[id[ni][nj]];
+                if (!c[id[ne.i][ne.j]][id[na.i][na.j]]) continue;
+                if (1==c[id[ne.i][ne.j]][id[na.i][na.j]]) {
+                    if (d[id[ne.i][ne.j]]+1<d[id[na.i][na.j]]) {
+                        d[id[na.i][na.j]]=d[id[ne.i][ne.j]]+1;
+                        st[++r].x=id[ni][nj];
+                    }
+                }
+            }
+        }
+    }
+    return d[id[tx][ty]];
+}
+int P[1000][2000],cost[1005][1005];
+int getans()
+{
+    int h,r;
+    h=r=0;
+    for (int i=1;i<=tot;i++) 
+        for (int k=0;k<=tot*2;k++)
+            P[i][k]=oo;
+    st[r=1].x=id[1][1],st[r].y=0,P[st[1].x][st[1].y]=0;
+	for (;h<r;) {
+        point ne=lot[st[++h].x];
+        int p=st[h].y;
+        for (int i=0;i<=3;i++) {
+            int ni=ne.i+di[i],nj=ne.j+dj[i];
+            if (1<=ni && ni<=n && 1<=nj && nj<=m) {
+                point na=lot[id[ni][nj]];
+                int cos=max(cost[id[ne.i][ne.j]][id[na.i][na.j]],p);
+                if (!c[id[ne.i][ne.j]][id[na.i][na.j]] || cos>tot*2) continue;
+                if (1==c[id[ne.i][ne.j]][id[na.i][na.j]]) {
+                    int cc=D[0][id[ne.i][ne.j]]+cos;
+                    if (max(P[id[ne.i][ne.j]][p],cc)<P[id[na.i][na.j]][cos]) {
+                        P[id[na.i][na.j]][cos]=max(P[id[ne.i][ne.j]][p],cc);
+                        st[++r].x=id[ni][nj];
+                        st[r].y=p+cos;
+                    }
+                }
+            }
+        }
+    }
+//    cout<<r<<endl;
+    int sum=oo;
+//    cout<<cost[1][2]<<' '<<cost[1][3]<<' '<<cost[2][4]<<' '<<cost[3][4]<<endl;
+    for (int i=0;i<=tot*2;i++)
+        sum=min(sum,P[id[n][m]][i]);
+    return sum;
+}
+int main()
+{
+    for (;scanf("%d%d",&n,&m)==2;) {
+        if (!n && !m) break;
+        tot=0;
+        for (int i=1;i<=n;i++)
+            for (int j=1;j<=m;j++) 
+                id[i][j]=++tot,lot[tot].i=i,lot[tot].j=j;
+        for (int i=1;i<=tot;i++)
+            for (int j=1;j<=tot;j++)
+                c[i][j]=0,cost[i][j]=oo; 
+        for (int i=1;i<=n;i++) {
+            int x;
+            for (int j=1;j<=m-1;j++) {
+                scanf("%d",&x);
+                if (!x) {
+                    int p=id[i][j],q=id[i][j+1];
+                    c[p][q]=c[q][p]=1;
+                }
+            }
+            if (i==n) break;
+            for (int j=1;j<=m;j++) {
+                scanf("%d",&x);
+                if (!x) {
+                    int p=id[i][j],q=id[i+1][j];
+                    c[p][q]=c[q][p]=1;
+                }
+            }
+        }
+        bfs(1,1,n,m);
+        for (int i=1;i<=tot;i++) D[0][i]=d[i];
+        bfs(n,m,1,1);
+        for (int i=1;i<=tot;i++) D[1][i]=d[i];
+  //      int ans=D[0][id[n][m]];
+        int ans=oo;
+        for (int i=1;i<=tot;i++)
+            for (int j=i+1;j<=tot;j++)
+                if (c[i][j]) {
+//                    if (D[0][i]+1+D[1][j]!=D[0][id[n][m]]) continue;
+//                    cout<<lot[i].i<<' '<<lot[i].j<<' '<<lot[j].i<<' '<<lot[j].j<<endl;
+                    if (D[0][i]<D[0][j]) {
+                        c[i][j]=c[j][i]=0;
+                        int sum=bfs(lot[i].i,lot[i].j,n,m);
+//                        ans=min(ans,sum+D[0][i]);
+                        c[i][j]=c[j][i]=1;
+                        cost[i][j]=sum;
+                    }
+                    else {
+                        c[i][j]=c[j][i]=0;
+                        int sum=bfs(lot[j].i,lot[j].j,n,m);
+//                        ans=min(ans,sum+D[0][j]);
+                        cost[j][i]=sum;
+                        c[i][j]=c[j][i]=1;
+                    }
+//                    cout<<ans<<endl;
+                }
+        ans=getans();
+        if (ans<oo) printf("%d\n",ans);
+        else printf("%d\n",-1);
+    }
+    return 0;
+}

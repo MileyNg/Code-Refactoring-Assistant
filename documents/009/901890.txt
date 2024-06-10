@@ -1,0 +1,34 @@
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	string s;
+
+	while(1){
+		getline(cin,s);
+		if(s==".") break;
+
+		stack<char> c;
+		for(int i1=0;i1<s.size();i1++){
+			if(s[i1]=='(') c.push('(');
+			else if(s[i1]=='[') c.push('[');
+			else if(s[i1]==')'){
+				if(!c.empty() && c.top()=='(') c.pop();
+				else c.push(')');
+			} 
+			else if(s[i1]==']'){
+				if(!c.empty() && c.top()=='[') c.pop();
+					else c.push(']');
+			}
+			else {}
+
+		}
+		if(c.empty()) cout<<"yes"<<endl;
+		else cout<<"no"<<endl;
+	}
+	return 0;
+}

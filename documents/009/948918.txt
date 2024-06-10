@@ -1,0 +1,213 @@
+package field;
+
+import java.awt.Point;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Field {
+
+	/**
+	 * フィールド
+	 */
+	private int width = 200, height = 300;
+	/**
+	 * 縦横の空白空間
+	 */
+	private int margin = 10;
+
+	/**
+	 * 全体フィールドから見た現在ブロックの横座標と縦座標
+	 */
+	private int nowBlockX, nowBlockY;
+
+	/**
+	 * 二次元配列にしたときの
+	 */
+	private int[][] field;
+
+	/**
+	 * マスひとつの大きさ
+	 */
+	int stoneSize = 10;
+
+	/**
+	 * コンストラクタ
+	 */
+	public Field() {
+
+		// フィールドの配列を作る
+		field = new int[width / stoneSize][height / stoneSize];
+		// ブロックの落下位置をフィールドの大きさから決定
+		this.nowBlockX = width / 2;
+		this.nowBlockY = 0;
+
+	}
+
+	/**
+	 * 動けるかどうか判定
+	 * 
+	 * @param nowBlockXPosition
+	 * @param nowStone
+	 * @param field_piece
+	 * @return
+	 */
+	public boolean canMove(int nowBlockXPosition, int[][] nowStone,
+			int field_piece) {
+
+		// 一番左にあるブロックのx座標
+		int mostLeftBlock = 0;
+		// 一番右にあるブロックのy座標
+		int mostRightBlock = 0;
+		// 現在の全てのブロックのx座標
+		ArrayList<Integer> bl = new ArrayList<Integer>();
+
+		for (int h = 0; h < nowStone[0].length; h++) {
+			for (int w = 0; w < nowStone.length; w++) {
+				if (nowStone[w][h] == 1) {
+					bl.add(w);
+				}
+			}
+		}
+		// ブロックのx座標を小さい順に並べる
+		Collections.sort(bl);
+
+		// 値を入れる
+		mostLeftBlock = bl.get(0);
+		mostRightBlock = bl.get(bl.size() - 1);
+
+		// 左方向に動けない場合
+		if (nowBlockXPosition + (mostLeftBlock * field_piece) <= margin) {
+			return false;
+			// 右方向に動けない場合
+		} else if (nowBlockXPosition + (mostRightBlock * field_piece) >= width
+				- margin) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * @return nowBlockX
+	 */
+	public int getNowBlockX() {
+		return nowBlockX;
+	}
+
+	/**
+	 * @param nowBlockX
+	 *            セットする nowBlockX
+	 */
+	public void setNowBlockX(int nowBlockX) {
+		this.nowBlockX = nowBlockX;
+	}
+
+	/**
+	 * @return nowBlockY
+	 */
+	public int getNowBlockY() {
+		return nowBlockY;
+	}
+
+	/**
+	 * @param nowBlockY
+	 *            セットする nowBlockY
+	 */
+	public void setNowBlockY(int nowBlockY) {
+		this.nowBlockY = nowBlockY;
+	}
+
+	/**
+	 * @return width
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * @param width
+	 *            セットする width
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	/**
+	 * @return height
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * @param height
+	 *            セットする height
+	 */
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	/**
+	 * @return stoneSize
+	 */
+	public int getstoneSize() {
+		return stoneSize;
+	}
+
+	/**
+	 * @param stoneSize
+	 *            セットする stoneSize
+	 */
+	public void setstoneSize(int stoneSize) {
+		this.stoneSize = stoneSize;
+	}
+
+	private int nowBlockWidth = 3;
+
+	/**
+	 * @return field
+	 */
+	public int[][] getField() {
+		return field;
+	}
+
+	/**
+	 * @param field
+	 *            セットする field
+	 */
+	public void setField(int[][] field) {
+		this.field = field;
+	}
+
+	/**
+	 * @return nowBlockWidth
+	 */
+	public int getNowBlockWidth() {
+		return nowBlockWidth;
+	}
+
+	/**
+	 * @param nowBlockWidth
+	 *            セットする nowBlockWidth
+	 */
+	public void setNowBlockWidth(int nowBlockWidth) {
+		this.nowBlockWidth = nowBlockWidth;
+	}
+
+	/**
+	 * @return margin
+	 */
+	public int getMargin() {
+		return margin;
+	}
+
+	/**
+	 * @param margin
+	 *            セットする margin
+	 */
+	public void setMargin(int margin) {
+		this.margin = margin;
+	}
+
+}

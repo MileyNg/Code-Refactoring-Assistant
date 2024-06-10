@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+#define X real()
+#define Y imag()
+
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+typedef vector<P> Pol;
+
+const double EPS = 1e-4;
+const double PI = acos(-1);
+
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+
+D det(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+
+D aPol(Pol vp) {D ret = 0; rep (i, vp.size()) ret += det(vp[i], vp[(i + 1) % vp.size()]); return ret / 2;}
+
+int main() {
+  int n;
+  D a = sin(36. / 180 * PI), b = sin(72. / 180 * PI);
+  while (cin >> n) {
+    Pol pol;
+    rep (i, n) {
+      D x, y;
+      cin >> x >> y;
+      pol.push_back(P(x, y));
+    }
+    D area = aPol(pol);
+    for (int i = 0; sig(i, area / a) <= 0; ++i) {
+      int j = round((area - a * i) / b);
+      if (sig(area, a * i + b * j) == 0) {
+	cout << i << " " << j << endl;
+	goto next;
+      }
+    }
+    cout << -1 << " " << -1 << endl;
+  next:;
+  }
+}

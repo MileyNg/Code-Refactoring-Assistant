@@ -1,0 +1,74 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+int solve(void);
+int Dup(int k);
+
+int a[100002],b[10002],List[10002]={0};
+int m;
+using namespace std;
+
+int main(){
+
+  int i,n;
+
+  while(1){
+
+    scanf("%d",&n);
+    scanf("%d",&m);
+
+    if(n==0 && m==0)break;
+
+    for(i=0;i<m;i++){
+      scanf("%d %d",&a[i],&b[i]);
+    }
+
+    printf("%d\n",solve());
+
+  }
+
+  return 0;
+}
+
+int solve(){
+
+  int i,j,k=0,cn;
+
+  for(i=0;i<m;i++){
+    if(a[i]==1){
+      List[k]=b[i];
+      a[i]=b[i]=0;
+      k++;
+    }
+  }
+
+  cn=k;
+  for(i=0;i<k;i++){
+    for(j=0;j<m;j++){
+      if(List[i]==a[j]){
+	List[cn]=b[j];
+	cn++;
+      }
+    }
+  }
+
+  return Dup(cn);
+
+}
+
+int Dup(int k){
+
+  int i,j;
+
+  for(i=0;i<k;i++){
+    for(j=0;j<k;j++){
+      if(List[j]==List[i] && i!=j){
+	List[i]=0;
+	k--;
+      }
+    }
+  }
+
+  return k;
+
+}

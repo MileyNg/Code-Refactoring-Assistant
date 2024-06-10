@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+ * structure definitions
+ */
+typedef struct _slobj {
+	struct _slobj *next;
+	int j;
+}slobj;
+
+typedef struct {
+	slobj* head;
+}slist;
+
+/**
+ * Make new slobj.
+ */
+slobj *make_slobj(int j)
+{
+	slobj *ret = (slobj*)malloc(sizeof(slobj));
+	ret->next = NULL;
+	ret->j = j;
+	return ret;
+}
+
+/**
+ * Make new empty linked list.
+ */
+slist *make_slist(void)
+{
+	return (slist*)malloc(sizeof(slist));
+}
+
+/**
+ * Release all objects of L.
+ */
+void slist_free(slist *L)
+{
+	slobj* p = L->head;
+	while(p){
+		slobj* next = p->next;
+		free(p);
+		p = next;
+	}
+	free(L);
+}
+
+void merge_sort(slist *L)
+{
+	slobj *last, *mid, *left_p, *right_p, **L_p;
+	slist left, right;
+
+	last = L->head;
+	mid = L->head;
+
+	/* find the object located in the centre of L */
+	while(1){
+
+        /* last: proceed two objects per loop */
+		last = last->next;
+		if(last){
+			last = last->next;
+		}
+
+		/* mid: proceed one object per loop */
+		if(!last){
+			slobj *p = mid;
+			if(p){
+				mid = p->next;
+				p->next = NULL;
+			}
+			break;
+		}
+		else{
+			mid = mid->next;       
+		}
+	}
+
+	/* return if L contains only one object at most */
+	if(!mid){ 
+		return;
+	}
+
+	/* sort left part and right part recursively */
+	left.head = L->head;
+	right.head = mid;
+	merge_sort(&left);
+	merge_sort(&right);
+
+	/* merge left and right */
+	left_p = left.head;
+	right_p = right.head;
+	L_p = &L->head;
+
+	while(left_p && right_p){
+		if(left_p->j < right_p->j){
+			*L_p = left_p;
+			left_p = left_p->next;
+		}
+		else{
+			*L_p = right_p;
+			right_p = right_p->next;
+		}
+		L_p = &(*L_p)->next;
+	}
+
+	/* append remaining objects */
+	if(left_p){
+		*L_p = left_p;
+	}
+	else if(right_p){
+		*L_p = right_p;
+	}
+}
+
+int main(void)
+{
+	int n, i;
+	slist *L;
+	slobj *p, **last;
+
+	scanf("%d", &n);
+
+	L = make_slist();
+	last = &L->head;
+
+	for(i=0; i<n; ++i){
+		int a;
+		scanf("%d", &a);
+
+		p = make_slobj(a);
+		*last = p;
+		last = &p->next;
+	}
+
+	merge_sort(L);
+
+	p = L->head;
+	for(i=0; i<n; ++i){
+		printf("%d%s", p->j, i==n-1 ? "\n" : " ");
+		p = p->next;
+	}
+
+	slist_free(L);
+
+	return 0;
+}

@@ -1,0 +1,61 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+void koukan(int*,int*,int,int );
+
+int n,m;
+
+int main(){
+	while(1){
+		int goukei=0,goukei_t=0;
+		cin>>n>>m;
+		if(!n&&!m)	break;
+
+		int *taro=new int[n];
+		int *hanako=new int [m];
+		for(int i=0;i<n;i++){
+			cin>>taro[i];
+			goukei+=taro[i];
+			goukei_t+=taro[i];
+		}
+		for(int j=0;j<m;j++){
+			cin>>hanako[j];
+			goukei+=hanako[j];
+		}
+		if(goukei%2==1){
+			delete[] hanako;
+			delete[]taro;
+			cout<<-1<<endl;
+			continue;
+		}
+		goukei/=2;
+		koukan(taro,hanako,goukei,goukei_t);
+		delete[] hanako;
+		delete[] taro;
+	}
+	return 0;
+}
+void koukan(int *taro,int *hanako,int goukei,int tarou_mix){
+	int mix=1000000;
+	int cnt=0;
+	pair<int,int> p[100];
+	for(int i=0;i<n;i++)
+		for(int j=0;j<m;j++){
+			if((tarou_mix-taro[i]+hanako[j])==goukei){
+				if(mix>(taro[i]+hanako[j])){
+					mix=taro[i]+hanako[j];
+					p[cnt].first=taro[i];
+					p[cnt].second=hanako[j];
+					cnt++;
+					
+				}
+			}
+		}
+	if(cnt){
+		cout<<p[cnt-1].first<<" "<<p[cnt-1].second<<endl;
+		return;
+	}
+	cout<<-1<<endl;
+}

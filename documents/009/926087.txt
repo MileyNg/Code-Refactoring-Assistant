@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <queue>
+
+using namespace std;
+
+typedef struct State_Def {
+	int y;
+	int x;
+	State_Def(int _y, int _x) {y = _y; x = _x;}
+} S;
+
+const int INF = 1e+8;
+int h, w, n;
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+char **data;
+int **dist;
+int *fX;
+int *fY;
+
+int bfs(int si, int sj, int gi, int gj)
+{
+	int res = 0;
+	int i, j;
+	queue<S> q;
+	S s	= S(si, sj);
+	q.push(s);
+
+	for (i=0; i<h; i++)
+		for (j=0; j<w; j++)
+			dist[i][j] = INF;
+	dist[si][sj] = 0;
+
+	while (!q.empty()) {
+		S t = q.front();
+		q.pop();
+
+
+		if (t.x == gj && t.y == gi) break;
+
+		for (i=0; i<4; i++) {
+			int nx = t.x + dx[i];
+			int ny = t.y + dy[i];
+			if (0<=nx && nx<w && 0<=ny && ny<h && data[ny][nx] != 'X' && dist[ny][nx] == INF) {
+				dist[ny][nx] = dist[t.y][t.x] + 1;
+				q.push(S(ny, nx));
+			}
+		}
+	}
+
+	return dist[gi][gj];	
+}
+
+int main()
+{
+	int i, j;
+	int sI, sJ;	
+	int res;
+
+	scanf("%d%d%d ", &h, &w, &n);
+	data = (char **)calloc(h, sizeof(char *));;
+	for (i=0; i<h; i++)
+		data[i] = (char *)calloc(w, sizeof(char));
+
+	fX = (int *)calloc(n+1, sizeof(int));;
+	fY = (int *)calloc(n+1, sizeof(int));;
+
+	for (i=0; i<h; i++) {
+		for (j=0; j<w; j++)
+			scanf("%c ", &(data[i][j]));
+	}
+
+	for (i=0; i<h; i++) {
+		for (j=0; j<w; j++) {
+			if (data[i][j] == 'S') {
+				fX[0] = j;  	
+				fY[0] = i;  	
+			} else if (0 < data[i][j] - '0' && data[i][j] - '0' <= n) {
+				fX[ (int)(data[i][j] - '0') ] = j;  	
+				fY[ (int)(data[i][j] - '0') ] = i;  	
+			}
+		}
+	}
+
+	dist = (int **)calloc(h, sizeof(int *));;
+	for (i=0; i<h; i++) 
+		dist[i] = (int *)calloc(w, sizeof(int));
+
+	res = 0;
+	for (i=0; i<n; i++) 
+		res += bfs(fY[i], fX[i], fY[i+1], fX[i+1]);
+
+	printf("%d\n", res);
+
+	for (i=0; i<h; i++)
+		free(data[i]);
+	free(data);
+
+	for (i=0; i<h; i++)
+		free(dist[i]);
+	free(dist);
+
+	free(fX);
+	free(fY);
+
+	return 0;
+}

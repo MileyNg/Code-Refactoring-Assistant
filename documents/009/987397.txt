@@ -1,0 +1,74 @@
+#include <iostream>
+
+using namespace std;
+
+struct List{
+	int id, cnt;
+	List *nxt;
+};
+
+void _delete(List *p){
+	if (p == nullptr) return;
+	_delete(p->nxt);
+	delete p;
+}
+
+void erase(List *p, int id){
+	if (p == nullptr) return;
+	if (p->id == id) p->id = -1;
+	erase(p->nxt, id);
+}
+
+int find(List *p, int pos){
+	if (p == nullptr) return -1;
+	if (p->cnt > pos) return p->id;
+	return find(p->nxt, pos - p->cnt);
+}
+
+List* add(List *p, int id, int cnt){
+	if (!cnt) return p;
+	if (p == nullptr)return new List{id, cnt, nullptr};
+	if (p->id < 0){
+		p->id = id;
+		if (p->cnt > cnt){
+			List *nl = new List{ -1, p->cnt - cnt, p->nxt };
+			p->cnt = cnt;
+			p->nxt = nl;
+			return p;
+		}
+		cnt -= p->cnt;
+	}
+	p->nxt = add(p->nxt, id, cnt);
+	return p;
+}
+
+int main(){
+	List *head = new List();
+	int n;
+	while (cin >> n, n){
+		while (n--){
+			char c;
+			cin >> c;
+			if (c == 'W'){
+				int id, cnt;
+				cin >> id >> cnt;
+				head->nxt = add(head->nxt, id, cnt);
+			}
+			else if (c == 'D'){
+				int id;
+				cin >> id;
+				erase(head->nxt, id);
+			}
+			else if (c == 'R'){
+				int pos;
+				cin >> pos;
+				cout << find(head->nxt, pos) << '\n';
+			}
+		}
+		cout << '\n';
+		_delete(head->nxt);
+		head->nxt = nullptr;
+	}
+
+	return 0;
+}

@@ -1,0 +1,52 @@
+### global variables
+
+$dcache = []
+
+### subroutines
+
+def count_dolls(k, dolls)
+  return $dcache[k] if ! $dcache[k].nil?
+
+  dn = dolls.length
+  return ($dcache[k] = 0) if (k >= dn)
+
+  h, w = dolls[k]
+  max_c = 1
+
+  for i in ((k + 1)...dn)
+    hi, wi = dolls[i]
+    if hi > h && wi > w
+      c = count_dolls(i, dolls) + 1
+      max_c = c if max_c < c
+    end
+  end
+
+  $dcache[k] = max_c
+end
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  dolls = n.times.map{gets.strip.split(' ').map{|s| s.to_i}}
+
+  m = gets.strip.to_i
+  dolls += m.times.map{gets.strip.split(' ').map{|s| s.to_i}}
+
+  dolls.sort!{|a, b| cmp = a[0] <=> b[0]; cmp != 0 ? cmp : a[1] <=> b[1]}
+  dn = dolls.length
+
+  $dcache = []
+
+  max_c = 0
+  for i in (0...dolls.length)
+    c = count_dolls(i, dolls)
+    #p "count_dolls(#{i}) = #{c}"
+
+    max_c = c if max_c < c
+  end
+
+  puts max_c
+end

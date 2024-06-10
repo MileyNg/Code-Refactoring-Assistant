@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+typedef pair< int, int > P;
+
+#define MAX_S 12
+
+P MakeNum( const char* );
+
+bool Check[ ( 1 << ( MAX_S * 2 ) ) - 1 ][ MAX_S + 1 ];
+
+int main() {
+	char ch[ MAX_S + 1 ];
+	int n;  scanf( "%d", &n );
+	while( n-- ) {
+		scanf( "%s", ch );
+		if( ch[ 0 ] == 'i' ) {
+			scanf( "%s", ch );
+			P p = MakeNum( ch );
+			Check[ p.first ][ p.second ] = true;
+		} else {
+			scanf( "%s", ch );
+			P p = MakeNum( ch );
+			if( Check[ p.first ][ p.second ] ) printf( "yes\n" );
+			else printf( "no\n" );
+		}
+	}
+	return 0;
+}
+
+P MakeNum( const char* ch ) {
+	int res = 0;
+	int i = 0;
+	for( ; ch[ i ] != '\0'; ++i ) {
+		int num;
+		switch( ch[ i ] ) {
+		case 'A' : num = 0; break;
+		case 'C' : num = 1; break;
+		case 'G' : num = 2; break;
+		case 'T' : num = 3; break;
+		};
+		res |= num << ( i * 2 );
+	}
+	--i;
+	return P( res, i );
+}

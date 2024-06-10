@@ -1,0 +1,54 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+struct pos{
+    int x;
+    int y;
+};
+
+int main(){
+    int w, h;
+    while(cin >> w >> h, w != 0 && h != 0){
+        int field[52][52] = {{0}};
+        for(int i = 1; i <= h; i++){
+            for(int j = 1; j <= w; j++){
+                cin >> field[i][j];
+            }
+        }
+
+        stack<pos> st;
+        int island = 0;
+        int dx[] = {-1,  0, 1, 0, -1,  1, 1, -1};
+        int dy[] = {0 , -1, 0, 1, -1, -1, 1,  1};
+        for(int i = 1; i <= h; i++){
+            for(int j = 1; j <= w; j++){
+                //島を探す
+                if(field[i][j] == 1){
+                    pos p;
+                    p.y = i;
+                    p.x = j;
+                    st.push(p);
+                    field[i][j] = 0;
+                    while(!st.empty()){
+                        pos stTop = st.top();
+                        st.pop();
+                        for(int k = 0; k < 8; k++){
+                            p = stTop;
+                            p.y += dy[k];
+                            p.x += dx[k];
+                            if(field[p.y][p.x] == 1){
+                                st.push(p);
+                                field[p.y][p.x] = 0;
+                            }
+                        }
+                    }
+                    island++;
+                }
+
+            }
+        }
+
+        cout << island << endl;
+    }
+}

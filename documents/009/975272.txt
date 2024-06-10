@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+#include <cstdio>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+typedef pair<pll,pll> plll;
+template <class T>
+void initvv(vector<vector<T> > &v,int a,int b, const T  &t = T()){
+	v.assign(a,vector<T>(b,t));
+}
+
+
+pair<plll,plll> cakecut(plll a,int s){
+	ll b=a.F.F,c=a.F.S,w=a.S.F,d=a.S.S;
+	// cout<<w<<" "<<d<<endl;
+	plll ansa,ansb;
+	while(1){
+		// cout<<s<<" "<<w<<" "<<d<<endl;
+		if(s<=w){
+			ansa.S.F=s;
+			ansa.S.S=d;
+			ansb.S.F=w-s;
+			ansb.S.S=d;
+			ansa.F.S=s*d;
+			ansb.F.S=d*(w-s);
+			break;
+		}
+		else s-=w;
+		if(s<=d){
+			ansa.S.F=w;
+			ansa.S.S=s;
+			ansb.S.F=w;
+			ansb.S.S=d-s;
+			ansa.F.S=w*s;
+			ansb.F.S=w*(d-s);
+			break;
+		}
+		else s-=d;
+	}
+	return mkp(ansa,ansb);
+}
+
+int main(){
+	ll n,w,d;
+	while(cin>>n>>w>>d,n||w||d){
+		vector<plll>  v;
+		v.PB(mkp(mkp(-1,w*d),mkp(w,d)));
+		rep(i,n){
+			ll p,s;
+			cin>>p>>s;
+			p--;
+			// cout<<w<<" "<<d<<endl;
+			pair<plll,plll> t = cakecut(v[p],s);
+			// cout<<"t "<<t.F.F.F<<" "<<t.F.F.S<<" "<<t.F.S.F<<" "<<t.F.S.S<<" - "<<t.S.F.F<<" "<<t.S.F.S<<" "<<t.S.S.F<<" "<<t.S.S.S<<endl;
+			t.F.F.F=i;
+			t.S.F.F=i;
+			v[p]=t.F;
+			v.PB(t.S);
+			sort(ALL(v));
+		}
+		vector<ll> vv;
+		rep(i,v.size()){
+			// if(i) cout<<" ";
+			vv.PB(v[i].F.S);
+		}
+		sort(ALL(vv));
+		rep(i,vv.size()){
+			if(i) cout<<" ";
+			cout<<vv[i];
+		}
+		cout<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,39 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+/*bool ok(int *q,int m,int h,int count){
+  for(int i=0;i<count;i++){
+    if(q[i]>m) continue;
+    for(int j=0;j<count;j++){
+      if(q[i]+q[j]<=m&&q[i]+q[j]>h) return true;
+    }
+  }
+  return false;
+  }*/
+int main(){
+  int n,m;
+  while(cin>>n>>m){
+    if(n==0&&m==0) return 0;
+    int data[n+1];
+    int q[(n+1)*(n+1)/2];
+    int ans = 0;
+    for(int i=0;i<n;i++) cin >> data[i];
+    data[n] = 0;
+    int count = 0;
+    for(int i=0;i<=n;i++){
+      for(int j=i;j<=n;j++){
+	if(data[i]+data[j]>m) continue; 
+	  q[count] = data[i] + data[j];
+	  count++;
+      }
+    }
+    sort(q,q+count);
+    int j = count - 1;
+    for(int i=0;i<count;i++){
+      while(0<=j&&m<q[i]+q[j]) j--;
+      if(j==-1) break;
+	ans = max(ans,q[i]+q[j]);
+    }
+    cout << ans << endl;
+  }
+}

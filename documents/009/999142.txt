@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+
+#define heapmax 500001
+
+int heap[heapmax],heapsize=0;
+
+void heapincreasekey(int [],int,int);
+
+int parent(int i){
+  return i/2;
+}
+
+int left(int i){
+  return 2*i;
+}
+
+int right(int i){
+  return 2*i+1;
+}
+
+void maxheapify(int A[],int i){
+  int largest,leftN,rightN,tmp;
+  leftN=left(i);
+  rightN=right(i);
+  if(leftN<=heapsize && A[leftN]>A[i]){
+    largest=leftN;
+  }
+  else {
+    largest=i;
+  }
+  if(rightN<=heapsize && A[rightN]>A[largest]){
+    largest=rightN;
+  }
+  if(largest!=i){
+    tmp=A[largest];
+    A[largest]=A[i];
+    A[i]=tmp;
+    maxheapify(A,largest);
+  }
+}
+
+void Buildmaxheap(int A[]){
+  int i;
+  for(i=heapsize/2;i>=1;i--){
+    maxheapify(A,i);
+  }
+}
+
+void heapincreasekey(int A[], int i,int key){
+  int tmp;
+  A[i]=key;
+  while(i>1 && A[parent(i)]<A[i]){
+    tmp=A[i];
+    A[i]=A[parent(i)];
+    A[parent(i)]=tmp;
+    i=parent(i);
+  }
+}
+
+void maxheapinsert(int A[], int key){
+  heapsize=heapsize+1;
+  A[heapsize]=INT_MIN;
+  heapincreasekey(A,heapsize,key);
+}
+
+int heapextractmax(int A[]){
+  int max;
+  max=A[1];
+  A[1]=A[heapsize];
+  heapsize=heapsize-1;
+  maxheapify(A,1);
+  return max;
+}
+
+int main(){
+  int i=0,key;
+  char M[2000000];
+  
+  while(1){
+    scanf("%s",M);
+    if(M[0]=='e'&&M[1]=='n'){
+      break;
+    }
+    if(M[0]=='i'){
+      scanf("%d",&key);
+      maxheapinsert(heap,key);
+    }
+    if(M[0]=='e'&& M[1]=='x'){
+      printf("\n%d",heapextractmax(heap));
+    }
+  }
+  printf("\n");
+
+  return 0;
+}

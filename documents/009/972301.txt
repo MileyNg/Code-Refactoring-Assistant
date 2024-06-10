@@ -1,0 +1,88 @@
+/*
+	Writing Segment Tree is Fun !
+*/
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+struct SegTree {
+
+	vector<int> dat;
+	int s;
+
+	void init(int size)
+	{
+		s = 1;
+		while(s < size)
+			s *= 2;
+		dat.resize(s * 2, 0);
+	}
+
+	void add(int pos, int x)
+	{
+		pos += s;
+
+		while(pos > 0) {
+			dat[pos] += x;
+			pos = pos / 2;
+		}
+	}
+
+	int sum(int a, int b, int k, int l, int r)
+	{
+		if(b <= l || a >= r)
+			return 0;
+		if(a <= l && r <= b)
+			return dat[k];
+
+		int mid = (l + r) / 2;
+		int lv = sum(a, b, k * 2 + 0, l, mid);
+		int rv = sum(a, b, k * 2 + 1, mid, r);
+
+		return lv + rv;
+	}
+
+	int sum(int a, int b)
+	{
+		return sum(a, b, 1, 0, s);
+	}
+};
+
+
+int main()
+{
+	while(true) {
+
+		int n;
+		vector<pair<int, int> > x;
+
+		scanf("%d", &n);
+		if(n == 0)
+			break;
+		x.resize(n);
+		for(int i = 0; i < n; ++i) {
+			int v;
+			scanf("%d", &v);
+			x[i] = make_pair(v, i);
+		}
+
+		SegTree st;
+
+		st.init(n);
+		sort(x.begin(), x.end());
+
+		int ans = 0;
+
+		for(int i = 0; i < n; ++i) {
+			int p = x[i].second;
+			ans += p - st.sum(0, p);
+			st.add(p, 1);
+		}
+
+		printf("%d\n", ans);
+	}
+
+	return 0;
+}

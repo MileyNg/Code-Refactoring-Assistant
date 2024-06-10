@@ -1,0 +1,20 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  int res;
+  int cur, n;
+  cin >> n >> cur;
+  res = cur;
+  for(int i = 0; i < n; i++) {
+    int in, out; cin >> in >> out;
+    cur = cur + in - out;
+    if(cur < 0) {
+      cout << 0 << endl;
+      return 0;
+    }
+    res = max(res, cur);
+  }
+  cout << res << endl;
+}

@@ -1,0 +1,50 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+using namespace std;
+typedef pair<int,int> P;
+int ans;
+int w,h;
+string map[50];
+int dx[4] = {1,0,-1,0}, dy[4] = {0,-1,0,1};
+int dfs(P s);
+
+int main(){
+  int i,j;
+  P s;
+  //cout <<x<<y<<endl;
+  while(1){
+    cin >> w >> h;
+    cin.ignore();
+    if(w == 0 && h == 0) break;
+    for(i = 0;i < h;i++) getline(cin,map[i]);
+    while(map[s.second][s.first] != '@'){
+      //cout << map[y][x]<<endl;
+      s.first++;
+      if(s.first > w-1){
+	s.second++;
+	s.first = 0;
+      }
+    }
+    dfs(s);
+    cout << ans<<endl;
+    s.first = s.second = ans = 0;
+  }
+  return 0;
+}
+
+int dfs(P s){
+  int i;
+  P tmp;
+  map[s.second][s.first] = '#';
+  ans++;
+  //cout <<"x = " << s.first << " y = " << s.second << endl;
+  for(i = 0; i<4;i++){
+    if(s.first + dx[i] > -1 && s.first + dx[i] < w && s.second + dy[i] < h && s.second + dy[i] > -1 && map[s.second + dy[i]][s.first + dx[i]] == '.'){
+      tmp.first = s.first + dx[i];
+      tmp.second = s.second + dy[i];
+      dfs(tmp);
+    }
+  }
+    return 0;
+}

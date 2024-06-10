@@ -1,0 +1,65 @@
+def set(x, y, f)
+  f[y] ^= (1 << x)
+end
+
+def isset?(x, y, f)
+  return (f[y] & (1 << x)) != 0
+end
+
+def shoot(x, y, f)
+  set(x, y, f)
+  set(x - 1, y, f) if x > 0
+  set(x + 1, y, f) if x < 9
+  set(x, y - 1, f) if y > 0
+  set(x, y + 1, f) if y < 9
+end
+
+def count(x, y, f)
+  c = 0
+  c += 1 if isset?(x, y, f)
+  c += 1 if x > 0 && isset?(x - 1, y, f)
+  c += 1 if x < 9 && isset?(x + 1, y, f)
+  c += 1 if y > 0 && isset?(x, y - 1, f)
+  c += 1 if y < 9 && isset?(x, y + 1, f)
+  return c
+end
+
+### main
+
+n = gets.strip.to_i
+
+n.times.each do
+  flds = []
+  ans = []
+  10.times.each do
+    hl = gets.strip.gsub(/ /, '').reverse.to_i(2)
+    flds.push hl
+    ans.push 0
+  end
+
+  shoots = []
+
+  while true
+    counts = []
+    for y in (0..9)
+      for x in (0..9)
+        if ! isset?(x, y, ans)
+          c = count(x, y, flds)
+          counts.push [c, x, y] if c > 0
+        end
+      end
+    end
+    break if counts.empty?
+
+    #p counts.sort{|a, b| b[0] <=> a[0]}
+    c, x, y = counts.max{|a, b| a[0] <=> b[0]}
+    #p [c, x, y]
+
+    shoots.push [x, y]
+    shoot(x, y, flds)
+    set(x, y, ans)
+    #flds.each{|bits| puts ("%010b" % bits).reverse}
+  end
+
+  ans.each{|bits| puts ("%010b" % bits).reverse.split("").join(" ")}
+end

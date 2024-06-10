@@ -1,0 +1,142 @@
+#include <cstring>
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <cmath>
+#include <queue>
+#include <string>
+#include <set>
+#include <stack>
+
+using namespace std;
+#define ll long long 
+#define eps 1e-8
+#define inf 0x3f3f3f3f
+#define N 1005
+#define M 1000010
+#define mod 1000000007
+#define MP make_pair
+
+int dx[] = { -1, 0, 1, 0 };
+int dy[] = { 0, 1, 0, -1 };
+int n, m, L;
+char str[M];
+char s[N][N];
+int lft[M], rht[M];
+void init()
+{
+	int i = 0, j = 0;
+	int cnt = 0;
+	for( ; i < L; ++i ){
+		while( j < L && cnt <= 1 ){
+			if( str[j] == 'L' ) ++cnt;
+			else --cnt;
+			++j;
+		}
+		if( cnt >= 1 ) lft[i] = j;
+		else lft[i] = M;
+		if( str[i] == 'L' ) --cnt;
+		else ++cnt;
+	}
+	for( i = cnt = j = 0; i < L; ++i ){
+		while( j < L && cnt <= 1 ){
+			if( str[i] == 'R' ) ++cnt;
+			else --cnt;
+			++j;
+		}
+		if( cnt >= 1 ) rht[i] = j;
+		else rht[i] = M;
+		if( str[i] == 'R' ) --cnt;
+		else ++cnt;
+	}
+	for( i = j = cnt = 0; i < L; ++i ){
+		while( j < L && cnt <= 3 ){
+			if( str[j] == 'L' ) ++cnt;
+			else --cnt;
+			++j;
+		}
+		if( cnt >= 3 ) rht[i] = min( rht[i], j );
+		//else lft[i] = M;
+		if( str[i] == 'L' ) --cnt;
+		else ++cnt;
+	}
+	for( i = cnt = j = 0; i < L; ++i ){
+		while( j < L && cnt <= 1 ){
+			if( str[i] == 'R' ) ++cnt;
+			else --cnt;
+			++j;
+		}
+		if( cnt >= 3 ) lft[i] = min( lft[i], j );
+		//else rht[i] = M;
+		if( str[i] == 'R' ) --cnt;
+		else ++cnt;
+	}
+}
+int dis[N][N][4], vis[N][N][4];
+int in( int x, int y )
+{
+	return x >= 0 && x < n && y >= 0 && y < m;
+}
+int solve( int x, int y, int ex, int ey )
+{
+	queue<int> q;
+	int x1, y1, d, d1;
+	int tmp;
+	q.push( x ), q.push( y ), q.push( 0 );
+	memset( dis, -1, sizeof(dis) );
+	memset( vis, 0, sizeof(vis) );
+	dis[x][y][0] = 0;
+	while( !q.empty() ){
+		x = q.front(), q.pop();
+		y = q.front(), q.pop();
+		d = q.front(), q.pop();
+		vis[x][y][d] = 0;
+		x1 = x + dx[d];
+		y1 = y + dy[d];
+		d1 = d;
+		if( in( x1, y1 ) && s[x1][y1] != '#' ){
+			if( dis[x1][y1][d1] == -1 || dis[x1][y1][d1] > dis[x][y][d] ){
+				dis[x1][y1][d1] = dis[x][y][d];
+				if( x1 == ex && y1 == ey ) return 1; 
+				if( !vis[x1][y1][d1] )
+					vis[x1][y1][d1] = 1, q.push( x1 ), q.push( y1 ), q.push( d1 );
+			}
+		}
+		if( dis[x][y][d] >= L ) continue;
+		x1 = x, y1 = y;
+		tmp = lft[dis[x][y][d]]; d1 = ( d - 1 + 4 ) % 4;
+		if( tmp != M && ( dis[x1][y1][d1] == -1 || dis[x1][y1][d1] > tmp )  ){
+				dis[x1][y1][d1] = tmp;
+				if( x1 == ex && y1 == ey ) return 1; 
+				if( !vis[x1][y1][d1] )
+					vis[x1][y1][d1] = 1, q.push( x1 ), q.push( y1 ), q.push( d1 );
+		}
+		tmp = rht[dis[x][y][d]], d1 = ( d + 1 ) % 4;
+		if( tmp != M && ( dis[x1][y1][d1] == -1 || dis[x1][y1][d1] > tmp )  ){
+				dis[x1][y1][d1] = tmp;
+				if( x1 == ex && y1 == ey ) return 1; 
+				if( !vis[x1][y1][d1] )
+					vis[x1][y1][d1] = 1, q.push( x1 ), q.push( y1 ), q.push( d1 );
+		}
+	}
+	return 0;
+}
+int main()
+{
+	int x, y, ex, ey;
+	while( scanf( "%d%d%d", &n, &m, &L ) == 3 && n+m+L ){
+		scanf( "%s", str );
+		for( int i = 0; i < n; ++i ){
+			scanf( "%s", s[i] );
+			for( int j = 0; j < m; ++j ){
+				if( s[i][j] == 'S' ) x = i, y = j;
+				if( s[i][j] == 'G' ) ex = i, ey = j;
+			}
+		}
+		init();
+		if( solve( x, y, ex, ey ) ) puts( "Yes" );
+		else puts( "No" );
+	}
+}

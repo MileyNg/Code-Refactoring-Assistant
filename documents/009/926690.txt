@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <ctype.h>
+main(){
+
+  char ch;
+  int i,num;
+  int counter[26]=[0];
+
+
+  while (scanf("%c",&ch)!=EOF) {
+    if (islower(ch)) {
+      num = ch-'a';
+    }
+    else if(isupper(ch)){
+      num = ch-'A';
+    }
+    else{
+      continue;
+    }
+    counter[num]++;
+
+  }
+  for (i=0; i<26; i++) {
+    printf("%c : %d\n",i+'a',counter[i]);
+  }
+  printf("\n");
+  return 0;
+
+}

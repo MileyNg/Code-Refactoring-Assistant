@@ -1,0 +1,16 @@
+gets.chomp.to_i.times do
+  first,second,third,point,out = [0]*5
+  while out < 3 do
+    action = gets.chomp
+    if action == 'HIT'
+      point+=1 if third == 1
+      first,second,third = 1,first,second
+    elsif action == 'HOMERUN'
+      point += first + second + third + 1
+      first,second,third = [0]*3
+    else
+      out+=1
+    end
+  end
+  puts point
+end

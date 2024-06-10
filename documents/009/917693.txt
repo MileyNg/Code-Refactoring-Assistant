@@ -1,0 +1,27 @@
+while 1:
+	n=input()
+	if n==0:break
+	hmax=7500
+	block=[map(int,raw_input().split()) for i in range(n)]
+	field=[[0]*5 for i in range(hmax)]
+	top=[0]*5
+	for d,p,q in block:
+		if d==1:
+			h=max(top[q-1:q-1+p])
+			field[h][q-1:q-1+p]=[1]*p
+			top[q-1:q-1+p]=[max(top)+1]*p
+		else:
+			h=top[q-1]
+			for i in range(p):
+				field[h+i][q-1]=1
+			top[q-1]=h+p
+		i=0
+		while 1:
+			if field[i]==[1]*5:
+				del field[i]
+				top=[x-1 for x in top]
+			elif field[i]==[0]*5:
+				break
+			else:
+				i+=1
+	print sum([sum(field[h]) for h in range(max(top))])

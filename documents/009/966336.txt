@@ -1,0 +1,67 @@
+#include<stdio.h>
+
+#define N 100005
+ 
+typedef struct{
+    int par, le, ri;
+} node;
+
+node T[N];
+ 
+void preorder(int);
+void inorder(int);
+void postorder(int);
+
+int main(int argc,char *argv[])
+{
+    int i, n;
+    int id, left, right;
+    scanf("%d", &n);
+ 
+    for(i=0; i < n; i++) {
+        T[i].le=-1;
+        T[i].ri=-1;
+        T[i].par=-1;
+    }
+ 
+    while(scanf("%d %d %d", &id, &left, &right)!=EOF) {
+        T[id].le=left;
+        T[id].ri=right;
+        if(left!=-1) T[left].par=id;
+        if(right!=-1) T[right].par=id;
+    }
+    for(id=0; T[id].par != -1; id++);
+ 
+    printf("Preorder\n");
+    preorder(id);
+    printf("\n");
+    printf("Inorder\n");
+    inorder(id);
+    puts("\n");
+    printf("Postorder\n");
+    postorder(id);
+    printf("\n");
+    return 0;
+}
+
+void preorder(int id) {
+    if(id==-1) return;
+    printf(" %d", id);
+    preorder(T[id].le);
+    preorder(T[id].ri);
+}
+ 
+void inorder(int id) {
+    if(id==-1) return;
+    inorder(T[id].le);
+    printf(" %d", id);
+    inorder(T[id].ri);
+}
+
+void postorder(int id) {
+    if(id==-1) return;
+    postorder(T[id].le);
+    postorder(T[id].ri);
+    printf(" %d", id);
+}
+ 

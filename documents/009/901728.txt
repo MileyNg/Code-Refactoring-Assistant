@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+
+bool issosu(int);
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	int cnt;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		cnt=0;
+		for(int i1=n+1;i1<=2*n;i1++){
+			if(issosu(i1)) cnt++;
+		}
+
+		cout<<cnt<<endl;
+	}
+	return 0;
+}
+
+bool issosu(int n){
+	for(int i1=2;i1<n/2+1;i1++){
+		if(n%i1==0) return false;
+	}
+	return true;
+}

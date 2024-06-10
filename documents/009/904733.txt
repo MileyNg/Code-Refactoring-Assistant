@@ -1,0 +1,27 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+int main() {
+	stack< int > nums;
+	char ch;
+	while( cin >> ch ) {
+		if( '0' <= ch && ch <= '9' ) {
+			nums.push( ch - '0' );
+			continue;
+		}
+		int num1, num2;
+		num2 = nums.top();  nums.pop();
+		num1 = nums.top();  nums.pop();
+		int ans;
+		switch( ch ) {
+		case '+' : ans = num1 + num2; break;
+		case '-' : ans = num1 - num2; break;
+		case '*' : ans = num1 * num2; break;
+		};
+		nums.push( ans );
+	}
+	cout << nums.top() << endl;
+	return 0;
+}

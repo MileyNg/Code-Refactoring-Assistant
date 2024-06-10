@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+
+#define loop(v, f, l) for(int v = (f), v##_ = (l); v < v##_; ++v)
+
+using namespace std;
+
+typedef long long int lint;
+static inline int in(){ int x; scanf("%d", &x); return (x); }
+static inline lint inl(){ lint x; scanf("lld", &x); return (x); }
+
+double sequence(double a)
+{
+	double ans = a;
+	loop(i, 2, 11)
+	{
+		if( i % 2 == 0 )
+		{
+			a *= 2;
+			ans += a;
+		}
+		else
+		{
+			a /= 3;
+			ans += a;
+		}
+	}
+	return ans;
+}
+
+int main()
+{
+	double a;
+
+	while( scanf("%lf", &a) != EOF )
+	{
+		printf("%lf\n", sequence( a ) );
+	}
+
+	return (0);
+}

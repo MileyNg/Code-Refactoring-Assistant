@@ -1,0 +1,47 @@
+#include<iostream>
+
+using namespace std;
+
+
+int main(){
+
+	int n, w,v;
+	int hei, num,anum;
+	double ans;
+	int cnt[101];
+
+	while (1){
+		cin >> n >> w;
+		if (n == 0 && w == 0) break;
+
+		for (int i = 0; i < 101; i++) cnt[i] = 0;
+
+		for (int i = 0; i < n; i++){
+			cin >> v;
+			cnt[v / w]++;
+		}
+
+		num = 0;
+		hei = -1;
+		for (int i = 100; i >= 0; i--){
+			if (cnt[i] != 0||num!=0) num++;
+			if (cnt[i] > hei) hei = cnt[i];
+		}
+
+		ans = 0;
+		num--;
+		anum = num;
+		for (int i = 0; i < 101; i++){
+			if (cnt[i] != 0){
+				//cout << cnt[i] << "," << anum << "," << hei << "," << i <<","<<ans<< endl;
+				ans += ((double)anum / num)*((double)cnt[i] / hei);
+			}
+			anum--;
+		}
+		ans += 0.01;
+
+		cout << ans << endl;
+
+	}
+	return 0;
+}

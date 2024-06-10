@@ -1,0 +1,103 @@
+#include<iostream>
+#include<stack>
+#include<vector>
+
+using namespace std;
+
+#define MAX 8
+
+struct S{
+	int field[MAX][MAX];
+	int cnt;
+};
+
+struct S2{
+	int x, y;
+};
+
+int main(){
+
+	int h, w, c;
+	S panel,tmp;
+	stack<S> sv;
+
+	S2 point,tmp2;
+	stack<S2> n;
+	int color;
+	int dx[] = { 0, 0, 1, -1 };
+	int dy[] = { 1, -1, 0, 0 };
+	int cnt;
+	int max;
+	while (1){
+
+		cin >> h >> w >> c;
+		if (h == 0 && w == 0 && c == 0) break;
+
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++){
+				cin >> panel.field[i][j];
+			}
+		}
+
+		max = -1;
+		panel.cnt = 0;
+
+		sv.push(panel);
+
+		while (!sv.empty()){
+			panel = sv.top();
+			sv.pop();
+
+			if (panel.cnt == 5){
+				if (panel.field[0][0] != c) continue;
+				point.x = 0, point.y = 0;
+				panel.field[0][0] = -1;
+				cnt = 1;
+				n.push(point);
+				while (!n.empty()){
+					point = n.top();
+					n.pop();
+					for (int i = 0; i < 4; i++){
+						if (point.x + dx[i] >= 0 && point.x + dx[i] < w && point.y + dy[i] >= 0 && point.y + dy[i] < h){
+							if (panel.field[point.y + dy[i]][point.x + dx[i]] == c){
+								panel.field[point.y + dy[i]][point.x + dx[i]] = -1;
+								cnt++;
+								tmp2.x = point.x + dx[i], tmp2.y = point.y + dy[i];
+								n.push(tmp2);
+							}
+						}
+					}
+				}
+				if (cnt>max) max = cnt;
+				continue;
+			}
+
+			for (int i = 1; i <= 6; i++){
+				tmp = panel;
+				point.x = 0, point.y = 0;
+				n.push(point);
+				color = tmp.field[0][0];
+				tmp.field[0][0] = i;
+				if (i == color) continue;
+				while (!n.empty()){
+					point = n.top();
+					n.pop();
+					for (int j = 0; j < 4; j++){
+						if (point.x + dx[j] >= 0 && point.x + dx[j] < w && point.y + dy[j] >= 0 && point.y + dy[j] < h){
+							if (tmp.field[point.y + dy[j]][point.x + dx[j]] == color){
+								tmp.field[point.y + dy[j]][point.x + dx[j]] = i;
+								tmp2.x = point.x + dx[j], tmp2.y = point.y + dy[j];
+								n.push(tmp2);
+							}
+						}
+					}
+				}
+				tmp.cnt = panel.cnt + 1;
+				sv.push(tmp);
+			}
+		}
+		cout << max << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<math.h>
+double areas(double x1,double y1,double x2,double y2,double x3,double y3)
+{
+	return 0.5*fabs((x2-x1)*(y3-y1)-(y2-y1)*(x3-x1));
+}
+int main()
+{
+	int i=0;
+	double a[7],area[4];
+	double x1,y1,x2,y2,x3,y3,x,y;
+	while(scanf("%lf",&x1)!=EOF)
+	{
+	 for(i=0;i<7;i++)
+		 scanf("%lf",&a[i]);
+	 area[0] = areas(x1,a[0],a[1],a[2],a[3],a[4]);
+	 area[1] = areas(x1,a[0],a[1],a[2],a[5],a[6]);
+	 area[2] = areas(x1,a[0],a[3],a[4],a[5],a[6]);
+	 area[3] = areas(a[1],a[2],a[3],a[4],a[5],a[6]);
+	 if(fabs(area[0]-area[1]-area[2]-area[3])<0.00001)
+		 printf("YES\n");
+	 else printf("NO\n");
+	}
+	return 0;
+}

@@ -1,0 +1,48 @@
+#include<iostream>
+
+int calc(int a, int b){
+
+	if (b == 0)return a;
+
+	return calc(b, a%b);
+
+}
+
+long long calc3(int a, int b){
+
+	long long c = calc(a, b);
+	
+	return c*a / c*b / c;
+
+}
+
+int calc2(int a, int b){
+
+	int c = 1, d = 0;
+
+	do{
+		c = a*c % b;
+		d++;
+	} while (c != 1);
+
+	return d;
+}
+
+int main(){
+	int a1, m1, a2, m2, a3, m3;
+
+	while (std::cin >> a1 >> m1 >> a2 >> m2 >> a3 >> m3, a1, m1, a2, m2, a3, m3){
+
+		int ca, cb, cc;
+
+		ca = calc2(a1, m1);
+
+		cb = calc2(a2, m2);
+
+		cc = calc2(a3, m3);
+
+		std::cout << calc3(calc3(ca, cb), calc3(ca, cc)) << std::endl;
+	}
+
+	return 0;
+}

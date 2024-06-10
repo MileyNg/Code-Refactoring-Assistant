@@ -1,0 +1,65 @@
+//
+//  main.cpp
+//  Bubble Sort (PC 甲子園 2007)
+//
+//  Created by 大森 亮 on 2014/04/10.
+//  Copyright (c) 2014年 大森 亮. All rights reserved.
+//
+
+
+#include <iostream>
+#include <cassert>
+#include <vector>
+#include <algorithm>
+#define rep(i,n) for(int i = 0;i < n;i++)
+
+using namespace std;
+
+int A[105];
+int W[105];
+
+int count(int left,int right){
+    if(right == left + 1){
+        return 0;
+    }else if(right == left + 2){
+        if(A[left] > A[left+1]){
+            swap(A[left], A[left+1]);
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    int mid = (left+right)/2;
+    int cl=count(left,mid),cr=count(mid,right);
+    int clr = 0;
+    int i = left,j = mid,k=left;
+    while(i < mid && j < right){
+        if(A[i] <= A[j]){
+            W[k++]=A[i++];
+        }else{
+            clr += mid-i;
+            W[k++]=A[j++];
+
+        }
+    }
+    while(i < mid){
+        W[k++]=A[i++];
+
+    }
+    while(j < right){
+        W[k++]=A[j++];
+    }
+    assert(k == right);
+    copy(W+left,W+right,A+left);
+    return cl + cr + clr;
+}
+
+int main(){
+    int N;
+    while(cin >> N&&N!=0){
+        rep(i,N){
+            cin >> A[i];
+        }
+        cout << count(0,N) <<endl;
+    }
+}

@@ -1,0 +1,203 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<queue>
+#include<cstdlib>
+#include<cmath>
+#define INF 0x3f3f3f3f
+#define MAXN 40010
+#define MAXM 110
+#define MOD 1000000007
+#define MAXNODE 4*MAXN
+#define eps 1e-9
+using namespace std;
+int T,x,y,dir,pre,xunhuan,K,H,W,d[MAXM][MAXM][4],lastx,lasty,lastdir;
+char a[MAXM][MAXM];
+long long L;
+struct path{
+    int x,y,dir;
+}p[MAXN];
+int main(){
+    while(scanf("%d%d%lld",&H,&W,&L),H||W||L){
+        K=0;
+        for(int i=0;i<H;i++){
+            scanf("%s",a[i]);
+            for(int j=0;j<W;j++) if(a[i][j]!='.'&&a[i][j]!='#'){
+                lastx=x=i;
+                lasty=y=j;
+                if(a[i][j]=='N') lastdir=dir=1;
+                if(a[i][j]=='E') lastdir=dir=2;
+                if(a[i][j]=='S') lastdir=dir=3;
+                if(a[i][j]=='W') lastdir=dir=4;
+                break;
+            }
+        }
+        if(!L){
+            printf("%d %d ",x+1,y+1);
+            if(dir==1) printf("N\n");
+            if(dir==2) printf("E\n");
+            if(dir==3) printf("S\n");
+            if(dir==4) printf("W\n");
+            continue;
+        }
+        while(1){
+            if(dir==1){
+                if(x-1>=0&&a[x-1][y]!='#') break;
+                else dir=2;
+            }
+            else if(dir==2){
+                if(y+1<W&&a[x][y+1]!='#') break;
+                else dir=3;
+            }
+            else if(dir==3){
+                if(x+1<H&&a[x+1][y]!='#') break;
+                else dir=4;
+            }
+            else if(dir==4){
+                if(y-1>=0&&a[x][y-1]!='#') break;
+                else dir=1;
+            }
+        }
+        memset(d,-1,sizeof(d));
+        d[x][y][dir]=0;
+        p[K].x=x;
+        p[K].y=y;
+        p[K++].dir=dir;
+        int flag=0;//printf("%d %d %d %d lastx=%d lasty=%d\n",x,y,dir,d[x][y][dir],lastx,lasty);
+        while(1){//printf("%d %d %d %d lastx=%d lasty=%d\n",x,y,dir,d[x][y][dir],lastx,lasty);
+            if(d[x][y][dir]==L){//cout<<"aa"<<endl;
+                flag=1;
+                printf("%d %d ",x+1,y+1);
+                if(dir==1) printf("N\n");
+                if(dir==2) printf("E\n");
+                if(dir==3) printf("S\n");
+                if(dir==4) printf("W\n");
+                break;
+            }
+            if(dir==1){
+                if(x-1>=0&&a[x-1][y]!='#'){
+                    if(d[x-1][y][dir]==-1){
+                        d[x-1][y][dir]=d[x][y][dir]+1;
+                        lastx=x;
+                        lasty=y;
+                        lastdir=dir;
+                        x--;
+                        p[K].x=x;
+                        p[K].y=y;
+                        p[K++].dir=dir;
+                    }
+                    else{
+                        pre=d[x-1][y][dir];
+                        xunhuan=d[x][y][dir]-d[x-1][y][dir]+1;
+                        break;
+                    }
+                }
+                else{
+                    if(d[x][y][2]!=-1){//cout<<"aaa"<<endl;
+                        pre=d[x][y][2];//printf("%d %d %d",lastx,lasty,lastdir);
+                        xunhuan=d[lastx][lasty][lastdir]-d[x][y][2]+1;//printf("%d %d %d %d\n",x,y,pre,xunhuan);
+                        break;
+                    }
+                    dir=2;
+                    d[x][y][2]=d[x][y][1];
+                }
+            }
+            else if(dir==2){
+                if(y+1<W&&a[x][y+1]!='#'){
+                    if(d[x][y+1][dir]==-1){
+                        d[x][y+1][dir]=d[x][y][dir]+1;//printf("aaa%d %d %d %d\n",x,y+1,dir,d[x][y+1][dir]);
+                        lastx=x;
+                        lasty=y;
+                        lastdir=dir;
+                        y++;
+                        p[K].x=x;
+                        p[K].y=y;
+                        p[K++].dir=dir;
+                    }
+                    else{
+                        pre=d[x][y+1][dir];
+                        xunhuan=d[x][y][dir]-d[x][y+1][dir]+1;
+                        break;
+                    }
+                }
+                else{
+                    if(d[x][y][3]!=-1){
+                        pre=d[x][y][3];
+                        xunhuan=d[lastx][lasty][lastdir]-d[x][y][3]+1;
+                        break;
+                    }
+                    dir=3;
+                    d[x][y][3]=d[x][y][2];
+                }
+            }
+            else if(dir==3){
+                if(x+1<H&&a[x+1][y]!='#'){
+                    if(d[x+1][y][dir]==-1){//cout<<"aaa"<<endl;
+                        d[x+1][y][dir]=d[x][y][dir]+1;
+                        lastx=x;
+                        lasty=y;
+                        lastdir=dir;
+                        x++;
+                        p[K].x=x;
+                        p[K].y=y;
+                        p[K++].dir=dir;
+                    }
+                    else{
+                        pre=d[x+1][y][dir];
+                        xunhuan=d[x][y][dir]-d[x+1][y][dir]+1;
+                        break;
+                    }
+                }
+                else{
+                    if(d[x][y][4]!=-1){
+                        pre=d[x][y][4];
+                        xunhuan=d[lastx][lasty][lastdir]-d[x][y][4]+1;
+                        break;
+                    }
+                    dir=4;
+                    d[x][y][4]=d[x][y][3];
+                }
+            }
+            else if(dir==4){
+                if(y-1>=0&&a[x][y-1]!='#'){
+                    if(d[x][y-1][dir]==-1){
+                        d[x][y-1][dir]=d[x][y][dir]+1;
+                        lastx=x;
+                        lasty=y;
+                        lastdir=dir;
+                        y--;
+                        p[K].x=x;
+                        p[K].y=y;
+                        p[K++].dir=dir;
+                    }
+                    else{
+                        pre=d[x][y-1][dir];
+                        xunhuan=d[x][y][dir]-d[x][y-1][dir]+1;
+                        break;
+                    }
+                }
+                else{
+                    if(d[x][y][1]!=-1){
+                        pre=d[x][y][1];
+                        xunhuan=d[lastx][lasty][lastdir]-d[x][y][1]+1;
+                        break;
+                    }
+                    dir=1;
+                    d[x][y][1]=d[x][y][4];
+                }
+            }
+        }
+        //for(int i=0;i<10;i++) printf("i=%d %d %d %d\n",i,p[i].x,p[i].y,p[i].dir);
+        if(!flag){//printf("%d %d\n",pre,xunhuan);
+            L=(L-pre)%xunhuan;//cout<<"aaa"<<pre<<" "<<xunhuan<<" "<<L<<endl;
+            int n=pre+L;//cout<<n<<endl;
+            printf("%d %d ",p[n].x+1,p[n].y+1);//cout<<p[n].dir<<endl;
+            if(p[n].dir==1) printf("N\n");
+            if(p[n].dir==2) printf("E\n");
+            if(p[n].dir==3) printf("S\n");
+            if(p[n].dir==4) printf("W\n");
+        }
+    }
+    return 0;
+}

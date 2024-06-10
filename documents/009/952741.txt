@@ -1,0 +1,97 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class direction{
+public:
+	int x, y, turn;
+	direction(int newx, int newy){
+		x = newx;
+		y = newy;
+	}
+};
+
+int main()
+{
+	int w, h, wall[31][31][4], gone[31][31], turn[31][31], x, y, t, input, before;
+	char str[31];
+	while (cin >> w >> h, (w || h)){
+		//初期化
+		for (int i = 0; i < 31; i++){
+			for (int j = 0; j < 31; j++){
+				for (int k = 0; k < 4; k++){
+					wall[i][j][k] = -1;
+				}
+				gone[i][j] = 0;
+				turn[i][j] = -1;
+			}
+		}
+		//外枠
+		for (int i = 0; i < w; i++){
+			wall[i][0][0] = 1; //上辺
+			wall[i][h - 1][2] = 1; //下辺
+		}
+		for (int i = 0; i < h; i++){
+			wall[0][i][1] = 1; //左辺
+			wall[w - 1][i][3] = 1; //右辺
+		}
+
+		//入力による壁の設定
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w - 1; j++){
+				cin >> input;
+				wall[j][i][3] = input; //右に行けるか
+				wall[j + 1][i][1] = input; //左に行けるか
+			}
+			if (i < h - 1){
+				for (int j = 0; j < w; j++){
+					cin >> input;
+					wall[j][i][2] = input; //下に行けるか
+					if (i < h - 1)
+						wall[j][i + 1][0] = input; //上に行けるか
+				}
+			}
+		}
+
+		queue<direction> q;
+		direction d = direction(0, 0);
+		turn[0][0] = 1;
+		gone[0][0] = 1;
+		q.push(d);
+		while (gone[w - 1][h - 1] != 1 && q.size()>0){
+			x = q.front().x;
+			y = q.front().y;
+			t = turn[x][y];
+			if (wall[x][y][0] == 0 && gone[x][y - 1] == 0){
+				direction d = direction(x, y - 1);
+				q.push(d);
+				gone[x][y - 1] = 1;
+				turn[x][y - 1] = t + 1;
+			}
+			if (wall[x][y][1] == 0 && gone[x - 1][y] == 0){
+				direction d = direction(x - 1, y);
+				q.push(d);
+				gone[x - 1][y] = 1;
+				turn[x - 1][y] = t + 1;
+			}
+			if (wall[x][y][2] == 0 && gone[x][y + 1] == 0){
+				direction d = direction(x, y + 1);
+				q.push(d);
+				gone[x][y + 1] = 1;
+				turn[x][y + 1] = t + 1;
+			}
+			if (wall[x][y][3] == 0 && gone[x + 1][y] == 0){
+				direction d = direction(x + 1, y);
+				q.push(d);
+				gone[x + 1][y] = 1;
+				turn[x + 1][y] = t + 1;
+			}
+			q.pop();
+		}
+		if (turn[w - 1][h - 1] == -1)
+			cout << 0 << endl;
+		else
+			cout << turn[w - 1][h - 1] << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,34 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+
+void main() {
+  string[] q;
+
+  foreach (string line; stdin.lines) {
+    if (line == "quit\n") break;
+
+    string op, clr;
+    auto s = line.chomp.split;
+    if (s.length == 1) {
+      op = s[0];
+    } else {
+      op = s[0];
+      clr = s[1];
+    }
+
+    switch (op) {
+    case "push":
+      q ~= clr;
+      break;
+    case "pop":
+      q.back.writeln;
+      q.popBack;
+    default:
+    }
+  }
+}

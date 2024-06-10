@@ -1,0 +1,33 @@
+#define _USE_MATH_DEFINES
+ 
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+
+int main(){
+	int n;
+	cin >> n;
+
+	for(int i=0;i<n;i++){
+		double xa, ya, ra, xb, yb, rb;
+		cin >> xa >> ya >> ra >> xb >> yb >> rb;
+
+		double d = (xa-xb)*(xa-xb)+(ya-yb)*(ya-yb);
+		if(d>ra*ra+rb*rb){
+			cout << 0 << endl;
+		}else if(d+rb*rb<ra*ra){
+			cout << 2 << endl;
+		}else if(d+ra*ra<rb*rb){
+			cout << -2 << endl;
+		}else{
+			cout << 1 << endl;
+		}
+	}
+
+	return 0;
+}

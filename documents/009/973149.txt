@@ -1,0 +1,70 @@
+
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <array>
+#include <set>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+bool g_schedule[50][31];
+set<int> g_map[50][31]; // DP
+
+int g_n;
+
+int solution() {
+	for (int i = 1; i <= 30; ++i) {
+		vector<int> ables; // i日目に予定が空いている人達
+		for (int j = 0; j < g_n; ++j) {
+			if (g_schedule[j][i]) ables.push_back(j);
+			else g_map[j][i] = g_map[j][i - 1];
+		}
+
+		set<int> gathers; // i日目に集めることができる地図の断片
+		for (auto able = ables.begin(); able != ables.end(); ++able) {
+			for (auto it = g_map[*able][i - 1].begin(); it != g_map[*able][i - 1].end(); ++it) {
+				gathers.insert(*it);
+			}
+		}
+		for (auto it = ables.begin(); it != ables.end(); ++it) {
+			g_map[*it][i] = gathers;
+		}
+
+		// 終了条件
+		for (int j = 0; j < g_n; ++j) {
+			if (g_map[j][i].size() == g_n) return i;
+		}
+	}
+
+	return -1;
+}
+
+int main() {
+	while (true) {
+		cin >> g_n;
+		if (g_n == 0) break;
+
+		// 初期化
+		for (int i = 0; i < g_n; ++i) {
+			g_map[i][0].clear();
+			g_map[i][0].insert(i);
+		}
+		memset(g_schedule, false, sizeof(g_schedule));
+
+		// 入力
+		for (int i = 0; i < g_n; ++i) {
+			int f;
+			cin >> f;
+			for (int j = 0; j < f; ++j) {
+				int day;
+				cin >> day;
+				g_schedule[i][day] = true;
+			}
+		}
+
+		cout << solution() << endl;
+	}
+
+}

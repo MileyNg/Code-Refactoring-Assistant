@@ -1,0 +1,20 @@
+#include <iostream>
+
+inline int calcGcd(int x,int y){
+	while(x % y != 0){
+		int num = x % y;
+		x = y;
+		y = num;
+	}
+	return y;
+}
+
+inline int calcLcm(int x,int y){
+	return x / calcGcd(x,y) * y;
+}
+
+int main(){
+	int a,b;
+	while(std::cin >> a >> b)
+		std::cout<< calcGcd(a,b)<<" "<<calcLcm(a,b)<<std::endl;
+}

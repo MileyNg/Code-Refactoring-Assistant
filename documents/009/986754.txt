@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+#define swap(a, b) {char tmp = a; a = b; b = tmp;}
+
+int main(void)
+{
+	char x, y;
+	char ball[3] = {1};
+	int i;
+	
+	while (scanf("%c%*c%c",&x,&y) != EOF){
+		swap(ball[x - 'A'], ball[y - 'A']);
+	}
+	for (i = 0; i < 3; i++){
+		if (ball[i] == 1){
+			printf("%c\n", 'A' + i);
+		}
+	}
+	
+	return 0;
+}

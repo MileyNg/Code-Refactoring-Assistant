@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<int, int> field[128][128];
+int v[128][128];
+
+int dfs(int x, int y, int now){
+    while(v[y][x] == 0){
+        v[y][x] = now;
+        int nx = field[y][x].first; int ny = field[y][x].second;
+        x = nx; y = ny;
+    }
+    if(v[y][x] == now) return 1;
+    return 0;
+}
+
+int main(){
+    int n;
+    while(cin >> n, n){
+        memset(v, 0, sizeof(v));
+        for(int i=0; i < n; i++){
+            for(int j=0; j < n; j++){
+                int x, y;
+                cin >> x >> y;
+                field[i][j].first = x; field[i][j].second = y;
+            }
+        }
+
+        int ans = 0, now = 1;
+        for(int i=0; i < n; i++){
+            for(int j=0; j < n; j++){
+                if(v[i][j] == 0){
+                    ans += dfs(j, i, now);
+                    now++;
+                }
+            }
+        }
+        cout << ans << endl;
+    }
+}

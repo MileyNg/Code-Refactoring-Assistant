@@ -1,0 +1,39 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+int main()
+{
+	int MAX = 1000000;
+	int[] prime;
+	prime.length = MAX;
+
+	prime[0] = prime[1] = 0;
+	foreach(int i;2..MAX)
+	{
+		prime[i] = 1;
+	}
+	foreach(int i;2..1001)
+	{
+		if(prime[i])
+		{
+			for(int j=2*i;j<MAX;j += i)
+			{
+				prime[j] = 0;
+			}
+		}
+	}
+	string s;
+	while((s = readln()).length != 0)
+	{
+		int number = to!(int)(chomp(s));
+		int count = 0;
+		foreach(int i;2..number+1)
+		{
+			count += prime[i];
+		}
+		writeln(count);
+	}
+
+	return 0;
+}

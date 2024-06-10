@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+using namespace std;
+#define N 100
+
+int main(){
+        int i=0, key[N], count=0;
+        string keymoji;
+
+        cin >> i;
+        while(i != 0){
+                for(int j=0; j<i; j++){
+                        cin >> keymoji;
+                        key[j] = (keymoji[0]-'0')*10+keymoji[1]-'0';
+                }
+                //for(int j=0; j<i; j++){
+                //      key[j] = keymoji[j*2]-'0';
+                //}
+                string eki;
+                cin >> eki;
+                for(int j=0; j<eki.size(); j++){
+                        if(eki[j] <= 'Z'){
+                                eki[j] -= key[j%i];
+                                if(eki[j] < 'A'){
+                                        eki[j] = 'z'+1-('A'-eki[j]);
+                                        if(eki[j] < 'a'){
+                                                eki[j] = 'Z'+1-('a'-eki[j]);
+                                        }
+                                }
+                        }else{
+                                if(eki[j]-key[j%i] < 'a'){
+                                        eki[j] -= key[j%i]+('a'-'Z'-1);
+                                        if(eki[j] < 'A'){
+                                                eki[j] += 'z'-'A'+1;
+                                        }
+                                }else{
+                                        eki[j] -= key[j%i];
+                                }
+                        }
+                }
+                cout << eki << endl;
+                cin >> i;
+        }
+
+
+}

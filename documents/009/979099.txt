@@ -1,0 +1,94 @@
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <climits>
+#include <ctime>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <list>
+#include <vector>
+#include <set>
+#include <map>
+#include <iostream>
+#include <deque>
+#include <complex>
+#include <string>
+#include <iomanip>
+#include <sstream>
+#include <bitset>
+#include <valarray>
+#include <iterator>
+using namespace std;
+typedef long long int ll;
+typedef unsigned int uint;
+typedef unsigned char uchar;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();i++)
+#define RREP(i,x) for(int i=(x);i>=0;i--)
+#define RFOR(i,c) for(__typeof((c).rbegin())i=(c).rbegin();i!=(c).rend();i++)
+#define ALL(container) container.begin(), container.end()
+#define SZ(container) ((int)container.size())
+
+template<class T> bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T> bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
+template<class T> ostream& operator<<(ostream &os, const vector<T> &t) {
+os<<"["; FOR(it,t) {if(it!=t.begin()) os<<","; os<<*it;} os<<"]"; return os;
+}
+template<class T> ostream& operator<<(ostream &os, const set<T> &t) {
+os<<"{"; FOR(it,t) {if(it!=t.begin()) os<<","; os<<*it;} os<<"}"; return os;
+}
+template<class S, class T> ostream& operator<<(ostream &os, const pair<S,T> &t) { return os<<"("<<t.first<<","<<t.second<<")";}
+
+const int INF = 1<<28;
+const double EPS = 1e-8;
+const int MOD = 1000000007;
+
+
+typedef vector<ll> Array;
+typedef vector<Array> Matrix;
+Matrix mul(const Matrix &a,const Matrix &b,const ll MOD){
+	Matrix res(a.size(),Array(b[0].size()));
+	REP(i,a.size()){
+		REP(j,b[0].size()){
+			REP(k,a[0].size()){
+				res[i][j]=(res[i][j]+a[i][k]*b[k][j])%MOD;
+			}
+		}
+	}
+	return res;
+}
+Matrix pow(const Matrix &a,ll b, const ll MOD){
+	if(b==0){
+		Matrix res(a.size(),Array(a.size()));
+		REP(i,a.size())res[i][i]=1;
+		return res;
+	}
+	Matrix res=pow(mul(a,a,MOD),b/2,MOD);
+	if(b&1)res=mul(res,a,MOD);
+	return res;
+}
+int n,M,a,b,c,t;
+
+
+main(){
+	int i,j;
+	while(scanf("%d%d%d%d%d%d", &n, &M, &a, &b, &c, &t), n){
+		Matrix m(n, Array(n));
+		Matrix arr(n, Array(1));
+		REP(i, n){
+			scanf("%d", &arr[i][0]);
+			if(i) m[i][i-1] = a;
+			m[i][i] = b;
+			if(i+1<n) m[i][i+1] = c;
+		}
+		arr = mul(pow(m, t, M), arr, M);
+		REP(i, n) printf("%d%s", arr[i][0], i==n-1?"\n":" ");
+	}
+	return 0;
+}

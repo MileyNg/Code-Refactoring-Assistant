@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+
+  double xa, ya, xb, yb, xc, yc, xd, yd;
+
+  while( cin >> xa >> ya >> xb >> yb >> xc >> yc >> xd >> yd ) {
+
+    if ( xa == xb ) {
+      if ( yc == yd ) {
+	cout << "YES" << endl;
+      }else {
+	cout << "NO" << endl;
+      }
+    }else if ( xc == xd ) {
+      if ( ya == yb ) {
+	cout << "YES" << endl;
+      }else {
+	cout << "NO" << endl;
+      }
+    }else {
+      if ( abs( ( yb - ya ) / ( xb - xa ) * ( yd - yc ) / ( xd - xc ) + 1 ) < 0.000000001 ) {
+	cout << "YES" << endl;
+      }else {
+	cout << "NO" << endl;
+      }
+    }
+  }
+
+  return 0;
+
+}

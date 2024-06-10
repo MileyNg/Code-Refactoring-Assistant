@@ -1,0 +1,34 @@
+#include <cstdlib>
+#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+
+template<class T> inline void chmax(T& a, const T& b) { if(b > a) a = b; }
+template<class T> inline void chmin(T& a, const T& b) { if(b < a) a = b; }
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int n;
+	cin >> n;
+
+	vector<int> a(n);
+	for(auto &e : a) cin >> e;
+
+	stack<int> sta;
+	int ans = 0;
+	for(const auto &e : a) {
+		while(!sta.empty() && sta.top() > e) sta.pop();
+
+		if(sta.empty() || sta.top() < e) {
+			++ans;
+			sta.push(e);
+		}
+	}
+
+	cout << ans << endl;
+
+	return EXIT_SUCCESS;
+}

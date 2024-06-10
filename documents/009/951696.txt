@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<stdbool.h>
+ 
+int main(void)
+{
+    bool ly[3000];
+    bool flag;
+    bool put;
+    int i;
+    int a, b;
+ 
+    memset(ly, false, sizeof(ly));
+ 
+    for (i = 1; i < 3001; ++i){
+        if ((i % 4) == 0){
+            if ((i % 100) == 0){
+                if ((i % 400) == 0){
+                    ly[i] = true;
+                }
+            }else {
+                ly[i] = true;
+            }
+        }
+    }
+     
+    put = false;
+ 
+    while (1){
+        scanf("%d %d", &a, &b);
+ 
+        if (a == 0 && b == 0){
+            break;
+        }
+ 
+        flag = false;
+ 
+        if (put == true){
+            printf("\n");
+        }
+ 
+        for (i = a; i <= b; ++i){
+            if (ly[i] == true){
+                printf("%d\n", i);
+                flag = true;
+            }
+        }
+ 
+        if (flag == false){
+            printf("NA\n");
+        }
+         
+        put = true;
+         
+    }
+ 
+    return 0;  
+ 
+}

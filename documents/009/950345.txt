@@ -1,0 +1,75 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+
+/** Problem0092 : Square Searching
+ !! TLE !! **/
+int d[1010][1010];
+char c[1010][1010];
+int n;
+
+bool check(int i)
+{
+	REP(y, 1, n+1) {
+		REP(x, 1, n+1) {
+			if (x-i>=0 && y-i>=0 && i*i == d[x][y] - d[x-i][y] - d[x][y-i] + d[x-i][y-i])
+				return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	while (cin >> n, n) {
+		rep(i, n) {
+			rep(j, n) {
+				char cc; cin >> cc;
+				c[j][i] = cc;
+			}
+		}
+		
+		rep(i, 1010) {
+			d[i][0]=0;
+			d[0][i]=0;
+		}
+		
+		REP(i, 1, n+1) {
+			REP(j, 1, n+1) {
+				if (c[j-1][i-1]=='.') {
+					d[j][i]=1+d[j-1][i]+d[j][i-1]-d[j-1][i-1];
+				} else {
+					d[j][i]=d[j-1][i]+d[j][i-1]-d[j-1][i-1];
+				}
+			}
+		}
+		int lb = 0, ub=n;
+		
+		rep(i, 100) {
+			int mid = (lb+ub)/2;
+			if (!check(mid)) {
+				ub=mid;
+			} else {
+				lb=mid;
+			}
+		}
+		cout << lb << endl;
+	}
+	return 0;
+}

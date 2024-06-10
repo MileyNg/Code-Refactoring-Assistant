@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+void output(vector<int> out)
+{
+  for(int i=0;i<out.size();i++)
+    {
+      cout<<out[i];
+      if(i!=out.size()-1)
+	cout<<" ";
+    }
+  cout<<endl;
+}
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      vector<int> data;
+      data.push_back(n);
+      output(data);
+      if(n!=1)
+	{
+	  do{
+	    int i=data.size()-1;
+	    while(data[i]<=1)
+	      i--;
+	    data[i]--;
+	    i++;
+	    while(true)
+	      {
+		if(i>=data.size())
+		  {
+		    data.push_back(1);
+		    break;
+		  }
+		  if(data[i]+1<=data[i-1])
+		  {
+		    data[i]++;
+		    break;
+		  }
+		i++;
+	      }
+	    output(data);
+	  }while(data[0]>1);
+	}
+    }
+}

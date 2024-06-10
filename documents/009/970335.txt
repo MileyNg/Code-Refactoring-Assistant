@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+using namespace std;
+
+int in[128], out[128];
+
+struct UnionFind {
+  vector<int> data;
+  UnionFind(int v) : data(v, -1) { }
+  int root(int x) {
+    // < ? = の順に優先順位が高い
+    return data[x] < 0 ? x : (data[x] = root(data[x]));
+  }
+  bool same(int x, int y) {
+    return root(x) == root(y);
+  }
+  void merge(int x, int y) {
+    x = root(x), y = root(y);
+    if(x != y) {
+      if(size(y) > size(x)) swap(x, y); // 例のテク
+      data[x] += data[y]; data[y] = x;
+    }
+  }
+  int size(int x) {
+    return -data[root(x)];
+  }
+  int count_union() {
+    int res = 0;
+    for(int i = 0; i < (int)data.size(); i++) res += (data[i] < 0);
+    return res;
+  }
+};
+
+int main() {
+  while(true) {
+    int N; cin >> N;
+    if(N == 0) break;
+    fill(in, in + 128, 0);
+    fill(out, out + 128, 0);
+    UnionFind uf(128);
+    char fst;
+    for(int i = 0; i < N; ++i) {
+      string s; cin >> s;
+      in[s[0]]++; out[s[s.size()-1]]++;
+      uf.merge(s[0], s[s.size()-1]);
+      if(i == 0) fst = s[0];
+    }
+    bool ok = true;
+    for(int i = 0; i < 128; ++i) {
+      if(in[i] != out[i]) ok = false;
+      if(in[i] > 0 && uf.same(fst, i) == false) ok = false;
+    }
+    cout << (ok ? "OK" : "NG") << endl;
+  }
+}

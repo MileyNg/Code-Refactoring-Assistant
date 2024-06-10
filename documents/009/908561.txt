@@ -1,0 +1,275 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+#define fs first
+#define sc second
+#define pb push_back
+#define sz size()
+#define all(a) (a).begin(),(a).end()
+
+using namespace std;
+typedef double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+typedef vector<P> Poly;
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+typedef pair<D,int> pdi;
+
+const D EPS = 1e-8;
+const D PI = acos(-1);
+
+namespace std{
+  bool operator<(const P &a,const P &b){
+    return EQ(real(a),real(b))?imag(a)<imag(b):real(a)<real(b);
+  }
+  bool operator==(const P &a, const P &b){return EQ(a,b);}
+};
+
+inline D dot(P x,P y){return real(conj(x)*y);}
+inline D cross(P x,P y){return imag(conj(x)*y);}
+
+inline int ccw(P a,P b,P c){
+  b -= a;c -= a;
+  if (cross(b,c)>EPS) return 1;   //counter clockwise
+  if (cross(b,c)<-EPS) return -1; //clockwise
+  if (dot(b, c)<-EPS) return 2;   //c--a--b on line
+  if (abs(b)+EPS<abs(c)) return -2;   //a--b--c on line
+  return 0;                       //on segment
+}
+
+inline P line_cp(L a,L b){
+  return a.fs+(a.sc-a.fs)*cross(b.sc-b.fs,b.fs-a.fs)/cross(b.sc-b.fs,a.sc-a.fs);
+}
+inline bool is_cp(L a,L b){
+  if(ccw(a.fs,a.sc,b.fs)*ccw(a.fs,a.sc,b.sc)<=0)
+    if(ccw(b.fs,b.sc,a.fs)*ccw(b.fs,b.sc,a.sc)<=0)return true;
+  return false;
+}
+
+inline  bool para(L a,L b){return abs(cross(a.fs-a.sc,b.fs-b.sc))<EPS;}
+
+inline bool in_poly(Poly p,P x){
+  if(p.empty())return false;
+
+  int n = p.size();
+  D xMax = x.real();
+  rep(i,n){
+    if(xMax < p[i].real())xMax = p[i].real();
+    if(EQ(x,p[i]))return false;
+  }
+  L h = L( x,P(xMax + 1.0, x.imag()) );
+
+  int c = 0;
+  rep(i,n){
+    L l = L(p[i],p[(i+1)%n]);
+    if(!para(h,l) && is_cp(h,l)){
+      P cp = line_cp(h,l);
+      if(cp.real() < x.real() + EPS)continue;
+      if(!EQ(cp, (l.fs.imag() < l.sc.imag())?l.sc:l.fs))c++;
+    }
+  }
+
+  return (c&1)?true:false;
+}
+
+//b divides a into segments
+inline vector<L> seg_cut(L a, L b){
+  vector<L> res;
+  
+  if(!is_cp(a,b))res.pb(a);
+  else{
+    if(para(a,b)){
+      int cpf = ccw(a.fs,a.sc,b.fs), cps = ccw(a.fs,a.sc,b.sc);
+      if(!cpf && !cps){
+	if(ccw(a.fs,b.fs,b.sc)==0){
+	  res.pb(L(a.fs,b.sc)); res.pb(L(b.sc,b.fs)); res.pb(L(b.fs,a.sc));
+	}else{
+	  res.pb(L(a.fs,b.fs)); res.pb(L(b.fs,b.sc)); res.pb(L(b.sc,a.sc));
+	}
+      }else if(!cpf){
+	res.pb(L(a.fs,b.fs)); res.pb(L(a.sc,b.fs));
+      }else if(!cps){
+	res.pb(L(a.fs,b.sc)); res.pb(L(a.sc,b.sc));
+      }else res.pb(a);
+    }else{
+      P cp = line_cp(a,b);
+      if(!EQ(a.fs,cp) && !EQ(a.sc,cp)){
+	res.pb(L(a.fs,cp)); res.pb(L(a.sc,cp));
+      }else{
+	res.pb(a);
+      }
+    }
+  }
+  return res;
+}
+
+inline vector<L> seg_set_cut(vector<L> l){
+  vector< vector<L> > vl(l.sz);
+  rep(i,l.sz)vl[i].pb(l[i]);
+  
+  rep(i,l.sz)for(int j=i+1;j<(int)l.sz;j++){
+    rep(ii,vl[i].sz)rep(jj,vl[j].sz){
+      if(is_cp(vl[i][ii],vl[j][jj])){
+	vector<L> a = seg_cut(vl[i][ii],vl[j][jj]);
+	vector<L> b = seg_cut(vl[j][jj],vl[i][ii]);
+
+	while(a.sz>1){vl[i].pb(a.back()); a.pop_back();}
+	vl[i][ii] = a[0];
+	while(b.sz>1){vl[j].pb(b.back()); b.pop_back();}
+	vl[j][jj] = b[0];
+	goto END;
+      }
+    }
+    END:;
+  }
+
+  vector<L> res;
+  rep(i,l.sz)rep(j,vl[i].size()){
+    if(vl[i][j].sc<vl[i][j].fs)swap(vl[i][j].fs,vl[i][j].sc);
+    res.pb(vl[i][j]);
+  }
+  sort(all(res));
+  res.erase(unique(all(res)),res.end());
+  return res;
+}
+
+inline void seg_arrange(vector<L> input_segs, vector<P> &vp,
+			vector<pii> &ve, vector< vector<pii> > &graph){
+  vector<L> vl = seg_set_cut(input_segs);
+
+  vp.clear();
+  rep(i,vl.sz){
+    vp.pb(vl[i].fs);
+    vp.pb(vl[i].sc);
+  }
+  sort(all(vp));
+  vp.erase(unique(all(vp)),vp.end());
+
+  ve.resize(vl.sz);
+  vector< vector<pdi> > edges(vp.sz);
+
+  rep(i,vl.sz){
+    int s = find(all(vp),vl[i].fs)-vp.begin();
+    int t = find(all(vp),vl[i].sc)-vp.begin();
+    ve[i] = pii(s,t);
+    edges[s].push_back(pdi(arg(vp[t]-vp[s]),i));
+    edges[t].push_back(pdi(arg(vp[s]-vp[t]),i));
+  }
+
+  graph.resize(vp.sz);
+  rep(i,vp.sz){
+    sort(all(edges[i]));
+    graph[i].clear();
+    rep(j,edges[i].sz){
+      int id = edges[i][j].sc;
+      int v = (ve[id].fs == i)?ve[id].sc:ve[id].fs;
+      graph[i].pb(pii(v,id));
+    }
+  }
+}
+
+vector<int> id;
+vector<vi> g;
+
+inline vector<Poly> extract_poly(vector<L> set_l){
+  vector<P> p;
+  vector<pii> l;
+  vector< vector<pii> > e;
+  seg_arrange(set_l,p,l,e);
+
+  g = vector<vi>(l.sz,vi(2,-1));
+  vector<Poly> PolySet;
+  id.clear();
+
+  rep(i,l.sz)rep(j,2){
+    int cur = i, dir = j;
+    if(g[cur][dir]>=0)continue;
+
+    D area = 0;
+    Poly poly;
+    while(true){
+      g[cur][dir] = id.sz;
+      
+      int node = dir?l[cur].fs:l[cur].sc;
+      int prv = dir?l[cur].sc:l[cur].fs;
+      poly.push_back(p[node]);
+      area += cross(p[node],p[prv]);
+
+      int nxt = find(all(e[node]),pii(prv,cur))-e[node].begin();
+      cur = e[node][(nxt+1)%e[node].sz].sc;
+      dir = (l[cur].fs==node)?0:1;
+
+      if(g[cur][dir]>=0)break;
+    }
+    
+    if(area>EPS){
+      id.pb(PolySet.sz);
+      PolySet.pb(poly);
+    }else{
+      id.pb(-1);
+    }
+  }
+  return PolySet;
+}
+
+
+//union-find
+vi uf,rank;
+void init(int n){
+  uf.resize(n); rank.resize(n);
+  rep(i,n)uf[i] = i, rank[i] = 0;
+}
+
+int find(int a){
+  if(uf[a]==a)return a;
+  return uf[a] = find(uf[a]);
+}
+
+int unite(int a, int b){
+  a = find(a); b = find(b);
+  if(a==b)return 0;
+  if(rank[a]<rank[b])uf[a] = b;
+  else{
+    uf[b] = a;
+    if(rank[a]==rank[b])rank[a]++;
+  }
+  return 1;
+}
+
+int main(){
+  int n;
+  cin >> n;
+  vector<L> seg(n);
+
+  rep(i,n){
+    int x,y;
+    cin >> x >> y; seg[i].fs = P(x,y);
+    cin >> x >> y; seg[i].sc = P(x,y);
+  }
+  
+  vector<Poly> PolySet = extract_poly(seg);
+
+  int ans = PolySet.size();
+  init(PolySet.size());
+
+  rep(i,g.size()){
+    int a = id[g[i][0]], b = id[g[i][1]];
+    if(a<0 || b<0)continue;
+    ans -= unite(a,b);
+  }
+
+  rep(i,PolySet.size()){
+    rep(j,PolySet.size()){
+      if(find(i)==find(j))continue;
+      bool f = true;
+      rep(k,PolySet[i].size()){
+	f &= in_poly(PolySet[j],PolySet[i][k]);
+	if(!f)break;
+      }
+      if(f)ans -= unite(i,j);
+    }
+  }
+
+  cout << ans << endl;
+}

@@ -1,0 +1,75 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+#define PMAX 10
+#define TMAX 50
+#define INF 1000000000
+
+int main(){
+
+	int M,T,P,R;
+	int m,t,p,j;
+	int accepted[TMAX+1];
+	int wrong[TMAX+1][PMAX+1];
+	int sumwrong[TMAX+1];
+	int time[TMAX+1];
+	int rank[TMAX];
+
+	while(1){
+		cin>>M>>T>>P>>R;
+		if(M==0&&T==0&&P==0&&R==0) break;
+
+		for(int i=1;i<=TMAX;i++){
+			accepted[i]=0;
+			sumwrong[i]=0;
+			time[i]=0;
+			for(int j=1;j<=PMAX;j++){
+				wrong[i][j]=0;
+			}
+		}
+
+		for(int i=0;i<R;i++){
+			cin>>m>>t>>p>>j;
+			if(j!=0) wrong[t][p]++;
+			else{
+				accepted[t]++;
+				time[t]+=m;
+				sumwrong[t]+=wrong[t][p];
+			}
+		}
+
+		for(int i=1;i<=T;i++){
+			time[i]+=sumwrong[i]*20;
+		}
+
+		for(int i=0;i<T;i++){
+			rank[i]=i+1;
+		}
+
+		for(int i=0;i<T;i++){
+			for(int j=T-1;j>i;j--){
+				if(accepted[rank[j]]>accepted[rank[j-1]]) swap(rank[j],rank[j-1]);
+			}
+		}
+		for(int i=0;i<T;i++){
+			for(int j=T-1;j>i;j--){
+				if(accepted[rank[j]]==accepted[rank[j-1]]&&time[rank[j]]<time[rank[j-1]]) swap(rank[j],rank[j-1]);
+			}
+		}
+		for(int i=0;i<T;i++){
+			for(int j=T-1;j>i;j--){
+				if(accepted[rank[j]]==accepted[rank[j-1]]&&time[rank[j]]==time[rank[j-1]]&&rank[j]>rank[j-1]) swap(rank[j],rank[j-1]);
+			}
+		}
+
+		cout<<rank[0];
+		for(int i=1;i<T;i++){
+			if(accepted[rank[i]]==accepted[rank[i-1]]&&time[rank[i]]==time[rank[i-1]]) cout<<"="<<rank[i];
+			else cout<<","<<rank[i];
+		}
+		cout<<endl;
+	}
+
+}

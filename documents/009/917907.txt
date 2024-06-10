@@ -1,0 +1,34 @@
+#include<cstdio>
+#include<algorithm>
+
+using namespace std;
+#define INF 2000000000
+
+int getMinNum(int[], int, int);
+
+int main(){
+
+  int n,m;
+  scanf("%d%d",&n,&m);
+  int data[m];
+  for(int i=0;i<m;i++)
+    scanf("%d",&data[i]);
+  printf("%d\n",getMinNum(data,n,m));
+  return 0;
+}
+
+int getMinNum(int c[],int n, int m)
+{
+  int t[n+1];
+  for(int j=0;j<=n;j++)
+    t[j]=INF;
+
+  t[0]=0;
+
+  for(int i=0;i<m;i++)
+    for(int j=c[i];j<=n;j++)
+      t[j]=min(t[j],t[j-c[i]]+1);
+
+  return t[n];
+
+}

@@ -1,0 +1,183 @@
+#include <iostream>
+#include <cassert>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <algorithm>
+#include <map>
+#include <queue>
+#include <sstream>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define mp(a,b) make_pair(a,b)
+#define SZ(a) ((int)(a).size())
+#define FOR(it,a) for(__typeof(a.begin())it=a.begin();it!=a.end();++it)
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+string a;
+enum{FRONT,BACK,LEFT,RIGHT,BOT,TOP};
+
+void rb(vector<int> &a){
+  vector<int> b=a;
+
+  int p[]={FRONT,BACK,LEFT,RIGHT,BOT,TOP};
+  int q[]={BOT,TOP,LEFT,RIGHT,BACK,FRONT};
+  
+  rep(i,6)
+    b[p[i]]=a[q[i]];
+  
+  a=b;
+}
+
+void rf(vector<int> &a){
+  vector<int> b=a;
+
+  int p[]={FRONT,BACK,LEFT,RIGHT,BOT,TOP};
+  int q[]={TOP,BOT,LEFT,RIGHT,FRONT,BACK};
+  
+  rep(i,6)
+    b[p[i]]=a[q[i]];
+  
+  a=b;
+}
+
+
+void rr(vector<int> &a){
+  vector<int> b=a;
+  
+  int p[]={FRONT,BACK,LEFT,RIGHT,BOT,TOP};
+  int q[]={FRONT,BACK,BOT,TOP,RIGHT,LEFT};
+
+  rep(i,6)
+    b[p[i]]=a[q[i]];
+  
+  a=b;
+}
+
+void rl(vector<int> &a){
+  vector<int> b=a;
+  
+  int p[]={FRONT,BACK,LEFT,RIGHT,BOT,TOP};
+  int q[]={FRONT,BACK,TOP,BOT,LEFT,RIGHT};
+  
+  rep(i,6)
+    b[p[i]]=a[q[i]];
+  
+  a=b;
+}
+
+
+int n;
+
+int t[100],f[100];
+
+map<PI,vector<int> > dice;
+
+void solve(){
+  rep(i,n)  cin>>t[i] >> f[i];
+
+  map<PI,PI> app;
+  
+  rep(i,n){
+    assert(dice.count(mp(t[i],f[i])));
+    vector<int> a=dice[mp(t[i],f[i])];
+    int cx=0,cy=0;
+    while(true){
+      if(!app.count(mp(cx,cy))){
+        assert(a[TOP]>0);
+        app[mp(cx,cy)] = mp(a[TOP],0);
+        break;
+      }
+      
+      /*ba
+       l  r
+        fr
+       */
+
+      int dx[]={1,-1,0,0};
+      int dy[]={0,0,-1,1};
+      int dir[]={FRONT,BACK,LEFT,RIGHT};
+      int ch = app[mp(cx,cy)].S;
+
+      bool ok = 0;
+      pair<int,vector<int> > ne=mp(0,vector<int>());
+      int nnx,nny;
+      
+      rep(j,4){
+        int nx = cx + dx[j];
+        int ny = cy + dy[j];
+        if(app.count(mp(nx,ny)) && app[mp(nx,ny)].S>=ch ) continue;
+        if(a[dir[j]]<4) continue;
+        if(a[dir[j]]<ne.F) continue;
+        ok=1;
+        vector<int> tne=a;
+        switch(dir[j]){
+        case FRONT:rf(tne);break;
+        case BACK:rb(tne);break;
+        case LEFT:rl(tne);break;
+        case RIGHT:rr(tne);break;
+        }
+        nnx=nx;
+        nny=ny;
+        ne.S=tne;
+        ne.F=a[dir[j]];
+      }
+      assert(a[TOP]>0);
+      if(ok){
+        cx = nnx;
+        cy = nny;
+        a = ne.S;
+        assert(a[TOP]>0);
+      }else{
+        app[mp(cx,cy)]=mp(a[TOP],ch+1);
+        break;
+      }
+    }
+  }
+
+  vector<int> ans(6);
+  
+
+  
+  FOR(it,app){
+    //cout << it->F.F << " " << it->F.S << " " << it->S.F << " " << it->S.S << endl;
+    //cout << it->S.F << endl;
+    ++ans[it->S.F-1];
+  }
+
+  
+  
+  rep(j,6){
+    if(j) cout << " ";
+    cout << ans[j];
+  }
+  cout << endl;
+}
+
+int main(){
+  //int p[]={FRONT,BACK,LEFT,RIGHT,BOT,TOP};
+  //assert(0);
+  int di[]={3,   4      ,2    ,5    ,6   ,1};
+  
+  vector<int> a(di,di+6);
+  queue<vector<int> > q;
+  q.push(a);
+  while(!q.empty()){
+    vector<int> cv = q.front();
+    q.pop();
+    if(dice.count(mp(cv[TOP],cv[FRONT]))) continue;
+    dice[mp(cv[TOP],cv[FRONT])] = cv;
+
+    vector<int> t=cv;
+    rr(t);q.push(t);t=cv;
+    rf(t);q.push(t);t=cv;
+    rb(t);q.push(t);t=cv;
+    rl(t);q.push(t);t=cv;    
+  }
+  //return 0;
+  
+  while(cin >> n && n) solve();
+}

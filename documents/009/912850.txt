@@ -1,0 +1,32 @@
+#include<iostream>
+#include<stack>
+#include<string>
+#include<sstream>
+#include<cstdlib>
+
+using namespace std;
+
+int main(void)
+{
+	string str;
+	while(getline(cin,str)){
+		stack<double> stk;
+		double ans=0;
+		stringstream strs(str);
+		string tmp;
+		while(strs>>tmp){
+			if(tmp=="+"||tmp=="-"||tmp=="*"||tmp=="/"){
+				double n1,n2;
+				n1=stk.top(); stk.pop();
+				n2=stk.top(); stk.pop();
+				if(tmp=="+") stk.push(n2+n1);
+				else if(tmp=="-") stk.push(n2-n1);
+				else if(tmp=="*") stk.push(n2*n1);
+				else if(tmp=="/") stk.push(n2/n1);
+			}
+			else stk.push(atof(tmp.c_str()));
+		}
+		printf("%.6lf\n",stk.top());
+	}
+	return 0;
+}

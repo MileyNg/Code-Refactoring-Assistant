@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> pii;
+
+const int dy[] = {0,-1,0,1}, dx[] = {1,0,-1,0};
+const int base = 1000;
+int n,m;
+int id[2000][2000];
+int p[2000][2000];
+pii dp[2000][2000];
+
+int isPrime(int x){
+  if(x<=1)return 0;
+  for(int i=2;i*i<=x;i++){
+    if(x%i==0)return 0;
+  }
+  return 1;
+}
+
+int main(){
+  int y = base, x = base;
+  id[y][x] = 1; p[y][x] = 0;
+
+  int cnt = 2,len = 1, d = 0;
+  do{
+    for(int i=0;i<len;i++){
+      y+=dy[d]; x+=dx[d];
+      p[y][x] = isPrime(cnt);
+      id[y][x] = cnt++;
+    }
+    if(d&1)len++;
+    (d += 1) %= 4;
+  }while(cnt<=1000000);
+
+  while(cin >> m >> n, m){
+    for(int i=0;i<2*base;i++)
+      for(int j=0;j<2*base;j++)dp[i][j] = pii(-1,0);
+
+    for(int i=0;i<2*base;i++){
+      for(int j=0;j<2*base;j++){
+	if(id[i][j] == n){
+	  if(p[i][j])dp[i][j] = pii(1,id[i][j]);
+	  else dp[i][j] = pii(0,0);
+	}else if(dp[i][j].first < 0)continue;
+	
+	for(int k=-1;k<=1;k++){
+	  if(1<=id[i+1][j+k] && id[i+1][j+k]<=m){
+	    if(p[i+1][j+k] && dp[i+1][j+k].first < dp[i][j].first+1){
+	      dp[i+1][j+k] = pii(dp[i][j].first+1, id[i+1][j+k]);
+	    }
+	    if(!p[i+1][j+k] && dp[i+1][j+k] < dp[i][j]){
+	      dp[i+1][j+k] = dp[i][j];
+	    }
+	  }
+	}
+      }
+    }
+
+    pii ans = pii(0,0);
+    for(int i=0;i<2*base;i++){
+      for(int j=0;j<2*base;j++)ans = max(ans, dp[i][j]);
+    }
+    cout << ans.first << " " << ans.second << endl;
+  }
+}

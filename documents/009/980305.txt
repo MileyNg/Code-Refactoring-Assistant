@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// a > b
+inline int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a%b);
+}
+
+inline int lcm(int a, int b) {
+    if (a < b)
+        return a * b / gcd(b, a);
+    return a * b / gcd(a, b);
+}
+
+
+int main(void) {
+    int n, a, b, i, j, *x, ablcm, count;
+
+    while (scanf("%d%d%d\n", &n, &a, &b) != EOF && (n || a || b)) {
+        x = (int*)calloc(n+1, sizeof(int));
+
+        for (i = b; i <= n; i += b) {
+            x[i] = 1;
+        }
+        ablcm = lcm(a, b);
+        for (i = 0; i <= ablcm; i += b) {
+            for (j = 0; i + j <= n; j += a) {
+                x[i + j] = 1;
+            }
+        }
+        for (i = 1, count = 0; i <= n; i++) {
+            count += x[i] == 0;
+        }
+
+        printf("%d\n", count);
+
+        free(x);
+    }
+
+    return 0;
+}

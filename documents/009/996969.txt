@@ -1,0 +1,85 @@
+//suhan lee,saitama university
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <complex>
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef long long ll;
+typedef pair<ll,ll> teki;
+
+
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define rep(i,a,b) for(int i=(a);i<(b);++i)
+#define repn(i,n) for(int i=0;i<n;i++)
+#define EACH(t,i,c) for(t::iterator i=(c).begin(); i!=(c).end(); ++i)
+#define pb push_back 
+#define pf push_front
+int tekisort(teki a,teki b){
+  return a.first*b.second<a.second*b.first;
+}
+
+int main(){
+  ll n,shuh,shua,shud,shus;
+  ll tmph,tmpa,tmpd,tmps,zentan;
+  zentan=0;
+  vector<teki> enemies;
+  cin>>n>>shuh>>shua>>shud>>shus;
+  zentan=shuh;
+  int arienai=false;
+  for(ll i=0;i<n;i++){
+    cin>>tmph>>tmpa>>tmpd>>tmps;
+    ll tmpdd=shua-tmpd;
+    if(tmpdd<=0) {
+      if(tmpa-shud<=0){
+	n--;
+	i--;
+	arienai=true;
+	continue;
+      }
+      
+      cout<<-1<<endl;
+      return 0;
+    }
+    ll tmpt=tmph/tmpdd;
+    if(tmph%tmpdd) tmpt+=1;
+    if(tmps>shus) shuh-=max(tmpa-shud,(ll)0);
+    enemies.pb(make_pair(tmpt,max(tmpa-shud,(ll)0)));     if(shuh<=0)  cout<<-1<<endl;
+  }
+  sort(enemies.begin(),enemies.end(),tekisort);
+  ll imamade=0;
+  for(ll i=0;i<n;i++){
+    //    cout<<shuh<<" "<<enemies[i].second<<"debug\n";  
+    imamade+=enemies[i].first;
+    shuh-=(imamade-1)*enemies[i].second;
+    if(shuh<=0)  cout<<-1<<endl;
+  }
+  cout<<zentan-shuh<<endl;
+  
+  return 0;
+}

@@ -1,0 +1,40 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define MAX 1120
+
+bool isprime[MAX + 1];
+vector< int > prime;
+
+void setprime(){
+  for(int i = 2; i < MAX + 1; i++){
+    if(!isprime[i]){
+      for(int j = 2; i * j < MAX + 1; j++){
+        isprime[i * j] = true;
+      }
+      prime.push_back(i);
+    }
+  }
+}
+
+int dp[MAX + 1][15];
+void solve(){ //dpかきたくないよ
+  dp[0][0] = 1;
+  for(int i = 0; i < prime.size() ; i++){
+    for(int j = 13 ; j >= 0; j--){
+      for(int k = 0 ; k <= MAX - prime[i] ; k++){
+        dp[k + prime[i]][j + 1] += dp[k][j];
+      }
+    }
+  }
+}
+
+int main(){
+  setprime();
+  solve();
+  int n, k;
+  while(cin >> n >> k, n|k){
+    cout << dp[n][k] << endl;
+  }
+}

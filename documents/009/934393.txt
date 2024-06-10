@@ -1,0 +1,15 @@
+n = gets.to_i
+obj = {}
+obj['S'] = [false]*13
+obj['H'] = [false]*13
+obj['C'] = [false]*13
+obj['D'] = [false]*13
+n.times do |i|
+  k, v = gets.split
+  obj[k][v.to_i - 1] = true
+end
+obj.each do |key, val|
+  val.length.times do |i|
+    puts "#{key} #{i + 1}" unless val[i]
+  end
+end

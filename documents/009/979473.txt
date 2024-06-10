@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<climits>
+
+using namespace std;
+
+class MatrixMultipluCost{
+private:
+ vector<unsigned long> p;
+ vector< vector<unsigned long> > cost;
+
+public:
+ MatrixMultipluCost(unsigned long num)
+  : p(num+1, 0), cost(num+1, vector<unsigned long>(num+1, 0)){
+
+  for(unsigned long mat_i = 0; mat_i < num; ++mat_i){
+   unsigned long tmp_row = 0; cin >> tmp_row;
+   if(mat_i == 0) p[mat_i] = tmp_row;
+   unsigned long tmp_col = 0; cin >> tmp_col; p[mat_i+1] = tmp_col;
+  }
+
+ };
+
+ unsigned long colculateCost(void){
+ unsigned long matrixNum = p.size()-1;
+
+  for(unsigned long distance = 1; distance < matrixNum; ++distance){
+   for(unsigned long front_i = 1; front_i+distance <= matrixNum; ++front_i){
+    for(unsigned long rear_i = front_i; rear_i < front_i+distance; ++rear_i){
+     unsigned long tmp_cost = cost[front_i][rear_i] + cost[rear_i+1][front_i+distance] + p[front_i-1] * p[rear_i] * p[front_i+distance];
+     if(cost[front_i][front_i+distance] == 0 || cost[front_i][front_i+distance] > tmp_cost) cost[front_i][front_i+distance] = tmp_cost;
+    }
+   }
+  }
+
+  return cost[1][matrixNum];
+ };
+
+ void display(){
+  for(unsigned long i = 0, max = p.size(); i < max; ++i)
+   cout << p[i] << " ";
+  cout << endl;
+
+  for(unsigned long i = 0, max = cost.size(); i < max; ++i){
+   for(unsigned long j = 0; j < max; ++j){
+    cout << cost[i][j] << " ";
+   }
+   cout << endl;
+  }
+ };
+
+};
+
+int main(){
+ unsigned long num = 0; cin >> num;
+
+ MatrixMultipluCost MMC(num);
+ cout << MMC.colculateCost() << endl;
+
+
+ return 0;
+};

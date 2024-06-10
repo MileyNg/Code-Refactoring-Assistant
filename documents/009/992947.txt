@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(){
+    int n, q;
+    long long int  c, a, b, m;      
+    cin>>n>>q;
+    vector<long long int> dat(n,2147483647);
+    for(int i=0;i<q;i++){
+        cin>>c>>a>>b;
+        if(c==1){
+            m=2147483647;
+            for(int j=a;j<=b;j++){
+                if(m>dat[j])
+                    m=dat[j];
+            }
+            cout<<m<<endl;
+        }else{
+            dat[a]=b;
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,49 @@
+#include<stdio.h>
+main(){
+  int x,y,size,i,j;
+  int pr[10][10]={0};
+  int cnt=0,max=0;
+
+  while(1){
+    if(scanf("%d,%d,%d",&x,&y,&size) == EOF){
+      break;
+    }
+    pr[x][y]++; 
+    if(y-1>=0)pr[x][y-1]++;
+    if(x-1>=0)pr[x-1][y]++;
+    if(y+1<=9)pr[x][y+1]++;
+    if(x+1<=9)pr[x+1][y]++;
+
+    if((size==2) || (size==3)){
+      if((x+1<=9) && (y+1<=9))pr[x+1][y+1]++;
+      if((x-1>=0) && (y+1<=9))pr[x-1][y+1]++;
+      if((x+1<=9) && (y-1>=0))pr[x+1][y-1]++;
+      if((x-1>=0) && (y-1>=0))pr[x-1][y-1]++;
+
+      if(size==3){
+	if(y-2>=0)pr[x][y-2]++;
+	if(x-2>=0)pr[x-2][y]++;
+	if(y+2<=9)pr[x][y+2]++;
+	if(x+2<=9)pr[x+2][y]++;
+      }
+    }
+  }
+
+  for(i=0;i<=9;i++){
+    for(j=0;j<=9;j++){
+      
+      if(pr[i][j]==0){
+	cnt++;
+      }
+
+      if(pr[i][j]>max){
+	max=pr[i][j];
+      }
+    }
+  }
+  
+  printf("%d\n%d\n",cnt,max);
+  
+  return 0;
+
+}

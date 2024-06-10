@@ -1,0 +1,71 @@
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+
+std::string ToString(int x) {
+	std::stringstream buffer;
+	std::string result;
+	buffer << x;
+	buffer >> result;
+	return result;
+}
+
+const int N = 100000 + 10;
+
+std::string to_string[N];
+int elements[N], a, b, MOD;
+
+bool compare(int x, int y) {
+	return to_string[x] < to_string[y];
+}
+
+int rank[N], order[N], value[N];
+
+int lowbit(int x) {
+	return x & -x;
+}
+
+void add(int x, int delta) {
+	for (; x < N; x += lowbit(x)) {
+		(value[x] += delta) %= MOD;
+	}
+}
+
+int get(int x) {
+	int result = 0;
+	for (; x > 0; x -= lowbit(x)) {
+		(result += value[x]) %= MOD;
+	}
+	return result;
+}
+
+int main() {
+	while (scanf("%d%d%d", &a, &b, &MOD) != EOF) {
+		if (a == 0 && b == 0 && MOD == 0) {
+			break;
+		}
+		// printf("%d %d %d\n", a, b, MOD);
+		int n = b - a + 1;
+		for (int i = a; i <= b; ++ i) {
+			elements[i - a + 1] = i;
+			to_string[i - a + 1] = ToString(i);
+			order[i - a + 1] = i - a + 1;
+		}
+		std::sort(order + 1, order + n + 1, compare);
+		for (int i = 1; i <= n; ++ i) {
+			rank[order[i]] = i;
+		}
+		
+		memset(value, 0, sizeof(value));
+		int answer = 0;
+		for (int i = 1; i <= n; ++ i) {
+			int temp = get(rank[i]) + 1;
+			(answer += temp) %= MOD;
+			add(rank[i], temp);
+		}
+		printf("%d\n", answer);
+	}
+	return 0;
+}

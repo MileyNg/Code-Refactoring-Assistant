@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+
+typedef struct U
+{
+	tm L;
+	int F,t;
+}U;
+
+tm set(int M,int D,int h,int m)
+{
+	tm t={0,m,h,D,M,100,0};
+	return t;
+}
+
+int N,i,j,G,M,D,h,m,u,R;
+U X[1000];
+
+int main()
+{
+	char f;
+	for(;scanf("%d\n",&N),N;)
+	{
+		G=0;
+		memset(X,0,sizeof(X));
+		for(i=0;i<N;i++)
+		{
+			scanf("%2d/%2d%2d:%2d%*c%[IO]%d",&M,&D,&h,&m,&f,&u);
+			tm tmp1=set(M,D,h,m);
+			time_t tmp=mktime(&tmp1);
+			if(f=='I')
+			{
+				if(u==0)
+					G=1;
+				else
+				{
+					X[u].F=1;
+				}
+				X[u].L=tmp1;
+			}
+			else
+			{
+				if(u==0)
+				{
+					
+					for(j=1;j<1000;j++)
+					{
+						if(X[j].F==1)
+						{
+							long long aaa=mktime(&X[0].L);
+							long long  bbb=mktime(&X[j].L);
+							double eee=difftime(tmp,aaa)/60;
+							double fff=difftime(tmp,bbb)/60;
+							X[j].t+=fff<eee?fff:eee;
+						}
+					}
+					G=0;
+				}
+				else
+				{
+					if(G==1)
+					{
+						long long aaa=mktime(&X[0].L);
+						long long  bbb=mktime(&X[u].L);
+						double eee=difftime(tmp,aaa)/60;
+						double fff=difftime(tmp,bbb)/60;
+						X[u].t+=fff<eee?fff:eee;
+					}
+					X[u].F=0;
+					X[u].L=tmp1;
+				}
+			}
+		}
+		for(i=1,R=0;i<1000;i++)
+			R=R<X[i].t?X[i].t:R;
+		printf("%d\n",R);
+	}
+	return 0;
+}

@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct {
+  char name[10];
+  int speed;
+  int time;
+}  Process;
+ 
+int main()
+{
+  Process S[10000];
+  int i;
+  int z,num=0,qua=0;
+  int s_top =0,s_tail=0;
+  int fnum=0,time_spend=0;
+ 
+  scanf("%d %d",&num,&qua);
+  //printf("%d %d\n",num,qua);
+  for(i=0;i<num;i++)
+    {
+      z=scanf("%s %d",S[i].name,&S[i].speed);
+      S[i].time =0;
+      //printf("%s %d\n",S[i].name,S[i].speed);
+      if(z==EOF) break;
+    }
+  s_tail = num;
+ 
+  for(i=0;i<1000000;i++)
+    {
+      if(qua >= S[i].speed)
+	{
+	  time_spend+= S[i].speed;
+	  printf("%s %d\n",S[i].name,time_spend);
+	  fnum++;
+	}
+      else
+	{
+	  time_spend+= qua;
+	  S[s_tail].speed = S[i].speed - qua;
+	  strcpy(S[s_tail].name,S[i].name);
+	  // printf("%s  %d\n",S[s_tail].name,S[s_tail].speed);
+	  s_tail++;
+	}
+      if(fnum==num) break;
+      if(s_tail == 10000) s_tail = 0;
+    }
+  return 0;
+}

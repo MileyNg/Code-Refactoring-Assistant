@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+#define END '.'
+#define SB '('
+#define CB ')'
+#define P 'P'
+#define Q 'Q'
+#define R 'R'
+#define zero '\0'
+#define Su '-'
+#define cal '*'
+char input[100]={0};
+int coun=0;
+int index;
+using namespace std;
+int func(int p,int q,int r);
+int nega(int p,int q,int r){
+	//cout<<input[index]<<endl;
+int left=0;
+int sw=input[index++];
+switch(sw){
+case SB:left=func(p,q,r);break;
+case Su:left=nega(p,q,r);break;
+case P:left=p;break;
+case Q:left=q;break;
+case R:left=r;break;
+default:left=sw-'0';break;
+}
+
+
+return(2-left);
+}
+
+int func(int p,int q,int r){
+	int left=0,right=0;
+	char ac;
+	char sw=input[index++];
+	switch(sw){
+	case SB:left=func(p,q,r);break;
+	case Su:left=nega(p,q,r);break;
+	case P:left=p;break;
+	case Q:left=q;break;
+	case R:left=r;break;
+	default:left=sw-'0';break;
+	}
+	ac=input[index++];
+	sw=input[index++];
+		switch(sw){
+		case SB:right=func(p,q,r);break;
+		case Su:right=nega(p,q,r);break;
+		case P:right=p;break;
+		case Q:right=q;break;
+		case R:right=r;break;
+		default:right=sw-'0';break;
+		}
+		index++;
+		//printf("%d%c%d\n",left,ac,right);
+	if(ac==cal){
+		if(left<right)return (left);
+		else return right;
+	}
+	if(left<right)return (right);
+	else return left;
+
+
+}
+int fun(int p,int q,int r){
+	if(input[1]==zero)
+		switch(input[0]){
+		case P:return(p);
+		case Q:return(q);
+		case R:return(r);
+		}
+	index++;
+	if(input[0]==Su)return(nega(p,q,r));
+	if(input[0]==SB)
+	return(func(p,q,r));
+	return(input[0]-'0');
+}
+
+int main(){
+
+	cin>>input;
+	while(input[0]!=END){
+	coun=0;
+	index=0;
+		rep(p,0,3)rep(q,0,3)rep(r,0,3){
+			index=0;
+				if(fun(p,q,r)==2)coun++;
+		}
+		cout<<coun<<endl;
+		cin>>input;
+	}
+
+	return(0);
+}

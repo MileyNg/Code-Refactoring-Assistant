@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <algorithm>
+#include <sstream>
+#include <cstdlib>
+#include <unordered_map>
+
+using namespace std;
+typedef long long ll;
+typedef pair<ll, int> P;
+
+inline string toStr(ll x) { stringstream ss; ss<<x; return ss.str(); }
+inline ll toLL(string s) { stringstream ss(s); return atoi(ss.str().c_str()); }
+
+const ll pow10[10] = {1LL, 10LL, 100LL, 1000LL, 10000LL, 100000LL, 1000000LL, 10000000LL, 100000000LL, 1000000000LL};
+
+int N;
+int bfs(const ll num) {
+
+  ll ans = 0;
+  string sorted = toStr(num); sort(sorted.begin(), sorted.end());
+  ll s_num = toLL(sorted);
+  
+  unordered_map<ll, int> mp;
+  mp[num] = 0;
+  queue<P> Q;
+  Q.push(P(num, 0));
+  while(!Q.empty()) {
+    
+    const ll now = Q.front().first;
+    const int cost = Q.front().second;
+    Q.pop();
+    
+    if(now == s_num) {
+      ans = cost;
+      break;
+    }
+    
+    if(cost >= N-1) continue;
+    
+    const int ncost = cost+1;
+    
+    for(int i=cost; i<N; i++) {
+      for(int j=i+1; j<N; j++) {
+        //reverse(now.begin()+i, now.begin()+j);
+        ll next = 0;
+        for(int k=N-1; k>=0; k--) {
+          if(i <= k && k <= j) {
+            (next *= 10) += (now / pow10[j-k+i]) % 10;
+          }
+          else {
+            (next *= 10) += (now / pow10[k]) % 10;
+          }
+        }
+        //cout << "(" << i << ", " << j << ") : " << now << " " << next << endl;
+        unordered_map<ll, int>::iterator it = mp.find(next);
+        if(it != mp.end()) {
+          if(it->second < ncost) continue;
+        }
+        mp[next] = ncost;
+        Q.push(P(next, ncost));
+      }
+    }
+  }
+  
+  return ans;
+}
+
+int main() {
+  
+  cin >> N;
+  ll num = 0;
+  for(int i=0; i<N; i++) {
+    int in; cin >> in;
+    (num *= 10) += in;
+  }
+  
+  cout << bfs(num) << endl;
+  
+  return 0;
+}

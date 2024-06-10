@@ -1,0 +1,27 @@
+import itertools
+
+r = 10001
+s = int(r**0.5)
+p = [1]*r
+p[0] = 0
+for i in range(1,s):
+	if p[i]:
+		p[2*i + 1::i + 1] = [0 for x in range(2*i + 1, r, i + 1)]
+
+while 1:
+	n = input()
+	if n == 0: break
+	m = (n - 1) / 2
+	a = sorted(list(set([i**2%n for i in range(1,n)])))
+	l = len(a)
+	if n%4 == 3 and p[n - 1] == 1:
+		ll = l*(l - 1) / m
+		for i in range(m):
+			print ll
+		continue
+	h = [0]*(m+1)
+	for i,j in itertools.combinations(a,2):
+		d = j - i
+		h[min(d,n - d)] += 2
+	for i in range(1,m+1):
+		print h[i]

@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+#define N 10000
+#define Q 500
+
+int main(){
+  int S[N],T[Q],ans;
+  int n,m,i,j,count=0;
+  scanf("%d",&n);
+  for(i=0; i<n ; i++){
+    scanf("%d",&S[i]);
+  }
+  
+  scanf("%d",&m);
+  for(i=0; i<m ; i++){
+    scanf("%d",&T[i]);
+  }
+  for(i=0; i<n ; i++){
+    for(j=0; j<m ; j++){
+      if(S[i]==T[j]){
+	count++;
+      }
+    }
+  }
+  if(count==0)
+    printf("0");
+  else printf("%d",count);
+  printf("\n");
+  return 0;
+}

@@ -1,0 +1,36 @@
+#include<stdio.h>
+
+int map[10][10],count;
+int x,y,N=10;
+
+int main(){
+  while(scanf("%d",&N)*N){
+  for(x=0;x<10;x++){
+    for(y=0;y<10;y++){
+      map[x][y]=x?map[x-1][y+1]+1:y?map[x][y-1]+y:1;
+    }
+  }
+  printf("Case %d:\n",++count);
+  for(x=0;x<N;x++){
+    for(y=0;y<N;y++){
+      if(x+y<N){
+        if((x+y)%2){
+          printf("%3d",map[x][y]);
+        }
+        else{
+          printf("%3d",map[y][x]);
+        }
+      }
+      else{
+        if((x+y)%2){
+          printf("%3d",N*N-map[N-1-x][N-1-y]+1);
+        }
+        else{
+          printf("%3d",N*N-map[N-1-y][N-1-x]+1);
+        }
+      }
+    }
+    printf("\n");
+  }
+  }
+}

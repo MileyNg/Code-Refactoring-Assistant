@@ -1,0 +1,52 @@
+#include<iostream>
+using namespace std;
+
+int a[50][50];
+
+void dfs(int j,int i){
+  
+  a[j][i]=0;
+for(int k=-1 ; k <= 1 ; k++){
+    for(int l=-1 ; l <= 1 ; l++){
+      if( l== 0 && k== 0 )continue;
+      if( (0 <= j+l && j+l <= 50)&&(0<=i+k && i+k <= 50)){
+      if(a[j+l][i+k])dfs(j+l,i+k);
+      }
+    }
+ }
+} 
+int main(){
+  
+  int w,h,counter=0;
+  
+  while(1){
+    
+    cin >>w>>h;
+    
+    if( w == 0 && h == 0 )break;
+    
+    counter=0;
+    
+    for(int i=0 ; i < h ; i++){
+      for(int j=0 ; j < w ; j++){
+	cin >>a[j][i];
+      }
+    }
+    
+    for(int i=0 ; i < h ; i++){
+      for(int j=0 ; j < w ; j++){
+	
+	if(a[j][i]){
+	  dfs(j,i);
+	  counter++;
+	}
+	
+      }
+    }
+    
+    cout<<counter<<endl;
+    
+  }
+  
+  return 0;
+}

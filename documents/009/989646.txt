@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+long long int gcd (long long int a, long long int b) {
+	if (b == 0) {
+		return a;
+	} else {
+		return gcd((long long int)max(a%b, b), (long long int)min(a%b, b));
+	}
+}
+
+long long int lcm (long long int a, long long int b) {
+	long long int c = a * b / gcd(a, b);
+	return c;
+}
+
+int main() {
+	long long int a1, m1, a2, m2, a3, m3;
+	while (cin >> a1 >> m1 >> a2 >> m2 >> a3 >> m3) {
+		if (a1 == 0 && m1 == 0 && a2 == 0 && m2 == 0 && a3 == 0 && m3 == 0) {
+			break;
+		} 
+		long long int x, y, z;
+		x = y = z = 1;
+		long long int counter = 1;
+		long long int counter2 = 1;
+		long long int counter3 = 1;
+		x = (a1 * x) % m1;
+		y = (a2 * y) % m2;
+		z = (a3 * z) % m3;
+		while (x != 1) {
+			x = (a1 * x) % m1;
+			counter++;
+		} 
+		while (y != 1) {
+			y = (a2 * y) % m2;
+			counter2++;
+		}
+		while (z != 1) {
+			z = (a3 * z) % m3;
+			counter3++;
+		}
+		cout << lcm(counter, lcm(counter2, counter3)) << endl;
+	}
+	return 0; 
+}

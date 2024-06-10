@@ -1,0 +1,28 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int n, m, s[393], l[393], p[393], w;
+  vector< int > dp( 394, -1); //dp[i]:i長のメロディを作るための最大値
+  dp[0] = 0;
+  cin >> n;
+  for(int i = 0; i < n; i++){
+    cin >> s[i] >> l[i] >> p[i];
+  }
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < 394; j++){
+      if(dp[j] == -1) continue;
+      for(int k = s[i]; k <= l[i] && i + k < 394; k++){
+        dp[j + k] = max( dp[j + k], dp[j] + p[i]);
+      }
+    }
+  }
+  cin >> m;
+  while(m--){
+    cin >> w;
+    cout << dp[w] << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,47 @@
+#include <cstdio>
+#include <iostream>
+#define rep(i,n) for(int i=0; i<n; ++i)
+#define irep(i,n) for(int i=n-1; i>=0; --i)
+using namespace std;
+
+int R;
+int J,GJ,H,GH;
+ 
+int main(){
+  while(cin >> R && R){
+    int min = 1000;
+    int min_J, min_GJ, min_H, min_GH;
+    int cnt;
+    cin >> J >> GJ >> H >> GH;
+    
+    rep(i,J+1){
+    rep(j,GJ+1){
+    rep(k,H+1){
+    rep(l,GH+1){
+      int dif = i*10 + j*50 + k * 100 + l * 500 - R;
+      if(dif < 0) continue;
+      cnt = J + GJ + H + GH;
+      cnt -=  i+j+k+l;
+      if(l > 0 && dif/500 > 0) continue;
+      cnt+= dif/500; dif -= 500 * (dif/500);
+      if(k > 0 && dif/100 > 0) continue;
+      cnt+= dif/100; dif -= 100 * (dif/100);
+      cout << cnt << ":" << dif << endl;
+      if(j > 0 && dif/50 > 0) continue;
+      cnt+= dif/50; dif -= 50 * (dif/50);
+      if(i > 0 && dif/10 > 0) continue;
+      cnt+= dif/10; dif -= 10 * (dif/10);
+      if( cnt <= min){
+        min = cnt;
+        min_J = i; min_GJ = j; min_H = k; min_GH = l;
+      }
+    }}}}
+    if(min_J > 0) cout << "10 " << min_J << endl;
+    if(min_GJ > 0) cout << "50 " << min_GJ << endl;
+    if(min_H > 0) cout << "100 " << min_H << endl;
+    if(min_GH > 0) cout << "500 " << min_GH << endl;
+    cout << endl;
+    
+  }
+  return 0;
+}

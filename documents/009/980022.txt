@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <map>
+#include <algorithm>
+using namespace std;
+#define mp make_pair
+typedef pair<double,double> pii;
+
+const double agl = M_PI / 2;
+vector<pii> temp1, temp2;	// temp1:そのまま temp2:逆
+
+// 四捨五入
+int roundOff( double x ){
+	if( 0 <= x ) return (int)(x + 0.5);
+	else				 return (int)(x - 0.5);
+}
+
+// 点を原点中心に(反時計周りに)回転
+pii rotate( pii p ){
+	double x = p.first, y = p.second;
+	p.first = (x * cos(agl)) - (y * sin(agl));
+	p.second = (x * sin(agl)) + (y * cos(agl));
+	return mp(roundOff(p.first), roundOff(p.second));
+}
+
+// 90,180,270,360度に回転した折れ線について確かめる
+bool isSame( vector<pii> l ){
+	bool res = false;
+	for( int r = 0; r < 4; r++ ){	// 90度づつ回転(clockwise)
+		bool f1 = true, f2 = true;
+		for( int i = 0; i < temp1.size(); i++ ){
+			l[i] = rotate(l[i]);
+			if( temp1[i] != l[i] ) f1 = false;
+			if( temp2[i] != l[i] ) f2 = false;
+		}
+		if( f1 || f2 ) res = true;
+	}
+	return res;
+}
+
+int main(){
+	int n;
+	while( cin >> n, n ){
+		vector<int> diff;
+		for( int i = 0; i <= n; i++ ){
+			int m;
+			cin >> m;
+			vector<pii> lines(m);
+			double dx, dy;
+			for( int j = 0; j < m; j++ ){
+				int x, y;
+				cin >> x >> y;
+				if( j == 0 ){
+					dx = x;
+					dy = y;
+				}
+				lines[j] = mp(x-dx,y-dy);	// スタートを原点にするように平行移動
+			}
+			// 探したい折れ線を設定
+			if( i == 0 ){
+				temp1 = lines;
+				reverse(lines.begin(), lines.end());
+				temp2 = lines;
+				dx = temp2[0].first;
+				dy = temp2[0].second;
+				for( int i = 0; i < m; i++ ){
+					temp2[i] = mp(temp2[i].first-dx, temp2[i].second-dy);
+				}
+				continue;
+			}
+			if( temp1.size() != lines.size() ) continue;
+			if( isSame(lines) ) diff.push_back(i);
+		}
+
+		// output
+		for( int i = 0; i < diff.size(); i++ ) cout << diff[i] << endl;
+		cout << "+++++" << endl;
+	}
+}

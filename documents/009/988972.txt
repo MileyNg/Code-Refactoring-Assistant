@@ -1,0 +1,45 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/19 01:54:34 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <climits>
+#define MP(a, b) make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+int main(int argc, char *argv[])
+{
+  std::vector<int> a(100000),b(50000);
+  int n,q;
+  std::cin>>n;
+  int t;
+  rep(i,n){
+    std::cin >> t;
+    a[i] = t;
+  }
+  std::cin>>q;
+  rep(i,q){
+    std::cin>>t;
+    b[i] = t;
+  }
+  int total = 0;
+  rep(i,n){
+    rep(j,q){
+      if(a[i] == b[j]){ total++;break;}
+    }
+  }
+  std::cout<<total<<std::endl;
+
+  return 0;
+}

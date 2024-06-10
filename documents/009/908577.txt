@@ -1,0 +1,144 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<(b)?(a=b,1):0)
+#define chmin(a,b) (a>(b)?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef pair<int,int> pii;
+typedef long long ll;
+
+typedef valarray<double> point;
+struct line : public vector<point> {
+  line() {}
+  line(point a, point b) { push_back(a); push_back(b); }
+  point v() const { return (*this)[1]-(*this)[0]; }
+};
+point Point() { point p(3); return p; }
+point Point(double x, double y, double z) {
+  point p(3);
+  p[0]=x;p[1]=y;p[2]=z;
+  return p;
+}
+double dot(const point& a, const point& b) {
+  return (a * b).sum();
+}
+point cross(const point& a, const point& b) {
+  return a.cshift(+1)*b.cshift(-1)
+       - a.cshift(-1)*b.cshift(+1);
+}
+double norm(const point &a) {
+  return dot(a,a);
+}
+double length(const point &a) {
+  return sqrt(dot(a,a));
+}
+double angle(const point &a, const point &b) {
+  return acos( dot(a,b)/length(a)/length(b) );
+}
+point input() {
+  double a[3];
+  REP(i,3) cin >>a[i];
+  return point(a,3);
+}
+ostream &operator<<(ostream &os, const point &a) {
+  char str[200];
+  snprintf(str, 199, "(%.2f, %.2f, %.2f)", a[0], a[1], a[2]);
+  os << str;
+  return os;
+}
+point projection(const line &l, const point &p) {
+  double t = dot(p-l[0], l.v()) / norm(l.v());
+  return l[0] + t * l.v();
+}
+
+struct sphere {
+  point p;
+  double r;
+  sphere(const point &p, double r) : p(p), r(r) {}
+  sphere() {}
+};
+
+vector<point> crosspointLineSphere(const line &l, const sphere &c) {
+  vector<point> ret;
+  point center = projection(l, c.p);
+  double d =  length(center - c.p);
+  if (c.r < d-EPS) return ret;
+  double t = sqrt(max(0.0,c.r*c.r-d*d));
+  point vect = l[1] - l[0];
+  vect /= length(vect);
+  ret.push_back(center - vect*t);
+  if (t > EPS) {
+    ret.push_back(center + vect*t);
+  }
+  return ret;
+}
+
+// 平面
+struct plane {
+  point p, n;
+  plane() : p(Point()),n(Point()){}
+  plane(const point &p, const point &n) : p(p),n(n) {}
+  plane(double A, double B, double C, double D)
+    : p(Point()), n(Point(A,B,C)) {
+    n /= length(n);
+    // Ax+By+Cz=D
+    if (abs(A) > 0) p = Point(D/A,0,0);
+    else if (abs(B) > 0) p = Point(0,D/B,0);
+    else p = Point(0,0,D/C);
+  }
+};
+int relationPlP(const plane &pl, const point &p) {
+  double d = dot(p-pl.p, pl.n)/length(p-pl.p);
+  if (abs(d) < EPS) return 0;
+  return d>0?1:-1;
+}
+bool intersectPlS(const plane &pl, const line &s) {
+  return relationPlP(pl,s[0]) * relationPlP(pl,s[1]) <= 0;
+}
+point crosspointPlL(const plane &pl, const line &l) {
+  double d = dot(pl.n,l.v());
+  if (abs(d) < EPS) return l[0];
+  double t = -dot(pl.n,l[0]-pl.p) / d;
+  return l[0]+t*l.v();
+}
+bool crossline(const plane &pl1, const plane &pl2, line &res) {
+  point v = cross(pl1.n,pl2.n);
+  if (norm(v) < EPS) return 0;
+  point tv = cross(pl1.n,v);
+  double t = dot(pl2.p-pl1.p,pl2.n) / dot(tv,pl2.n);
+  point p = pl1.p + t * tv;
+  res = line(p,p+v);
+  return 1;
+}
+
+bool solve(double x, double y, double z) {
+  point p1(Point(x,y,z));
+  point v11(input());
+  point v12(input());
+  point p2(input());
+  point v21(input());
+  point v22(input());
+  plane pl1(p1, cross(v11,v12));
+  plane pl2(p2, cross(v21,v22));
+  line cl;
+  if (!crossline(pl1, pl2, cl)) return 0;
+  vector<point> pv = crosspointLineSphere(cl, sphere(p1,1));
+  if (pv.size() != 2) return 0;
+  double d1 = length(pv[0]-p2);
+  double d2 = length(pv[1]-p2);
+  return (d1 < 1-EPS && d2 > 1+EPS ||
+          d2 < 1-EPS && d1 > 1+EPS);
+}
+
+int main() {
+  double x,y,z;
+  while(cin >> x >> y >> z) {
+    cout << (solve(x,y,z)?"YES":"NO") << endl;
+  }
+}

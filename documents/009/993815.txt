@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+typedef double D;
+const D EPS = 1e-9;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+typedef struct {
+	double x, y;
+} Point;
+
+double rad(double deg)
+{
+	return deg*2*PI/360;
+}
+
+int sig(D a, D b) {
+	if(a < b - EPS) return -1;
+	if(a > b + EPS) return +1;
+	return 0;
+}
+
+/** Problem0166 : Area of Polygon **/
+double area(vector<Point> points)
+{
+	points.push_back(points[0]);
+	
+	double S=0;
+	for (int i=0; i<points.size(); i++) {
+		S += fabs(points[i].x*points[i+1].y - points[i+1].x*points[i].y);
+	}
+	
+	return S/2;
+}
+
+int main()
+{
+	int M, N;
+	while (cin>>M, M) {
+		int angle=0;
+		double S1=0;
+		rep(k, M-1) {
+			int t; cin>>t;
+			angle+=t;
+			S1 += sin(rad(t));
+		}
+		S1 += sin(rad(360-angle));
+		
+		angle=0;
+		cin>>N;
+		double S2=0;
+		rep(k, N-1) {
+			int t; cin>>t;
+			angle+=t;
+			S2 += sin(rad(t));
+		}
+		S2 += sin(rad(360-angle));
+		
+		if (sig(S1, S2)>0)
+			cout << 1 << endl;
+		else if (sig(S1, S2)==0)
+			cout << 0 << endl;
+		else
+			cout << 2 << endl;
+	}
+}

@@ -1,0 +1,44 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int n,m;
+  cin >> n >> m;
+  int pas[n+1];
+  for(int i=0;i<=n;i++) pas[i] = 0;
+  int d,c;
+  for(int i=0;i<m;i++){
+    cin >> d >> c;
+    pas[d] = c;
+  }
+  int pd[2][3]={0,0};
+  int mem[2][3]={0,0};
+  if(pas[1]==0) pd[0][0]=pd[0][1]=pd[0][2]=1;
+  else pd[0][pas[1]-1]=1;
+  for(int i=2;i<=n;i++){
+    if(pas[i]==0||pas[i]==1){
+      mem[0][0] = pd[0][1]+pd[1][1]+pd[0][2]+pd[1][2];
+      mem[1][0] = pd[0][0];
+    }
+    if(pas[i]==0||pas[i]==2){
+      mem[0][1] = pd[0][0]+pd[1][0]+pd[0][2]+pd[1][2];
+      mem[1][1] = pd[0][1];
+    }
+    if(pas[i]==0||pas[i]==3){
+      mem[0][2] = pd[0][0]+pd[1][0]+pd[0][1]+pd[1][1];
+      mem[1][2] = pd[0][2];
+    }
+    for(int i=0;i<2;i++){
+      for(int j=0;j<3;j++){
+	pd[i][j] = mem[i][j]%10000;
+	mem[i][j] = 0;
+      }
+    }
+  }
+  int ans = 0;
+  for(int i=0;i<2;i++){
+    for(int j=0;j<3;j++) ans += pd[i][j];
+  }
+  ans %= 10000;
+  cout << ans << endl;
+  return 0;
+}

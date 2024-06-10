@@ -1,0 +1,234 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cassert>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <list>
+#include <set>
+#include <map>
+#include <bitset>
+#include <functional>
+#include <iterator>
+
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define iter(c) __typeof__((c).begin())
+#define foreach(i,c) for(iter(c) i=(c).begin();i!=(c).end();++i)
+#define all(c) (c).begin(),(c).end()
+#define mp make_pair
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+typedef pair<int,int> pii;
+
+const int INFTY=1<<29;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+const double PI=acos(-1);
+
+int Signum(double x){
+	return x<-EPS?-1:x<EPS?0:1;
+}
+
+struct Point{
+	double x,y;
+	Point(){}
+	Point(double x,double y):x(x),y(y){}
+};
+bool operator==(Point a,Point b){
+	return abs(a.x-b.x)<EPS && abs(a.y-b.y)<EPS;
+}
+bool operator!=(Point a,Point b){
+	return !(a==b);
+}
+Point operator+(Point a,Point b){
+	return Point(a.x+b.x,a.y+b.y);
+}
+Point operator-(Point a,Point b){
+	return Point(a.x-b.x,a.y-b.y);
+}
+Point operator*(double c,Point p){
+	return Point(c*p.x,c*p.y);
+}
+Point operator/(Point p,double c){
+	return Point(p.x/c,p.y/c);
+}
+struct LessX{
+	bool operator()(Point a,Point b){
+		return abs(a.x-b.x)>EPS?a.x<b.x-EPS:a.y<b.y-EPS;
+	}
+};
+
+double Abs(Point p){
+	return sqrt(p.x*p.x+p.y*p.y);
+}
+double Abs2(Point p){
+	return p.x*p.x+p.y*p.y;
+}
+double Arg(Point p){
+	return atan2(p.y,p.x);
+}
+double Dot(Point a,Point b){
+	return a.x*b.x+a.y*b.y;
+}
+double Cross(Point a,Point b){
+	return a.x*b.y-a.y*b.x;
+}
+Point Rot(Point p,double t){
+	return Point(cos(t)*p.x-sin(t)*p.y,sin(t)*p.x+cos(t)*p.y);
+}
+
+struct Line{
+	Point pos,dir;
+	Line(){}
+	Line(Point p,Point d):pos(p),dir(d){}
+	Line(double px,double py,double dx,double dy):pos(px,py),dir(dx,dy){}
+};
+typedef Line Segment;
+
+Point Proj(Line l,Point p){
+	Point a=p-l.pos,b=l.dir;
+	return l.pos+Dot(a,b)/Abs2(b)*b;
+}
+
+ostream& operator<<(ostream& os,const Point& p){
+	return os<<'('<<p.x<<','<<p.y<<')';
+}
+ostream& operator<<(ostream& os,const Line& l){
+	return os<<'('<<l.pos<<','<<l.dir<<')';
+}
+
+int CCW(Point a,Point b,Point c){
+	Point d1=b-a,d2=c-a;
+	if(int sign=Signum(Cross(d1,d2)))
+		return sign;	// 1:ccw,-1:cw
+	if(Dot(d1,d2)<-EPS)
+		return -2;		// c-a-b
+	if(Abs2(d1)<Abs2(d2)-EPS)
+		return 2;		// a-b-c
+	return 0;			// a-c-b
+}
+
+bool IntersectLL(Line a,Line b){
+	return abs(Cross(a.dir,b.dir))>EPS || abs(Cross(a.dir,b.pos-a.pos))<EPS;
+}
+bool IntersectLS(Line l,Segment s){
+	Point a=s.pos-l.pos,b=s.pos+s.dir-l.pos;
+	return Signum(Cross(l.dir,a))*Signum(Cross(l.dir,b))<=0;
+}
+bool IntersectSS(Segment a,Segment b){
+	int c1=CCW(a.pos,a.pos+a.dir,b.pos),c2=CCW(a.pos,a.pos+a.dir,b.pos+b.dir);
+	int c3=CCW(b.pos,b.pos+b.dir,a.pos),c4=CCW(b.pos,b.pos+b.dir,a.pos+a.dir);
+	return c1*c2<=0 && c3*c4<=0;
+}
+bool IntersectSP(Segment s,Point p){
+	return CCW(s.pos,s.pos+s.dir,p)==0;
+}
+
+Point InterPointLL(Line a,Line b){
+	if(abs(Cross(a.dir,b.dir))<EPS)
+		return a.pos;
+	return a.pos+Cross(b.pos-a.pos,b.dir)/Cross(a.dir,b.dir)*a.dir;
+}
+Point InterPointLS(Line l,Segment s){
+	return InterPointLL(s,l);
+}
+Point InterPointSS(Segment a,Segment b){
+	if(abs(Cross(a.dir,b.dir))<EPS){
+		if(IntersectSP(b,a.pos)) return a.pos;
+		if(IntersectSP(b,a.pos+a.dir)) return a.pos+a.dir;
+		if(IntersectSP(a,b.pos)) return b.pos;
+		if(IntersectSP(a,b.pos+b.dir)) return b.pos+b.dir;
+	}
+	return InterPointLL(a,b);
+}
+
+double Area(const vector<Point>& ps){
+	double res=0;
+	repi(i,2,ps.size())
+		res+=Cross(ps[i-1]-ps[0],ps[i]-ps[0]);
+	return res;
+}
+
+vector<Point> ConvexCut(const vector<Point>& ps,Line l){
+	int n=ps.size();
+	vector<Point> res;
+	rep(i,n){
+		int c1=CCW(l.pos,l.pos+l.dir,ps[i]);
+		int c2=CCW(l.pos,l.pos+l.dir,ps[(i+1)%n]);
+		if(c1!=-1)
+			res.push_back(ps[i]);
+		if(c1*c2==-1)
+			res.push_back(InterPointLS(l,Segment(ps[i],ps[(i+1)%n]-ps[i])));
+	}
+	return res;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vector<Point> ps(n);
+		rep(i,n) cin>>ps[i].x>>ps[i].y;
+		
+		double area=Area(ps);
+		
+		Line ls[2];
+		rep(i,2){
+			Point p=ps[i],a=ps[(i+1)%n]-p,b=ps[(i+n-1)%n]-p;
+			double lo=atan2(a.y,a.x),hi=atan2(b.y,b.x);
+			if(lo>hi) hi+=2*PI;
+			rep(_,60){
+				double mi=(lo+hi)/2;
+				Line l(p,Rot(Point(1,0),mi));
+				if(Area(ConvexCut(ps,l))<area/2)
+					hi=mi;
+				else
+					lo=mi;
+			}
+			ls[i]=Line(p,Rot(Point(1,0),lo));
+		}
+		
+		Point ip=InterPointLL(ls[0],ls[1]);
+		
+		bool ok=true;
+		rep(i,5){
+			double t=rand()*2*PI/RAND_MAX;
+			double a=Area(ConvexCut(ps,Line(ip,Rot(Point(1,0),t))));
+			ok&=abs(a-area/2)/(area/2)<EPS;
+		}
+		if(ok) printf("%f %f\n",ip.x,ip.y);
+		else   puts("NA");
+	}
+}

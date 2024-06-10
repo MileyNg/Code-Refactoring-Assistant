@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+main(){
+  int i,k,j,m,a[1000],kazu;
+  char mozi[1000],tmp[1000];
+  while(1){
+    scanf("%s",mozi);
+    if(mozi[0]=='-')break;
+    scanf("%d",&m);
+    kazu=strlen(mozi);
+    for(i=0;i<m;i++){
+      scanf("%d",&a[i]);
+      for(j=0;j<a[i];j++){
+	strcpy(tmp,mozi);
+	for(k=kazu-1;k>=0;k--){ // 並べ替え
+	  if(k==0) mozi[kazu-1]=tmp[0];
+	  else mozi[k-1]=tmp[k];
+	}
+      }
+    }
+    printf("%s\n",mozi);
+    kazu=0;
+  }
+  return 0;
+}
+
+  

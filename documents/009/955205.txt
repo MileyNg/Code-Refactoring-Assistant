@@ -1,0 +1,111 @@
+
+//n == 2のときは無料にできない.
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<functional>
+#define INF 100000000
+using namespace std;
+
+typedef pair<int,int> P;	//cost,node
+
+int n,m;
+int s,t,u;		//s→t→uと来たときのみ無料。したがって、node[s]からnode[u]へグラフを1本張ればよい。
+struct NODE
+{
+	vector<int> et;
+	vector<int> ec;
+	int size;
+}node[100];
+
+int Dijkstra()
+{
+	int done[100] = {0};
+	int mcos[100];
+	int i;
+	priority_queue< P,vector<P>,greater<P> > que;
+	P now;
+
+	for( i = 0;i < n;i++ )
+		mcos[i] = INF;
+
+	que.push( P(0,0) );
+	while( !que.empty() )
+	{
+		now = que.top();
+		que.pop();
+		if( done[ now.second ] )
+			continue;
+		done[ now.second ] = 1;
+		mcos[ now.second ] = now.first;
+
+		NODE *no = &node[ now.second ];
+		for( i = 0;i < no->size;i++ ){
+			int cost = no->ec[i];
+			if( mcos[ no->et[i] ] > mcos[ now.second ] + cost ){
+				mcos[ no->et[i] ] = mcos[ now.second ] + cost;
+				que.push( P( mcos[ no->et[i] ],no->et[i] ) );
+			}
+		}
+	}
+	return mcos[ n-1 ];
+}
+
+int main(){
+	int i,j,k,l;
+
+	for( i = 0;cin >> n >> m;i++ ){
+		int ans = INF;
+		s = -1;t = -1;u = -1;
+		if( n == 0 && m == 0 )
+			break;
+		for( i = 0;i < n;i++ ){
+			node[i].size = 0;
+		}
+		for( j = 0;j < m;j++ ){
+			int a,b,c;
+			cin >> a >> b >> c;
+			a--;b--;
+			node[a].et.push_back(b);
+			node[b].et.push_back(a);
+			node[a].ec.push_back(c);
+			node[b].ec.push_back(c);
+			node[a].size++;
+			node[b].size++;
+		}
+
+		//無料区間が0
+		ans = min( ans,Dijkstra() );
+
+		for( j = 0;j < n; j++){
+			s = j;
+			for( k = 0;k < node[s].size; k++){
+				t = node[s].et[k];
+				for(l = 0;l < node[t].size ;l++){
+					u = node[t].et[l];
+					//無料区間が2
+					node[s].et.push_back(u);
+					node[u].et.push_back(s);
+					node[s].ec.push_back(0);
+					node[u].ec.push_back(0);
+					node[s].size++;
+					node[u].size++;
+					ans = min( ans,Dijkstra() );
+					node[s].et.pop_back();
+					node[u].et.pop_back();
+					node[s].ec.pop_back();
+					node[u].ec.pop_back();
+					node[s].size--;
+					node[u].size--;
+				}
+			}
+		}
+		cout << ans << endl;
+		for( i = 0;i < n;i++ ){
+			node[i].ec.clear();
+			node[i].et.clear();
+			node[i].size = 0;
+		}
+	}
+	return 0;
+} 

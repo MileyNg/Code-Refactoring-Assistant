@@ -1,0 +1,40 @@
+
+#include <stdio.h>
+
+double function(double,double,double,double,double,double);
+
+double main(void){
+	double xa,ya,xb,yb,xc,yc,xp,yp;
+	
+	scanf("%lf%lf%lf%lf%lf%lf%lf%lf", &xa,&ya,&xb,&yb,&xc,&yc,&xp,&yp);
+	
+	double abc,abp,bcp,cap,sum;
+	
+	abc = function(xa,ya,xb,yb,xc,yc);
+	abp = function(xa,ya,xb,yb,xp,yp);
+	bcp = function(xb,yb,xc,yc,xp,yp);
+	cap = function(xc,yc,xa,ya,xp,yp);
+	sum = abp+bcp+cap;
+	
+//	printf("xa:%f ya:%f xb:%f yb:%f xc:%f yc:%f xp:%f yp:%f\n");
+//	printf("abc:%f\nabp:%f\nbcp:%f\ncap:%f\nsum:%f\n", abc,abp,bcp,cap,sum);
+	
+	if(sum-abc < 0.001 && sum-abc > -0.001){
+		printf("YES\n");
+	} else {
+		printf("NO\n");
+	}
+	
+	return 0;
+	
+}
+
+double function(double a, double b, double c, double d, double e, double f){
+	double menseki = ((c-a)*(f-b)-(e-a)*(d-b))/2;
+		if(menseki < 0) menseki = menseki * -1;
+		
+		
+//		printf("a:%f\nb:%f\nc:%f\nd:%f\nr:%f\nf:%f\nmenseki:%f\n", a,b,c,d,e,f,menseki);
+		
+	return menseki;
+}

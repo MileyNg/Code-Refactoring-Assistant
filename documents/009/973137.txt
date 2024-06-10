@@ -1,0 +1,78 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <array>
+#include <algorithm>
+
+using namespace std;
+
+#define SIZE 130
+bool table[SIZE][SIZE];
+int standed[SIZE][SIZE];
+
+int current_x;
+int current_y;
+int g_count;
+int g_turn;
+int g_current_turn;
+
+int g_dx[] = { 0, 1, 1, 0, -1, -1 };
+int g_dy[] = { 1, 1, 0, -1, -1, 0 };
+
+int calc(int x) {
+	return x + SIZE/2;
+}
+
+// 正直幅優先のほうが良い
+void solution() {
+	if (standed[calc(current_x)][calc(current_y)] == -1) {
+		++g_count;
+	} else if (standed[calc(current_x)][calc(current_y)] <= g_current_turn) return;
+	
+	standed[calc(current_x)][calc(current_y)] = g_current_turn;
+	if (g_current_turn >= g_turn) return;
+
+	auto x = current_x;
+	auto y = current_y;
+
+	for (int i = 0; i < 6; ++i) {
+		if (!table[calc(current_x + g_dx[i])][calc(current_y + g_dy[i])]) {
+			current_x += g_dx[i];
+			current_y += g_dy[i];
+
+			++g_current_turn;
+			solution();
+			--g_current_turn;
+
+			current_x = x;
+			current_y = y;
+		}
+	}
+}
+
+int main() {
+	while (true) {
+		memset(table, false, sizeof(table));
+		memset(standed, -1, sizeof(standed));
+
+		g_count = 0;
+		g_current_turn = 0;
+
+		int n;
+		cin >> g_turn >> n;
+		if (g_turn == 0) break;
+
+		for (int i = 0; i < n; ++i) {
+			int x, y;
+			cin >> x >> y;
+			table[calc(x)][calc(y)] = true;
+		}
+
+		cin >> current_x >> current_y;
+
+		solution();
+
+		cout << g_count << endl;
+	}
+}

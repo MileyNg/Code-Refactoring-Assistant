@@ -1,0 +1,66 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <string>
+#include <cmath>
+#include <cassert>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<b?(a=b,1):0)
+#define chmin(a,b) (a>b?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+
+int dp[100];
+
+int main() {
+  int D;
+  while(cin >> D) {
+    int n;
+    cin >> n;
+    memset(dp,0,sizeof(dp));
+    REP(i,n) {
+      char a;
+      int b;
+      cin >> a >> b;
+      if (a == 'D') {
+        for (int j=D-1; j>=0; --j) {
+          chmax(dp[j+1],dp[j]+b);  
+        }
+      }
+    }
+    int m;
+    cin >> m;
+    REP(i,m) {
+      char a;
+      char b;
+      int c;
+      cin >> a >> b >> c;
+      if (a == 'D' && b == 'D') {
+        for (int j=D-2; j>=0; --j) {
+          chmax(dp[j+2], dp[j] + c);
+        }
+      }
+    }
+    cout << dp[D] << endl;
+  }
+}

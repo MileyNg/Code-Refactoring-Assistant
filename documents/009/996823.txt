@@ -1,0 +1,55 @@
+#include<iostream>
+using namespace std;
+int a[200][200]={},sx,sy,gx,gy;
+int f(int i,int j){
+	if(i==gy && j==gx)
+		return 1;
+	if(a[i+1][j]==a[sy][sx])
+		if(f(i+1,j)==1)
+			return 1;
+	if(a[i][j+1]==a[sy][sx])
+		if(f(i,j+1)==1)
+			return 1;
+	if(a[i-1][j]==a[sx][sy])
+		if(f(i-1,j)==1)
+			return 1;
+	if(a[i][j-1]==a[sx][sy])
+		if(f(i,j-1)==1)
+			return 1;
+	return 0;
+}
+int main(){
+	while(1){
+		int w,h,n,c,d,x,y;
+		cin>>w>>h;
+		if(w==0 && h==0)
+		break;
+		for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+			a[i][j]=0;
+		cin>>sx>>sy;
+		cin>>gx>>gy;
+		cin>>n;
+		for(int i=0;i<n;i++){
+			cin>>c>>d>>x>>y;
+			if(d==0){
+				for(int i=0;i<2;i++)
+				for(int j=0;j<4;j++)
+					a[y+i][x+j]=c;
+			}
+			if(d==1){
+				for(int i=0;i<4;i++)
+				for(int j=0;j<2;j++)
+					a[y+i][x+j]=c;
+			}
+		}
+		if(a[sx][sy]!=a[gx][gy])
+		cout<<"NG"<<endl;
+		else if(f(sy,sx)==0)
+		cout<<"NG"<<endl;
+		else if(f(sx,sy)==1)
+		cout<<"OK"<<endl;
+	}
+	return 0;
+}
++-

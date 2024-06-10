@@ -1,0 +1,56 @@
+#include<sstream>
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<string>
+#include<vector>
+#include<set>
+#include<map>
+#include<queue>
+#include<numeric>
+#include<functional>
+#include<algorithm>
+using namespace std;
+#define INF (1<<29)
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define all(v) v.begin(),v.end()
+#define uniq(v) v.erase(unique(all(v)),v.end())
+#define indexOf(v,x) (find(all(v),x)-v.begin())
+
+
+using namespace std;
+
+
+
+int main(){
+	int D,x,y;
+	vector<int> one,two;
+	int ans=0;
+	cin>>D;
+	cin>>x;
+	rep(i,x){
+		char a;
+		int p;
+		cin>>a>>p;
+		if(a=='D')one.push_back(p);
+	}
+	cin>>y;
+	rep(i,y){
+		char b,c;
+		int p;
+		cin>>b>>c>>p;
+		if(b=='D'&&c=='D')two.push_back(p);
+	}
+	sort(all(one),greater<int>());
+	sort(all(two),greater<int>());
+	rep(i,D/2+1){
+		int s=0;
+		rep(j,min<int>(D-2*i,one.size()))s+=one[j];
+		rep(j,min<int>(i,two.size()))s+=two[j];
+		ans=max(ans,s);
+	}
+	cout<<ans<<endl;
+	return 0;
+}

@@ -1,0 +1,37 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+using namespace std;
+const int MAX_V = 100;
+vector<pair<int,int> > pairs;
+int main(){
+  int n; scanf("%d",&n);
+  for(int i=0;i<n;i++){
+    pair<int,int> p;
+    scanf("%d %d",&p.first,&p.second);
+    pairs.push_back(p);
+  }
+  long long int sum=0;
+  while(pairs.size()>1){
+    vector<pair<int,int> >::iterator min_ptr;
+    int min=0x7fffffff;
+    int mulMin=0x7fffffff;
+    for(auto iter=pairs.begin()+1;iter<pairs.end();iter++){
+      int localMin = (*(iter-1)).first;
+      if(localMin > (*iter).second) localMin = (*iter).second;
+      int mul=(*(iter-1)).first*(*iter).second;
+      if(min>=localMin){
+	if(mulMin>mul){
+	  min=localMin;
+	  mulMin=mul;
+	  min_ptr=iter;
+	}
+      }
+    }
+    cout<<(*(min_ptr-1)).first<<":"<<(*min_ptr).first<<":"<<(*min_ptr).second<<"\n";
+    sum+=(*(min_ptr-1)).first*(*min_ptr).first*(*min_ptr).second;
+    (*(min_ptr-1)).second=(*min_ptr).second;
+    pairs.erase(min_ptr);
+  }
+  printf("%lld\n",sum);
+}

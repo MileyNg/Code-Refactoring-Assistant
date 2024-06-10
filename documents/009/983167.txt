@@ -1,0 +1,189 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+
+int INF=1<<28;
+struct SegmentTree{
+	vector<int> dat;
+	vector<int> mi;
+
+	int n,size;
+	SegmentTree(int _n){
+		n=Pow2Fit(_n)<<1;
+		size=2*n-1;
+		dat=vector<int>(size,-INF);
+		mi=vector<int>(size,INF);
+	}
+	int Pow2Fit(int n){
+		  n = n | (n >>  1);n = n | (n >>  2);n = n | (n >>  4);n = n | (n >>  8);n = n | (n >> 16);
+		  return n ^ (n >> 1);
+	}
+
+	void update(int v,int a){
+		v+=n-1;
+		dat[v]=a;
+		mi[v]=v-(n-1);
+		DUMP(a);
+		while(v>0){
+			int parent=v=(v-1)/2;
+			int chl=parent*2+1,chr=parent*2+2;
+			if(dat[chl]>=dat[chr])mi[parent]=mi[chl];				
+			else mi[parent]=mi[chr];
+			dat[parent]=max(dat[chl],dat[chr]);
+		}
+	}
+
+	int query(int a,int b){
+		return query(0,a,b,0,n);
+	}
+
+	private:
+	int query(int v,int a,int b,int l,int r){
+		if(r<=a || b<=l)return -1;//out range
+		if(a<=l && r<=b)return mi[v];
+
+		int vl=query(v*2+1,a,b,l,(l+r)/2);
+		int vr=query(v*2+2,a,b,(l+r)/2,r);
+		DUMP(v);DUMP(l);DUMP(r);DUMP(vl);DUMP(vr);DUMP(BR);
+		if(vl==-1)return vr;
+		if(vr==-1)return vl;
+
+		if(dat[vl+(n-1)]>=dat[vr+(n-1)])return vl;
+		else return vr;
+	}
+};
+
+class Task{
+	public:
+	int d,t,x;
+	Task(int d,int t,int x):d(d),t(t),x(x){
+	}
+
+	bool operator < (const Task& r) const {
+		return t< r.t;
+	}
+};
+
+class Main{
+public:
+	
+	void run(){
+		int N,R,L;cin >> N >> R >> L;
+		vector<Task> ts;
+		REP(i,R){
+			int d,t,x;cin >> d >> t >> x;d--;
+			ts.push_back(Task(d,t,x));
+		}
+		sort(ALL(ts));
+
+		vector<int> vs(N);
+		SegmentTree seg(N);
+		REP(i,N)seg.update(i,0);
+
+		int pt=0;
+		REP(i,R){
+			vs[seg.query(0,N)]+=ts[i].t-pt;
+			pt=ts[i].t;
+			seg.update(ts[i].d,seg.dat[ts[i].d+(N-1)]+ts[i].x);
+		}
+		vs[seg.query(0,N)]+=L-pt;
+
+		int Mv=0;
+		REP(i,N){
+			Mv=max(Mv,vs[i]);
+		}
+		REP(i,N)if(Mv==vs[i]){
+			cout <<i+1<<endl;return;
+		}
+
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

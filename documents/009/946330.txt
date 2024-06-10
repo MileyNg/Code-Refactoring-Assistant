@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <list>
+using namespace std;
+
+pair<int,char> card[9];
+
+int main(void){
+	int t;
+	cin >> t;
+	for(int loop=0;loop<t;loop++){
+
+		for(int i=0;i<9;i++)
+			cin >> card[i].first;
+
+		for(int i=0;i<9;i++)
+			cin >> card[i].second;
+
+		bool ok=false;
+
+		sort(card,card+9);
+
+		do{	
+			bool check=true;
+
+			for(int i=0;i<3;i++){
+				bool color=false;
+
+				// color
+				if(((card[3*i].second==card[3*i+1].second)&&(card[3*i+1].second==card[3*i+2].second)))
+					color=true;
+
+				bool number=false;
+
+				// number
+				if((card[3*i].first+1==card[3*i+1].first)&&(card[3*i+1].first+1==card[3*i+2].first))
+					number=true;
+				
+				if((card[3*i+1].first==card[3*i].first)&&(card[3*i+2].first==card[3*i+1].first))
+					number=true;
+
+				if(number&&color)
+					continue;
+
+				check=false;
+			}
+
+			if(check)
+				ok=true;
+
+		}while(next_permutation(card,card+9));
+		cout << ok <<  endl;
+	}
+	return 0;
+}

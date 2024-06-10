@@ -1,0 +1,13 @@
+while true
+  q = gets.chomp.to_f
+  break if q < 0
+
+  delta = 0.00001 * q
+  x = q / 2
+
+  while (d = x ** 3 - q).abs >= delta
+    x = x - d / (3 * x * x)
+  end
+
+  printf("%.6f\n", x)
+end

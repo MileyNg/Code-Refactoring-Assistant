@@ -1,0 +1,43 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int sum[100],x,i=0,a1,a2;
+  char s[100];
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      i--;     
+      a1=sum[i];
+      i--;
+      a2=sum[i];
+      sum[i]=a1+a2;
+      i++;
+    } else if ( s[0] == '-' ){
+      i--;    
+      a1=sum[i];
+      i--;
+      a2=sum[i];
+      
+      sum[i]=a1-a2;
+      i++; 
+    } else if ( s[0] == '*' ){
+      i--;    
+      a1=sum[i];
+      i--;
+      a2=sum[i];
+      sum[i]=a1*a2;
+      i++;
+    } else {
+      x = atoi(s);
+      sum[i]=x;      
+      i++;    
+    }
+   
+  }
+  
+  
+  printf("%d\n",sum[i-1]);
+  return 0;
+}

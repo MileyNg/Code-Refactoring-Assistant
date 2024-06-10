@@ -1,0 +1,30 @@
+#include<iostream>
+#include<string>
+using namespace std;
+int main(){
+  int n;
+  char c;
+  cin >> n;
+  int d[7];//"J","O","I","JO","JI","OI","JOI";
+  int mem[7];
+  for(int i=0;i<7;i++) d[i] = mem[i] = 0;
+  d[0] = 1;
+  for(int i=0;i<n;i++){
+    cin >> c;
+    if(c=='J') mem[0] = d[0] + d[3] + d[4] + d[6];
+    if(c=='O') mem[1] = d[1] + d[3] + d[5] + d[6];
+    if(c=='I') mem[2] = d[2] + d[4] + d[5] + d[6];
+    if(c=='J'||c=='O') mem[3] = d[0] + d[1] + d[3] + d[4] + d[5] + d[6];
+    if(c=='J'||c=='I') mem[4] = d[0] + d[2] + d[3] + d[4] + d[5] + d[6];
+    if(c=='O'||c=='I') mem[5] = d[1] + d[2] + d[3] + d[4] + d[5] + d[6];
+    mem[6] = d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6];
+    for(int i=0;i<7;i++){
+      d[i] = mem[i] % 10007;
+      mem[i] = 0;
+    }
+  }
+  int ans = 0;
+  for(int i=0;i<7;i++) ans += d[i];
+  cout << ans % 10007 << endl;
+  return 0;
+}

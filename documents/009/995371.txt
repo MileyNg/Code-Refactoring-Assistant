@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+
+#define loop(v, f, l) for(int v = (f), v##_ = (l); v < v##_; ++v)
+
+using namespace std;
+
+typedef long long int lint;
+static inline int in(){ int x; scanf("%d", &x); return (x); }
+static inline lint inl(){ lint x; scanf("lld", &x); return (x); }
+
+int main()
+{
+	map<char, char> conversion;
+	int n;
+	int m;
+	while( scanf("%d\n", &n) != EOF )
+	{
+		if( n == 0 )break;
+		conversion.clear();
+		loop(i, 0, n)
+		{
+			char src;
+			char conv;
+			scanf("%c %c\n", &src, &conv);
+			conversion[src] = conv;
+		}
+		scanf("%d\n", &m);
+		loop(i, 0, m)
+		{
+			char c[2];
+			scanf("%s", c);
+			if( conversion.count(c[0]) == 0 )
+			{
+				printf("%c", c[0]);
+			}
+			else
+			{
+				printf("%c", conversion[c[0]]);
+			}
+		}
+		cout << endl;
+	}
+	return (0);
+}

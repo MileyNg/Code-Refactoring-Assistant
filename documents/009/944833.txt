@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include <ctype.h>
+
+int stack[200],p=0;
+
+void push(int x){
+  stack[p++]=x;
+}
+
+int pop(void){
+  return stack[--p];
+}
+
+int main(void){
+  int x,i,a,b;
+  char eq;
+
+  do{
+    scanf("%c",&eq);
+
+    if(eq == '+'){
+      push( pop() + pop() );
+    }else if(eq == '-'){
+      a = pop();
+      b = pop();
+      push( b - a );
+    }else if(eq == '*'){
+      push( pop() * pop() );
+    }else if(isdigit(eq)){
+      x = atoi(&eq);
+      push(x);
+    }
+
+    /*                                                                          
+    for(i=0; i<10; i++){                                                        
+      printf("%d ",stack[i]);                                                   
+    }                                                                           
+    printf("\n");                                                               
+    */
+
+  }while(eq != '\n');
+
+  printf("%d\n",stack[p-1]);
+
+  return 0;
+}

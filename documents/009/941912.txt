@@ -1,0 +1,10 @@
+while 1:
+	N = map(int,raw_input().split())
+	if sum(N) == 0: break
+	md,gg,go = N[0]+N[3],N[1]+N[4],N[2]+N[5]
+	low = min(md,gg,go)
+	if low < 3:
+		md -= low; gg -= low; go -= low
+	count = min(md/3,gg/3,go/3)
+	md -= 3*count; gg -= 3*count; go -= 3*count
+	print low + count + md/3 + gg/3 + go/3 + min(md%3,gg%3,go%3)

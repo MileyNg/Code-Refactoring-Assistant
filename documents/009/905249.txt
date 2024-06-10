@@ -1,0 +1,77 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <tuple>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+typedef tuple<int, int, int> T;
+const int MN = 1010;
+int d[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+bool g[MN][MN] = {};
+int main() {
+    int w, h;
+    P t;
+    cin >> w >> h;
+    for (int i = 0; i < h; i++) {
+        string s;
+        cin >> s;
+        for (int j = 0; j < w; j++) {
+            if (s[j] == 't') {
+                t = P(i, j);
+            }
+            if (s[j] == '#') {
+                g[i][j] = true;
+            }
+        }
+    }
+    bool used[MN][MN];
+    fill_n(used[0], MN*MN, false);
+    int n;
+    cin >> n;
+    queue<P> q;
+    q.push(P(0, 0));
+    bool f = false;
+    for (int i = 0; i <= n; i++) {
+        while (!q.empty()) {
+            P p = q.front(); q.pop();
+            if (used[p.first][p.second]) continue;
+            used[p.first][p.second] = true;
+            if (p == t) {
+                f = true;
+                break;
+            }
+            for (int j = 0; j < 4; j++) {
+                P pp = p;
+                pp.first += d[j][0];
+                pp.second += d[j][1];
+                if (0 <= pp.first && pp.first < h && 0 <= pp.second && pp.second < w && !g[pp.first][pp.second]) {
+                    q.push(pp);
+                }
+            }
+        }
+        if (f) {
+            printf("%d\n", i);
+            return 0;
+        }
+        if (i == n) break;
+        int x, y;
+        cin >> x >> y;
+        q.push(P(y, x));
+        g[y][x] = false;
+    }
+    printf("-1\n");
+    return 0;
+}

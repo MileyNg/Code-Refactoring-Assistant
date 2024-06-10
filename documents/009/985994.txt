@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+int w, h;
+char ma[30][30];
+char check[30][30];
+int mx[4] = {-1, 0, 1, 0};
+int my[4] = {0, -1, 0, 1};
+int ans;
+
+void Rec(int x, int y);
+
+int main(void){
+	while(1){
+		ans = 0;
+
+		cin >> w >> h;
+		if(w == 0 && h == 0) break;
+		for(int i=0; i<h; i++){
+			scanf("%s", ma[i]);
+		}
+
+		int sx, sy;
+		for(int i=0; i<h; i++){
+			for(int j=0; j<w; j++){
+				if(ma[i][j] == '@'){
+					sx = j;
+					sy = i;
+				}
+				check[i][j] = 0;
+			}
+		}
+		
+		check[sy][sx] = 1;
+		ans++;
+		Rec(sx, sy);
+
+		cout << ans << endl;
+	}
+
+	return 0;
+}
+
+void Rec(int x, int y){
+	for(int i=0; i<4; i++){
+		int nx = x + mx[i];
+		int ny = y + my[i];
+
+		if(nx >= 0 && nx < w && ny >= 0 && ny < h && ma[ny][nx] == '.' && check[ny][nx] == 0){
+			check[ny][nx] = 1;
+			ans++;
+			Rec(nx, ny);
+		}
+	}
+}

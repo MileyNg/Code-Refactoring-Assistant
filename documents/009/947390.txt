@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int A(const string &s) {
+  for(int i = 0; i < s.size(); ++i) {
+    if(s[i] == '#') return i;
+  }
+  return -1;
+}
+
+int B(const string &s) {
+  for(int i = s.size()-1; i >= 0; --i) {
+    if(s[i] == '#') {
+      bool a = i == 0 || s[i-1] != 'A';
+      bool b = i+1 == s.size() || s[i+1] != 'A';
+      if(a && b) return i;
+    }
+  }
+  return A(s);
+}
+
+int C(const string &s) {
+  for(int i = 0; i < s.size(); ++i) {
+    if(s[i] != '#') {
+      if(i+1 < s.size() && s[i+1] == '#') return i+1;
+      if(i && s[i-1] == '#') return i-1;
+    }
+  }
+  return s.size()/2;
+}
+
+int D(const string &s) {
+  pair<int,int> res(0,-1);
+  for(int i = 0; i < s.size(); ++i) {
+    if(s[i] != '#') continue;
+    int l = s.size(), r = s.size();
+    for(int j = i-1; j >= 0; --j) {
+      if(s[j] != '#') {
+        l = i - j;
+        break;
+      }
+    }
+    for(int j = i+1; j < s.size(); ++j) {
+      if(s[j] != '#') {
+        r = j-i;
+        break;
+      }
+    }
+    if(l == s.size() && i != 0) continue;
+    if(r == s.size() && i+1 != s.size()) continue;
+    res = min(res, make_pair(-min(l,r), i));
+  }
+  if(res.second == -1) return A(s);
+  return res.second;
+}
+
+int main() {
+  for(int n, m; cin >> n >> m && (n|m);) {
+    string s(n, '#');
+    while(m--) {
+      char c;
+      cin >> c;
+      int pos;
+      switch(c) {
+      case 'A': pos = A(s); break;
+      case 'B': pos = B(s); break;
+      case 'C': pos = C(s); break;
+      case 'D': pos = D(s); break;
+      }
+      s[pos] = c;
+    }
+    cout << s << endl;
+  }
+  return 0;
+}

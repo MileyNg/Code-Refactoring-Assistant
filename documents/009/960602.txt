@@ -1,0 +1,49 @@
+#include<stdio.h>
+
+#define N 2000
+
+int search(int c,int x);
+int n,q;
+int A[N],M[N];
+int t;
+
+
+int main(){
+	int i;
+	scanf("%d",&n);
+	for(i=0;i<n;i++){
+		scanf("%d",&A[i]);
+	}
+
+		scanf("%d",&q);
+	for(i=0;i<q;i++){
+		scanf("%d",&M[i]);
+	}
+
+	for(i=0;i<q;i++){
+		t=0;
+		search(-1,M[i]);
+		if(t==1){
+			printf("yes\n");
+		}
+		else{
+			printf("no\n");
+		}
+	}
+
+	return 0;
+}
+
+int search(int c,int x){
+	if (c>n)return 0;
+	else if(x<0)return 0;
+	else if(x==0 || x-A[c]==0){
+		t=1;
+		return 1;
+	}
+	else{
+		search(c+1,x);
+		search(c+1,x-A[c]);
+	}
+
+}

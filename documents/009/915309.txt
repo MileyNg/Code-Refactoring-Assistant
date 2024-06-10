@@ -1,0 +1,64 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+int a[8][8][8],n,m,p;
+int y[300],x[300];
+int dz[13] = {0,0,1,0,0,1,1,1,1,1,1,1,1};
+int dy[] = {0,1,0,1,1,0,0,1,-1,1,1,-1,-1};
+int dx[] = {1,0,0,1,-1,1,-1,0,0,1,-1,1,-1};
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	while(cin>>n>>m>>p && n){
+		memset(a,-1,sizeof(a));
+		rep(i,p){
+			cin>>y[i]>>x[i];
+			y[i]--;x[i]--;
+		}
+		rep(i,p){
+			int z=0;
+			while(a[z][y[i]][x[i]] != -1) z++;
+			a[z][y[i]][x[i]] = i%2;
+			rep(sz,n)rep(sy,n)rep(sx,n)rep(d,13){
+				int z = sz, y = sy, x = sx, ok = 1;
+				rep(j,m){
+					if(z>=n || y<0 || y>=n || x<0 || x>=n || a[z][y][x] != i%2){
+						ok=0;break;
+					}
+					z+=dz[d],y+=dy[d],x+=dx[d];
+				}
+				if(ok){
+					cout<<(i%2==0 ? "Black":"White")<<" "<<i+1<<endl;
+					goto end;
+				}
+			}
+		}
+		cout<<"Draw"<<endl;
+		end:;
+	}
+}

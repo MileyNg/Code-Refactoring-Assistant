@@ -1,0 +1,30 @@
+if __FILE__ == $0
+  n, q = gets.split.map{|i| i.to_i}
+  wakasagi = Array.new(n, 0)
+  currMaxUser = []
+  currMaxWakasagi = 0
+  q.times do
+    a, v = gets.split.map{|i| i.to_i}
+    wakasagi[a - 1] += v
+    if wakasagi[a - 1] > currMaxWakasagi
+      currMaxUser = [a]
+      currMaxWakasagi = wakasagi[a - 1]
+    elsif wakasagi[a - 1] == currMaxWakasagi
+      currMaxUser << a
+    elsif wakasagi[a - 1] < currMaxWakasagi
+      if currMaxUser.include?(a)
+        currMaxUser.delete(a)
+        if currMaxUser.length() == 0
+          currMaxWakasagi = wakasagi.max
+          currMaxUser = []
+          wakasagi.each_with_index do |w, idx|
+            if w == currMaxWakasagi
+              currMaxUser << idx + 1
+            end
+          end
+        end
+      end
+    end
+    puts "#{currMaxUser.sort[0]} #{currMaxWakasagi}"
+  end
+end

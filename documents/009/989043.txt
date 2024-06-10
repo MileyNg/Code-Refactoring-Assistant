@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <complex>
+
+using namespace std;
+
+#define X real()
+#define Y imag()
+
+typedef complex<double> P;
+
+bool cmp(const P &a, const P &b) {
+	if (a.X != b.X) return a.X < b.X;
+	return a.Y < b.Y;
+}
+
+vector<P> convex_hull(vector<P> ps){
+	sort(ps.begin(), ps.end(), cmp);
+	ps.erase(unique(ps.begin(), ps.end()), ps.end());
+	int n = ps.size(), k = 0;
+	vector<P> ch(2 * n);
+	P a;
+	for (int i = 0; i < n; ch[k++] = ps[i++]){
+		while (k > 1 && imag(conj(ch[k - 1] - ch[k - 2]) * (ps[i] - ch[k - 1])) <= 0) --k;
+	}
+	for (int i = n - 2, t = k; i >= 0; ch[k++] = ps[i--]){
+		while (k > t && imag(conj(ch[k - 1] - ch[k - 2]) * (ps[i] - ch[k - 1])) <= 0) --k;
+	}
+	ch.resize(k-1);
+	return ch;
+}
+
+int main(){
+	int n;
+	while (cin >> n, n){
+		vector<P> ps;
+		while (n--){
+			double x, y;
+			char c;
+			cin >> x >> c >> y;
+			ps.emplace_back(x, y);
+		}
+
+		cout << ps.size()-convex_hull(ps).size() << '\n';
+	}
+
+	return 0;
+}

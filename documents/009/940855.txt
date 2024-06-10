@@ -1,0 +1,35 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8').trim();
+var lines = input.split('\n');
+
+var num;
+while (num = lines.shift()) {
+    if (num == '0')
+        break;
+
+    var n = +num;
+    var m = [];
+    var colsum = [];
+    for (var i = 0; i < n; i++) {
+        var cols = lines.shift().split(' ').map(function(n){return +n;});
+        cols[cols.length] = cols.reduce(function(p,n) {
+            return p + n;
+        });
+        m.push(cols);
+
+        for (var j = 0; j < cols.length; j++) {
+            if (i == 0) {
+                colsum.push(cols[j]);
+            } else {
+                colsum[j] += cols[j];
+            }
+        }
+    }
+    m.push(colsum);
+
+    m.forEach(function(row) {
+        row.forEach(function(col) {
+            process.stdout.write(('    ' + col).slice(-5));
+        });
+        console.log();
+    });
+}

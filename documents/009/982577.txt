@@ -1,0 +1,68 @@
+#include<stdio.h>
+#define MAX 100005
+#define NIL -1
+ 
+typedef struct Node{
+  int p,l,r;
+    }Node;
+Node T[MAX];
+ 
+int depht(int);
+void print_degree(int);
+ 
+int main(){
+ 
+  int n,i,j,node,degree,child,sibling;
+ 
+  scanf("%d",&n);
+  for(i = 0; i < n; i++){
+    T[i].p = NIL;
+    T[i].l = NIL;
+    T[i].r = NIL;
+  }
+  for(i = 0; i < n; i++){
+    scanf("%d%d",&node,&degree);
+    for(j = 0; j < degree; j++){
+      scanf("%d",&child);
+      T[child].p = node;
+      if(j == 0)
+        T[node].l = child;
+      else
+        T[sibling].r = child;
+      sibling = child;
+    }
+  }
+ 
+  for(i = 0; i < n; i++){
+    printf("node %d: parent = %d, depth = %d, ",i,T[i].p,depth(i));
+    if(T[i].p == NIL)
+      printf("root, [");
+    else if(T[i].l == NIL)
+      printf("leaf, [");
+    else
+      printf("internal node, [");
+    print_degree(T[i].l);
+    printf("]\n");
+  }
+ 
+  return 0;
+}
+ 
+  int depth(int node){
+    if(T[node].p == NIL){
+      return 0;
+    } 
+    else {
+      return depth(T[node].p) + 1;
+    }
+  }
+ 
+void print_degree(int i){
+ 
+  if(i != NIL){
+    if(T[i].r == NIL)
+      printf("%d",i);
+    else printf("%d, ",i);
+  print_degree(T[i].r);
+  }
+}

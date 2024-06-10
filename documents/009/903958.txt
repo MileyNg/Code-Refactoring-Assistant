@@ -1,0 +1,82 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+#include <functional>
+#include <numeric>
+#include <cmath>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+#define ALL(co) co.begin(), co.end()
+
+typedef long long LL;
+typedef pair<int, int> P;
+typedef pair<P, P> PP;
+typedef vector<int> Array;
+typedef vector<int> LArray;
+
+const int INF = 1 << 29;
+const LL LINF = 1LL << 60;
+
+int itiv;
+inline int getInt() { return (cin >> itiv, itiv); }
+void readAll(Array& vec, int n) { for (int i = 0; i < n; i++) cin >> vec[i]; }
+inline bool between(int first, int last, int n) { return first <= n && n <= last; }
+inline bool inRange(int begin, int end, int n) { return begin <= n && n < end; }
+inline bool inRange(int size, int n) { return 0 <= n && n < size; }
+
+int m, n;
+int dx[] = { -1, 0, 1, 0 }, dy[] = { 0, -1, 0, 1 };
+int dr[] = { 0, -1, 0, 1 }, dc[] = { -1, 0, 1, 0 };
+
+vector<vector<bool> > stage;
+
+int dfs(int r, int c)
+{
+	if(!stage[r][c]) return 0;
+	stage[r][c] = false;
+
+	int ret = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		int nr = r + dr[i], nc = c + dc[i];
+		if(!inRange(n, nr) || !inRange(m, nc)) continue;
+		ret = max(ret, dfs(nr, nc));
+	}
+
+	stage[r][c] = true;
+	return ret + 1;
+}
+
+int main(void)
+{
+	while(cin >> m >> n && n)
+	{
+		stage = vector<vector<bool> >(n, vector<bool>(m));
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
+				stage[i][j] = getInt();
+			}
+		}
+
+		int ans = 0;
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
+				ans = max(ans, dfs(i, j));
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX_M 16
+#define MAX_N 20000
+#define INF LLONG_MAX
+
+typedef long long ll;
+
+int N,M,C[MAX_M],x[MAX_N];
+
+int main(){
+  while(cin >> N >> M , (N | M)){
+    for(int i = 0 ; i < M ; i++){
+      cin >> C[i];
+    }
+ 
+    for(int i = 0 ; i < N ; i++){
+      cin >> x[i];
+    }
+
+    ll min = INF;
+    for(int i = 0 ; i <= 255 ; i++){
+      ll value = 0, ii = i; 
+      for(int j = 0 ; j < N ; j++){
+        ll min_y = INF, next;
+        for(int k = 0 ; k < M ; k++){
+          int cmp = abs(x[j] - (ii + C[k]));
+
+          if(cmp < 0){
+            cmp = 0;
+          }else if(cmp > 255){
+            cmp = 255;
+          }
+
+          if(cmp < min_y){
+            min_y = cmp;
+            next = ii + C[k];
+          }
+        }
+        value += min_y*min_y;
+        ii = next;
+      }
+      min = std::min(min,value);
+    }
+    cout << min << endl;
+  }
+
+  return 0;
+}

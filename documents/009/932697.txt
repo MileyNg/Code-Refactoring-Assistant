@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void){
+	
+	char c1[100], c2[100];
+    int i, j, num;
+    int p1, p2;
+    p1 = 0;
+    p2 = 0;
+	
+    scanf("%d", &num);
+        
+    for (i = 0; i < num; i++) {
+        
+        scanf("%s %s", &c1, &c2);
+        getchar();
+        for(j = 0;c1[j] != '\0' && c2[j] != '\0'; j++) {
+            if (c1[j] > c2[j]) {
+                p1 += 3;
+                break;
+            }
+            else if (c1[j] < c2[j]) {
+                p2 += 3;
+                
+                break;
+            }
+            else if (c1[j+1] == '\0' && c2[j+1] == '\0') {
+                p1++;
+                p2++;
+            }
+            
+            if (c1[j+1] == '\0' || c2[j+1] == '\0') {
+                if (strlen(c1) > strlen(c2)) {
+                    p1++;
+                }
+                else {
+                    p2++;
+                }
+            }
+        }
+        
+    }
+    
+    printf("%d %d\n", p1, p2);
+	
+	return 0;
+    
+}

@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define LENGTH 10
+
+int main(){
+	char buf[10];
+	int num,i,j;
+	int data[LENGTH];
+	for(i=0;i<LENGTH;i++){
+	    fputs(buf,stdin);
+	    num = atoi(buf);
+	    data[i]=num;
+	}
+	for(i=0; i < LENGTH-1;i++){
+		for(j=0;j<LENGTH-i-1;j++){
+			if(data[j]>data[j+1]){
+				num=data[j+1];
+				data[j+1]=data[j];
+				data[j]=num;
+			}
+		}
+	}
+	printf("%d\n%d\n%d\n",data[LENGTH-1],data[LENGTH-2],data[LENGTH-3]);
+	return 0;
+}

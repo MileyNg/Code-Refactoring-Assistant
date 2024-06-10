@@ -1,0 +1,59 @@
+#include<iostream>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+int n;
+int board[8][8];
+bool used[8][8];
+
+bool ok(int y, int x) {
+  return 0 <= y && y < n && 0 <= x && x < n;
+}
+
+bool solve(int y, int x, int r) {
+  if (r < 0) return false;
+  if (used[y][x]) return false;
+  used[y][x] = true;
+  if (r == 0) {
+    rep (i, n) rep (j, n) if (!used[i][j] && board[i][j] < 0) {
+      bool res = solve(i, j, -board[i][j]);
+      used[y][x] = false;
+      return res;
+    }
+    return true;
+  }
+  rep (k, 4) {
+    int ny = y + dy[k];
+    int nx = x + dx[k];
+    if (!ok(ny, nx)) continue;
+    if (board[ny][nx] < 0) continue;
+    if (solve(ny, nx, r - board[ny][nx])) return true;
+  }
+  used[y][x] = false;
+  return false;
+}
+
+int main() {
+  while (true) {
+    cin >> n;
+    if (n == 0) break;
+    rep (i, n) rep (j, n) cin >> board[i][j];
+    rep (i, n) rep (j, n) used[i][j] = false;
+    int sum = 0;
+    rep (i, n) rep (j, n) sum += board[i][j];
+    if (sum != 0) {
+      cout << "NO" << endl;
+      continue;
+    }
+    rep (i, n) rep (j, n) if (board[i][j] < 0) {
+      if (solve(i, j, -board[i][j])) cout << "YES" << endl;
+      else cout << "NO" << endl;
+      i = j = n;
+    }
+  }
+}

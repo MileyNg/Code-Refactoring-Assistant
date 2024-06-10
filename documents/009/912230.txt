@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef long long ll;
+
+template<class T>
+inline T gcd(T a, T b) {
+  return b > 0 ? gcd(b, a % b) : a;
+}
+
+template<class T>
+inline T lcm(T a, T b) {
+  return a*b/gcd(a, b);
+}
+
+int main() {
+  int N;
+  
+  while(cin >> N && N) {
+    vector<ll> d(N), v(N);
+    
+    for(int i=0; i<N; i++) {
+      cin >> d[i] >> v[i];
+      int const GCD = gcd(d[i], v[i]);
+      d[i] /= GCD, v[i] /= GCD;
+    }
+    
+    ll D = d[0], V = v[0];
+    for(int i=1; i<N; i++) {
+      D = lcm(D, d[i]);
+      V = gcd(V, v[i]);
+    }
+    
+    for(int i=0; i<N; i++) {
+      cout << (v[i] * D) / (d[i] * V) << endl;
+    }
+  }
+  
+  return 0;
+}

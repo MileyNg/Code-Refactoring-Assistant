@@ -1,0 +1,49 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+
+	int pdata[8];
+	int cdata[8][8] = {
+		{ 4, 1, 4, 1, 2, 1, 2, 1 },
+		{ 4, 1, 2, 1, 2, 1, 4, 1 },
+		{ 2, 1, 4, 1, 4, 1, 2, 1 },
+		{ 2, 1, 2, 1, 4, 1, 4, 1 },
+		{ 1, 4, 1, 4, 1, 2, 1, 2 },
+		{ 1, 4, 1, 2, 1, 2, 1, 4 },
+		{ 1, 2, 1, 4, 1, 4, 1, 2 },
+		{ 1, 2, 1, 2, 1, 4, 1, 4 },
+	};
+	int ians, sans, sum;
+
+	while (cin >> pdata[0]){
+
+		for (int i = 1; i < 8; i++){
+			cin >> pdata[i];
+		}
+
+		for (int i = 7; i >= 0; i--){
+			sum = 0;
+			for (int j = 0; j < 8; j++){
+				if (pdata[j] > cdata[i][j]) sum += pdata[j] - cdata[i][j];
+			}
+			if (i == 7){
+				ians = 0;
+				sans = sum;
+			}
+			else if (sum < sans){
+				ians = i;
+				sans = sum;
+			}
+		}
+
+		for (int i = 0; i < 7; i++){
+			cout << cdata[ians][i] << " ";
+		}
+		cout << cdata[ians][7] << endl;
+
+	}
+
+	return 0;
+}

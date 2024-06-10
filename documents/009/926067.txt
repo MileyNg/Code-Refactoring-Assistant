@@ -1,0 +1,32 @@
+r, c = gets.chomp.split(' ').map { |i| i.to_i }
+table = Array.new(r)
+col_sum = Array.new(c, 0)
+(0..r-1).each_with_index { |ro,ri|
+  table[ri] = gets.chomp.split(' ').map { |i| i.to_i }
+}
+
+row_sum = 0
+table.each_with_index { |ro,ri|
+  ro.each_with_index { |co,ci|
+    if ci < ro.size-1 then
+      row_sum += co
+      col_sum[ci] += co
+      print "#{co} "
+    else
+      row_sum += co
+      col_sum[ci] += co
+      print "#{co} #{row_sum}\n"
+      row_sum = 0
+    end
+  }
+}
+
+col_sum.each_with_index { |co,ci|
+  if ci < col_sum.size-1 then
+    row_sum += co
+    print "#{co} "
+  else
+    row_sum += co
+    print "#{co} #{row_sum}\n"
+  end
+}

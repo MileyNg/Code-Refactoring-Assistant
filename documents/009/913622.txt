@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+enum {
+	TARO_WIN,
+	HANAKO_WIN,
+	DRAW
+};
+
+int which_win(char *taro_card, char *hana_card);
+
+int main(void){
+	int taro_p=0, hana_p=0, count, i;
+	char taro_card[128], hana_card[128];
+	scanf("%d",&count);
+	for(i = 0; i < count; i++){
+		scanf("%s %s", taro_card, hana_card);
+		int result = which_win(taro_card, hana_card);
+		if(result == TARO_WIN){ taro_p += 3; }
+		if(result == HANAKO_WIN){ hana_p += 3; }
+		if(result == DRAW){ taro_p++; hana_p++; }
+	}
+	
+	printf("%d %d\n",taro_p, hana_p);
+	return 0;
+}
+
+
+int which_win(char *taro_card, char *hana_card){
+	int i = 0;
+	while(1){
+		if(taro_card[i]=='\0' && hana_card[i]=='\0') { return DRAW;}
+		if(taro_card[i]=='\0') { return HANAKO_WIN; }
+		if(hana_card[i]=='\0') { return TARO_WIN; }
+		if(taro_card[i] == hana_card[i]) { i++; continue; }
+		if(taro_card[i] < hana_card[i]) { return HANAKO_WIN; }
+		return TARO_WIN;
+	}
+}

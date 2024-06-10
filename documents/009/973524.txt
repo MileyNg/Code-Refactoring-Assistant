@@ -1,0 +1,103 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+
+
+int main()
+{
+	int p, q, a, n, m[8];
+	while (cin >> p >> q >> a >> n, p || q || a || n){
+		int counter = 0;
+		for (int i0 = 1; i0 < a / 8; i0++){
+			m[0] = i0;
+			int total0 = m[0];
+			if (n >= 1){
+				int s = q * m[0];
+				if (total0 % q == 0 && s * p / q == s / m[0]){
+					counter++;
+				}
+			}
+			for (int i1 = 1; i1 <= i0; i1++){
+				m[1] = i1;
+				int total1 = total0 * m[1];
+				if (total1 > a || n < 2){
+					break;
+				}
+				else{
+					int s = q * total1;
+					if (total1 % q == 0 && s * p / q == s / m[0] + s / m[1]){
+						counter++;
+					}
+				}
+				for (int i2 = 1; i2 <= i1; i2++){
+					m[2] = i2;
+					int total2 = total1 * m[2];
+					if (total2 > a || n < 3){
+						break;
+					}
+					else{
+						int s = q * total2;
+						if (total2 % q == 0 && s * p / q == s / m[0] + s / m[1] + s / m[2]){
+							counter++;
+						}
+					}
+					for (int i3 = 1; i3 <= i2; i3++){
+						m[3] = i3;
+						int total3 = total2 * m[3];
+						if (total3 > a || n < 4){
+							break;
+						}
+						else {
+							int s = q * total3;
+							if (total3 % q == 0 && s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3]){
+								counter++;
+							}
+						}
+						for (int i4 = 1; i4 <= i3; i4++){
+							m[4] = i4;
+							int total4 = total3 * m[4];
+							if (total4 > a || n < 5){
+								break;
+							}
+							else {
+								int s = q * total4;
+								if (total4 % q == 0 && s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4]){
+									counter++;
+								}
+							}
+							for (int i5 = 1; i5 <= i4; i5++){
+								m[5] = i5;
+								int total5 = total4 * m[5];
+								if (total5 > a || n < 6){
+									break;
+								}
+								else{
+									int s = q * total5;
+									if (total5 % q == 0 && s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4] + s / m[5]){
+										counter++;
+									}
+								}
+								for (int i6 = 1; i6 <= i5; i6++){
+									m[6] = i6;
+									int total6 = total5 * m[6];
+									if (total6 > a || n < 7){
+										break;
+									}
+									else{
+										int s = q * total6;
+										if (total6 % q == 0 && s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4] + s / m[5] + s / m[6]){
+											counter++;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,50 @@
+#include<iostream>
+using namespace std;
+typedef pair<int,int> P;
+int n;
+P A,B;
+P t[100];
+P u[100];
+int dp[100];
+int costA,costB;
+
+P on(P x,P y){
+  return P(x.first,y.second);
+}
+
+int cost(P x,P y){
+  return x.first*x.second*y.first*y.second;
+}
+
+int main(){
+  cin>>n;
+  for(int i=0;i<n;i++)cin>>t[i].first>>t[i].second;
+
+  if(n==1){cout<<"0"<<endl;return 0;}
+  dp[0]=0;
+  u[0]=t[0];
+
+  dp[1]=cost(t[0],t[1]);
+  u[1]=on(t[0],t[1]);
+  if(n==2){cout<<dp[1]<<endl;return 0;}
+
+  for(int i=2;i<n;i++){
+    A=on(u[i-1],t[i]);
+    costA=cost(u[i-1],t[i])+dp[i-1];
+    
+    B=on(u[i-2],on(t[i-1],t[i]));
+    costB=cost(t[i-1],t[i]) + cost(u[i-2],on(t[i-1],t[i])) + dp[i-2];
+    
+    if(costA<costB || (costA==costB && A.first<B.first) ){
+      u[i]=A;
+      dp[i]=costA;
+    }else{
+      u[i]=B;
+      dp[i]=costB;
+    }
+  }
+
+  cout<<dp[n-1]<<endl;
+
+  return 0;
+}

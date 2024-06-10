@@ -1,0 +1,66 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int n, top, west, north;
+string op;
+
+int main(){
+  while(scanf("%d", &n) && n){
+    int tmp;
+    top = 1;
+    north = 2;
+    west = 3;
+    rep(i, n){
+      cin >> op;
+      switch(op[0]){
+      case 'n':
+	tmp = 7 - north;
+	north = top;
+	top = tmp;
+	break;
+      case 's':
+	tmp = 7 - top;
+	top = north;
+	north = tmp;
+	break;
+      case 'e':
+	tmp = 7 - top;
+	top = west;
+	west = tmp;
+	break;
+      case 'w':
+	tmp = 7 - west;
+	west = top;
+	top = tmp;
+	break;
+      }
+    }
+    printf("%d\n", top);
+  }
+  return 0;
+}

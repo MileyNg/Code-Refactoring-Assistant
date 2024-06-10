@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int m, g;
+int dp[8][1024];
+
+
+int main(){
+  while(scanf("%d", &m) && m){
+    int a[7], b[7];
+    rep(i, m) scanf("%d%d", a+i, b+i);
+
+    memset(dp, 0, sizeof(dp));
+    dp[0][0] = 1;
+
+    rep(i, m){
+      rep(j, 1000){
+	//	fprintf(stderr, "%d\n", j);
+	rep(k, b[i]+1){
+	  if(j+a[i]*k > 1000) continue;
+	  dp[i+1][j+a[i]*k] += dp[i][j];
+	}
+      }
+    }
+
+    /*    rep(i, 7){
+      rep(j, 50) printf("%d ", dp[i][j]);
+      puts("");
+      }*/
+    scanf("%d", &g);
+    rep(i, g){
+      int n;
+      scanf("%d", &n);
+      printf("%d\n", dp[m][n]);
+    }
+  }
+  return 0;
+}

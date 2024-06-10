@@ -1,0 +1,46 @@
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool in(int l, int r, const vector<int> &a, const vector<int> &b) {
+	int i = l;
+	for(const auto &e : a) {
+		if(e == b[i]) {
+			++i;
+			if(i == r) break;
+		}
+	}
+	return i == r;
+}
+
+bool ok(int len, const vector<int> &a, const vector<int> &b) {
+	for(unsigned l = 0; l + len <= b.size(); ++l) {
+		if(in(l, l + len, a, b)) return true;
+	}
+	return false;
+}
+
+int main() {
+	int n, m;
+	cin >> n >> m;
+
+	vector<int> a(n), b(m);
+	for(auto &e : a) cin >> e;
+	for(auto &e : b) cin >> e;
+
+	int low = 0, high = min(n, m) + 1;
+	while(low + 1 < high) {
+		const int mid = (low + high) / 2;
+		if(ok(mid, a, b)) {
+			low = mid;
+		}
+		else {
+			high = mid;
+		}
+	}
+
+	cout << low << endl;
+
+	return EXIT_SUCCESS;
+}

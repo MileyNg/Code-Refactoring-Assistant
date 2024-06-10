@@ -1,0 +1,186 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+#include <cassert>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+const int maxDay[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+    accumulationOfDays[13] = {0,31,59,90,120,151,181,212,243,273,304,334,365};
+
+ll f(ll year, ll month, ll day){
+    ll y = month<=2?year-1:year, m = month<=2?month+12:month;
+    return 365 * y + y / 4 - y / 100 + y / 400 + 306 * (m+1) / 10 + day - 429;
+}
+
+class Data{
+public:
+    bool isLeapYear() const{
+        if(year % 400 == 0){return true;}
+        if(year % 100 == 0){return false;}
+        if(year % 4 == 0){return true;}
+        return false;
+    }
+    Data nextDay() const{
+        Data d = *this;
+        if(d.day == maxDay[d.month] + (isLeapYear()&&d.month==2?1:0)){
+            if(d.month == 12){
+                d.year += 1;
+                d.month = 1;
+                d.day = 1;
+            }else{
+                d.month += 1;
+                d.day = 1;
+            }
+        }else{
+            d.day += 1;
+        }
+
+        return d;
+    }
+    Data firstDayOfNextMonth() const{
+        Data d = *this;
+
+        if(d.day != 1){
+            while(d.day != 1){
+                d = d.nextDay();
+            }
+        }else{
+            if(d.month == 12){
+                d.year += 1;
+                d.month = 1;
+            }else{
+                d.month += 1;
+            }
+        }
+
+        return d;
+    }
+    Data firstDayOfNextYear() const{
+        Data d = *this;
+        
+        if(d.month != 1 || d.day != 1){
+            while(d.month != 1 || d.day != 1){
+                d = d.firstDayOfNextMonth();
+            }
+        }else{
+            d.year += 1;
+        }
+
+        return d;
+    }
+    int daysToFirstDayOfNextMonth() const{
+        Data d = firstDayOfNextMonth();
+        return f(d.year, d.month, d.day) - f(this->year, this->month, this->day);
+    }
+    int daysToFirstDayOfNextYear() const{
+        Data d = firstDayOfNextYear();
+        return f(d.year, d.month, d.day) - f(this->year, this->month, this->day);
+    }
+    Data operator+(ll val){
+        Data res = *this;
+
+        while(val >= res.daysToFirstDayOfNextYear()){
+            val -= res.daysToFirstDayOfNextYear();
+            res = res.firstDayOfNextYear();
+        }
+
+        while(val >= res.daysToFirstDayOfNextMonth()){
+            val -= res.daysToFirstDayOfNextMonth();
+            res = res.firstDayOfNextMonth();
+        }
+
+        while(val > 0){
+            val -= 1;
+            res = res.nextDay();
+        }
+
+        return res;
+    }
+    ll year, month, day;
+};
+
+
+std::vector<ll> split(const std::string& s){
+    std::vector<std::string> ss;
+    int pos = 0, prev_pos = 0;
+    while(pos = s.find(".", pos), pos != std::string::npos){
+        ss.push_back(s.substr(prev_pos, pos-prev_pos));
+        pos += 1;
+        prev_pos = pos;
+    }
+    ss.push_back(s.substr(prev_pos, s.size()-prev_pos));
+
+    std::vector<ll> res;
+    for(const auto &s : ss){
+        res.push_back(std::stoi(s));
+    }
+
+    return res;
+}
+
+std::string join(const std::vector<ll>& ns){
+    if(ns.empty()){return "";}
+
+    std::string res = std::to_string(ns[0]);
+    for(int i=1;i<ns.size();i++){
+        res += "." + std::to_string(ns[i]);
+    }
+    return res;
+}
+
+std::vector<ll> ADToMaya(std::vector<ll> ns){
+    ll y = ns[0], m = ns[1], d = ns[2], day = f(y, m, d) - f(2012, 12, 21);
+    
+    day %= 1872000;
+
+    std::vector<ll> res;
+    res.push_back(day / 144000);
+    day %= 144000;
+    res.push_back(day / 7200);
+    day %= 7200;
+    res.push_back(day / 360);
+    day %= 360;
+    res.push_back(day / 20);
+    day %= 20;
+    res.push_back(day);
+
+    return res;
+}
+
+std::vector<ll> MayaToAD(std::vector<ll> ns){
+    ll days = ns[4]+20*(ns[3]+18*(ns[2]+20*(ns[1]+20*ns[0])));
+    Data d = Data{2012, 12, 21} + days;
+
+    return {d.year, d.month, d.day};
+}
+
+int main(){
+    std::string s;
+    while(std::cin >> s, s != "#"){
+        auto ns = split(s);
+        if(ns.size() == 3){
+            std::cout << join(ADToMaya(ns)) << std::endl;
+        }else{
+            std::cout << join(MayaToAD(ns)) << std::endl;
+        }
+    }
+}

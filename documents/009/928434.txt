@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+
+#define MAXN 1005
+#define MAX_N 1000005
+#define INF 1<<30
+#define eps 1.0e-10
+
+#define For(i,m,n) for(int i=(m);i<n;i++)
+
+using namespace std;
+
+struct point{
+    int x;
+    int y;
+    int step;
+    point(int x, int y, int step): x(x), y(y), step(step) {;}
+    bool operator<(const point &p) const {
+        return step > p.step;
+    }
+};
+
+int vis[MAXN][MAXN], cost[MAXN][MAXN], dir[MAX_N], g[4][MAX_N];
+int H,W,N,flag,sx,sy;
+int move[4][2]={-1,0,0,1,1,0,0,-1};
+char str[MAX_N], _map[MAXN][MAXN];
+
+int main()
+{
+    while(scanf("%d%d%d",&H,&W,&N),H||W||N){
+        memset(vis,0,sizeof(vis));
+        memset(cost,0x0f,sizeof(cost));
+        memset(g,0x0f,sizeof(g));
+        flag=0;
+        dir[0]=0;
+        scanf("%s",str);
+        For(i,0,N){
+            dir[i+1]=dir[i];
+            dir[i+1]+=(str[i]=='L'?3:1);
+            dir[i+1]%=4;
+        }
+        for(int i=N;i>=0;i--){
+            For(j,0,4) g[j][i]=g[j][i+1];
+            g[dir[i]][i]=i;
+        }
+        For(i,0,H){
+            scanf("%s",_map[i]);
+            For(j,0,W) if(_map[i][j]=='S') sx=i, sy=j;
+        }
+        priority_queue<point> q;
+        q.push(point(sx,sy,0));
+        while(!q.empty()){
+            point tmp=q.top();
+            q.pop();
+            if(!vis[tmp.x][tmp.y]){
+                vis[tmp.x][tmp.y]=1;
+                if(_map[tmp.x][tmp.y]=='G') {flag=1; break;}
+                For(i,0,4){
+                    int tx=tmp.x+move[i][0];
+                    int ty=tmp.y+move[i][1];
+                    int tcost=g[i][tmp.step];
+                    if(tx>=0&&tx<H&&ty>=0&&ty<W&&_map[tx][ty]!='#'&&tcost<cost[tx][ty]){
+                        cost[tx][ty]=tcost;
+                        q.push(point(tx,ty,tcost));
+                    }
+                }
+            }
+        }
+        puts(flag?"Yes":"No");
+    }
+    return 0;
+}

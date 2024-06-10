@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+int m, n;
+int ans;
+
+bool f(int mid, const vector<int>& page)
+{
+	int need = 1;
+	int s = 0;
+	for(int i = 0; i < n; ++i)
+	{
+		if(page[i] > mid)
+		{
+			return(false);
+		}
+		if(s + page[i] > mid)
+		{
+			++need;
+			s = 0;
+		}
+		s += page[i];
+	}
+	return (need <= m);
+}
+
+void solve()
+{
+	while(cin >> m >> n, m || n)
+	{
+		vector<int> page(n);
+		for(int i = 0; i < n; ++i)
+		{
+			cin >> page[i];
+		}
+		int right = 1500000;
+		int left = 1;
+		while(right - left > 1)
+		{
+			int mid = (left + right) / 2;
+			if(f(mid, page))
+			{
+				right = mid;
+			}
+			else
+			{
+				left = mid;
+			}
+		}
+		if(f(left, page))
+		{
+			cout << left << endl;
+		}
+		else
+		{
+			cout << right << endl;
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

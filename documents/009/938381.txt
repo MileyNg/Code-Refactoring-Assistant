@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+enum {LUNCH, DINNER, MIDNIGHT};
+
+int main() {
+	const string times[] = {"lunch", "dinner", "midnight"};
+
+	for(int n; scanf("%d", &n) == 1 && n;) {
+		array<int, 3> num, ok;
+		num.fill(0);
+		ok.fill(0);
+
+		for(int i = 0; i < n; ++i) {
+			int h, m;
+			scanf("%d:%d", &h, &m);
+
+			int M;
+			scanf("%d", &M);
+
+			int t = -1;
+			if(11 <= h && h <= 14) {
+				t = LUNCH;
+			}
+			else if(18 <= h && h <= 20) {
+				t = DINNER;
+			}
+			else if(21 <= h || h <= 1) {
+				t = MIDNIGHT;
+			}
+			else {
+				continue;
+			}
+
+			++num[t];
+			if((M - m + 60) % 60 <= 8) ++ok[t];
+		}
+
+		for(int t = 0; t < 3; ++t) {
+			cout << times[t] << " ";
+
+			if(num[t]) {
+				cout << 100 * ok[t] / num[t] << "\n";
+			}
+			else {
+				cout << "no guest\n";
+			}
+		}
+	}
+
+	return 0;
+}

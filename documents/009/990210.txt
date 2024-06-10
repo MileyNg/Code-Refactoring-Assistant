@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <cassert>
+#include <utility>
+using namespace std;
+typedef pair<int,int> pii;
+#define repeat(i,n) for (int i = 0; i < n; ++i)
+#define repeat_from(i,m,n) for (int i = m; i < n; ++i)
+
+#define MAX_N 100000
+#define MAX_M 100000
+int N, M;
+
+pii tree[MAX_N];
+void init_tree(int n) { repeat (i,n) { tree[i] = pii(i,0); } }
+pii find_root(int a) {
+    if (tree[a].first != a) {
+        pii pb = find_root(tree[a].first);
+        tree[a].first = pb.first;
+        tree[a].second += pb.second;
+    }
+    return tree[a];
+}
+void union_tree(int a, int b, int w) {
+    pii pa = find_root(a), pb = find_root(b);
+    if (pa.first != pb.first) {
+        tree[pa.first].first = pb.first;
+        tree[pa.first].second -= pb.second + w;
+    } else {
+        // assert(false);
+    }
+}
+
+int main(void) {
+    while (true) {
+        cin >> N >> M; cin.ignore();
+        if (not N or not M) break;
+        init_tree(N);
+        repeat (i,M) {
+            char c; cin >> c;
+            if (c == '!') {
+                int a, b, w; cin >> a >> b >> w; cin.ignore(); -- a; -- b;
+                union_tree(a,b,w);
+            } else if (c == '?') {
+                int a, b; cin >> a >> b; cin.ignore(); -- a; -- b;
+                pii pa = find_root(a), pb = find_root(b);
+                if (pa.first == pb.first) {
+                    cout << pb.second - pa.second << endl;
+                } else {
+                    cout << "UNKNOWN" << endl;
+                }
+            } else {
+                assert(false);
+            }
+        }
+    }
+    return 0;
+}

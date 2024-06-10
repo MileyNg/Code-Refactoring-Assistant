@@ -1,0 +1,57 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int main(){
+    int n, m;
+    while(cin >> n >> m, n+m){
+        int field[50][50];
+        for(int i=0; i < 50; i++) for(int j=0; j < 50; j++) field[i][j] = 0;
+        for(int i=0; i < 50; i++) {field[i][1] = 1; field[1][i] = 1;}
+        int c;
+        cin >> c;
+        for(int i=0; i < c; i++){
+            int x, y;
+            cin >> x >> y;
+            field[y][x] = -1;
+        }
+        for(int i=2; i <= m; i++){
+            for(int j=2; j <= n; j++){
+                if(field[i][j] == -1) continue;
+                int p = field[i-1][j];
+                int q = field[i][j-1];
+                if(p == -1) p = 0;
+                if(q == -1) q = 0;
+                field[i][j] = p+q;
+            }
+        }
+        cout << field[m][n] << endl;
+    }
+}

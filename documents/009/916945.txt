@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+
+	int n,bot, top, sum, cnt;
+
+
+	while (1){
+		cin >> n;
+		if (n == 0) break;
+
+		sum = 0, cnt = 0, bot = 0, top = 0;
+		while (top < n){
+			if (sum == n){
+				cnt++;
+				top++;
+				sum += top;
+			}
+			else if (sum < n){
+				top++;
+				sum += top;
+			}
+			else{
+				sum -= bot;
+				bot++;
+			}
+		}
+
+		cout << cnt << endl;
+	}
+
+	return 0;
+}

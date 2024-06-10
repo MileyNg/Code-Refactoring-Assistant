@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <algorithm>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int n, m;
+    std::cin >> n >> m;
+    if (n == 0 && m == 0)
+      break;
+    std::vector<int> taro(n);
+    std::vector<int> hanako(m);
+    for (int i = 0; i < n; ++i)
+      std::cin >> taro[i];
+    for (int i = 0; i < m; ++i)
+      std::cin >> hanako[i];
+    std::sort(taro.begin(), taro.end());
+    std::sort(hanako.begin(), hanako.begin());
+    int taro_score = std::accumulate(taro.begin(), taro.end(), 0);
+    int hanako_score = std::accumulate(hanako.begin(), hanako.end(), 0);
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+        int x = taro[i], y = hanako[j];
+        if (taro_score - x + y == hanako_score - y + x) {
+          std::cout << x << " " << y << std::endl;
+          goto finish;
+        }
+      }
+    }
+    std::cout << "-1" << std::endl;
+finish:
+    1+1;
+  }
+  return 0;
+}

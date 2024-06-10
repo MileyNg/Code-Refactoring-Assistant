@@ -1,0 +1,20 @@
+#include <iostream>
+#include<stack>
+using namespace std;
+
+int main() {
+	int g;
+	int num[]={1,2,4,8,16,32,64,128,256,512};
+	stack<int> ans;
+	while(cin>>g){
+		for(int i=9;i>=0;i--){
+			if(g>=num[i]){
+				g-=num[i];
+				ans.push(num[i]);
+			}
+		}while(!ans.empty()){
+			cout<<ans.top()<<' ';
+			ans.pop();
+		}cout<<endl;
+	}
+}

@@ -1,0 +1,57 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAX_H = 1000;
+const int MAX_W = 1000;
+char field[MAX_H][MAX_W];
+
+int dy[] = { 0, -1, 0, 1 };
+int dx[] = { -1, 0, 1, 0 };
+
+void dfs(int i, int j) {
+  char c = field[i][j];
+  if (c == 0) return;
+  field[i][j] = 0;  // mark as visited
+
+  for (int k = 0; k < 4; k++) {
+    int new_i = i + dy[k];
+    int new_j = j + dx[k];
+    if (field[new_i][new_j] == c) {
+      dfs(new_i, new_j);
+    }
+  }
+}
+
+int main() {
+
+  while (1) {
+    int W, H;
+    cin >> H >> W;
+    if (W == 0 && H == 0) {
+      break;
+    }
+
+    int ans = 0;
+
+    memset(field, 0, MAX_W * MAX_H);
+    for (int i = 1; i <= H; i++) {
+      for (int j = 1; j <= W; j++) {
+        cin >> field[i][j];
+      }
+    }
+
+    for (int i = 1; i <= H; i++) {
+      for (int j = 1; j <= W; j++) {
+        if (field[i][j]) {
+          dfs(i, j);
+          ans++;
+        }
+      }
+    }
+
+    cout << ans << endl;
+  }
+  
+  return 0;
+}

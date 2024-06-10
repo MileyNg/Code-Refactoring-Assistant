@@ -1,0 +1,73 @@
+#include<stdio.h>
+#define LEN 100010
+#define STABLE 1
+#define NOTSTABLE 0
+
+typedef struct{
+  char c;
+  int n;
+}Card;
+
+void quicksort(Card *A, int p, int r){
+  int q;
+  if(p<r){
+    q = partion(A, p, r);
+    quicksort(A, p, q-1);
+    quicksort(A, q+1, r);
+  }
+}
+
+int partion(Card *A, int p, int r){
+  int x = A[r].n;
+  int i = p-1;
+  int j, n;
+  Card k;
+  
+  for(j=p; j<=r-1; j++){
+    if(A[j].n<=x){
+      i++;
+      k=A[i];
+      A[i]=A[j];
+      A[j]=k;
+    }
+  }
+  
+  k=A[i+1];
+  A[i+1]=A[r];
+  A[r]=k;
+  return i+1;
+}
+
+int main(){
+  int n;
+  Card A[LEN], M[LEN], card;
+  int p, r; 
+  int flag=STABLE;
+  int i, j, k;
+  char c;
+  
+  scanf("%d", &n);
+  scanf("%c", &c);
+  for(i=0; i<n; i++){
+    scanf("%c %d", &A[i].c, &A[i].n);
+    scanf("%c", &c);
+    M[i]=A[i];
+  }
+  
+  p=0;
+  r=n-1;
+  quicksort(&A[0], p, r);
+  
+  for(i=0; i<n-1; i++){
+    if(A[i].c!=M[i].c){
+      flag=NOTSTABLE;
+      break;
+    }
+  }
+  
+  if(flag==STABLE)printf("Stable\n");
+  else printf("Not stable\n");
+  for(i=0; i<n; i++)printf("%c %d\n", A[i].c, A[i].n);
+  
+  return 0;
+}

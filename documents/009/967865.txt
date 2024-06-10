@@ -1,0 +1,21 @@
+def out_prod(v0, v1)
+  return v0[0] * v1[1] - v0[1] * v1[0]
+end
+
+### main
+
+while (line = gets)
+  fs = line.chop.split(/\s+/).map { |s| s.to_f }
+  #p fs.join(", ")
+
+  p0 = out_prod([fs[2] - fs[0], fs[3] - fs[1]], [fs[6] - fs[2], fs[7] - fs[3]]);
+  p1 = out_prod([fs[4] - fs[2], fs[5] - fs[3]], [fs[6] - fs[4], fs[7] - fs[5]]);
+  p2 = out_prod([fs[0] - fs[4], fs[1] - fs[5]], [fs[6] - fs[0], fs[7] - fs[1]]);
+
+  if (p0 > 0 && p1 > 0 && p2 > 0 ||
+      p0 < 0 && p1 < 0 && p2 < 0)
+    puts "YES"
+  else
+    puts"NO"
+  end
+end

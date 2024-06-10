@@ -1,0 +1,30 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int t;
+		cin >> t;
+		int z1, z2;
+		int umax = 0;
+		int dmax = 0;
+		for (int j = 0; j < t; j++) {
+			cin >> z2;
+			if (j == 0) {
+			} else {
+				if (z1 > z2) {
+					dmax = max(dmax, z1-z2);
+				} else {
+					umax = max(umax, z2-z1);
+				}
+			}
+			z1 = z2;
+		}
+		cout << umax << ' ' << dmax << endl;
+	}
+	return 0;
+}

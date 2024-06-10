@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+
+using namespace std;
+
+double EPS = 1e-4;
+
+int gcd(int a, int b) { return b != 0 ? gcd(b, a%b) : a; }
+
+int main() {
+	double a, b, c, d, e, f;
+	
+	while (cin >> a >> b >> c >> d >> e >> f) {
+		double x, y;
+		
+		int div1 = gcd(a, b), div2 = gcd(b, d);
+		int div = gcd(div1, div2);
+		a /= div; b /= div; c /= div;
+		
+		div1 = gcd(d, e); div2 = gcd(e, f);
+		div = gcd(div1, div2);
+		d /= div; e /= div; f /= div;
+		
+		double s = a*f/d, s_ = a*e/d;
+		if (fabs(s) < EPS) s = 0.0;
+		if (fabs(s_) < EPS) s_ = 0.0;
+		
+		y = (c - s)/(b - s_);
+		if (fabs(y) < EPS) y = 0.0;
+		
+		x = (c - b*y)/a;
+		if (fabs(x) < EPS) x = 0.0;
+		
+		printf("%.3lf %.3lf\n", x, y);
+	}
+	
+	return 0;
+}

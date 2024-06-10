@@ -1,0 +1,31 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int len = 8;
+
+int main(void) {
+    int n, x[len], a, b;
+    char c;
+    cin >> n;
+    while (n--) {
+        for (int i = 0; i < len; i++) {
+            cin >> c;
+            x[i] = int(c - '0');
+        }
+        sort(x, x + len);
+        a = 0;
+        for (int i = len - 1; i >= 0; i--) {
+            a *= 10;
+            a += x[i];
+        }
+        b = 0;
+        for (int i = 0; i < len; i++) {
+            b *= 10;
+            b += x[i];
+        }
+        cout << (a - b) << endl;
+    }
+    return 0;
+}

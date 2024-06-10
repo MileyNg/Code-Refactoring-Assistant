@@ -1,0 +1,13 @@
+w = gets.chop.to_i
+n = gets.chop.to_i
+
+vls = (0...w).map { |k| k }
+#p vls
+
+for i in (0...n)
+  a, b = gets.chop.split(",").map { |k| k.to_i - 1 }
+  #p "#{a}<->#{b}"
+  tmp = vls[a]; vls[a] = vls[b]; vls[b] = tmp
+end
+
+vls.each { |k| puts k + 1 }

@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a[4];
+	int e[4];
+	int z, zz;
+	int hit, blow;
+	
+	while (scanf("%d %d %d %d", &a[0], &a[1], &a[2], &a[3]) != EOF){
+		hit = 0;
+		blow = 0;
+		scanf("%d %d %d %d", &e[0], &e[1], &e[2], &e[3]);
+		for (z = 0; z < 4; z++) {
+			for (zz = 0; zz < 4; zz++) {
+				if (a[z] == e[zz]) {
+					if (z == zz) {
+						blow++;
+					}
+					else {
+						hit++;
+					}
+				}
+			}
+		}
+		
+		printf("%d %d\n", blow, hit);
+	}
+	
+	return (0);
+}	

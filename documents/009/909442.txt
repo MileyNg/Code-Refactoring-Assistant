@@ -1,0 +1,35 @@
+class Array
+  def sb
+    sort_by.with_index{ |e, index| [yield(e), index] }
+  end
+end
+
+while true do
+  mm, tt, pp, rr = gets.split.map(&:to_i)
+  break if mm + tt + pp + rr == 0
+  wa = Array.new(tt).map{Array.new(pp,0)}
+  solved = Array.new(tt, 0)
+  time = Array.new(tt, 0)
+  rr.times do
+    m, t, p, j = gets.split.map(&:to_i)
+    t -= 1
+    p -= 1
+    if j == 0
+      solved[t] += 1
+      time[t] += m + wa[t][p] * 20
+    else
+      wa[t][p] += 1
+    end
+  end
+  teams = (0...tt).to_a.reverse
+  result = teams.sb{|x| time[x]}.sb{|x| - solved[x]}
+  tt.times do |i|
+    t = result[i]
+    if i != 0
+      s = result[i-1]
+      print time[s] == time[t] && solved[s] == solved[t] ? '=' : ','
+    end
+    print t + 1
+  end
+  puts
+end

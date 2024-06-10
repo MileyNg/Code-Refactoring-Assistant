@@ -1,0 +1,23 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+
+int main(){
+	int n;
+	bool check;
+	stack<int> a;
+	stack<int> b;
+	int ain,bin;
+	cin>>n;
+	for(int i=0;i<n;i++){
+	check=true;
+	cin>>ain>>bin;
+	a.push(ain);b.push(bin);
+	for(int j=0;j<5;j++){
+		cin>>ain>>bin;
+		if(!(a.top()<ain||b.top()<bin))check=false;
+		a.push(ain);b.push(bin);
+	}	
+	if(check==false){cout<<"NO"<<endl;}else cout<<"YES"<<endl;
+	}
+}

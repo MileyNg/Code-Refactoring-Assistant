@@ -1,0 +1,17 @@
+#include<stdio.h>
+int main()
+{
+	int R,C,i,j,r[105]={0},c[105]={0},t;
+	scanf("%d%d",&R,&C);
+	for(i=0;i<=R;i++)
+		for(j=0;j<=C;j++)
+		{
+			if(i<R&&j<C)
+			{
+				scanf("%d",&t);
+				r[i]+=t;c[j]+=t,c[R+1]+=t;
+			}
+			printf("%d%s",i==R?c[j]:j==C?r[i]:t,j==C?"\n":" ");
+		}
+	return 0;
+}

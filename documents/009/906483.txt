@@ -1,0 +1,155 @@
+#include <cstdlib>
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+
+
+
+
+
+
+
+int T,n,num,m;
+char z[55][55];
+int dp[55][55][55][55];
+int vi[55][55];
+int ac[55][55][55][55];
+void dfs(int q,int w)
+{
+    if(z[q][w]=='#')
+        return;
+    vi[q][w]=1;
+    if(q>=n||w>=m)
+        return;
+    if(vi[q+1][w]==0)
+        dfs(q+1,w);
+    if(vi[q][w+1]==0)
+        dfs(q,w+1);
+}
+int main()
+{
+    // freopen("1","w",stdout);
+    while(~scanf("%d%d",&n,&m))
+    {
+        if(n==0&&m==0)
+            break;
+        for(int q=0;q<n;q++)
+            scanf("%s",z[q]);
+        memset(dp,0,sizeof dp);
+        memset(vi,0,sizeof vi);
+        memset(ac,0,sizeof ac);
+        dfs(0,0);
+        if(vi[n-1][m-1]==0)
+        {
+            printf("-1\n");
+            continue;
+        }
+        // for(int q=0;q<n;q++)
+        //     for(int w=0;w<m;w++)
+        //     {
+        //         if(q<n-1)
+        //         {
+        //             if(z[q][w]!='#'&&z[q+1][w]!='#')
+        //                 ac[q][w][q+1][w]=1;
+        //         }
+        //         if(w<m-1)
+        //         {
+        //             if(z[q][w]!="#"&&z[q][w+1]!='#')
+        //                 ac[q][w][q][w+1]=1;
+        //         }
+        //     }
+
+        for(int q=0;q<n;q++)
+            for(int w=0;w<m;w++)
+            {
+                memset(vi,0,sizeof vi);
+                dfs(q,w);
+                for(int e=0;e<n;e++)
+                    for(int r=0;r<m;r++)
+                    {
+                        if(vi[e][r])
+                            ac[q][w][e][r]=1;
+                        // printf("%d %d %d %d %d\n",q,w,e,r,ac[q][w][e][r]);
+                    }
+            }
+
+        for(int q=0;q<n;q++)
+            for(int w=0;w<m;w++)
+                for(int e=q+1;e<n;e++)
+                    for(int r=w;r<m;r++)
+                    {
+
+                    }
+        for(int w=0;w<=n;w++)
+            for(int q=0;q+w<=n;q++)
+                for(int r=0;r<=m;r++)
+                    for(int e=0;e+r<=m;e++)
+                    {
+                        if(q+w>=q+1&&e+r>=e+2)
+                        {
+                            if(ac[q][e][q+w-1][e+r-1]&&z[q][e]-'a'==z[q+w-1][e+r-1]-'A'&&z[q][e]>='a'&&z[q][e]<='z'&&z[q+w-1][e+r-1]>='A'&&z[q+w-1][e+r-1]<='Z')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e+1][e+r-1]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e+1][e+r-1]);
+                        }
+                        if(q+w>=q+2&&e+r>=e+1)
+                        {
+                            if(ac[q][e][q+w-1][e+r-1]&&z[q][e]-'a'==z[q+w-1][e+r-1]-'A'&&z[q][e]>='a'&&z[q][e]<='z'&&z[q+w-1][e+r-1]>='A'&&z[q+w-1][e+r-1]<='Z')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w-1][e][e+r]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w-1][e][e+r]);
+                        }
+                        if(q+w>=q+2&&e+r>=e+2&&z[q][e]>='a'&&z[q][e]<='z'&&z[q+w-1][e+r-1]>='A'&&z[q+w-1][e+r-1]<='Z')
+                        {
+                            if(ac[q][e][q+w-1][e+r-1]&&z[q][e]-'a'==z[q+w-1][e+r-1]-'A')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w][e][e+r-1]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w][e][e+r-1]);
+                        }
+                        if(q+w>=q+2&&e+r>=e+2&&z[q][e]>='a'&&z[q][e]<='z'&&z[q+w-1][e+r-1]>='A'&&z[q+w-1][e+r-1]<='Z')
+                        {
+                            if(ac[q][e][q+w-1][e+r-1]&&z[q][e]-'a'==z[q+w-1][e+r-1]-'A')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w-1][e+1][e+r]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w-1][e+1][e+r]);
+                        }
+                        for(int t=q+1;t<=q+w-1;t++)
+                        {
+                            // dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][t][e][e+r]+dp[t][q+w][e][e+r]);
+                            for(int y=e+1;y<=e+r-1;y++)
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][t][e][y]+dp[t][q+w][y][e+r]);
+                        }
+                        for(int t=e+1;t<=e+r-1;t++)
+                        {
+                            dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e][t]+dp[q][q+w][t][e+r]);
+                        }
+                        // if(q==0&&q+w==10&&e==4&&e+r==9)
+                        // {
+                        //     cout<<dp[q][q+w][e+1][e+r-1]<<endl;
+                        //     cout<<dp[q+1][q+w-1][e][e+r]<<endl;
+                        //     cout<<dp[q+1][q+w][e][e+r-1]<<endl;
+                        //     cout<<dp[q][q+w-1][e+1][e+r]<<endl;
+                        // }
+                        // printf("%d %d %d %d %d\n",q,q+w,e,e+r,dp[q][q+w][e][e+r]);
+                        dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w][e][e+r]);
+                        if(q+w>0)
+                        dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w-1][e][e+r]);
+                        dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e+1][e+r]);
+                        if(e+r>0)
+                        dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e][e+r-1]);
+                        // printf("%d %d %d %d %d\n",q,q+w,e,e+r,dp[q][q+w][e][e+r]);
+                    }
+
+                    // for(int q=0;q<=n;q++)
+
+
+                    printf("%d\n",dp[0][n][0][m]);
+    }
+
+
+
+
+}

@@ -1,0 +1,77 @@
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+#define MAX 30
+#define INF 100000000
+
+struct point{
+	int x, y;
+};
+
+int main(){
+
+	int w, h;
+	int mize[MAX+2][MAX+2];
+	int tw[MAX+2][MAX+2];
+	int yw[MAX+2][MAX+2];
+	point st, go, no, s;
+	queue<point> qu;
+
+		while (1){
+
+		cin >> w >> h;
+		if (w == 0 && h == 0) break;
+		for (int i = 0; i <= MAX+1; i++){
+			for (int j = 0; j <= MAX+1; j++){
+				mize[i][j] = INF;
+				tw[i][j] = 1;
+				yw[i][j] = 1;
+			}
+		}
+		for (int i = 1; i <= h; i++){
+			for (int j = 1; j <= w - 1; j++){
+				cin >> tw[i][j];
+			}
+			if (i != h){
+				for (int j = 1; j <= w; j++){
+					cin >> yw[i][j];
+				}
+			}
+		}
+		st.x = 1, st.y = 1;
+		go.x = w, go.y = h;
+		no.x = 1, no.y = 1;
+		qu.push(no);
+		mize[1][1] = 1;
+		while (!qu.empty()){
+			no = qu.front();
+			qu.pop();
+			if (tw[no.y][no.x] == 0 && mize[no.y][no.x] + 1 < mize[no.y][no.x + 1]){
+				s.y = no.y, s.x = no.x + 1;
+				mize[no.y][no.x + 1] = mize[no.y][no.x] + 1;
+				qu.push(s);
+			}
+			if (tw[no.y][no.x - 1] == 0 && mize[no.y][no.x] + 1 < mize[no.y][no.x - 1]){
+				s.y = no.y, s.x = no.x - 1;
+				mize[no.y][no.x - 1] = mize[no.y][no.x] + 1;
+				qu.push(s);
+			}
+			if (yw[no.y - 1][no.x] == 0 && mize[no.y][no.x] + 1 < mize[no.y - 1][no.x]){
+				s.y = no.y - 1, s.x = no.x;
+				mize[no.y - 1][no.x] = mize[no.y][no.x] + 1;
+				qu.push(s);
+			}
+			if (yw[no.y][no.x] == 0 && mize[no.y][no.x] + 1 < mize[no.y + 1][no.x]){
+				s.y = no.y + 1, s.x = no.x;
+				mize[no.y + 1][no.x] = mize[no.y][no.x] + 1;
+				qu.push(s);
+			}
+		}
+		if (mize[go.y][go.x] == INF) cout << "0" << endl;
+		else cout << mize[go.y][go.x] << endl;
+	}
+
+	return 0;
+}

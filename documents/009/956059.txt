@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool isRightTriangle(vector<int> &vecSide);
+
+int main(void)
+{
+    int i,j;
+    int n;
+    vector<int> vecSide;
+    
+    cin >> n;
+    vecSide.resize(3);
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < 3; j++) {
+            cin >> vecSide[j];
+        }
+        
+        if (isRightTriangle(vecSide)) {
+            cout << "YES" << endl;
+        } else {
+            cout << "NO" << endl;
+        }
+    }
+    
+    return 0;
+}
+
+bool isRightTriangle(vector<int> &vecSide)
+{
+    int a,b,c;
+    
+    if (vecSide[0] > vecSide[1]) {
+        swap(vecSide[0], vecSide[1]);
+    }
+    if (vecSide[1] > vecSide[2]) {
+        swap(vecSide[1], vecSide[2]);
+    }
+    
+    a = vecSide[0];
+    b = vecSide[1];
+    c = vecSide[2];
+    
+    if (c * c == a * a + b * b) {
+        return true;
+    } else {
+        return false;
+    }
+}

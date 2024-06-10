@@ -1,0 +1,160 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <memory>
+#include <time.h>
+using namespace std;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) FOR(i,0,n)
+const double EPS = 1e-9;
+const double PI  = acos(-1.0);
+
+struct node{
+	int marked_anc,anc_len,begin,end;
+	node *left,*right;
+	node():marked_anc(INT_MAX),anc_len(INT_MAX),left(NULL),right(NULL){}
+	static node *init(int n){
+		node *root=new node();
+		int depth=0;
+		int num=1;
+		while(num<n){
+			depth++;
+			num*=2;
+		}
+		root->construct(depth,0,num-1);
+		return root;
+	}
+	void construct(int depth,int begin,int end){
+		this->begin=begin;
+		this->end=end;
+		if(depth){
+			left=new node();
+			right=new node();
+			int width=(end-begin)/2;
+			left->construct(depth-1,begin,begin+width);
+			right->construct(depth-1,begin+width+1,end);
+		}
+	}
+	int query(int pos){
+		if(begin<=pos&&pos<=end){
+			if(marked_anc!=INT_MAX){
+				return marked_anc;
+			}
+			if(left&&right){
+				int ret=left->query(pos);
+				if(ret==INT_MAX){
+					ret=right->query(pos);
+				}
+				return ret;
+			}else{
+				return marked_anc;
+			}
+		}else{
+			return INT_MAX;
+		}
+	}
+	void mark(int begin,int end,int marked_anc){
+		if(this->end < begin || this->begin > end){
+			return;
+		}else if(begin <= this->begin && this->end <= end){
+			if(anc_len>end-begin){
+				this->marked_anc=marked_anc;
+				this->anc_len=end-begin;
+			}
+			//left->mark(begin,end,marked_anc);
+			//right->mark(begin,end,marked_anc);
+			return;
+		}else{
+			this->marked_anc=INT_MAX;
+			this->anc_len=INT_MAX;
+			left->mark(begin,end,marked_anc);
+			right->mark(begin,end,marked_anc);
+			return;
+		}
+	}
+};
+
+struct treenode{
+	int index;
+	vector<treenode*> children;
+	treenode(int index):index(index){}
+};
+
+vi eulertour(treenode *n){
+	vi ret;
+	ret.push_back(n->index);
+	REP(i,n->children.size()){
+		treenode* c=n->children[i];
+		vi et=eulertour(c);
+		ret.insert(ret.end(),ALL(et));
+	}
+	ret.push_back(n->index);
+	return ret;
+}
+
+int main(){
+	int n,q;
+	cin>>n>>q;
+	vi a(n);
+	vector<treenode*> treenodes;
+	treenodes.push_back(new treenode(1));
+	REP(i,n-1){
+		int p;
+		cin>>p;
+		treenodes.push_back(new treenode(i+2));
+		treenodes[p-1]->children.push_back(treenodes[treenodes.size()-1]);
+	}
+	vi et=eulertour(treenodes[0]);
+	vector<pii> ends(n+1,make_pair(-1,-1));
+	REP(i,et.size()){
+		if(ends[et[i]].first==-1){
+			ends[et[i]].first=i;
+		}else{
+			ends[et[i]].second=i;
+		}
+	}
+
+	node *root=node::init(et.size());
+	root->mark(ends[1].first,ends[1].second,1);
+	int ans=0;
+	REP(i,q){
+		char command;
+		int v;
+		cin>>command>>v;
+		if(command=='Q'){
+			int marked_anc=root->query(ends[v].first);
+			ans+=marked_anc;
+		}else{
+			root->mark(ends[v].first,ends[v].second,v);
+		}
+	}
+	cout<<ans<<endl;
+}

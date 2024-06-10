@@ -1,0 +1,18 @@
+#include <ctype.h>
+#include <stdio.h>
+
+int main(void) {
+	char str[1200] = "";
+	fgets(str, sizeof(str), stdin);
+	char *p = str;
+	while (*p != '\0') {
+		if (islower(*p)) {
+			*p = toupper(*p);
+		} else if (isupper(*p)) {
+			*p = tolower(*p);
+		}
+		p++;
+	}
+	printf(str);
+	return 0;
+}

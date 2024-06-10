@@ -1,0 +1,16 @@
+def countPrime(max)
+  ans_array = [*2..max]
+  # maxの平方根までループする
+  2.upto(Math.sqrt(max)) do |num|
+    # 素数の倍数を削除する
+    ans_array.reject! { |elem| (elem % num == 0) && (elem > num) }
+  end
+
+  return ans_array.count()
+end
+
+
+while n = gets()
+  n = n.to_i
+  print countPrime(n)
+end

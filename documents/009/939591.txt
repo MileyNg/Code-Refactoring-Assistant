@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(x,b) (0<=(x)&&(x)<(b))
+using namespace std;
+int box[5][5][5];
+int M[2][27];
+
+int judge(int z, int y, int x){
+  int a = 0;
+  for(int i = -1; i <= 1; ++i)
+    for(int j = -1; j <= 1; ++j)
+      for(int k = -1; k <= 1; ++k)
+	if(BW(z+i,5) && BW(y+j,5) && BW(x+k,5))
+	  a += box[z+i][y+j][x+k];
+	
+  a -= box[z][y][x];
+  if(M[box[z][y][x]][a]) return 1;
+  return 0;
+}
+
+int main(){
+  int N, cnt = 1, a, b;
+  char in[8];
+  while(scanf("%d", &N) && N){
+    rep(i, 5) rep(j, 5){
+      scanf("%s", in);
+      rep(k, 5) box[i][j][k] = in[k]-'0';
+    }
+    rep(i, 2){
+      rep(j, 27) M[i][j] = 0;
+      scanf("%d", &a);
+      while(a--){
+	scanf("%d", &b);
+	M[i][b] = 1;
+      }
+    }
+    rep(j, 27) M[1][j] ^= 1;
+
+    rep(h, N){
+      queue<int>zq,xq,yq;
+      rep(i, 5) rep(j,5) rep(k, 5){
+	if(judge(i, j, k)){
+	  zq.push(i); yq.push(j); xq.push(k);
+	}
+      }
+
+      while(!zq.empty()){
+	int z, x, y;
+	z = zq.front(); zq.pop();
+	y = yq.front(); yq.pop();
+	x = xq.front(); xq.pop();
+	box[z][y][x] ^= 1;
+      }
+    }
+    if(cnt>1) puts("");
+    printf("Case %d:\n", cnt);
+    rep(i, 5){
+      rep(j, 5){
+	rep(k, 5) printf("%d", box[i][j][k]);
+	puts("");
+      }
+    }
+    cnt++;
+  }
+  retu

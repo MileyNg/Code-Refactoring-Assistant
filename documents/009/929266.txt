@@ -1,0 +1,59 @@
+def calc(total, m1, m5, m10, m50, m100, m500)
+    m = 0
+    temp = m500
+    while temp > 0 && total >= 500
+         total -= 500
+         temp -= 1
+         m += 1
+     end
+    temp = m100
+    while temp > 0 && total >= 100
+         total -= 100
+         temp -= 1
+         m += 1
+     end
+    temp = m50
+    while temp > 0 && total >= 50
+         total -= 50
+         temp -= 1
+         m += 1
+     end
+    temp = m10
+    while temp > 0 && total >= 10
+        total -= 10
+        temp -= 1
+        m += 1
+    end
+    temp = m5
+    while temp > 0 && total >= 5
+        total -= 5
+        temp -= 1
+        m += 1
+    end
+    temp = m1
+    while temp > 0 && total >= 1
+        total -= 1
+        temp -= 1
+        m += 1
+    end
+    m
+end
+while line = gets do
+    p, n1, n5, n10, n50, n100, n500 = line.split.map(&:to_i)
+    if p == 0
+        break
+    end
+    res = Float::INFINITY
+
+    for c in 0..499 do
+        m = 0
+        total = p + c
+        l = calc(total, n1, n5, n10, n50, n100, n500)
+        n = calc(c, 5,2,5,2,5,0)
+        m = l + n
+         if m < res
+            res = m
+        end
+    end
+    puts res
+end

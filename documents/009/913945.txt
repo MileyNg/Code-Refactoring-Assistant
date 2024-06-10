@@ -1,0 +1,22 @@
+def calc(a,b,op)
+  a   = $1.to_i
+  b   = $3.to_i
+  op = $2.to_sym
+  case op
+  when "+"
+    a + b
+  when "-"
+    a - b
+  when "*"
+    a * b
+  when "/"
+    a / b
+  end
+end
+
+while line = gets do
+  return if line =~ /\?/
+  a, op, b = line.sprit
+
+  puts calc(a.to_i,b.to_i,op)
+end

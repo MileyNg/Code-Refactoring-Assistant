@@ -1,0 +1,62 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+typedef long long ll;
+const ll INF = 10000000000LL;
+ll d[100][100];
+
+struct Edge {
+  int from, to, cost;
+  Edge(int from_, int to_, int cost_) : from(from_), to(to_), cost(cost_) { }
+};
+
+int main() {
+  int V, E; cin >> V >> E;
+  vector<Edge> G;
+  for(int i = 0; i < E; i++) {
+    int from, to, cost;
+    cin >> from >> to >> cost;
+    G.emplace_back(from, to, cost);
+  }
+  for(int i = 0; i < V; i++)
+    for(int j = 0; j < V; j++)
+      d[i][j] = INF;
+
+  bool negative_cycle = false;
+
+  for(int v = 0; v < V; v++) {
+    d[v][v] = 0;
+    int k = 0;
+    while(true) {
+      if(k == V) {
+        negative_cycle = true;
+        break;
+      }
+      bool update = false;
+      for(int i = 0; i < E; i++) {
+        if(d[v][G[i].to] > d[v][G[i].from] + G[i].cost) {
+          d[v][G[i].to] = d[v][G[i].from] + G[i].cost;
+          update = true;
+        }
+      }
+      if(update == false) break;
+      k++;
+    }
+  }
+  if(negative_cycle) {
+    cout << "NEGATIVE CYCLE" << endl;
+  }
+  else {
+    for(int i = 0; i < V; i++) {
+      for(int j = 0; j < V; j++) {
+        if(d[i][j] == INF) cout << "INF";
+        else cout << d[i][j];
+
+        if(j + 1 == V) cout << endl;
+        else cout << ' ';
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+#include <stdlib.h>
+
+using namespace std;
+
+#define rep(i,a,b) for(int i=(int)(a); i<(int)(b); ++i)
+#define SORT(x) sort((x).begin(),(x).end())
+
+#define INF 2000000000000
+
+int compare_int(const void *a, const void *b)
+{
+    return *(int*)a - *(int*)b;
+}
+
+int main()
+{
+	int W[10] = {0};
+	int K[10] = {0};
+	
+	vector<int> Wv = {90,11,52,23};
+	vector<int> Kv = {90,11,52,23};
+	
+	rep(i,0,10){
+		cin >> W[i];
+	}
+	
+	rep(i,0,10){
+		cin >> K[i];
+	}
+	
+	qsort(W, 10, sizeof(int), compare_int);
+	qsort(K, 10, sizeof(int), compare_int);
+	
+	cout << W[7] + W[8] + W[9] << " ";
+	cout << K[7] + K[8] + K[9] << endl;
+	
+	/*
+	for(auto a : W){
+		cout << a << endl;
+	}
+	*/
+	
+}

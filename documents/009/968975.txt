@@ -1,0 +1,35 @@
+while (line = gets)
+  xys = line.chop.split(",").map{|s| s.to_f}
+
+  xs = [ xys[0], xys[2], xys[4], xys[6] ]
+  ys = [ xys[1], xys[3], xys[5], xys[7] ]
+  #p xs, ys
+
+  x0 = xs[3]
+  y0 = ys[3]
+
+  op = nil
+  convex = true
+
+  for i in (0..3)
+    x = xs[i]
+    y = ys[i]
+
+    x1 = xs[(i + 1) % 4]
+    y1 = ys[(i + 1) % 4]
+
+    op_i = (x - x0) * (y1 - y) - (y - y0) * (x1 - x)
+
+    if op.nil?
+      op = op_i
+    elsif op * op_i < 0
+      convex = false
+      break
+    end
+
+    x0 = x
+    y0 = y
+  end
+
+  puts convex ? "YES" : "NO"
+end

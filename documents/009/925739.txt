@@ -1,0 +1,174 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define EDGE_MAX 500000
+#define HEAP_SIZE 500000
+
+typedef struct _vertex vertex;
+
+typedef struct {
+    vertex **e;
+    int count;
+} binheap;
+
+typedef struct _edge edge;
+struct _edge {
+    int v;
+    int dist;
+    edge *next;
+};
+
+struct _vertex {
+    char fix;
+    unsigned int cost;
+    edge *edges;
+    edge *lastedge;
+};
+
+
+binheap *bh_new(int size) {
+    binheap *bh;
+    bh = (binheap*)malloc(sizeof(binheap));
+    bh->e = (vertex**)malloc(sizeof(vertex*) * size);
+    bh->count = 0;
+    return bh;
+}
+
+void bh_delete(binheap *bh) {
+    free(bh->e);
+    free(bh);
+}
+
+void bh_percup(binheap *bh, int i) {
+    vertex *vp, *vc, *tmp;
+    while (i / 2 > 0) {
+        vc = bh->e[i];
+        vp = bh->e[i/2];
+        if (vc->cost < vp->cost) { // parent is larger
+            bh->e[i/2] = vc;
+            bh->e[i] = vp;
+        }
+        i = i / 2;
+    }
+}
+
+void bh_push(binheap *bh, vertex *v) {
+    bh->count++;
+    bh->e[bh->count] = v;
+    bh_percup(bh, bh->count);
+}
+
+int bh_minchild(binheap *bh, int i) {
+    vertex *vl, *vr;
+    if (i * 2 + 1 > bh->count) {
+        return i * 2;
+    }
+    else {
+        vl = bh->e[i * 2];
+        vr = bh->e[i * 2 + 1];
+        if (vl->cost < vr->cost)
+            return i * 2;
+        else
+            return i * 2 + 1;
+    }
+}
+
+void bh_percdown(binheap *bh, int i) {
+    int ci;
+    vertex *vp, *vc, *tmp;
+    while (i*2 <= bh->count) {
+        ci = bh_minchild(bh, i);
+        vp = bh->e[i];
+        vc = bh->e[ci];
+        if (vp->cost > vc->cost) {
+            bh->e[i] = vc;
+            bh->e[ci] = vp;
+        }
+        i = ci;
+    }
+}
+
+vertex *bh_pop(binheap *bh) {
+    vertex *v = bh->e[1];
+    bh->e[1] = bh->e[bh->count];
+    bh->count--;
+    bh_percdown(bh, 1);
+    return v;
+}
+
+
+int main() {
+    int vlen, elen, sv;
+    int i, s, t, d, eidx;
+    vertex *vs, *v, *v1, *v2, *target;
+    vertex vtmpl;
+    edge *es, *e1, *e2, *e;
+    binheap *bh;
+
+    scanf("%d %d %d", &vlen, &elen, &sv);
+    vs = (vertex*)malloc(sizeof(vertex) * (vlen));
+    es = (edge*)malloc(sizeof(edge) * (elen));
+
+    vtmpl.fix = 0;
+    vtmpl.cost = UINT_MAX;
+    vtmpl.edges = NULL;
+    vtmpl.lastedge = NULL;
+    for (i=0; i < vlen; i++) {
+        *(vs+i) = vtmpl;
+    }
+
+    eidx = 0;
+    for (i=0; i < elen; i++) {
+        scanf("%d %d %d", &s, &t, &d);
+        e1 = &(es[eidx++]);
+        e1->v = t;
+        e1->dist = d;
+        e1->next = NULL;
+        v1 = &(vs[s]);
+        if (v1->edges == NULL) {
+            v1->edges = e1;
+            v1->lastedge = e1;
+        }
+        else {
+            v1->lastedge->next = e1;
+            v1->lastedge = e1;
+        }
+    }
+
+    bh = bh_new(HEAP_SIZE);
+    int newcost;
+    v = &vs[sv];
+    v->cost = 0;
+    bh_push(bh, v); 
+
+    while (bh->count) {
+        v = bh_pop(bh);
+        v->fix = 1;
+        e = v->edges;
+        while (e != NULL) {
+            target = &vs[e->v];
+            if (target->fix == 0) {
+                newcost = v->cost + e->dist;
+                if (newcost < target->cost) {
+                    target->cost = newcost;
+                    bh_push(bh, target);
+                }
+            }
+            e = e->next;
+        }
+    }
+
+    for (i = 0; i < vlen; i++) {
+        if (vs[i].fix) {
+            printf("%d\n", vs[i].cost);
+        }
+        else {
+            printf("INF\n");
+        }
+    }
+
+    bh_delete(bh);
+
+    return 0;
+}

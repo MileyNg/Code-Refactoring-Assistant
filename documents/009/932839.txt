@@ -1,0 +1,9 @@
+import sys, math
+step = [1,1,2,4] + [0]*26
+for i in range(4,30):
+  step[i] = step[i-1] + step[i-2] + step[i-3]
+
+for s in sys.stdin:
+  n = int(s)
+  if n == 0: break
+  print int(math.ceil(step[n]/3650.0))

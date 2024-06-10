@@ -1,0 +1,68 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+const int MAX = 10000;
+
+/** Problem0200 : Traveling Alone : One-way Ticket of Youth **/
+int costG[100][100];
+int timeG[100][100];
+
+int main()
+{
+	int n, m, a, b, c, t;
+	
+	while (cin >> n >> m, n!=0 && m!=0) {
+		rep(i, 100) {
+			rep(j, 100) {
+				costG[i][j]=INF;
+				timeG[i][j]=INF;
+			}
+		}
+		
+		rep(k, n) {
+			cin >> a >> b >> c >> t;
+			a--; b--;
+			costG[a][b] = c;
+			costG[b][a] = c;
+			timeG[a][b] = t;
+			timeG[b][a] = t;
+		}
+		
+		rep(k, m) {
+			rep(i, m) {
+				rep(j, m) {
+					costG[i][j] = min(costG[i][j], costG[i][k]+costG[k][j]);
+					timeG[i][j] = min(timeG[i][j], timeG[i][k]+timeG[k][j]);
+				}
+			}
+		}
+		
+		int k, p, q, r;
+		cin >> k;
+		rep(i, k) {
+			cin >> p >> q >> r;
+			p--; q--;
+			if (r==0) {
+				cout << costG[p][q] << endl;
+			} else {
+				cout << timeG[p][q] << endl;
+			}
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,13 @@
+while 1:
+	n=input()
+	if n==0:break
+	p=[0]*n
+	a=sorted([raw_input().split() for i in range(n)])
+	for t in range(1,30):
+		c=0
+		for j in range(n):
+			c+=a[j][2:].count(str(t))
+		for j in range(n):
+			if str(t) in a[j][2:]:
+				p[j]+=n-c+1
+	print min(p),a[p.index(min(p))][0]

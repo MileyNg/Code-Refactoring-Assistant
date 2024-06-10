@@ -1,0 +1,49 @@
+#include <iostream>
+#include <stdio.h>
+#include <string>
+#include <vector>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++) 
+#define ascent(i,a,b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+
+using namespace std;
+
+string list = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+int main() {
+  int n;
+  while(cin >> n, n) {
+    vector<int> k;
+    loop(n) {
+      int tmp;
+      cin >> tmp;
+      k.pb(tmp);
+    }
+
+    string s;
+    cin >> s;
+
+    // A = 65,Z =  91
+    // a = 97,z = 123;
+    
+    int cnt = 0;
+    ascent(i, 0, s.length()) {
+      int c;
+      if('A' <= s[i] && s[i] <= 'Z') {
+	c = 26 + s[i] - 'A';
+      }
+      else if('a' <= s[i] && s[i] <= 'z') {
+	c = s[i] - 'a';
+      }
+    
+      //   cout << " " << c << " " << k[cnt%n] << " " << list[(52 + c-k[cnt%n])%52] << endl;
+      s[i] = list[(52 + c-k[cnt%n])%52];
+      cnt ++;
+    }
+
+    cout << s << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,48 @@
+#include<stdio.h>
+
+int euc(int a,int b){
+  if(a<b){
+    return euc(b,a);
+  }
+  else{
+    int n=a%b;
+    if(n==0){
+      return b;
+    }
+    else{
+      return euc(n,b);
+    }
+  }
+}
+
+void dvsr(int i,int n){
+  if(i<=n){
+    if(n%i==0){
+      printf("%d\n",i);
+    }
+    dvsr(i+1,n);
+  }
+}
+
+void doit(){
+  int n;
+  int a,b;
+  scanf("%d",&n);
+  if(n==2){
+    scanf("%d %d",&a,&b);
+    dvsr(1,euc(a,b));
+  }
+  else{
+    int c;
+    scanf("%d %d %d",&a,&b,&c);
+    {
+      int t=euc(a,b);
+      dvsr(1,euc(t,c));
+    }
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

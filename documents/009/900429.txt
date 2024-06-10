@@ -1,0 +1,44 @@
+#include<cstdio>
+#include<utility>
+#include<vector>
+using namespace std;
+#define MP 10005
+int main()
+{
+	int x1,y1,x2,y2,N,R,A[2];
+	for(;scanf("%d%d",&N,&R),N;)
+	{
+		vector<pair<int,int> >S[MP];
+		for(int i=0;i<N;i++)
+		{
+			scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+			x1++;y1++;x2++;y2++;
+			S[x1].push_back(make_pair(y1,1));
+			S[x1].push_back(make_pair(y2,-1));
+			S[x2].push_back(make_pair(y2,1));
+			S[x2].push_back(make_pair(y1,-1));
+		}
+		int dp[2][MP]={0},*p1=dp[0],*p2=dp[1];
+		for(int x=A[0]=A[1]=0;x<MP;x++)
+		{
+			fill(p2,p2+MP,0);
+			for(int i=0;i<S[x].size();i++)
+			{
+				int p=S[x][i].first,v=S[x][i].second;
+				p2[p]+=v;
+			}
+			for(int y=1;y<MP;y++)
+				p2[y]+=p2[y-1];
+			for(int y=1;y<MP;y++)
+				p2[y]+=p1[y];
+			for(int y=1;y<MP;y++)
+			{
+				if(p2[y]>0)A[0]++;
+				if((p1[y]==0&&p2[y]>0)||(p1[y]>0&&p2[y]==0))A[1]++;
+				if((p2[y-1]==0&&p2[y]>0)||(p2[y-1]>0&&p2[y]==0))A[1]++;
+			}
+			swap(p1,p2);
+		}
+		for(int i=0;i<R;i++)printf("%d\n",A[i]);
+	}
+}

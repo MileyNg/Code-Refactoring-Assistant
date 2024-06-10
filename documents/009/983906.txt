@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+const int N_MAX = 10;
+
+struct Team{
+	int id;
+	int win;
+	int lose;
+	char t;
+};
+
+class TeamSort
+{
+public:
+	bool operator()( const Team& t0, const Team& t1 )
+	{
+		if( t0.win > t1.win ) return true;
+		if( t0.win < t1.win ) return false;
+		if( t0.lose < t1.lose ) return true;
+		if( t0.lose > t1.lose ) return false;
+		return t0.id < t1.id;
+	}
+};
+
+int main()
+{
+	int n;
+	while( cin >> n && n ){
+		vector< Team > team;
+		for( int i = 0; i < n; ++i ){
+			Team tm;
+			memset( &tm, 0, sizeof(tm) );
+			tm.id = i;
+			cin >> tm.t;
+			for( int j = 0; j < n - 1; ++j ){
+				int r;
+				cin >> r;
+				switch( r ){
+					case 0: ++tm.win; break;
+					case 1: ++tm.lose; break;
+				}
+			}
+			team.push_back( tm );
+		}
+		sort( team.begin(), team.end(), TeamSort() );
+		for( int i = 0; i < n; ++i ){
+			cout << team[ i ].t << endl;
+		}
+	}
+
+	return 0;
+}

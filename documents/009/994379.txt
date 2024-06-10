@@ -1,0 +1,80 @@
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <memory>
+#include <algorithm>
+
+using namespace std;
+
+template<typename T>
+using sp = shared_ptr<T>;
+
+
+struct Node{
+    int self;
+    vector<sp<Node>> children;
+    Node() : self(0) {}
+};
+
+int solve(sp<Node> n){
+    if(n->children.size() == 0){
+        return n->self / 2 + 1;
+    }else{
+        vector<int> chi;
+        for(auto c : n->children){
+            chi.push_back(solve(c));
+        }
+        int ret = 0;
+        sort(chi.begin(),chi.end());
+        for(int i=0;i<chi.size()/2+1;i++){
+            ret += chi[i];
+        }
+        return ret;
+    }
+}
+
+typedef string::const_iterator Cursor;
+
+sp<Node> number(Cursor&);
+sp<Node> parse(Cursor& c){
+    if(*c == '['){
+        vector<sp<Node>> children;
+        c++;
+        while(true){
+            children.push_back(parse(c));
+            if(*c == ']'){
+                c++;
+                sp<Node> n = make_shared<Node>();
+                n->children = children;
+                return n;
+            }
+        }
+    }else{
+        return number(c);
+    }
+}
+
+sp<Node> number(Cursor& c){
+    stringstream ss;
+    while(isdigit(*c)){
+        ss << *c;
+        c++;
+    }
+    int ret;ss >> ret;
+    sp<Node> n = make_shared<Node>();
+    n->self = ret;
+    return n;
+}
+
+int main(){
+    int n;cin >> n;
+    cin.ignore();
+    for(int i=0;i<n;i++){
+        string s;
+        getline(cin,s);
+        Cursor c = s.begin();
+        sp<Node> n = parse(c);
+        cout << solve(n) << endl;
+    }
+    return 0;
+}

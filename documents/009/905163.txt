@@ -1,0 +1,48 @@
+#pragma warning (disable:4996)
+#include <stdio.h>
+
+void input(int *r, int *c, int matrix[100][100]){
+	unsigned short int i, j;
+	scanf("%d %d", r, c);
+	for (i = 0; i < *r; i++){
+		for (j = 0; j < *c; j++){
+			scanf("%d", &matrix[i][j]);
+		}
+	}
+}
+void addSpread(int *r, int *c, int matrix[100][100]){
+	unsigned short int i, j;
+	for (i = 0; i < *r; i++){
+		for (j = 0; j < *c;j++){
+			matrix[i][*c] += matrix[i][j];
+		}
+	}
+	for (i = 0; i < *r; i++){
+		for (j = 0; j < *c;j++){
+			matrix[*r][j] += matrix[i][j];
+		}
+	}
+	for (i = 0; i < *r; i++){
+		for (j = 0; j < *c; j++){
+			matrix[*r][*c] += matrix[i][j];
+		}
+	}
+}
+void output(int *r, int *c, int matrix[100][100]){
+	unsigned short int i, j;
+	for (i = 0; i <= *r; i++){
+		for (j = 0; j <= *c; j++){
+			printf("%d", matrix[i][j]);
+			if (j != *c)printf(" ");
+		}
+	printf("\n");
+	}
+}
+int main(void){
+	int r, c;
+	int matrix[100][100] = {0};
+	input(&r, &c, matrix);
+	addSpread(&r, &c, matrix);
+	output(&r, &c, matrix);
+	return 0;
+}

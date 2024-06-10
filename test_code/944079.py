@@ -1,0 +1,1 @@
+print reduce(lambda stack, s: stack[:-2] + [eval("{} {} {}".format(stack[-2], s, stack[-1]))] if s in "+-*" else stack + [int(s)], raw_input().split(), [])[-1]

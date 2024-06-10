@@ -1,0 +1,18 @@
+class Main
+  def main
+    array = gets.split.map {|s| s.to_i}
+
+    (array.size - 1).downto(1) do |i|
+      0.upto(i - 1) do |j|
+        if array[j] > array[j + 1] then
+          tmp = array[j + 1]
+          array[j + 1] = array[j]
+          array[j] = tmp
+        end
+      end
+    end
+
+    puts array.join(" ")
+  end
+end
+Main.new.main

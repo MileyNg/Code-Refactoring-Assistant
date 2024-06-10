@@ -1,0 +1,60 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+struct TILE {
+	char tile;
+	bool hantei;
+};
+
+typedef pair<int, int> P;
+
+TILE yuka[20][20];
+int w, h;
+
+int main() {
+	while (cin >> w >> h) {
+		if (w == 0 && h == 0) {
+			break;
+		}
+		int si, sj;
+		int imove[4] = {1, 0, -1, 0};
+		int jmove[4] = {0, 1, 0, -1};
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				cin >> (yuka[i][j]).tile;
+				(yuka[i][j]).hantei = false;
+				if ((yuka[i][j]).tile == '@') {
+					si = i;
+					sj = j;
+				}
+			}
+		}
+		queue<P> q;
+		q.push(P(si, sj));
+		while (!q.empty()) {
+			P p = q.front();
+			q.pop();
+			(yuka[p.first][p.second]).hantei = true;
+			for (int k = 0; k < 4; k++) {
+				if (0 <= p.first+imove[k] && p.first+imove[k] < h 
+					&& 0 <= p.second+jmove[k] && p.second+jmove[k] < w 
+					&& (yuka[p.first+imove[k]][p.second+jmove[k]]).tile == '.' 
+					&& !(yuka[p.first+imove[k]][p.second+jmove[k]]).hantei) {
+						q.push(P(p.first+imove[k], p.second+jmove[k]));
+				}
+			}
+		}
+		int counter = 0;
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				if ((yuka[i][j]).hantei) {
+					counter++;
+				}
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

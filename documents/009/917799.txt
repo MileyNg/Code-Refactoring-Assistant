@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+const int INF = 1000000000;
+
+inline void update(int& x, int y){
+    if(x > y) x = y;
+}
+
+int main(){
+    int n, m, l, s, t;
+    while(cin >> n >> m >> l >> s >> t && n > 0){
+        s--;
+        int dist[300][300];
+        REP(i, n) REP(j, n) dist[i][j] = (i == j ? 0 : INF);
+
+        REP(i, m) {
+            int a, b, c;
+            cin >> a >> b >> c;
+            a--; b--;
+            dist[a][b] = dist[b][a] = c;
+        }
+
+        REP(k, n) REP(i, n) REP(j, n) dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+
+        vector<int> p(l);
+        vector<int> c(l);
+        REP(i, l) cin >> p[i] >> c[i];
+        REP(i, l) p[i]--;
+
+        int dp[1 << 16][16] = {};
+        REP(S, 1 << l) REP(i, l) dp[S][i] = INF;
+        REP(i, l) dp[1 << i][i] = c[i] + dist[s][p[i]];
+
+        REP(S, 1 << l) REP(i, l) if(S >> i & 1) {
+            REP(j, l) if(!(S >> j & 1)) {
+                update(dp[S | (1 << j)][j], dp[S][i] + dist[p[i]][p[j]] + c[j]);
+            }
+        }
+
+        int ans = 0;
+        REP(S, 1 << l) REP(i, l) {
+            if(dp[S][i] + dist[p[i]][s] <= t){
+                ans = max(ans, __builtin_popcount(S));
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+#define rep(i,b) for(int i = 0; i < b; i++)
+#define pb push_back
+#define back(x) x[x.size()-1]
+inline bool vowel(char c){return c=='a'||c=='i'||c=='u'||c=='e'||c=='o';}
+inline bool voiceless(char c){return c=='k'||c=='s'||c=='t'||c=='h'||c=='p';}
+
+string in;
+vector<string> compose(){
+	int n=in.size();
+	vector<string> res;
+	string tmp;
+	rep(i,n){
+		tmp.pb(in[i]);
+		if(vowel(in[i])){
+			if(i<n-1&&(in[i+1]=='a'||in[i+1]=='i'||in[i+1]=='u')){
+				tmp.pb(in[++i]);
+			}
+			res.pb(tmp);
+			tmp="";
+		}
+		else{
+			if(in[i]=='\''){
+				res.pb(tmp);
+				tmp="";
+			}
+			else if(in[i] == 'n' && (i == n-1 || !vowel(in[i+1]) && in[i+1] != 'y')){
+				res.pb(tmp);
+				tmp="";
+			}
+		}
+	}
+	return res;
+}
+int main(){
+	while(cin>>in,in!="#"){
+		vector<string> v=compose();
+		int n=v.size();
+		bool flag=0;
+		rep(i,n){
+			bool res=!flag;
+			if(res){
+				res=0;
+				int vw=0;
+				rep(j,v[i].size())if(vowel(v[i][j]))vw++;
+				if(voiceless(v[i][0])&&vw==1){
+					if((back(v[i])=='i'||back(v[i])=='u')&&
+							(i==n-1||voiceless(v[i+1][0])))res=1;
+					if((back(v[i])=='a'||back(v[i])=='o')&&i<n-1&&
+							voiceless(v[i+1][0])&&(v[i+1][1]=='y'?v[i+1][2]:v[i+1][1])==back(v[i]))res=1;
+				}
+			}
+			flag=res;
+			if(res){
+				bool ok=0;
+				rep(j,v[i].size())if(!ok&&vowel(v[i][j])){
+					cout<<"("<<v[i][j]<<")";
+					ok=1;
+				}
+				else cout<<v[i][j];
+			}
+			else cout<<v[i];
+		}
+		cout<<endl;
+	}
+	return 0;
+}

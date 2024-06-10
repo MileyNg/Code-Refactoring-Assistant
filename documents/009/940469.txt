@@ -1,0 +1,30 @@
+inf = 0x11111111
+def solve(G,start):
+	cost = [inf]*V
+	visited = [0]*V
+	cost[start] = 0
+	while 1:
+		visited[start] = 1
+		next = -1
+		min = inf
+		for i in range(V):
+			if visited[i]: continue
+			if G[start][i] > -1:
+				d = cost[start] + G[start][i]
+				if d < cost[i]:
+					cost[i] = d
+			if min > cost[i]:
+				min = cost[i]
+				next = i	
+		start = next
+		if next == -1: break
+	return cost
+
+V,E,r = map(int,raw_input().split())
+G = [[-1]*V for i in range(V)]
+for i in range(E):
+	s,t,d = map(int,raw_input().split())
+	G[s][t] = d
+	
+cost = solve(G,r)
+for i in cost: print i if i < inf else "INF"

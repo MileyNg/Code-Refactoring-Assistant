@@ -1,0 +1,37 @@
+
+#include <iostream>
+
+#define max(x,y) (x) > (y) ? (x) : (y)
+
+using namespace std;
+
+int main()
+{
+	int N,Q,c[300000],m=0,q;
+	cin>>N>>Q;
+	for (int i=0; i<N; i++) {
+		cin>>c[i];
+		m=max(m,c[i]);
+	}
+	
+	for (int i=0; i<Q; i++) {
+		cin>>q;
+		if (q>m) {
+			cout<<m<<endl;
+			continue;
+		}
+		int ans=0;
+		bool flag=true;
+		for (int j=0; j<N; j++) {
+			if (c[j]%q==q-1) {
+				cout<<q-1<<endl;
+				flag=false;
+				break;
+			}
+			ans=max(ans,c[j]%q);
+		}
+		if (flag) {
+			cout<<ans<<endl;
+		}
+	}
+}

@@ -1,0 +1,59 @@
+max_ = 1000000
+#def solv(p,q):
+    #global costs
+    #global times
+    #global stack
+    #if times[p][q] < max_:
+        ##最短経路算出済み
+        #return costs[p][q],times[p][q]
+#
+    #if p == q:
+        #return 0,0
+#
+    #min_cost = max_
+    #min_time = max_
+    #stack.append(p)
+#
+    #for s in senro :
+        #if (s[0] == p or s[1] == p) :
+            #next_ = s[1] if s[0]==p else s[0]
+            #if next_ in stack: #経過済みは無視
+                #continue
+#
+            #c,t = solv(next_,q)
+            #min_cost = min(c + s[2],min_cost)
+            #min_time = min(t + s[3],min_time)
+    #
+    #costs[p][q] = min_cost
+    #times[p][q] = min_time
+#
+    #stack.pop()
+#
+    #return min_cost,min_time
+
+while True:
+    n,m = list(map(int,input().split()))
+    if n == 0 and m == 0:
+        break
+
+    costs = [[max_ for i in range(m+1)] for j in range(m+1)]
+    times = [[max_ for i in range(m+1)] for j in range(m+1)]
+
+    #senro = [list(map(int,input().split())) for i in range(n)]
+    for i in range(n):
+        s = list(map(int,input().split()))
+        costs[s[0]][s[1]] = s[2]
+        costs[s[1]][s[0]] = s[2]
+        times[s[0]][s[1]] = s[3]
+        times[s[1]][s[0]] = s[3]
+
+    for i in range(1,m+1):
+        for k in range(1,m+1):
+            for j in range(1,m+1):
+                costs[i][j] = min(costs[i][j],costs[i][k] + costs[k][j])
+                times[i][j] = min(times[i][j],times[i][k] + times[k][j])
+
+    k = int(input())
+    for i in range(k):
+        p,q,r = list(map(int,input().split()))
+        print(times[p][q] if r==1 else costs[p][q])

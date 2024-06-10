@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+char translation_table[6][5] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','?','!',' '};
+
+int main(){
+    string input;
+    while(cin>>input){
+        if(input.length()%2!=0)cout<<"NA"<<endl;
+        else{
+            string ans;
+            for(int i=0; i<input.length(); i++){
+                int y = input[i]-'0';
+                i++;
+                int x = input[i]-'0';
+                if(y<=6&&x<=5&&0<y&&0<x){
+                    ans+=translation_table[y-1][x-1];
+                }else{
+                    ans = "NA";
+                    break;
+                }
+            }
+            
+            cout<<ans<<endl;
+        }
+    }
+
+}

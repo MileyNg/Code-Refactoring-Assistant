@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(void) {
+    while (true) {
+        int n, m, c2 = 0, c5 = 0;
+        cin >> n;
+        if (cin.eof()) break;
+        for (int i = 1; i <= n; i++) {
+            m = i;
+            while (m % 2 == 0) {
+                m /= 2;
+                c2++;
+            }
+            while (m % 5 == 0) {
+                m /= 5;
+                c5++;
+            }
+        }
+        cout << min(c2, c5) << endl;
+    }
+    return 0;
+}

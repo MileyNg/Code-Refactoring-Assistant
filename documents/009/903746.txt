@@ -1,0 +1,216 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <string>
+#include <cmath>
+#include <cassert>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<b?(a=b,1):0)
+#define chmin(a,b) (a>b?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+#define double long double
+const double EPS = 1e-7;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+
+typedef complex<double> P;
+P pIN() { double x,y; cin >> x >> y; return P(x,y); }
+namespace std {
+  bool operator < (const P& a, const P& b) {
+    // if (abs(a-b)<EPS) return 0;
+    return real(a) != real(b) ? real(a) < real(b) : imag(a) < imag(b);
+  }
+}
+double cross(const P& a, const P& b) {
+  return imag(conj(a)*b);
+}
+double dot(const P& a, const P& b) {
+  return real(conj(a)*b);
+}
+struct L : public vector<P> {
+  L(const P &a, const P &b) {
+    push_back(a); push_back(b);
+  }
+  L() { resize(2); }
+};
+ostream &operator<<(ostream &os, const L &a) {
+  os << a[0] << " -> " << a[1];
+  return os;
+}
+typedef vector<P> G;
+#define curr(P, i) P[i]
+#define next(P, i) P[(i+1)%P.size()]
+struct C {
+  P p; double r;
+  C() {}
+  C(const P &p, double r) : p(p), r(r) { }
+};
+int ccw(P a, P b, P c) {
+  b -= a; c -= a;
+  if (cross(b, c) > EPS)   return +1;       // counter clockwise
+  if (cross(b, c) < -EPS)   return -1;       // clockwise
+  if (dot(b, c) < -EPS)     return +2;       // c--a--b on line
+  if (norm(b) < norm(c)) return -2;       // a--b--c on line
+  return 0;
+}
+
+bool intersectLL(const L &l, const L &m) {
+  return abs(cross(l[1]-l[0], m[1]-m[0])) > EPS || // non-parallel
+         abs(cross(l[1]-l[0], m[0]-l[0])) < EPS;   // same line
+}
+bool intersectLS(const L &l, const L &s) {
+  return cross(l[1]-l[0], s[0]-l[0])*       // s[0] is left of l
+         cross(l[1]-l[0], s[1]-l[0]) < EPS; // s[1] is right of l
+}
+bool intersectLP(const L &l, const P &p) {
+  return abs(cross(l[1]-p, l[0]-p)) < EPS;
+}
+bool intersectSS(const L &s, const L &t) {
+  return ccw(s[0],s[1],t[0])*ccw(s[0],s[1],t[1]) <= 0 &&
+         ccw(t[0],t[1],s[0])*ccw(t[0],t[1],s[1]) <= 0;
+}
+bool intersectSS2(const L &s, const L &t) { // 接しているやつは交差と考えない
+  REP(i, 2) {
+    if (ccw(s[0], s[1], t[i]) == 0) {
+      int c = ccw(s[0],s[1],t[!i]);
+      if (s[0] == t[i]) {
+        if (c!=-2&&c) return 0;
+      } else if (s[1] == t[i]) {
+        if (c!=2&&c) return 0;
+      } else if (abs(c)==1) return 0;
+    }
+  }
+  return ccw(s[0],s[1],t[0])*ccw(s[0],s[1],t[1]) <= 0 &&
+         ccw(t[0],t[1],s[0])*ccw(t[0],t[1],s[1]) <= 0;
+}
+bool intersectSP(const L &s, const P &p) {
+  return abs(s[0]-p)+abs(s[1]-p)-abs(s[1]-s[0]) < EPS; // triangle inequality
+}
+bool intersectLH(const L &l, const L &h) {
+  if (intersectLS(l,h)) return 1;
+  if (!intersectLL(l,h)) return 0;
+  if (abs(cross(l[1]-l[0],h[1]-h[0])) < EPS) return 1; // same line
+  return (ccw(l[0],l[1],h[0]) == 1) ^ (cross(l[1]-l[0], h[1]-h[0]) > 0);
+}
+bool intersectHS(const L &h, const L &s) {
+  if (intersectSS(h,s)) return 1;
+  if (!intersectLS(h,s)) return 0;
+  if (abs(cross(s[1]-s[0],h[1]-h[0])) < EPS) // same line
+    return ccw(h[0],h[1],s[0]) != 2 || ccw(h[0],h[1],s[1]) != 2;
+  return (ccw(s[0],s[1],h[0]) == 1) ^ (cross(s[1]-s[0], h[1]-h[0]) > 0);
+}
+bool intersectHH(const L &h, const L &k) {
+  return intersectLH(h,k) && intersectLH(k,h);
+}
+bool intersectHS2(const L &h, const L &s) {
+  L t(s); swap(t[0],t[1]);
+  return intersectHH(h,s) && intersectHH(h,t);
+}
+
+P projection(const L &l, const P &p) {
+  double t = dot(p-l[0], l[0]-l[1]) / norm(l[0]-l[1]);
+  return l[0] + t*(l[0]-l[1]);
+}
+P reflection(const L &l, const P &p) {
+  return p + P(2,0) * (projection(l, p) - p);
+}
+vector<L> tangentCP(const C &c, const P &p) {
+  vector<L> ret;
+  P vect = c.p - p;
+  double d = abs(vect);
+  double l = sqrt(d*d-c.r*c.r);
+  if (::isnan(l)) { return ret; }
+  P v1 = vect * P(l / d,  c.r / d);
+  P v2 = vect * P(l / d, -c.r / d);
+  ret.push_back(L(p, p+v1));
+  if (l > EPS)
+    ret.push_back(L(p, p+v2));
+  return ret;
+}
+
+P crosspoint(const L &l, const L &m) {
+  double A = cross(l[1] - l[0], m[1] - m[0]);
+  double B = cross(l[1] - l[0], l[1] - m[0]);
+  if (abs(A) < EPS && abs(B) < EPS) return m[0]; // same line
+  if (abs(A) < EPS) assert(false); // !!!PRECONDITION NOT SATISFIED!!!
+  return m[0] + B / A * (m[1] - m[0]);
+}
+double distanceSP(const L &s, const P &p) {
+  const P r = projection(s, p);
+  if (intersectSP(s, r)) return abs(r - p);
+  return min(abs(s[0] - p), abs(s[1] - p));
+}
+
+C circles[10];
+int n,d;
+double ans;
+P start(25,0);
+P goal(25,94);
+
+void check(const P &p) {
+  if (p.real() < -EPS || p.real() > 50+EPS || p.imag() < -EPS || p.imag() > 94+EPS) {
+    return;
+  }
+  int cnt = 0;
+  REP(i,n) {
+    if (distanceSP(L(start, p), circles[i].p) <= circles[i].r - EPS ||
+        distanceSP(L(goal, p), circles[i].p) <= circles[i].r - EPS) {
+      cnt++;
+    }
+  }
+  if (cnt <= d) {
+    chmin(ans, abs(start-p)+abs(goal-p));
+  }
+}
+
+int main() {
+  while(cin >> n >> d) {
+    REP(i,n) {
+      int x,y,r;
+      cin >> x >> y >> r;
+      circles[i] = C(P(x,y),r);
+    }
+    ans = INF;
+    check(start);
+    vector<L> v;
+    v.push_back(L(P(0,0),P(50,0)));
+    v.push_back(L(P(50,0),P(50,94)));
+    v.push_back(L(P(50,94),P(0,94)));
+    v.push_back(L(P(0,94),P(0,0)));
+                
+    REP(i,n) {
+      vector<L> v1 = tangentCP(circles[i], start);
+      vector<L> v2 = tangentCP(circles[i], goal);
+      FOR(it, v1) v.push_back(*it);
+      FOR(it, v2) v.push_back(*it);
+    }
+    FOR(it, v) {
+      FOR(jt, v) {
+        if (intersectLL(*it, *jt)) {
+          P p = crosspoint(*it, *jt);
+          check(p);
+        }
+      }
+    }
+    if (ans == INF) cout << -1 << endl;
+    else printf("%.10Lf\n", ans);
+  }
+}

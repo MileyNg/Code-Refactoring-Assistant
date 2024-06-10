@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <array>
+
+using namespace std;
+
+array<int, 300000> buf;
+bool solve() {
+    int N, Q;
+    if(!(cin >> N >> Q)) return false;
+    if(!N && !Q) return false;
+    for(int i = 0; i < N; ++i) {
+        cin >> buf[i];
+    }
+    sort(buf.begin(), buf.begin()+N);
+    while(Q--) {
+        int q;
+        cin >> q;
+        int res = 0;
+        for(int i = q; i <= buf[N-1]+q; i += q) {
+            auto it = lower_bound(buf.begin(), buf.begin()+N, i-1);
+            if(it == buf.begin()+N || (it != buf.begin() && *it >= i)) --it;
+            //cout << i << ' ' << *it << endl;
+            res = max(res, *it % q);
+        }
+        cout << res << endl;
+    }
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

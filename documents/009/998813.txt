@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<iomanip>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+int main(){
+  double m[2]={100};
+  int n[2]={0};
+  rep(i,3){
+    vector<int>a(8);
+	vector<double>b(8);
+	rep(j,8)cin>>a[j]>>b[j];
+	rep(j,7){
+	  rep(k,7-j){
+	    if(b[k]>b[k+1]){
+		  swap(b[k],b[k+1]);
+		  swap(a[k],a[k+1]);
+		}
+      }
+	}
+    //cout<<b[2]<<"!"<<b[3]<<endl;
+	rep(j,2)printf("%d %.2f\n",a[j],b[j]);
+	rep(k,2){
+	  rep(j,2){
+     	if(m[k]>b[j+2]){
+		  if(k==0){
+		    m[1]=m[0];
+			n[1]=n[0];
+		  }
+	      m[k]=b[j+2];
+	      n[k]=a[j+2];
+		  b[j+2]=100;
+		}
+	  }
+	}
+	//rep(i,2)cout<<n[i]<<" "<<m[i]<<endl;
+  }
+  rep(i,2)printf("%d %.2f\n",n[i],m[i]);
+}

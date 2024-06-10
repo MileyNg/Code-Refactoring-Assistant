@@ -1,0 +1,31 @@
+#include<iostream>
+#include<map>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int main(){
+  int i;
+  int n;
+  map<string, int> p;
+  cin >> n;
+  int num;
+  string name;
+  map<string, int>::iterator it;
+  for(i = 0; i < n; i++){
+    cin >> name >> num;
+    if(p.find(name) != p.end()) p[name] += num;
+    else p[name] = num;
+  }
+
+  for(i=1; i<=5; i++){
+    it = p.begin();
+    while( it != p.end()){
+      if(it->first.size() == i){
+	cout <<it->first << " " << it->second << endl;
+      }
+      it++;
+    }
+  }
+  return 0;
+}

@@ -1,0 +1,16 @@
+import random
+ans = 0
+while 1:
+	n = input()
+	if n == 0: break
+	xy = [map(float,raw_input().split()) for i in range(n)]
+	for r in range(20000):
+		cx,cy = 10*random.random(),10*random.random()
+		cur = 0
+		for i in range(n):
+			x,y = xy[i]
+			if (cx-x)**2 + (cy-y)**2 <= 1:
+				cur += 1
+			if n - cur < ans: break
+		ans = max(ans,cur)
+	print ans

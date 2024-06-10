@@ -1,0 +1,30 @@
+#include<stdio.h>
+
+int gcd(int ,int);
+int swap(int,int);
+
+main(){
+  int a,b;
+
+  scanf("%d%d",&a,&b);
+
+  gcd(a,b);
+
+}
+
+int gcd(int x, int y){
+  int n;
+
+  if(x < y){
+    n = x;
+    x = y;
+    y = n;
+  }
+
+  while(y>0){
+    n = x%y;
+    x = y;
+    y = n;
+  }
+ printf("%d\n",x);
+}

@@ -1,0 +1,22 @@
+#include<iostream>
+#include<fstream>
+#include<stack>
+#include<string>
+using namespace std;
+
+int main(){
+  string s;
+  stack<char> c;
+  c.push('\0');
+  while(getline(cin,s)){
+    if(s == ".")break;
+    while(c.size() != 1)c.pop();
+    for(int i = 0;i < s.length();i++){
+      if(s[i] == '(' || s[i] == '[') c.push(s[i]);		
+      else if(s[i]-1 == c.top() || s[i]-2 == c.top()) c.pop();
+    }
+    if(c.size() == 1) cout<<"yes"<<endl;
+    else cout<<"no"<<endl;
+  }
+  return 0;
+}

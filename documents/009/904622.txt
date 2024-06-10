@@ -1,0 +1,99 @@
+#include<iostream>
+#include<cmath>
+#include<algorithm>
+#include<deque>
+#include<stack>
+#include<queue>
+#include<sstream>
+#include<cstdlib>
+#define INF 16777216
+typedef long long llong;
+using namespace std;
+deque<int>deq;
+int init();
+int dfs();
+int s2i(string);
+string i2s(int);
+llong EN2D(llong,llong);
+llong EN2R(llong,llong);
+llong D2EN(llong,llong);
+llong R2EN(llong,llong);
+//
+int n,tmp,flg,mx,mn,num,sum,i,j,k,H,W,avg;
+int main(){
+  llong M,Cd,Cr,MD,MR,RA,DA;
+  int rD,rR;
+  cin >> M >> rD >> rR >> Cd >> Cr;
+  
+  MD=D2EN(Cd,rD);
+  MR=R2EN(Cr,rR);
+  if(M<MD+MR){
+    cout<<-1<<endl;
+  }else{
+    // cout<<MD<<" is MD"<<endl;
+    // cout<<MR<<" is MR"<<endl;
+    DA=D2EN( EN2D(10000,rD),rD);
+    RA=R2EN( EN2R(10000,rR),rR);
+    if(DA>RA ){
+      if(DA>10000){
+	//Rで最小限 Dで残りぜんぶ
+	MD=M-MR;
+	
+	MD=D2EN(EN2D(MD,rD),rD);
+	MR=R2EN(EN2R(MR,rR),rR);
+	cout<<MR+MD<<endl;
+	return 0;
+      }
+      
+      
+    }else{
+      if(RA>10000){
+      //Dで最小限 Rで残りぜんぶ
+	MR=M-MD;
+	
+	MD=D2EN(EN2D(MD,rD),rD);
+	MR=R2EN(EN2R(MR,rR),rR);
+	cout<<MR+MD<<endl;
+	return 0;
+      }
+    }
+    
+    cout<<M-MD-MR<<endl;
+  }
+
+  return 0;
+}
+
+llong EN2D(llong x,llong rD){
+  return (rD*x)/100 + ((rD*x)%100>0);
+}
+llong EN2R(llong x,llong rR){
+  return (rR*x)/100 + ((rR*x)%100>0);
+}
+llong D2EN(llong x,llong rD){
+  return (100*x)/rD + ((100*x)%rD>0);
+}
+llong R2EN(llong x,llong rR){
+  return (100*x)/rR + ((100*x)%rR>0);
+}
+
+
+int init(){
+}
+int dfs(){
+}
+
+
+int s2i(string str){
+  int num;
+  num=atoi(str.c_str());
+  return num;
+}
+
+string i2s(int num){
+  string str;
+  stringstream s;
+  s<<num;
+  s>>str;
+  return str;
+}

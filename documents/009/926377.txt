@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX (100)
+
+int main(int argc, const char * argv[])
+{
+    char w[MAX],t[MAX];     //単語と文字列
+    char end[]="END_OF_TEXT";   //終了条件用
+    int cnt=0,i;        //cnt　はカウント用変数
+    int ask;            //アスキーコード用
+    ask='a'-'A';    //大文字と小文字の差
+    
+    scanf("%s",w);     //単語Wを入力
+    //単語Wの大文字小文字変換
+    for(i=0;w[i]!='\0';i++){
+        if(w[i]>='A' && w[i]<='Z'){     //大文字なら
+            w[i]=w[i]+ask;              //小文字に
+        }
+    }
+    while(1){
+        //文字列Tを入力
+        scanf("%s",t);
+        if(strcmp(end,t)==0){   //"END_OF_TEXT"があるか判定
+            break;//終了
+        }
+        //文字列Tを大文字小文字変換
+        for(i=0;t[i]!='\0';i++){
+            if(t[i]>='A' && t[i]<='Z'){     //大文字なら
+                t[i]=t[i]+ask;              //小文字に
+            }
+        }
+        if(strcmp(w,t)==0){     //単語Wがあればカウント＋１
+            cnt++;
+        }
+    }
+    printf("%d\n",cnt); //印字
+    return 0;
+}

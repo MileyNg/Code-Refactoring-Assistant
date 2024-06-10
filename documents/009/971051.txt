@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int dx[4] = {0, 1, 0, -1};
+int dy[4] = {1, 0, -1, 0};
+int main(){
+    int n, m;
+    while(cin >> n >> m, n+m){
+        int mx = 1, my = 1;
+        int direction = 0;
+        while(1){
+            string command;
+            int step;
+            cin >> command >> step;
+            if(command == "FORWARD"){
+                if(mx+dx[direction]*step <= n) mx += dx[direction]*step;
+                else mx = n;
+                if(my+dy[direction]*step <= m) my += dy[direction]*step;
+                else my = m;
+            }
+            if(command == "BACKWARD"){
+                if(0 <= mx-dx[direction]*step) mx -= dx[direction]*step;
+                else mx = 0;
+                if(0 <= my-dy[direction]*step) my -= dy[direction]*step;
+                else my = 0;
+            }
+            cin >> command;
+            if(command == "RIGHT")direction = (direction+1)%4;
+            else if(command == "LEFT")direction = (direction-1)%4;
+            else if(command == "STOP")break;
+        }
+        cout << mx << " " << my << endl;
+    }
+}

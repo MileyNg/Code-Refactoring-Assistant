@@ -1,0 +1,38 @@
+def get_prime_nums(max_p)
+  primes = (0..max_p).map{true}
+  primes[0] = primes[1] = false
+
+  smp = Math::sqrt(0.5 + max_p).to_i
+  count = 0
+
+  for p in (2..smp)
+    if (primes[p])
+      count += 1
+      (p * p).step(max_p, p){|q| primes[q] = false}
+    end
+  end
+
+  #puts "#{count} primes"
+
+  return primes
+end
+
+### main
+
+primes = get_prime_nums(50000)
+
+while (line = gets)
+  n = line.chomp.to_i
+
+  n0 = n - 1
+  while (! primes[n0]) do
+    n0 -= 1
+  end
+
+  n1 = n + 1
+  while (! primes[n1]) do
+    n1 += 1
+  end
+
+  puts "#{n0} #{n1}"
+end

@@ -1,0 +1,27 @@
+
+#include<iostream>
+#define rep(i,n) for(i = 0;i < n;i++)
+using namespace std;
+
+int m,e,j;
+
+int main(){
+	int n,i;
+	while( cin >> n ){
+		if( n == 0 )
+			break;
+		rep(i,n){
+			cin >> m >> e >> j;
+			//上から順に振り分け
+			if( max(m,max(e,j)) == 100 || (m+e) >= 180 || (m+e+j) >= 240 ){
+				cout << "A" << endl;
+			}
+			else if( m+e+j >= 210 || ( (m >= 80 || e >= 80) && m+e+j >= 150 ) ){
+				cout << "B" << endl;
+			}
+			else
+				cout << "C" << endl;
+		}
+	}
+	return 0;
+}

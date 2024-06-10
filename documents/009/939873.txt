@@ -1,0 +1,23 @@
+inf = 0x101010
+def floyd(P,m):
+	for k in range(m):
+		for i in range(m):
+			for j in range(m):
+				P[i][j]=min(P[i][j],P[i][k]+P[k][j])
+
+while 1:
+	n,m = map(int,raw_input().split())
+	if n == 0: break
+	C = [[inf]*n for i in range(m)]
+	T = [[inf]*n for i in range(m)]
+	for i in range(m):
+		C[i][i] = 0
+		T[i][i] = 0
+	for i in range(n):
+		a,b,c,t = map(int,raw_input().split())
+		C[a-1][b-1] = C[b-1][a-1] = c
+		T[a-1][b-1] = T[b-1][a-1] = t
+	floyd(C,m);floyd(T,m)
+	for i in range(input()):
+		p,q,r = map(int,raw_input().split())
+		print C[p-1][q-1] if r == 0 else T[p-1][q-1]

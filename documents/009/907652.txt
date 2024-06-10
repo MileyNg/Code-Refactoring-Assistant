@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+/*
+	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_A&lang=jp
+
+	コイン問題
+
+	有名なDP問題の一つ。
+	dp[今何番目?][合計金額] := コインの最小枚数
+
+	個数制限なしのナップサック問題と同様に、O(M*N*N) となるが
+
+	dp[i+1][j] = 
+	min {dp[i][j-k*d[i]] + k|0 <= k }	= min {dp[i][j], min{dp[i][j-k*d[i]] + k| 1 <= k } }
+						= min {dp[i][j], min{dp[i][j-d[i]-(k-1)*d[i]] + (k-1)| 1 <= k} + 1 }
+						= min {dp[i][j], min{dp[i][j-d[i] - k'*d[i]] + k'| 0 <= k'} + 1 }
+						= min {dp[i][j], dp[i+1][j-d[i]] + 1 }
+	より、O(M*N) となる。
+ 	詳細は蟻本 p.59
+
+*/
+const int MAX_N = 50000;
+const int MAX_M = 20;
+const int INF = 50001;
+
+int N, M;
+int d[MAX_M];
+int dp[MAX_M+1][MAX_N+1];
+
+int solve (void ){
+
+	rep (i, M+1 ) rep (j, N+1 ) dp[i][j] = INF;
+
+	dp[0][0] = 0;
+	rep (i, M ){
+		for (int j = 0; j <= N; j++ ){
+			dp[i+1][j] = min (dp[i+1][j], dp[i][j] );
+			if (j - d[i] >= 0 ){
+				dp[i+1][j] = min (dp[i+1][j], dp[i+1][j-d[i]] + 1 );
+			} // end for
+		} // end for
+	} // end rep
+
+	
+	return dp[M][N];
+}
+
+int main()
+{
+	memset (d, 0, sizeof (d ) );
+
+	ios_base::sync_with_stdio(0);
+	cin >> N >> M;
+
+	rep (i, M ) cin >> d[i];
+
+	int res = solve ();
+	cout << res << endl;
+
+	return 0;
+}

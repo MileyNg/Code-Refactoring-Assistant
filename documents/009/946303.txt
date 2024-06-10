@@ -1,0 +1,25 @@
+#include <cstdio>
+
+inline void aizu(int e){
+    int x, y, z;
+
+    for(int xyz = 1; xyz <= e; xyz++){
+        for(x = 0; x <= xyz; x++){
+            for(y = 0; x + y <= xyz && x + y * y <= e; y++){
+                z = xyz - x - y;
+                if(x + y * y + z * z * z == e){
+                    printf("%d\n", xyz);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+int main(void)
+{
+    for(int e = 1; scanf("%d", &e), e != 0;){
+        aizu(e);
+    }
+    return 0;
+}

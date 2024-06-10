@@ -1,0 +1,47 @@
+#include<stdio.h>
+
+int search_pattern(int n, int s, int i, int j, int *sum, int *result);
+
+main()
+{
+	int n = 0, s = 0, i = 0, j = 0, sum = 0, result = 0;
+	while(scanf("%d %d", &n, &s), !((0 == n) && (0 == s)))
+	{
+		search_pattern(n, s, i, j, &sum, &result);
+		//printf("&result = %d result = ", &result);
+		printf("%d\n", result);
+		//n = 0, s = 0, i = 0, j = 0;
+		sum = 0, 
+		result = 0;
+	}
+	return 0;
+}
+
+int search_pattern(int n, int s, int i, int j, int *sum, int *result)
+{
+	for(; (i <= 9) && (j < n); i++)
+	{
+		///*
+		if((i <= 8) && (j < n))
+		{
+			printf("%d ", i);
+		}
+		else
+		{
+			printf("%d\n", i);
+		}
+		//*/
+		*sum += i;
+		//printf("sum = %d i = %d\n", *sum, i);
+		j++;
+		search_pattern(n, s, i + 1, j + 1, sum, result);
+		//printf("sum = %d j = %d\n", *sum, j);
+		if((*sum == s) && (j == n))
+		{
+			*result += 1;
+			//printf("*result = %d\n", *result);
+		}
+		*sum -= i;
+		j--;
+	}
+}

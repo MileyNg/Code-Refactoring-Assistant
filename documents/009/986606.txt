@@ -1,0 +1,92 @@
+#include <stdio.h>
+
+
+typedef struct {
+    int x;
+    int y;
+} point_t;
+
+typedef struct {
+    point_t p[4];
+} quadrangle_t;
+
+int segment_intersect(point_t *a, point_t *b, point_t *c, point_t *d) {
+    point_t ab, ac, ad, cd, ca, cb;
+    ab.x = b->x - a->x;
+    ab.y = b->y - a->y;
+    ac.x = c->x - a->x;
+    ac.y = c->y - a->y;
+    ad.x = d->x - a->x;
+    ad.y = d->y - a->y;
+    cd.x = d->x - c->x;
+    cd.y = d->y - c->y;
+    ca.x = a->x - c->x;
+    ca.y = a->y - c->y;
+    cb.x = b->x - c->x;
+    cb.y = b->y - c->y;
+    if (((ab.x * ac.y - ab.y * ac.x) * (ab.x * ad.y - ab.y * ac.x) <= 0) &&
+        ((cd.x * ca.y - cd.y * ca.x) * (cd.x * cb.y - cd.y * cb.x) <= 0)) {
+        return 1;
+    }
+    return 0;
+}
+
+int cross(int ax, int ay, int bx, int by) {
+    return ax * by - ay * bx;
+}
+
+int main(void) {
+    int N, M, n, m, i, k, e, group_count;
+    quadrangle_t quad[100], *qi, *qm;
+
+    while (scanf("%d\n", &N) == 1 && N) {
+        for (n = 0; n < N; n++) {
+            scanf("%d\n", &M);
+            for (m = 0; m < M; m++) {
+                for (i = 0; i < 4; i++) {
+                    scanf("%d%d", &(quad[m].p[i].x), &(quad[m].p[i].y));
+                }
+            }
+
+            group_count = 1;
+            for (m = 1; m < M; m++) {
+                qm = &quad[m];
+                for (i = 0; i < m; i++) {
+                    qi = &quad[i];
+                    for (k = 0; k < 4; k++) {
+                        for (e = 0; e < 4; e++) {
+                            if (cross(qi->p[(e+1)%4].x - qi->p[e].x,
+                                  qi->p[(e+1)%4].y - qi->p[e].y,
+                                  qm->p[k].x - qi->p[e].x,
+                                  qm->p[k].y - qi->p[e].y) > 0) {break;
+                            }
+                        }
+                        if (e == 4) goto overlapped;
+                        for (e = 0; e < 4; e++) {
+                            if (cross(qm->p[(e+1)%4].x - qm->p[e].x,
+                                  qm->p[(e+1)%4].y - qm->p[e].y,
+                                  qi->p[k].x - qm->p[e].x,
+                                  qi->p[k].y - qm->p[e].y) > 0) {break;
+                            }
+                        }
+                        if (e == 4) goto overlapped;
+                    }
+                    for (k = 0; k < 4; k++) {
+                        for (e = 0; e < 4; e++) {
+                            if (segment_intersect(
+                                &(qi->p[e]), &(qi->p[(e+1)%4]),
+                                &(qm->p[k]), &(qm->p[(k+1)%4]))) {
+                                goto overlapped;
+                            }
+                        }
+                    }
+                }
+                group_count++;
+                overlapped:;
+            }
+            printf("%d\n", group_count);
+        }
+    }
+
+    return 0;
+}

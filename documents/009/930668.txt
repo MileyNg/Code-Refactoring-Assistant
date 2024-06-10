@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 101;
+const int W = 17;
+int wait[MAXN];
+int u[W];
+
+void make() {
+  fill(u, u+W, 0);
+  queue<pair<int,int> > que;
+  for(int t = 0, i = 0; i < 100 || que.size(); ++t) {
+    if(i < 100 && t == 5*i) que.push(make_pair(i++, t));
+    while(que.size()) {
+      int k = que.front().first;
+      int s = que.front().second;
+      int x = k%5 == 1 ? 5 : 2;
+      int d = 17 * (k%2) + 3*(k%3) + 19;
+
+      int pos = -1;
+      for(int j = 0; j+x <= W; ++j) {
+        bool flag = true;
+        for(int a = 0; a < x; ++a) {
+          if(u[j+a] > t) {
+            flag = false;
+            break;
+          }
+        }
+        if(flag) {
+          pos = j;
+          break;
+        }
+      }
+      if(pos == -1) break;
+      wait[k] = t - s;
+      que.pop();
+      for(int a = 0; a < x; ++a) u[pos+a] = t + d;
+    }
+  }
+}
+
+int main() {
+  make();
+  int n;
+  while(cin >> n) {
+    cout << wait[n] << endl;
+  }
+  return 0;
+}

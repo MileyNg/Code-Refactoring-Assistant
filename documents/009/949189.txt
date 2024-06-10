@@ -1,0 +1,49 @@
+//============================================================================
+// Name        : timecard.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	int h1,m1,s1; //Aさんの出社時刻
+	int h2,m2,s2; //Bさんの退社時刻
+
+	for(int i=0; i<3;i+=1){
+
+
+		cin >>h1>> m1 >> s1;
+		cin >>h2>> m2 >> s2;
+
+		int h=h2-h1;
+		int m=m2-m1;
+		int s=s2-s1;
+
+
+		int k =0;
+		if(s<0){
+			k=1;
+			s= s+ 60;
+		}
+		m =m2-m1-k;
+		k=0;
+		if(m<0){
+			k=1;
+			m= m+ 60;
+		}
+		h =h2-h1-k;
+		k=0;
+
+
+		cout <<h<<" "<<m<<" " <<s<<endl;
+
+	}
+
+
+
+	return 0;
+}

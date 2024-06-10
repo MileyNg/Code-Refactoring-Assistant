@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <memory.h>
+#include <math.h>
+ 
+#define NUM 10000000
+unsigned int prime[NUM+2];
+unsigned int prime_value[700000];
+unsigned int prime_size = 0;
+ 
+void create_prime(void)
+{
+    unsigned int i, j;
+    unsigned int size;
+    unsigned int sq_num = (int)sqrt((double)NUM);
+ 
+    memset((char*)prime, 0xFF, sizeof(prime));
+    prime[0] = 0;
+    prime[1] = 0;
+     
+    for (i=2;i<=sq_num;i++) {
+        if (prime[i] != 0) {
+            for (j=2;i*j<=NUM;j++){
+                prime[i*j] = 0;
+            }
+        }
+    }
+
+	for(i=2;i<NUM;i++) {
+		if(prime[i] != 0) {
+		   	prime_value[prime_size] = i;
+		   	prime_size ++;
+		}	
+	}  
+}
+ 
+int main(void) {
+    int i, j, n, value;
+    int count = 0;
+    int sq_num;
+     
+    create_prime();
+     
+    scanf("%d\n", &n);
+    for(i=0;i<n;i++) {
+        scanf("%d\n", &value);
+        if(value >= NUM) {
+        	sq_num = (int)sqrt((double)value);
+        	for(j=0;j<prime_size;j++) {
+        		if(value % prime_value[j] == 0) {
+        			break;
+        		} else if(prime_value[j] > sq_num) {
+        			count ++;
+        			break;
+        		}
+        	}
+        }
+        else if(prime[value] != 0) {
+            count++;
+        }
+    }
+     
+    printf("%d\n", count);
+    return 0;
+}

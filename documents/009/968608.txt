@@ -1,0 +1,26 @@
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+int main() {
+  int n, h, m;
+  double hr, mr, dr;
+  scanf("%d", &n);
+  for (int i=0; i<n; i++) {
+    scanf("%d:%d", &h, &m);
+    mr = m * 6;
+    hr = h * 30 + m * 0.5;
+    dr = fabs(mr - hr);
+    if (dr > 180.0) {
+      dr = 360.0 - dr;
+    }
+    if (dr < 30.0) {
+      printf("alert\n");
+    } else if (dr < 90.0) {
+      printf("warning\n");
+    } else {
+      printf("safe\n");
+    }
+  }
+  return 0;
+}

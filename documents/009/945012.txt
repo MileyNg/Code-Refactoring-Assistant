@@ -1,0 +1,36 @@
+#include<stdio.h>
+
+int main(){
+  int i,j,n,q,S[10001],T[501],count=0,l,r,m;
+  scanf("%d",&n);
+  for (i=0;i<n;i++){
+    scanf("%d",&S[i]);
+  }
+  scanf("%d",&q);
+  for (i=0;i<q;i++){
+    scanf("%d",&T[i]);
+  }
+ 
+  for (j=0;j<q;j++){
+    l = 0;
+    r = n;
+    while(l<r){
+      m = (l+r)/2;
+      if(l==r){
+	break;
+      }
+      if (S[m]==T[j]){
+	count++;
+	break;
+      }
+      if (S[m]>T[j]){
+	r = m;
+      } else if(S[m]<T[j]){
+	l = m+1;
+      }
+    }
+  }
+
+  printf("%d\n",count);
+  return 0;
+}

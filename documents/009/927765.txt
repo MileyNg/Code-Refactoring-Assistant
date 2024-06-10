@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char str[200];
+	char str2[200];
+	int a, b, c, d, e, zero;
+	
+	while (1) {
+		for (a = 0; a < 200; a++) {
+			str[a] = 0;
+			str2[a] = 0;
+		}
+		scanf("%s", str);
+		
+		if (str[0] == '-') {
+			break;
+		}
+		scanf("%d", &b);
+		
+		e = 0;
+		zero = 0;
+		while (str[e] != '\0') {
+			e++;
+		}
+
+		for (c = 0; c < b; c++) {
+			scanf("%d", &a);			
+			zero = 0;
+			for (d = a; d < e; d++) {
+				str2[zero] = str[d];
+				zero++;
+			}
+			for (d = 0; d < a; d++) {
+				str2[zero] = str[d];
+				zero++;
+			}
+			str[0] = '\0';
+			for (d = 0; d < e; d++) {
+				str[d] = str2[d];
+			}
+		}
+		printf("%s\n", str2);
+		str[0] = '\0';
+		str2[0] = '\0';
+	}
+	
+	return (0);
+}	
+			

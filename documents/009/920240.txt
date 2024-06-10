@@ -1,0 +1,86 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+
+int toint[333];
+int used[10];
+
+int getvalue(string& str){
+	int ret = 0;
+	rep(i,str.size()){
+		ret *= 10;
+		ret += toint[str[i]];
+	}
+	return ret;
+}
+
+int wariate(vector<char>& mozi, vector<string>& input, int depth){
+	if(depth==mozi.size()){
+		
+		rep(i,input.size()){
+			if(toint[input[i][0]]==0)return 0;
+		}
+		
+		int sum = 0;
+		rep(i,input.size()-1){
+			sum += getvalue(input[i]);
+		}
+		if(sum==getvalue(input[input.size()-1])){
+			/*
+			rep(i,mozi.size()){
+				printf("(%c,%d) ",mozi[i],toint[mozi[i]]);
+			}puts("");
+			
+			rep(i,input.size()){
+				cout<<input[i]<<" "<<getvalue(input[i])<<endl;
+			}puts("");*/
+			return 1;
+		}
+		return 0;
+	}
+	
+	int ans = 0;
+	rep(i,10){
+		if(used[i]==0){
+			toint[mozi[depth]]=i;
+			used[i]=1;
+			ans += wariate(mozi, input, depth+1);
+			used[i]=0;
+		}
+	}
+	
+	return ans;
+}
+
+int main(){
+	
+	A:;
+	int n;
+	cin>>n;
+	if(n==0)return 0;
+	map<char,int> has;
+	vector<char> mozi;
+	vector<string> input;
+	rep(i,n){
+		string str;
+		cin>>str;
+		input.push_back(str);
+		rep(j,str.size()){
+			if(has[str[j]]==0)mozi.push_back(str[j]);
+			has[str[j]]=1;
+		}
+	}
+	
+	int ans = wariate(mozi,input, 0);
+	printf("%d\n",ans);
+	goto A;
+}

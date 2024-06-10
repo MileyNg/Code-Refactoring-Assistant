@@ -1,0 +1,21 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+long double thrt(long double q){
+  long double x=q/2.0;
+  while(abs(x*x*x-q)>=0.00001*q){
+    x-=(x*x*x-q)/(3.0*x*x);
+  }
+  return x;
+}
+
+int main(){
+  long double q;
+  while(cin>>q&&(q!=-1)){
+    cout<<setprecision(7)<<thrt(q)<<endl;
+  }
+
+}

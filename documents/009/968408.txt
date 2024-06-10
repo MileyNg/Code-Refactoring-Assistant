@@ -1,0 +1,26 @@
+while (line = gets)
+  n = line.chop.to_i
+  if (n == 0)
+    break
+  end
+
+  max = 0
+  subseq = Array.new
+
+  n.times do
+    a = gets.chop.to_i
+
+    for i in (0...subseq.length)
+      subseq[i] += a
+    end
+    subseq.push a
+
+    cmax = subseq.max
+
+    if (max < cmax)
+      max = cmax
+    end
+  end
+
+  puts max
+end

@@ -1,0 +1,15 @@
+month = 0
+comp = [{}, {}];
+import sys
+for s in sys.stdin.readlines():
+    s = s.strip()
+    if s=="":
+        month = 1
+    else:
+        n, d = map(int, s.split(','))
+        if n not in comp[month]:
+            comp[month][n] = 1
+        else:
+            comp[month][n] += 1
+for c in set(comp[0]) & set(comp[1]):
+    print c, comp[0][c] + comp[1][c]

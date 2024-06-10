@@ -1,0 +1,95 @@
+#include<stdio.h>
+#define M 10000
+typedef struct tree{
+  int c[100];
+  int d;
+  int k;
+  int root;
+}t;
+t T[M];
+int n,i,j,l,sum,p;
+void node(int i){
+  printf("node %d: ",T[i].d);
+}
+void parent(int i){
+  p=0;
+  for(l=0;l<i;l++){
+    for(j=0;j<T[l].k;j++){
+      if(T[i].d==T[l].c[j]){       
+	printf("parent = %d, ",T[l].d);
+	p=1;
+	break;	
+      }      
+    }
+    if(p==1)
+      break;
+  }
+  if(p==0){
+    printf("parent = -1, ");
+    T[i].root=1;
+  }
+}
+void depth(int i){
+  p=0;
+  for(l=0;l<i;l++){
+    for(j=0;j<T[l].k;j++){
+      if(T[i].d==T[l].c[j]){   
+	sum++;
+	depth(l);
+	p=1;
+	break;
+      }
+    }
+    if(p==1)
+      break;
+  }
+}
+void other(int i){
+  if(T[i].root==1){
+    printf("root, [");
+    for(j=0;j<T[i].k-1;j++)
+      printf("%d, ",T[i].c[j]);
+    if(T[i].k==0)
+      printf("]\n");
+    else
+      printf("%d]\n",T[i].c[T[i].k-1]);
+  }
+  else{
+    if(T[i].k==0)
+      printf("leaf, []\n");
+    else{
+      printf("internal node, [");
+      for(j=0;j<T[i].k-1;j++)
+	printf("%d, ",T[i].c[j]);
+      printf("%d]\n",T[i].c[T[i].k-1]);
+    }
+  }
+}
+int main(void){
+  int atai;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    T[i].root=0;
+    scanf("%d%d",&T[i].d,&T[i].k);
+    for(j=0;j<T[i].k;j++){
+      scanf("%d",&T[i].c[j]);
+    }
+  } 
+  atai=0;
+  i=0;
+  while(atai!=n){
+    if(atai==T[i].d){
+      sum=0;
+      node(i);
+      parent(i);
+      depth(i);
+      printf("depth = %d, ",sum);
+      other(i);
+      atai++;
+      i=0;
+      continue;    
+    }
+    i++;
+  }
+  return 0;
+}

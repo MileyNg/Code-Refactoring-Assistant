@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+int main(void) {
+    int x, y, r; // x > yとする。また、rはxをyで割った余り
+    scanf("%d %d", &x, &y);
+    if (y > x) {
+        r = x; 
+        x = y; 
+        y = r;
+    }
+    r = y;
+    while (x % y != 0) {
+        r = x % y;
+        x = y;
+        y = r;
+    }
+    printf ("%d\n", r);
+    return 0;
+}

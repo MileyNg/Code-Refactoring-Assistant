@@ -1,0 +1,46 @@
+#include<iostream>
+
+using namespace std;
+
+#define NMAX 100
+#define MMAX 100
+
+int main(){
+
+	int n,m;
+	int ns[NMAX],ms[NMAX];
+	int nsum,msum;
+	int ansn,ansm;
+
+	while(1){
+
+		cin>>n>>m;
+		if(n==0&&m==0) break;
+
+		nsum=0,msum=0;
+		for(int i=0;i<n;i++){
+			cin>>ns[i];
+			nsum+=ns[i];
+		}
+		for(int i=0;i<m;i++){
+			cin>>ms[i];
+			msum+=ms[i];
+		}
+		
+		ansn=-1,ansm=-1;
+		for(int i=0;i<n;i++){
+			for(int j=0;j<m;j++){
+				if(nsum-ns[i]+ms[j]==msum-ms[j]+ns[i]){
+					if(ansn==-1&&ansm==-1||ns[i]+ms[j]<ansn+ansm){
+						ansn=ns[i];
+						ansm=ms[j];
+					}
+				}
+			}
+		}
+		if(ansn==-1&&ansm==-1) cout<<"-1"<<endl;
+		else cout<<ansn<<" "<<ansm<<endl;
+	}
+
+	return 0;
+}

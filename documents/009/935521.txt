@@ -1,0 +1,24 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int n,a,ans;
+string str;
+int main(){
+  while(scanf("%d",&n)&&n){
+    int t[1000001]={0};
+    ans=-1;
+    for(int i=0;i<n;i++){
+      scanf("%d",&a);
+      t[a]++;
+      if(t[a]>n/2){
+	ans=a;
+	getline(cin,str);
+	break;
+      }
+    }
+    if(ans==-1)printf("NO COLOR\n");
+    else printf("%d\n",ans);
+  }
+  return 0;
+}

@@ -1,0 +1,63 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void print(const vector<string> &page) {
+	for(const auto &line : page) {
+		cout << line << endl;
+	}
+	cout << "#" << endl;
+}
+
+int main(){
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int plen, cnum, width, cspace; cin >> plen && plen;) {
+		cin >> cnum >> width >> cspace;
+		cin.ignore();
+
+		const int len = cnum * width + cspace * (cnum - 1);
+		vector<string> page(plen, string(len, '.'));
+
+		int r = 0, c = 0;
+		for(string line; getline(cin, line) && line != "?";) {
+			bool first = true;
+
+			while(first || line.size()) {
+				string word;
+				if(line.size() >= width) {
+					word = line.substr(0, width);
+					line = line.substr(width);
+				}
+				else {
+					word = move(line);
+					line = "";
+				}
+
+				const int offset = c * (width + cspace);
+				copy(word.begin(), word.end(), page[r].begin() + offset);
+
+				if(++r == plen) {
+					r = 0;
+					if(++c == cnum) {
+						c = 0;
+						print(page);
+						fill(page.begin(), page.end(), string(len, '.'));
+					}
+				}
+
+				first = false;
+			}
+		}
+
+		if(any_of(page[0].begin(), page[0].end(), [](char c) { return c != '.';})) {
+			print(page);
+		}
+		cout << "?" << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

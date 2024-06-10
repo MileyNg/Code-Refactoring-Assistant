@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+
+void generatePS(char* ps, int n);
+
+int main(void)
+{
+	int i;
+	int n;
+	int m;
+	int result;
+	char ps[1000001];
+	char  s[1000001];
+	while( 1 )
+	{
+		result = 0;
+		scanf( "%d", &n );
+		
+		if( n == 0 )break;
+		generatePS( ps, n );
+		
+		scanf( "%d%s", &m, s );
+		
+		for( i = 0; i < m; i++ )
+		{
+			if( strncmp( ps, s + i, 2 * n + 1 ) == 0 )
+			{
+				result++;
+			}
+		}
+		printf( "%d\n", result );
+	}
+	
+	return (0);
+}
+
+void generatePS(char* ps, int n)
+{
+	int i;
+	for( i = 0; i < 2 * n + 1; i += 2 )
+	{
+		ps[i] = 'I';
+	}
+	for( i = 1; i < 2 * n + 1; i += 2 )
+	{
+		ps[i] = 'O';
+	}
+	ps[i] = '\0';
+}

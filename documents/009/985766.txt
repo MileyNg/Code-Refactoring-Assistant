@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define Y first
+#define X second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+
+int main(){
+  int n, m, i, j, d, res;
+  while(scanf("%d%d", &n, &m) && n+m){
+    char cas[128][128];
+    int cnt[128][128];
+    rep(i, m) rep(j, n) cnt[i][j] = INF;
+    rep(i, m) scanf("%s", cas[i]);
+
+    int x, y;
+    rep(i, m) rep(j, n) if(cas[i][j] == '&'){ y = i; x = j;}
+    cnt[y][x] = 0;
+    queue<pi>q;
+    q.push(make_pair(y, x));
+    while(!q.empty()){
+      int qsize = (int)q.size();
+      rep(i, qsize){
+	pi now = q.front(); q.pop();
+	//	printf("%d %d\n", now.Y, now.X);
+	rep(d, 4){
+	  int ny = now.Y + dy[d], nx = now.X + dx[d];
+	  if(ny < 0 || nx < 0 || ny >= m || nx >= n) continue;
+	  if(cnt[ny][nx] <= cnt[now.Y][now.X]) continue;
+	  if(cas[ny][nx] == '#'){
+	    cnt[ny][nx] = cnt[now.Y][now.X] + 1;
+	  }else{
+	    cnt[ny][nx] = cnt[now.Y][now.X];
+	  }
+	  q.push(make_pair(ny, nx));
+	}
+      }
+    }
+    res = 0;
+    rep(i, m){
+      if(cas[i][0] != '#') res = max(res, cnt[i][0]);
+      if(cas[i][n-1] != '#') res = max(res, cnt[i][0]);
+    }
+    rep(i, n){
+      if(cas[0][i] != '#') res = max(res, cnt[0][i]);
+      if(cas[m-1][i] != '#') res = max(res, cnt[0][i]);
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char str[81];
+	int num = 0;
+	
+	while (scanf("%s", str) != EOF){
+		int i;
+		
+		for (i = 0; str[i] != 0; i++){
+			int tmp = 0;
+			for (; '0' <= str[i] && str[i] <= '9'; i++){
+				tmp *= 10;
+				tmp += str[i] - '0';
+			}
+			num += tmp;
+			if (str[i] == 0){
+				break;
+			}
+		}
+	}
+	
+	printf("%d\n", num);
+	
+	return 0;
+}

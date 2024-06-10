@@ -1,0 +1,53 @@
+#include<iostream>
+using namespace std;
+
+#define MAX_AREA_SIZE 21
+
+int main()
+{
+        int jen, jex, jey; // 宝の数、位置X、位置Y 
+        bool jewel[MAX_AREA_SIZE][MAX_AREA_SIZE];
+        int curX, curY;
+        int step;
+        char dire;
+        int dist;
+        bool flag;
+
+        while(1){
+                flag = true;
+                for(int i=0; i<MAX_AREA_SIZE; i++){
+                        for(int j=0; j<MAX_AREA_SIZE; j++){
+                                jewel[i][j] = true;
+                        }
+                }
+                // 宝物の位置をセット
+                cin >> jen;
+                if(jen == 0){ break; }
+                for(int i=0; i<jen; i++){
+                        cin >> jex >> jey;
+                        jewel[jex][jey] = false;
+                }
+                curX = curY = 10;
+                cin >> step; // なんステップ進むかを入手
+                for(; step>0; step--){
+                        cin >> dire >> dist; // 方向と距離を入手
+                        switch(dire){
+                        case 'N' : { for(; dist>0; dist--){jewel[curX][++curY]=true;} break; }
+                        case 'S' : { for(; dist>0; dist--){jewel[curX][--curY]=true;} break; }
+                        case 'W' : { for(; dist>0; dist--){jewel[--curX][curY]=true;} break; }
+                        case 'E' : { for(; dist>0; dist--){jewel[++curX][curY]=true;} break; }
+                        }
+                }
+                // 宝が全部ゲットできたかのチェック
+                for(int i=0; i<MAX_AREA_SIZE; i++){
+                        for(int j=0; j<MAX_AREA_SIZE; j++){
+                                if(jewel[i][j]==false){ flag = false; }
+                        }
+                }
+
+                if( flag == true ){ cout << "Yes" << endl; }
+                else{ cout << "No" << endl; }
+        }
+        
+        return 0;
+}

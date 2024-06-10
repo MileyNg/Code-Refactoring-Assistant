@@ -1,0 +1,56 @@
+#include<iostream>
+#include<complex>
+using namespace std;
+int main(){
+
+    int n;
+    while(cin>>n,n){
+
+        complex<int> gem[30];
+        for(int i = 0;i < n;i++){
+            cin>>gem[i].real()>>gem[i].imag();
+            if(gem[i].real() == 10 && gem[i].imag() == 10)gem[i].real() = gem[i].imag() = -1;
+        }
+
+        int m;
+        cin>>m;
+
+        const char way[] = "NESW";
+        const int dx[] = {0,1,0,-1};
+        const int dy[] = {1,0,-1,0};
+        complex<int> com[50];
+        complex<int> pos;
+        pos.real() = pos.imag() = 10;
+        for(int i = 0;i < m;i++){
+            char c;
+            int x;
+            cin>>c>>x;
+            for(int j = 0;j < 4;j++){
+                if(c == way[j]){
+                    com[i].real() = dx[j],com[i].imag() = dy[j];
+                    while(x--){
+                        pos+=com[i];
+                        for(int j = 0;j < n;j++){
+                            if(pos == gem[j])gem[j].real() = gem[j].imag() = -1;
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        bool flg = true;
+        for(int i = 0;i < n;i++){
+           // cout<<gem[i].real()<<", "<<gem[i].imag()<<endl;
+            if(gem[i].real() != -1)flg = false;
+        }
+        if(flg)cout<<"Yes"<<endl;
+        else cout<<"No"<<endl;
+
+
+
+    }
+
+    return 0;
+}

@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string>
+
+int main() {
+	std::string str;
+	std::getline(std::cin, str);
+	
+	std::string ans;
+	for (auto c : str) {
+		char elem = c - 4;
+		if (c >= 'a' && c <= 'z') {
+			if (elem < 'a') {
+				elem = 'z' - 'a' + elem + 1;
+			}
+			ans.push_back(elem);
+		} else {
+			ans.push_back(c);
+		}
+	}
+	
+	std::cout << ans << std::endl;
+}

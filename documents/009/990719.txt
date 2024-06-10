@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <math.h>
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem 1187 : ICPC Ranking **/
+
+typedef pair<int, pair<int, int> > P3;
+
+bool cmp(const P3 &a, const P3 &b){
+	if(a.first != b.first) return a.first > b.first;
+	else if(a.second.first != b.second.first) return a.second.first < b.second.first;
+	else return a.second.second > b.second.second;
+}
+
+int main()
+{
+	int M, T, PN, R;
+
+	vector<P3> team;
+	while (cin>>M>>T>>PN>>R, M||T||PN||R) {
+		int WA[51][10]={0};
+		team.clear();
+		
+		rep(i, T+1) {
+			team.push_back(P3(0, P(0, i)));
+		}
+		
+		rep(k, R) {
+			int m, t, p, j;
+			cin >> m >> t >> p >> j;
+			p--;
+			if (j==0) {
+				team[t].first++;
+				team[t].second.first+=m + WA[t][p]*20;
+			} else {
+				WA[t][p]++;
+			}
+		}
+		
+		sort(team.begin()+1, team.end(), cmp);
+		vector<P3>::iterator it = team.begin()+1;
+		for (; it!=team.end()-1; it++) {
+			cout << it->second.second;
+			if (it->first==(it+1)->first && it->second.first==(it+1)->second.first) {
+				cout << "=";
+			} else {
+				cout << ",";
+			}
+		}
+		cout << it->second.second << endl;
+	}
+}

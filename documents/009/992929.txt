@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+const int INF = 1 << 29;
+
+int main()
+{
+  int g[128][128];
+  rep(i, 128) rep(j, 128) g[i][j] = INF;
+  rep(i, 128) g[i][i] = 0;
+  int n = in();
+  rep(i, n){
+    int f = in() - 1;
+    rep(j, in()){
+      g[f][in() - 1] = 1;
+    }
+  }
+  rep(k, n){
+    rep(i, n){
+      rep(j, n){
+        g[i][j] = min(g[i][j], g[i][k] + g[k][j]);
+      }
+    }
+  }
+  rep(p, in()){
+    int f, t, v;
+    f = in() - 1;
+    t = in() - 1;
+    v = in();
+    if (g[f][t] + 1 <= v) printf("%d\n", g[f][t] + 1);
+    else puts("NA");
+  }
+  return 0;
+}

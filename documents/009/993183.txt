@@ -1,0 +1,85 @@
+// 金子先生へ
+// ITC-LMSの「第9回提出物」の提出期間が6/23までで、期間後の提出が不可になっています。
+// しかし月曜までに今回の課題全部は解き終わらないので、いつもの様に7月末までにしてくださると幸いです。
+// 多分、今回の課題は全部解けそうです。
+
+// Sampleは全部正解を出しましたが、ジャッジは通りませんでした。
+// 反例も作成できなかったです。
+
+// http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1130&lang=jp
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <utility> // pair<int,int> xxxx;  make_pair(first,second);
+// 今から考えればstructで十分だった……
+using namespace std;
+
+int W,H;
+int X,Y; // 自分の位置
+char s[20+10];
+char c;
+bool tile[20+10][20+10]; // タイルの状態。trueは黒、falseは赤(または壁)。
+bool visited[20+10][20+10];
+int answer;
+
+// 下方向がx軸(第1成分)、右方向がy軸(第2成分)。
+
+const int dx[4] = { 1, 0, -1, 0 }; 
+const int dy[4] = { 0, 1, 0, -1 };
+
+bool valid (int x, int y) {
+  return 0 <= x && x < H && 0 <= y && y < W && tile[x][y] ;
+}
+
+void init() { // 初期化
+  fill(&tile[0][0], &tile[0][0]+30*30, 0);
+  fill(&visited[0][0], &visited[0][0]+30*30, 0);
+  answer = 0;
+}
+
+void make_tile() { // タイル読み込み
+  for (int i=0; i<H; i++) {
+    scanf("%s", s);
+    for (int j=0; j<W; j++) {
+      c = s[j];
+      if (c == '.') {
+	tile[i][j] = true;
+      } else if (c == '@') {
+	tile[i][j] = true;
+	X = i;
+	Y = j;
+      }
+    }
+  }
+}
+
+void count_tile() {
+  queue<pair<int,int>> Q; // 幅優先探索を使う。周辺から徐々に探査する感じになるのでイメージしやすい。
+  pair<int,int> cur = make_pair(X,Y);
+  Q.push(cur);
+  while (!Q.empty()) {
+    cur = Q.front();
+    Q.pop();
+    if (visited[cur.first][cur.second]) {
+      continue;
+    }
+    visited[cur.first][cur.second] = true;
+    answer++;
+    for (int i=0; i<4; i++) {
+      int a = cur.first+dx[i];
+      int b = cur.second+dy[i];
+      if (valid(a, b) && !visited[a][b]) {
+	Q.push(make_pair(a, b));
+      }
+    }
+  }
+  printf("%d\n", answer);
+}
+
+int main() {
+  while (scanf("%d%d", &W, &H) && W && H) {
+    init();
+    make_tile();
+    count_tile();
+  }
+}

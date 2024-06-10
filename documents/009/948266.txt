@@ -1,0 +1,54 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+bool prime[10000001];
+bool dp[10000001];
+int menu[30];
+int n,x;
+
+void make_prime()
+{
+  memset(prime,true,sizeof(prime));
+  prime[0]=prime[1]=false;
+  for(int i=2;i<10000001;i++)
+    {
+      if(prime[i])
+	{
+	  for(int j=i+i;j<10000001;j+=i)
+	    prime[j]=false;
+	}
+    }
+}
+
+int main()
+{
+  make_prime();
+  for(;cin>>n>>x,n;)
+    {
+      memset(dp,false,sizeof(dp));
+      for(int i=0;i<n;i++)
+	{
+	  cin>>menu[i];
+	  dp[menu[i]]=true;	  
+	}
+      int ans=-1;
+      for(int i=0;i<10000001;i++)
+	{
+	  if(dp[i])
+	    for(int j=0;j<n;j++)
+	      if(i+menu[j]<10000001)
+		dp[i+menu[j]]=true;	  
+	}
+      for(int i=x;i>0;i--)
+	if(prime[i]&&dp[i])
+	  {
+	    ans=i;
+	    break;
+	  }
+      if(ans!=-1)
+	cout<<ans<<endl;
+      else
+	cout<<"NA"<<endl;
+    }
+}

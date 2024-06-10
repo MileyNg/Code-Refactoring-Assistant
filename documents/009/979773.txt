@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int m, n;
+int ct[26];
+pair<int, int> pos[26][2];
+
+char board[512][512];
+bool done[26];
+
+bool c(pair<int, int> a, pair<int, int> b, char ch)
+{
+	if (a.first > b.first) swap(a.first, b.first);
+	if (a.second > b.second) swap(a.second, b.second);
+	
+	for (int i = a.first; i <= b.first; i++){
+		for (int j = a.second; j <= b.second; j++){
+			if (isalpha(board[i][j]) && board[i][j] != ch) return (false);
+		}
+	}
+	
+	return (true);
+}
+
+int main()
+{
+	scanf("%d %d", &m, &n);
+	
+	for (int i = 0; i < m; i++){
+		scanf("%s", board[i]);
+		for (int j = 0; j < n; j++){
+			if (isalpha(board[i][j])) pos[board[i][j] - 'A'][ct[board[i][j] - 'A']++] = make_pair(i, j);
+		}
+	}
+	
+	for (int t = 0; t < 26; t++){
+		for (int i = 0; i < 26; i++){
+			if (done[i]) continue;
+			if (abs(pos[i][0].first - pos[i][1].first) +
+				abs(pos[i][0].second - pos[i][1].second) <= 1) continue;
+			
+			pair<int, int> tmp = make_pair(pos[i][0].first, pos[i][1].second);
+			
+			if (c(pos[i][0], tmp, i + 'A') + c(tmp, pos[i][1], i + 'A') == 2){
+				done[i] = true;
+				board[pos[i][0].first][pos[i][0].second] = '.';
+				board[pos[i][1].first][pos[i][1].second] = '.';
+			}
+			
+			tmp = make_pair(pos[i][1].first, pos[i][0].second);
+			
+			if (c(pos[i][0], tmp, i + 'A') + c(tmp, pos[i][1], i + 'A') == 2){
+				done[i] = true;
+				board[pos[i][0].first][pos[i][0].second] = '.';
+				board[pos[i][1].first][pos[i][1].second] = '.';
+			}
+		}
+	}
+	
+	int ret = 0;
+	for (int i = 0; i < 26; i++) ret += 2 * done[i];
+	
+	printf("%d\n", ret);
+	
+	return (0);
+}

@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define s system
+
+int main(void) {
+    s("touch src.c");
+    s("echo \"i = 81; main(a){ while (i--)printf(\"%dx%d=%d\\n\", 9 - i / 9, 9 - i % 9, ((9 - i % 9)*(9 - i / 9))); }\" > src.c");
+    s("gcc src.c -o a.out");
+    s("./a.out");
+    return 0;
+}

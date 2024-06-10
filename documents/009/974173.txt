@@ -1,0 +1,129 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+int W, H;
+vector<string> smap;
+int map[25][25];
+int cpmap[25][25];
+
+struct Tile {
+	int x, y;
+	Tile() {};
+	Tile(int _x, int _y) : x(_x), y(_y) {}
+};
+
+struct State {
+	int x, y, d;
+	State() {};
+	State(int _x, int _y, int _d) : x(_x), y(_y), d(_d) {}
+};
+
+int DX[4] = {-1, 1, 0, 0};
+int DY[4] = {0, 0, -1, 1};
+
+int search(int sx, int sy, int ex, int ey) {
+	// map copy
+	memset(cpmap, 0, sizeof(cpmap));
+	for (int i=0; i<H; i++) for (int j=0; j<W; j++) cpmap[i][j] = map[i][j];
+	
+	// search start
+	int res = 1e9;
+	queue<State> q;
+	q.push(State(sx, sy, 0));
+	
+	while (!q.empty()) {
+		State s = q.front(); q.pop();
+		
+		if (s.x == ex && s.y == ey) {
+			res = min(res, s.d);
+			continue;
+		}
+		
+		if (res <= s.d) continue;
+		
+		for (int d = 0; d < 4; d++) {
+			if (!(0 <= s.x + DX[d] && s.x + DX[d] < W && 0 <= s.y + DY[d] && s.y + DY[d] < H)) continue;
+			if (cpmap[s.y + DY[d]][s.x + DX[d]] != -1) {
+				cpmap[s.y + DY[d]][s.x + DX[d]] = -1;
+				q.push(State(s.x + DX[d], s.y + DY[d], s.d + 1));
+			}
+		}
+	}
+	
+	return res;
+}
+
+int solver() {
+	memset(map, 0, sizeof(map));
+	int yogore = 1;
+	int sx, sy;
+	vector< Tile > YG;
+	
+	for (int i=0; i<H; i++) {
+		for (int j=0; j<W; j++) {
+			if (smap[i][j] == '.') map[i][j] = 0;
+			else if (smap[i][j] == '*') {
+				map[i][j] = yogore++;
+				YG.push_back(Tile(j, i));
+			}
+			else if (smap[i][j] == 'x') map[i][j] = -1;
+			else if (smap[i][j] == 'o') {
+				map[i][j] = 0;
+				sy = i; sx = j;
+			}
+		}
+	}
+	
+	// dist matrix    start:0   YG:1~yogore-1
+	vector< vector<int> > dist(yogore, vector<int>(yogore, 0));
+	
+	// start to yogore
+	for (int i=1; i<yogore; i++) {
+		dist[0][i] = search(sx, sy, YG[i-1].x, YG[i-1].y);
+		if (dist[0][i] >= 1e9) return -1;	// 到達できないゴミがある
+	}
+	
+	// 各ゴミから他のゴミへの距離
+	for (int i=1; i<yogore; i++) {
+		for (int j=i+1; j<yogore; j++) {
+			dist[i][j] = dist[j][i] = search(YG[i-1].x, YG[i-1].y, YG[j-1].x, YG[j-1].y);
+		}
+	}
+	
+	// dist についてTSPを解く　スタートは　0
+	int res = 1e9;
+	
+	vector<int> order(yogore-1);
+	for (int i=0; i<yogore-1; i++) order[i] = i + 1;
+	
+	do {
+		// 現在の訪問順序での総距離を求める
+		int cur = 0;
+		cur += dist[0][order[0]];
+		for (int i=1; i<yogore-1; i++) {
+			cur += dist[order[i-1]][order[i]];
+		}
+		
+		res = min(res, cur);
+	} while (next_permutation(order.begin(), order.end()));
+	
+	return res;
+}
+
+int main() {
+	while (1) {
+		cin >> W >> H; if (W==0 && H==0) break;
+		smap.assign(H, "");
+		for (int i=0; i<H; i++) cin >> smap[i];
+		
+		cout << solver() << endl;
+	}
+	
+	return 0;
+}

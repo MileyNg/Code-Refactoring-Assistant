@@ -1,0 +1,41 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+int main()
+{
+  int n;
+  for(;cin>>n;)
+    {
+      vector< pair<int,int> > data;
+      int ans=0;
+      for(int i=0;i<n;i++)
+	{
+	  int a,b;
+	  cin>>a>>b;
+	  data.push_back(make_pair(a,b));
+	}
+      while(data.size()>=2)
+	{
+	  int max=0;
+	  int bit=0;
+	  for(int i=1;i<data.size();i++)
+	    {
+	      if(data[i-1].second+data[i].first>max)
+		{
+		  max=data[i-1].second+data[i].first;
+		  bit=i;
+		}
+	    }
+	  ans+=data[bit-1].second*data[bit].first*data[bit].second*data[bit-1].first;
+	  data.insert(data.begin()+(bit-1),make_pair(data[bit-1].first,data[bit].second));
+	  data.erase(data.begin()+bit);
+	  data.erase(data.begin()+bit);
+	  //  for(int i=0;i<data.size();i++)
+	  //   cout<<"<"<<data[i].first<<","<<data[i].second<<"> ";
+	  // cout<<endl;
+	}
+      cout<<ans<<endl;
+    }
+
+}

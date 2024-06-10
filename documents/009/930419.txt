@@ -1,0 +1,65 @@
+
+loop{
+	
+	an,bn,r = gets.split.map(&:to_i)
+	if an == 0 and bn == 0 or an.nil? then
+		break
+	end
+	rr = 16 * r * r
+	r4 = 4 * r
+	len = (0..r4).map{|y| Math.sqrt(rr - y*y).to_i}
+	#p len
+	as = []
+	
+	#0.step(41){|i|
+	#	as[i]= Hash.new([])
+	#}
+	as= Hash.new([])
+	
+	#1.step(an){
+	#	ax,ay = gets.split.map(&:to_i)
+	#	as[(ax/250).to_i][ay] += [ax]
+	#}
+
+	1.step(an){
+		ax,ay = gets.split.map(&:to_i)
+		as[ay] += [ax]
+	}
+	
+	#as.each do |key,arr|
+		#as[key] = arr.sort()
+	#end
+	#p as
+	#as = an.times.map{gets.split.map(&:to_i)}
+	pow = 0
+	1.step(bn){
+		bx,by = gets.split.map(&:to_i)
+		[0,by-r4].max.step[0,by-r4/2]){|ay|
+			dy = (ay - by).abs
+			#[0,((bx-len[dy])/250).to_i].max.step([((bx+len[dy])/250).to_i,40].min){|i|
+				#cnt = 0
+				as[ay].each{|ax|
+					#dx = (ax-bx).abs
+					#if dx < len[dy] then
+					#	pow += 1
+					#end
+					#pow += bound_up(arr,bx + len[dy]) - bound_up(arr,bx - len[dy])
+				}
+			#}
+		}
+		[0,by+r4/2].max.step(by+r4){|ay|
+			dy = (ay - by).abs
+			#[0,((bx-len[dy])/250).to_i].max.step([((bx+len[dy])/250).to_i,40].min){|i|
+				#cnt = 0
+				as[ay].each{|ax|
+					#dx = (ax-bx).abs
+					#if dx < len[dy] then
+					#	pow += 1
+					#end
+					#pow += bound_up(arr,bx + len[dy]) - bound_up(arr,bx - len[dy])
+				}
+			#}
+		}
+	}
+	p pow
+}

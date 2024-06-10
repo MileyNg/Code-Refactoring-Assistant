@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+int A[100005];
+int B[100005+1];
+char flag[100][2];
+int fp;
+
+int solve(int s, int l, int r, int e, int w) {
+	int i;
+	int esw = B[e]-B[s];
+	int lsw = B[l]-B[s];
+	int rsw = B[r]-B[s];
+	
+//	printf("%d %d %d %d %d %d %d %d\n", s, l, r, e, w, esw, lsw, rsw);
+	for(i=0;i<fp;i++) {
+		if(flag[i][0] == l && flag[i][1] == r) {
+			if(rsw <= w) return r;
+			if(lsw <= w) return l;
+		} 
+	}
+	flag[fp][0] = l;
+	flag[fp][1] = r;
+	fp ++;
+	
+	if(esw < w) {
+		return e;
+	} else if(l == r){
+		return l;
+	} else if(lsw==w) {
+		return l;
+	} else if(rsw==w) {
+		return r;
+	} else if(lsw>w) {
+		return solve(s, (s+l-1)/2, l-1, e, w);
+	} else {
+		return solve(s, l, (l+e)/2, e, w);
+	}
+}
+
+int main(void) {
+	int n, c, i, j;
+	int max_c = 0;
+	int w;
+	int count;
+	int p;
+	scanf("%d %d\n", &n, &c);
+	
+	B[i] = 0;
+	for(i=1;i<=n;i++) {
+		scanf("%d\n", &A[i]);
+		if(max_c < A[i]) max_c = A[i];
+		B[i] = B[i-1] + A[i];
+	}
+
+	for(i=max_c;1;i++) {
+		p = 0;
+		for(j=0;j<c;j++) {
+			fp = 0;
+			p = solve(p, (p+n)/2, n, n, i);
+		}
+//		printf("%d %d\n", i, p);
+		
+		if(p == n) {
+			printf("%d\n", i);
+			break;
+		}
+	}
+	
+	return 0;
+}

@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int n,m;
+	int left=0;
+	int c;
+	int p[1000] = {};
+	
+	while(cin>>n>>m,n|m){
+		
+		c=n;
+		
+		while(left != n-1){
+			
+			while(c=(c+1)%n,p[c]);
+		
+			for(int i=0;i<m-1;++i){
+				
+				c=(c+1)%n;
+				
+				if(p[c])
+					--i;
+			}
+			p[c]=1;
+			++left;
+		}
+		
+		for(int i=0;i<n;++i)
+			if(!p[i]){
+				cout<<i<<endl;
+				break;
+			}
+	}
+}

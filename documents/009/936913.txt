@@ -1,0 +1,179 @@
+#include <iostream>
+#include <queue>
+#include <unordered_set>
+#include <set>
+#include <tuple>
+
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	for(int i=0;i<a.size();i++)
+		os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Point{
+	int x,y;
+	Point(){}
+	Point(int x,int y):x(x),y(y){}
+};
+bool operator==(Point a,Point b){
+	return a.x==b.x && a.y==b.y;
+}
+bool operator!=(Point a,Point b){
+	return !(a==b);
+}
+bool operator<(Point a,Point b){
+	return a.x!=b.x?a.x<b.x:a.y<b.y;
+}
+bool operator>(Point a,Point b){
+	return b<a;
+}
+ostream& operator<<(ostream& os,const Point& p){
+	return os<<'('<<p.x<<','<<p.y<<')';
+}
+
+typedef vector<Point> Serpent;
+namespace std{
+	template<>
+	struct hash<Serpent>{ // FNV hash
+		size_t operator()(const Serpent& key)const{
+			size_t res=0;
+			for(Point p:key){
+				res=(res*16777619)^p.x;
+				res=(res*16777619)^p.y;
+			}
+			return res;
+		}
+	};
+}
+
+const int dx[]={-1,1,0,0,-1,1};
+const int dy[]={0,0,-1,1,1,-1};
+
+inline int distance(Point a,Point b)
+{
+	a.x-=b.x,a.y-=b.y;
+	if(a.x<0 && a.y>0 || a.x>0 && a.y<0)
+		return max(abs(a.x),abs(a.y));
+	else
+		return abs(a.x)+abs(a.y);
+}
+
+inline bool is_valid(const Serpent& serpent)
+{
+	int n=serpent.size();
+	for(int i=0;i<n-1;i++){
+		if(distance(serpent[i],serpent[i+1])!=1)
+			return false;
+		for(int j=i+2;j<n;j++)
+			if(distance(serpent[j],serpent[i])<=1)
+				return false;
+	}
+	return true;
+}
+
+vector<Serpent> get_nexts(const Serpent& cur,const vector<vector<Point>>& neighbors,int mask)
+{
+	int n=cur.size();
+	
+	vector<int> indices;
+	for(int i=0;i<n;i++) if(mask>>i&1)
+		indices.push_back(i);
+	
+	vector<Serpent> nexts;
+	// 各節について，移動可能な窪みは高々2つ．
+	// maskのi番目が1のとき，whichのi番目が0なら近傍0，1なら近傍1へ移動する．
+	for(int which=mask,last=false;!last;which=which-1&mask){
+		if(!which) last=true;
+		
+		bool ok=true;
+		for(int i=0;i<n;i++) if(mask>>i&1)
+			if(neighbors[i].empty() || neighbors[i].size()==1 && (which>>i&1))
+				ok=false;
+		if(!ok) continue;
+		
+		Serpent next(n);
+		for(int i=0;i<n;i++)
+			if(mask>>i&1)
+				next[i]=neighbors[i][which>>i&1];
+			else
+				next[i]=cur[i];
+		
+		if(is_valid(next))
+			nexts.push_back(next);
+	}
+	
+	return nexts;
+}
+
+vector<Serpent> get_nexts(const Serpent& cur,const vector<Point>& stones)
+{
+	int n=cur.size();
+	
+	vector<vector<Point>> neighbors(n); // 各節の移動可能な窪み
+	for(int i=0;i<n;i++)
+		for(int j=0;j<6;j++){
+			Point next(cur[i].x+dx[j],cur[i].y+dy[j]);
+			bool ok=true;
+			for(int k=0;k<stones.size();k++)
+				ok&=next!=stones[k];
+			for(int k=max(i-1,0);k<=min(i+1,n-1);k++)
+				ok&=distance(next,cur[k])==1;
+			if(ok) neighbors[i].push_back(next);
+		}
+	
+	vector<Serpent> nexts;
+	for(int i=1;i<(1<<n);i++){
+		bool adjacent=false; // 隣りあう節が動くならばtrue
+		for(int j=0;j<n-1;j++)
+			adjacent|=(i>>j&3)==3;
+		if(adjacent) continue;
+		
+		vector<Serpent> temp=get_nexts(cur,neighbors,i);
+		nexts.insert(end(nexts),begin(temp),end(temp));
+	}
+	
+	return nexts;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		Serpent serpent(n);
+		for(int i=0;i<n;i++)
+			cin>>serpent[i].x>>serpent[i].y;
+		int m; cin>>m;
+		Serpent stones(m);
+		for(int i=0;i<m;i++)
+			cin>>stones[i].x>>stones[i].y;
+		Point goal; cin>>goal.x>>goal.y;
+		
+		queue<pair<Serpent,int>> q;
+		q.emplace(serpent,0);
+		//unordered_set<Serpent> visited;
+		set<Serpent> visited;
+		visited.insert(serpent);
+		while(q.size()){
+			Serpent cur; int turn;
+			tie(cur,turn)=q.front(); q.pop();
+			
+			if(cur[0]==goal){
+				cout<<turn<<endl;
+				break;
+			}
+			
+			vector<Serpent> nexts=get_nexts(cur,stones);
+			
+			for(auto& next:nexts)
+				if(!visited.count(next)){
+					q.emplace(next,turn+1);
+					visited.insert(next);
+				}
+		}
+	}
+}

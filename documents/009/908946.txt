@@ -1,0 +1,60 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+
+using namespace std;
+
+double henkan(double r) {
+	r *= 10000.0;
+	if (((((int)r % 10000)% 1000) % 100) % 10 >= 5){
+		r += 10.0;
+		r /= 10000.0;
+	} else {
+		r /= 10000.0;
+	}
+	return r;
+}
+
+int main() {
+	int n;
+	cin >> n;
+	double x1, y1, x2, y2, x3, y3;
+	for (int i = 0; i < n; i++) {
+		cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+		double r;
+		double sina;
+		double cosa;
+		double a = sqrt(pow(x3-x2,2)+pow(y3-y2,2));
+		double b = sqrt(pow(x2-x1,2)+pow(y2-y1,2));
+		double c = sqrt(pow(x3-x1,2)+pow(y3-y1,2));
+		cosa = (b*b+c*c-a*a)/(2.0*b*c);
+		sina = sqrt(1-cosa*cosa);
+		r = a / (sina*2.0);
+		double aa, bb;
+		double x4, y4;
+		double xx1, yy1, xx2, yy2;
+		xx1 = (x1+x2)/2.0;
+		xx2 = (x1+x3)/2.0;
+		yy1 = (y1+y2)/2.0;
+		yy2 = (y1+y3)/2.0;
+		if (y1 == y2) {
+			bb = - (x3-x1)/(y3-y1);
+			x4 = xx1;
+			y4 = bb*x4+yy2-bb*xx2;
+		} else if (y1 == y3){
+			aa = - (x2-x1)/(y2-y1);
+			y4 = xx2;
+			x4 = (y4-yy1+aa*xx1)/aa;
+		} else {
+			aa = - (x2-x1)/(y2-y1);
+			bb = - (x3-x1)/(y3-y1);
+			x4 = (aa*xx1-bb*xx2-yy1+yy2)/(aa-bb);
+			y4 = aa*x4+yy1-aa*xx1;
+		}
+		x4 = henkan(x4);
+		y4 = henkan(y4);
+		r = henkan(r);
+		printf("%.3f %.3f %.3f\n", x4, y4, r);
+	}
+	return 0;
+}

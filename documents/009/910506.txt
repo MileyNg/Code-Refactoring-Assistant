@@ -1,0 +1,45 @@
+#include<stdio.h>
+ 
+int main(){
+  int i,a[200000],n=0,max,min,bmin,bmax,t;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&a[i]);
+  }
+   
+  max=bmax=a[1];
+  min=bmin=a[0];
+   
+  for(i=1;i<n;i++){
+    if(max<a[i]){
+      max=a[i];
+      t=i;
+    }
+  }
+  for(i=0;t>i && i<n-1;i++){
+    if(min>a[i]){
+      min=a[i];
+    }
+  }
+
+
+  for(i=0;i<n-1;i++){
+    if(bmin>a[i]){
+      bmin=a[i];
+      t=i;
+    }
+  }
+  
+  for(i=t+1;i<n;i++){
+    if(bmax<a[i]){
+      bmax=a[i];
+    }
+  }
+
+  if(max-min < bmax-bmin){
+    printf("%d\n",bmax-bmin);
+  }else{
+    printf("%d\n",max-min);
+  }
+ return 0;
+}

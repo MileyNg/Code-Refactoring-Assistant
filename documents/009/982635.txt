@@ -1,0 +1,147 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Edge{
+	int src,dst,flow,cap,cost;
+	Edge(){}
+	Edge(int s,int d,int f,int ca,int co):src(s),dst(d),flow(f),cap(ca),cost(co){}
+};
+typedef vector<vector<Edge>> Graph;
+
+pair<int,vector<Edge>> MinCostFlow(const Graph& _g,int tap,int sink,int flow)
+{
+	int n=_g.size();
+	Graph g(n);
+	vvi rev(n);
+	rep(i,n) for(auto e:_g[i]){
+		g[i].push_back(e);
+		g[e.dst].emplace_back(e.dst,e.src,0,0,-e.cost);
+		rev[i].push_back(g[e.dst].size()-1);
+		rev[e.dst].push_back(g[i].size()-1);
+	}
+	
+	int res=0;
+	vi pots(n);
+	while(flow){
+		vi dist(n,INF);
+		vector<pii> prev(n,mp(-1,-1));
+		priority_queue<pii,vector<pii>,greater<pii>> pq;
+		pq.emplace(0,tap);
+		dist[tap]=0;
+		while(pq.size()){
+			int d,u; tie(d,u)=pq.top(); pq.pop();
+			if(dist[u]<d) continue;
+			rep(i,g[u].size()){
+				Edge e=g[u][i];
+				if(e.cap-e.flow==0) continue;
+				int nd=dist[e.src]+e.cost+pots[e.src]-pots[e.dst];
+				if(dist[e.dst]>nd){
+					dist[e.dst]=nd;
+					prev[e.dst]=mp(e.src,i);
+					pq.emplace(nd,e.dst);
+				}
+			}
+		}
+		
+		if(prev[sink].first==-1) return mp(INF,vector<Edge>());
+		rep(i,n) pots[i]+=dist[i];
+		
+		int aug=flow;
+		for(int v=sink;v!=tap;v=prev[v].first){
+			Edge e=g[prev[v].first][prev[v].second];
+			aug=min(aug,e.cap-e.flow);
+		}
+		for(int v=sink;v!=tap;v=prev[v].first){
+			int i=prev[v].first,j=prev[v].second;
+			g[i][j].flow+=aug;
+			g[g[i][j].dst][rev[i][j]].flow-=aug;
+		}
+		flow-=aug;
+		res+=aug*pots[sink];
+	}
+	vector<Edge> es;
+	rep(i,n) for(auto e:g[i]) es.push_back(e);
+	return mp(res,es);
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vvi wcost(n,vi(n)),ecost(n,vi(n));
+		rep(i,n) rep(j,n) cin>>wcost[i][j];
+		rep(i,n) rep(j,n) cin>>ecost[i][j];
+		vs grid(n);
+		rep(i,n) cin>>grid[i];
+		
+		int sum=0;
+		Graph g(n+n+2);
+		rep(i,n) rep(j,n){
+			if(grid[i][j]=='o'){
+				sum+=ecost[i][j];
+				g[i].emplace_back(i,n+j,0,1,-ecost[i][j]);
+			}
+			else{
+				g[i].emplace_back(i,n+j,0,1,wcost[i][j]);
+			}
+		}
+		int tap=n+n,sink=tap+1;
+		rep(i,n){
+			g[tap].emplace_back(tap,i,0,1,0);
+			g[n+i].emplace_back(n+i,sink,0,1,0);
+		}
+		
+		int res; vector<Edge> es;
+		tie(res,es)=MinCostFlow(g,tap,sink,n);
+		
+		vs last(n,string(n,'.'));
+		for(auto e:es) if(e.src!=tap && e.dst!=sink && e.flow>0)
+			last[e.src][e.dst-n]='o';
+		
+		int cnt=0;
+		rep(i,n) rep(j,n) cnt+=grid[i][j]!=last[i][j];
+		
+		cout<<sum+res<<'\n'<<cnt<<'\n';
+		rep(i,n) rep(j,n){
+			if(grid[i][j]=='o' && last[i][j]=='.')
+				cout<<i+1<<' '<<j+1<<" erase"<<endl;
+			if(grid[i][j]=='.' && last[i][j]=='o')
+				cout<<i+1<<' '<<j+1<<" write"<<endl;
+		}
+	}
+}

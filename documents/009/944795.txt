@@ -1,0 +1,87 @@
+#include<iostream>
+#include<cstdlib>
+#include<vector>
+using namespace std;
+
+
+class union_find{
+    vector<int> set;
+public:
+    union_find(int size){ for(int i=0; i<size; i++)set.push_back(-1); }
+    int find(int x);
+    void unite(int x, int y);
+    void printV();
+    int getTreeSize(int x);
+};
+/* rootには木の高さに-1を掛けた値が入っている */
+
+
+int main()
+{
+    int n, q;
+    cin >> n >> q;
+
+    union_find uf(n);
+
+    int com, x, y;
+    for(int i=0; i<q; i++){
+        cin >> com >> x >> y;
+
+        switch(com){
+        case 0 :
+            uf.unite(x, y);
+            break; 
+        case 1 :
+            uf.find(x) == uf.find(y) ? cout << "1" : cout << "0";
+            cout << endl;
+            break;
+        }
+        // uf.printV();
+    }
+
+     return 0;
+ }
+
+ int union_find::find(int x)
+ {
+     if( !(x >= 0 && x < set.size()) ) exit(1);
+
+     if( set.at(x) < 0){
+         return x;
+     }else{
+         return (set.at(x) = find(set.at(x)));
+     }
+
+     // while( set.at(x) >= 0 ){
+     //     x = set.at(x);
+     // }
+     // return x;
+ }
+
+ void union_find::unite(int x, int y)
+ {
+     int rootX, rootY;
+     rootX = find(x);
+     rootY = find(y);
+
+     if( rootX == rootY ) return;
+
+     if( set.at(rootX) < set.at(rootY) ){
+         set.at(rootX) += set.at(rootY);
+         set.at(rootY) = rootX;
+     }else{
+        set.at(rootY) += set.at(rootX);
+        set.at(rootX) = rootY;
+    }
+ }
+
+void union_find::printV()
+{
+    for(int i=0; i<set.size(); i++) cout << set.at(i) << " ";
+    cout << endl;
+}
+
+int union_find::getTreeSize(int x)
+{
+    return set.at(find(x));
+}

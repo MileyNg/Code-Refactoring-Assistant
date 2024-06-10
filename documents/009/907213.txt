@@ -1,0 +1,77 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<string> vs;
+
+const string s1 = " ',-.?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const string s2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .,-'?";
+vs CODE1{
+    "101",
+    "000000",
+    "000011",
+    "10010001",
+    "010001",
+    "000001",
+    "100101",
+    "10011010",
+    "0101",
+    "0001",
+    "110",
+    "01001",
+    "10011011",
+    "010000",
+    "0111",
+    "10011000",
+    "0110",
+    "00100",
+    "10011001",
+    "10011110",
+    "00101",
+    "111",
+    "10011111",
+    "1000",
+    "00110",
+    "00111",
+    "10011100",
+    "10011101",
+    "000010",
+    "10010010",
+    "10010011",
+    "10010000",
+};
+
+int main() {
+    map<char,string> dic;
+    rep(i,32){
+        dic[s1[i]] = CODE1[i];
+    }
+
+    string l;
+    while(getline(cin, l)) {
+        string code;
+        rep(i,l.size()){
+            code += dic[l[i]];
+        }
+        code += string((5-code.size()%5)%5,'0');
+
+        string res;
+        rep(i,code.size()){
+            string num = code.substr(i, 5);
+            int val = 0;
+            rep(j,5){
+                val<<=1;
+                val+=num[j]-'0';
+            }
+            res += s2[val];
+            i+=4;
+        }
+        cout << res << endl;
+    }
+}

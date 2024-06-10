@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+void cscan(void);
+void clear(void);
+
+int n,sa=0,sb=0;
+
+int main(){
+
+  int end=1;
+
+  while(end){
+
+  scanf("%d",&n);
+
+  if(n==0){
+    break;
+  }
+
+  cscan();
+
+  printf("%d %d\n",sa,sb);
+
+  clear();
+
+}
+
+  return 0;
+}
+
+void cscan(){
+
+  int i,j;
+  int a,b;
+
+  for(i=0;i<n;i++){
+
+    scanf("%d %d",&a,&b);
+
+    if(a==b){
+      sa+=a;
+      sb+=b;
+    }
+    else if(a>b){
+      sa+=a+b;
+    }
+    else if(a<b){
+      sb+=a+b;
+    }
+
+  }
+}
+
+void clear(){
+
+  sa=sb=0;
+
+}

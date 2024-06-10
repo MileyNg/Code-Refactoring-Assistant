@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n,m;
+	int sumh,sumt;
+	int i1,i2;
+
+	int min;
+	int mint,minh;
+
+	while(1){
+		cin>>n>>m;
+		if(n+m==0) break;
+
+		vector<int> t(n);
+		vector<int> h(m);
+		sumh=0;
+		sumt=0;
+		min=300;
+		mint=300;
+		minh=300;
+
+		for(i1=0;i1<n;i1++){
+			cin>>t[i1];
+			sumt+=t[i1];
+		}
+		for(i1=0;i1<m;i1++){
+			cin>>h[i1];
+			sumh+=h[i1];
+		}
+
+		for(i1=0;i1<n;i1++){
+			for(i2=0;i2<m;i2++){
+				int tempt=sumt;
+				int temph=sumh;
+				tempt+=(h[i2]-t[i1]);
+				temph+=(t[i1]-h[i2]);
+
+				if(temph==tempt){
+					if(min>temph){
+						mint=i1;
+						minh=i2;
+						min=temph;
+					}
+				}
+			}
+		}
+
+		if(mint==300 && minh==300) cout<<-1<<endl;
+		else cout<<t[mint]<<" "<<h[minh]<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,97 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+string STR;
+vector<string> S;
+
+bool bye_bye_paren(int b, int e){
+  int cnt = 0;
+  FOR(i, b, e){
+    if(S[i] == "(") ++cnt;
+    if(S[i] == ")") --cnt;
+    if(cnt < 0) return false;
+  }
+  return (cnt == 0);
+}
+
+set<int> calc(int b, int e){
+  //cout <<"-------" <<endl;
+  //cout <<"begin = " <<b <<", end = " <<e <<endl;
+  //FOR(i, b, e) cout <<S[i]; cout <<endl;
+  set<int> ret;
+  if(e - b == 1) ret.insert(atoi(S[b].c_str()));
+  else if(S[b] == "(" && S[e - 1] == ")" && bye_bye_paren(b + 1, e - 1)) ret = calc(b + 1, e - 1);
+  else {
+    int cnt = 0;
+    FOR(i, b, e){
+      if(S[i] == "(") ++cnt;
+      else if(S[i] == ")") --cnt;
+      else if(cnt == 0 && (S[i] == "+" || S[i] == "-" || S[i] == "*" || S[i] == "/")){
+        set<int> left = calc(b, i), right = calc(i + 1, e);
+        for(set<int>::iterator it1 = left.begin(); it1 != left.end(); ++it1){
+          for(set<int>::iterator it2 = right.begin(); it2 != right.end(); ++it2){
+            if(S[i] == "+") ret.insert((*it1) + (*it2));
+            if(S[i] == "-") ret.insert((*it1) - (*it2));
+            if(S[i] == "*") ret.insert((*it1) * (*it2));
+            if(S[i] == "/" && (*it2) != 0) ret.insert((*it1) / (*it2));
+            //if(b == 1 && e == 14){
+            //  cout <<"insert " <<endl;
+            //  for(set<int>::iterator it = left.begin(); it != left.end(); ++it) cout <<(*it) <<", "; cout <<endl;
+            //  for(set<int>::iterator it = right.begin(); it != right.end(); ++it) cout <<(*it) <<", "; cout <<endl;
+            //  cout <<S[i] <<", " <<ret.size() <<endl;
+            //  for(set<int>::iterator it = ret.begin(); it != ret.end(); ++it) cout <<(*it) <<", "; cout <<endl;
+            //}
+          }
+        }
+      }
+    }
+  }
+  //cout <<"ret = ";
+  //for(set<int>::iterator it = ret.begin(); it != ret.end(); ++it) cout <<(*it) <<", "; cout <<endl;
+  return ret;
+}
+
+int main() {
+  while(cin >>STR && STR != "#"){
+    S = vector<string>();
+    string tmp = "";
+    REP(i, STR.length()){
+      if(isdigit(STR[i])) tmp += STR[i];
+      else{
+        if(tmp != "") S.push_back(tmp);
+        tmp = STR[i];
+        S.push_back(tmp);
+        tmp = "";
+      }
+    }
+    if(tmp != "") S.push_back(tmp);
+    //REP(i, S.size()) cout <<S[i] <<" | "; cout <<endl;
+    set<int> ans = calc(0, S.size());
+    cout <<ans.size() <<endl;
+    //for(set<int>::iterator it = ans.begin(); it != ans.end(); ++it) cout <<(*it) <<", "; cout <<endl;
+  }
+  return 0;
+}

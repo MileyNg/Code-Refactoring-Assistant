@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <string.h>
+
+#define M 1000003
+#define L 14
+
+char array[M][L];
+
+int getChar(char c){
+  if(c == 'A') return 1;
+  if(c == 'C') return 2;
+  if(c == 'G') return 3;
+  if(c == 'T') return 4;
+}
+
+long long getKey(char c[]){
+  long long sum = 0, p = 1, i;
+  for( i = 0; i < strlen(c); i++){
+    sum += p * getChar(c[i]);
+    p *= 5;
+  }
+  return sum;
+}
+
+int hash1(int key, int m){
+  return (key % m);
+}
+
+int hash2(int key, int m){
+  return (1 + (key % (m - 1)));
+}
+
+void Insert(char c[], int m){
+  int k, index, i = 0;
+  int h1, h2;
+
+  k = getKey(c);
+  h1 = hash1(k, m);
+  h2 = hash2(k, m);
+
+  while(1){
+    index = (h1 + i * h2) % m;
+    if(array[index][0] == '\0'){
+      strcpy(array[index], c);
+      break;
+    }else{
+      i++;
+    }
+  }
+}
+
+int Search(char c[], int m){
+  int k, index, i = 0;
+  int flg = 0, h1, h2;
+
+  k = getKey(c);
+  h1 = hash1(k, m);
+  h2 = hash2(k, m);
+
+  while(1){
+    index = (h1 + i * h2) % m;
+  if(array[index][0] == '\0'){
+    break;
+  }else{
+    if(strcmp(array[index], c) == 0){
+      flg = 1;
+      break;
+    }
+  }
+  i++;
+  }
+  return flg;
+}
+
+int main(){
+  int n, i;
+  char str[L], com[9];
+  for( i = 0; i < M; i++)array[i][0] = '\0';
+
+    scanf("%d", &n);
+
+    for( i = 0; i < n; i++){
+    scanf("%s %s", com, str);
+
+    if(com[0] == 'i'){
+      Insert(str, M);
+    }else {
+      if(Search(str, M) == 1){
+	printf("yes\n");
+      }else{
+	printf("no\n");
+      }
+    }
+  }
+    return 0;
+}
+      
+      

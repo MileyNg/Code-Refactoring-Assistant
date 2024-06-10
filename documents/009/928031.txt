@@ -1,0 +1,108 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+int n,found,len;
+string sequence;
+char table[26];
+char tmp_table[26];
+set<string> S;
+vector<string> buf,server[21];
+
+inline bool check(const string& word,const string& cipher,const int &blen){
+  rep(i,blen){
+    if( word[i] == '?' ) continue;
+    if( word[i] != cipher[i] ) return false;
+  }
+  return true;
+}
+
+void dfs(int cur){
+
+  if( found >= 2 ) return;
+  if( cur >= len ){
+    found++;
+    rep(i,26) table[i] = tmp_table[i];
+
+    return;
+  }
+
+
+  int blen = buf[cur].size();
+  bool already = true;
+  string str = buf[cur];
+  rep(i,blen) {
+    if( tmp_table[buf[cur][i]-'A'] == '?' ) already = false;
+    str[i] = tmp_table[buf[cur][i]-'A'];
+  }
+  if( already ){
+    if( S.find(str) != S.end() ) dfs(cur+1);
+    return;
+  }
+
+  /*
+    cipher = "AAA";
+    buf = "ZAB";
+    str = "?A?";
+   */
+  rep(i,(int)server[blen].size()){
+    if( !check(str,server[blen][i],blen) ) continue;
+    char tmper[26];
+    rep(j,26) tmper[j] = tmp_table[j];
+    bool error = false;
+    rep(j,blen) if( str[j] == '?' ) {
+      if( tmp_table[buf[cur][j]-'A'] == '?' && tmp_table[server[blen][i][j]-'A'] == '?' ) {
+        tmp_table[buf[cur][j]-'A'] = server[blen][i][j];
+        tmp_table[server[blen][i][j]-'A'] = buf[cur][j];
+      } else if( !( tmp_table[buf[cur][j]-'A'] == server[blen][i][j] && tmp_table[server[blen][i][j]-'A'] == buf[cur][j] ) ){
+        error = true;
+        break;
+      }
+    }
+    if( error ) {
+      rep(j,26) tmp_table[j] = tmper[j];
+      continue;
+    }
+    dfs(cur+1);
+    rep(j,26) tmp_table[j] = tmper[j];
+  }
+
+}
+
+bool comp(const string& a, const string& b){ return (int)a.size() > (int) b.size(); }
+
+int main(){
+  while(cin>>n,n){
+    S.clear(), buf.clear(), found = 0;
+    rep(i,26)table[i] = tmp_table[i] = '?';
+    rep(i,21)server[i].clear();
+
+    rep(i,n){
+      cin >> sequence;
+      S.insert(sequence);
+      server[(int)sequence.size()].push_back(sequence);
+    }
+    cin.ignore();
+    getline(cin,sequence);
+    string tmp = sequence.substr(0,(int)sequence.size()-1);
+
+    stringstream ss(tmp);
+    while(!(ss>>tmp).fail()) buf.push_back(tmp);
+    sort(buf.begin(),buf.end());
+
+
+    len = buf.size();
+    dfs(0);
+
+    if( found == 0 || found >= 2 ) puts("-.");
+    else {
+      rep(i,(int)sequence.size()) cout << (isupper(sequence[i])?table[sequence[i]-'A']:sequence[i]);
+      cout << '\n';
+    }
+
+  }
+  return 0;
+}

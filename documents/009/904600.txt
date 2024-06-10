@@ -1,0 +1,18 @@
+#!/bin/ruby
+while 1
+  n=gets.to_i
+  break if n==0
+  k=gets.split.map(&:to_i)
+  s=gets.chomp
+  a=[]
+  ("a".."z").each do |e|
+    a<< e
+  end
+  ("A".."Z").each do |e|
+    a<< e
+  end
+  (0...s.size).each do |x|
+    s[x]=a[(a.find_index(s[x])-k[x%k.size]+a.size)%a.size]
+  end
+  puts s
+end

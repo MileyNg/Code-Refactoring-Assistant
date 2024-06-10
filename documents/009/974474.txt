@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+
+#define NMAX 20000
+int main(){
+
+	int N,M;
+	bool comp[NMAX+1];
+	int t,s,d;
+	int ans=0;
+
+	while(1){
+
+		cin>>N>>M;
+		if(N==0&&M==0) break;
+
+		comp[1]=true;
+		for(int i=2;i<=N;i++) comp[i]=false;
+
+		while(M --> 0){
+			cin>>t>>s>>d;
+			if(comp[s]==true) comp[d]=true;
+		}
+
+		ans=0;
+		for(int i=1;i<=N;i++){
+			if(comp[i]==true) ans++;
+		}
+
+		cout<<ans<<endl;
+	}
+
+	return 0;
+}

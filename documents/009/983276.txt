@@ -1,0 +1,72 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <map>
+#include <ctime>
+using namespace std;
+
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+#define pb push_back
+
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+
+const int inf=1<<29;
+
+int n;
+int dp[100010];
+int panel[100010];
+
+void dijkstra(void){
+	rep(i,n) dp[i]=inf;
+
+	priority_queue <pii,vector<pii>,greater<pii> > q;
+	pii init;
+	init.first=0;
+	init.second=0;
+	dp[0]=0;
+	q.push(init);
+	while(!q.empty()){
+		pii cur=q.top(); q.pop();
+
+		if(dp[cur.first] < cur.second)
+			continue;
+
+		//cout << iconvert[cur.first] << " "<< cur.second << endl;
+
+		if(panel[cur.first]){
+			pii next;
+			next.first=cur.first+panel[cur.first];
+			next.second=cur.second;
+			if(dp[next.first]>next.second){
+				dp[next.first]=next.second;
+				q.push(next);
+			}
+
+		}else{
+			rep(i,6){
+				pii next;
+				next.first=cur.first+i+1;next.second=cur.second+1;
+				if(dp[next.first] > next.second){
+					dp[next.first]=next.second;
+					q.push(next);
+				}
+			}
+		}
+	}
+	return ;
+}
+
+int main(void){
+	cin >> n;
+	rep(i,n) cin >> panel[i];
+	dijkstra();
+	cout << dp[n-1] << endl;
+	/*rep(i,n){
+		cout << i << " " << dp[i] << endl;
+
+	}*/
+	return 0;
+}

@@ -1,0 +1,100 @@
+#include<stdio.h>
+#include<limits.h>
+#define MAX 2000000
+
+int size=0;
+int heap[MAX];
+
+void maxHeapInsert(int);
+void heapIncreaseKey(int ,int);
+void maxHeapify(int);
+int heapExtractMax();
+int parent(int);
+int left(int);
+int right(int);
+
+int main(){
+
+  int n,i,tmp,x;
+  char com[20];
+
+  while(1){
+    scanf("%s",com);
+    if(com[0] == 'i'){
+      scanf("%d",&x);
+      maxHeapInsert(x);
+    }
+    else if(com[0] == 'e' && com[1] == 'x'){
+      printf("%d\n",heapExtractMax());
+    }
+    else if(com[0] == 'e' && com[1] == 'n')
+      break;
+  }
+  
+
+  return 0;
+}
+
+void maxHeapInsert(int key){
+
+  size++;
+  heap[size] = INT_MIN;
+  heapIncreaseKey(size,key);
+}
+
+void heapIncreaseKey(int i, int key){
+
+  int tmp;
+
+  if(key < heap[i])
+    printf("error\n");
+  heap[i] = key;
+  while(i > 1 && heap[parent(i)] < heap[i]){
+    tmp = heap[i];
+    heap[i] = heap[parent(i)];
+    heap[parent(i)] = tmp;
+    i = parent(i);
+  }
+}
+
+int heapExtractMax(){
+
+  int max;
+
+  max = heap[1];
+  heap[1] = heap[size];
+  size--;
+  maxHeapify(1);
+  return max;
+}
+
+int parent(int i){
+  return i / 2;
+  }
+
+int left(int i){
+    return 2 * i;
+}
+ 
+int right(int i){
+    return 2 * i + 1;
+}
+
+void maxHeapify(int i){
+    int l,r,largest,tmp;
+ 
+    l = left(i);
+    r = right(i);
+    if(l <= size && heap[l] > heap[i])
+        largest = l;
+    else
+        largest = i;
+    if(r <= size && heap[r] > heap[largest])
+        largest = r;
+    if(largest != i){
+        tmp = heap[i];
+        heap[i] = heap[largest];
+        heap[largest] = tmp;
+        maxHeapify(largest);
+    }
+}

@@ -1,0 +1,87 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <complex>
+#include <ctime>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <string>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <complex>
+
+using namespace std;
+
+template<typename T> ostream& operator<<(ostream& os, const vector<T>& v){
+    os << "{ ";
+    for (typename vector<T>::const_iterator it = v.begin(); it != v.end(); ++it)
+        os << '\"' << *it << '\"' << (it + 1 == v.end() ? "" : ", ");
+    os << " }";
+    return os;
+}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+#define vv(type,w,h,init) vector<vector<type>>(h,vector<type>(w,init))
+typedef vector<string> vs;
+typedef long long ll;
+typedef unsigned uint;
+typedef unsigned long ul;
+typedef unsigned long long ull;
+
+#define all(c) (c).begin(), (c).end()
+#define rall(c) (c).rbegin(), (c).rend()
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define pb push_back
+#define mp make_pair
+
+
+typedef complex<int> P;
+
+int main(){
+    int n;
+    while (cin >> n, n){
+        P ps[100];
+        bool vis[30][30] = {};
+        rep(i, n){
+            int x, y;
+            cin >> x >> y;
+            ps[i] = P(x, y);
+        }
+        int m; cin >> m;
+
+        P dir[256] = {};
+        dir['N'] = P(0, 1);
+        dir['W'] = P(-1, 0);
+        dir['E'] = P(1, 0);
+        dir['S'] = P(0, -1);
+
+        vis[10][10] = true;
+        P cur(10, 10);
+        rep(i, m){
+            char c; int d;
+            cin >> c >> d;
+            rep(i, d){
+                cur += dir[c];
+                vis[cur.imag()][cur.real()] = true;
+            }
+        }
+
+        bool ans = true;
+        rep(i, n){
+            if (!vis[ps[i].imag()][ps[i].real()]) ans = false;
+        }
+        cout << (ans ? "Yes" : "No") << endl;
+    }
+}

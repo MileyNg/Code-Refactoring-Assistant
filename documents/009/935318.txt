@@ -1,0 +1,17 @@
+#include<stdio.h>
+#include<math.h>
+int main(void) {
+	double x[4]={0};
+	double y[4]={0};
+	double a, b, c, t1, t2, t3, s, s1, s2;
+	while(scanf("%lf %lf %lf %lf %lf %lf %lf %lf",&x[1],&y[1],&x[2],&y[2],&x[3],&y[3],&x[0],&y[0]) != EOF){
+		s1=fabs(x[1]*(y[2]-y[3])+x[2]*(y[3]-y[1])+x[3]*(y[1]-y[2]))/2;
+		t1=fabs(x[0]*(y[1]-y[2])+x[1]*(y[2]-y[0])+x[2]*(y[0]-y[1]))/2;
+		t2=fabs(x[0]*(y[1]-y[3])+x[1]*(y[3]-y[0])+x[3]*(y[0]-y[1]))/2;
+		t3=fabs(x[0]*(y[2]-y[3])+x[2]*(y[3]-y[0])+x[3]*(y[0]-y[2]))/2;
+		s2=t1+t2+t3;
+		if(s1==s2) printf("YES\n");
+		else printf("NO\n");
+	}
+	return 0;
+}

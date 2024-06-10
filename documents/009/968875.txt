@@ -1,0 +1,42 @@
+#include <stdio.h>
+ 
+void cut(int* cards,int n,int k) {	//	カット処理
+    int result[200];
+    int i;
+    for(i=0;i<k;i++) {
+        result[2*n-k+i]=cards[i];
+    }
+    for(i=k;i<2*n;i++) {
+        result[i-k]=cards[i];
+    }
+    for(i=0;i<n*2;i++) {
+        cards[i]=result[i];
+    }
+}
+ 
+void rf(int* cards,int n) {//リフルシャッフル
+    int result[200];
+    int i;
+    for(i=0;i<n;i++) {
+        result[i*2]=cards[i];
+        result[i*2+1]=cards[i+n];
+    }
+    for(i=0;i<n*2;i++) {
+        cards[i]=result[i];
+    }
+}
+ 
+int main(void) {
+    int cards[200];
+    int i,n,m,k;
+    scanf("%d",&n);
+    scanf("%d",&m);
+    for(i=0;i<n*2;i++)cards[i]=i+1;
+    for(i=0;i<m;i++) {
+        scanf("%d",&k);
+        if(k==0)rf(cards,n);
+        else cut(cards,n,k);
+    }
+    for(i=0;i<n*2;i++)printf("%d\n",cards[i]);
+    return 0;
+}

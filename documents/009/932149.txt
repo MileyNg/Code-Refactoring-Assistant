@@ -1,0 +1,79 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+#include <algorithm>
+
+//0-indexed overflow-> max:Height*MOD sum's comment out:2*MOD
+template <class T, int SIZE>
+struct BinaryIndexedTree {
+    T seg[SIZE];
+    
+    inline void init() {
+        fill_n(seg, SIZE, 0);
+    }
+
+    inline void add(uint i, T x) {
+        while (i < SIZE) {
+            seg[i] += x;
+            i += (i+1) & ~i;
+        }
+    }
+    //[0, i)
+    inline T sum(uint i) {
+        T s = 0;
+        uint d = 1;
+        while (i >= d) {
+            i -= d;
+            s += seg[i];
+            d = (i+1) & ~i;
+        }
+        return s;
+    }
+    //[a, b)
+    inline T sum(uint a, uint b) {
+        T d = sum(b) - sum(a);
+        return d;
+    }
+};
+typedef long long ll;
+typedef pair<int, int> P;
+
+const int MN = 100100;
+BinaryIndexedTree<int, MN> b;
+int main() {
+    b.init();
+    int n, m;
+    cin >> n >> m;
+    for (int i = 1; i < MN; i++) {
+        if (i*2 <= m) {
+            b.add(max(0, i), 1);
+            continue;
+        }
+        if (m <= i) {
+            break;
+        }
+        int u = m-i;
+        for (int j = i; j < MN; j += i) {
+            b.add(max(i, j-u), 1);
+            b.add(max(i, j), -1);
+        }
+    }
+    for (int i = 1; i <= n-m+1; i++) {
+        printf("%d ", b.sum(i)+m);
+    }
+    printf("\n");
+    return 0;
+}

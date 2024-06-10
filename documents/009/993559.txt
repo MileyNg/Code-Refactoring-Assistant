@@ -1,0 +1,83 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef vector<int> vec;
+typedef vector<string> vecs;
+const int MAX_N = 10;
+const string DEFAULT = "\0";
+
+string ans;
+
+void dfs( vecs data, string str, vector<bool> isUsed ){
+	//cout << "str:" << str << endl;
+	string res = ans;
+	bool end = true;
+	for( int i = 0; i < isUsed.size(); i++ ){
+		//cout << res << endl;
+		if( isUsed[i] || data[i] == DEFAULT ){
+			//cout << "It's default." << endl;
+			continue;
+		}else end = false;
+		for( int j = min(str.size(),data[i].size()); 0 <= j; j-- ){
+			//cout << "substr:" << str.substr(str.size()-j,j) << endl;
+			if( str.substr(str.size()-j,j) == data[i].substr(0,j) ){
+				string nstr = str + data[i].substr(j,data[i].size()-j);
+				if( res != DEFAULT && res.size() <= nstr.size() ) continue;
+				isUsed[i] = true;
+				//cout << "nstr:" << nstr << endl;
+				dfs( data, nstr, isUsed);
+				isUsed[i] = false;
+			}
+		}
+	}
+	if( end ){
+		if( ans == DEFAULT || str.size() < ans.size() ) ans = str;
+		else if( ans.size() == str.size() && str < ans ) ans = str;
+	}
+}
+
+int main(){
+	int n;
+	while( scanf("%d", &n), n ){
+		vecs data;
+		for( int i = 0; i < n; i++ ){
+			char s[11];
+			scanf("%s", s);
+			data.push_back(s);
+		}
+
+/*
+		sort(data.begin(), data.end());
+		data.erase(unique(data.begin(),data.end()),data.end());
+		for( int i = 0; i < data.size(); i++ ){
+			for( int j = 0; j < data.size(); j++ ){
+				if( i != j && data[i].find(data[j],0) != string::npos ){
+					data[j] = DEFAULT;
+				}
+			}
+		}
+		*/
+		/*
+		cout << "data-----------" << endl;
+		for( int i = 0; i < data.size(); i++ ){
+			cout << data[i] << endl;
+		}
+		cout << "data-----------" << endl;
+		*/
+
+		ans = DEFAULT;
+		vector<bool> isUsed(data.size(), false);
+		dfs( data, DEFAULT, isUsed );
+		/*
+		for( int i = 0; i < isUsed.size(); i++ ){
+			isUsed[i] = true;
+			dfs(data[i],isUsed);
+			isUsed[i] = false;
+		}
+		*/
+		printf("%s\n", ans.c_str());
+	}
+}

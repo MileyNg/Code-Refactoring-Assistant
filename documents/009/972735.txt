@@ -1,0 +1,192 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+double pfmod(double v,double MOD){
+	return fmod(fmod(v,MOD)+MOD,MOD);
+}
+
+class Comp{
+public:
+	bool operator () (const pair<int,int>& l,const pair<int,int>& r){
+		if(l.first!=r.first)return l.first>r.first;
+		return l.second<r.second;
+	}
+};
+
+namespace Ps{
+	const double EPS = 1e-8;
+	const double INF = 1e12;
+
+	typedef complex<double> P;
+	#define X(a) (real(a))
+	#define Y(a) (imag(a))
+	
+	// a×b
+	double cross(const P& a,const P& b){
+		return imag(conj(a)*b);
+	}
+	// a・b
+	double dot(const P&a,const P& b) {
+		return real(conj(a)*b);
+	}
+
+	 int ccw(const P& a,P b,P c){
+		b -= a; c -= a;
+		  if (cross(b,c) > 0)   return +1;       // counter clockwise
+		  if (cross(b,c) < 0)   return -1;       // clockwise
+		  if (dot(b,c) < 0)     return +2;       // c--a--b on line
+		  if (norm(b) < norm(c)) return -2;       // a--b--c on line
+		  return 0;
+	  }
+}
+using namespace Ps;
+
+double Abs(double a){double ret=pfmod(max(a,-a),2*M_PI);return min(ret,2*M_PI-ret);}
+
+class Main{
+public:
+	bool canReach(int x,int y,int w,int a,int d){
+		if((ll)x*x+(ll)y*y<=(ll)a*a){
+			if(Abs(w*M_PI/180-atan2(y,x))<=d*M_PI/180/2)return true;
+		}
+		return false;
+	}
+
+	void run(){
+
+		while(true){
+			int H,R;scanf("%d%d",&H,&R);if(H==0)break;
+
+			vector<int> xs(H),ys(H);
+			REP(h,H)scanf("%d%d",&xs[h],&ys[h]);
+			int U,M,S,du,dm,ds;scanf("%d%d%d%d%d%d",&U,&M,&S,&du,&dm,&ds);
+
+			vector<int> uxs(U),uys(U);vector<int> mxs(M),mys(M);vector<int> sxs(S),sys(S);
+			REP(i,U)scanf("%d%d",&uxs[i],&uys[i]);
+			REP(i,M)scanf("%d%d",&mxs[i],&mys[i]);
+			REP(i,S)scanf("%d%d",&sxs[i],&sys[i]);
+			
+			vector<int> ws(R),as(R);
+			REP(i,R)scanf("%d%d",&ws[i],&as[i]);
+
+
+			vector<pair<int,int>> res;
+			REP(h,H){
+				int x=xs[h],y=ys[h];
+
+				int okc=0;
+				REP(r,R){
+					int w=ws[r],a=as[r];
+					bool ok=false;
+					if(canReach(x,y,w,a,du))ok=true;
+					REP(i,U)if(canReach(x-uxs[i],y-uys[i],w,a,du))ok=false;
+					REP(i,M)if(canReach(x-mxs[i],y-mys[i],w,a,dm))ok=false;
+					REP(i,S)if(canReach(x-sxs[i],y-sys[i],w,a,ds))ok=false;
+					if(ok)okc++;
+				}
+				res.push_back(make_pair(okc,h+1));
+			}
+			sort(ALL(res),Comp());
+
+			int Mh=res[0].first;
+			
+			if(Mh==0){
+				cout<<"NA"<<endl;continue;
+			}
+
+			for(int i=0;i<H && Mh==res[i].first;i++){
+				if(i!=0)cout <<" ";
+				cout << res[i].second; 
+			}
+			cout <<endl;
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

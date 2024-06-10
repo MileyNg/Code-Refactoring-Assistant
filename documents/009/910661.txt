@@ -1,0 +1,38 @@
+#include<stdio.h>
+int sagaku(int* ,int,int);
+int main()
+{
+  int n,i;
+  int r[200000];
+  int maxsa=0,sa=0,time=0;
+  scanf("%d",&n);
+
+  for(i=0;i<n;i++)
+    {
+      scanf("%d",&r[i]);
+    }
+
+  for(i=0;i<n;i++)
+    {
+      sa = sagaku(&r[i],n,time);
+      time++;
+      if(sa>maxsa) maxsa=sa;
+    }
+
+  printf("%d\n",maxsa);
+  return 0;
+}
+
+int sagaku(int *r,int n,int time)
+{
+  int i,j;
+  int maxsa=0,sa=0,max=0; /*max比べる値*/
+  for(i=0;i<n-time-1;i++)
+    {
+      if(r[0]>r[i+1]) continue; //sa = r[0]-r[i+1];
+      else sa = r[i+1]-r[0];
+      printf("比べる元 %d 比べる値 %d 差 %d\n",r[0],r[i+1],sa);
+      if(sa > maxsa) maxsa = sa;
+    }
+  return maxsa;
+}

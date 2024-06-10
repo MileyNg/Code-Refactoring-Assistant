@@ -1,0 +1,72 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int a[16], c[100];
+priority_queue<pair<int,int> > b;
+
+int can_sit(int n) {
+  int p = 0;
+  for (int i=0; i<16; i++) {
+    if (a[i] == -1) {
+      ++p;
+    } else {
+      p = 0;
+    }
+    if (p == n) {
+      return i-n+1;
+    }
+  }
+  return -1;
+}
+
+int sit(int id, int stt, int n) {
+  for (int i=0; i<n; i++) {
+    a[i+stt] = id;
+  }
+}
+
+int stand(int id) {
+  for (int i=0; i<16; i++) {
+    if (a[i] == id) {
+      a[i] = -1;
+    }
+  }
+}
+
+int main() {
+  int t, p, q, r;
+  for (int i=0; i<16; i++) a[i] = -1;
+  t = 0;
+  p = 0;
+  while (1) {
+    while (t >= 5*p && p<100) {
+      q = (p%5==1) ? 5 : 2;
+      r = can_sit(q);
+      if (r != -1) {
+        c[p] = t - 5*p;
+        sit(p, r, q);
+        b.push(pair<int, int>(-(t + 17*(p%2) + 3*(p%3) + 19), p));
+        p++;
+      } else {
+        break;
+      }
+    }
+    if (-b.top().first <= ((t/5)+1)*5) {
+      t = -b.top().first;
+      stand(b.top().second);
+      b.pop();
+    } else {
+      t = ((t/5)+1)*5;
+    }
+    if (p==100 && b.empty()) {
+      break;
+    }
+  }
+
+  while (cin >> t) {
+    cout << c[t] << endl;
+  }
+
+  return 0;
+}

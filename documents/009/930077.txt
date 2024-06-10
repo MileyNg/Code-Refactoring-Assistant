@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdlib>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  int n, m;
+  vector<int> costs;
+  vector<int> votes;
+  cin >> n >> m;
+
+  for( int i = 0; i < n; i++ ) {
+    int c;
+    cin >> c;
+    costs.push_back( c );
+    votes.push_back( 0 );
+  }
+  
+  for( int j = 0; j < m; j++ ) {
+    int t;
+    cin >> t;
+    for( int i = 0; i < n; i++ ) {
+      if( costs[ i ] <= t ) { 
+        votes[ i ]++;
+        break;
+      }
+    }
+  }
+  
+  int maxidx = 0;
+  for( int i = 1; i < n; i++ ) {
+    if( votes[ i ] > votes[ maxidx ] ) {
+      maxidx = i;
+    }
+  }
+
+  cout << maxidx + 1 << endl;
+
+  return EXIT_SUCCESS;
+}

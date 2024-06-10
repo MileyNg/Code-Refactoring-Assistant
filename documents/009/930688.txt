@@ -1,0 +1,111 @@
+#include <cstdio>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+#define whole(xs) xs.begin(), xs.end()
+
+template <class T>
+ostream& operator<<(ostream& os, const vector<T>& v) {
+    os << "{ ";
+    for (int i = 0; i < v.size(); i++) {
+        os << v[i] << " ";
+    }
+    os << "}";
+    return os;
+}
+
+int N;
+vector<string> SS;
+int L[10][10];
+string cache[10][1 << 10];
+
+int common(const string& s, const string& t) {
+    int l = min(s.size(), t.size());
+    for (int i = l; i >= 0; i--) {
+        bool flag = true;
+        for (int j = 0; j < i; j++) {
+            if (s[s.size() - i + j] != t[j]) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) return i;
+    }
+    assert(0);
+}
+
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    vector<string> v(N);
+    SS.clear();
+    for (int i = 0; i < N; i++) cin >> v[i];
+    vector<bool> remove(N, false);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (i == j) continue;
+            if (v[i] != v[j] && search( whole(v[i]), whole(v[j]) ) != v[i].end()) {
+                remove[j] = true;
+            }
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        if (!remove[i]) {
+            SS.push_back(v[i]);
+        }
+    }
+    N = SS.size();
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (i == j) continue;
+            L[i][j] = common(SS[i], SS[j]);
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < (1 << N); j++) {
+            cache[i][j] = "_";
+        }
+    }
+    return true;
+}
+
+bool comp(const string& s, const string& t) {
+    if (s == "_") return false;
+    if (t == "_") return true;
+    if (s.size() == t.size()) return s < t;
+    return s.size() < t.size();
+}
+#define MIN(s, t) min((s), (t), comp)
+
+string dfs(int v, int used) {
+    if (used == (1 << N) - 1) return "";
+    if (cache[v][used] != "_") return cache[v][used];
+    string ret = "_";
+    for (int i = 0; i < N; i++) {
+        if (used & (1 << i)) continue;
+        const string& t = SS[i];
+        int l = L[v][i];
+        ret = MIN(ret, t.substr(l, t.size() - l) + dfs(i, used | 1 << i));
+    }
+    return cache[v][used] = ret;
+}
+
+int main() {
+    while (input()) {
+        string ans = "_";
+        for (int i = 0; i < N; i++) {
+            ans = MIN(ans, SS[i] + dfs(i, 1<<i));
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

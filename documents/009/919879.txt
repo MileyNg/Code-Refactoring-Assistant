@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+int main()
+{
+    vector<int> n, r;
+    int a, b;
+    int count = 0;
+    
+    while(1)
+    {
+        cin >> a >> b;
+        if(a == 0 && b == 0)
+            break;
+
+        n.push_back(a);
+        r.push_back(b);
+        count++;
+    }
+
+    for(int i = 0; i < count; i++)
+    {
+        int counter = 0;
+
+        for(int j = 1; j <= n[i]; j++)
+        {
+            for(int k = 1; k <= n[i]; k++)
+            {
+                for(int l = 1; l <= n[i]; l++)
+                {
+                    if(r[i] == j + k + l
+                    && j != k
+                    && k != l
+                    && l != j)
+                        counter++;
+                }
+            }
+        }
+
+        cout << counter / 6 << endl;
+    }
+
+    return 0;
+} 

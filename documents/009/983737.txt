@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+void doit(int n){
+	if(n>0){
+		int m;
+		int i;
+		int b;
+		int bt;
+		int up=0;
+		int dw=0;
+		scanf("%d",&m);
+		scanf("%d",&bt);
+		for(i=1;i<m;i++){
+			scanf("%d",&b);
+			if(b>bt){
+				if(up<(b-bt)){
+					up=b-bt;
+				}
+			}
+			else if(b<bt){
+				if(dw<(bt-b)){
+					dw=bt-b;
+				}
+			}
+			bt=b;
+		}
+		printf("%d %d\n",up,dw);
+		doit(n-1);
+	}
+}
+
+int main(void) {
+	int n;
+	scanf("%d",&n);
+	doit(n);
+	return 0;
+}

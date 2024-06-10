@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+using namespace std;
+
+int mod = 10007;
+int dp[1010][8];
+
+map<char,int> id = { {'J',0}, {'O',1}, {'I',2} };
+
+int main(){
+  int n;
+  string s;
+
+  cin >> n >> s;
+  dp[0][1] = 1;
+  
+  rep(i,n)rep(j,8)rep(k,8){
+    if( (j&k) && ((k>>id[s[i]])&1) ){
+      (dp[i+1][k] += dp[i][j]) %= mod;
+    }
+  }
+
+  rep(i,7)(dp[n][7] += dp[n][i]) %= mod;
+  cout << dp[n][7] << endl;
+}

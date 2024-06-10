@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+int a[21];
+int n;
+
+
+int f(int i, int sum)
+{
+  if (sum == 0) return 1;
+  if (sum < 0) return 0;
+  if (i >= n) return 0;
+  return f(i + 1, sum) || f(i + 1, sum - a[i]);
+}
+
+int main() {
+  int i;
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%d", &a[i]);
+  }
+  int m;
+  scanf("%d", &m);
+  for (i = 0; i < m; i++) {
+    int input;
+    scanf("%d", &input);
+    puts(f(0, input) ? "yes" : "no");
+  }
+  return 0;
+}

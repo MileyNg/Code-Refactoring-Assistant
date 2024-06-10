@@ -1,0 +1,123 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <queue>
+#include <algorithm>
+#include <map>
+#include <cmath>
+#include <iomanip>
+using namespace std;
+#define inf 999999999
+int ID=0;
+map<string ,int>mp;
+string str;
+int n,m,cap,size,len;
+int val[3005][3005];
+int gas[3005];
+int head[3005];
+int dp[2001][3005];
+struct Edge
+{
+    int v,next;
+    Edge(){}
+    Edge(int V,int NEXT):v(V),next(NEXT){}
+}edge[3005];
+void Init(int num)
+{
+    for(int i=1;i<=num;++i)
+    {
+        head[i]=-1;
+    }
+    ID=0;
+    size=0;
+}
+
+void InsertEdge(int u,int v)
+{
+    edge[size]=Edge(v,head[u]);
+    head[u]=size++;
+}
+
+int dfs(int u,int father,int gasnum)
+{
+    ///蜉?イケ遶?    if(gas[u])
+        gasnum=cap*10;
+    if(dp[gasnum][u]!=-1)
+        return dp[gasnum][u];
+    /// 扈育せ
+    if(u==2)
+        return dp[gasnum][u]=0;
+    int ret=inf;
+    for(int i=head[u];i != -1;i=edge[i].next)
+    {
+        ///荳倶ク?クェ闃らせ
+        int v=edge[i].v;
+        if(v == father)
+        continue;
+        ///閭ス蛻ー霎セv
+        if(val[u][v]!=-1&&gasnum>=val[u][v])
+        {
+            int ans=dfs(v,u,gasnum-val[u][v])+val[u][v];
+            if(ans<ret)
+            ret=ans;
+        }
+    }
+    return dp[gasnum][u]=ret;
+}
+
+int main()
+{
+    ///freopen("in.txt","r",stdin);
+    int u,v;
+    while(scanf("%d%d%d",&n,&m,&cap)&&(n+m+cap)!=0)
+    {
+        mp.clear();
+        Init(n);
+        cin>>str;
+        mp[str]=1;
+        cin>>str;
+        mp[str]=2;
+        ID=2;
+        memset(val,-1,sizeof val);
+        memset(gas,0,sizeof gas);
+        memset(dp,-1,sizeof dp);
+        while(n--)
+        {
+            cin>>str;
+            if(mp[str]==0)
+            {
+                ID++;
+                mp[str]=ID;
+                u=ID;
+            }
+            else
+                u=mp[str];
+            cin>>str;
+            if(mp[str]==0)
+            {
+                ID++;
+                mp[str]=ID;
+                v=ID;
+            }
+            else
+                v=mp[str];
+            cin>>len;
+            val[u][v]=val[v][u]=len;
+            InsertEdge(u,v);
+            InsertEdge(v,u);
+        }
+        while(m--)
+        {
+            cin>>str;
+            gas[mp[str]]=1;
+        }
+        int ans=dfs(1,-1,cap*10);
+        if(ans==inf)
+            printf("-1\n");
+        else
+        printf("%d\n",ans);
+    }
+    return 0;
+}

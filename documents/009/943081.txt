@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+using namespace std;
+#define INF	100000000
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define sec second
+#define lb lower_bound
+#define ub upper_bound
+#define SS stringstream
+#define rep(i,n) for(int i = 0; i < n; i++)
+#define sz(x) ((int)(x).size())
+#define SORT(x) sort((x).begin(), (x).end())
+#define RSORT(x) sort((x).begin(), (x).end(), greater<int>() )
+#define clr(a,b) memset((a),(b),sizeof(a))
+typedef pair<int, int> P;
+typedef long long int ll;
+typedef vector<int> Vi;
+typedef vector<ll> Vll;
+typedef vector<P> Vp;
+typedef priority_queue<P, vector<P>, greater<P> > PQ;
+
+struct edge{int u, v; double cost; };
+int n, m;
+int rank[10000], par[10000];
+edge es[100000];
+double a;
+
+void init(int x){
+	rep(i,x){
+		rank[i] = 0;
+		par[i] = i;
+	}
+}
+
+int find(int x){
+	if(par[x] == x) return x;
+	return par[x] = find(par[x]);
+}
+
+void unite(int x, int y){
+	x = find(x);
+	y = find(y);
+	if(x == y) return;
+	
+	if(rank[x] < rank[y]) par[x] = y;
+	else{
+		par[y] = x;
+		if(rank[x] == rank[y]) rank[x]++;
+	}
+}
+
+bool same(int x, int y){
+	return find(x) == find(y);
+}
+
+bool comp(const edge& e1, const edge& e2){
+	return e1.cost > e2.cost;
+}
+
+int main(){
+	scanf("%d%d", &n, &m);
+	Vp node(n);
+	rep(i,n) scanf("%d%d", &node[i].fi, &node[i].sec);
+	rep(i,m){
+		int tmp1, tmp2;
+		scanf("%d%d", &tmp1, &tmp2);
+		tmp1--; tmp2--;
+		edge e;
+		e.u = tmp1; e.v = tmp2;
+		e.cost = sqrt((node[tmp1].fi-node[tmp2].fi)*(node[tmp1].fi-node[tmp2].fi)+(node[tmp1].sec-node[tmp2].sec)*(node[tmp1].sec-node[tmp2].sec));
+		es[i] = e;
+		a += e.cost;
+	}
+	sort(es, es+m, comp);
+	init(n);
+	double ans = 0.0;
+	rep(i,m){
+		edge e = es[i];
+		if(!same(e.u, e.v)){
+			unite(e.u, e.v);
+			ans += e.cost;
+		}
+	}
+	printf("%0.5f\n", a-ans); 
+}

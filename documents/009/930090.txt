@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+using namespace std;
+
+int main() {
+  int value;
+  string opecode;
+  while( 1 ) {
+    string token;
+    cin >> token;
+    if( token == "=" ) { break; }
+    if( '0' <= token[ 0 ] && token[ 0 ] <= '9' ) {
+      int operand = atoi( token.c_str() );
+      value = opecode == "+" ? value + operand :
+              opecode == "-" ? value - operand :
+              opecode == "*" ? value * operand :
+              opecode == "/" ? value / operand :
+              operand;
+
+    } else {
+      opecode = token;
+    }
+  }
+  cout << value << endl;
+
+  return EXIT_SUCCESS;
+}

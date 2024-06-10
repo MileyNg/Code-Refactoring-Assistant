@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  int tate[30];
+  int num;
+  int yoko;
+  int i;
+
+  for(i=0;i<30;i++)
+    tate[i]=i+1;
+
+  scanf("%d %d",&num,&yoko);
+
+  for(i=0;i<yoko;i++){
+    int a,b;
+    int tmp;
+    scanf("%d,%d",&a,&b);
+    tmp=tate[a-1];
+    tate[a-1]=tate[b-1];
+    tate[b-1]=tmp;
+  }
+  for(i=0;i<num;i++)
+    printf("%d\n",tate[i]);
+
+
+  return 0;
+}

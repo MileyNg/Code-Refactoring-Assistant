@@ -1,0 +1,32 @@
+#include<iostream>
+using namespace std;
+
+#define N 100000
+#define mod 100000
+
+int main() {
+	int n, m;
+	int s[N], a, memo[N], ans = 0;
+	cin >> n >> m;
+	for(int i=0; i<n-1; ++i) {
+		cin >> s[i];
+		memo[i] = 0;
+	}
+	int pos = 0;
+	for(int i=0; i<m; ++i) {
+		cin >> a;
+		if(a>0) {
+			for(int i=0; i<a; ++i) {
+				memo[pos+i] = (memo[pos+i] + s[pos+i])%mod;
+			}
+		}else if(a<0) {
+			for(int i=a; i<0; ++i) {
+				memo[pos+i] = (memo[pos+i] + s[pos+i])%mod;
+			}
+		}
+		pos += a;
+	}
+	for(int i=0; i<n-1; ++i) ans = (ans + memo[i])%mod;
+	cout << ans << endl;
+	return 0;
+}

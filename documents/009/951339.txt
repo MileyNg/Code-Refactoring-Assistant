@@ -1,0 +1,60 @@
+#include "stdio.h"
+
+int dpw[100][2];
+int dph[111][2];
+
+int dpww[100][2];
+int dphw[111][2];
+
+int main()
+{
+	while(1)
+	{
+		int h,w;
+		scanf("%d %d",&h,&w);
+		if(h == 0 && w == 0)
+		{
+			break;
+		}
+		h--;
+		w--;
+		for(int i = 0; i < w; i++)
+		{
+			dpw[i][0] = 1;
+			dpw[i][1] = 0;
+		}
+		for(int i = 0; i <= w; i++)
+		{
+			dph[i][0] = 0;
+			dph[i][1] = 0;
+		}
+		for(int i = 0; i < h; i++)
+		{
+			dphw[0][0] = 1;
+			dphw[0][1] = 0;
+			for(int i = 0; i < w; i++)
+			{
+				dphw[i + 1][0] = dph[i + 1][0] + dph[i + 1][1];
+				dphw[i + 1][1] = dpw[i][0];
+			}
+			for(int i = 0; i <= w; i++)
+			{
+				dph[i][0] = dphw[i][0] % 100000;
+				dph[i][1] = dphw[i][1] % 100000;
+			}
+			int now = 0;
+			for(int i = 0; i < w; i++)
+			{
+				dpww[i][0] = now;
+				now += (dpww[i][1] = dph[i][0]);
+			}
+			for(int i = 0; i < w; i++)
+			{
+				dpw[i][0] = dpww[i][0] % 100000;
+				dpw[i][1] = dpww[i][1] % 100000;
+			}
+		}
+		printf("%d\n",(dpw[w - 1][0] + dpw[w - 1][1] + dph[w][0] + dph[w][1]) % 100000);
+	}
+	return 0;
+}

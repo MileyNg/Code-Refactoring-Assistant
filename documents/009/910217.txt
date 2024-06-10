@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+static const int N = 10000;
+static const int MIN = 2;
+static const int MAX = 10*10*10*10*10*10*10*10;
+
+int main(){
+  int n, i,j,count=0,number,flag;
+  int A[N+1];
+
+  scanf("%d", &n);
+
+  if(MIN > n || n > MAX){
+    printf("不正な数です。");
+    exit(1);
+  }
+
+  for ( i = 1; i <= n; i++ ){
+    scanf("%d", &A[i]);
+    if(1 > A[i] && A[i] > N){
+      exit(1);
+    }
+  }
+  
+  for( i = 1; i <= n; i++ ){
+    
+    number = A[i];
+    
+    flag = 0;
+    for( j = 2; j < number; j++){
+      if(A[i]%j == 0){
+	flag = 1;
+	break;
+      }
+    }
+    if(flag == 0){
+	count++;
+    }
+  }
+
+  printf("%d\n",count);
+  
+  return 0;
+}

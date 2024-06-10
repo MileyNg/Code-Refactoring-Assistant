@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <math.h>
+#include <queue>
+#include <vector>
+using namespace std;
+ 
+int main()
+{
+    double a,b,c;
+    int n,i;
+    priority_queue< double, vector<double>, greater<double> > que;
+ 
+    scanf("%d",&n);
+ 
+    for(i = 0; i < n; i++){
+        scanf("%lf %lf %lf",&a,&b,&c);
+        que.push(a);
+        que.push(b);
+        que.push(c);
+        a = que.top();
+        que.pop();
+        b = que.top();
+        que.pop();
+        if(pow( que.top(),2.0 ) == pow( a,2.0 ) + pow( b,2.0 )){
+            printf("YES\n");
+        }
+        else{
+            //printf("%lf %lf\n",pow( que.top(),2.0 ),pow( a,2.0 ) + pow( b,2.0 ));
+            printf("NO\n");
+        }
+        que.pop();
+    }
+ 
+    return 0;
+}

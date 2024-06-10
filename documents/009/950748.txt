@@ -1,0 +1,70 @@
+def main
+  command = gets.chomp
+  yaml = parse_yaml
+  puts print(yaml, command)
+end
+ 
+def print obj, command
+  params = command.split('.')
+  params.shift
+  next_obj = obj
+ 
+  params.each do |param|
+    unless next_obj.instance_of?(Hash)
+      return 'no such property'
+    end
+ 
+    next_obj = next_obj[param]
+    if next_obj.nil?
+      return 'no such property'
+    end
+  end
+ 
+  unless next_obj.instance_of?(String)
+    return 'object'
+  end
+ 
+  "string \"#{next_obj}\""
+end
+ 
+def parse_yaml
+  next_line,yaml = make_obj
+  yaml
+end
+ 
+def make_obj
+  obj = Hash.new
+  line = gets.chomp
+  next_line = ''
+  level = obj_level(line)
+  loop do
+    key,value = parse_line(line)
+ 
+    if value.nil?
+      next_line,value = make_obj
+    else
+      next_line = gets.chomp
+    end
+    obj[key] = value
+ 
+    break if next_line.size == 0 or obj_level(next_line) < level
+    line = next_line
+  end
+  [next_line, obj]
+end
+ 
+def parse_line str
+  key,value = str.split(':')
+  key.strip!
+  value.sub!(/^ /, '') unless value.nil?
+  [key, value]
+end
+ 
+def obj_level str
+  str.index(/[a-z0-9]/)
+end
+ 
+ 
+if __FILE__ == $0
+  main
+end

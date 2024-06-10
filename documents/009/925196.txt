@@ -1,0 +1,58 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	
+	char card[4][13] = {0};
+	char suit[4] = {'S', 'H', 'C', 'D'};
+	
+	int num;
+	char c;
+	
+	int i, j;
+	
+	scanf("%d", &n);
+	
+	for (i = 0; i < n; i++){
+		scanf("%c %d\n", &c, &num);
+		switch (c){
+		  case 'S':
+		  	card[0][num - 1] = 1;
+			break;
+			
+		  case 'H':
+		  	card[1][num - 1] = 1;
+			break;
+		
+		  case 'C':
+		  	card[2][num - 1] = 1;
+			break;
+		
+		  case 'D':
+		  	card[3][num - 1] = 1;
+			break;
+		}
+		
+		/* for (j = 0; j < 4; j++){
+			if (c == suit[j]){
+				card[j][num - 1] = 1;
+				
+			 	break;
+			} 
+		} */ 
+		//printf("ok");
+	}
+	
+	
+	//printf("\n");
+	for (i = 0; i < 4; i++){
+		for (j = 0; j < 13; j++){
+			if (card[i][j] == 0){
+				printf("%c %d\n", suit[i], j + 1);
+			}
+		}
+	}
+	
+	return (0);
+}

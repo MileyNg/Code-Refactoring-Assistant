@@ -1,0 +1,28 @@
+#include<stdio.h>
+
+int main(void)
+{
+  int mountain[10];
+  int i, j;
+  int tmp;
+
+  for(i = 0; i < 10; i++) {
+    scanf("%d", &mountain[i]);
+  }
+
+  for(i = 0; i < 9; i++) {
+    for(j = 9 ; j > i; j--) {
+      if(mountain[j] > mountain[j-1]) {
+	tmp = mountain[j];
+	mountain[j] = mountain[j-1];
+	mountain[j-1] = tmp;
+      }
+    }
+  }
+
+  for(i = 0; i < 3; i++) {
+    printf("%d\n", mountain[i]);
+  }
+
+  return 0;
+}

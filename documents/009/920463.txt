@@ -1,0 +1,48 @@
+#include<cstdio>
+#include<cstdlib>
+#include<ctime>
+#include<cmath>
+#include<cstring>
+#include<cctype>
+#include<complex>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<vector>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+#include<set>
+#include<bitset>
+#include<numeric>
+using namespace std;
+const int dx[]={1,0,-1,0};
+const int dy[]={0,1,0,-1};
+#define INF 1e+8
+#define EPS 1e-7
+#define PB push_back
+#define fi first
+#define se second
+#define ll long long
+#define reps(i,j,k) for(int i = (j); i < (k); i++)
+#define rep(i,j) reps(i,0,j)
+typedef pair<int,int> Pii;
+typedef vector<int> vi;
+int main(){
+	ll dp[10][10000]={{0}};
+	dp[0][0] = 1;
+	rep(i,101){
+		for(int j = 1000; j >= i; j--){
+			for(int k = 9; k > 0; k--){
+				dp[k][j] += dp[k-1][j-i];
+			}
+		}
+	}
+	int n,s;
+	while(scanf("%d%d",&n,&s),(n|s)){
+		printf("%d\n",dp[n][s]);
+	}
+	return 0;
+}

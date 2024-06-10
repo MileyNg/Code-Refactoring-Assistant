@@ -1,0 +1,40 @@
+#include<stdio.h>
+int teto(int,int);
+
+int a[25],n,ayana=0;
+
+int main(void){
+  int q,m[205],i;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&a[i]);
+  }
+  scanf("%d",&q);
+  for(i=0;i<q;i++){
+    scanf("%d",&m[i]);
+  }
+  for(i=0;i<q;i++){
+    teto(0,m[i]);
+    if(ayana==1){
+	printf("yes\n");
+    }
+    else{
+      printf("no\n");
+    }
+    ayana=0;
+  }
+
+  return 0;
+}
+
+int teto(int i,int x){
+  if(x==0){
+    ayana=1;
+    return 1;
+  }
+  else if(i<n){
+    teto(i+1,x-a[i]);
+    teto(i+1,x);
+  }
+  return 0;
+}

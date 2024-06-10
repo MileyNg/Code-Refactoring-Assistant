@@ -1,0 +1,40 @@
+
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i,count = 0;
+	char compare[11] = {0},text[1001] = {0};
+	scanf("%s",&compare);
+
+	for(i=0;i<strlen(compare) ;i++)
+	{
+		if('A' <= compare[i] && compare[i] <= 'Z')
+		{
+			compare[i] += ('a'-'A');
+		}
+	}
+
+	while(1)
+	{
+		scanf("%s",&text);
+		if(strcmp(text,"END_OF_TEXT") == 0)
+		{
+			break;
+		}
+		for(i=0 ;i<strlen(text);i++)
+		{
+			if('A' <= text[i] && text[i] <= 'Z')
+			{
+				text[i] += ('a'-'A');
+			}
+		}
+		if(strcmp(compare,text) == 0)
+		{
+			count++;
+		}
+	}
+	printf("%d\n",count);
+	return 0;
+}

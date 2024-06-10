@@ -1,0 +1,32 @@
+#include<cstdio>
+#include<cstdlib>
+#include<algorithm>
+using namespace std;
+
+int n,m,suma,sumb;
+int data[21];
+
+void dfs(int a, int b,int cnt){
+  suma+=a;
+  sumb+=b;
+  if(cnt==n){ 
+    m=min(m,abs(suma-sumb));
+  }else{
+    dfs(data[cnt],0,cnt+1);
+    dfs(0,data[cnt],cnt+1);
+  }
+  suma-=a;
+  sumb-=b;
+}
+int main(){
+  while(1){
+    scanf("%d",&n);
+    if(!n) break;
+    m=10000000,suma=sumb=0;
+    for(int i=0;i<n;i++)
+      scanf("%d",&data[i]);
+    dfs(0,0,0);
+    printf("%d\n",m);
+  }
+  return 0;
+}

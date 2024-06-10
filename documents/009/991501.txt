@@ -1,0 +1,27 @@
+#include<iostream>
+using namespace std;
+int main(){
+	int a,b,c,d,n,ans;
+	cin>>n;
+	for(int i=0;i<n;i++){
+		ans=0;
+		cin>>a>>b>>c>>d;
+		ans+=a*c+b*d;
+		if(c>=5 && d>=2){
+			ans=ans*0.8;
+		}
+		else if(c>=5 && d<2){
+			if(ans>(a*c+b*2)*0.8)
+			ans=(a*c+b*2)*0.8;
+		}
+		else if(c<5 && d>=2){
+			if(ans>(a*5+b*d)*0.8)
+			ans=(a*5+b*d)*0.8;
+		}else{
+			if(ans>(a*5+b*2)*0.8)
+			ans=(a*5+b*2)*0.8;
+		}
+		cout<<ans<<endl;
+	}
+	return 0;
+}

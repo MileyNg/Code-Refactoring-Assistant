@@ -1,0 +1,108 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define MAX_V 1 << 10
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+double cost[MAX_V][MAX_V];
+double d[MAX_V];
+int prev[MAX_V];
+bool used[MAX_V];
+int n;
+
+void dijkstra(int s){
+  fill(d, d + n, INF);
+  fill(used, used + n, false);
+  fill(prev, prev + n, -1);
+  d[s] = 0;
+
+  while(true){
+    int v = -1;
+    rep(u, n){
+      if(!used[u] && (v == -1 || d[u] < d[v])) v = u;
+    }
+
+    if(v == -1) break;
+    used[v] = true;
+
+    rep(u, n){
+      if(d[u] > d[v] + cost[v][u]){
+	d[u] = d[v] + cost[v][u];
+	prev[u] = v;
+      }
+    }
+  }
+}
+
+vi get_path(int t){
+  vi path;
+  for(; t != -1; t = prev[t]) path.push_back(t);
+  reverse(path.begin(), path.end());
+  return path;
+}
+
+int main(){
+  while(scanf("%d", &n) && n){
+    int b;
+    double x[MAX_V], y[MAX_V];
+    rep(i, n){
+      scanf("%d", &b); b--;
+      scanf("%lf%lf", &x[b], &y[b]);
+    }
+    rep(i, MAX_V) rep(j, MAX_V) cost[i][j] = INF;
+    rep(i, n) rep(j, n){
+      if(i == j) continue;
+      double dis = sqrt(pow(x[i]-x[j],2)+pow(y[i]-y[j],2));
+      if(dis > 50) continue;
+      cost[i][j] = dis;
+    }
+
+
+    int m;
+    scanf("%d", &m);
+    rep(i, m){
+      int s, g;
+      scanf("%d%d", &s, &g);s--;g--;
+      dijkstra(s);
+      /*      rep(i, n){
+	rep(j, n) if(cost[i][j]==INF) printf("INF"); else printf("%3.0lf", cost[i][j]);
+	puts("");
+      }
+      rep(i, n) printf("%lf ", d[i]); puts("");
+      rep(i, n) printf("%d ", (int)used[i]); puts("");
+      rep(i, n) printf("%d", prev[i]); puts("");*/
+      if(d[g] == INF){
+	puts("NA");
+      }else{
+	vi res = get_path(g);
+	//	printf("%d\n", (int)res.size());
+	rep(i, res.size()) printf(i?" %d":"%d", res[i]+1);
+	puts("");
+      }
+    }
+  }
+  return 0;
+}

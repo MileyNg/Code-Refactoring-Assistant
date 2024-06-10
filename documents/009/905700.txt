@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+int a[100][100];
+int main(){
+  int n, r, k, t;
+  scanf("%d", &n);
+  rep(i, n) rep(j, n) a[i][j] = 1<<16;
+  rep(i, n){
+    scanf("%d%d", &r, &k);r--;
+    rep(j, k){
+      scanf("%d", &t);t--;
+      a[r][t] = 1;
+    }
+  }
+
+  // solve
+  rep(i, n) rep(j, n) rep(k, n)
+    a[j][k] = min(a[j][k], a[j][i] + a[i][k]);
+
+  int p, s, d, v;
+  scanf("%d", &p);
+  rep(i, p){
+    scanf("%d%d%d", &s, &d, &v);s--;d--;
+    if(v - a[s][d]) printf("%d\n", a[s][d] + 1);
+    else puts("NA");
+  }
+
+  return 0;
+}

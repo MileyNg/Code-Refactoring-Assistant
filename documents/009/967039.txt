@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string input;
+    string symbol = "+*-/";
+    while(getline(cin, input)){
+        input += " ";
+        stack<double> st;
+        while(input.find_first_of(" ") != string::npos){
+            string s = input.substr(0, input.find_first_of(" "));
+            if(symbol.find(s) == string::npos){st.push(atoi(s.c_str()));}
+            else {
+                double n, m;
+                n = st.top(); st.pop();
+                m = st.top(); st.pop();
+                if(s == "+") m += n;
+                else if(s == "-") m -= n;
+                else if(s == "*") m *= n;
+                else if(s == "/") m /= n;
+
+                st.push(m);
+            }
+            input = input.substr(input.find_first_of(" ")+1);
+        }
+        printf("%lf\n", st.top());
+    }
+}

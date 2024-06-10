@@ -1,0 +1,27 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main(){
+  int nn,pp;
+  while(cin >> nn >> pp,nn || pp){
+    int i;
+    vector<int>n(50),p(50);
+    int wan=pp;
+    for(i=0;;i++){
+      if(i==nn)
+	i=0;
+      if(wan==0){
+	wan=n[i];
+	n[i]=0;
+      }else{
+	wan--;
+	n[i]++;
+      }
+      if(pp==n[i])
+	break;
+    }
+    cout << i << endl;
+
+  }
+}

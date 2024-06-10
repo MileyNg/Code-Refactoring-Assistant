@@ -1,0 +1,39 @@
+#include <iostream>
+
+using namespace std;
+
+
+int sum(int N){
+    return N * (N+1) / 2;
+}
+// return sum of [s..t]
+int sum_up(int s,int t){
+    return sum(t) - sum(s-1);
+}
+
+int solve(int N){
+    int s = 1;
+    int t = 2;
+    int ret = 0;
+
+    while(s != N){
+        if(sum_up(s,t) >= N){
+            if(sum_up(s,t) == N){
+                ret++;
+            }
+            s++;
+        }else{
+            t++;
+        }
+    }
+    return ret;
+}
+
+int main(int argc,char** argv){
+    while(true){
+        int n;cin >> n;
+        if(n == 0) break;
+        cout << solve(n) << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+#define X real()
+#define Y imag()
+
+typedef double D;
+D EPS = 1e-8;
+
+typedef complex<D> P;
+struct L{
+    P a, b;
+    P vec(){ return b - a; }
+};
+typedef vector<P> Pol;
+
+int sig(D a) { return a < -EPS ? -1 : a > EPS ? 1 : 0; }
+D dot(P a, P b){ return a.X * b.X + a.Y * b.Y; }
+D cross(P a, P b){ return a.X * b.Y - a.Y * b.X; }
+
+D area(Pol pol) {
+    int n = pol.size();
+    D res = 0;
+    REP(i, n) {
+        res += cross(pol[i], pol[ (i + 1) % n ]);
+    }
+    return abs(res) / 2.0;
+}
+
+// 2点a, bを通る半径rの円の中心
+vector<P> tc2(P a, P b, D r){
+    vector<P> res;
+
+    D d = abs(b - a);
+    if(d > 2 * r) return res;
+
+    P mid = 0.5 * (a + b);
+    P dir = polar(sqrt(r * r - d * d / 4), arg(b - a) + M_PI / 2);
+    res.push_back(mid + dir);
+    res.push_back(mid - dir);
+    return res;
+}
+
+int main(){
+    int N;
+    while(cin >> N && N > 0) {
+        vector<P> ps(N);
+        REP(i, N) {
+            D x, y;
+            cin >> x >> y;
+            ps[i] = P(x, y);
+        }
+
+        int ans = 0;
+        REP(i, N) REP(j, N) if(i != j) {
+            vector<P> cv = tc2(ps[i], ps[j], 1.0);
+            for(auto c : cv) {
+                int sum = 0;
+                REP(k, N) {
+                    if(sig(abs(c - ps[k]) - 1.0) <= 0) {
+                        sum++;
+                    }
+                }
+                ans = max(ans, sum);
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

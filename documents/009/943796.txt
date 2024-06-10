@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int AN, BN, R, XA, YA, XB, YB;
+
+int main() {
+    ios::sync_with_stdio(false);
+    while (1) {
+        cin >> AN >> BN >> R;
+        if ( ! AN && ! BN && ! R) break;
+
+        vector<long long> xy;
+        for (int i=0; i<AN; ++i) {
+            cin >> XA >> YA;
+            xy.push_back(XA * 100000 + YA);
+        }
+        sort(begin(xy), end(xy));
+
+        int ans = 0;
+        for (int i=0; i<BN; ++i) {
+            cin >> XB >> YB;
+            auto begin_it = lower_bound(begin(xy), end(xy), XB-4*R);
+            auto end_it = upper_bound(begin(xy), end(xy), XB+4*R);
+            for (auto it=begin_it; it!=end_it; ++it) {
+                int x = *it / 100000;
+                int y = *it % 100000;
+                ans += ((x - XB) * (x - XB) + (y - YB) * (y - YB) <= (4 * R) * (4 * R));
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

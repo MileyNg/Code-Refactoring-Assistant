@@ -1,0 +1,63 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int main(){
+
+	int n;
+	int d;
+	int md;
+	int inum;
+	int sum;
+	int cha;
+	string s;
+	string snum;
+	vector<int> hyo[1000];
+
+	cin>>n;
+
+	for(int i=0;i<n;i++){
+		cin>>s;
+		d=0;
+		md=0;
+		for(int i=0;i<s.size();i++){
+			if(s[i]=='[') d++,md=d;
+			else if(s[i]==']') d--;
+			else{
+				snum=("");
+				while(1){
+					if(s[i]=='['||s[i]==']') break;
+					snum+=s[i];
+					i++;
+				}
+				i--;
+				inum=0;
+				for(int j=0;j<snum.size();j++) inum+=(snum[j]-'0')*pow(10.0,(double)snum.size()-1-j);
+				hyo[d].push_back(inum);
+			}
+			if(d<=md-2){
+				if(d==md-2) cha=2;
+				else cha=1;
+				sort(hyo[d+2].begin(),hyo[d+2].end());
+				sum=0;
+				for(int j=0;j<hyo[d+2].size()/2+1;j++){
+					sum+=hyo[d+2][j]/cha;
+					if(cha==2) sum++;
+				}
+				hyo[d+2].clear();
+				hyo[d+1].push_back(sum);
+			}
+		}
+		sum=0;
+		for(int j=0;j<hyo[1].size()/2+1;j++){
+			sum+=hyo[1][j];
+		}
+		cout<<sum<<endl;
+		for(int j=0;j<1000;j++){
+			if(!hyo[j].empty()) hyo[j].clear();
+		}
+	}
+}

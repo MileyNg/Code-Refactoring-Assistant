@@ -1,0 +1,41 @@
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <string>
+
+
+#define range(i,a,b) for(int (i)=a;(i)<(b);(i)++)
+#define rep(i,n) range(i,0,n)
+
+using namespace std;
+
+int main(void){
+	int m;
+	cin >> m;
+	rep(i,m){
+		string a;
+		cin >> a;
+		int n=a.size();
+		set<string> com;
+		rep(j,n-1){
+			string pro=a.substr(0,j+1);
+			string pos=a.substr(j+1,n-(j+1));
+			string rpro=pro;
+			string rpos=pos;
+			reverse(rpro.begin(),rpro.end());
+			reverse(rpos.begin(),rpos.end());
+			com.insert(pro+pos);
+			com.insert(rpro+pos);
+			com.insert(pro+rpos);
+			com.insert(rpro+rpos);
+
+			com.insert(pos+pro);
+			com.insert(rpos+pro);
+			com.insert(pos+rpro);
+			com.insert(rpos+rpro);
+
+		}
+		cout << com.size() << endl;
+	}
+	return 0;
+}

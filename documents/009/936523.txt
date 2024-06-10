@@ -1,0 +1,328 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<complex>
+#include<queue>
+#include<map>
+#include<set>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#ifdef __BORLANDC__
+	typedef __int64 ll;
+#else
+	typedef long long ll;
+#endif
+
+#define xx real()
+#define yy imag()
+
+typedef complex<int> Point;
+
+typedef pair<int,int> pii;
+typedef pair<pii,pii> Body;
+Body mkBody(int a,int b,int c,int d){
+	pair<pii,pii> ret;
+	ret.first = pii(a,b);
+	ret.second = pii(c,d);
+	return ret;
+}
+
+class Hexwamp{
+	public:
+	static const int blen = 7;
+	int x1,x2,y1,y2;
+	int count;
+	
+	Hexwamp(){
+		x1=0;x2=0;y1=0;y2=0;
+		count=0;
+	}
+	void add(Point p){
+		write(p,count);
+		count++;
+	}
+	void write(Point p, int count){
+		p = Point(p.real()+64, p.imag()+64);
+		if(count<4){
+			int c = count;
+			x1 &= ~(127<<(c*blen));
+			y1 &= ~(127<<(c*blen));
+			x1 |= (p.real()<<(c*blen));
+			y1 |= (p.imag()<<(c*blen));
+		}else{
+			int c = count-4;
+			x2 &= ~(127<<(c*blen));
+			y2 &= ~(127<<(c*blen));
+			x2 |= (p.real()<<(c*blen));
+			y2 |= (p.imag()<<(c*blen));
+		}
+	}
+	Point read(int count){
+		int x,y;
+		if(count<4){
+			int c = count;
+			x = (x1&(127<<(c*blen)))>>(c*blen);
+			y = (y1&(127<<(c*blen)))>>(c*blen);
+		}else{
+			int c = count-4;
+			x = (x2&(127<<(c*blen)))>>(c*blen);
+			y = (y2&(127<<(c*blen)))>>(c*blen);
+		}
+		x-=64;
+		y-=64;
+		return Point(x,y);
+	}
+	void print(){
+		rep(i,count){
+			Point pt = read(i);
+			printf("(%d,%d)",pt.real(),pt.imag());
+		}puts("");
+	}
+	void printbit(int arg){
+		for(int i=31;i>=0;i--)printf("%d",(arg&(1<<i))>0);
+	}
+	Body getBody(){
+		return mkBody(x1,y1,x2,y2);
+	}
+	void setBody(Body body){
+		x1 = body.first.first;
+		y1 = body.first.second;
+		x2 = body.second.first;
+		y2 = body.second.second;
+	}
+	Hexwamp getForm(){
+		Hexwamp copy;
+		Point st = read(0);
+		rep(i,count){
+			copy.add(read(i)-st);
+		}
+		return copy;
+	}
+};
+
+class PointComp{
+	public:
+	bool operator()(const Point& a, const Point& b){
+		if(a.real()==b.real())return a.imag()<b.imag();
+		return a.real()<b.real();
+	}
+};
+class PairPointComp{
+	public:
+	typedef pair<Point,Point> ppp;
+	bool operator()(const ppp&a, const ppp& b){
+		if(a.first==b.first)return PointComp()(a.second,b.second);
+		return PointComp()(a.first,b.first);
+	}
+};
+
+const int sh = 5;
+
+Point memoTriMove[10][10][10][10];
+Point getTriMove(Point a,Point b,Point c){
+	Point st = b;
+	a-=st; b-=st; c-=st;
+	
+	Point pt = memoTriMove[a.xx+sh][a.yy+sh][c.xx+sh][c.yy+sh];
+	return pt+st;
+}
+Point setTriMove(){
+	Point pt[6]={Point(1,0),Point(1,-1),Point(0,-1),Point(-1,0),Point(-1,1),Point(0,1)};
+	for(int i=0;i<6;i++){
+		Point a = pt[i];
+		Point b = pt[(i+1)%6];
+		Point c = pt[(i+2)%6];
+		memoTriMove[a.xx+sh][a.yy+sh][c.xx+sh][c.yy+sh] = b;
+		memoTriMove[c.xx+sh][c.yy+sh][a.xx+sh][a.yy+sh] = b;
+	}
+}
+
+Point memoDualMove[10][10][2];
+Point getDualMove(Point a,Point b,int mode){
+	Point st = b;
+	a-=st; b-=st;
+	
+	Point pt = memoDualMove[a.xx+sh][a.yy+sh][mode];
+	//cout<<"DUAL  a"<<a<<" b"<<b<<" m"<<mode<<" pt"<<pt<<" ret"<<pt+st<<endl;
+	return pt+st;
+}
+Point setDualMove(){
+	Point pt[6]={Point(1,0),Point(1,-1),Point(0,-1),Point(-1,0),Point(-1,1),Point(0,1)};
+	for(int i=0;i<6;i++){
+		Point a = pt[i];
+		Point b = pt[(i+1)%6];
+		Point c = pt[(i+2)%6];
+		memoDualMove[a.xx+sh][a.yy+sh][0] = b;
+		memoDualMove[c.xx+sh][c.yy+sh][1] = b;
+	}
+}
+
+void init(){
+	setTriMove();
+	setDualMove();
+}
+Point d[6]={Point(1,0),Point(1,-1),Point(0,-1),Point(-1,0),Point(-1,1),Point(0,1)};
+
+int main(){
+	init();
+	
+	A:;
+	Hexwamp h;
+	
+	// input hexwamp
+	int n; cin>>n;
+	if(n==0)return 0;
+	
+	vector<Point> hexpos;
+	rep(i,n){
+		int a,b;
+		cin>>a>>b;
+		hexpos.push_back(Point(a,b));
+	}
+	
+	// input rock
+	int m; cin>>m;
+	vector<Point> rpos;
+	rep(i,m){
+		int a,b;
+		cin>>a>>b;
+		rpos.push_back(Point(a,b));
+	}
+	
+	// input end
+	int enx,eny; cin>>enx>>eny;
+	Point end = Point(enx,eny);
+	
+	// shift hexwamp
+	rep(i,n)h.add(hexpos[i]-end);
+	
+	// shift rock
+	map<Point,int,PointComp> rock;
+	rep(i,m){
+		rock[rpos[i]-end]=1;
+	}
+	
+	typedef pair<Hexwamp,int> P;
+	queue<P> que;
+	que.push(P(h,0));
+	
+	map<Body,int> visit;
+	map<Body,vector<Body> > moves;
+	
+	while(1){
+		if(que.empty())break;
+		
+		P u = que.front();
+		que.pop();
+		
+		Hexwamp def = u.first;
+		Hexwamp form = def.getForm();
+		
+		if(visit[def.getBody()]==1)continue;
+		visit[def.getBody()]=1;
+		
+		Point head = def.read(0);
+		if(head.xx>(20-u.second) || head.xx<-(20-u.second) || head.yy>(20-u.second) || head.yy<-(20-u.second))continue;
+		
+		//printf("%d ",u.second);def.print();
+		
+		if(head==Point(0,0)){
+			printf("%d\n",u.second);
+			break;
+		}
+		
+		vector<Body> move = moves[form.getBody()];
+		if(move.size()==0){	
+			for(int i=0;i<(1<<n);i++){
+				Hexwamp wamp;
+				wamp.x1 = form.x1; wamp.y1 = form.y1;
+				wamp.x2 = form.x2; wamp.y2 = form.y2;
+				wamp.count = def.count;
+				
+				bool flg = true;
+				for(int j=0;j<n-1;j++)if((i&(1<<j))>0 && (i&(1<<(j+1)))>0)flg = false;
+				if(!flg)continue;
+				
+				for(int j=1;j<n-1;j++){
+					if((i&(1<<j))>0){
+						Point pt = getTriMove(wamp.read(j-1), wamp.read(j), wamp.read(j+1));
+						if(pt==wamp.read(j))flg = false;
+						wamp.write(pt,j);
+					}
+				}
+				if(!flg)continue;
+				
+				map<pair<Point,Point>,int,PairPointComp> visit2;
+				for(int j=0;j<2;j++){
+					for(int k=0;k<2;k++){
+						Point pt1 = getDualMove(wamp.read(0),wamp.read(1),j);
+						Point pt2 = getDualMove(wamp.read(n-1),wamp.read(n-2),k);
+						
+						if((i&(1<<0))==0)pt1 = form.read(0);
+						if((i&(1<<(n-1)))==0)pt2 = form.read(n-1);
+						
+						pair<Point,Point> key(pt1,pt2);
+						if(visit2[key]==1)continue;
+						visit2[key]=1;
+						
+						wamp.write(pt1,0);
+						wamp.write(pt2,n-1);
+						
+						bool rflg = true;
+						rep(p,n){
+							int count = 0;
+							rep(t,n)rep(c,6)if(wamp.read(p)==wamp.read(t)+d[c])count++;
+							if((p==0 || p==n-1)&&count>=2)rflg=false;
+							if(count>=3)rflg=false;
+						}
+						
+						if(rflg)move.push_back(wamp.getBody());
+						wamp.write(form.read(0),0);
+						wamp.write(form.read(n-1),n-1);
+					}
+				}
+			}
+			moves[form.getBody()] = move;
+		}
+		
+		rep(i,move.size()){
+			Hexwamp w;
+			w.setBody(move[i]);
+			
+			Hexwamp next;
+			Point head = def.read(0);
+			bool flg = true;
+			rep(j,n){
+				Point p = w.read(j)+head;
+				if(rock.find(p)!=rock.end())flg=false;
+				next.add(p);
+			}
+			if(flg)que.push(P(next,u.second+1));
+		}
+	}
+	
+	goto A;
+	
+}
+
+/*
+8
+-6 0
+-5 0
+-4 0
+-3 0
+-2 0
+-1 0
+0 0
+1 0
+1
+-1 1
+0 0
+0
+
+*/

@@ -1,0 +1,23 @@
+criteria =
+  [["AAA", 35.5, 71.0],
+   ["AA",  37.5, 77.0],
+   ["A",   40.0, 83.0],
+   ["B",   43.0, 89.0],
+   ["C",   50.0, 105.0],
+   ["D",   55.0, 116.0],
+   ["E",   70.0, 148.0]]
+
+while (line = gets)
+  t500, t1000 = line.chomp.split(" ").map{|s| s.to_f}
+
+  rank = "NA"
+
+  for cr in criteria
+    if t500 < cr[1] && t1000 < cr[2]
+      rank = cr[0]
+      break
+    end
+  end
+
+  puts rank
+end

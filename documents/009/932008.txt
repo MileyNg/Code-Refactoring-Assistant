@@ -1,0 +1,66 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+int main() {
+  int MAX;
+  while(cin >>MAX && MAX){
+    int N; cin >>N;
+    vector<int> v(N + 2, 0); FOR(i, 1, N + 1) cin >>v[i];
+    //debug
+    //REP(i, v.size()) cout <<v[i] <<" "; cout <<endl;
+    queue<int> open;
+    open.push(0);
+    vector<bool> closed(N + 1, false);
+    bool isOK = false;
+    while(!open.empty()){
+      int now = open.front(); open.pop();
+      //cout <<now <<", " <<v[now] <<endl;
+      if(now == N + 1){
+        isOK = true;
+        break;
+      }
+      if(closed[now]) continue;
+      closed[now] = true;
+
+      if(v[now] == 0){
+        FOR(i, now + 1, min(N + 1, now + MAX) + 1){
+          if(!closed[i]){
+            //cout <<"    push " <<i <<endl;
+            open.push(i);
+          }
+        }
+      } else if(v[now] < 0){
+        int next = max(0, now + v[now]);
+        if(!closed[next]) open.push(next);
+      } else if(v[now] > 0){
+        int next = min(N + 1, now + v[now]);
+        if(!closed[next]) open.push(next);
+      }
+    }
+    cout <<(isOK ? "OK" : "NG") <<endl;
+  }
+  return 0;
+}

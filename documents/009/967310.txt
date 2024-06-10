@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+
+int C[10001]={0};
+
+
+
+void  Counting_Sort(int A[],int n,int k){
+    
+    int i,j;
+    int B[n];
+    
+    for(i=0;i<k;i++){
+        C[i]=0;
+    }
+    
+    for(j=1;j<=n;j++){
+        C[A[j]]++;
+    }
+    
+    for(i=1;i<=k;i++){
+        C[i]=C[i]+C[i-1];
+    }
+    
+    for(j=n;j>=1;j--){
+        B[C[A[j]]] = A[j];
+        C[A[j]]--;
+    }
+    
+    for(i=1;i<n;i++){
+        printf("%d ",B[i]);
+    }
+    printf("%d\n",B[n]);
+    /**/
+}
+
+
+
+
+
+
+
+
+int main(int argc, char *argv[]){
+    int n,k=0;
+    int i,j;
+    int A[2000001];
+    
+    
+    scanf("%d",&n);
+   
+    
+    
+   if(1>n || n>2000000)return 0;
+   
+    
+    
+    /* incert */
+    for(i=1;i<=n;i++){
+        scanf("%d",&A[i]);
+        if(A[i]>=k)k=A[i];
+    }
+    
+    int B[n];
+    Counting_Sort(A,n,k);
+    return 0;
+    
+}

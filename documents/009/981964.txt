@@ -1,0 +1,64 @@
+#include<iostream>
+#include<set>
+#include<utility>
+#include<valarray>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+valarray<int> braces(string s){
+  valarray<int> va(3);
+  for(auto e:s){
+    va[0]+=(e=='(')-(e==')');
+    va[1]+=(e=='{')-(e=='}');
+    va[2]+=(e=='[')-(e==']');
+  }
+  return va;
+}
+
+int main(){
+  for(int p,q;cin>>p>>q,p;){
+    vector<pair<valarray<int>,int> > v;
+    valarray<int> va(3);
+    for(int i=0;i<p;i++){
+      string s;
+      cin>>s;
+      v.emplace_back(va,find_if(begin(s),end(s),[](char c){
+	    return c!='.';
+	  })-begin(s));
+      va+=braces(s);
+    }
+    vector<vector<int> > fact;
+    for(int i=1;i<=20;i++){
+      for(int j=1;j<=20;j++){
+	for(int k=1;k<=20;k++){
+	  bool f=false;
+	  for(auto e:v){
+	    auto cva=e.first;
+	    f|=cva[0]*i+cva[1]*j+cva[2]*k!=e.second;
+	  }
+	  if(!f){
+	    fact.push_back({i,j,k});
+	  }
+	}
+      }
+    }
+    valarray<int> rva(3);
+    while(q--){
+      set<int> cand;
+      for(auto e:fact){
+	cand.insert(e[0]*rva[0]+e[1]*rva[1]+e[2]*rva[2]);
+      }
+      cout<<((cand.size()==1)?*begin(cand):-1)<<" \n"[q==0];
+      string s;
+      cin>>s;
+      rva+=braces(s);
+    }
+  }
+}
+      
+      
+	
+    
+    

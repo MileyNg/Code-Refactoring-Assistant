@@ -1,0 +1,60 @@
+#include <iostream>
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+const double fiv_t[] = {
+    35.5,
+    37.5,
+    40,
+    43,
+    50,
+    55,
+    70
+};
+
+const double th_t[] = {
+    71,
+    77,
+    83,
+    89,
+    105,
+    116,
+    148
+};
+
+const string ss[] = {
+    "AAA",
+    "AA",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+};
+
+const int inf = 1<<30;
+
+int main(){
+    double a, b;
+    while(cin>>a>>b){
+        int fiv = inf;
+        int th = inf;
+        rep(i,7)if(a<fiv_t[i]){
+            fiv = i;
+            break;
+        }
+        rep(i,7)if(b<th_t[i]){
+            th =i;
+            break;
+        }
+        int ans = max(th,fiv);
+        if(ans == inf){
+            cout <<"NA"<<endl;
+        } else {
+            cout <<ss[ans]<<endl;
+        }
+    }
+    return 0;
+}

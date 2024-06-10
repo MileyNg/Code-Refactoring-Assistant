@@ -1,0 +1,138 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+
+
+template<class T>
+class BinomialHeap{
+	struct Tree{
+		T val;
+		Tree *child,*next;
+		Tree(){}
+		Tree(T &v):val(v),child(0),next(0){}
+		~Tree(){
+			if(child)delete child;
+			if(next)delete next;
+		}	
+	};
+	std::vector<Tree*> trees;
+	mutable int imax;
+
+	static Tree* add(Tree* a,Tree* b){
+		if(a->val > b->val){
+			b->next=a->child;
+			a->child=b;
+			return a;
+		}else{
+			a->next=b->child;
+			b->child=a;
+			return b;
+		}
+	}
+	void findmax()const{
+		for(int i=0;i<trees.size();i++)
+			if(trees[i] && (imax==-1||trees[i]->val > trees[imax]->val))
+				imax=i;
+	}
+	BinomialHeap(int n):trees(n){}
+public:
+	BinomialHeap():imax(-1){}
+	~BinomialHeap(){
+		clear();
+	}
+	//O(log n)
+	void meld(BinomialHeap &h){
+		imax=-1;
+		Tree* carry=NULL;
+		if(trees.size()<h.trees.size())trees.swap(h.trees);
+		for(int i=0;i<trees.size();i++){
+			if(carry){
+				if(i<h.trees.size() && h.trees[i]){
+					carry=add(carry,h.trees[i]);
+				}else if(trees[i]){
+					carry=add(carry,trees[i]);
+					trees[i]=NULL;
+				}else{
+					trees[i]=carry;
+					carry=NULL;
+				}
+			}else if(i<h.trees.size() && h.trees[i]){
+				if(trees[i]){
+					carry=add(trees[i],h.trees[i]);
+					trees[i]=NULL;	
+				}else{
+					trees[i]=h.trees[i];
+				}
+			}
+		}
+		h.trees.clear();
+		if(carry)trees.push_back(carry);
+	}
+	//O(log n)
+	void push(T &v){
+		imax=-1;
+		BinomialHeap h(1);
+		h.trees[0]=new Tree(v);
+		meld(h);
+	}
+	T getmax()const{
+		if(imax==-1)findmax();
+		return trees[imax]->val;
+	}
+	void popmax(){
+		if(imax==-1)findmax();
+		if(imax==0){
+			delete trees[0];
+			trees[0]=NULL;
+		}else{
+			BinomialHeap h(imax);
+			Tree *p,*t=trees[imax]->child;
+			int i=imax;
+			while(t){
+				h.trees[--i]=t;
+				p=t;
+				t=t->next;
+				p->next=NULL;
+			}
+			trees[imax]->child=NULL;
+			delete trees[imax];
+			trees[imax]=NULL;
+			meld(h);
+		}
+		while(!trees.empty() && trees.back()==NULL)trees.pop_back();
+		imax=-1;
+	}
+	bool empty()const{
+		return trees.empty();
+	}
+	void clear(){
+		imax=-1;
+		for(int i=0;i<trees.size();i++)
+			if(trees[i])delete trees[i];
+		trees.clear();
+	}
+	//void remove(int id){}
+	//decrease_key remove(int id,T v){}
+};
+
+using namespace std;
+
+
+int main(){
+	BinomialHeap<int> heap;
+	string s;
+	while(1){
+		cin>>s;
+		if(s=="end")break;
+		if(s=="insert"){
+			int n;
+			cin>>n;
+			heap.push(n);
+		}else if(s=="extract"){
+			cout<<heap.getmax()<<endl;
+			heap.popmax();
+		}
+	}
+	return 0;
+}

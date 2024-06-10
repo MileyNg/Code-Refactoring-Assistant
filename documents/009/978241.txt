@@ -1,0 +1,21 @@
+import std.algorithm;
+import std.conv;
+import std.stdio;
+import std.string;
+
+void main() {
+  string[] b_type = [ "A", "B", "AB", "O" ];
+  int[string] b_counter;
+  foreach (b; b_type) {
+    b_counter[b] = 0;
+  }
+
+  foreach (string line; stdin.lines) {
+    string b = line.chomp.split(",")[1];
+    b_counter[b]++;
+  }
+
+  foreach (b; b_type) {
+    b_counter[b].writeln;
+  }
+}

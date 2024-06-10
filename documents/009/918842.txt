@@ -1,0 +1,61 @@
+#include<cstdio>
+#include<string>
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+
+typedef pair<int,int> pii;
+
+const int M = 10010;
+int in1[M],in2[M],in3[M],in4[M];
+
+int main(){
+	
+	while(1){
+		int n,m;
+		cin>>n>>m;
+		if(n==0 && m==0)break;
+		
+		int t;
+		cin>>t;
+		
+		rep(i,t){
+			cin>>in1[i]>>in2[i]>>in3[i]>>in4[i];
+		}
+		
+		int y;
+		cin>>y;
+		
+		rep(i,y){
+			int a,b,c;
+			cin>>a>>b>>c;
+			
+			int pos=0;
+			int diff[2000]={0};
+			rep(j,t){
+				if(in3[j]==c){
+					if(in4[j]==0)diff[in1[j]]--;
+					else diff[in1[j]]++;
+				}
+			}
+			
+			int sum[2000]={0};
+			reps(j,1,2000){
+				sum[j] = sum[j-1]+diff[j];
+			}
+			
+			int cont=0;
+			reps(j,a,b){
+				if(sum[j]>0)cont++;
+			}
+			printf("%d\n",cont);
+		}
+	}
+}

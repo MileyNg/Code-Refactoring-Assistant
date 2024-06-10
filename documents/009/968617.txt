@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+ 
+int main() {
+    int m, f, r;
+    while (cin>>m>>f>>r,!(m==-1 && f==-1 && r==-1)) {
+        char ans;
+        if (m==-1 || f==-1) ans='F';
+        else if (m+f>=80) ans='A';
+        else if (65<=m+f && m+f<80) ans='B';
+        else if (50<=m+f && m+f<65) ans='C';
+        else if (30<=m+f && m+f<50) {
+            if (r>=50) ans='C';
+            else ans='D';
+        }
+        else if (m+f<30) ans='F';
+        cout << ans << endl;
+    }
+}

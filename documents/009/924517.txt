@@ -1,0 +1,100 @@
+#include<cstdio>
+#include<cstring>
+#include<cstdlib>
+#include<iostream>
+#include<algorithm>
+#include<sstream>
+#define maxn 100050
+using namespace std;
+
+  typedef struct yyy
+  {
+      int x;
+      char s[15];
+  }yyy;
+
+  char ch[15];
+  bool cmp(yyy x,yyy y )
+  {
+      int i=0,j=0,lx=strlen(x.s),ly=strlen(y.s);
+      while(i<lx&&i<ly)
+      {
+          if (x.s[i]>y.s[i]) return 0;
+          else if (x.s[i]<y.s[i]) return 1;
+          else i++;
+      }
+       if (lx>ly) return 0;
+       else return 1;
+  }
+
+  yyy A[maxn];
+  int B[maxn];
+  int p,n;
+  long long sum[maxn];
+
+  int lowbit(int x){return x&-x;}
+
+  void add(int x,int v)
+  {
+      while(x<=n)
+      {
+          sum[x]=(sum[x]+v)%p;
+          x+=lowbit(x);
+      }
+  }
+
+  long long getsum(int x)
+  {
+      long long Sum=0;
+      while(x>0)
+      {
+          Sum=(Sum+sum[x])%p;
+          x-=lowbit(x);
+      }
+      return Sum;
+  }
+
+
+  void f(int x,int s)
+  {
+      sprintf(A[x].s,"%d",s);
+  }
+
+  int main()
+  {
+      int a,b;
+      int i,x,j;
+      while(cin>>a>>b>>p&&a!=0)
+      {
+
+      memset(A,0,sizeof(A));
+      memset(B,0,sizeof(B));
+      memset(sum,0,sizeof(sum));
+          n=b-a+2;
+           for (i=a;i<=b;i++)
+           {
+               A[i-a+1].x=i-a+1;
+               f(i-a+1,i);
+           }
+
+           sort(A+1,A+b-a+2,cmp);
+           //for (i=1;i<=b-a+1;i++) cout<<A[i].x<<' '<<A[i].s<<endl;
+           for (i=1;i<=b-a+1;i++)
+             B[A[i].x]=i;
+
+           for (i=1;i<=b-a+1;i++)
+             {
+             add(B[i],getsum(B[i]-1)+1);
+             // for (j=1;j<=b-a+1;j++) cout<<sum[j]<<' ';
+              //cout<<endl;
+             }
+           long long Sum=getsum(b-a+1);
+           cout<<Sum<<endl;
+
+      }
+
+
+
+
+      return 0;
+  }

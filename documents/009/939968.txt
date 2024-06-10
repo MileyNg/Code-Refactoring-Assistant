@@ -1,0 +1,12 @@
+var mem = [];
+function fib(n) {
+	if (mem[n]) return mem[n];
+	if (n <= 1) return 1;
+	var ret = fib(n - 1) + fib(n - 2);
+	mem[n] = ret;
+	return ret;
+}
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var n = +input.trim();
+
+console.log(fib(n));

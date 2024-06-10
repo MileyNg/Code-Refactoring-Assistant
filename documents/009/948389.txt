@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a, b;
+	int n;
+
+	while (scanf("%d %d %d", &a, &b, &n) != EOF){
+		int integer = a / b;
+		double quo = (double)a / b - integer;
+		int i;
+		int sum = 0;
+
+		for (i = 1; i <= n; i++){
+			int f = quo * 10;
+
+			f %= 10;
+			sum += f;
+			quo = quo * 10 - f;
+		}
+		printf("%d\n", sum);
+	}
+
+	return 0;
+}

@@ -1,0 +1,36 @@
+#include<stdio.h>
+int N,K,C[100],i,j,m,n,t;
+
+int f()
+{
+	int i,j,r=-1;
+	for(i=j=0,t=1;i<=N-K;i++)
+		{
+			for(;j-i<K;j++)
+				t*=C[j];
+			r=r>t?r:t;
+			t/=C[i];
+		}
+	return r;
+}
+
+int main()
+{
+	for(;scanf("%d%d",&N,&K),N;)
+	{
+		m=n=-1;
+		for(i=0;i<N;i++)scanf("%d",&C[i]);
+		m=f();
+		for(i=0;i<N-1;i++)
+			for(j=i+1;j<N;j++)
+			{
+				C[i]^=C[j]^=C[i]^=C[j];
+				t=f();
+				n=n>t?n:t;
+				C[i]^=C[j]^=C[i]^=C[j];
+			}
+		if(n-m<0)puts("NO GAME");
+		else printf("%d\n",n-m);
+	}
+	return 0;
+}

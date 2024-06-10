@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+int Parent(int i){
+  return i/2;
+}
+ 
+int Left(int i){
+  return 2*i;
+}
+ 
+int Right(int i){
+  return 2*i+1;
+}
+ 
+int check(int n,int i){
+  if(n>=Right(i)) return 1;//右側もある
+  else if(n>=Left(i) && n<Right(i)) return 2;//右側がない
+  else if(n<Left(i)) return 3;//左側すらない（ラスハイ）
+}
+ 
+main(){
+  int n,i;
+  int *A;
+ 
+  scanf("%d",&n);
+ 
+  A=(int *)malloc((n+1)*sizeof(int));
+ 
+  for(i=1;i<=n;i++){
+	 scanf("%d",&A[i]);
+ }
+
+  for(i=1;i<=n;i++){
+    if(i==1){
+      if(check(n,i)==1) printf("node %d: key = %d, left key = %d, right key = %d, \n",i,A[i],A[Left(i)],A[Right(i)]);
+      else if(check(n,i)==2) printf("node %d: key = %d, left key = %d, \n",i,A[i],A[Left(i)]);
+      else if(check(n,i)==3) printf("node %d: key = %d, \n",i,A[i]);
+    }
+    else{
+      if(check(n,i)==1) printf("node %d: key = %d, parent key = %d, left key = %d, right key = %d, \n",i,A[i],A[Parent(i)],A[Left(i)],A[Right(i)]);
+      else if(check(n,i)==2) printf("node %d: key = %d, parent key = %d, left key = %d, \n",i,A[i],A[Parent(i)],A[Left(i)]);
+      else if(check(n,i)==3)printf("node %d: key = %d, parent key = %d, \n",i,A[i],A[Parent(i)]);
+    }
+  }
+ 
+  return 0;
+}

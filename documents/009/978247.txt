@@ -1,0 +1,14 @@
+import std.algorithm;
+import std.conv;
+import std.stdio;
+import std.string;
+
+void main() {
+  readln;
+
+  foreach (string line; stdin.lines) {
+    int max = line.chomp.split("").sort!("a > b").join.to!int;
+    int min = line.chomp.split("").sort!("a < b").join.to!int;
+    (max - min).writeln;
+  }
+}

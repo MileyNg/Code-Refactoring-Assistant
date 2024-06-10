@@ -1,0 +1,138 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+char tmp[1000];
+#define nextInt(n) scanf("%d",&n)
+#define nextLong(n) scanf("%lld",&n)//I64d
+#define nextDouble(n) scanf("%lf",&n)  
+#define nextChar(n) scanf("%c",&n)
+#define nextString(n) scanf("%s",tmp);n=tmp
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+
+ll MOD=1000000007;
+
+namespace SyntaxAnalysis{
+	typedef string::const_iterator Cursor;
+	
+	class ParseError{};
+	
+	map<char,int> vmap;
+	map<char,bool> used;
+
+	class Syntax{
+	public:
+		const string& s;
+		Cursor& c;
+		Syntax(const string& s,Cursor& c):s(s),c(c){}
+
+		ll expression(){
+			ll r=term();
+			if(c==s.end())return r;
+			if(*c=='<')return r;
+			c++;c++;
+			ll l =expression();	
+			return l>>min(r,31LL);
+		}
+
+		ll term(){
+			if(*c=='>'){
+				c++;
+				ll t=expression();
+				c++;c++;
+				return t*t%MOD;
+			}
+			ll v=number();//DUMP(v);
+			return v;
+		}
+		ll number(){
+		    stringstream ss;
+		    while(isdigit(*c)){
+		        ss << *c;c++;
+		    }
+		  	string tmp;ss>> tmp;ss.clear();reverse(ALL(tmp));ss<<tmp;
+			ll ret;ss >> ret;return ret;
+		}
+	};
+}
+using namespace SyntaxAnalysis;
+
+
+class Main{
+public:
+
+	string l;		
+	bool input(){
+		getline(cin,l);
+		if(l=="#")return false;
+		l.erase(remove(l.begin(), l.end(), ' '), l.end());//空白除去
+		return true;
+	}
+
+	void run(){
+		while(input()){
+			reverse(ALL(l));
+			Cursor s=l.begin();
+			Syntax sy(l,s);
+			cout <<sy.expression()<<endl;
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

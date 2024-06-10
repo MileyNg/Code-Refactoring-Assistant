@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Heap{
+private:
+ enum HEAPSIZE {SIZE = 250};
+ vector<long> node;
+public:
+ Heap(){
+  node.push_back(0);
+ };
+
+ void print(){
+  int n = node.size();
+  for(int i = 1; i < n; i++){ 
+   cout << "node " << i << ": ";
+   cout << "key = " << node[i] << ", ";
+   if(i != 1)
+    cout << "parent key = " << node[parent(i)] << ", ";
+   if(left(i) < n)
+    cout << "left key = " << node[left(i)] << ", ";
+   if(right(i) < n)
+    cout << "right key = " << node[right(i)] << ", ";
+   cout << endl;
+  }
+
+ };
+
+ void insert(long value){
+  node.push_back(value);
+ };
+
+ long parent(long num){
+  return (num / 2);
+ };
+
+ long left(long num){
+  return (num * 2);
+ };
+
+ long right(long num){
+  return (num * 2 + 1);
+ };
+ 
+protected:
+};
+
+int main(){
+ int n = 0; cin >> n;
+ Heap heap;
+
+ for(int i = 0; i < n; i++){
+  long num = 0; cin >> num;
+  heap.insert(num);
+ }
+
+ heap.print(); 
+ 
+ return 0;
+}

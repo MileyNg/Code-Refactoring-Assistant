@@ -1,0 +1,30 @@
+#include <iostream>
+
+int check_intersection(const double xa, const double ya, const double ra,
+                            const double xb, const double yb, const double rb)
+{
+    double distance = (xa - xb) * (xa - xb) + (ya - yb) * (ya - yb);
+    if(distance < ra * ra || distance < rb * rb){
+        if(ra > rb)
+            return -2;
+        else
+            return 2;
+    }
+    else if(distance > (ra + rb) * (ra + rb))
+        return 0;
+    else return 1;
+}
+
+int main ()
+{
+    double xa, ya, ra, xb, yb, rb;
+    u_int N;
+    
+    std::cin >> N;
+    for(u_int i = 0; i < N; ++i){
+        std::cin >> xa >> ya >> ra >> xb >> yb >> rb;
+        std::cout << check_intersection(xa, ya, ra, xb, yb, rb) << std::endl;
+    }
+    
+    return 0;
+}

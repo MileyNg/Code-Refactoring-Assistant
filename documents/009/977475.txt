@@ -1,0 +1,52 @@
+def v_sub(v, w)
+  return [v[0] - w[0], v[1] - w[1], v[2] - w[2]]
+end
+
+def i_prod(v, w)
+  return v[0] * w[0] + v[1] * w[1] + v[2] * w[2]
+end
+
+def o_prod(v, w)
+  px = v[1] * w[2] - v[2] * w[1]
+  py = v[2] * w[0] - v[0] * w[2]
+  pz = v[0] * w[1] - v[1] * w[0]
+  return [px, py, pz]
+end
+
+### main
+
+tf = "HIT"
+
+u = gets.chomp.split(" ").map{|s| s.to_f}
+e = gets.chomp.split(" ").map{|s| s.to_f}
+t0 = gets.chomp.split(" ").map{|s| s.to_f}
+t1 = gets.chomp.split(" ").map{|s| s.to_f}
+t2 = gets.chomp.split(" ").map{|s| s.to_f}
+
+eu = v_sub(e, u)
+v1 = v_sub(t1, t0)
+v2 = v_sub(t2, t0)
+
+nv = o_prod(v1, v2)
+
+u0 = v_sub(u, t0)
+e0 = v_sub(e, t0)
+
+u0n = i_prod(nv, u0)
+e0n = i_prod(nv, e0)
+
+if u0n * e0n <= 0
+  t = u0n.abs / (u0n.abs + e0n.abs)
+  cp = [t * eu[0] + u[0], t * eu[1] + u[1], t * eu[2] + u[2]]
+
+  op0 = i_prod(nv, o_prod(v_sub(t1, t0), v_sub(cp, t0)))
+  op1 = i_prod(nv, o_prod(v_sub(t2, t1), v_sub(cp, t1)))
+  op2 = i_prod(nv, o_prod(v_sub(t0, t2), v_sub(cp, t2)))
+
+  if (op0 >= 0 && op1 >= 0 && op2 >= 0) ||
+      (op0 <= 0 && op1 <= 0 && op2 <= 0)
+    tf = "MISS"
+  end
+end
+
+puts tf

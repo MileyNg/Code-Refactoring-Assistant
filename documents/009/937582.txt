@@ -1,0 +1,107 @@
+#include "stdio.h"
+
+int s[11111][11111];
+
+int main()
+{
+	while(1)
+	{
+		int n,r;
+		scanf("%d %d",&n,&r);
+		if(n == 0 && r == 0)
+		{
+			break;
+		}
+		for(int i = 0; i < 11111; i++)
+		{
+			for(int ii = 0; ii < 11111; ii++)
+			{
+				s[i][ii] = 0;
+			}
+		}
+		for(int i = 0; i < n; i++)
+		{
+			int x1,y1,x2,y2;
+			scanf("%d %d %d %d",&x1,&y1,&x2,&y2);
+			s[x1][y1]++;
+			s[x2][y2]++;
+			s[x1][y2]--;
+			s[x2][y1]--;
+		}
+		for(int i = 0; i < 11111; i++)
+		{
+			int now = 0;
+			for(int ii = 0; ii < 11111; ii++)
+			{
+				now += s[i][ii];
+				s[i][ii] = now;
+			}
+		}
+		for(int i = 0; i < 11111; i++)
+		{
+			int now = 0;
+			for(int ii = 0; ii < 11111; ii++)
+			{
+				now += s[ii][i];
+				s[ii][i] = now;
+			}
+		}
+		int all = 0;
+		for(int i = 0; i < 11111; i++)
+		{
+			for(int ii = 0; ii < 11111; ii++)
+			{
+				if(s[i][ii] > 0)
+				{
+					all++;
+				}
+			}
+		}
+		printf("%d\n",all);
+		all = 0;
+		if(r == 2)
+		{
+			for(int i = 0; i < 11110; i++)
+			{
+				for(int ii = 0; ii < 11110; ii++)
+				{
+					if(s[i][ii] != 0)
+					{
+						if(i != 0)
+						{
+							if(s[i - 1][ii] == 0)
+							{
+								all++;
+							}
+						}
+						else
+						{
+							all++;
+						}
+						if(ii != 0)
+						{
+							if(s[i][ii - 1] == 0)
+							{
+								all++;
+							}
+						}
+						else
+						{
+							all++;
+						}
+						if(s[i + 1][ii] == 0)
+						{
+							all++;
+						}
+						if(s[i][ii + 1] == 0)
+						{
+							all++;
+						}
+					}
+				}
+			}
+			printf("%d\n",all);
+		}
+	}
+	return 0;
+}

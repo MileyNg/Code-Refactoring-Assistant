@@ -1,0 +1,52 @@
+
+def strec(stocks, i)
+  st = stocks[i]
+  while ! st[2].nil?
+    st = st[2]
+  end
+  stocks[i] = st
+end
+
+def lay(n, stocks)
+  n = stocks.length
+  return 0 if n <= 1
+
+  ims = (1...n).map{|i| [i - 1, i]}
+
+  sum = 0
+  is = []
+
+  while ! ims.empty?
+    ims.each do |im|
+      st0 = strec(stocks, im[0])
+      st1 = strec(stocks, im[1])
+      im[2] = st0[0] * st1[1]
+      im[3] = st0[1] * st1[0]
+    end
+
+    im = ims.min do |a, b|
+      cmp = a[2] <=> b[2]
+      cmp != 0 ? cmp : b[3] <=> a[3]
+    end
+
+    ims.delete im
+    is << im
+
+    st0 = strec(stocks, im[0])
+    st1 = strec(stocks, im[1])
+
+    sum += im[2] * im[3]
+
+    st0[1] = st1[1]
+    st1[2] = st0
+  end
+
+  sum
+end
+
+### main
+
+n = gets.strip.to_i
+stocks = n.times.map{gets.strip.split(' ').map{|s| s.to_i}}
+
+puts lay(n, stocks)

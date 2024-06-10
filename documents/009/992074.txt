@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+define N 200000;
+
+void maxheap(int *,int);
+ 
+int main(int argc,char*argv[]) {
+    int *heap, key, index, half, tmp;
+    char cmd[20];
+ 
+    heap = malloc(sizeof(int) * N);
+    heap[0] = 1;
+    while (1) {
+        scanf("%s %d ", cmd, &key);
+        if (cmd[0] == 'i') {
+            heap[0]++;
+            index = heap[0];
+            heap[index] = key;
+ 
+            half = index / 2;
+            while (index > 1 && heap[half] < heap[index]) {
+                tmp = heap[index];
+                heap[index] = heap[half];
+                heap[half] = tmp;
+                index /= 2;
+                half = index / 2;
+            }
+        } else if (cmd[1] == 'x') {
+            printf("%d\n", heap[1]);
+            heap[1] = heap[heap[0]];
+            heap[0]--;
+            maxheapify(heap, 1);
+        } else {
+            return 0;
+        }
+    }
+    return 0;
+}
+
+void maxheap(int *heap, int i) {
+    int heapsize, l, r, largest, tmp;
+ 
+    heapsize = heap[0];
+    l = 2*i;
+    r = 2*i + 1;
+    if (l <= heapsize && heap[l] > heap[i]) {
+        largest = l;
+    } else {
+        largest = i;
+    }
+    if (r <= heapsize && heap[r] > heap[largest]) {
+        largest = r;
+    }
+    if (largest != i) {
+        tmp = heap[i];
+        heap[i] = heap[largest];
+        heap[largest] = tmp;
+        maxheap(heap, largest);
+    }
+}

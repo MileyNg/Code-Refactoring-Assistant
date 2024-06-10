@@ -1,0 +1,41 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  for(int n,d;cin>>n>>d,n;){
+    vector<int> c[100];
+    int s[100]={};
+    int nm=0;
+    for(int i=0;i<n;i++){
+      int m;
+      cin>>m;
+      c[i].resize(m);
+      for(int j=0;j<m;j++){
+	cin>>c[i][j];
+	nm++;
+	s[i]+=c[i][j];
+      }
+    }
+    if(n==1){
+      nm=0;
+    }
+    for(;nm;nm--){
+      vector<int> v(begin(s),begin(s)+n);
+      sort(v.rbegin(),v.rend());
+      for(int i=0;i<n;i++){
+	if(!v.empty()&&((s[i]==v[0])?v[1]:v[0])-(s[i]-c[i].back())<=d){
+	  s[i]-=c[i].back();
+	  c[i].pop_back();
+	  goto next;
+	}
+      }
+      break;
+    next:
+      ;
+    }
+    cout<<(nm?"No":"Yes")<<endl;
+  }
+}

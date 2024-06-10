@@ -1,0 +1,74 @@
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <memory>
+#include <vector>
+using namespace std;
+
+struct node_t {
+	string name;
+	int x1, y1, x2, y2;
+	int size;
+	vector<unique_ptr<node_t>> children;
+
+	node_t(const string &name_, int x1_, int y1_, int x2_, int y2_):
+		name(name_), x1(x1_), y1(y1_), x2(x2_), y2(y2_), size(1) {}
+
+	bool in(int x, int y) const {
+		return x1 <= x && x <= x2 && y1 <= y && y < y2;
+	}
+
+	string click(int x, int y) const {
+		for(const auto &child : children) {
+			if(child->in(x, y)) return child->click(x, y);
+		}
+		return name + " " + to_string(children.size());
+	}
+
+	void add_child(unique_ptr<node_t> &&child) {
+		children.emplace_back(move(child));
+	}
+};
+
+int get_int(string::const_iterator &it) {
+	int res = 0;
+	while(isdigit(*(++it))) res = res * 10 + *it - '0';
+	return res;
+}
+
+unique_ptr<node_t> parse(string::const_iterator &it) {
+	string name = "";
+	while(isalpha(*(++it))) name += *it;
+	const int x1 = get_int(it);
+	const int y1 = get_int(it);
+	const int x2 = get_int(it);
+	const int y2 = get_int(it);
+
+	unique_ptr<node_t> res(new node_t(name, x1, y1, x2, y2));
+	while(*(it + 1) != '/') res->add_child(parse(it));
+
+	it += name.size() + 3; // "</name>"
+	return res;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		string tags;
+		cin >> tags;
+
+		auto it = tags.cbegin();
+		const auto root = parse(it);
+
+		for(int i = 0; i < n; ++i) {
+			int x, y;
+			cin >> x >> y;
+
+			cout << (root->in(x, y) ? root->click(x, y) : "OUT OF MAIN PANEL 1") << "\n";
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

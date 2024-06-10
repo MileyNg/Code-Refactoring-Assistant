@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+char str;
+int num[22485760];
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    int x,y;
+    int t=n;
+    int i=0;
+    int sum1=0;
+    int sum2=0;
+    memset(num,0,sizeof(num));
+    int max=0;
+    while(i<n)
+    {
+        i++;
+        scanf("%d %c %d",&x,&str,&y);
+        if(x>max)
+            max=x;
+        if(str=='(')
+            num[x]=num[x]+y;
+        else
+        num[x]=num[x]-y;
+
+        int j=0;
+       while(j<=max)
+       {
+
+           if(num[j]+num[x]==0)
+           {
+               printf("Yes\n");
+               num[j]=0;
+               num[x]=0;
+               break;
+           }
+            j++;
+
+       }
+       if(j>max)
+        printf("No\n");
+
+
+    }
+}

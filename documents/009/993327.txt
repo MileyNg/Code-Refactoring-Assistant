@@ -1,0 +1,164 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+#define tpl(...) make_tuple(__VA_ARGS__)
+const int INF = 0x3f3f3f3f;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
+template<class T>ostream&operator<<(ostream &o,const vector<T>&t){o<<'[';FOR(i,t){if(i!=t.begin())o<<',';o<<*i;}return o<<']';}
+template<class S,class T>ostream&operator<<(ostream &o,const pair<S,T>&t){return o<<'('<<t.first<<','<<t.second<<')';}
+template<int N,class Tp>void out(ostream&,const Tp&){}
+template<int N,class Tp,class,class ...Ts>void out(ostream &o,const Tp&t){if(N)o<<',';o<<get<N>(t);out<N+1,Tp,Ts...>(o,t);}
+template<class ...Ts>ostream&operator<<(ostream&o,const tuple<Ts...>&t){o<<'(';out<0,tuple<Ts...>,Ts...>(o,t);return o<<')';}
+template<class T>void output(T *a,int n){REP(i,n){if(i)cout<<',';cout<<a[i];}cout<<endl;}
+template<class T>void output(T *a,int n,int m){REP(i,n)output(a[i],m);}
+template<class T>void output(T t){if(t<0)t=-t,putchar(45);static int c[20];
+int k=0;while(t)c[k++]=t%10,t/=10;for(k||(c[k++]=0);k;putchar(c[--k]^48));}
+template<class S,class ...T>void output(S a,T...t){output(a);putchar(' ');output(t...);}
+template<class T>bool input(T &t){int n=1,c;for(t=0;!isdigit(c=getchar())&&~c&&c-45;);
+if(!~c)return 0;for(c-45&&(n=0,t=c^48);isdigit(c=getchar());t=10*t+c-48);t=n?-t:t;return 1;}
+template<class S,class ...T>bool input(S&a,T&...t){input(a);return input(t...);}
+
+struct P {
+  int x, y, v;
+  bool operator<(const P &rhs) const {
+    return x!=rhs.x ? x<rhs.x : y<rhs.y;
+  }
+};
+
+struct RangeTree {
+  struct SegTree {
+    vector<int> pos;
+    vector<int> dat;
+    int n;
+    SegTree() : n(0) {}
+    SegTree(int y, int v) : pos(1,y), dat(1,v), n(1) { }
+    SegTree(const SegTree &a, const SegTree &b) {
+      int n1 = a.pos.size(), n2 = b.pos.size();
+      for (n=1;n<n1+n2; n*=2);
+      pos.resize(n1+n2);
+      dat.assign(2*n-1,0);
+      int c1=0,c2=0;
+      for (int i=0;i<n1+n2;++i) {
+        if (c1<n1&&c2<n2&&a.pos[c1]<b.pos[c2] || c2==n2) {
+          dat[i+n-1] = a.dat[c1+a.n-1];
+          pos[i] = a.pos[c1++];          
+        } else {
+          dat[i+n-1] = b.dat[c2+b.n-1];
+          pos[i] = b.pos[c2++];
+        }
+      }
+      for (int i=n-2; i>=0; --i)
+        dat[i] = max(dat[i*2+1], dat[i*2+2]);
+    }
+    void change(int y, int a) {
+      int k = lower_bound(ALL(pos),y)-pos.begin();
+      k += n - 1;
+      dat[k] = a;
+      while(k>0) {
+        k = k-1>>1;
+        dat[k] = max(dat[k*2+1], dat[k*2+2]);
+      }
+    }
+    int query() {
+      return query(0,pos.size(),0,0,n);
+    }
+    int query(int yl, int yr) {
+      int a = lower_bound(ALL(pos), yl) - pos.begin();
+      int b = upper_bound(ALL(pos), yr) - pos.begin();
+      return query(a,b,0,0,n);
+    }
+    int query(int a, int b, int k, int l, int r) {
+      if (r <= a || b <= l) return 0;
+      if (a <= l && r <= b) return dat[k];
+      return max(query(a, b, k*2+1, l, (l+r)/2),
+                 query(a, b, k*2+2, (l+r)/2, r));      
+    }
+  };
+  vector<SegTree> segs;
+  int n;
+  vector<pii> pos;
+  RangeTree(vector<P> v) {
+    sort(ALL(v));
+    pos.resize(v.size());
+    REP(i,v.size()) pos[i] = pii(v[i].x,v[i].y); 
+    for (n=1; n<v.size(); n*=2);
+    segs.assign(2*n-1,SegTree());
+    REP(i,v.size()) segs[i+n-1] = SegTree(v[i].y,v[i].v);
+    for (int i=n-2; i>=0; --i)
+      segs[i] = SegTree(segs[i*2+1], segs[i*2+2]);
+  }
+  void change(int x, int y, int a) {
+    int k = lower_bound(ALL(pos),pii(x,y)) - pos.begin();
+    k += n - 1;
+    segs[k].change(y,a);
+    while(k>0) {
+      k = k-1>>1;
+      segs[k].change(y, max(segs[k*2+1].query(), segs[k*2+2].query()));
+    }
+  }
+  int query(int xl, int yl, int xr, int yr) {
+    int a = lower_bound(ALL(pos), pii(xl,-INF)) - pos.begin();
+    int b = upper_bound(ALL(pos), pii(xr,INF)) - pos.begin();
+    return query(a,b,0,0,n,yl,yr);
+  }
+  int query(int a, int b, int k, int l, int r, int yl, int yr) {
+    if (r <= a || b <= l) return 0;
+    if (a <= l && r <= b) return segs[k].query(yl,yr);
+    return max(query(a, b, k*2+1, l, (l+r)/2, yl, yr),
+               query(a, b, k*2+2, (l+r)/2, r, yl, yr));
+  }
+};
+
+namespace RND {
+int a, b, C = ~(1<<31), M = (1<<16)-1;
+int r() {
+  a = 36969 * (a & M) + (a >> 16);
+  b = 18000 * (b & M) + (b >> 16);
+  return (C & ((a << 16) + b)) % 1000000;
+}
+}
+struct Pt {
+  int x,y,z;
+  void in() {
+    scanf("%d%d%d",&x,&y,&z);
+  }
+  bool operator<(const Pt &rhs) const {
+    return z < rhs.z;
+  }
+} pt[1000000];
+
+int main() {
+  int m,n,A,B;
+  while(input(m,n,A,B),n||m) {
+    RND::a = A;
+    RND::b = B;
+    REP(i,m) {
+      pt[i].in();
+    }
+    REP(i,n) {
+      int x=RND::r();
+      int y=RND::r();
+      int z=RND::r();
+      pt[m+i] = Pt{x,y,z};
+    }
+    sort(pt,pt+m+n);
+    vector<P> v(m+n);
+    REP(i,m+n) v[i] = P{pt[i].x,pt[i].y,0};
+    RangeTree rt(v);
+    int ans = 0;
+    REP(i,m+n) {
+      int t = rt.query(0,0,pt[i].x,pt[i].y) + 1;
+      chmax(ans, t);
+      rt.change(pt[i].x,pt[i].y,t);
+    }
+    printf("%d\n", ans);
+  }
+}

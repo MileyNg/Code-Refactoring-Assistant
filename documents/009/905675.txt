@@ -1,0 +1,50 @@
+#!/bin/ruby
+prime=Array.new(1000001,true)
+prime[0..1]=false
+(2..1000000).each do |i|
+  if prime[i] then
+    j=i*2
+    while j<=1000000
+      prime[j]=false
+      j+=i
+    end
+  end
+end
+g=Array.new(1001){Array.new(1001,1e9)}
+x,y=500,500
+dy=[-1,0,1,0]
+dx=[0,1,0,-1]
+d=1
+(1..1000000).each do |i|
+  g[y][x]=i
+  x+=dx[d]
+  y+=dy[d]
+  nx=x+dx[(d+3)%4]
+  ny=y+dy[(d+3)%4]
+  d=(d+3)%4 if g[ny][nx]==1e9
+end
+loop do
+  m,n=gets.split.map(&:to_i)
+  break if m==0&&n==0
+  dp=Array.new(1001){Array.new(1001,-1e99)}
+  nc,lc=0,0
+  (0..1000).each do |i|
+    (0..1000).each do |j|
+      next if g[i][j]>m
+      dp[i][j]=0 if g[i][j]==n
+      if prime[g[i][j]] then
+        dp[i][j]+=1
+        nc,lc=dp[i][j],g[i][j] if dp[i][j]>nc||dp[i][j]==nc&&lc<g[i][j]
+      end
+      (-1..1).each do |k|
+        ni=i+1
+        nj=j+k
+        next if ni>1000||nj<0||1000<nj||g[i][j]>m
+        dp[ni][nj]=dp[i][j] if dp[ni][nj]<dp[i][j]
+      end
+    end
+  end
+  puts "#{nc} #{lc}"
+end
+
+  

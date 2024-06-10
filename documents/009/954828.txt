@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const string characters = "abcdefghijklmnopqrstuvwxyz.?! ";
+
+string convert(const string &number) {
+	if(number.size() & 1) return "NA";
+
+	string res = "";
+	for(unsigned i = 0; i < number.size(); i += 2) {
+		if(!('1' <= number[i] && number[i] <= '6')) return "NA";
+		if(!('1' <= number[i + 1] && number[i + 1] <= '5')) return "NA";
+
+
+		const unsigned idx = (number[i] - '1') * 5 + (number[i + 1] - '1');
+
+		if(idx >= characters.size()) return "NA";
+
+		res += characters[idx];
+	}
+
+	return res;
+}
+
+int main() {
+	string number;
+	while(cin >> number) {
+		cout << convert(number) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

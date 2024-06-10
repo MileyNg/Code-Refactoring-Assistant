@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+long long int map[1010][1010] = {0};
+long long int maps[1010][1010] = {0};
+long long int num[1010][1010] = {0};
+long long int cnt[1010][1010] = {0};
+bool flag[1100010] = {};
+int main() {
+
+  vector< long long int > sosu;
+  for ( long long int i = 2; i <= 1100000; i++ ) {
+    if ( flag[i] == false ) {
+      sosu.push_back( i );
+      for ( long long int j = 1; j * i <= 1100000; j++ ) {
+	flag[j*i] = true;
+      }
+    }
+  }
+
+  vector< long long int > mx, my;
+  mx.push_back( 0 );
+  my.push_back( 0 );
+  long long int x = 505;
+  long long int y = 505;
+  long long int lm = 1;
+  long long int l = lm;
+  bool lf = false;
+  long long int d = 0;
+  int dx[4] = {  1,  0, -1,  0 };
+  int dy[4] = {  0, -1,  0,  1 };
+  long long int s = 0;
+  for ( long long int i = 1; i <= 1000000; i++ ) {
+    if ( i == sosu[s] ) {
+      maps[x][y] = 1;
+      s++;
+    }
+    map[x][y] = i;
+    mx.push_back( x );
+    my.push_back( y );
+    x += dx[d];
+    y += dy[d];
+    l--;
+    if ( l == 0 ) {
+      if ( lf == false ) {
+	lf = true;
+      }else {
+	lf = false;
+	lm++;
+      }
+      l = lm;
+      d = ( d + 1 ) % 4;
+    }
+  }
+
+  long long int m, n;
+  while( true ) {
+
+    cin >> m >> n;
+    if ( m == 0 ) break;
+
+    x = 0;
+    y = 1008;
+    while( true ) {
+      cnt[x][y] = 0;
+      num[x][y] = 0;
+      if ( map[x][y] > 0 && map[x][y] <= m ) {
+	if ( maps[x][y] == 1 ) {
+	  cnt[x][y]++;
+	  num[x][y] = map[x][y];
+	}
+	d = -1;
+	if ( cnt[x-1][y+1] < cnt[x][y+1] ) d = 0;
+	if ( cnt[x-1][y+1] == cnt[x][y+1] && num[x-1][y+1] < num[x][y+1] ) d = 0;
+	if ( cnt[x+d][y+1] < cnt[x+1][y+1] ) d = 1;
+	if ( cnt[x+d][y+1] == cnt[x+1][y+1] && num[x+d][y+1] < num[x+1][y+1] ) d = 1;
+	if ( cnt[x+d][y+1] > 0 ) {
+	  cnt[x][y] += cnt[x+d][y+1];
+	  num[x][y] = num[x+d][y+1];
+	}
+      }
+      x++;
+      if ( x == 1010 ) {
+	x = 0;
+	y--;
+	if ( y == 0 ) break;
+      }
+    }
+    cout << cnt[mx[n]][my[n]] << " " << num[mx[n]][my[n]] << endl;
+
+  }
+
+  return 0;
+
+}

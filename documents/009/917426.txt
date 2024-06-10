@@ -1,0 +1,58 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+//123456 246912  17 19 23 
+int prime[246920]={0};
+int sum[246920]={0};
+
+int main(){
+	int tt=246920;
+	rep(i,tt) prime[i]=1;
+	prime[0]=prime[1]=0;
+	for(int i=0;i*i<tt;i++){
+		if(prime[i]==1){
+			//cout<<i<<endl;
+			for(int j=i*i;j<tt;j+=i){
+				prime[j]=0;
+			}
+		}
+	}
+	rep(i,tt){
+		if(i==0) continue;
+		sum[i]=sum[i-1];
+		if(prime[i]==1) sum[i]++;
+	}
+	//cout<<"    "<<sum[100]<<endl;
+	int n;
+	while(cin>>n,n){
+		int ans=sum[2*n]-sum[n];
+		cout<<ans<<endl;
+	}
+	return 0;
+}

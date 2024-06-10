@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+#include <time.h>
+using namespace std;
+
+int main(){
+  int index ,flag=0 ,temp= 'z' - 'a';
+  string s ,key[3]={ "the" ,"this" ,"that" };
+  getline( cin ,s );
+  usleep( 100000 );
+  while( flag == 0 ){
+    for( int i=0 ; i<s.length() ; i++ ){
+      if( s[i] != '.' && s[i] != ' ' && s[i] != '\n' ){ //　記号はスルー
+	s[i]--;
+	if( s[i] < 'a' ){ // aからzに飛ばす
+	  s[i] += temp; 
+	}
+      }
+    }
+
+    for( int i=0 ; i<3 ; i++ ){
+      index = s.find( key[i] ,0 );
+      if( index != string::npos ){
+	cout << s << endl;
+	flag = 1;
+	break;
+      }
+    }
+  }
+}

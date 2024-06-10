@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+
+string cmd;
+int m, n, x, y, dd[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}}, d;
+
+int main(){
+    cin >> m >> n;
+    while( m + n > 0 ){
+        d = 0;
+        x = 1, y = 1;
+        while( getline(cin, cmd) ){
+            if( cmd == "STOP" ) break;
+            else if( cmd == "RIGHT" ) ++d %= 4;
+            else if( cmd == "LEFT" ) --d %= 4;
+            else if( cmd[0] == 'B' || cmd[0] == 'F' ){
+                int i = 9 - (cmd[0] - 'B')/4, j = 0;
+                while( i < cmd.length() ){
+                    j *= 10;
+                    j += cmd[i] - '0';
+                    i++;
+                }
+                x += dd[d][0] * j * (cmd[0] - 'D') / 2;
+                y += dd[d][1] * j * (cmd[0] - 'D') / 2;
+                if( x < 1 ) x = 1;
+                if( x > n ) x = n;
+                if( y < 1 ) y = 1;
+                if( y > n ) y = m;
+            }
+        }
+        cout << y << ' ' << x << endl;
+        cin >> m >> n;
+    }
+    return 0;
+}

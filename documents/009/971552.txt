@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+struct Deck{
+    int first, last;
+};
+
+Deck ds[100];
+// dp[i][j][k] := 位置iからj個とk個の山に分ける時の最小値
+int dp[100][101][101];
+
+int rec(int pos, int a, int b){
+    if(dp[pos][a][b] != -1){
+        return dp[pos][a][b];
+    }
+
+    if(a == 0 || b == 0){
+        return 0;
+    }
+
+    int res = ds[pos].first * ds[pos+a-1].last * ds[pos+a].first * ds[pos+a+b-1].last;
+    // printf("%d, %d, %d: %d\n", pos, a, b, res);
+    if(a == 1 && b == 1){
+        return res;
+    }
+
+    int min_a = rec(pos, 1, a-1);
+    FOR(i, 2, a){
+        min_a = std::min(rec(pos, i, a-i), min_a);
+    }
+
+    int min_b = rec(pos+a, 1, b-1);
+    FOR(i, 2, b){
+        min_b = std::min(rec(pos+a, i, b-i), min_b);
+    }
+
+    res += min_a + min_b;
+    return dp[pos][a][b] = res;
+}
+
+int main(){
+    int N;
+    std::cin >> N;
+    
+    REP(i, N){
+        std::cin >> ds[i].first >> ds[i].last;
+    }
+    std::fill(dp[0][0], dp[0][0]+100*101*101, -1);
+    
+    int res = rec(0, 1, N-1);
+    FOR(i, 2, N){
+        res = std::min(rec(0, i, N-i), res);
+    }
+
+    std::cout << res << std::endl;
+}

@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+int n,s;
+long long int dp[1<<10][10][250];
+long long int check(int bit,int now,int sum)
+{
+  // cout<<bit<<" "<<now<<" "<<sum<<endl;
+  if(s==sum && n==now)
+    return 1;
+  if(sum>=s || n<=now)
+    return 0;
+  if(dp[bit][now][sum]!=-1)
+    return dp[bit][now][sum];
+  long long int ans=0;
+  for(int i=0;i<10;i++)
+    {
+      if(!(bit && 1<<i))
+	ans+=check(bit&&1<<i,now+1,sum+(i*(now+1)));
+    }
+  dp[bit][now][sum]=ans;
+  return ans;
+
+  
+}
+
+int main()
+{
+
+  for(;cin>>n>>s;)
+    {
+      memset(dp,-1,sizeof(dp));
+      cout<<check(0,0,0)<<endl;
+    }
+}

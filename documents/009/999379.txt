@@ -1,0 +1,79 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+//#define NIL 2000000001
+#define N 500001
+
+
+int A[N];
+int n;
+void maxHeapify(int A[]  ,int i);
+void buildMaxHeap(int A[]);
+
+int main(void){
+  int i,j;
+  
+  scanf("%d",&n);
+  /*for(i=1;i<=n;i++){
+    A[i]=NIL;
+    }*/
+  for(i=1;i<=n;i++){
+    scanf("%d",&A[i]);
+    // buildMaxHeap( A);
+  }
+  
+  //for(i=1 ; i<=n ; i++){
+    
+    buildMaxHeap(A);
+    //} 
+    for(i=1 ; i<=n ; i++){
+      printf(" %d",A[i]);      
+    }
+    
+  printf("\n");
+  
+  return 0;
+}
+
+
+
+
+
+
+
+void maxHeapify(int A[],int i){
+  int l,r,largest,temp;
+
+  l = 2*i;
+  r = 2*i + 1;
+  if(l <= n && A[l] > A[i]){
+    largest = l;
+  }
+  else largest = i;
+  
+  if(r <= n && A[r] > A[largest]){
+    largest = r;
+  }
+  
+  if(largest != i){
+    temp = A[i];
+    A[i] = A[largest];
+    A[largest] = temp;
+    maxHeapify(A,largest);
+  }
+  
+  
+}
+
+
+
+
+
+
+void buildMaxHeap(int A[]){
+  int i;
+
+  for(i=n/2;i>=1;i--){
+    maxHeapify(A,i);   
+  }  
+}

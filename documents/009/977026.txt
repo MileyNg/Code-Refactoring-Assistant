@@ -1,0 +1,88 @@
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <queue>
+#include <map>
+#include <algorithm>
+using namespace std;
+
+#define NMAX 1000
+typedef pair<double, pair<int, int> > P;
+int n;
+int b[NMAX], x[NMAX], y[NMAX], prev[NMAX], r[NMAX];
+bool u[NMAX];
+double c[NMAX], d[NMAX][NMAX];
+
+int solve(int s, int g) {
+  P p;
+  int num, t;
+  priority_queue<P> q;
+  bool solved = false;
+
+  memset(u, 0, n);
+  memset(c, 0, sizeof(double)*n);
+  q.push(make_pair(0.0, make_pair(s, -1)));
+  while (!q.empty()) {
+    p = q.top();
+    q.pop();
+    t = p.second.first;
+    if (u[t]) continue;
+    u[t] = true;
+    prev[p.second.first] = p.second.second;
+    if (t == g) {
+      solved = true;
+      break;
+    }
+    for (int i=0; i<n; i++) {
+      if (u[i] || d[t][i] > 50.) continue;
+      q.push(make_pair(p.first - d[t][i], make_pair(i, t)));
+    }
+  }
+
+  if (solved) {
+    num = 0;
+    t = g;
+    while (t!=-1) {
+      r[num++] = t;
+      t = prev[t];
+    }
+    reverse(r, r+num);
+  }
+  return solved ? num : -1;
+}
+
+int main() {
+  int m, s, g, t;
+  map<int,int> id;
+  while (1) {
+    scanf("%d", &n);
+    if (!n) break;
+    for (int i=0; i<n; i++) {
+      scanf("%d %d %d", &b[i], &x[i], &y[i]);
+    }
+    id.clear();
+    for (int i=0; i<n; i++) {
+      id.insert(make_pair(b[i], i));
+    }
+    for (int i=0; i<n; i++) {
+      for (int j=i; j<n; j++) {
+        d[i][j] = d[j][i] = sqrt((x[j]-x[i])*(x[j]-x[i])+(y[j]-y[i])*(y[j]-y[i]));
+      }
+    }
+    scanf("%d", &m);
+    for (int i=0; i<m; i++) {
+      scanf("%d %d", &s, &g);
+      t = solve(id[s], id[g]);
+      if (t == -1) {
+        printf("NA\n");
+      } else {
+        for (int j=0; j<t; j++) {
+          if (j) printf(" ");
+          printf("%d", b[r[j]]);
+        }
+        puts("");
+      }
+    }
+  }
+  return 0;
+}

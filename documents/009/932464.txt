@@ -1,0 +1,36 @@
+# 線路の情報の数, 駅の数
+n, m = gets.split.map(&:to_i)
+m += 1
+
+# 線路の情報
+$connect = Array.new(m) { [] }
+costs = {}
+times = {}
+n.times do
+  a, b, cost, time = gets.split.map(&:to_i)
+  $connect[a] << b; $connect[b] << a
+  costs[[a,b]] = costs[[b,a]] = cost
+  times[[a,b]] = times[[b,a]] = time
+end
+
+dp = {}
+m.times do |b|
+  next if b == 0
+  m.times do |a|
+    next if a == 0
+    $connect[a].each do |c|
+      2.times do |i|
+        vals = []
+        table = [costs, times][i]
+        vals << 0 if a == b
+        vals << dp[[b,a,i]] if dp[[b,a,i]]
+        vals << dp[[a,b,i]] if dp[[a,b,i]]
+        vals << table[[a,b]] if table[[a,b]]
+        vals << table[[a,c]] + dp[[c,b,i]] if dp[[c,b,i]]
+        dp[[a,b,i]] = vals.min
+      end
+    end
+  end
+end
+
+gets.to_i.times { puts dp[gets.split.map(&:to_i)] }

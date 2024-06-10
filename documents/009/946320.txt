@@ -1,0 +1,24 @@
+#include <cstdio>
+
+int main(void)
+{
+    int e;
+    int x, y, z, xyz;
+    while(scanf("%d", &e), e != 0){
+        for(xyz = 1; xyz <= e; xyz++){
+            for(x = 0; x <= xyz; x++){
+                for(y = 0; x + y <= xyz; y++){
+                    z = xyz - x - y;
+                    if(x + y * y + z * z * z > e){
+                        break;
+                    }else if(x + y * y + z * z * z == e){
+                        printf("%d\n", xyz);
+                        x = xyz = e;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}

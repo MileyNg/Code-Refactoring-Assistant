@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+#define max(a,b)(a<b?a:b)
+
+int main(){
+
+	int fi[100][2]={0};
+	int fiPos=0;
+ 
+	while(1){
+
+	int n,m;
+	int tr[100]={0};
+	int hnk[100]={0};
+	int trSum=0,hnkSum=0;
+
+	cin >> n>>m;
+
+	if(!n&&!m)
+		break;
+
+	for(int i=0;i<n+m;i++){
+		if(i<n){
+			cin >> tr[i];
+			trSum+=tr[i];
+		}
+		else{
+			cin >> hnk[i-n];
+			hnkSum+=hnk[i-n];
+		}
+	}
+
+	int max=1000;
+	bool ANS=0;
+	for(int i=0;i<n;i++){
+		for(int j=0;j<m;j++){
+			if(trSum==hnkSum+(tr[i]*2)-(hnk[j]*2)){
+				int tMax=max;
+				max=max(max,tr[i]+hnk[j]);
+				if(max!=tMax){
+					fi[fiPos][0]=tr[i];
+					fi[fiPos][1]=hnk[j];
+					ANS=true;
+				}
+			}
+		}
+	}
+
+	if(ANS==0){
+		fi[fiPos][0]=-1;
+	}
+		fiPos++;
+
+}
+
+	for(int i=0;i<fiPos;i++){
+		if(fi[i][0]==-1)
+			cout << -1<<endl;
+		else
+			cout << fi[i][0] << " " << fi[i][1]<<endl;
+	}
+
+	return 0;
+}

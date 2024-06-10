@@ -1,0 +1,21 @@
+def solve(s, t):
+    n, m = len(s), len(t)
+
+    ans, dp = 0, [0] * (m + 1)
+    for i in xrange(n):
+        for j in xrange(m, 0, -1):
+            if s[i] == t[j - 1]:
+                dp[j] = 1 + dp[j - 1]
+            else:
+                dp[j] = 0
+            ans = max(ans, dp[j])
+    return ans
+
+while True:
+    try:
+        s = raw_input().strip()
+        t = raw_input().strip()
+    except EOFError:
+        break
+
+    print solve(s, t)

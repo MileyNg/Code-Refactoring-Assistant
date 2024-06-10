@@ -1,0 +1,85 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cmath>
+using namespace std;
+
+
+int fact(int n){
+	if (n == 0)
+		return 1;
+	else
+		return n * fact(n - 1);
+}
+
+int main()
+{
+	int len[13], data[13];
+	int * np[150];
+	char alphabet[150];
+	int n;
+	int num[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+	//入力
+	while (cin >> n, n){
+		int found = 0;
+
+		//STRINGの入力
+		int counter = 0;
+		for (int i = 0; i < n; i++){
+			string s;
+			cin >> s;
+			len[i] = s.size();
+			for (int j = 0; j < s.size(); j++){
+				alphabet[counter++] = s[j];
+			}
+		}
+
+		//同じ文字の処理
+		int numcounter = 0, variationcounter = 0;
+		for (int i = 0; i < counter; i++){
+			bool flag = true;
+			for (int j = 0; j < i; j++){
+				if (alphabet[i] == alphabet[j]){
+					np[i] = np[j];
+					flag = false;
+				}
+			}
+			if (flag){
+				np[i] = num + numcounter++;
+				variationcounter++;
+			}
+		}
+
+		do{
+			numcounter = 0;
+			//dataの作成
+			for (int i = 0; i < n; i++){
+				data[i] = 0;
+
+				for (int j = 0; j < len[i]; j++){
+					if (j == 0 && *np[numcounter] == 0 && len[i] > 1){
+						goto endfor;
+					}
+					data[i] += *np[numcounter++] * pow(10, len[i] - 1 - j);
+				}
+			}
+
+
+			//方程式
+			int left = 0,
+				int right;
+			for (int i = 0; i < n - 1; i++){
+				left += data[i];
+			}
+			right = data[n - 1];
+			if (left == right){
+				found++;
+			}
+		endfor:
+			;
+		} while (next_permutation(num, num + 10));
+		cout << found / fact(10 - variationcounter) << endl;
+	}
+	return 0;
+}

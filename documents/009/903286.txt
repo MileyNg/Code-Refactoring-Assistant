@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i,count = 0;
+	char compare[10],text[100];
+	scanf("%s",&compare);
+
+	scanf("%s",&text);
+	while(text != "END_OF_TEXT")
+	{
+		for(i=0 ;i<100 ;i++)
+		{
+			if(isupper(text[i]) != 0)
+			{
+				text[i] = tolower(text[i]);
+			}
+		}
+		if(strcmp(text,compare) == 0)
+		{
+			count++;
+		}
+		scanf("%s",&text);
+	}
+	printf("%d\n",count);
+	return 0;
+}

@@ -1,0 +1,25 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+
+/** Problem0266 : Aka-beko and 40 Thieves **/
+int main()
+{
+	int list[7][2] = {{1, 2}, {6, 3}, {1, 6}, {4, 5}, {5, 2}, {2, 1}, {6, 6}}, now;
+	string p;
+	while (cin>>p, p!="#") {
+		now=0;
+		rep(i, p.length())
+			now = list[now][p[i]-'0'];
+		cout << (now==5?"Yes":"No") << endl;
+	}
+	return 0;
+}

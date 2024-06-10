@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int i, num[26] = {0};
+	char c;
+	
+	while (scanf("%c", &c) != EOF){
+		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')){
+			if (c >= 'A' && c <= 'Z'){
+				c += 32;
+			}
+			
+			num[c - 'a']++;
+		}
+	}
+	
+	for (i = 0; i <= 25; i++){
+		printf("%c : %d\n", i + 'a', num[i]);
+	}
+	
+	return (0);
+}

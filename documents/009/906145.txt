@@ -1,0 +1,17 @@
+#include<iostream>
+#include<map>
+#include<algorithm>
+using namespace std;
+typedef pair < int , int > Pi;
+int main(){
+  int n;
+  Pi a[20];
+  cin >> n;
+  for(int i = 0 ; i < n ; i++ ){
+    cin >> a[i].second >> a[i].first;
+    a[i].second = -a[i].second;
+  }
+  sort( a, a + n);
+  Pi *itr = max_element(a, a + n);
+  cout << -(*itr).second << " " << (*itr).first << endl;
+}

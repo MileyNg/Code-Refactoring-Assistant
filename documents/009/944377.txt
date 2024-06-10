@@ -1,0 +1,151 @@
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+#include<iostream>
+#include<complex>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int INF = 1000000000;
+
+#define X real()
+#define Y imag()
+
+typedef complex<double> Point;
+
+class Line{
+	public:
+	double A,B,C;
+	Line(double A,double B,double C):A(A),B(B),C(C){}
+	Line(){}
+};
+class Circle : public Point{
+	public:
+	double R;
+	Circle(Point pt, double R):Point(pt),R(R){}
+	Circle(){}
+};
+
+
+double Dot(Point p1, Point p2){return p1.X*p2.X + p1.Y*p2.Y;}
+double Cross(Point p1, Point p2){return p1.X*p2.Y - p1.Y*p2.X;}
+
+bool ccw(Point p1, Point p2, Point p3){return  Cross(p2-p1, p3-p1)>=0;}
+
+pair<Point,Point> Suisen(Line line, Point pt){
+	Point v(line.A, line.B);  v/=Point(abs(v),0);
+	Point toPoint;
+	
+	if(line.B!=0){
+		Point slide = pt-Point(0, -line.C/line.B);
+		toPoint = v*Point(Dot(v,slide),0);
+	}else{
+		toPoint = Point(pt.X + line.C/line.A, 0);
+	}
+	return pair<Point,Point>(pt-toPoint, toPoint); //場所と方向
+}
+bool CircleHit(Circle a, Circle b){return abs(a-b) <= a.R + b.R;}
+Line CircleCommonLine(Circle a,Circle b){
+	double C = pow(b.R, 2)-pow(a.R, 2)+norm(a)-norm(b);
+	return Line(2*(b.X-a.X), 2*(b.Y-a.Y), C);
+}
+pair<Point,Point> CircleCross(Circle a, Circle b){
+	Line commonLine = CircleCommonLine(a,b);
+	pair<Point,Point> s = Suisen(commonLine, a);
+	
+	double d = abs(s.second);
+	if(d!=0){
+		Point e = s.second*Point(0,1)/d;
+		if(a.R<d)d=a.R;
+		double dist = sqrt(a.R*a.R - d*d);
+		return pair<Point,Point>(s.first+e*Point(dist,0), s.first+e*Point(-dist,0));
+	}
+	return pair<Point,Point>(s.first-Point(0,a.R), s.first+Point(0,a.R));
+}
+
+
+const int N = 11;
+
+int n;
+Circle cir[N];
+Circle cirnext[N];
+
+bool checknext(){
+	vector<Point> pt;
+	rep(i,n)pt.push_back(cirnext[i]);
+	/*
+	rep(i,n){
+		cout<<cirnext[i]<<cirnext[i].R<<" ";
+	}puts("");
+	*/
+	rep(i,n){
+		reps(j,i+1,n){
+			if(!CircleHit(cirnext[i],cirnext[j]))continue;
+			pair<Point,Point> cross = CircleCross(cirnext[i],cirnext[j]);
+			pt.push_back(cross.first);
+			pt.push_back(cross.second);
+		}
+	}
+	
+	const double EPS_IN = 0.00000001;
+	bool has = false;
+	rep(i,pt.size()){
+		bool ok = true;
+		rep(j,n){
+			if(abs(pt[i]-cirnext[j]) > cirnext[j].R+EPS_IN)ok=false;
+		}
+		if(ok)has=true;
+	}
+	
+	return has;
+}
+
+bool check(double val){
+	bool ret = true;
+	rep(i,n){
+		if(val>cir[i].R)return false;
+		double theta = asin(val/cir[i].R);
+		double len = cir[i].R * cos(theta);
+		cirnext[i]=Circle(cir[i], len);
+	}
+	ret &= checknext();
+	return ret;
+}
+
+
+double solve(){
+	rep(i,n){
+		double a,b,c;
+		cin>>a>>b>>c;
+		cir[i] = Circle(Point(a,b),c);
+	}
+	
+	double left = 0;
+	double right = INF;
+	const double EPS_BS = 0.0000001;
+	
+	while(1){
+		double half = (left+right)/2;
+		
+		if(check(half)){
+			left = half;
+		}else{
+			right = half;
+		}
+		if(left+EPS_BS>right)break;
+	}
+	
+	return left;
+}
+
+int main(){
+	while(1){
+		cin>>n;
+		if(n==0)break;
+		printf("%.9lf\n",solve());
+		//break;
+	}
+}

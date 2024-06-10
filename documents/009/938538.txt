@@ -1,0 +1,86 @@
+#include<iostream>
+#include<stdio.h>
+#include<cstdio>
+#include<vector>
+using namespace std;
+struct node
+{
+	bool flag;
+	int num;
+};
+struct node2{
+	int a;
+	int b;
+};
+node ko[2][175];
+vector<node2> si;
+const int q=1000000009;
+int main()
+{
+	int n,i,j,x,y,count=0,k;
+	long long h,w;
+	while(cin>>w>>h>>n)
+	{
+		if(w==0&&h==0&&n==0)
+			break;
+		for(j=1;j<=w;j++)
+		{
+			ko[0][j].flag=false;
+			ko[1][j].flag=false;
+			ko[0][j].num=0;
+			ko[1][j].num=0;
+		}
+		if(!si.empty())
+			si.clear();
+		for(i=1;i<=n;i++)
+		{
+			scanf("%d%d",&x,&y);
+			node2 r;
+			r.b=x;
+			r.a=y;
+			si.push_back(r);
+		}
+		if(w>h)
+			cout<<"Case "<<++count<<": "<<0<<endl;
+		else {
+			ko[1][1].flag=true;
+			ko[1][1].num=1;
+			for(i=2;i<=h;i++)
+				for(j=1;j<=w;j++)
+				{
+					bool flag=true;
+					for(k=0;k<si.size();k++)
+						if(si[k].a==i&&si[k].b==j)
+						{
+							flag=false;
+							ko[i%2][j].flag=false;
+							ko[i%2][j].num=0;
+							break;
+						}
+					if(flag==false)
+							continue;
+					ko[i%2][j].num=0;
+					if(ko[(i-1)%2][j].flag==true)
+					{
+						ko[i%2][j].num=(ko[i%2][j].num+ko[(i-1)%2][j].num)%q;
+						ko[i%2][j].flag=true;
+					}
+					if(j-1>=1&&ko[(i-1)%2][j-1].flag==true)
+					{
+						ko[i%2][j].num=(ko[i%2][j].num+ko[(i-1)%2][j-1].num)%q;
+						ko[i%2][j].flag=true;
+					}
+					if(j+1<=w&&ko[(i-1)%2][j+1].flag==true)
+					{
+						ko[i%2][j].num=(ko[i%2][j].num+ko[(i-1)%2][j+1].num)%q;
+						ko[i%2][j].flag=true;
+					}
+				}
+			if(ko[h%2][w].flag==true)
+				cout<<"Case "<<++count<<": "<<ko[h%2][w].num<<endl;
+			else cout<<"Case "<<++count<<": "<<0<<endl;
+		}
+	}
+	return 0;
+}
+			

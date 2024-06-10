@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+int main(){
+
+	int n, r, l;
+	std::cin >> n >> r >> l;
+
+	std::vector<int>time(n, 0);
+	std::vector<int>score(n, 0);
+
+	int id_now = 0, time_before = 0;
+
+	for (int i = 0; i < r; i++){
+
+		int d, t, x;
+		std::cin >> d >> t >> x;
+
+		d--;
+
+		time[id_now] += (t - time_before);
+		score[d] += x;
+
+		id_now = 0;
+		for (int j = 1; j < n; j++){
+			if (score[j]>score[id_now])id_now = j;
+		}
+
+		time_before = t;
+	}
+
+	time[id_now] += (l - time_before);
+
+	int res = 0;
+
+	for (int i = 1; i < n; i++){
+		if (time[i]>time[res])res = i;
+	}
+
+	std::cout << res + 1 << std::endl;
+
+	return 0;
+}

@@ -1,0 +1,39 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int a,b,c,d,n,ax,ay,bx,by,cx,cy,dx,dy,ABX,ABY,CDX,CDY,mn;
+  cin>>n>>a>>b>>c>>d;
+  mn=99999;
+  for(int i=1;i<=n;i++){
+    ax=a%i;
+    if(ax==0)ax=i;
+    ay=a/i+1;
+    if(a%i==0)ay--;
+ 
+    bx=b%i;
+    if(bx==0)bx=i;
+    by=b/i+1;
+    if(b%i==0)by--;
+ 
+    cx=c%i;
+    if(cx==0)cx=i;
+    cy=c/i+1;
+    if(c%i==0)cy--;
+ 
+    dx=d%i;
+    if(dx==0)dx=i;
+    dy=d/i+1;
+    if(d%i==0)dy--;
+ 
+    ABX=ax-bx,ABY=ay-by,CDX=cx-dx,CDY=cy-dy;
+    if(ABX<0)ABX*=-1;
+    if(ABY<0)ABY*=-1;
+    if(CDX<0)CDX*=-1;
+    if(CDY<0)CDY*=-1;
+    if(mn>ABX+ABY+CDX+CDY)mn=ABX+ABY+CDX+CDY;
+     
+     
+  }
+  cout<<mn<<endl;
+  return 0;
+}

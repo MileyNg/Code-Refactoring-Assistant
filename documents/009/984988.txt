@@ -1,0 +1,80 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest10
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var read_line_origin = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(read_line_origin))
+            {
+                return;
+            }
+
+            //三角形の数
+            int all_num = int.Parse(read_line_origin);
+
+            
+            //空白で分割する
+            read_line_origin = Console.ReadLine();
+            string[] words = read_line_origin.Split();
+
+            for (int i = 0; i < all_num; i++)
+            {
+                //配列の要素、すべてに処理を行う
+                var num_array = Array.ConvertAll(words, len => double.Parse(len));
+
+                //三角形の座標
+                double x1 = num_array[(i * 6) + 0];
+                double y1 = num_array[(i * 6) + 1];
+                double x2 = num_array[(i * 6) + 2];
+                double y2 = num_array[(i * 6) + 3];
+                double x3 = num_array[(i * 6) + 4];
+                double y3 = num_array[(i * 6) + 5];
+
+                //辺の長さ
+                double r1 = Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+                double r2 = Math.Sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));
+                double r3 = Math.Sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1));
+
+                //計算用
+//                double tmp_1 = (r1 * r1) * (r2 * r2 + r3 * r3 - r1 * r1);
+//                double tmp_2 = (r2 * r2) * (r3 * r3 + r1 * r1 - r2 * r2);
+//                double tmp_3 = (r3 * r3) * (r1 * r1 + r2 * r2 - r3 * r3);
+
+//                double tri_tmp = tmp_1 + tmp_2 + tmp_3;
+
+  //              double center_x = (tmp_1 * x1 + tmp_2 * x2 + tmp_3 * x3) / tri_tmp;
+  //              double center_y = (tmp_1 * y1 + tmp_2 * y2 + tmp_3 * y3) / tri_tmp;
+
+                double x = (((x1 * x1 + y1 * y1) * (y2 - y3)) +
+                            ((x2 * x2 + y2 * y2) * (y3 - y1)) +
+                            ((x3 * x3 + y3 * y3) * (y1 - y2)))
+                            /
+                            ((x1 * (y2 - y3)) +
+                             (x2 * (y3 - y1)) +
+                             (x3 * (y1 - y2))
+                            ) * 0.5;
+                double y = (((x1 * x1 + y1 * y1) * (x2 - x3)) + ((x2 * x2 + y2 * y2) * (x3 - x1)) + ((x3 * x3 + y3 * y3) * (x1 - x2))) / ((y1 * (x2 - x3)) + (y2 * (x3 - x1)) + (y3 * (x1 - x2))) * 0.5;
+
+
+                double radius = (r1 * r2 * r3) /
+                                Math.Sqrt(
+                                    (r1 + r2 + r3) * (-r1 + r2 + r3) * (r1 - r2 + r3) * (r1 + r2 - r3)
+
+                                );
+
+                Console.WriteLine("{0:f3} {1:f3} {2:f3}", x, y, radius);
+            }
+
+
+
+
+        }
+    }
+}

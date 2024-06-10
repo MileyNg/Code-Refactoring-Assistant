@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<vector>
+#include<map>
+#define fs first
+#define sc second
+#define pb push_back
+using namespace std;
+ 
+typedef pair<int,int> P;
+struct edge{int u,v,cost;};
+bool comp(const edge& e1, const edge& e2){return e1.cost<e2.cost;}
+ 
+int n,m;
+int s,t,c;
+edge e[10100];
+vector<int> sp;
+vector<P> g[1010];
+bool use[1010],h[10100];
+ 
+int dfs(int pos){
+  if(use[pos])return 0;
+  use[pos] = true;
+  int res = 1;
+  for(int i=0;i<g[pos].size();i++){
+    if(h[g[pos][i].sc])continue;
+    res += dfs(g[pos][i].fs);
+  }
+  return res;
+}
+ 
+int main(){
+  while(cin >> n >> m,n||m){
+    for(int i=0;i<m;i++){
+      sp.clear();
+      cin >> s >> t >> c;
+      s--; t--;
+      e[i].u = s;
+      e[i].v = t;
+      e[i].cost = c;
+    }
+ 
+    sort(e,e+m,comp);
+    sp.clear();    
+ 
+    for(int i=0;i<n;i++)g[i].clear();
+    
+    for(int i=0;i<m;i++){
+      g[e[i].u].pb(P(e[i].v,i));
+      g[e[i].v].pb(P(e[i].u,i));
+      h[i] = false;
+    }
+ 
+    for(int i=m-1;i>=0;i--){
+      for(int j=0;j<n;j++)use[j] = false;
+      h[i] = true;
+      if(dfs(0) != n){
+	h[i] = false;
+	sp.pb(e[i].cost);
+      }
+    }
+        
+    sort(sp.begin(),sp.end());
+    cout << sp[n/2-1] << endl;
+  }
+}

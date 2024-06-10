@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+using namespace std;
+int main(){
+string s;
+getline(cin,s);
+int j=0;
+bool a=false;
+rep(i,s.size()){
+int co=0;
+for(;j!=s.size();j++){
+if(isalpha(s[j]))co++;
+else break;
+}
+if(co>2&&co<7){
+if(a)cout<<" ";
+loop(k,j-co,j)cout<<s[k];
+a=true;
+}
+j++;
+i=j;
+}
+cout<<endl;
+}

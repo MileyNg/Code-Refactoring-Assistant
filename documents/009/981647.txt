@@ -1,0 +1,120 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define F first
+#define S second
+#define mkp make_pair
+
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef pair<pll,ll> plll;
+list<plll> li;
+
+ll distplll(plll a){
+	return a.F.S-a.F.F+1;
+}
+
+void w_list(ll a,ll b){
+	list<plll>::iterator it=li.begin();
+	while(1){
+		if(b==0) break;
+		if(it==li.end()){
+			if(it==li.begin()){
+				li.PB(mkp(mkp(0,b-1),a));
+			}
+			else{
+				--it;
+				li.PB(mkp(mkp((*it).F.S+1,(*it).F.S+b),a));
+				++it;
+			}
+			return;
+		}
+		else{
+			if((*it).S==-1){
+				if(distplll(*it)<=b){
+					(*it).S=a;
+					b-=distplll(*it);
+				}
+				else{
+					plll tmp;
+					tmp.S=a;
+					tmp.F.S=(*it).F.F+b-1;
+					tmp.F.F=(*it).F.F;
+					(*it).F.F=tmp.F.S+1;
+					it=li.insert(it,tmp);
+					++it;
+					return;
+				}
+			}
+		}
+		++it;
+	}
+}
+
+
+void d_list(ll a){
+	list<plll>::iterator it=li.begin();
+	while(it!=li.end()){
+		if((*it).S==a){
+			(*it).S=-1;
+		}
+		++it;
+	}
+}
+
+void r_list(ll a){
+	list<plll>::iterator it=li.begin();
+	while(it!=li.end()){
+		if(a<=(*it).F.S){
+			cout<<(*it).S<<endl;
+			return;
+		}
+		++it;
+	}
+	cout<<"-1"<<endl;
+}
+
+
+int main(){
+	int n;
+	while(cin>>n,n){
+		list<plll> ttt;
+		li=ttt;
+		rep(i,n){
+			char c;
+			cin>>c;
+			if(c=='W'){
+				ll a,b;
+				cin>>a>>b;
+				w_list(a,b);	
+	
+			}
+			else if(c=='D'){
+				ll a;
+				cin>>a;
+				d_list(a);
+			}
+			else{
+				ll a;
+				cin>>a;
+				r_list(a-1);
+			}
+			// list<plll>::iterator it=li.begin();
+			// 
+			// for(;it!=li.end();++it){
+				// cout<<(*it).F.F<<" "<<(*it).F.S<<" "<<(*it).S<<endl;
+			// }
+			// cout<<endl;
+		}
+		cout<<endl;
+	}
+	return 0;
+} 

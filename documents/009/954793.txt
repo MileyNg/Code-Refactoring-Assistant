@@ -1,0 +1,56 @@
+
+//=====================================================
+// 
+// (setq backup-inhibited t)
+// (setq auto-save-default nil)
+// 
+// (column-number-mode t)
+// (setq-default tab-width 2 indent-tabs-mode nil)
+// 
+// (global-set-key "\C-h" 'delete-backward-char)
+// 
+// (setq indent-line-function 'indent-relative-maybe)
+// (global-set-key "\C-m" 'newline-and-indent)
+// 
+//=====================================================
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  vector<vector<int>> factors(300000);
+  for(int i = 0;; ++i) {
+    int i1 = i*7+1;
+    int i2 = i*7+6;
+    if (i1 >= 300000) break;
+    if (i != 0 && factors[i1].empty()) {
+      for (int j = i1; j < 300000; j += i1) {
+        factors[j].push_back(i1);
+      }
+    }
+    if (i2 >= 300000) break;
+    if (factors[i2].empty()) {
+      for (int j = i2; j < 300000; j += i2) {
+        factors[j].push_back(i2);
+      }
+    }
+  }
+  while(1){
+    int n;
+    cin >> n;
+    if(n==1) break;
+    cout << n << ':';
+    for (int k : factors[n]) {
+      cout << ' ' << k;
+    }
+    cout << endl;
+  }
+  return 0;
+}

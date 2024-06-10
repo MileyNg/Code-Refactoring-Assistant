@@ -1,0 +1,48 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+
+using namespace std;
+
+int main(){
+    string b = "  kstnhmyrw";
+    string input;
+
+    cin >> input;
+    for(int i=0; i < input.size(); i+=2){
+        string str = input.substr(i, 1);
+        if(atoi(str.c_str()) != 0){
+            if(atoi(str.c_str()) != 1) cout << b[atoi(str.c_str())];
+            switch(input[i+1]){
+                case 'T':
+                    cout << 'a';
+                    break;
+                case 'L':
+                    cout << 'i';
+                    break;
+                case 'U':
+                    cout << 'u';
+                    break;
+                case 'R':
+                    cout << 'e';
+                    break;
+                case 'D':
+                    cout << 'o';
+                    break;
+            }
+        }
+        else {
+            switch(input[i+1]){
+                case 'T':
+                    cout << "wa";
+                    break;
+                case 'D':
+                    cout << "wo";
+                    break;
+                case 'U':
+                    cout << "nn";
+            }
+        }
+    }
+    cout << endl;
+}

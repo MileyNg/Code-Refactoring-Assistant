@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+int hit(std::vector<int> a, std::vector<int> b){
+    int hit_count = 0;
+    for(int i = 0; i < 4; ++i){
+        if(a.at(i) == b.at(i)){
+            hit_count += 1;
+        }
+    }
+    return hit_count;
+}
+
+int same_number(std::vector<int> a, std::vector<int> b){
+    int same_count = 0;
+    for(int i = 0; i < 4; ++i){
+        for(int j = 0; j < 4; ++j){
+            if(a.at(i) == b.at(j)){
+                same_count += 1;
+            }
+        }
+    }
+    return same_count;
+}
+
+int main(){
+    std::vector<int> a_set, b_set;
+    int a[4], b[4];
+    while(std::cin >> a[0] >> a[1] >> a[2] >> a[3]){
+        if(a[0] == -1 or a[1] == -1 or a[2] == -1 or a[3] == -1)  break;
+        for(int i = 0; i < 4; ++i){
+            a_set.push_back(a[i]);
+        }
+        std::cin >> b[0] >> b[1] >> b[2] >> b[3];
+        if(b[0] == -1 or b[1] == -1 or b[2] == -1 or b[3] == -1)  break;
+        for(int i = 0; i < 4; ++i){
+            b_set.push_back(b[i]);
+        }
+        std::cout << hit(a_set, b_set) << " " << same_number(a_set, b_set) - hit(a_set, b_set) << std::endl;
+        a_set.clear();
+        b_set.clear();
+    }
+    return 0;
+}

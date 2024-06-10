@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vd xs(n),ys(n);
+		{
+			rep(i,n) cin>>xs[i]>>ys[i];
+			
+			vd uys=ys; // uniqueなy座標たち
+			sort(all(uys));
+			uys.erase(unique(all(uys)),end(uys));
+			
+			vd xs2(1,xs[0]),ys2(1,ys[0]);
+			repi(i,1,n){
+				double x1=xs[i-1],x2=xs[i];
+				double y1=ys[i-1],y2=ys[i];
+				int j=upper_bound(all(uys),min(y1,y2))-begin(uys);
+				int k=lower_bound(all(uys),max(y1,y2))-begin(uys);
+				if(j<k){
+					repi(l,j,k){
+						double y=uys[l];
+						// y-y1=(y2-y1)/(x2-x1)*(x-x1)
+						double x=(y-y1)*(x2-x1)/(y2-y1)+x1;
+						xs2.push_back(x);
+						ys2.push_back(y);
+					}
+					if(y1>y2){
+						reverse(end(xs2)-(k-j),end(xs2));
+						reverse(end(ys2)-(k-j),end(ys2));
+					}
+				}
+				xs2.push_back(xs[i]);
+				ys2.push_back(ys[i]);
+			}
+			xs=xs2,ys=ys2,n=xs.size();
+		}
+		
+		vvd dist(n,vd(n,INF));
+		queue<tuple<int,int,double>> q; q.emplace(0,n-1,0);
+		while(q.size()){
+			int i,j; double d;
+			tie(i,j,d)=q.front(); q.pop();
+			if(dist[i][j]!=INF) continue;
+			dist[i][j]=d;
+			for(int k=i-1;k<=i+1;k++)
+				for(int l=j-1;l<=j+1;l++){
+					if(k<0 || n<=k || l<0 || n<=l || ys[k]!=ys[l]) continue;
+					double d1=hypot(xs[k]-xs[i],ys[k]-ys[i]);
+					double d2=hypot(xs[l]-xs[j],ys[l]-ys[j]);
+					q.emplace(k,l,d+d1+d2);
+				}
+		}
+		
+		double res=INF;
+		rep(i,n) res=min(res,dist[i][i]);
+		printf("%.10f\n",res);
+	}
+}

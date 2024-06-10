@@ -1,0 +1,18 @@
+N = gets.chomp.to_i
+
+line = gets.chomp.split.map(&:to_i)
+
+1.upto(line.length - 1) do |i|
+  key = line[i]
+
+  j = i - 1
+
+  while j > -1 && line[j] > key
+    line[j + 1] = line[j]
+    j -= 1
+  end
+
+  line[j + 1] = key
+
+  puts line.join(" ")
+end

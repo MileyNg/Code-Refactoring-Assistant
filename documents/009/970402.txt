@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <math.h>
+#define PI 3.1415926535897932386
+
+double getArea(double a, double b, double rad){
+	return a*b*sin(rad)/2;
+}
+
+double getcl(double a, double b, double rad){
+	return sqrt(a*a + b*b -2*a*b*cos(rad));
+}
+
+int main(void){
+	double a,b,c,C,L,S,h,rad;
+	int deg;
+	scanf("%lf %lf %d", &a, &b, &deg);
+	rad = deg*PI/180;
+	S = getArea(a, b, rad);
+	c = getcl(a, b, rad);
+	L = a + b + c;
+	h = 2*S/a;
+	
+	printf("%.4f\n%.4f\n%.4f\n", S, L, h);
+	
+	return 0;
+}

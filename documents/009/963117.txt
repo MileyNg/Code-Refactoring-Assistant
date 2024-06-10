@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void) {
+	int dist=1, ang=1, direction=90;
+	double x=0, y=0;
+	
+	while(dist != 0 || ang != 0) {
+		scanf("%d,%d", &dist, &ang);
+		
+		x += (double)dist*cos(M_PI*direction/180);
+		y += (double)dist*sin(M_PI*direction/180);		
+		
+		direction = direction - ang;
+	}
+	
+	printf("%d\n%d\n", (int)x, (int)y );
+	
+	return 0;
+}

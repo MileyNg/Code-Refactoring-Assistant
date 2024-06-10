@@ -1,0 +1,99 @@
+// compile in C++11. use -std=c++11.
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <valarray>
+#include <map>
+#include <set>
+#include <list>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <complex>
+#include <string>
+#include <sstream>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+
+// this require C++11
+#include <unordered_set>
+#include <unordered_map>
+#include <random>
+
+using namespace std;
+
+#define all(c) c.begin(),c.end()
+#define repeat(i,n) for(int i=0;i<static_cast<int>(n);i++)
+#define debug(x) #x << "=" << (x)
+#define dump(x) cerr << debug(x) << " (L:" << __LINE__ << ")"<< endl
+
+typedef complex<double> point;
+
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& vec){
+    os << "[";
+    for(const auto& v : vec){
+        os << v << ",";
+    }
+    os << "]";
+    return os;
+}
+
+template<typename T>
+T input(){
+    T t;cin >> t;
+    return t;
+}
+
+template<typename T>
+vector<T> input(const int N){
+    vector<T> v(N);
+    repeat(i,N) cin >> v[i];
+    return v;
+}
+const double EPS = 1e-7;
+int solve(vector<point> ps){
+    int n = ps.size();
+    int ret = 1;
+    for(int apple=0;apple<n;apple++){
+        for(int banana=0;banana<n;banana++){
+            if(apple == banana) continue;
+            int cur = 0;
+            point a = ps[apple];
+            point b = ps[banana];
+            point vec = a - b;
+            point unit_vec = vec / (abs(vec)+EPS);
+            point check = b + unit_vec;
+            for(const point& p : ps){
+                if(abs(check-p) <= 1 + EPS){
+                    cur++;
+                }
+            }
+            ret = max(ret,cur);
+        }
+    }
+    return ret;
+}
+
+int main(){
+    while(true){
+        int n = input<int>();
+        if(n == 0) break;
+        vector<point> ps;
+        repeat(apple,n){
+            double x,y;
+            char c;
+            cin >> x >> c >> y;
+            ps.push_back(point(x,y));
+        }
+        cout << solve(ps) << endl;
+    }
+    return 0;
+}

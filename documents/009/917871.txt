@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<string>
+#include<stack>
+
+using namespace std;
+
+int main(){
+
+	string str;
+	char c[100];
+	double a,b;
+	char inp;
+	stack<string> por;
+
+	while(cin>>str){
+		por.push(str);
+		str=("");
+		while(1){
+			inp=getchar();
+			if(inp=='\n') break;
+			else if(inp==' '){
+				if(!str.empty()) por.push(str);
+				str=("");
+			}
+			else if(inp=='+'||inp=='*'||inp=='-'||inp=='/'){
+				a=atof(por.top().c_str());
+				por.pop();
+				b=atof(por.top().c_str());
+				por.pop();
+				switch(inp){
+					case '+':
+						sprintf(c,"%f",b+a);
+						break;
+					case '*':
+						sprintf(c,"%f",b*a);
+						break;
+					case '/':
+						if(a!=0) sprintf(c,"%f",b/a);
+						else sprintf(c,"%d",0);
+						break;
+					case '-':
+						sprintf(c,"%f",b-a);
+						break;
+				}
+				por.push(c);
+			}
+			else{
+				str+=inp;
+			}
+		}
+		cout<<por.top()<<endl;
+	}
+}

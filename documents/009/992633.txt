@@ -1,0 +1,30 @@
+#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+
+int main(){
+  string str;
+  stack<char> s;
+  while(getline(cin,str)){
+    bool f = true;
+    if(str == ".")break;
+    while(!s.empty())s.pop();
+    for(int i = 0;i < str.length();i++){
+      if(str[i] == '(' || str[i] == '[') s.push(str[i]);
+      else if(!s.empty()){
+	if(str[i] == ')'){
+	  if(s.top() == '(') s.pop();
+	  else f = false;
+	}
+	if(str[i] == ']'){
+	  if(s.top() =='[') s.pop();
+	  else f = false;
+	}
+      }
+    }
+    if(s.empty() && f == true) cout<<"yes"<<endl;
+    else cout<<"no"<<endl;
+  }
+  return 0;
+}

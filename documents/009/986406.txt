@@ -1,0 +1,30 @@
+## global variables
+
+$ccache = []
+
+### subroutines
+
+def count(n)
+  return 1 if n == 0
+  return $ccache[n] if ! $ccache[n].nil?
+
+  c = 0
+
+  for i in (1..3)
+    break if n < i
+    c += count(n - i)
+  end
+
+  $ccache[n] = c
+end
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  c = count(n)
+
+  puts (c.to_f / 3650).ceil
+end

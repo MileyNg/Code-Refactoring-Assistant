@@ -1,0 +1,85 @@
+#include<stdio.h>
+
+struct Dice{
+  int above;
+  int under;
+  int north;
+  int south;
+  int east;
+  int west;
+};
+
+//サイコロの操作をする関数
+void Operate(struct Dice *dice, char *order);
+
+int main(){
+  int n,i;
+  char order[8];
+  int point;
+
+  scanf("%d", &n);
+  while(n != 0){
+    point = 1;
+    //ダイスの初期化
+    struct Dice dice={1,6,5,2,3,4};
+
+    for(i=0;i<n;i++){
+      scanf("%s", order);  //操作の命令入力
+      Operate(&dice,order);//ダイスの操作
+      point += dice.above; //ポイント加算
+    }
+    printf("%d\n",point);//output
+    scanf("%d", &n);
+  }
+  return 0;
+}
+
+void Operate(struct Dice *dice, char *order){
+  int above,under,north,south,east,west;
+  above = dice->above;
+  under = dice->under;
+  north = dice->north;
+  south = dice->south;
+  east = dice->east;
+  west = dice->west;
+
+  if(!strcmp(order, "North")){
+    dice->above = south;
+    dice->under = north;
+    dice->north = above;
+    dice->south = under;
+  }
+  else if(!strcmp(order, "East")){
+    dice->above = west;
+    dice->under = east;
+    dice->east = above;
+    dice->west = under;
+  }
+  else if(!strcmp(order, "West")){
+    dice->above = east;
+    dice->under = west;
+    dice->east = under;
+    dice->west = above;
+  }
+  else if(!strcmp(order, "South")){
+    dice->above = north;
+    dice->under = south;
+    dice->north = under;
+    dice->south = above;
+  }
+  else if(!strcmp(order, "Right")){
+    dice->north = west;
+    dice->south = east;
+    dice->east = north;
+    dice->west = south;
+  }
+  else if(!strcmp(order, "Left")){
+    dice->north = east;
+    dice->south = west;
+    dice->east = south;
+    dice->west = north;
+  }
+  else{
+    printf("operate error.\n");
+  }
+}

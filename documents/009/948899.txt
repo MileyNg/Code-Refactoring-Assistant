@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dp[1<<10][1001];
+
+void solve(){
+  dp[0][0] = 1;
+  for(int i = 0 ; i < (1<<10) ; i++){
+    int m = __builtin_popcount(i) + 1;
+    for(int j = 0 ; j <= 1000 ; j++){
+      if(dp[i][j] == 0) continue;
+      for(int k = 0 ; k < 10 ; k++){
+	if((i >> k) & 1) continue;
+	int nex = (i | (1<<k));
+	int nexv = j + k * m;
+	dp[nex][nexv] += dp[i][j];
+      }
+    }
+  }
+}
+
+int main(){
+  solve();
+  int n, s;
+  while(cin >> n >> s){
+    int ans = 0;
+    for(int i = 0 ; i < (1<<10) ; i++){
+      if(__builtin_popcount(i) == n) ans += dp[i][s];
+    }
+    cout << ans << endl;
+  }  
+  return 0;
+}

@@ -1,0 +1,46 @@
+#include<stdio.h>
+#define N 250
+
+typedef struct{
+  int parent;
+  int left;
+  int right;
+  int key;
+}Node;
+
+
+Node node[N];
+
+int parent(int i){
+  return i/2;
+}
+int left(int i){
+  return 2*i;
+}
+int right(int i){
+  return 2*i+1;
+}
+
+int main(){
+  int i, j, n;
+  scanf("%d", &n);
+  for(i = 1;i < n+1;i++){
+    scanf("%d", &node[i].key);
+    if(i == 1) node[i].parent = -1;
+    else node[i].parent = parent(i);
+    if(2*i > n) node[i].left = node[i].right = -1;
+    else{
+      node[i].left = left(i);
+      if(2*i+1 > n) node[i].right = -1;
+      else node[i].right = right(i);
+    }
+  }
+  for(i = 1;i < n+1;i++){
+    printf("node %d: key = %d, ", i, node[i].key);
+    if(node[i].parent != -1) printf("parent key = %d, ", node[node[i].parent].key);
+    if(node[i].left != -1) printf("left key = %d, ", node[node[i].left].key);
+    if(node[i].right != -1) printf("right key = %d, ", node[node[i].right].key);
+    printf("\n");
+  }
+  return 0;
+}

@@ -1,0 +1,23 @@
+gets.to_i.times do
+  funds = gets.to_i
+  years = gets.to_i
+  oprs = []
+  gets.to_i.times do
+    oprs << gets.split(" ")
+    oprs[-1][0] = oprs[-1][0].strip
+    oprs[-1][1] = oprs[-1][1].to_f
+    oprs[-1][2] = oprs[-1][2].to_i
+  end
+
+  max = 0
+  oprs.each do |opr|
+    now = funds
+    int = 0
+    years.times do
+      int += ((now + (opr[0] == "0" ? 0 : int)) * opr[1]).to_i
+      now -= opr[2]
+    end
+    max = [max, now + int].max
+  end
+  puts max
+end

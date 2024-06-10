@@ -1,0 +1,13 @@
+def solve(G,start):
+	for i in range(n):
+		if G[start][i]:
+			cost[i] = max(cost[i],cost[start] + G[start][i])
+			solve(G,i)
+n,m = map(int,raw_input().split())
+G = [[0]*n for i in range(n)]
+for i in range(m):
+	a,b,c = map(int,raw_input().split())
+	G[a][b] = c
+cost = [0]*n
+solve(G,0)
+print cost[n-1]

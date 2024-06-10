@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+#define loop(v, f, l) for(int v = (f), v##_ = (l); v < v##_; ++v)
+
+using namespace std;
+
+typedef long long int lint;
+static inline int in(){ int x; scanf("%d", &x); return (x); }
+static inline lint inl(){ lint x; scanf("lld", &x); return (x); }
+
+int main()
+{
+	list<int> staffList;
+	map<int, int> saleResult;
+	int n;
+	int staffNum;
+	int unitPrice;
+	int quantity;
+	while( 1 )
+	{
+		n = in();
+		if( n == 0 )break;
+
+		staffList.clear();
+		saleResult.clear();
+		loop(i, 0, n)
+		{
+			staffNum = in();
+			unitPrice = in();
+			quantity = in();
+			staffList.push_back(staffNum);
+			saleResult[staffNum] += unitPrice * quantity;
+		}
+		bool flag = false;
+		for(list<int>::iterator it = staffList.begin(); it != staffList.end(); it++)
+		{
+			if( saleResult[*it] >= 1000000 )
+			{
+				printf("%d\n", *it);
+				saleResult[*it] = 0;
+				flag = true;
+			}
+		}
+		if( !flag )
+		{
+			cout << "NA" << endl;
+		}
+	}
+	return (0);
+}

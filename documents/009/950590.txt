@@ -1,0 +1,74 @@
+#include<iostream>
+
+using namespace std;
+
+int main()
+{
+  int d;
+  cin>>d;
+  for(;d--;)
+    {
+      int n;
+      cin>>n;
+      char output[n][n];
+      for(int i=0;i<n;i++)
+	for(int j=0;j<n;j++)
+	  output[i][j]=' ';
+
+      int dx[]={-1,0,1,0};
+      int dy[]={0,1,0,-1};
+      int move=0;
+      int cnt=0;
+      int x=n-1,y=0;
+      for(;;)
+	{
+	  //	  cout<<x<<" "<<y<<endl;
+	  // cout<<"next:"<<x+dx[move]<<" "<<y+dy[move]<<endl;
+	  output[x][y]='#';
+	  cnt++;
+	  bool flag=false;
+	  while(x+dx[move]<0 || 
+		x+dx[move]>=n ||
+		y+dy[move]<0 || 
+		y+dy[move]>=n ||
+		(
+		 x+dx[move]*2>=0 &&
+		 x+dx[move]*2<n &&
+		 y+dy[move]*2>=0 &&
+		 y+dy[move]*2<n &&
+		 output[x+dx[move]*2][y+dy[move]*2]=='#'
+		 )
+		)
+	    {
+	      /*
+		cout<<(x+dx[move]<0)<<endl; 
+		cout<<(x+dx[move]>=n)<<endl; 
+		cout<<(y+dy[move]<0)<<endl; 
+		cout<<(y+dy[move]>=n)<<endl; 
+	      */
+	      move++;
+	      if(move>3)
+		move=0;
+	      
+	      if(cnt<2)
+		{
+		  flag=true;
+		  break;
+		}
+	      cnt=0;
+	    }
+	  if(flag)
+	    break;
+	  x+=dx[move];
+	  y+=dy[move];
+	  
+	}
+
+      for(int i=0;i<n;i++,cout<<endl)
+	for(int j=0;j<n;j++)
+	  cout<<output[i][j];
+      if(d>0)
+	cout<<endl;
+    }
+
+}

@@ -1,0 +1,61 @@
+#include<stdio.h>
+
+static const int MAX = 500;
+static const int INFTY = (1<<21);
+
+main(){
+  int n, i, j;
+  int u, k, v, c;
+  scanf("%d", &n);
+
+  int d[n];
+  int M[n][n];
+  int done[n];
+  
+  for(i=0;i<n;i++){
+    d[i] = INFTY;
+    done[i] = 0;
+  }
+  d[0] = 0;
+  
+  for ( i = 0; i< n; i++ ){
+    for ( j = 0; j < n; j++ ){
+      M[i][j] = INFTY;
+    }
+  }
+
+  for ( i = 0; i < n; i++ ){
+    scanf("%d %d", &u, &k);
+    for ( j = 0; j < k; j++ ){
+      scanf("%d %d", &v, &c);
+      M[u][v] = c;
+    }
+  }
+
+  while(1){
+    int doneNode = -1;
+    for ( i = 0; i < n; i++ ){
+      if(done[i] || d[i] == INFTY)
+        continue;
+      if(doneNode == -1 || d[i] < d[doneNode])
+        doneNode = i;
+    }
+    if (doneNode == -1)
+      break;
+
+    done[doneNode] = 1;
+    for ( j = 0; j < n; j++ ){
+      if(M[doneNode][j] < INFTY){
+        if(d[j] > d[doneNode] + M[doneNode][j]){
+          d[j] = d[doneNode] + M[doneNode][j];
+        }
+      }
+    }
+  }
+  
+  for ( i = 0; i < n; i++ ){
+    printf("%d %d\n", i, (d[i]==INFTY?-1:d[i]));
+  }
+
+  return 0;
+}

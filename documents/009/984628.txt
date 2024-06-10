@@ -1,0 +1,37 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+
+using namespace std;
+
+int main(){
+	ostringstream out;
+
+	int N,W,H,S,T,x,y;
+	while(cin >> N, N){
+		cin >> W >> H;
+		vector<vector<bool> > map(W,vector<bool>(H));
+		for(int i=0;i<N;i++){
+			cin >> x >> y;
+			map[x-1][y-1]=true;
+		}
+		cin >> S >> T;
+
+		int m=0;
+		for(int ix=0;ix<=W-S;ix++)
+		for(int iy=0;iy<=H-T;iy++){
+			int n=0;
+			for(int s=0;s<S;s++)
+			for(int t=0;t<T;t++)
+				if(map[s+ix][t+iy])n++;
+			m=m>n?m:n;
+		}
+
+		out << m << endl;
+
+	}
+
+
+	cout << out.str();
+	return 0;
+}

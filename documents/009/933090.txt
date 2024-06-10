@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+
+void dfs(int, int);
+int limx,limy,cnt=0,ni,nj;
+char data[20][21];
+
+int main(){
+  int i,j;
+  while(1){
+    scanf("%d%d",&limx,&limy);
+    if(limx==0 && limy==0)
+      break;
+    for(i=0;i<limy;i++)
+      scanf("%s",data[i]);
+
+    for(i=0;i<limy;i++)
+      for(j=0;j<limx;j++)
+	if(data[i][j]=='@') ni=i,nj=j;
+    dfs(ni,nj);
+    printf("%d\n",cnt);
+    cnt=0;
+  }
+  return 0;
+}
+
+void dfs(int i, int j){
+  int di[4]={0,-1,0,1};
+  int dj[4]={1,0,-1,0};
+
+  data[i][j]='#';
+  cnt++;
+  for(int r=0;r<4;r++){
+    ni=i+di[r];
+    nj=j+dj[r];
+    if(data[ni][nj]=='.') dfs(ni,nj);
+  }
+}

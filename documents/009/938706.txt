@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<string.h>
+
+int H, W;
+long long L;
+int Map[105][105];
+char vect[]={'N', 'E', 'S', 'W'};
+int dx[]={-1, 0, 1, 0};
+int dy[]={0, 1, 0, -1};
+
+int main()
+{
+ //   freopen("3.txt", "r", stdin);
+    while(scanf("%d %d %lld", &H, &W, &L)!=EOF && (H||W||L))
+    {
+        memset(Map, 0, sizeof(Map));
+        getchar();
+        char vet;
+        int x, y;
+        char t;
+        for(int i=1; i<=H; ++i)
+        {
+            for(int j=1; j<=W; ++j)
+            {
+                scanf("%c", &t);
+                if(t!='.' && t!='#')
+                {
+                    Map[i][j]=1;
+                    x=i; y=j;
+                    vet=t;
+                }
+                if(t=='.')
+                {
+                    Map[i][j]=1;
+                }
+            }
+            getchar();
+        }
+        int now;
+        for(int i=0; i<4; ++i)
+        {
+            if(vect[i]==vet)
+            {
+                now=i;
+                break;
+            }
+        }
+        int nextx, nexty;
+        long long step=0;
+        while(step!=L)
+        {
+            nextx=x+dx[now];
+            nexty=y+dy[now];
+            if(Map[nextx][nexty])
+            {
+                ++step;
+                x=nextx;
+                y=nexty;
+                continue;
+            }
+            else
+            {
+                while(true)
+                {
+                    now=(now+1)%4;
+                    nextx=x+dx[now];
+                    nexty=y+dy[now];
+                    if(Map[nextx][nexty])
+                    {
+                        break;
+                    }
+                }
+                ++step;
+                x=nextx;
+                y=nexty;
+                continue;
+            }
+        }
+
+        printf("%d %d %c\n", x, y, vect[now]);
+    }
+    return 0;
+}

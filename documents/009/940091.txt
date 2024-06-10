@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(void) {
+	int A[5];
+	int i, j;
+	scanf("%d %d %d %d %d\n", &A[0], &A[1], &A[2], &A[3], &A[4]);
+	
+	void swap(int a, int b) {
+		int t;
+		t = A[a];
+		A[a] = A[b];
+		A[b] = t;
+	}
+	
+	for(i=0;i<4;i++) {
+		for(j=i+1;j<5;j++) {
+			if(A[i] < A[j]) {
+				swap(i, j);
+			}
+		}
+	}
+	
+	printf("%d %d %d %d %d\n", A[0], A[1], A[2], A[3], A[4]);
+	return 0;
+}

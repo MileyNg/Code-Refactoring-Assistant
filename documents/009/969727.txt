@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int dfs(vector<vector<int>>& t,int i, int j, int depth,int w, int h) {
+  if(depth==0)return 100000;
+  int di[] = {1,0,-1,0};
+  int dj[] = {0,1,0,-1};
+  int minn = 100000;
+  REP(k,4){
+    for(int l=1;l <= 20; ++l){
+      int ni=i+di[k]*l;
+      int nj=j+dj[k]*l;
+      if(ni<0||nj<0||ni>=h||nj>=w){
+        break;
+      }else if(t[ni][nj]==1){
+        if(l>1){
+          t[ni][nj] = 0;
+          int n =dfs(t,ni-di[k],nj-dj[k],depth-1,w,h)+1;
+          minn=min(minn,n);
+          t[ni][nj] = 1;
+        }
+        break;
+      }else if(t[ni][nj]==3){
+        return 1;
+      }
+    }
+  }
+  return minn;
+}
+
+int main() {
+  while(1){
+    int w,h;
+    cin>>w>>h;
+    if(!w)break;
+    vector<vector<int>> t(h,vector<int>(w));
+    REP(i,h)REP(j,w)cin>>t[i][j];
+    int si=0,sj=0;
+    REP(i,h)REP(j,w)if(t[i][j]==2){
+      si=i;sj=j;
+      t[i][j]=0;
+    }
+    int n = dfs(t,si,sj,10,w,h);
+    if(n < 100)
+      cout << n << endl;
+    else
+      cout << -1 << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,25 @@
+#include<stdio.h>
+int B[10],N,i;
+int dfs(int p,int r,int l)
+{
+	int a=0;
+	if(p==10)
+		return 1;
+	if(B[p]>l)
+		a|=dfs(p+1,r,B[p]);
+	if(B[p]>r)
+		a|=dfs(p+1,B[p],l);
+	return a;
+}
+
+int main()
+{
+	scanf("%d",&N);
+	for(;N--;)
+	{
+		for(i=0;i<10;i++)
+			scanf("%d",&B[i]);
+		puts(dfs(0,0,0)?"YES":"NO");
+	}
+	return 0;
+}

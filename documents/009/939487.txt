@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+
+#define STRING_L 100
+
+void change(int , int, char *, char *);
+
+int main(){
+	int n, i=0, j;
+	char data[STRING_L], base[STRING_L] = { "zzzzzzzzzzzzzzzzzzzzzz" };
+	scanf("%d", &n);
+	for (j = 0; j < n; j++){
+		scanf("%s", data);
+		change(n, i, data, base);
+	}
+	printf("%s", base);
+
+	return 0;
+}
+
+void change(int n, int i, char *data, char *base){
+	//printf("check1\n");
+	if (data[i] < base[i]){
+		//printf("check2\n");
+		//printf("%d\n", mini_string);
+		strcpy(base, data);
+	}else if (data[i] == base[i]){
+		//printf("check3\n%s %s\n", data, base);
+		change(n, i+1, data, base);
+	}
+}

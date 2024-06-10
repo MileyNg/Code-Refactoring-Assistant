@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+class Frac{
+public:
+    int num, den;
+    Frac():num(0), den(1){}
+    Frac(const Frac &f):num(f.num), den(f.den){}
+    Frac(int num_, int den_):num(num_), den(den_){}
+    Frac& operator-=(const Frac &f){
+        int g = __gcd(den, f.den);
+        Frac t((num * f.den - f.num * den) / g, den * f.den / g);
+        g = __gcd(t.num, t.den);
+        num = t.num / g; den = t.den / g;
+        return *this;
+    }
+};
+
+inline Frac operator-(const Frac &lhs, const Frac &rhs){
+    Frac t(lhs);
+    t -= rhs;
+    return t;
+}
+
+int solve(Frac prev, int lo, int hi, int n){
+    if(prev.num == 0)return 1;
+    if(n == 0)return 0;
+    int res = 0;
+    for(int d=lo; d<=hi; ++d)res += solve(prev - Frac(1, d), d, hi/d, n-1);
+    return res;
+}
+
+int main(){
+    int p, q, a, n;
+    while(cin >> p >> q >> a >> n, p|q|a|n)cout << solve(Frac(p, q), 1, a, n) << '\n';
+    return 0;
+}

@@ -1,0 +1,190 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#include<set>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+#define pb push_back
+
+enum State{PLUS,MULTI,NUM,CHAR,END};
+
+struct Node{
+	Node* node1;
+	Node* node2;
+	int num;
+	char c;
+	State state;
+	int length;
+};
+
+int isChar(char c){return 'A'<=c && c<='Z';}
+int isNum(char c){return '0'<=c && c<='9';}
+
+int getNum(string str,int st,int en){
+	int ret = 0;
+	for(int i=st;i<en;i++){
+		ret*=10;
+		ret+=str[i]-'0';
+	}
+	return ret;
+}
+int cLen(string& str, int st, int en){
+	if(isChar(str[st]))return 1;
+	int pos = st;
+	int count = 0;
+	while(1){
+		if(str[pos]=='(')count++;
+		if(str[pos]==')')count--;
+		pos++;
+		if(count==0)break;
+	}
+	return pos-st;
+}
+int numLen(string& str, int st,int en){
+	int pos = st;
+	while(1){
+		if(pos==en || !isNum(str[pos]))break;
+		pos++;
+	}
+	return pos-st;
+}
+
+Node* nNode(){
+	Node* ret = new Node;
+	ret->node1 = NULL;
+	ret->node2 = NULL;
+	ret->state = END;
+	ret->num = 0;
+	ret->c = '*';
+	ret->length = 0;
+	return ret;
+}
+Node* makeCharNode(char c){
+	Node* ret = nNode();
+	ret->state = CHAR;
+	ret->c = c;
+	return ret;
+}
+Node* makeNumNode(int num){
+	Node* ret = nNode();
+	ret->state = NUM;
+	ret->num = num;
+	return ret;
+}
+
+Node* solveF(string& str, int st, int en);
+Node* solveC(string& str, int st, int en){
+	Node* ret;	
+	if(en-st==1)ret = makeCharNode(str[st]);
+	else ret = solveF(str, st+1, en-1);
+	return ret;
+}
+Node* solveT(string& str, int st, int en){
+	Node* ret;
+	int len = numLen(str,st,en);
+	if(len==0)ret = solveC(str, st, en);
+	else{
+		ret = nNode();
+		ret->node1 = makeNumNode(getNum(str,st,st+len));
+		ret->node2 = solveC(str, st+len, en);
+		ret->state = MULTI;
+	}
+	return ret;
+}
+Node* solveF(string& str, int st, int en){
+	Node* ret;	
+	int len = numLen(str,st,en);
+	int len2 = cLen(str,st+len,en);
+	if(st+len+len2==en)ret = solveT(str,st,en);
+	else{
+		ret = nNode();
+		ret->node1 = solveT(str,st,st+len+len2);
+		ret->node2 = solveF(str,st+len+len2,en);
+		ret->state = PLUS;
+	}
+	return ret;
+}
+
+void printNode(Node* node, int depth){
+	cout<<"depth:"<<depth<<" state:"<<node->state<<" num:"<<node->num
+		<<" char:"<<node->c<<" len:"<<node->length<<endl;
+	
+	if(node->node1!=0)printNode(node->node1, depth+1);
+	if(node->node2!=0)printNode(node->node2, depth+1);
+}
+
+int calcLength(Node* node){
+	if(node->length!=0)return node->length;
+	
+	int ret = 0;
+	if(node->state == PLUS){
+		int val1 = calcLength(node->node1);
+		int val2 = calcLength(node->node2);
+		ret = val1+val2;
+	}
+	if(node->state == MULTI){
+		int val = calcLength(node->node2);
+		int scale = node->node1->num;
+		ret = scale * val;
+	}
+	if(node->state == CHAR){
+		ret = 1;
+	}
+	return node->length = min(1000001,ret);
+}
+
+char getChar(Node* node, int lest){
+	if(node->length <= lest)return '0';
+	
+	if(node->state == CHAR){
+		return node->c;
+	}
+	if(node->state == MULTI){
+		lest %= node->node2->length;
+		return getChar(node->node2, lest);
+	}
+	if(node->state == PLUS){
+		int left = node->node1->length;
+		if(lest<left){
+			return getChar(node->node1, lest);
+		}else{
+			return getChar(node->node2, lest-left);
+		}
+	}
+	return '0';
+}
+
+int main(){
+	A:;
+	int m;
+	string str;
+	cin>>str>>m;
+	
+	if(str=="0")return 0;
+	
+	Node* root = solveF(str, 0, str.size());
+	calcLength(root);
+	//printNode(root,0);
+	printf("%c\n",getChar(root,m));
+	
+	goto A;
+}
+
+/*
+1000(1000(1000(1000(1000(1000(NM)))))) 999999
+0 0
+
+2(4(AB)3(XY))10C 30
+
+2(4(AB)3(XY))10C 0
+2(4(AB)3(XY))10C 21
+
+2(4(AB)3(XY))10C
+
+*/

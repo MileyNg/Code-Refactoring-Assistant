@@ -1,0 +1,37 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int n;
+  cin>>n;
+  vector<pair<int,int> > power;
+  for(int i=1;i<=n;i++)
+    {
+      int sum=0;
+      for(int j=1;j<=n;j++)
+	{
+	  char tmp;
+	  cin>>tmp;
+	  if(tmp=='o')
+	    sum+=3;
+	  else if(tmp=='-')
+	    sum+=1;
+	}
+      power.push_back(make_pair(sum,i));
+    }
+  sort(power.begin(),power.end());
+  int cnt=0;
+  for(int i=1;i<=1000;i++)
+    {
+      int ai_hand;
+      cout<<power[cnt].second<<endl;
+      cin>>ai_hand;
+      if(power[cnt+1].second/(double)n>=0.35)
+	cnt++;
+      else
+	cnt=0;
+    }
+  
+}

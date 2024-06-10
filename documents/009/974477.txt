@@ -1,0 +1,476 @@
+# 1 "1132.cpp"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 175 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "1132.cpp" 2
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+# 1 "./../geometory.cpp" 1
+# 1 "geometry.h"
+# 1 "<command-line>"
+# 1 "geometry.h"
+using namespace std;
+
+
+# 1 "point.cpp" 1
+typedef complex<double> Point;
+const double EPS = 1e-8;
+
+
+int sign(double a){
+    if(a > EPS) return +1;
+    if(a < -EPS) return -1;
+    return 0;
+}
+
+
+namespace std{
+    bool operator < (const Point& a, const Point& b) {
+        return real(a) != real(b) ? real(a) < real(b) : imag(a) < imag(b);
+    }
+}
+
+
+double dot(Point a, Point b){
+    return real(conj(a) * b);
+}
+double cross(Point a, Point b){
+    return imag(conj(a) * b);
+}
+
+
+
+double angle(Point a, Point b){
+    return arg(conj(a) * b);
+}
+
+
+
+Point rotate(Point a, double b, Point c = Point()){
+    return (a - c) * polar(1.0, b) + c;
+}
+
+
+int ccw(Point a, Point b, Point c) {
+    b -= a; c -= a;
+    if (cross(b, c) > +EPS) return +1;
+    if (cross(b, c) < -EPS) return -1;
+    if (dot(b, c) < 0) return +2;
+    if (norm(b) < norm(c)) return -2;
+    return 0;
+}
+# 4 "geometry.h" 2
+# 1 "line.cpp" 1
+struct Line : public vector<Point> {
+    Line(const Point& a, const Point& b) {
+        push_back(a); push_back(b);
+    }
+    Point vector() const {
+        return back() - front();
+    }
+};
+
+
+
+
+
+bool paralell(Line l, Line m){
+    return sign(cross(l.vector(), m.vector())) == 0;
+}
+
+
+bool equalLL(Line l, Line m){
+    return sign(cross(l.vector(), m[0] - l[0])) == 0;
+}
+
+
+bool iLP(Line l, Point p) {
+
+    return sign(cross(l.vector(), p - l[0])) == 0;
+}
+
+
+
+bool iSP(Line s, Point p) {
+    return ccw(s[0], s[1], p) == 0;
+}
+
+
+bool iLS(Line l, Line s) {
+
+    return sign(cross(l.vector(), s[0] - l[0]) * cross(l.vector(), s[1] - l[0])) <= 0;
+}
+
+
+bool iSS(Line s, Line t) {
+    return ccw(s[0], s[1], t[0]) * ccw(s[0], s[1], t[1]) <= 0 &&
+        ccw(t[0], t[1], s[0]) * ccw(t[0], t[1], s[1]) <= 0;
+}
+
+
+
+Point proj(Line l, Point p){
+    double t = dot(p - l[0], l.vector()) / norm(l.vector());
+    return l[0] + t * l.vector();
+}
+
+
+Point refl(Line l, Point p){
+    return 2.0 * proj(l, p) - p;
+}
+
+
+double dLP(Line l, Point p){
+
+    return abs(cross(l.vector(), p - l[0])) / abs(l.vector());
+}
+
+
+double dSP(Line s, Point p){
+    if(sign(dot(s.vector(), p - s[0])) <= 0) return abs(p - s[0]);
+    if(sign(dot(-s.vector(), p - s[1])) <= 0) return abs(p - s[1]);
+    return dLP(s, p);
+}
+
+
+double dLL(Line l, Line m){
+
+    return paralell(l, m) ? dLP(l, m[0]) : 0;
+}
+
+
+double dLS(Line l, Line s){
+    if(iLS(l, s)) return 0;
+    return min(dLP(l, s[0]), dLP(l, s[1]));
+}
+
+
+double dSS(Line s, Line t){
+    if(iSS(s, t)) return 0;
+    return min({dSP(s, t[0]), dSP(s, t[1]), dSP(t, s[0]), dSP(t, s[1])});
+}
+
+
+Point pLL(Line l, Line m){
+    double A = cross(l.vector(), m.vector());
+    double B = cross(l.vector(), l[1] - m[0]);
+    if(sign(A) == 0 && sign(B) == 0) return m[0];
+    if(sign(A) == 0) assert(false);
+    return m[0] + m.vector() * B / A;
+}
+# 5 "geometry.h" 2
+# 1 "polygon.cpp" 1
+typedef vector<Point> Polygon;
+
+
+Point curr(const Polygon& a, int x){ return a[x]; }
+Point next(const Polygon& a, int x){ return a[(x + 1) % a.size()]; }
+Point prev(const Polygon& a, int x){ return a[(x - 1 + a.size()) % a.size()]; }
+
+
+
+enum { OUT, ON, IN };
+int contains(const Polygon& P, const Point& p){
+
+    bool in = false;
+    for(int i = 0; i < P.size(); i++){
+        Point a = curr(P, i) - p;
+        Point b = next(P, i) - p;
+        if(a.imag() > b.imag()) swap(a, b);
+
+        if(a.imag() <= 0 && 0 < b.imag() && cross(a, b) < 0){
+            in = !in;
+        }
+        if(sign(cross(a, b)) == 0 && sign(dot(a, b)) <= 0) return ON;
+    }
+    return in ? IN : OUT;
+}
+
+
+
+double area(const Polygon& P) {
+    double A = 0;
+    for(int i = 0; i < P.size(); i++){
+        A += cross(curr(P, i), next(P, i));
+    }
+    return abs(A) / 2.0;
+}
+# 6 "geometry.h" 2
+# 1 "convex.cpp" 1
+
+Polygon convex_hull(vector<Point> ps) {
+    int n = ps.size(), k = 0;
+    sort(ps.begin(), ps.end());
+    vector<Point> ch(2*n);
+    for (int i = 0; i < n; ch[k++] = ps[i++]){
+        while (k >= 2 && ccw(ch[k-2], ch[k-1], ps[i]) <= 0) --k;
+    }
+    for (int i = n-2, t = k+1; i >= 0; ch[k++] = ps[i--]){
+        while (k >= t && ccw(ch[k-2], ch[k-1], ps[i]) <= 0) --k;
+    }
+    ch.resize(k-1);
+    return ch;
+}
+
+bool is_convex(const Polygon& P){
+    for(int i = 0; i < P.size(); i++){
+        if(ccw(prev(P, i), curr(P, i), next(P, i)) > 0) return false;
+    }
+    return true;
+}
+
+
+
+Polygon convex_cut(const Polygon& P, Line l){
+    Polygon Q;
+    for(int i = 0; i < P.size(); i++){
+        Point A = curr(P, i), B = next(P, i);
+        if(ccw(l[0], l[1], A) != -1) Q.push_back(A);
+        if(ccw(l[0], l[1], A) * ccw(l[0], l[1], B) < 0)
+            Q.push_back(pLL(l, Line(A, B)));
+    }
+    return Q;
+}
+
+
+Line bisector(Point a, Point b){
+    Point mid = (a + b) / 2.0;
+    Point vec = (mid - a) * Point(0.0, 1.0);
+    return Line(mid, mid + vec);
+}
+
+
+Polygon voronoi_cell(Polygon P, const vector<Point>& ps, int s){
+    for(int i = 0; i < ps.size(); i++){
+        if(i != s) P = convex_cut(P, bisector(ps[s], ps[i]));
+    }
+    return P;
+}
+# 7 "geometry.h" 2
+# 1 "circle.cpp" 1
+struct Circle {
+    Point p;
+    double r;
+    Circle() {}
+    Circle(Point p, double r) : p(p), r(r) { }
+};
+
+
+enum{ OUT, ON, IN };
+int contains(const Circle& C, const Point& p){
+    double d = abs(C.p - p);
+    if(sign(d - C.r) > 0) return OUT;
+    if(sign(d - C.r) == 0) return ON;
+    return IN;
+}
+
+
+
+bool iCS(const Circle& C, const Line& l){
+    int c1 = contains(C, l[0]);
+    int c2 = contains(C, l[1]);
+    if(c1 > c2) swap(c1, c2);
+
+
+    if(c1 == OUT && c2 == IN) return true;
+    if(c1 == IN && c2 == IN) return false;
+    if(c1 == ON) return true;
+    double d = dSP(l, C.p);
+    if(sign(d - C.r) < 0) return true;
+    if(sign(d - C.r) == 0) return true;
+    if(sign(d - C.r) > 0) return false;
+}
+
+
+bool iCC(const Circle& C, const Circle& D){
+
+    double e = abs(C.p - D.p);
+    return sign(e - (C.r + D.r)) <= 0 && sign(e - abs(C.r - D.r)) >= 0;
+}
+
+
+
+vector<Point> pLC(const Line &l, const Circle &c) {
+    vector<Point> res;
+    Point center = proj(l, c.p);
+    double d = abs(center - c.p);
+    double tt = c.r * c.r - d * d;
+    if(tt < 0 && tt > -EPS) tt = 0;
+    if(tt < 0) return res;
+    double t = sqrt(tt);
+    Point vect = l.vector();
+    vect /= abs(vect);
+    res.push_back(center - vect * t);
+    if (t > EPS) {
+        res.push_back(center + vect * t);
+    }
+    return res;
+}
+
+
+vector<Point> pSC(const Line &s, const Circle &c) {
+    vector<Point> ret;
+    vector<Point> nret = pLC(s, c);
+    for (int i = 0; i < nret.size(); i++) {
+        if (iSP(s, nret[i])) ret.push_back(nret[i]);
+    }
+    return ret;
+}
+
+
+
+vector<Point> pCC(Circle a, Circle b){
+    vector<Point> res;
+
+    double l = abs(b.p - a.p);
+
+    if(sign(l) == 0 && sign(a.r - b.r) == 0) assert(false);
+    if(sign(l - abs(a.r - b.r)) < 0 || sign(l - (a.r + b.r)) > 0) return res;
+
+    double th1 = arg(b.p - a.p);
+    if(sign(l - abs(a.r - b.r)) == 0 || sign(l - (a.r + b.r)) == 0){
+        res.push_back(a.p + polar(a.r, th1));
+    }else {
+        double th2 = acos( (a.r * a.r - b.r * b.r + l * l) / (2 * a.r * l) );
+        res.push_back(a.p + polar(a.r, th1 - th2));
+        res.push_back(a.p + polar(a.r, th1 + th2));
+    }
+    return res;
+}
+
+
+
+vector<Point> touching_circle2(Point a, Point b, double r){
+    vector<Point> res;
+
+    double d = abs(b - a);
+    if(d > 2 * r) return res;
+
+    Point mid = 0.5 * (a + b);
+    Point dir = polar(sqrt(r * r - d * d / 4), arg(b - a) + M_PI / 2);
+    res.push_back(mid + dir);
+    res.push_back(mid - dir);
+    return res;
+}
+
+
+Circle touching_circle3(Point a, Point b, Point c){
+
+    Point mid_ab = (a + b) / 2.0;
+    Line bis_ab(mid_ab, (mid_ab - a) * Point(0.0, 1.0));
+    Point mid_bc = (b + c) / 2.0;
+    Line bis_bc(mid_bc, (mid_bc - b) * Point(0.0, 1.0));
+
+    assert(!paralell(bis_ab, bis_bc));
+
+    Point center = pLL(bis_ab, bis_bc);
+    return Circle(center, abs(a - center));
+}
+
+
+
+double cc_area(const Circle& c1, const Circle& c2) {
+    double d = abs(c1.p - c2.p);
+    if (c1.r + c2.r < d + EPS) {
+        return 0.0;
+    } else if (d < abs(c1.r - c2.r) + EPS) {
+        double r = min(c1.r, c2.r);
+        return r * r * M_PI;
+    } else {
+        double rc = (d*d + c1.r*c1.r - c2.r*c2.r) / (2*d);
+        double theta = acos(rc / c1.r);
+        double phi = acos((d - rc) / c2.r);
+        return c1.r*c1.r*theta + c2.r*c2.r*phi - d*c1.r*sin(theta);
+    }
+}
+# 8 "geometry.h" 2
+# 1 "circle_tangent.cpp" 1
+
+
+Line circle_tangent(const Circle& C, double th){
+    Point p0 = C.p + polar(C.r, th);
+    Point p1 = p0 + polar(1.0, th + M_PI / 2);
+    return Line(p0, p1);
+}
+
+
+
+
+vector<double> common_tangents(const Circle& C, const Circle& D){
+    vector<double> res;
+    Point v = D.p - C.p;
+    double l = abs(v);
+    double a = arg(v);
+    if(sign(l - abs(C.r - D.r)) > 0){
+
+
+        double a1 = acos((C.r - D.r) / l);
+        res.push_back(a + a1);
+        res.push_back(a - a1);
+        if(sign(l - (C.r + D.r)) > 0){
+
+
+            double a2 = acos((C.r + D.r) / l);
+            res.push_back(a + a2);
+            res.push_back(a - a2);
+        }
+    }
+    if((sign(l - abs(C.r - D.r)) == 0 || sign(l - (C.r + D.r)) == 0) && sign(l) != 0){
+
+
+        res.push_back(a);
+    }
+    return res;
+}
+
+
+
+vector<Line> tangents_through_point(const Circle& C, const Point& p){
+    vector<Line> tangents;
+    double d = abs(C.p - p);
+
+    double e = sqrt(d * d - C.r * C.r);
+
+    double th = asin(C.r / d);
+    Point q1 = p + (C.p - p) * polar(1.0, +th) * e / d;
+    Point q2 = p + (C.p - p) * polar(1.0, -th) * e / d;
+    tangents.push_back(Line(p, q1));
+    tangents.push_back(Line(p, q2));
+    return tangents;
+}
+# 8 "geometry.h" 2
+# 7 "1132.cpp" 2
+
+int main(){
+    int N;
+    while(cin >> N && N > 0) {
+        vector<Point> ps(N);
+        for(int i=0; i<(int)(N); ++i) {
+            double x, y;
+            cin >> x >> y;
+            ps[i] = Point(x, y);
+        }
+
+        int ans = 1;
+        for(int i=0; i<(int)(N); ++i) for(int j=0; j<(int)(N); ++j) if(i != j) {
+            vector<Point> cv = touching_circle2(ps[i], ps[j], 1.0);
+            for(auto c : cv) {
+                int sum = 0;
+                for(int k=0; k<(int)(N); ++k) {
+                    if(sign(abs(c - ps[k]) - 1.0) <= 0) {
+                        sum++;
+                    }
+                }
+                ans = max(ans, sum);
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

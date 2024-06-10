@@ -1,0 +1,221 @@
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <limits>
+#include <iostream>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+namespace libcomp {
+namespace geometry {
+static const double EPS = 1e-9;
+inline double abs(double x){ return std::abs(x); }
+inline bool tolerant_eq(double a, double b){ return abs(a - b) < EPS; }
+}
+}
+namespace libcomp {
+namespace geometry {
+struct Point {
+	double x;
+	double y;
+	explicit Point(const double &x = 0.0, const double &y = 0.0) :
+		x(x), y(y)
+	{ }
+	static Point invalid(){
+		double qnan = numeric_limits<double>::quiet_NaN();
+		return Point(qnan, qnan);
+	}
+	bool is_valid() const { return !(std::isnan(x) || std::isnan(y)); }
+	Point operator+(const Point &p) const { return Point(x + p.x, y + p.y); }
+	Point &operator+=(const Point &p){ return *this = *this + p; }
+	Point operator-(const Point &p) const { return Point(x - p.x, y - p.y); }
+	Point &operator-=(const Point &p){ return *this = *this - p; }
+	Point operator*(double s) const { return Point(x * s, y * s); }
+	Point &operator*=(double s){ return *this = *this * s; }
+	Point operator*(const Point &p) const {
+		return Point(x * p.x - y * p.y, x * p.y + y * p.x);
+	}
+	Point &operator*=(const Point &p){ return *this = *this * p; }
+	Point operator/(double s) const { return Point(x / s, y / s); }
+	Point &operator/=(double s){ return *this = *this / s; }
+	bool operator==(const Point &p) const { return x == p.x && y == p.y; }
+	bool operator!=(const Point &p) const { return x != p.x || y != p.y; }
+	bool operator<(const Point &p) const {
+		return (x == p.x) ? (y < p.y) : (x < p.x);
+	}
+	double abs() const { return sqrt(x * x + y * y); }
+	double norm() const { return x * x + y * y; }
+	Point unit() const { return *this / abs(); }
+	Point ortho() const { return Point(-y, x); }
+};
+inline Point operator*(double s, const Point &p){ return p * s; }
+inline bool tolerant_eq(const Point &a, const Point &b){
+	return tolerant_eq(a.x, b.x) && tolerant_eq(a.y, b.y);
+}
+inline double cross(const Point &a, const Point &b){
+	return a.x * b.y - a.y * b.x;
+}
+inline double dot(const Point &a, const Point &b){
+	return a.x * b.x + a.y * b.y;
+}
+inline int ccw(const Point &a, const Point &b, const Point &c){
+	Point d = b - a, e = c - a;
+	if(cross(d, e) > 0.0){ return 1; }
+	if(cross(d, e) < 0.0){ return -1; }
+	if(dot(d, e) < 0.0){ return 2; }
+	if(d.abs() < e.abs()){ return -2; }
+	return 0;
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+struct Segment {
+	Point a;
+	Point b;
+	explicit Segment(const Point &a = Point(), const Point &b = Point()) :
+		a(a), b(b)
+	{ }
+	static Segment invalid(){
+		Point inv = Point::invalid();
+		return Segment(inv, inv);
+	}
+	bool is_valid() const { return a.is_valid() && b.is_valid(); }
+	bool operator<(const Segment &s) const {
+		return (a == s.a) ? (b < s.b) : (a < s.a);
+	}
+};
+inline bool tolerant_eq(const Segment &a, const Segment &b){
+	if(tolerant_eq(a.a, b.a) && tolerant_eq(a.b, b.b)){ return true; }
+	if(tolerant_eq(a.a, b.b) && tolerant_eq(a.b, b.a)){ return true; }
+	return false;
+}
+inline bool directed_tolerant_eq(const Segment &a, const Segment &b){
+	return tolerant_eq(a.a, b.a) && tolerant_eq(a.b, b.b);
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+class Polygon {
+private:
+	vector<Point> m_points;
+public:
+	Polygon() : m_points() { }
+	explicit Polygon(size_t s, const Point &p = Point()) :
+		m_points(s, p)
+	{ }
+	template <typename Iterator>
+	explicit Polygon(Iterator begin, Iterator end) :
+		m_points(begin, end)
+	{ }
+	static Polygon invalid(){ return Polygon(); }
+	bool is_valid() const { return m_points.size() > 0; }
+	const Point &operator[](int i) const { return m_points[i]; }
+	Point &operator[](int i){ return m_points[i]; }
+	size_t size() const { return m_points.size(); }
+	bool operator<(const Polygon &p) const {
+		return m_points < p.m_points;
+	}
+	double area() const {
+		double s = 0.0;
+		for(size_t i = 0; i < size(); ++i){
+			s += cross(m_points[i], m_points[(i + 1) % size()]);
+		}
+		return s * 0.5;
+	}
+	int contains(const Point &p) const {
+		int result = -1;
+		for(size_t i = 0; i < size(); ++i){
+			Point a = m_points[i] - p;
+			Point b = m_points[(i + 1) % size()] - p;
+			if(a.y > b.y){ swap(a, b); }
+			if(a.y <= 0.0 && b.y > 0.0 && cross(a, b) < 0.0){
+				result = -result;
+			}
+			if(cross(a, b) == 0.0 && dot(a, b) <= 0.0){ return 0; }
+		}
+		return result;
+	}
+};
+inline bool tolerant_eq(const Polygon &a, const Polygon &b){
+	if(a.size() != b.size()){ return false; }
+	const size_t size = a.size();
+	for(size_t i = 0; i < size; ++i){
+		if(!tolerant_eq(a[i], b[i])){ return false; }
+	}
+	return true;
+}
+}
+}
+namespace libcomp {
+namespace geometry {
+inline bool intersect(const Point &a, const Point &b){
+	return tolerant_eq(a, b);
+}
+inline bool intersect(const Point &a, const Segment &b){
+	return (b.a - a).abs() + (b.b - a).abs() - (b.b - b.a).abs() < EPS;
+}
+inline bool intersect(const Segment &a, const Point &b){
+	return intersect(b, a);
+}
+inline bool intersect(const Segment &a, const Segment &b){
+	if(ccw(a.a, a.b, b.a) * ccw(a.a, a.b, b.b) > 0){ return false; }
+	if(ccw(b.a, b.b, a.a) * ccw(b.a, b.b, a.b) > 0){ return false; }
+	return true;
+}
+}
+}
+namespace geom = libcomp::geometry;
+int main(){
+	ios_base::sync_with_stdio(false);
+	while(true){
+		int n;
+		cin >> n;
+		if(n == 0){ break; }
+		geom::Polygon polygon(n);
+		for(int i = 0; i < n; ++i){
+			double x, y;
+			cin >> x >> y;
+			polygon[i] = geom::Point(x, y);
+		}
+		vector< vector<int> > reachable(n, vector<int>(n));
+		for(int i = 0; i < n; ++i){
+			reachable[i][i] = 1;
+			reachable[i][(i + 1) % n] = 1;
+			reachable[(i + 1) % n][i] = 1;
+			for(int j = i + 2; j < n; ++j){
+				const geom::Segment s(polygon[i], polygon[j]);
+				bool accept = polygon.contains((s.a + s.b) * 0.5);
+				for(int k = 0; accept && k < n; ++k){
+					const int a = k, b = (k + 1) % n;
+					if(a == i || a == j){ continue; }
+					if(b == i || b == j){ continue; }
+					const geom::Segment t(polygon[a], polygon[b]);
+					if(geom::intersect(s, t)){
+						if(abs(geom::cross(s.b - s.a, t.a - s.a)) >= geom::EPS){
+							accept = false;
+						}
+					}
+				}
+				if(accept){ reachable[i][j] = reachable[j][i] = 1; }
+			}
+		}
+		int answer = n;
+		for(int i = 0; i < (1 << n); ++i){
+			int done = i;
+			for(int j = 0; j < n; ++j){
+				if(i & (1 << j)){
+					for(int k = 0; k < n; ++k){
+						if(reachable[j][k]){ done |= (1 << k); }
+					}
+				}
+			}
+			if(done == (1 << n) - 1){
+				answer = min(answer, __builtin_popcount(i));
+			}
+		}
+		cout << answer << endl;
+	}
+	return 0;
+}

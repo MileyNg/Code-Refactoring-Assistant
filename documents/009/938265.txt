@@ -1,0 +1,133 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef int Edge;
+typedef vector<vector<Edge> > Graph;
+
+struct State {
+  int v, bit;
+  bool operator == (const State &s) const {
+    return v == s.v && bit == s.bit;
+  }
+  bool operator < (const State &s) const {
+    if(v != s.v) return v < s.v;
+    return bit < s.bit;
+  }
+};
+
+int n, m;
+Graph g;
+vector<vector<int> > r;
+
+void showPath(map<State, pair<pair<int,int>,State> > &prev, State s) {
+  vector<pair<int,int> > v;
+  vector<int> tmp;
+  while(prev.count(s)) {
+    v.push_back(prev[s].first);
+    s = prev[s].second;
+  }
+  reverse(v.begin(), v.end());
+  for(int i = 0; i < v.size(); ++i) {
+    int j = i+1;
+    if(v[i].first >= 1)
+      while(j < v.size() && v[j].first >= 1) ++j;
+    vector<pair<int,int> > u;
+    for(int k = i; k < j; ++k) u.push_back(make_pair(v[k].second, v[k].first));
+    sort(u.begin(), u.end());
+    for(int k = 0; k < u.size(); ++k) {
+      if(u[k].second == 0) {
+        cout << "Move to room " << u[k].first+1 << "." << endl;
+      } else if(u[k].second == 1) {
+        cout << "Switch on room " << u[k].first+1 << "." << endl;
+      } else if(u[k].second == 2) {
+        cout << "Switch off room " << u[k].first+1 << "." << endl;
+      }
+    }
+    i = j-1;
+  }
+}
+
+void bfs(const State &src) {
+  queue<State> que;
+  map<State, int> cost;
+  map<State, pair<pair<int,int>,State> > prev;
+  const State dst = {n-1, 1<<(n-1)};
+  bool canGoal = false;
+  que.push(src);
+  cost[src] = 0;
+
+  while(que.size()) {
+    const State s = que.front();
+    que.pop();
+    if(s == dst) {
+      cout << "You can go home in " << cost[s] << " steps." << endl;
+      showPath(prev, s);
+      return;
+    }
+    if(s.v == n-1) canGoal = true;
+
+    for(int i = 0; i < g[s.v].size(); ++i) {
+      int nv = g[s.v][i];
+      if(s.bit & (1<<nv)) {
+        const State t = {nv, s.bit};
+        if(!cost.count(t)) {
+          que.push(t);
+          cost[t] = cost[s] + 1;
+          prev[t] = make_pair(make_pair(0, nv), s);
+        }
+      }
+    }
+
+    for(int i = 0; i < r[s.v].size(); ++i) {
+      if(r[s.v][i] == s.v) continue;
+      int nbit = s.bit ^ (1<<r[s.v][i]);
+      const State t = {s.v, nbit};
+      if(!cost.count(t)) {
+        que.push(t);
+        cost[t] = cost[s] + 1;
+        if(s.bit < nbit) { // ON
+          prev[t] = make_pair(make_pair(1, r[s.v][i]), s);
+        } else { // OFF
+          prev[t] = make_pair(make_pair(2, r[s.v][i]), s);
+        }
+      }
+    }
+  }
+
+  if(canGoal) {
+    cout << "You can not switch off all lights." << endl;
+  } else {
+    cout << "Help me!" << endl;
+  }
+}
+
+int main() {
+  while(cin >> n >> m && (n|m)) {
+    g = Graph(n);
+    for(int i = 0; i < m; ++i) {
+      int s, t;
+      cin >> s >> t;
+      --s; --t;
+      g[s].push_back(t);
+      g[t].push_back(s);
+    }
+    State s = {0, 0};
+    for(int i = 0; i < n; ++i) {
+      int a;
+      cin >> a;
+      s.bit |= a<<i;
+    }
+    r = vector<vector<int> >(n);
+    for(int i = 0; i < n; ++i) {
+      int k;
+      cin >> k;
+      r[i].resize(k);
+      for(int j = 0; j < k; ++j) {
+        cin >> r[i][j];
+        --r[i][j];
+      }
+    }
+    bfs(s);
+  }
+  return 0;
+}

@@ -1,0 +1,94 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_W = 31;
+const int MAX_H = 61;
+const int INF = 1e9 + 7;
+
+//start: 0, goal: 0, X: -1
+
+int my[9] = {2, 1, 0, -1, -2, 1, 0, -1, 0};
+int mx[9] = {1, 1, 1, 1, 1, 2, 2, 2, 3};
+
+class C{
+  public:
+    int y, x, foot, cost;
+    C(int _y, int _x, int _f, int _c){ y = _y, x = _x; foot = _f, cost = _c; }
+    C(){}
+    bool operator > (const C &c) const { return cost > c.cost; }
+};
+
+int W, H, v[MAX_H][MAX_W];
+
+int dij(){
+  priority_queue<C, vector<C>, greater<C> > open;
+  REP(x, W){
+    if(v[H - 1][x] == 0){
+      open.push( C(H - 1, x, 0, 0) );
+      open.push( C(H - 1, x, 1, 0) );
+    }
+  }
+  int closed[MAX_H][MAX_W][2];
+  REP(y, H) REP(x, W) REP(i, 2) closed[y][x][i] = INF;
+  while(!open.empty()){
+    C tmp = open.top(); open.pop();
+    int y = tmp.y, x = tmp.x, foot = tmp.foot, cost = tmp.cost;
+    //cout <<y <<", " <<x <<", " <<foot <<", " <<cost <<endl;
+    if(closed[y][x][foot] <= cost) continue;
+    closed[y][x][foot] = cost;
+    REP(i, 9){
+      int ny = y + my[i], nx = (foot == 0 ? x + (mx[i] * -1) : x + mx[i]);
+      if(ny >= 0 && nx >= 0 && ny < H && nx < W && v[ny][nx] >= 0){
+        //cout <<"    " <<ny <<", " <<nx <<", " <<(foot + 1) % 2 <<endl;
+        open.push( C(ny, nx, (foot + 1) % 2, cost + v[ny][nx]) );
+      }
+    }
+  }
+  int ans = INF;
+  REP(x, W) REP(i, 2) if(v[0][x] == 0) ans = min(ans, closed[0][x][i]);
+  return (ans == INF ? -1 : ans);
+}
+
+int main() {
+  while(cin >>W >>H && W){
+    REP(y, H){
+      REP(x, W){
+        char c; cin >>c;
+        if(c == 'S') v[y][x] = 0;
+        else if(c == 'T') v[y][x] = 0;
+        else if(c == 'X') v[y][x] = -1;
+        else v[y][x] = c - '0';
+      }
+    }
+    //debug
+    //REP(y, H){
+    //  REP(x, W) cout <<v[y][x] <<" ";
+    //  cout <<endl;
+    //}
+    //cout <<"--------" <<endl;
+    cout <<dij() <<endl;
+  }
+  return 0;
+}

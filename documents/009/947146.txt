@@ -1,0 +1,10 @@
+a = raw_input().replace("egg","0").replace("chicken","1")
+for i in range(len(a)-1):
+	if a[i] == a[i+1]:
+		if len(a[:i+1]) >= len(a[i+1:]):
+			ans = a[:i+1][-1]
+			break
+		else:
+			ans = a[i+1:][-1]
+			break
+print "egg" if ans == "0" else "chicken"

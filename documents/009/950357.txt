@@ -1,0 +1,41 @@
+
+#include<iostream>
+#include<queue>
+using namespace std;
+
+const int T = 4,S = 9;
+int num[1000],p[1000],q[1000],r[1000];
+int P,Q,R,C;
+queue<int> ans[100];
+
+int main()
+{
+	int i,j;
+	int N;
+	for(i = 0; cin >> N ;i++){
+		if( N == 0 )
+			break;
+		for(j = 0;j < N;j++)
+		{
+			cin >> num[j] >> p[j] >> q[j] >> r[j];
+		}
+		cin >> P >> Q >> R >> C;
+		for(j = 0;j < N;j++){
+			if( p[j]  <= P && q[j]  <= Q && r[j]  <= R && (p[j]+r[j])*T+q[j]*S <= C)
+			{
+				ans[i].push( num[j] );
+			}
+		}
+	}
+	for( j = 0;j < i;j++){
+		if( ans[j].empty() )
+			cout << "NA" << endl;
+		else{
+			while( !ans[j].empty() ){
+				cout << ans[j].front() << endl;
+				ans[j].pop();
+			}
+		}
+	}
+	return 0;
+}

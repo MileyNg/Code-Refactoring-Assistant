@@ -1,0 +1,56 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int W, Q;
+  while(scanf("%d%d", &W, &Q) && W && Q){
+    scanf("\n");
+    vector<int>s(W);
+    int id, w, j;
+    char k;//, tmp[1024];
+    //    fgets(tmp, sizeof(tmp), stdin);
+    fill(s.begin(), s.end(), -1);
+    rep(i, Q){
+      scanf("%c", &k);
+      //      printf("%d\n", i);
+      if(k == 's'){
+	scanf("%d %d", &id, &w); scanf("\n");
+	//	fgets(tmp, sizeof(tmp), stdin);
+	//	printf("%c %d %d\n", k, id, w);
+	for(j = 0; j < W; ++j){
+	  int cnt = 0;
+	  for(int k = j; s[k] == -1; k++) cnt++;
+	  //	  if(s[k] == - 1) cnt++;
+	  //	  REP(k, j, Q) if(s[k] == -1 && s[k+1] == -1) cnt++;
+	  if(cnt >= w){
+	    REP(k, j, j+w) s[k] = id;
+	    printf("%d\n", j);
+	    break;
+	  }
+	}
+	if(j == W) puts("impossible");
+      }else{
+	scanf("%d", &id); scanf("\n");
+	//	printf("%c %d\n", k, id);
+	rep(j, W) if(s[j] == id) s[j] = -1;
+      }
+      //      rep(i, 4) printf("%d", s[i]); puts("");
+    }
+    puts("END");
+  }
+  return 0;
+}

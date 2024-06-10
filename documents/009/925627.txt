@@ -1,0 +1,32 @@
+#include<stdio.h>
+
+int main(){
+
+  int n,i,j,min,m=0,f;
+  int A[100];
+  int temp;
+  scanf("%d",&n);
+  
+    for(i = 0 ; i < n ; i++)scanf("%d",&A[i]);
+  
+
+    for(i = 0 ; i <= n-1 ; i++){
+      min = i;
+     
+      for(j = i ; j <= n-1 ; j++){
+       
+	if(A[j] < A[min]){
+	  min = j;
+	  temp = A[i];
+          A[i] = A[min];
+          A[min] = temp;
+	 
+          }
+      }
+      m = m + 1;
+    }
+    for(i = 0 ; i < n ; i++)printf("%d",A[i]);
+    printf("\n");
+    printf("%d\n",m);
+
+  return 0;

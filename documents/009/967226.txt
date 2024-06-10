@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+
+long long int cnt[1050000 * 2] = {0};
+long long int as[1050000 * 2] = {0};
+
+int main() {
+
+  long long int n, q;
+
+  cin >> n >> q;
+  
+  long long int n2 = 1;
+  while(n2 < n){
+    n2 *= 2;
+  }
+
+  for(int i = 0; i < n2; i++){
+    as[i + (n2- 1)] = i;
+  }
+
+  for(int query = 0; query < q; query++){
+    long long int a = 0;
+    long long int v = 0;
+
+    cin >> a >> v;
+
+    long long int index = a + (n2 - 1);
+    cnt[index] += v;
+
+    do{
+      index = (index - 1) / 2;
+      
+      long long int left  = index * 2 + 1;
+      long long int right = index * 2 + 2;
+      
+      if(cnt[left] >= cnt[right]){
+	cnt[index] = cnt[left];
+	as[index] = as[left];
+      }else if(cnt[left] < cnt[right]){
+	cnt[index] = cnt[right];
+	as[index] = as[right];
+      }
+
+    }while(index > 0);   
+    
+    cout << as[0] << " " << cnt[0] << endl;
+  }
+
+  return 0;
+
+}

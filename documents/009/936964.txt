@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int y, m, d, y2, m2, d2;
+	int i, j;
+	int ans;
+	char month[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	
+	while (1){
+		scanf("%d %d %d %d %d %d", &y, &m, &d, &y2, &m2, &d2);
+		
+		if (y < 0 || m < 0 || d < 0 || y2 < 0 || m2 < 0 || d2 < 0){
+			break;
+		}
+		
+		ans = 0;
+		
+		while (1){
+			
+			if (y == y2 && d == d2 && m == m2){
+				break;
+			}
+			
+			ans++;
+			d++;
+			
+			if (d > month[m - 1]){
+				d = 1;
+				m++;
+			}
+			if (m > 12){
+				m = 1;
+				y++;
+			}
+			
+			if ( (y % 4 == 0 && y % 100 != 0) || y % 400 == 0){
+				month[1] = 29;
+			}
+			else {
+				month[1] = 28;
+			}
+		}
+		
+		printf("%d\n", ans);
+	}
+	
+	return (0);
+}

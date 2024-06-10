@@ -1,0 +1,112 @@
+
+#include<iostream>
+#include<queue>
+#include<vector>
+#define rep(i,n) for(i = 0;i < n;i++)
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<P,P> PP;
+typedef pair<PP,int> PPI;
+const int INF = 10000000;
+
+int X,Y;
+int X1,Y1;
+int X2,Y2;
+int data[52][52];			//行,列でのデータ
+int dp[52][52][52][52];		//T君が(Y,X) , K君が(Y,X)に来る時の最短手数。( 座標は(行,列) )
+queue<PPI> que;
+
+P add( P p1,P p2 ){
+	p1.first += p2.first;
+	p1.second += p2.second;
+	return p1;
+}
+
+int BFS()
+{
+	PPI now;
+	P pos1,pos2,next1,next2;
+	int cnt;
+	int dx[4] = {0,1,0,-1};
+	int dy[4] = {1,0,-1,0};
+
+	que.push( PPI( PP( P( Y1,X1 ),P( Y2,X2 ) ),0 ) );
+	while( !que.empty() )
+	{
+		now = que.front();
+		pos1 = now.first.first;
+		pos2 = now.first.second;
+		cnt  = now.second;
+		que.pop();
+		//確定
+		dp[pos1.first][pos1.second][pos2.first][pos2.second] = cnt;
+		//どちらも行けない場所または遷移したことがある⇒continue
+		//pos1を固定すると行けるか…
+		//枝を出す.  
+		for( int i = 0;i < 4;i++ ){
+			next1 = add( pos1 , P(dy[i],dx[i]) );
+			next2 = add( pos2 , P(dy[(i+2)%4],dx[(i+2)%4]) );
+			if( data[ next1.first ][ next1.second ] == 1 )
+				next1 = pos1;
+			if( data[ next2.first ][ next2.second ] == 1 )
+				next2 = pos2;
+			if( dp[ next1.first ][ next1.second ][ next2.first ][ next2.second ] > cnt+1 )
+			{
+				dp[ next1.first ][ next1.second ][ next2.first ][ next2.second ] = cnt+1;
+				que.push( PPI( PP( next1,next2 ),cnt+1 ) );
+			}
+		}
+	}
+	int ans = INF;
+	int i,j;
+	rep(i,Y+2){
+		rep(j,X+2){
+			ans = min( ans,dp[i][j][i][j] );
+		}
+	}
+	return ans;
+}
+
+int main(){
+	int i,j,k,l;
+	while( cin >> X >> Y ){
+		if( X == 0 && Y == 0 )
+			break;
+		//dataの番兵
+		rep(i,Y+2){
+			rep(j,X+2){
+				if(i == 0 || i == Y+1 || j == 0 || j == X+1)
+					data[i][j] = 1;
+				else
+					data[i][j] = 0;
+			}
+		}
+		//入力
+		cin >> X1 >> Y1 >> X2 >> Y2;
+		rep(i,Y){
+			rep(j,X){
+				cin >> data[i+1][j+1];
+			}
+		}
+		//DPテーブルの初期化っぽいこと
+		rep(i,Y+2){
+			rep(j,X+2){
+				rep(k,Y+2){
+					rep(l,X+2){
+						dp[i][j][k][l] = INF;
+					}
+				}
+			}
+		}
+		//最短手数は?
+		int ret = BFS();
+		if( ret >= 100 )
+			cout << "NA" << endl;
+		else
+			cout << ret << endl;
+		//queを空っぽにする
+		while(!que.empty())
+			que.pop();
+	}
+	return 0;
+}

@@ -1,0 +1,87 @@
+#include <cstdio>
+#include <cassert>
+#include <cstring>
+#include <iomanip>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+#include <stack>
+
+using namespace std;
+
+typedef long long Long;
+
+#define MN 100000
+#define MQ 100000
+int N, Q;
+int parent[MN + 1];
+bool marked[MN + 1];
+pair<int, int> queries[MQ];
+int group[MN + 1];
+
+int fillGroup(int n) {
+    if (group[n] >= 1) return group[n];
+    return group[n] = fillGroup(parent[n]);
+}
+int findGroup(int n) {
+    if (marked[ group[n] ]) return group[n];
+    return group[n] = findGroup(parent[n]);
+}
+
+bool input() {
+    scanf("%d %d", &N, &Q);
+    if (N == 0 && Q == 0) return false;
+    if (getchar() == EOF) return false;
+    for (int i = 2; i <= N; i++) {
+        int p;
+        scanf("%d", &p);
+        parent[i] = p;
+    }
+    memset(marked, false, N + 1);
+    marked[1] = true;
+    memset(group, 0, sizeof(int) * (N + 1));
+    group[1] = 1;
+    for (int i = 0; i < Q; i++) {
+        char t; int n;
+        scanf("%*[ \t\r\n]%c %d", &t, &n);
+        if (t == 'M') {
+            if (marked[n]) {
+                queries[i] = make_pair('X', 0);
+                continue;
+            }
+            marked[n] = true;
+            group[n] = n;
+        }
+        queries[i] = make_pair(t, n);
+    }
+    for (int i = 1; i <= N; i++) {
+        if (group[i] <= 0) fillGroup(i);
+    }
+    return true;
+}
+
+void solve() {
+    Long ans = 0;
+    for (int q = Q - 1; q >= 0; q--) {
+        pair<int, int> query = queries[q];
+        if (query.first == 'Q') {
+            ans += findGroup(query.second);
+        } else if (query.first == 'M') {
+            marked[query.second] = false;
+        }
+        //for (int i = 1; i <= N; i++) cout << setw(3) << group[i]; cout << endl;
+    }
+    printf("%lld\n", ans);
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

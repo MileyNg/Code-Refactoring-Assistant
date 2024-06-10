@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define iter(it,c) for(auto it=c.begin(); it!=c.end(); it++)
+
+typedef vector<int> vi;
+
+pair<vi,int> solve(int n, int x, int m, vi const& l, vi const& r, vi const& s){
+    vi ans;
+    int ans_sum = -1;
+    int end = x + 1;
+    rep(i, n - 1) end *= x + 1;
+    rep(q, end + 1){
+        int mask = q;
+        vi v(n);
+        rep(i, n){
+            v[i] = mask % (x + 1);
+            mask /= (x + 1);
+        }
+        vi sum(n);
+        sum[0] = v[0];
+        loop(i, 1, n) sum[i] = sum[i - 1] + v[i];
+
+        bool ok = true;
+        rep(i, m){
+            int a = sum[r[i]];
+            if (i != 0) a -= sum[l[i - 1]];
+            if (a == s[i]) continue;
+            ok = false;
+            break;
+        }
+        if (ok && sum.back() > ans_sum) {
+            ans_sum = sum.back();
+            swap(ans, v);
+        }
+    }
+    return make_pair(ans,ans_sum);
+}
+
+int main(){
+    int n, x, m;
+    while (cin >> n >> x >> m){
+        vi l(n), r(n), s(n);
+        vi ans;
+        rep(i, m){
+            cin >> l[i] >> r[i] >> s[i];
+            l[i]--; r[i]--;
+        }
+        auto t = solve(n, x, m, l, r, s);
+        if (t.second != -1){
+            rep(i, t.first.size() - 1) cout << t.first[i] << " ";
+            cout << t.first.back() << endl;
+        }
+        else{
+            cout << -1 << endl;
+        }
+    }
+}

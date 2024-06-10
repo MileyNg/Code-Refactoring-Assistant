@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> II;
+
+/** Problem0090 : Overlaps of Seals **/
+
+struct  P {
+	D x, y;
+	P() {}
+	P(D x_, D y_) : x(x_), y(y_) {}
+};
+
+struct  C {
+	P p; D r;
+	C(){}
+	C(P p_, D r_) : p(p_), r(r_) {}
+};
+
+P operator +(P a, P b) { return P(a.x + b.x, a.y + b.y); }
+P operator -(P a, P b) { return P(a.x - b.x, a.y - b.y); }
+P operator *(P a, D b) { return P(a.x * b, a.y * b); }
+P operator /(P a, D b) { return P(a.x / b, a.y / b); }
+P vec(P from, P to) { return to - from; }
+D inp(P a, P b) { return a.x*b.x + a.y*b.y; }
+D outp(P a, P b) { return a.x*b.y - a.y*b.x; }
+D norm(P p) { return inp(p, p); }
+D abs(P p) { return sqrt(norm(p)); }
+int sig(D a, D b) {
+	if(a < b - EPS) return -1;
+	if(a > b + EPS) return +1;
+	return 0;
+}
+P rot90(P p) { return P(-p.y, p.x);}
+// NaN
+vector<P> cCC(C a, C b) {
+	D d = abs(b.p - a.p);
+	D x = (d*d + a.r*a.r - b.r*b.r) / (2*d);
+	D y = sqrt(a.r*a.r - x*x);
+	P v = (b.p - a.p) / d;
+	vector<P> res;
+	res.push_back(a.p + v*x + rot90(v)*y);
+	res.push_back(a.p + v*x - rot90(v)*y);
+	return res;
+}
+
+int main()
+{
+	int N;
+	while (cin>>N, N) {
+		vector<P> points;
+		rep(k, N) {
+			P p; char c;
+			cin >>p.x>>c>>p.y;
+			points.push_back(p);
+		}
+		
+		int ans=1;
+		rep(i, N) {
+			P p1 = points[i];
+			rep(j, N) {
+				if (i!=j) {
+					P p2 = points[j];
+					if (sig(abs(p2-p1), 2.0) <= 0) {
+						P ip1 = cCC(C(p1, 1), C(p2, 1))[0];
+						P ip2 = cCC(C(p1, 1), C(p2, 1))[1];
+						
+						int tmp1=2, tmp2=2;
+						rep(k, N) {
+							if (k!=i && k!=j) {
+								P p = points[k];
+								if (sig(abs(p-ip1), 1.0) <= 0) {
+									tmp1++;
+								} if (sig(abs(p-ip2), 1.0) <= 0) {
+									tmp2++;
+								}
+							}
+						}
+						ans = max(max(ans, tmp1), tmp2);
+					}
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+}

@@ -1,0 +1,48 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+void shuffle(int *cards,int p, int c){
+	int *mt1 = new int[p-1];
+	for(int i=0;i<p-1;i++){
+		mt1[i] = cards[i];
+	}	
+	int *mt2 = new int[c];
+	for(int i=0;i<c;i++){
+		mt2[i] = cards[p-1+i];
+	}
+	for(int i=0;i<c;i++){
+		cards[i] = mt2[i];
+	}
+	for(int i=0;i<p-1;i++){
+		cards[c+i] = mt1[i];
+	}
+	delete[] mt1;
+	delete[] mt2;
+}
+
+int main(){
+	int n,r;//カードの枚数,シャッフルの回数
+	while(true){
+		cin >> n >> r;
+		if(n==0 && r==0){
+			break;
+		}
+		int *cards = new int[n];
+		for(int i=0;i<n;i++){
+			cards[i] = n-i;
+		}
+		for(int i=0;i<r;i++){
+			int p,c;//上からpの場所からc個
+			cin >> p >> c;
+			shuffle(cards,p,c);
+		}
+		int result = cards[0];
+		cout << result << endl;
+		delete[] cards;
+	}
+	
+	return 0;
+}

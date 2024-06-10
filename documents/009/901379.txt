@@ -1,0 +1,56 @@
+#include <iostream>
+
+using namespace std;
+
+#define WH 110
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	int w,h;
+	int f[WH][WH];
+
+	int x,y;
+	int s,t;
+
+	int cnt,max;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		cin>>w>>h;
+
+		for(int i1=0;i1<WH;i1++){
+			for(int i2=0;i2<WH;i2++){
+				f[i1][i2]=0;
+			}
+		}
+
+		for(int i1=0;i1<n;i1++){
+			cin>>x>>y;
+			f[y-1][x-1]=1;
+		}
+
+		cin>>s>>t;
+
+		max=0;
+
+		for(int i1=0;i1<h-t+1;i1++){
+			for(int i2=0;i2<w-s+1;i2++){
+
+				cnt=0;
+
+				for(int i3=0;i3<t;i3++){
+					for(int i4=0;i4<s;i4++){
+						if(f[i1+i3][i2+i4]==1) cnt++;
+					}
+				}
+				if(max<cnt) max=cnt;
+			}
+		}
+
+		cout<<max<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,30 @@
+#include <iostream>
+
+int main() {
+  int a;
+
+  while(std::cin >> a) {
+    bool flag = false;
+    int prime = 0;
+
+    for(int cnt = 2; cnt <= a; ++cnt) {
+      int fact = 2;
+      flag = false;
+
+      while(fact < cnt) {
+        if(cnt % fact == 0) {
+          flag = true;
+          break;
+        }
+        ++fact;
+      }
+
+      if(!flag) {
+        ++prime;
+      }
+
+    }
+    std::cout << prime << std::endl;
+  }
+
+}

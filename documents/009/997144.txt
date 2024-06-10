@@ -1,0 +1,99 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<cstdlib>
+#include<cmath>
+#include<cstring>
+#include<string>
+#include<algorithm>
+#define INF 1e9
+#define M_Team 50
+#define M_Pro 10
+
+typedef long long int ll;
+using namespace std;
+
+int wacount[M_Team+1][M_Pro+1]={};
+int timesum[M_Team+1]={},anssum[M_Team+1];
+vector<char> ans;
+
+
+void set(int n){
+	if(n <10)
+		ans.push_back(n+'0');
+	else{
+		ans.push_back(n/10+'0');
+		ans.push_back(n%10+'0');
+	}
+}
+
+void out(int timesum[M_Team+1],int grad[M_Team+1],int T){
+	set(grad[0]+1);
+	for(int i=1;i<T;i++){
+		if(anssum[ grad[i] ]==anssum[ grad[i-1] ]  &&  timesum[ grad[i] ] == timesum[ grad[i-1] ] ){
+			ans.push_back('=');
+			set(grad[i]+1);
+		}else{
+			ans.push_back(',');
+			set(grad[i]+1);
+		}
+	}
+	for(int i=0;i<ans.size();i++)cout<<ans[i];
+	cout<<endl;
+}
+
+bool checkOver(int a,int b){
+	if(anssum[a] <  anssum[b])return true;
+	if( (anssum[a] == anssum[b]) && (timesum[a]>timesum[b]) )return true;
+	return false;
+}
+
+
+void babu_sort(int anssum[M_Team+1],int timesum[M_Team+1],int grad[M_Team+1],int T){
+	for(int i=0;i<T;i++)
+		for(int j=0;j<T-i-1;j++)
+			if( checkOver(grad[j],grad[j+1]) )
+				swap(grad[j],grad[j+1]);
+}
+
+void solve(int anssum[M_Team+1],int timesum[M_Team+1],int M,int T,int P,int R){
+	int grad[M_Team+1];
+	for(int i=0;i<T;i++)
+		grad[i]=T-i-1;
+//for(int i=0;i<T;i++)cout<<grad[i];cout<<endl;
+	babu_sort(anssum,timesum,grad,T);
+//for(int i=0;i<T;i++)cout<<grad[i];cout<<endl;
+	out(timesum,grad,T);
+}
+
+int main(){
+	while(1){
+//初期化
+		ans.clear();
+		for(int i=0;i<M_Pro+1;i++){
+			for(int j=0;j<M_Team+1;j++){
+				wacount[i][j]=0;
+			}
+			timesum[i]=0;
+			anssum[i]=0;
+		}
+///////
+		int M,T,P,R;
+		int m,t,p,J;
+		cin>>M>>T>>P>>R;
+		if(M==0 && T==0 && P==0 && R==0)break;
+		for(int i=0;i<R;i++){
+			cin>>m>>t>>p>>J;
+			t--;
+			if(J!=0){
+				wacount[t][p]++;
+			}
+			else{
+				timesum[t]+=m+wacount[t][p]*20;
+				anssum[t]++;
+			}
+		}
+		solve(anssum,timesum,M,T,P,R);
+	}
+	return 0;
+}

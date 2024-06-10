@@ -1,0 +1,17 @@
+import sys
+for s in sys.stdin.readlines():
+    st = []
+    for c in s.strip().split():
+        if c.isdigit():
+            st.append(float(c))
+        else:
+            b = st.pop(); a = st.pop();
+            if c=='+':
+                st.append(a+b)
+            elif c=='-':
+                st.append(a-b)
+            elif c=='*':
+                st.append(a*b)
+            else:
+                st.append(a/b)
+    print st.pop()

@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<string.h>
+#define STACK 1000
+#define compile 0
+void init(char array[], int roop)
+{
+	int i = 0;
+	for(i = 0; i < roop; i++)
+	{
+		array[i] = '\0';
+	}
+	return;
+}
+void stacking(char array[], int stack)
+{
+	char input[7];
+	char mountain[STACK];
+	init(input, 7);
+	init(mountain, STACK);
+	int i = 0; //mountain制御変数
+	int j = 0; //array制御変数
+	gets(input);
+	
+#if compile == 2
+	int t = 0;
+	for(t = 0; t < 10; t++)
+	{
+		printf("array[%d] = %d\n", t, array[t]);
+	}
+#endif
+	
+	while(strcmp(input, "quit") != 0)
+	{
+#if compile == 1
+		printf("input = %s\n", input);
+#endif
+		if(input[4] == 0x20)
+		{
+			mountain[i] = input[5];
+#if compile == 1
+			printf("i = %d j = %d\n", i, j);
+			printf("mountain[%d] = %c\n", i, mountain[i]);
+#endif
+			i++;
+		}
+		if(strcmp(input, "pop") == 0)
+		{
+#if compile == 2
+			printf("代入前のarray[%d] = %d\n", j, array[j]);
+#endif
+			array[j] = mountain[--i];
+#if compile == 1
+			printf("i = %d j = %d\n", i, j);
+			printf("array[%d] = %c\n", j, array[j]);
+#endif
+			j++;
+		}
+		init(input, 7);
+		gets(input);
+	}
+	return;
+}
+void output(char array[])
+{
+#if compile == 1
+	printf("関数ouput実行\n");
+#endif
+	int i = 0;
+	while((97 <= array[i]) && (122 >= array[i]))
+	{
+		printf("%c\n", array[i]);
+		i++;
+	}
+	return;
+}
+main()
+{
+	char result[STACK];
+	init(result, STACK);
+	stacking(result, STACK);
+	output(result);
+	return 0;
+}

@@ -1,0 +1,64 @@
+#include<iostream>
+
+using namespace std;
+
+#define MMAX 100
+#define tMAX 1260
+
+int main(){
+
+	int N,M;
+	int r;
+	int t,n,m,s;
+	int q;
+	int ts,te;
+	int score[MMAX][tMAX];
+	int cnt[MMAX];
+	int tim[MMAX];
+	int cou;
+
+	while(1){
+
+		cin>>N>>M;
+		if(N==0&&M==0) break;
+		cin>>r;
+		for(int i=1;i<M;i++){
+			cnt[i]=0;
+			tim[i]=0;
+			for(int j=0;j<=1260;j++){
+				score[i][j]=0;
+			}
+		}
+
+		for(int i=0;i<r;i++){
+			cin>>t>>n>>m>>s;
+			if(s==1){
+				if(cnt[m]==0){
+					tim[m]=t;
+					cnt[m]++;
+				}
+			}
+			else{
+				if(cnt[m]==1){
+					for(int i=tim[m];i<t;i++){
+						score[m][i]=1;
+					}
+				}
+			}
+		}
+
+		cin>>q;
+
+		for(int i=0;i<q;i++){
+			cin>>ts>>te>>m;
+			cou=0;
+			for(int i=ts;i<te;i++){
+				if(score[m][i]>=1) cou++;
+			}
+			cout<<cou<<endl;
+		}
+	}
+
+	return 0;
+}
+ 

@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int Levenstein(string a,string b){
+  int dp[a.size()+1][b.size()+1];
+  
+  for(int i=0;i<=a.size();i++)dp[i][0]=i;
+  for(int i=0;i<=b.size();i++)dp[0][i]=i;
+  
+  for(int i=1;i<=a.size();i++){
+    for(int j=1;j<=b.size();j++){
+      int cost=(a[i-1]==b[j-1])?0:1;
+      dp[i][j]=min(dp[i-1][j]+1,min(dp[i][j-1]+1,dp[i-1][j-1]+cost));
+    }
+  }
+  return dp[a.size()][b.size()];
+}
+
+vector<string>v;
+
+int main(void){
+
+  int n,m;
+
+  cin >> n >> m;
+  cin.ignore();
+  v.clear();
+
+  for(int i=0;i<n;i++){
+    string in;
+    getline(cin,in);
+    
+    for(int j=0,head=0;j<in.size();){
+      while(j<in.size() && in[j]!=' ')j++;
+      if(j>in.size())continue;
+      v.push_back(in.substr(head,j-head));
+      j++;      
+      head=j;
+    }
+  }
+
+
+    vector<string>dic(m);
+    for(int i=0;i<m;i++)cin >> dic[i];
+
+    
+    int sum=0;
+    for(int i=0;i<v.size();i++){
+      int mn=(1<<29);
+      for(int j=0;j<m;j++){
+        mn=min(mn,Levenstein(v[i],dic[j]));
+      }
+
+      sum+=mn;
+    }
+    cout << sum << endl;
+  
+
+  return 0;
+}

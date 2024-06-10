@@ -1,0 +1,26 @@
+#include <cstdio>
+#include <stdlib.h>
+#include <math.h>
+
+float a,b,c,d,e,f;
+double    round( double val, int precision )
+{
+    double    ret;
+    char    buf[256] = {'\0'};
+    char    *p;
+
+    sprintf( buf, "%.*f", precision, val );
+    ret = strtod( buf, &p );
+
+    return ret;
+}
+int main (){
+  scanf("%f %f %f %f %f %f",&a,&b,&c,&d,&e,&f);
+  double x,y;
+  x=(f*b/e-c)/(d*b/e-a);
+  y=(f*a/d-c)/(e*a/d-b);
+ round(x,4);
+ round(y,4);
+if(x/1000== -0.000) x=0.000;
+  printf("%.3f %.3f\n",x,y);
+}

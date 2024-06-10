@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <stack>
+using namespace std;
+
+int main(){
+
+	while(1){
+        stack<char> s;
+		int p=0, q=0, cont=0;
+		string input;
+
+		getline(cin, input);
+
+		if(input[0] == '.' && input[1] == '\0') break;
+
+		for(int i=0;i < input.length() ;i++){
+			if(input[i] == '.') break;
+			switch(input[i]){
+				case '[': s.push(input[i]);
+				break;
+				case '(': s.push(input[i]);
+				break;
+				case ']':
+                          if(s.empty()){ cont = -1; break;}
+                          if(s.top() != '['){cont = -1; break;}
+                          s.pop();
+				break;
+				case ')': q--;
+                          if(s.empty()){ cont = -1; break;}
+                          if(s.top() != '('){cont = -1; break;}
+                          s.pop();
+				break;
+			}
+		}
+		if(cont == -1) cout << "no" << endl;
+		else cout << "yes" << endl;
+
+	}
+	return 0;
+}

@@ -1,0 +1,21 @@
+#include<stdio.h>
+#define K 200000
+#define L 1000000000
+int main(){
+  int N,i,R[K],max=0,min=L;
+  scanf("%d",&N);
+  if(N<2 || N >K){
+    return 0;
+  }
+  for(i=0;i<N;i++){
+    scanf("%d",&R[i]);
+    if(R[i]>L)return 0;
+  }
+  
+  for(i=0;i<N;i++){
+    if(max < R[i])max = R[i];
+    if(min > R[i])min = R[i];
+  }
+  printf("%d\n",max-min);
+  return 0;
+}

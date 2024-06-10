@@ -1,0 +1,103 @@
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Point {
+	int x, y;
+};
+
+struct Node {
+	int a, b;
+	double d;
+};
+
+Point piles[10001];
+
+int N, M;
+
+int s[10001];
+
+double distanc(int i, int j)
+{
+	int dx = piles[i].x - piles[j].x;
+	int dy = piles[i].y - piles[j].y;
+	return sqrt(dx*dx+dy*dy);
+}
+
+bool compare_node(const Node &n1, const Node &n2)
+{
+	if (n1.d != n2.d)
+		return n1.d < n2.d;
+	if (n1.a != n2.a)
+		return n1.a < n2.a;
+	return n1.b < n2.b;
+}
+
+int find_root(int i)
+{
+	if (s[i]!=i)
+		s[i] = find_root(s[i]);
+	return s[i];
+}
+
+bool same_set(int i, int j)
+{
+	return find_root(i)==find_root(j);
+}
+
+void union_set(int i, int j)
+{
+	int root1 = find_root(i);
+	int root2 = find_root(j);
+	s[root1] = root2;
+}
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	while (scanf("%d%d", &N, &M)==2) {
+		int i, j;
+
+		for (i=1; i<=N; i++) {
+			scanf("%d%d", &piles[i].x, &piles[i].y);
+		}
+
+		vector<Node> v;
+		Node node;
+
+		for (i=0; i<M; i++) {
+			scanf("%d%d", &node.a, &node.b);
+			node.d = distanc(node.a, node.b);
+			v.push_back(node);
+		}
+		sort(v.begin(), v.end(), compare_node);
+
+		vector<int> remove_v;
+		for (i=1; i<=N; i++)
+			s[i] = i;
+		for (i=M-1; i>=0; i--) {
+			if (!same_set(v[i].a, v[i].b)) {
+				union_set(v[i].a, v[i].b);
+				remove_v.push_back(i);
+			}
+		}
+
+		double sum = 0.0;
+		j = remove_v.size()-1;
+		for (i=0; i<M; i++) {
+			if (j>=0 && i==remove_v[j]) {
+				j--; continue;
+			}
+			sum += v[i].d;
+		}
+		printf("%.3lf\n", sum);
+	}
+
+
+	return 0;
+}

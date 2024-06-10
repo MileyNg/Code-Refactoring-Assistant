@@ -1,0 +1,28 @@
+#include<stdio.h>
+#define M 200001
+void CouSort(int *A,int k,int n){
+  int i,j,B[M],C[10000];
+  for(i=0;i<k;i++)
+    C[i]=0;
+  for(j=0;j<n;j++)
+    C[A[j]]++;
+  /* C[i]にはiの出現数が記録されている*/
+  for(i=1;i<k;i++)
+    C[i] = C[i] + C[i-1];
+  /* C[i]にはi以下の数の出現数が記録されている*/
+  for(j=n-1;j>=0;j--){
+    B[C[A[j]]] = A[j];
+    C[A[j]]--;
+  }
+  for(i=1;i<n;i++)
+    printf("%d ",B[i]);
+  printf("%d\n",B[n]);
+}
+main(){
+  int n,i,A[M];
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    scanf("%d",&A[i]);
+  CouSort(A,10000,n);
+  return 0;
+}

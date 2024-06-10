@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+int main (int argc, char * const argv[]) {
+    // insert code here...
+    int n, a, b, c, d;
+	
+	while(cin >> n){
+		int count = 0;
+		for(int i=0;i<10;i++){
+			for(int j=0;j<10;j++){
+				for(int k=0;k<10;k++){
+				/*
+					for(int l=0;l<10;l++){
+						if(i+j+k+l==n){
+							count++;
+						}else if(i+j+k+l>n){
+							break;
+						}
+					}
+				*/
+				if(n-(i+j+k)>=0 && n-(i+j+k)<10)
+					count++;
+				}
+			}
+		}
+		cout << count <<endl;
+	}
+	
+	return 0;
+}

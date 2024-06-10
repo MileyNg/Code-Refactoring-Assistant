@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+using namespace std;
+int main(){
+int n;
+while(cin>>n,n){
+long long int tmp[4001]={0};
+vector<int>no;
+rep(i,n){
+int a,b,c;
+cin>>a>>b>>c;
+pb(no,a);
+tmp[a]+=b*c;
+}
+int co=0;
+rep(i,n){
+if(tmp[no[i]]>=1000000){
+int han=0;
+rep(j,i){
+if(no[i]==no[j]){
+han=1;
+break;
+}
+}
+if(han)continue;
+co++;
+cout<<no[i]<<endl;
+}
+}
+if(!co)cout<<"NA"<<endl;
+}
+}

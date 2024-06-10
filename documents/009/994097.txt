@@ -1,0 +1,105 @@
+#include<cstdio>
+#include<iostream>
+
+int main(void)
+{
+	int n,m; //宝の個数、移動回数
+	int i; //for変数
+	int math[21][21]; //宝の位置、ある場所は1,ない場所は0
+	int x,y;
+	int a,b; 
+	char d; //方角
+	int l; //移動量
+	int count; //見つけた宝の数
+	int yL,xL;
+	
+	for(;;)
+	{
+		count=0;
+		x=10,y=10;
+		xL=x,yL=y;
+		scanf("%d",&n);
+		if(n==0) break;
+		for(a=0; a<21; a++)
+		{
+			for(b=0; b<21; b++)
+			{
+				math[a][b]=0;
+			}
+		}
+		for(i=0; i<n; i++)
+		{
+			scanf("%d  %d",&a,&b);
+			math[a][b]=1;
+		}
+		
+		scanf("%d",&m);
+		for(i=0; i<m; i++)
+		{
+			scanf("%s %d",&d,&l);
+			
+			if(math[10][10]==1)
+			{
+				count++;
+				math[10][10]=0;
+			}	
+			if(d=='N')
+			{
+				yL+=l;
+				for(y=y+1; y<=yL; y++)
+				{
+					if(math[x][y]==1)
+					{
+						count+=1;
+						math[x][y]=0;
+					}
+				}
+				y--;
+			}
+			else if(d=='E')
+			{
+				xL+=l;
+				for(x=x+1; x<=xL; x++)
+				{
+					if(math[x][y]==1)
+					{
+						count+=1;
+						math[x][y]=0;
+					}
+				}
+				x--;
+			}
+			else if(d=='S')
+			{
+				yL-=l;
+				for(y=y-1; y>=yL; y--)
+				{
+					if(math[x][y]==1)
+					{
+						count+=1;
+						math[x][y]=0;
+					}
+				}
+				y++;
+			}
+			else if(d=='W')
+			{
+				xL-=l;
+				for(x=x-1; x>=xL; x--)
+				{
+					if(math[x][y]==1)
+					{
+						count+=1;
+						math[x][y]=0;
+					}
+				}
+				x++;
+			}
+		}
+		
+		if(count==n) printf("Yes\n");
+		else printf("No\n");
+	}
+	
+	return 0;
+}

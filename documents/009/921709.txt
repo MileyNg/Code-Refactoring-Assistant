@@ -1,0 +1,45 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int get3Year(){
+	return 20*10;
+}
+int get12Year(){
+	return 20*5 + 19*5;
+}
+
+int getYear(int num){
+	if(num%3==0)return get3Year();
+	return get12Year();
+}
+
+int getMonth(int year,int month){
+	if(year%3==0)return 20;
+	if(month%2==1)return 20;
+	return 19;
+}
+
+int main(){
+	int n;
+	cin>>n;
+	
+	rep(i,n){
+		int a,b,c;
+		cin>>a>>b>>c;
+		
+		int sum = 0;
+		for(int i=a+1;i<1000;i++)sum+=getYear(i);
+		for(int j=b+1;j<=10;j++)sum+=getMonth(a,j);
+		
+		int maxi = getMonth(a,b);
+		sum += maxi-c;
+		
+		printf("%d\n",sum+1);
+	}
+}

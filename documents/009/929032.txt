@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+  int n,a,b;
+  cin>>n;
+  vector<int> v(n);
+  cin>>a>>b;
+  int cal;
+  cin>>cal;
+  for(int i=0;i<n;++i)
+    cin>>v[i];
+  sort(begin(v),end(v),greater<int>());
+  int cost = a;
+  for(int i=0;i<n;++i){
+    if(cal*(cost+b) > (cal+v[i])*cost)break;
+    cal += v[i];
+    cost += b;
+  }
+  cout << (cal / cost) << endl;
+  return 0;
+}

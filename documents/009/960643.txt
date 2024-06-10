@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int p, a, b, c, d, flag = 0;
+  while(scanf("%d", &p) && p){
+    scanf("%d%d%d%d", &a, &b, &c, &d);
+    int e, f, g, h;
+    e = f = g = h = 0;
+    int res = INF;
+    rep(i, a+1) rep(j, b+1) rep(k, c+1) rep(l, d+1){
+      int change = i*10 + j*50 + k*100 + l*500 - p;
+      //      if(j != 20) continue;
+      if(change < 0) continue;
+      int ca = (change%50)/10, cb = (change%100)/50, cc = (change%500)/100, cd = change/500;
+      //      if(((change % 50)/10 && i) || ((change % 100)/50 && j) || ((change % 500)/100 && k) || ((change / 500) && l)) continue;
+      if((ca && i) || (cb && j) || (cc && k) || (cd && l)) continue;
+      //      printf("%d %d %d %d\n", i, j, k, l);
+      //      printf("%d %d %d %d\n", ca, cb, cc, cd);
+      //      printf("%d %d\n", res, (a-i+ca) + (b-j+cb) + (c-k+cc) + (d-l+cd));
+      if(res > (a-i+ca) + (b-j+cb) + (c-k+cc) + (d-l+cd)){
+	//       	printf("price: %d, s %d\n", p, i*10+j*50+k*100+l*500);
+	//		printf("shiharai %d %d %d %d\n", i, j, k, l);
+	//		printf("change %d\n", change);
+
+	//		printf("maisuu %d %d\n", a-e+b-f+c-g+d-h, a-i+ca+b-j+cb+c-k+cc+d-l+cd);
+	//		printf("kokono maisuu%d %d %d %d\n", a-i+ca, b-j+cd, c-k+cc, d-l+cd);
+
+	e = i;
+	f = j;
+	g = k;
+	h = l;
+	res = a-e+ca + b-f+cb + c-g+cc + d-h+cd;
+      }
+    }
+    if(flag) puts("");
+    if(e) printf("10 %d\n", e);
+    if(f) printf("50 %d\n", f);
+    if(g) printf("100 %d\n", g);
+    if(h) printf("500 %d\n", h);
+    flag = 1;
+  }
+  return 0;
+}

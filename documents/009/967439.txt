@@ -1,0 +1,34 @@
+#include <stdio.h>
+#define N 2000
+#define Q 2000
+
+int n,q,i,j;
+int a[N],m[Q],array[N];
+void solve(int,int);
+
+main(){
+  
+  scanf("%d",&n);
+  
+  for(i=0;i < n;i++)  scanf("%d",&a[i]);
+  
+  scanf("%d",&q);
+  
+  for(i=0;i < q;i++)  scanf("%d",&m[i]);
+  
+  for(i=0;i < q;i++){
+    array[i]=0;
+    solve(0,m[i]);
+    if(array[i]==1)  printf("yes\n");
+    else printf("no\n");
+  }
+  return 0;
+}
+
+void solve(int l,int m){
+  if (m == 0) array[i]=1;
+  if(m>0 && l<n){
+    solve(l+1,m-a[l]);
+    solve(l+1,m);
+  }
+}

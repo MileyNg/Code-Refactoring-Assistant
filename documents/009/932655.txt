@@ -1,0 +1,40 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+bool is_hamming[1000001];
+
+int pow(int a,int b){
+	int result=1;
+	for(int i=0; i<b; ++i){
+		result*=a;
+	}
+	return result;
+}
+
+void calc(){
+	fill(is_hamming,is_hamming+1000001,false);
+	for(int i=0; i<21 ; ++i){
+		bool flag=true;
+		for(int j=0; j<14 ; ++j){
+			for(int k=0; k<10 ; ++k){
+				unsigned long long int tmp=pow(2,i)*pow(3,j)*pow(5,k);
+				//cout << tmp << endl;
+				if(tmp>1000000) break;
+				is_hamming[tmp]=true;
+			}
+		}
+	}
+}
+
+int main(){
+	int M,N;
+	calc();
+	while(cin >> M&&M){
+		cin >> N;
+		int ans=0;
+		for(int i=M; i<=N; ++i) if(is_hamming[i]) ++ans;
+		cout << ans << endl;
+	}
+	return 0;
+}

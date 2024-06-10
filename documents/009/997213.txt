@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstring>
+#include <cctype>
+using namespace std;
+
+string ans, str;
+int p;
+
+string dfs(){
+    int res = 0;
+    string st = "";
+    while (p < str.size()) {
+        if (isdigit(str[p])) {
+            res = 0;
+            while (isdigit(str[p])) {
+                res *= 10;
+                res += str[p] - '0';
+                p++;
+            }
+        }else if (isalpha(str[p])){
+            st = "";
+            while (isalpha(str[p])) {
+                st += str[p];
+                p++;
+            }
+        }else if (str[p] == '('){
+            p++;
+            string tmp = dfs();
+            for (int i = 0; i < res; i++) {
+                st += tmp;
+            }
+        }else if (str[p] == ')'){
+            p++;
+            return st;
+        }
+    }
+    return st;
+}
+
+string complement(string s){
+    int p = 0;
+    string expanded_string = "";
+    while (p < s.size()) {
+        if (isdigit(s[p]) && isalpha(s[p+1])) {
+            expanded_string += s[p++];
+            expanded_string += '(';
+            while (isalpha(s[p])) {
+                expanded_string += s[p++];
+            }
+            expanded_string += ')';
+        }else{
+            expanded_string += s[p++];
+        }
+    }
+    return expanded_string;
+}
+
+int main()
+{
+    int n;
+    while (true) {
+        p = 0;
+        cin >> str >> n;
+        if (str == "0") {
+            break;
+        }
+        str = complement(str);
+        ans = dfs();
+        if (ans.size() <= n) {
+            cout << "0" << endl;
+        }else{
+            cout << ans[n] << endl;
+        }
+    }
+
+    return 0;
+}

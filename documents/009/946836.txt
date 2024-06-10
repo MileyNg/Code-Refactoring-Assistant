@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int main(void) {
+  int a, b, n;
+  double div;
+
+  while (cin >> a) {
+    cin >> b >> n;
+    div = (double)a / b;
+    div -= (int)div;
+    int ans = 0;
+
+    for (int i = 0; i < n; i++) {
+      div *= 10;
+      ans += (int)div;
+      div -= (int)div;
+    }
+
+    cout << ans << endl;
+  }
+
+  return 0;
+}

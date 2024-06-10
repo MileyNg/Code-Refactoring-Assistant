@@ -1,0 +1,89 @@
+#include <array>
+#include <cstdlib>
+#include <map>
+#include <memory>
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+constexpr int NUM = 4;
+constexpr int MAX_N = 10;
+
+array<int, MAX_N> S;
+
+struct node_t {
+	int S_index;
+	unique_ptr<node_t> left;
+	unique_ptr<node_t> right;
+
+	node_t(int index = -1):S_index(index) {}
+
+	bool is_leaf() const {
+		return S_index != -1;
+	}
+
+	unordered_map<int, int> calc() const {
+		if(is_leaf()) return {{S[S_index], 1}};
+
+		unordered_map<int, int> res;
+		const auto l_result = left->calc();
+		const auto r_result = right->calc();
+
+		for(const auto &l_e : l_result) {
+			for(const auto &r_e : r_result) {
+				const int inc = l_e.second * r_e.second;
+				res[l_e.first & r_e.first] += inc;
+				res[l_e.first | r_e.first] += inc;
+				res[l_e.first ^ r_e.first] += inc;
+			}
+		}
+		return res;
+	}
+};
+
+unique_ptr<node_t> parse(string::const_iterator &it) {
+	unique_ptr<node_t> res(new node_t);
+
+	if(isdigit(*it)) {
+		res->S_index = *it - '1';
+		++it;
+	}
+	else {
+		++it; // '('
+		res->left = parse(it);
+		++it; // ' '
+		res->right = parse(it);
+		++it; // ')'
+	}
+	return res;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	constexpr int all = (1 << NUM) - 1;
+
+	for(string line; getline(cin, line) && line != "END";) {
+		string::const_iterator it = line.cbegin();
+		unique_ptr<node_t> root = parse(it);
+
+		int n;
+		cin >> n;
+
+		S.fill(0);
+		for(int i = 0; i < n; ++i) {
+			for(int j = 0; j < NUM; ++j) {
+				int in;
+				cin >> in;
+				S[i] |= (in << j);
+			}
+		}
+		cin.ignore();
+
+		auto ans = root->calc();
+		cout << ans[all] << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

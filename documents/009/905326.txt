@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+int W, H, N;
+vector<string> board;
+vector<vector<bool>> memo;
+
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+bool Search(int x, int y)
+{
+    board[y][x] = '.';
+
+    queue<pair<int, int>> que;
+    que.push(make_pair(x, y));
+    memo[y][x] = true;
+
+    while (!que.empty()) {
+        pair<int, int> now = que.front();
+        que.pop();
+
+        if (board[now.second][now.first] == 't')
+            return true;
+
+        for (int d = 0; d < 4; ++d) {
+            int nx = now.first + dx[d];
+            int ny = now.second + dy[d];
+
+            if (nx < 0 || nx >= W || ny < 0 || ny >= H)
+                continue;
+            if (memo[ny][nx] || board[ny][nx] == '#')
+                continue;
+
+            memo[ny][nx] = true;
+            que.push(make_pair(nx, ny));
+        }
+    }
+
+    return false;
+}
+
+int main()
+{
+    cin >> W >> H;
+    board.resize(H);
+    memo.resize(H, vector<bool>(W, false));
+
+    for (int i = 0; i < H; ++i)
+        cin >> board[i];
+
+    bool check = false;
+    int x = 0, y = 0;
+
+    if (Search(x, y)) {
+        cout << "0\n";
+        check = true;
+    }
+    else {
+        cin >> N;
+
+        for (int t = 0; t < N; ++t) {
+            cin >> x >> y;
+
+            if (Search(x, y)) {
+                cout << t + 1 << endl;
+                check = true;
+                break;
+            }
+        }
+    }
+
+    if (!check)
+        cout << "-1\n";
+
+    return 0;
+}

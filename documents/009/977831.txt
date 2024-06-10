@@ -1,0 +1,66 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int w, h;
+int board[20][20];
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+
+int dfs(int y, int x, int c){
+  int ret = INF;
+  if(c >= 10) return ret;
+  rep(d, 4){
+    int ny = y+dy[d], nx = x+dx[d];
+    if(ny < 0 || nx < 0 || ny >= h || nx >= w) continue;
+    if(board[ny][nx] == 1) continue;
+    if(board[ny][nx] == 3) return c+1;
+    while(true){
+      ny += dy[d]; nx += dx[d];
+      if(ny < 0 || nx < 0 || ny >= h || nx >= w) break;;
+      if(board[ny][nx] == 3) return c+1;
+      if(board[ny][nx] == 1){
+	board[ny][nx] = 0;
+	ret = min(ret, dfs(ny-dy[d], nx-dx[d], c+1));
+	board[ny][nx] = 1;
+	break;
+      }
+    }
+  }
+  return ret;
+}
+
+int main(){
+  while(scanf("%d%d", &w, &h) && w+h){
+    rep(i, h) rep(j, w) scanf("%d", &board[i][j]);
+    int y, x;
+    rep(i, h) rep(j, w) if(board[i][j] == 2) y = i, x = j;
+    board[y][x] = 0;
+    int res = dfs(y, x, 0);
+    printf("%d\n", res==INF?-1:res);
+  }
+  return 0;
+}

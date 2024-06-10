@@ -1,0 +1,30 @@
+
+def convertRoman(str)
+  romanHash = Hash.new()
+  romanHash["I"] = 1
+  romanHash["V"] = 5
+  romanHash["X"] = 10
+  romanHash["L"] = 50
+  romanHash["C"] = 100
+  romanHash["D"] = 500
+  romanHash["M"] = 1000
+  pre = 0
+  num = 0
+  (str.length - 1).downto(0) do |i|
+    n = romanHash[str[i].upcase]
+    return -1 unless n
+    if n >= pre
+      num += n
+      pre = n
+    else
+      num -= n
+    end
+  end
+  return num
+end
+
+if __FILE__ == $0
+  while line = gets
+    puts convertRoman(line.rstrip)
+  end
+end

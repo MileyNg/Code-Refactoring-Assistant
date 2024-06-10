@@ -1,0 +1,55 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      int ans[3]={0,0,0};
+      int sum[3]={0,0,0};
+      for(int i=0;i<n;i++)
+	{
+	  int hh,mm,m;
+	  char buf;
+	  cin>>hh>>buf>>mm>>m;
+	  //cout<<hh<<" "<<mm<<" "<<m<<endl;
+	  int time=hh*60+mm;
+	  int m_time;
+	  if(mm<=m)
+	    m_time=m-mm;
+	  else
+	    m_time=(60-m)+mm;
+
+	  if(time>=11*60 && time<=14*60+59)
+	    {
+	      sum[0]++;
+	      if(m_time<9)
+		ans[0]++;
+	    }
+	  if(time>=18*60 && time<=20*60+59)
+	    {
+	      sum[1]++;
+	      if(m_time<9)
+		ans[1]++;
+	    }
+	  if((time>=21*60 && time<=23*60+59) ||( time>=0 && time<=1*60+59))
+	    {
+	      sum[2]++;
+	      if(m_time<9)
+		ans[2]++;
+	    }
+	}
+      string s[3]={"lunch","dinner","midnight"};
+      for(int i=0;i<3;i++)
+	{
+	  cout<<s[i]<<" ";
+	  if(sum[i]>0)
+	    cout<<(int)(((double)ans[i]/sum[i])*100)<<endl;
+	  else
+	    cout<<"no guest"<<endl;
+	}
+    }
+
+
+}

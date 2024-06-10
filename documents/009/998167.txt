@@ -1,0 +1,30 @@
+## subroutines
+
+def gcd(x, y)
+  if x < y
+    tmp = x; x = y; y = tmp
+  end
+
+  step = 0
+
+  while true
+    r = x % y
+    x = y
+    y = r
+    step += 1
+    break if y == 0
+  end
+
+  [x, step]
+end
+
+### main
+
+while true
+  m, n = gets.strip.split(' ').map{|s| s.to_i}
+  break if m == 0 && n == 0
+
+  g, step = gcd(m, n)
+
+  puts [g, step].join(' ')
+end

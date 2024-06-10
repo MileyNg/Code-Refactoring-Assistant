@@ -1,0 +1,52 @@
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+using namespace std;
+bool f(string a, string b, string c, int x){
+  int crr=0;
+  for(int i=0;i<(int)c.length();i++){
+    int n,m, l;
+    n=(i>=(int)a.length())?0
+      :(a[i]=='X')?x:a[i]-'0';
+    m=(i>=(int)b.length())?0
+      :(b[i]=='X')?x:b[i]-'0';
+    l=(i>=(int)c.length())?0
+      :(c[i]=='X')?x:c[i]-'0';
+    if((n+m+crr)%10!=l)return false;
+    crr=(n+m+crr)/10;
+  }
+  return true;
+}
+int main(){
+  string str;
+  while(cin>>str){
+    if(str=="END")break;
+    string a,b,c;
+    int flg=0;
+    for(int i=0;i<(int)str.length();i++){
+      if(str[i]=='+'){
+        a = str.substr(0,i);
+        reverse(a.begin(),a.end());
+      }else if(str[i]=='='){
+        b=str.substr(a.length()+1, i-a.length()-1);
+        c=str.substr(i+1, str.length()-i);
+        reverse(b.begin(),b.end());
+        reverse(c.begin(),c.end());
+      } 
+    }
+    if(!((a.length()!=1&&(*(a.end()-1)=='X'))
+        ||(b.length()!=1&&(*(b.end()-1)=='X'))
+         ||(c.length()!=1&&(*(c.end()-1)=='X')))) {
+      if(f(a,b,c,0)){
+        cout<<0<<endl;flg=1;
+      }
+    }
+    for(int i=1;i<=9&&!flg;i++){
+      if(f(a,b,c,i)){
+        cout<<i<<endl;flg=1;
+      }
+    }
+    if(!flg)cout<<"NA"<<endl;
+  }
+  return 0;
+}

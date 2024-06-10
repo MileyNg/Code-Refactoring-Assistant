@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class team{
+public:
+	int num, ans, time;
+	team(int n){
+		num = n;
+		ans = time = 0;
+	}
+	bool operator<(const team &t2)const{
+		if (ans != t2.ans)
+			return ans > t2.ans;
+		else if (time != t2.time)
+			return time < t2.time;
+		else
+			return num > t2.num;
+	}
+};
+
+int　main()
+{
+	int M, T, P, R, m[2001], t[2001], p[2001], r[2001], before;
+	while (cin >> M >> T >> P >> R, (M || T || P || R)){
+		vector<team> v;
+		vector<team>::iterator pv;
+		//入力
+		for (int i = 0; i < R; i++){
+			cin >> m[i] >> t[i] >> p[i] >> r[i];
+		}
+
+		//各チームの時間
+		for (int i = 1; i <= T; i++){
+			team te = team(i);
+			for (int j = 0; j < R; j++){
+				//正解時間の計算
+				if (t[j] == i && r[j] == 0){
+					te.time += m[j];
+					te.ans++;
+					//以前のペナルティを計算
+					for (int k = 0; k < j; k++){
+						if (t[k] == i && p[k] == p[j]){
+							te.time += 20;
+						}
+					}
+				}
+			}
+			v.push_back(te);
+		}
+
+		//ソート
+		sort(v.begin(), v.end());
+		pv = v.begin();
+		before = -1;
+		while (pv != v.end()){
+			if (before == pv->time)
+				cout << "=" << pv->num;
+			else {
+				if (pv == v.begin())
+					cout << pv->num;
+				else
+					cout << "," << pv->num;
+				before = pv->time;
+			}
+			pv++;
+		}
+		cout << endl;
+		v.~vector();
+	}
+	return 0;
+}

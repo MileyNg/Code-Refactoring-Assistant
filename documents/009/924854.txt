@@ -1,0 +1,78 @@
+#include<iostream>
+#include<string>
+#define CASE(c,s) case c:return s
+using namespace std;
+
+string f(char c){
+	switch (c){
+		CASE(' ', "101");
+		CASE('\'', "000000");
+		CASE(',', "000011");
+		CASE('-', "10010001");
+		CASE('.', "010001");
+		CASE('?', "000001");
+		CASE('A', "100101");
+		CASE('B', "10011010");
+		CASE('C', "0101");
+		CASE('D', "0001");
+		CASE('E', "110");
+		CASE('F', "01001");
+		CASE('G', "10011011");
+		CASE('H', "010000");
+		CASE('I', "0111");
+		CASE('J', "10011000");
+		CASE('K', "0110");
+		CASE('L', "00100");
+		CASE('M', "10011001");
+		CASE('N', "10011110");
+		CASE('O', "00101");
+		CASE('P', "111");
+		CASE('Q', "10011111");
+		CASE('R', "1000");
+		CASE('S', "00110");
+		CASE('T', "00111");
+		CASE('U', "10011100");
+		CASE('V', "10011101");
+		CASE('W', "000010");
+		CASE('X', "10010010");
+		CASE('Y', "10010011");
+		CASE('Z', "10010000");
+	default:return "";
+	}
+}
+
+int bitodec(string s){
+	int sum=0;
+	for (unsigned int i = 0; i < s.length(); ++i){
+		sum *= 2;
+		sum += (s[i] - '0');		
+	}
+	return sum;
+}
+
+char g(string s){
+	char c[33] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .,-\'?";
+	return c[bitodec(s)];
+}
+
+int main(){
+	string s,r;
+	int i;
+
+	while (getline(cin, s)){
+		i = 0;
+		r = "";
+
+		while (s[i] != '\0'){
+			r += f(s[i]);
+			++i;
+		}
+
+		if (i % 5)for (int j = 4 - (i % 5); --j;)r += "0";
+
+		for (unsigned int j = 0; j < r.length() ;j+=5)
+			cout << g(r.substr(j,5));
+		cout << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define N 1000000
+
+using namespace std;
+
+vector<int> primes;
+
+void init_primes() {
+    for (int p=2; p<N; p++) {
+        bool is_prime = true;
+        for (vector<int>::iterator iter=primes.begin(); iter!=primes.end(); iter++) {
+            if (p%(*iter) == 0) {
+                is_prime = false;
+                break;
+            }
+            if ((*iter)*(*iter) > p) {
+                break;
+            }
+        }
+        if (is_prime) {
+            primes.push_back(p);
+        }
+    }
+}
+
+int matsuzaki(int n, int p) {
+    vector<int> candidates;
+    vector<int>::iterator iter1, iter2;
+    iter1 = upper_bound(primes.begin(), primes.end(), n);
+    for (int i=0; i<p && iter1!=primes.end(); i++, iter1++) {
+        iter2 = iter1;
+        for (int j=0; j<p && iter2!=primes.end(); j++, iter2++) {
+            candidates.push_back((*iter1)+(*iter2));
+        }
+    }
+    sort(candidates.begin(), candidates.end());
+    return candidates[p-1];
+}
+
+int main() {
+    int n, p;
+    init_primes();
+    while (true) {
+        cin >> n >> p;
+        if (n < 0) {
+            return 0;
+        }
+        cout << matsuzaki(n, p) << endl;
+    }
+}

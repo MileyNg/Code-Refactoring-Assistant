@@ -1,0 +1,49 @@
+#include <iostream>
+#define CAPACITY 9
+using namespace std;
+int b, c;
+
+bool dfs(int pos, int ary[], bool flag) {
+    if(pos < 0) {
+        return(false);
+    }
+    
+    flag = dfs(pos - 1, ary, flag);
+    
+    if(pos == CAPACITY) {
+        flag = true;
+    }
+    if(ary[pos] > b) {
+        b = ary[pos];
+    } else if(ary[pos] > c) {
+        c = ary[pos];
+    } else {
+        return(false);
+    }
+    cout << "B = " << b << "C = " << c << endl;
+    
+    return(flag);
+}
+
+int main(void) {
+    int num;
+    
+    cin >> num;
+    int ary[10];
+    
+    for(int r = 0; r < num; r++) {
+        for(int c = 0; c < 10; c++) {
+            cin >> ary[c];
+        }
+        b = ary[0];
+        c = INT_MIN;
+        if(dfs(CAPACITY, ary, true)) {
+            cout << "YES";
+        } else {
+            cout << "NO";
+        }
+        cout << endl;
+    }
+    
+    return(0);
+}

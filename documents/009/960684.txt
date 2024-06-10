@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+int main() {
+	char c;
+	int sum = 0;
+	int i = 0;
+	while (cin >> c) {
+		/*if (c == '!') {
+			break;
+		}*/
+		if (c == '\n') {
+			sum += i;
+			i = 0;
+		}else if (0 <= c-'0' && c-'0' <= 9) {
+			i *= 10;
+			i += c-'0';
+		} else {
+			if (i > 0) {
+				sum += i;
+				i = 0;
+			}
+		}
+	}
+	sum += i;
+	cout << sum << endl;
+	return 0;
+}

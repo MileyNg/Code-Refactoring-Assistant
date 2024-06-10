@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int N;
+    std::cin >> N;
+    if (N == 0)
+      break;
+    int W, H;
+    std::cin >> W >> H;
+    std::vector<std::vector<char> > field(W, std::vector<char>(H, 0));
+    for (int i = 0; i < N; ++i) {
+      int x, y;
+      std::cin >> x >> y;
+      field[y - 1][x - 1] = 1;
+    }
+    int S, T;
+    std::cin >> S >> T;
+    int max_trees = 0;
+    for (int i = 0; i < H; ++i) {
+      for (int j = 0; j < W; ++j) {
+        int cnt = 0;
+        for (int k = 0; k < T; ++k)
+          for (int l = 0; l < S; ++l)
+            if (field[i + k][j + l])
+              ++cnt;
+        if (cnt > max_trees)
+          max_trees = cnt;
+      }
+    }
+    std::cout << max_trees << std::endl;
+  }
+  return 0;
+}

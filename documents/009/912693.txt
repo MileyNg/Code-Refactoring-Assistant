@@ -1,0 +1,50 @@
+
+#include <stdio.h>
+
+int main(void){
+    int i,mem,ba = 0;
+    int j = 0;
+    int a[10];
+    char str[101];
+    scanf("%d",&mem);
+    
+    //配列内の値を人数分初期化
+    if(mem <= 0) exit(0);
+    for(i = 0;i < mem;i++){
+        a[i] = 0;
+    }
+    
+    //手札読み込み
+    scanf("%s", str);
+    
+    //手札についての条件
+    for(i = 0; i < 100; i++){
+        
+        //場に手持ちのカードと引いたカードを追加
+        if(str[i] == 'S') {
+            ba = ba + a[j] + 1;
+            a[j] = 0;
+        }
+        
+        //カードを一枚持ち札に追加
+        if(str[i] == 'M'){
+            a[j] = a[j] + 1;
+        }
+        
+        //場のカードと引いたカードを持ち札に追加
+        if(str[i] == 'L'){
+            a[j] = a[j] + ba + 1;
+            ba = 0;
+        }
+        
+        //jに値を1づつ追加。人数以上になった時memに0を代入し、1人目のターンに戻る
+        j= j+1;
+        if(j >= mem) j = 0;
+    }
+    
+    //個々のカードの枚数を表示
+    for(i = 0;i<mem;i++){
+        printf("\n%d",a[i]);
+    }
+    return 0;
+}

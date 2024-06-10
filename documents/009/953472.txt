@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+#define SIN_60 0.86602540378443864
+
+typedef struct {
+	double x;
+	double y;
+} Point;
+
+void devide(Point left, Point right, Point* m_left, Point* m_right) {
+	Point len;
+	len.x = (right.x - left.x) / 3.0;
+	len.y = (right.y - left.y) / 3.0;
+	m_left->x = left.x + len.x;
+	m_left->y = left.y + len.y;
+	m_right->x = right.x - len.x;
+	m_right->y = right.y - len.y;
+}
+
+Point make_tri(Point left, Point right) {
+	Point vec, vec2, tri;
+	vec.x = right.x - left.x;
+	vec.y = right.y - left.y;
+	vec2.x = vec.x * 0.5 - vec.y * SIN_60;
+	vec2.y = vec.x * SIN_60 + vec.y * 0.5;
+	tri.x = left.x + vec2.x;
+	tri.y = left.y + vec2.y;
+	return tri;
+}
+
+void koch(Point left, Point right, int depth) {
+	Point m_left, m_right, top;
+	
+	if (depth == 0) {
+		printf("%f %f\n", right.x, right.y);
+		return;
+	}
+	
+	devide(left, right, &m_left, &m_right);
+	top = make_tri(m_left, m_right);
+	
+	koch(left, m_left, depth - 1);
+	koch(m_left, top, depth - 1);
+	koch(top, m_right, depth - 1);
+	koch(m_right, right, depth - 1);
+}
+
+int main(){
+	Point left, right, n;
+	left.x = 0.0;
+	left.y = 0.0;
+	right.x = 100.0;
+	right.y = 0.0;
+	
+	scanf("%d", &n);
+	
+	printf("%f %f\n", left.x, left.y);
+	koch(left, right, n);
+	
+	return 0;
+}

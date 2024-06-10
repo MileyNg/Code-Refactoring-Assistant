@@ -1,0 +1,62 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+#include <stack>
+
+using namespace std;
+
+int main (int argc, char * const argv[]) {
+    // insert code here...
+	int n;
+    string a, b;
+		
+	cin>> n;	
+	for(int i=0;i<n;i++){
+		int x[81]={0}, y[81]={0}, z[81]={0};
+
+		cin >> a;
+		cin >> b;
+		
+		reverse(a.begin(), a.end());
+		reverse(b.begin(), b.end());
+		
+		for(int j=0;j<a.size();j++){
+			x[j]=a[j]-'0';
+		}
+		for(int j=0;j<b.size();j++){
+			y[j]=b[j]-'0';
+		}
+		
+		for(int j=0;j<80;j++){
+			z[j]+=x[j]+y[j];
+			if(z[j]>=10){
+				z[j+1]++;
+				z[j]-=10;
+			}
+		}
+		
+		if(z[80]>0){
+			cout << "overflow" <<endl;
+		}else{
+			bool flag = 0;
+			for(int j=79;j>=0;j--){
+				if(z[j]==0&& flag==0){
+					continue;
+				}else{
+					flag=1;
+				}
+				cout<<z[j];
+			}
+			if(flag==0){
+				cout<<0;
+			}
+			cout<<endl;
+			
+		}
+		
+	}
+	
+	return 0;
+}

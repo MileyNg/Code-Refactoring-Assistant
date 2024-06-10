@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cmath>
+#include <cstdio>
+using namespace std;
+int main () {
+
+  int n,b,sum,e[1000];
+  double m,a,c=0;
+
+  while(1){
+
+    sum=0,c=0;
+
+    cin >>n;
+
+    if( n == 0 ) break;
+
+    for( int i=0 ; i < n ; i++ ){
+      cin >>b;
+      sum+=b; 
+      e[i]=b;
+    }
+
+    m=(double)sum/(double)n;
+    
+    for( int j=0 ; j < n ; j++ ){
+      c+=(e[j]-m)*(e[j]-m);
+    }
+
+    a=c/n;
+
+    printf("%.8f\n",sqrt(a));
+
+  }
+
+  return 0;
+
+}

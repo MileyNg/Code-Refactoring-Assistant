@@ -1,0 +1,72 @@
+#include<iostream>
+#include<string>
+#include<cstring>
+#include<map>
+#include<queue>
+#include<algorithm>
+#define F first
+#define S second
+#define INF 1<<28
+using namespace std;
+
+int w, h;
+char maze[999][999]; //y,x
+int data[999][999]; //y,x
+int dx[] = {0,0,1,-1};
+int dy[] = {1,-1,0,0};
+
+int bfs(int sy, int sx){
+
+  typedef pair < int, int > P; //y, x
+  queue < P > que;
+  int ans = INF;
+
+  que.push(P(sy, sx));
+  data[sy][sx] = 0;
+
+  while(!que.empty()){
+    P p = que.front(); que.pop();
+    int nx = p.S, ny = p.F;
+
+    for(int i=0;i<4;i++){
+      int x = nx + dx[i], y = ny + dy[i];
+
+      if(x < 0 || y < 0 || x == w || y == h){
+	ans = min(ans, data[ny][nx]);
+	continue;
+      }
+
+      if(maze[y][x] == '#' && data[y][x] > data[ny][nx]+1){
+	data[y][x] = data[ny][nx]+1;
+	que.push(P(y,x));
+      }
+
+      else if(maze[y][x] == '.' && data[y][x] > data[ny][nx]){
+	data[y][x] = data[ny][nx];
+	que.push(P(y,x));
+      }
+    }
+  }
+
+  return ans;
+}
+
+int main(){
+
+  while(true){
+    cin >> w >> h;
+    if(!w && !h) break;
+
+    int sx, sy;
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++){
+	cin >> maze[i][j];
+	data[i][j] = INF;
+	if(maze[i][j] == '&') sx = j, sy = i;
+      }
+    }
+
+    cout << bfs(sy, sx) << endl;
+
+  }
+}

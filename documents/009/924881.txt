@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int tizu[52][52];
+
+void check(int i, int j) {
+	tizu[i][j] = 0;
+	for (int k = -1; k <= 1; k++) {
+		for (int l = -1; l <= 1; l++) {
+			if (tizu[i+k][j+l] == 1) {
+				check(i+k,j+l);
+			}
+		}
+	}
+	return;
+}
+
+int main() {
+	int w, h;
+	while (cin >> w >> h) {
+		if (w == 0 && h == 0) {
+			break;
+		}
+		for (int i = 0; i < 52; i++) {
+			for (int j = 0; j < 52; j++) {
+				tizu[i][j] = 0;
+			}
+		}
+		int counter = 0;
+		for (int i = 1; i <= h; i++) {
+			for (int j = 1; j <= w; j++) {
+				cin >> tizu[i][j];
+			}
+		}
+		for (int i = 1; i <= h; i++) {
+			for (int j = 1; j <= w; j++) {
+				if (tizu[i][j] == 1) {
+					counter++;
+					check(i,j);
+				}
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

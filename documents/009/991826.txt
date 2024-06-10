@@ -1,0 +1,75 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <cmath>
+#include <typeinfo>
+#include <cxxabi.h>
+#define type_name(class)  demangle((typeid(class)).name())
+char* demangle(const char *demangle) {
+    int status;
+    return abi::__cxa_demangle(demangle, 0, 0, &status);
+}
+
+using namespace std;
+
+class KeyCoordinate{
+public:
+	int x;
+	int y;
+	KeyCoordinate(){x=0;y=0;}
+	void DebugPrint(){
+		cout<<"x = "<<x<<"   y = "<<y<<endl;
+	}
+};
+
+bool isNeighbor(KeyCoordinate& first, KeyCoordinate& second){
+	if(first.x == second.x && abs(first.y - second.y) == 1){
+		return true;
+	}else if((first.y == second.y && abs(first.x - second.x) == 1)){
+		return true;
+	}
+	return false;
+}
+
+void getKeyCoordinate(const string& charactor, KeyCoordinate& kc){
+	if(charactor == "A"){kc.x = 0;kc.y = 0;}
+	if(charactor == "B"){kc.x = 1;kc.y = 0;}
+	if(charactor == "C"){kc.x = 2;kc.y = 0;}
+	if(charactor == "D"){kc.x = 0;kc.y = 1;}
+	if(charactor == "E"){kc.x = 1;kc.y = 1;}
+	if(charactor == "F"){kc.x = 2;kc.y = 1;}
+	if(charactor == "G"){kc.x = 0;kc.y = 2;}
+	if(charactor == "H"){kc.x = 1;kc.y = 2;}
+	if(charactor == "I"){kc.x = 2;kc.y = 2;}
+}
+
+bool isUnicursal(string& str){
+	//ボタン１つのみの入力も一筆書きとみなす
+	if(str.length() == 1 ) return true;
+	
+	KeyCoordinate f,s;
+	
+	for(int i=0;i<str.length()-1;i++){
+		
+		getKeyCoordinate(str.substr(i,1), f);
+		getKeyCoordinate(str.substr(i+1,1), s);
+		
+		// cout<<"i = "<<i<<endl;
+		// f.DebugPrint();
+		// s.DebugPrint();
+		
+		if(!isNeighbor(f,s)){return false;}
+	}
+	return true;
+}
+
+int main() {
+	// your code goes here
+	string str;
+	while(cin>>str){
+		if(isUnicursal(str)){
+			cout<<str<<endl;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+double solve(double q, double x) {
+	if(fabs(x*x*x-q) < 0.00001*q) {
+		return x;
+	}
+	
+	return solve(q, x-(x*x*x-q)/(3*x*x));
+}
+
+int main(void) {
+	int q;
+	while(scanf("%d\n", &q) == 1) {
+		if(q == -1) break;
+		
+		printf("%.6lf\n", solve((double)q, (double)q/2.0));
+	}
+	return 0;
+}

@@ -1,0 +1,36 @@
+loop{
+	num = gets.to_i()
+	
+	if num == 0 then
+		break
+	end
+
+	data = gets.split.map(&:to_i).sort
+	sum = data.inject(:+)
+	min = sum
+	a = [0]
+	while(!data.empty?) do
+		d = data.pop()
+		tmp = []
+		flag = 0
+		for e in a do
+			f = d + e
+			if (f == (sum/2)) then
+				min = sum - f * 2
+				flag =1
+				break
+			elsif (f < (sum/2))
+				min = [min,sum - f * 2].min
+				tmp.push(f)
+			end
+		end
+		a.concat(tmp)
+		a.uniq!
+		if flag == 1 then
+			break;
+		end
+	end
+
+	p min
+
+}

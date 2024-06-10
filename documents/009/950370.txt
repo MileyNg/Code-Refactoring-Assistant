@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+#define MAX 10000
+#define F_MAX 20000
+
+int n;
+int field[MAX][MAX];
+
+struct futon{
+	int x[2], y[2];
+};
+
+futon F[F_MAX];
+
+int dx[] = {-1,0,1,0}, dy[] = {0,1,0,-1};
+
+bool dfs( int pos ){
+	if( pos == n ) return true;
+	bool rep = false;
+	for( int i = 0; i < 2; i++ ){
+		int legx, legy, headx, heady;
+		legx = F[pos].x[i];
+		legy = F[pos].y[i];
+		headx = F[pos].x[1-i];
+		heady = F[pos].y[1-i];
+		//cout << "----" << pos << "------" << endl;
+		//cout << legx << " " << legy << " " << headx << " " << heady << endl;
+		bool ok = true;
+		for( int j = 0; j < 4; j++ ){
+			if( (0 <= legx+dx[j] && legx+dx[j] < MAX) && (0 <= legy+dy[j] && legy+dy[j] < MAX) ){
+				if( field[legx+dx[j]][legy+dy[j]] == 1 ) ok = false;
+			}
+			if( (0 <= headx+dx[j] && headx+dx[j] < MAX) && (0 <= heady+dy[j] && heady+dy[j] < MAX) ){
+				if( field[headx+dx[j]][heady+dy[j]] == 2 ) ok = false;
+			}
+		}
+		if( !ok ) continue;
+		field[headx][heady] = 1;
+		field[legx][legy] = 2;
+		if( dfs(pos+1) ) rep = true;
+		field[headx][heady] = 0;
+		field[legx][legy] = 0;
+	}
+	return rep;
+}
+
+int main(){
+	while( cin >> n, n ){
+		for( int i = 0; i < n; i++ ){
+			int x, y;
+			char d;
+			cin >> x >> y >> d;
+			F[i].x[0] = x;
+			F[i].y[0] = y;
+			F[i].x[1] = (d == 'x') ? x+1 : x;
+			F[i].y[1] = (d == 'x') ? y : y+1;
+		}
+		for( int j = 0; j < MAX; j++ ){
+			for( int k = 0; k < MAX; k++ ){
+				field[j][k] = 0;
+			}
+		}
+		/*for( int i = 0; i < n; i++ ){
+			for( int j = 0; j < 2; j++ ){
+				cout << F[i].x[j] << " " << F[i].y[j] << " ";
+			}
+			cout << endl;
+		}*/
+		if( dfs(0) ) cout << "Yes" << endl;
+		else cout << "No" << endl;
+	}
+}

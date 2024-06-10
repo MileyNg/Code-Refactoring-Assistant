@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+#define INF	100000000
+#define pb	push_back
+#define fi first
+#define sec second
+#define SS stringstream
+using namespace std;
+typedef pair<int, int> P;
+typedef long long int	ll;
+
+int n;
+
+int main(){
+	cin >> n;
+	for(int i = 0; i < n; i++){
+		vector<int> vec;
+		ll m = 0, l = 0;
+		for(int j = 0; j < 8; j++){
+			SS ss;
+			char temp;
+			int kari;
+			cin >> temp;
+			ss << temp;
+			ss >> kari;
+			vec.pb(kari);
+		}
+		sort(vec.begin(), vec.end());
+		for(int j = 0; j < 8; j++){
+			l += vec[j]*pow(10,j);
+		}
+		sort(vec.begin(), vec.end(), greater<int>());
+		for(int j = 0; j < 8; j++){
+			m += vec[j]*pow(10,j);
+		}
+		cout << l-m << endl;
+	}
+}

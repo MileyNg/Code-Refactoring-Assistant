@@ -1,0 +1,85 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+int N;
+std::vector<std::string> dict[26];
+
+std::vector<std::string> split(std::string s){
+    s += " ";
+    std::vector<std::string> res;
+    int pos = 0, prev_pos = 0;
+    while(pos = s.find(" ", pos), pos != std::string::npos){
+        res.push_back(s.substr(prev_pos, pos-prev_pos));
+        ++pos; prev_pos = pos;
+    }
+    return res;
+}
+
+int main(){
+    while(std::cin >> N, N){
+        REP(i, 26){
+            dict[i].clear();
+        }
+        std::cin.ignore();
+
+        REP(i, N){
+            std::string s;
+            std::getline(std::cin, s);
+
+            for(auto t : split(s)){
+                dict[t[0]-'a'].push_back(t);
+            }
+        }
+
+        char C;
+        std::cin >> C;
+
+        auto &v = dict[C-'a'];
+        std::sort(v.begin(), v.end());
+
+        std::vector<std::pair<int, std::string>> res;
+        int n = 1;
+        for(int i=0;i<v.size();i++){
+            if(i+1 >= v.size() || v[i] != v[i+1]){
+                res.push_back(mp(-n, v[i]));
+                n = 1;
+            }else{
+                ++n;
+            }
+        }
+
+        std::sort(res.begin(), res.end());
+    
+        if(res.size() == 0){
+            puts("NA");
+        }else{
+            for(int i=0;i<std::min<int>(res.size(),5);i++){
+                // printf("%d, %s\n", res[i].first, res[i].second.c_str());
+                if(i == 0){std::cout << res[i].second;}
+                else{std::cout << " " << res[i].second;}
+            }
+            std::cout << std::endl;
+        }
+    }
+}

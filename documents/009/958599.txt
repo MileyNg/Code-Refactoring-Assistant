@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Edge{
+	int src,dst,weight;
+	Edge(){}
+	Edge(int s,int d,int w):src(s),dst(d),weight(w){}
+};
+typedef vector<vector<Edge>> Graph;
+bool operator<(const Edge& a,const Edge& b){return a.weight<b.weight;}
+bool operator>(const Edge& a,const Edge& b){return a.weight>b.weight;}
+
+void Dijkstra(const Graph& g,int v,vi& dist)
+{
+	priority_queue<Edge,vector<Edge>,greater<Edge>> pq;
+	pq.emplace(-1,v,0);
+	while(pq.size()){
+		Edge cur=pq.top(); pq.pop();
+		if(dist[cur.dst]!=INF) continue;
+		dist[cur.dst]=cur.weight;
+		for(Edge e:g[cur.dst])
+			pq.emplace(e.src,e.dst,cur.weight+e.weight);
+	}
+}
+
+int main()
+{
+	for(int r,m,cap;cin>>r>>m>>cap && r|m|cap;){
+		cap*=10;
+		map<string,int> f;
+		string src,dst; cin>>src>>dst;
+		f[src]=0,f[dst]=1;
+		Graph g(2);
+		rep(i,r){
+			string s,t; int w; cin>>s>>t>>w;
+			if(!f.count(s)) f.insert(mp(s,f.size())),g.resize(g.size()+1);
+			if(!f.count(t)) f.insert(mp(t,f.size())),g.resize(g.size()+1);
+			int u=f[s],v=f[t];
+			g[u].emplace_back(u,v,w);
+			g[v].emplace_back(v,u,w);
+		}
+		int n=f.size();
+		
+		vi lpg(m);
+		rep(i,m){
+			string s; cin>>s;
+			lpg[i]=f[s];
+		}
+		
+		vvi dists(m+2,vi(n,INF));
+		rep(i,m) Dijkstra(g,lpg[i],dists[i]);
+		rep(i,2) Dijkstra(g,i,dists[m+i]);
+		
+		vvi dp(m+2,vi(m+2,INF));
+		rep(i,m+2){
+			rep(j,m) if(dists[i][lpg[j]]<=cap)
+				dp[i][j]=dists[i][lpg[j]];
+			rep(j,2) if(dists[i][j]<=cap)
+				dp[i][m+j]=dists[i][j];
+		}
+		
+		rep(k,m+2) rep(i,m+2) rep(j,m+2)
+			dp[i][j]=min(dp[i][j],dp[i][k]+dp[k][j]);
+		
+		if(dp[m][m+1]==INF)
+			cout<<-1<<endl;
+		else
+			cout<<dp[m][m+1]<<endl;
+	}
+}

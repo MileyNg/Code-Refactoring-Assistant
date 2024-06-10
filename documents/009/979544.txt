@@ -1,0 +1,91 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+struct list{
+	int data;
+	struct list *next;
+};
+
+list* make_list(int a, list *l) {
+	list *z = (list*)malloc(sizeof(list));
+	z->data = a;
+	z->next = l;
+	return z;
+}
+
+list* insert_list(int a, list *l) {
+	list** x = &l;
+	bool hantei = true;
+	while ((*x)->next != NULL) {
+		if ((*x)->data == -1) {
+			(*x)->data = a;
+			hantei = false;
+			break;
+		} else {
+			x = &((*x)->next);
+		}
+	}
+	if (hantei) {
+		(*x)->next = make_list(a, NULL);
+	}
+	return l;
+}
+
+list* delete_list(int a, list *l) {
+	list** x = &l;
+	while ((*x)->next != NULL) {
+		if ((*x)->data == a) {
+			(*x)->data = -1;
+		}
+		x = &((*x)->next);
+	}
+	return l;
+}
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		char c;
+		list *z = NULL;
+		int a, b;
+		for (int i = 0; i < n; i++) {
+			cin >> c;
+			int d = 0;
+			if(c == 'W') {
+				cin >> a >> b;
+				for (int j = 0; j < b; j++) {
+					if (z == NULL) {
+						z = make_list(a, NULL);
+					} else {
+						z = insert_list(a, z);
+					}
+				}
+			} else if (c == 'D') {
+				cin >> a;
+				z = delete_list(a, z);
+			} else {
+				cin >> a;
+				list** x = &z;
+				bool hantei = true;
+				for (int j = 0; j < a; j++) {
+					if ((*x) == NULL || (*x)->next == NULL) {
+						cout << -1 << endl;
+						hantei = false;
+						break;
+					} else {
+						x = &((*x)->next);
+					}
+				}
+				if (hantei) {
+					cout << (*x)->data << endl;
+				}
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}

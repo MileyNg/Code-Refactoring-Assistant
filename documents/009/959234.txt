@@ -1,0 +1,115 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+map<int, int> hit;
+
+#define POS(value, i) ((value>>(i+(i<<1)))&7)
+
+inline int swap_pos(int value, int i, int j)
+{
+	int vi, vj;
+	i*=3; j*=3;
+	vi = (value>>i) & 7;
+	vj = (value>>j) & 7;
+
+	value = (value & ~(7<<i)) | (vj<<i);
+	value = (value & ~(7<<j)) | (vi<<j);
+	return value;
+
+}
+
+void init_map(int target)
+{
+
+	queue<int> q1, q2, *q, *nq, *qtmp;
+	q = &q1; nq = &q2;
+	q1.push(target);
+	
+	hit[target]=1;
+
+	while (!q->empty()) {
+		while (!nq->empty()) nq->pop();
+		
+		while (!q->empty()) {
+			int value = q->front(); q->pop();
+			int step = hit[value];
+			int next_value;
+			int i;
+			for (i=0; i<=7; i++) {
+				if (POS(value, i)!=0) continue;
+
+				if (i<4) {
+					next_value = swap_pos(value, i, i+4);
+					if (hit[next_value]==0) {
+						hit[next_value] = step+1;
+						nq->push(next_value);
+					}
+				}
+				else {
+					next_value = swap_pos(value, i, i-4);
+					if (hit[next_value]==0) {
+						hit[next_value] = step+1;
+						nq->push(next_value);
+					}
+				}
+
+				if (i!=0 && i!=4) {
+					next_value = swap_pos(value, i, i-1);
+					if (hit[next_value]==0) {
+						hit[next_value] = step+1;
+						nq->push(next_value);
+					}
+				}
+
+				if (i!=3 && i!=7) {
+					next_value = swap_pos(value, i, i+1);
+					if (hit[next_value]==0) {
+						hit[next_value] = step+1;
+						nq->push(next_value);
+					}
+				}
+			}
+				
+		}
+
+		qtmp = q; q = nq; nq = qtmp;
+
+	}
+
+}
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	int target, src;
+	int i, j;
+
+	target=0;
+	for (i=0; i<=7; i++) {
+		target = (target<<3)|i;
+	}
+
+	init_map(target);
+
+	//printf("MAX_HIT=0x%x\n", MAX_HIT);
+
+	while (scanf("%d", &src)==1) {
+		for (i=1; i<=7; i++) {
+			int tmp;
+			scanf("%d", &tmp);
+			src = (src<<3) | tmp;
+		}
+
+		printf("%d\n", hit[src]-1);
+
+	}
+
+	return 0;
+}

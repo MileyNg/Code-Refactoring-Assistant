@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+
+int main(){
+	int a,b;
+	while(std::cin >> a >> b){
+		if(a == 0 && b == 0){
+			break;
+		}
+		std::vector< std::vector<int> > intersection(a, std::vector<int>(b, 1));
+		int n;
+		std::cin >> n;
+		int close_a, close_b;
+		for(int i = 0; i < n; ++i){
+			std::cin >> close_a >> close_b;
+			intersection[close_a - 1][close_b - 1] = 0;
+			//工事が(1,i)にある時
+			if(close_a == 1) {
+				for(int i = (close_b - 1); i < b; ++i){
+					intersection[close_a - 1][i] = 0;
+				}
+			}
+			//工事が(i,1)にある時
+			if(close_b == 1) {
+				for(int i = (close_a - 1); i < a; ++i){
+					intersection[i][close_b - 1] = 0;
+				}
+			}
+		}
+		for(int i = 1; i < a; ++i){
+			for(int j = 1; j < b; ++j){
+				if(intersection[i][j] != 0){
+					intersection[i][j] = intersection[i - 1][j] + intersection[i][j - 1];
+				}
+			}
+		}
+		std::cout << intersection[a - 1][b - 1] << std::endl;
+	}
+	return 0;
+}

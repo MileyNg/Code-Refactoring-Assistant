@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+
+#define PRIME_NUM 40000
+
+using namespace std;
+
+bool prime_flag[PRIME_NUM];
+vector<int> prime;
+
+void get_prime_flag(void);
+
+int main(void) {
+    long long N;
+    get_prime_flag();
+    cin >> N;
+    cout << N << ":";
+    for (int i = 0; i < prime.size(); i++) {
+        if (N % prime[i] == 0) {
+            while (N % prime[i] == 0) {
+                N /= prime[i];
+                cout << " " << prime[i];
+            }
+        }
+        if (N == 1) break;
+    }
+    cout << endl;
+
+    return 0;
+}
+
+void get_prime_flag(void) {
+    for (int i = 0; i < PRIME_NUM; i++) {
+        prime_flag[i] = true;
+    }
+    prime_flag[0] = prime_flag[1] = false;
+    for (int i = 2; i * i <= PRIME_NUM; i++) {
+        if (prime_flag[i]) {
+            for (int j = 2; i * j <= PRIME_NUM; j++) {
+                prime_flag[i*j] = false;
+            }
+        }
+    }
+    for (int i = 0; i <= PRIME_NUM; i++) {
+        if (prime_flag[i]) prime.push_back(i);
+    }
+    return;
+}

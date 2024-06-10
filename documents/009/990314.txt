@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+inline int popcount(uint x)
+{
+	x=(x&0x55555555)+(x>>1&0x55555555);
+	x=(x&0x33333333)+(x>>2&0x33333333);
+	x=(x&0x0f0f0f0f)+(x>>4&0x0f0f0f0f);
+	x=(x&0x00ff00ff)+(x>>8&0x00ff00ff);
+	return (x&0x0000ffff)+(x>>16&0x0000ffff);
+}
+
+// 長さnの11..11
+uint one(int n)
+{
+	return (1<<n)-1;
+}
+
+template<typename T>
+void chmax(T& a,const T& b)
+{
+	a=max(a,b);
+}
+
+int main()
+{
+	const char WILD='*';
+	const char EMPTY0='#';
+	const char EMPTY1='!';
+	const char EMPTY2='?';
+	static_assert(EMPTY0!=EMPTY1 && EMPTY1!=EMPTY2 && EMPTY2!=EMPTY0,"ha?");
+	
+	for(int h,w;cin>>h>>w && h|w;){
+		vs ss(h);
+		rep(i,h) cin>>ss[i];
+		
+		ss.insert(begin(ss),string(w,'#'));
+		h++;
+		
+		vector<vvi> dp(h,vvi(w,vi(1<<w,-INF)));
+		dp[0][w-1][(1<<w)-1]=0;
+		
+		repi(i,1,h) rep(j,w){
+			int pi=i,pj=j-1;
+			if(pj<0) pi--,pj+=w;
+			rep(k,1<<w){
+				int al=popcount(k&one(j+1)),ar=ss[i].size()-al;
+				int br=popcount(k>>j+1&one(w-j-1)),bl=ss[i-1].size()-br;
+				if(al<0 || j+1<al || ar<0 || w-j-1<ar
+				|| bl<0 || j+1<bl || br<0 || w-j-1<br) continue;
+				if(k>>j&1){
+					if(bl<j+1)
+						chmax(dp[i][j][k],dp[pi][pj][k^1<<j]);
+					if(bl>0)
+						chmax(dp[i][j][k],dp[pi][pj][k]+2*(ss[i][al-1]==ss[i-1][bl-1]));
+					if(al>=2 && (k>>j+1&1) && ss[i][al-2]==ss[i][al-1])
+						dp[i][j][k]+=2;
+				}
+				else{
+					if(bl<j+1)
+						chmax(dp[i][j][k],dp[pi][pj][k]);
+					if(bl>0)
+						chmax(dp[i][j][k],dp[pi][pj][k^1<<j]);
+				}
+			}
+		}
+		
+		cout<<*max_element(all(dp[h-1][w-1]))<<endl;
+	}
+}

@@ -1,0 +1,30 @@
+loop do
+  h, w = gets.chomp.split(' ').map{|x| x.to_i}
+  break if h == 0 and w == 0
+
+  tiles = []
+  h.times{tiles << gets.chomp}
+
+  x, y = 0,0
+  loop do
+    if tiles[y][x] == '>'
+      tiles[y][x] = ' '
+      x+=1
+    elsif tiles[y][x] == '<'
+      tiles[y][x] = ' '
+      x-=1
+    elsif tiles[y][x] == '^'
+      tiles[y][x] = ' '
+      y-=1
+    elsif tiles[y][x] == 'v'
+      tiles[y][x] = ' '
+      y+=1
+    elsif tiles[y][x] == '.'
+      puts "#{x} #{y}"
+      break 
+    else
+      puts 'LOOP'
+      break 
+    end
+  end
+end

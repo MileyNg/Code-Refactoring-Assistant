@@ -1,0 +1,49 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<map>
+#include<stack>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int main(){
+	
+	while(1){
+		char str[111];
+		gets(str);
+		
+		if(str[0]=='.' && strlen(str)==1)break;
+		
+		int valid = 1;
+		stack<char> c;
+		int n = strlen(str);
+		rep(i,n){
+			if(str[i]=='(' || str[i]=='['){
+				c.push(str[i]);
+			}
+			if(str[i]==')' || str[i]==']'){
+				if(c.empty()){
+					valid=0;
+					break;
+				}
+				char s = c.top();
+				c.pop();
+				
+				if((str[i]==')' && s=='[')||
+					(str[i]==']' && s=='(')){
+					valid=0;
+					break;	
+				}
+			}
+		}
+		if(!c.empty())valid=0;
+		
+		if(valid)puts("yes");
+		else puts("no");
+	}
+}

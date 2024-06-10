@@ -1,0 +1,99 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
+using namespace std;
+typedef long long int ll;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x)-1;i>=0;i--)
+#define RFOR(i,c) for(auto i=(c).rbegin();i!=(c).rend();++i)
+#define ALL(container) container.begin(), container.end()
+#define SZ(container) ((int)container.size())
+
+const int INF = 1<<28;
+const double EPS = 1e-8;
+const int MOD = 1000000007;
+
+string s;
+vector<pii> stdb;
+vector< set<int> > sts;
+vector< vector<double> > sim;
+
+double Jaccard(set<int> &a, set<int> &b){
+	int t = 0;
+	FOR(it, a) if(b.count(*it)) t++;
+	return (double)t / (a.size() + b.size() - t);
+}
+
+int dfs(int &p){
+//	printf("dfs(%d, %d)\n", p, l);
+	if(s[p] == 'x'){
+		p++;
+		return 0;
+	}
+	pii t;
+	if(s[p++] != '('){
+		cout << "not (" << endl;
+	}
+	t.first = dfs(p);
+	if(s[p++] != ' '){
+		cout << "not space" << endl;
+	}
+	t.second = dfs(p);
+	if(s[p++] != ')'){
+		cout << "not )" << endl;
+	}
+	if(t.first > t.second) swap(t.first, t.second);
+	auto ret = find(stdb.begin(), stdb.end(), t);
+	if(ret == stdb.end()){
+		int p = stdb.size();
+		stdb.push_back(t);
+		sts.push_back(sts[t.first]);
+		sts.back().insert(sts[t.second].begin(), sts[t.second].end());
+		sts.back().insert(p);
+		sim.push_back(max(sim[t.first], sim[t.second]));
+		sim.back().insert(sim.back().begin(), 1.0 - Jaccard(sts[t.first], sts[t.second]));
+//		printf("%d: (%d, %d) %.5f [", p, t.first, t.second, sim.back()[0]);
+//		FOR(it, sts[p]) printf("%d ", *it);
+//		printf("]\n");
+		return p;
+	}else return ret - stdb.begin();
+}
+void printTree(int st, int r){
+	if(!st) printf("x");
+	else{
+		pii t = stdb[st];
+		if(r ^ (sim[t.first] < sim[t.second])) swap(t.first, t.second);
+		printf("(");
+		printTree(t.first, 0);
+		printf(" ");
+		printTree(t.second, 1);
+		printf(")");
+	}
+}
+main(){
+	while(getline(cin, s), s[0] !='0'){
+		stdb.clear();
+		stdb.push_back(pii(-1, -1));
+		sts.clear();
+		sts.push_back(set<int>());
+		sts.back().insert(0);
+		sim.clear();
+		sim.push_back(vector<double>(1, 1.0));
+		int p = 0;
+		printTree(dfs(p), 0);
+		puts("");
+	}
+	return 0;
+}

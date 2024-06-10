@@ -1,0 +1,51 @@
+#include<stdio.h>
+#define M 100000
+typedef struct{
+  int id, k, d, c[10], p , type;
+
+}node;
+
+
+
+
+int main(){
+  node T[M];
+  int n,i,a,b,e,deep=1,j;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    T[i].p=-1;
+}
+
+  for(i=0;i<n;i++){
+    scanf("%d %d",&a,&b);
+    T[a].k=b;
+    if(b>0)T[i].type=0;
+    else T[i].type = 1;
+    for(j=0;j<b;j++){
+      scanf("%d",&e);
+      T[e].p=a;
+      T[a].c[j]=e;
+    }
+  }
+
+  for(i=0;i<n;i++){
+    if(T[i].p==-1)T[i].type=-1;
+    else T[i].d=T[T[i].p].d+1;
+    printf("node %d: parent = %d, depth = %d, ",i,T[i].p,T[i].d);
+    if( T[i].type== -1) printf("root, ");
+    else if(T[i].type == 0)printf("internal node, ");
+    else printf("leaf, ");
+    if(T[i].k==0)printf("[]\n");
+    else {
+      printf("[");
+      for(j=0;j<T[i].k-1;j++){
+	printf("%d, ",T[i].c[j]);
+      }
+      printf("%d]\n",T[i].c[j]);
+    }
+  }
+
+
+
+  return 0;
+}

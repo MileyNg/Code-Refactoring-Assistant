@@ -1,0 +1,45 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <iterator>
+#include <set>
+
+using namespace std;
+
+inline int getInt() { int s; scanf("%d", &s); return s; }
+
+// bad knowhow
+#define ALL(c) (c).begin(), (c).end()
+#define REP(i,n) for(long long i=0;i<(long long)n;++i)
+#define MAX_SIZE 100
+
+set<int> g_p[MAX_SIZE];
+set<int> g_leak;
+
+int main() {
+	//freopen("Text.txt", "r", stdin);
+	while (true) {
+		REP(i, MAX_SIZE) g_p[i].clear();
+		g_leak.clear();
+
+		const int n = getInt();
+		if (n==0) break;
+		
+		REP(i, n) {
+			const int m = getInt();
+			REP(j, m) g_p[i].insert(getInt()-1);
+		}
+
+		const int k = getInt();
+		REP(i, k) g_leak.insert(getInt()-1);
+
+		vector<int> suspect;
+		REP(i,n) {
+			vector<int> is;
+			if (includes(ALL(g_p[i]), ALL(g_leak))) suspect.push_back(i);
+		}
+
+		cout << ((suspect.size()==1) ? suspect[0] + 1 : -1) << endl;
+	}
+}

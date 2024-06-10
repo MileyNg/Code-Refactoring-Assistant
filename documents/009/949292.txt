@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+    int n; cin>>n;
+
+    vector<pair<int,int> > p(n);
+    for(int i=0; i<n; i++){
+        int x, y;
+        scanf("%d %d", &x,&y);
+        p[i] = make_pair(x,y);
+    }
+
+    int m; cin>>m;
+    vector<pair<int,int> > q(m);
+    for(int i=0; i<m; i++){
+        int x, y;
+        scanf("%d %d", &x,&y);
+        q[i] = make_pair(x,y);
+    }
+
+    sort(q.begin(), q.end());
+
+    int ansx=-1, ansy=-1;
+    for(int i=0; i<m; i++){
+        int dx = - q[i].first + p[0].first;
+        int dy = - q[i].second + p[0].second;
+        bool ok = true;
+        for(int j=0; j<n; j++){
+            pair<int,int> after = make_pair(p[j].first - dx, p[j].second - dy);
+            if(binary_search(q.begin(), q.end(), after)) continue;
+            else ok = false;
+        }
+        if(ok) {
+            ansx = dx;
+            ansy = dy;
+            break;
+        }
+    }
+
+    cout << -ansx << " " << -ansy << endl;
+}

@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void) {
+	int a, b, x, y, tem, m, max, i;
+	while(scanf("%d %d", &a, &b) != EOF){
+		max = a*b;
+		if(a < b){
+			tem = a;
+			a = b;
+			b = tem;
+		}
+		tem = 1;
+		while(tem != 0){
+			tem = a % b;
+			a = b;
+			b = tem;
+		}
+		x = a;
+		y = max / x;
+		printf("%d %d\n", x, y);
+	}
+	return 0;
+}

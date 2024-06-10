@@ -1,0 +1,31 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cmath>
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,a) loop(i,0,a)
+#define all(in) in.begin(),in.end()
+#define pb(in,a) in.push_back(a)
+using namespace std;
+int main(){
+  int n;
+  while(cin>>n,n){
+    string s;
+    cin>>s;
+    vector<int>a(n),b(n);
+    rep(i,n)cin>>a[n-i-1]>>b[n-i-1];
+
+    rep(i,n){
+      swap(s[a[i]-1],s[b[i]-1]);
+      if(s[a[i]-1]+b[i]-a[i]>'z')s[a[i]-1]+=b[i]-a[i]-26;
+      else s[a[i]-1]+=b[i]-a[i];
+      if(s[b[i]-1]+b[i]-a[i]>'z')s[b[i]-1]+=b[i]-a[i]-26;
+      else s[b[i]-1]+=b[i]-a[i];
+      
+      //s[b[i]-1]+=abs(a[i]-b[i]);
+      //if(s[b[i]-1]>'z')s[b[i]-1]-=26;
+      //cout<<s<<endl;
+    }
+    cout<<s<<endl;
+  }
+}

@@ -1,0 +1,142 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <iterator>
+#include <tuple>
+
+using namespace std;
+typedef tuple<double, int, int> tdii;
+
+struct Route {
+	vector<double> t, vx, vy, x, y;
+	explicit Route(int n = 0) : t(n), vx(n), vy(n), x(n), y(n) { }
+};
+vector<double> merge(const Route &a, const Route &b){
+	vector<double> result;
+	set_union(
+		a.t.begin(), a.t.end(), b.t.begin(), b.t.end(),
+		back_inserter(result));
+	return result;
+}
+Route interpolate(const Route &r, const vector<double> &t){
+	Route result(t.size());
+	for(int i = 0, j = 0; i < t.size(); ++i){
+		while(r.t[j] < t[i]){ ++j; }
+		result.t[i] = t[i];
+		if(r.t[j] == t[i]){
+			result.vx[i] = r.vx[j];
+			result.vy[i] = r.vy[j];
+			result.x[i] = r.x[j];
+			result.y[i] = r.y[j];
+		}else{
+			const double dt = r.t[j] - t[i];
+			const double vx = r.vx[j - 1], vy = r.vy[j - 1];
+			result.vx[i] = vx;
+			result.vy[i] = vy;
+			result.x[i] = r.x[j] - vx * dt;
+			result.y[i] = r.y[j] - vy * dt;
+		}
+	}
+	return result;
+}
+inline double pow2(double x){ return x * x; }
+
+int main(){
+	ios_base::sync_with_stdio(false);
+	while(true){
+		int n, end_t, r;
+		cin >> n >> end_t >> r;
+		if(n == 0 && end_t == 0 && r == 0){ break; }
+		vector<string> names(n);
+		vector<Route> routes(n);
+		for(int i = 0; i < n; ++i){
+			Route &r = routes[i];
+			cin >> names[i];
+			while(true){
+				int t, vx, vy;
+				cin >> t >> vx >> vy;
+				r.t.push_back(t);
+				r.vx.push_back(vx);
+				r.vy.push_back(vy);
+				if(t == end_t){ break; }
+			}
+			const int m = r.t.size();
+			r.x.resize(m);
+			r.y.resize(m);
+			r.x[0] = r.vx[0];
+			r.y[0] = r.vy[0];
+			for(int j = 1; j < m; ++j){
+				const double dt = r.t[j] - r.t[j - 1];
+				r.x[j] = r.x[j - 1] + r.vx[j] * dt;
+				r.y[j] = r.y[j - 1] + r.vy[j] * dt;
+				r.vx[j - 1] = r.vx[j];
+				r.vy[j - 1] = r.vy[j];
+			}
+		}
+		vector<tdii> events;
+		for(int i = 0; i < n; ++i){
+			const Route &ri = routes[i];
+			for(int j = i + 1; j < n; ++j){
+				const Route &rj = routes[j];
+				const vector<double> t = merge(ri, rj);
+				const Route &pri = interpolate(ri, t);
+				const Route &prj = interpolate(rj, t);
+				const int m = t.size();
+				for(int k = 0; k + 1 < m; ++k){
+					const double dvx = pri.vx[k] - prj.vx[k];
+					const double dvy = pri.vy[k] - prj.vy[k];
+					const double dx = pri.x[k] - prj.x[k];
+					const double dy = pri.y[k] - prj.y[k];
+					const double a = pow2(dvx) + pow2(dvy);
+					const double b = 2 * (dvx * dx + dvy * dy);
+					const double c = pow2(dx) + pow2(dy) - pow2(r);
+					const double d = b * b - 4 * a * c;
+					if(a == 0 || d < 0){ continue; }
+					double t0 = (-b - sqrt(d)) / (2 * a);
+					double t1 = (-b + sqrt(d)) / (2 * a);
+					if(t0 > t1){ swap(t0, t1); }
+					t0 = max(t0, t[k]);
+					t1 = min(t1, t[k + 1]);
+					if(t0 >= t1){ continue; }
+					events.push_back(tdii(t0, i, j));
+					events.push_back(tdii(t1, i, j));
+				}
+			}
+		}
+		sort(events.begin(), events.end());
+		vector<int> done(n);
+		queue<int> q;
+		vector< vector<int> > mat(n, vector<int>(n));
+		done[0] = 1;
+		for(int i = 0; i < events.size(); ++i){
+			const int a = get<1>(events[i]);
+			const int b = get<2>(events[i]);
+			mat[a][b] ^= 1;
+			mat[b][a] ^= 1;
+			if(done[a] == done[b]){ continue; }
+			const int root = (done[a] ? b : a);
+			done[root] = 1;
+			q.push(root);
+			while(!q.empty()){
+				const int u = q.front();
+				q.pop();
+				for(int v = 0; v < n; ++v){
+					if(mat[u][v] == 0 || done[v]){ continue; }
+					done[v] = 1;
+					q.push(v);
+				}
+			}
+		}
+		vector<string> answer;
+		for(int i = 0; i < n; ++i){
+			if(done[i]){ answer.push_back(names[i]); }
+		}
+		sort(answer.begin(), answer.end());
+		for(int i = 0; i < answer.size(); ++i){
+			cout << answer[i] << endl;
+		}
+	}
+	return 0;
+}

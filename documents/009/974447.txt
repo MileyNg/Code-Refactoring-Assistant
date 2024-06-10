@@ -1,0 +1,58 @@
+#include<iostream>
+
+using namespace std;
+
+int n,x,m;
+int l[10],r[10],s[10];
+int rion[6];
+int ansrion[6];
+int rionsum=0;
+bool f=false;
+
+void solve(int num){
+	if(num==n){
+		bool jd=true;
+		int sum;
+		for(int i=0;i<m;i++){
+			sum=0;
+			for(int j=l[i];j<=r[i];j++){
+				sum+=rion[j];
+			}
+			if(sum!=s[i]) jd=false;
+		}
+		if(jd){
+			sum=0;
+			for(int i=0;i<n;i++)sum+=rion[i];
+			if(sum>=rionsum){
+				rionsum=sum;
+				for(int i=0;i<n;i++) ansrion[i]=rion[i];
+				f=true;
+			}
+		}
+		return;
+	}
+	for(int i=0;i<=x;i++){
+		rion[num]=i;
+		solve(num+1);
+	}
+	return;
+}
+
+int main(){
+
+	cin>>n>>x>>m;
+
+	for(int i=0;i<m;i++){
+		cin>>l[i]>>r[i]>>s[i];
+		l[i]--,r[i]--;
+	}
+
+	solve(0);
+	if(!f) cout<<"-1"<<endl;
+	else{
+		for(int i=0;i<n-1;i++) cout<<ansrion[i]<<" ";
+		cout<<ansrion[n-1]<<endl;
+	}
+
+	return 0;
+}

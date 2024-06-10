@@ -1,0 +1,55 @@
+#include<stdio.h>
+#define N 500000
+int heap_size;
+
+int parent(int i){
+  return i/2;
+}
+int left(int i){
+  return 2*i;
+} 
+int right(int i){
+  return 2*i+1;
+}
+void maxHeapify(int A[], int i){
+  int l,r,largest,temp;  
+
+  l = left(i);
+  r = right(i);
+  if(l <= heap_size && A[l] > A[i]){
+    largest = l;
+  }
+  else largest = i;
+  if(r <= heap_size && A[r] > A[largest]){
+    largest = r;
+  }
+
+  if(largest != i){
+    temp = A[i];
+    A[i] = A[largest];
+    A[largest] = temp;
+    maxHeapify(A, largest);
+  }
+}
+
+void buildMaxHeap(int  A[]){
+  int i;
+  for(i = (heap_size/2); i > 0; i--){
+    maxHeapify(A,i);
+  }
+}
+  
+int main(){
+  int i;
+  int A[N];
+  scanf("%d",&heap_size);
+  for(i = 1; i <= heap_size; i++){
+    scanf("%d",&A[i]);
+  }
+  buildMaxHeap(A);
+  for(i = 1; i <= heap_size; i++){
+    printf(" %d",A[i]);
+  }
+  printf("\n");
+  return 0;
+}

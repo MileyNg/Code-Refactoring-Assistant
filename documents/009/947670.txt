@@ -1,0 +1,87 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+#define NMAX 200
+#define RMAX 1000
+#define INF 100000000
+
+typedef long long ll;
+
+int main(void){
+
+	ll N,M;
+	ll x,y,t;
+	char sl;
+	ll R,zi;
+	ll bzi;
+	ll ans;
+	ll ldp[NMAX+1][NMAX+1];
+	ll sdp[NMAX+1][NMAX+1];
+	ll dp[NMAX+1][RMAX+1];
+
+	while(1){
+
+		cin>>N>>M;
+		if(N==0&&M==0) break;
+
+		for(int i=0;i<=N;i++){
+			for(int j=0;j<=N;j++){
+				ldp[i][j]=INF;
+				sdp[i][j]=INF;
+			}
+			ldp[i][i]=0;
+			sdp[i][i]=0;
+		}
+
+		for(int i=0;i<M;i++){
+			cin>>x>>y>>t>>sl;
+			if(sl=='L'){
+				ldp[x][y]=min(ldp[x][y],t);
+				ldp[y][x]=min(ldp[y][x],t);
+			}
+			else{
+				sdp[x][y]=min(sdp[x][y],t);
+				sdp[y][x]=min(sdp[y][x],t);
+			}
+		}
+
+		for(int k=1;k<=N;k++){
+			for(int i=1;i<=N;i++){
+				for(int j=1;j<=N;j++){
+					ldp[i][j]=min(ldp[i][j],ldp[i][k]+ldp[k][j]);
+					sdp[i][j]=min(sdp[i][j],sdp[i][k]+sdp[k][j]);
+				}
+			}
+		}
+
+		cin>>R;
+
+		for(int i=0;i<=N;i++){
+			for(int j=0;j<=N;j++){
+				dp[i][j]=INF;
+			}
+		}
+		dp[1][0]=0;
+		bzi=1;
+
+		for(int i=1;i<=R;i++){
+			cin>>zi;
+			for(int j=1;j<=N;j++){
+				for(int k=1;k<=N;k++){
+					//cout<<i<<","<<j<<","<<k<<","<<dp[j][i]<<","<<ldp[j][zi]<<","<<sdp[k][j]<<","<<ldp[bzi][k]<<","<<dp[k][i-1]<<endl;
+					dp[j][i]=min(dp[j][i],ldp[j][zi]+sdp[k][j]+ldp[bzi][k]+dp[k][i-1]);
+				}
+			}
+			bzi=zi;
+		}
+
+		ans=dp[1][R];
+		for(int i=2;i<=N;i++){
+			ans=min(ans,dp[i][R]);
+		}
+		cout<<ans<<endl;
+	}
+
+}

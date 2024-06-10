@@ -1,0 +1,52 @@
+#include<iostream>
+#include<vector>
+#include<climits>
+#include<algorithm>
+#include<functional>
+#include<numeric>
+
+using namespace std;
+
+long maxBurdenVolume(vector<long> &burden, long trackNum){
+ long ave = accumulate(burden.begin(), burden.end(), 0) / trackNum;
+
+ vector<long> track(trackNum, 0);
+ unsigned long track_i = 0;
+
+ for(unsigned long burden_i = 0, burdenMax = burden.size(); burden_i < burdenMax; ++burden_i){
+  if(track[track_i] >= ave) ++track_i;
+
+  track[track_i] +=burden[burden_i];
+ }
+
+ 
+
+ return *max_element(track.begin(), track.end());
+};
+
+
+int main(){
+
+ ios_base::sync_with_stdio(false);
+ cin.tie(0);
+
+ unsigned long burdenNum = 0;  cin >> burdenNum;
+ unsigned long trackNum  = 0;  cin >> trackNum;
+
+ vector<long> burden(burdenNum, 0);
+
+ for(unsigned long burden_i = 0; burden_i < burdenNum; ++burden_i){
+
+  unsigned long burdenVolume = 0; cin >> burdenVolume;
+  burden[burden_i] = burdenVolume;
+
+ }
+
+ if(burdenNum <= trackNum){
+  cout << *max_element(burden.begin(), burden.end()) << endl;
+ }else{
+  cout << maxBurdenVolume(burden, trackNum) << endl;
+ }
+
+ return 0;
+}

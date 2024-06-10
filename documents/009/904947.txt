@@ -1,0 +1,11 @@
+#!/bin/ruby
+def dist(x1,y1,x2,y2)
+  (x1-x2).abs+(y1-y2).abs
+end
+n=gets.to_i
+a,b=gets.split.map{|e|e.to_i-1}
+c,d=gets.split.map{|e|e.to_i-1}
+puts (1..100).map{|w|
+  dist(a/w,a%w,b/w,b%w)+dist(c/w,c%w,d/w,d%w)
+}.min
+  

@@ -1,0 +1,31 @@
+import std.stdio;
+import std.string;
+import std.conv;
+import std.math;
+
+int main() {
+    string buf;
+    while ((buf = strip(readln())) != null) {
+        writeln(calc_sim_eq(buf));
+    }
+
+    return 0;
+}
+
+string calc_sim_eq(string data_set) {
+    string[] factors = split(data_set);
+    double a = to!(double)(factors[0]);
+    double b = to!(double)(factors[1]);
+    double c = to!(double)(factors[2]);
+    double d = to!(double)(factors[3]);
+    double e = to!(double)(factors[4]);
+    double f = to!(double)(factors[5]);
+
+    double determinant = a * e - b * d;
+    double x = (c * e - b * f) / determinant;
+    double y = (a * f - c * d) / determinant;
+    x = 0 == x ? 0 : x;
+    y = 0 == y ? 0 : y;
+    
+    return format("%.3f %.3f", round(x), round(y));
+}

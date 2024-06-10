@@ -1,0 +1,26 @@
+#include<iostream>
+#define rep(i,n) for( i = 0;i < n;i++ )
+using namespace std;
+  
+long long n,k;
+long long rui[100000];
+long long ans = 0;
+  
+int main(){
+int i;
+cin >> n >> k;
+rep(i,n-1){
+cin >> rui[i+1];
+rui[i+1] += rui[i];
+}
+  
+int bef=0,now;
+rep(i,k){
+cin >> now;
+now += bef;
+ans += rui[ max(now,bef) ] - rui[ min(now,bef) ];
+bef = now;
+}
+cout << ans%100000 << endl;
+return 0;
+}

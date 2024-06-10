@@ -1,0 +1,41 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int solve(int n){
+	int cnt = 0;
+	for(int i=1;i<n;i++){//足す数は1~ n-1。本当はn-1とか足しても無駄ｗ
+		if(i+(i+1)>n){//2つ連続で足したらもうnを超える
+			break;
+		}
+		int sum = 0;
+		for(int j=0;j<n;j++){//繰り返し回数ｎはどうでもいい
+			sum += i+j;
+			if(sum == n){
+				cnt ++;
+				break;
+			}else if(sum >n){
+				break;
+			}
+		}
+	}
+	return cnt;
+}
+
+int main(){
+	while(true){
+		int n;
+		cin >> n;
+		if(n==0){
+			break;
+		}
+		int result = solve(n);
+		cout << result << endl;
+	}
+	return 0;
+}
+/*
+等差数列の和は
+項数*(初項+末項)/2
+*/

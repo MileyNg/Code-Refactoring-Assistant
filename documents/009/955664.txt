@@ -1,0 +1,12 @@
+#include <iostream>
+using namespace std;
+int main(){
+	int n,q,*t,c,x,y,k,i,j;
+	for(cin>>n>>q,t=new int[n],i=0;i<n;++i)t[i]=i;
+	for(i=q;cin>>c>>x>>y,i--;){
+		if(c)
+			cout<<(t[x]-t[y]?0:1)<<endl;
+		else
+			for(k=t[y],j=0;j<n;++j)if(t[j]==k)t[j]=t[x];
+	}
+}

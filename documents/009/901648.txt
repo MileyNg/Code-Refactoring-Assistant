@@ -1,0 +1,22 @@
+def lastDigit(num)
+  return num % 10
+end
+
+def nextLine(list)
+  acc = []
+  list.each_cons(2) do |a, b|
+    acc << lastDigit(a + b)
+  end
+  return acc
+end
+
+if __FILE__ == $0
+  while line = gets
+    first_line = line.split('').map{|i| i.to_i}
+    currentLine = first_line
+    9.times do 
+      currentLine = nextLine(currentLine)
+    end
+    puts currentLine[0]
+  end
+end

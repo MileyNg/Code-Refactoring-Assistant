@@ -1,0 +1,148 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdint.h>
+#include<string.h>
+
+#define ADDR_ABS_MAX (1000)
+#define STACK_SIZE (1000)
+
+typedef struct {
+    uint8_t posMem[ADDR_ABS_MAX+1]; /* region for 0 ~ ADDR_ABS_MAX */
+    uint8_t negMem[ADDR_ABS_MAX+1]; /* region for -1 ~ -ADDR_ABS_MAX */
+    char *stack[STACK_SIZE]; 
+    int ptr; 
+    int sp; 
+} CPU;
+
+void initCPU( CPU* cpu );
+void pointer_range_assert( CPU *cpu );
+void write( CPU* cpu, uint8_t value );
+uint8_t read( CPU* cpu );
+void output( CPU* cpu );
+void input( CPU* cpu );
+void push( CPU* cpu, char* p);
+char* pop( CPU* cpu );
+char* pairBrace( char* p );
+void interpretBF( CPU* cpu, char *code );
+
+int main()
+{
+    int i;
+    CPU cpu;
+    initCPU( &cpu );
+    interpretBF( &cpu, " ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>>.  " );
+    return 0;
+}
+
+
+void initCPU( CPU* cpu )
+{
+    memset( cpu->posMem, 0, ADDR_ABS_MAX+1 );
+    memset( cpu->negMem, 0, ADDR_ABS_MAX+1 );
+    cpu->ptr = 0;
+    cpu->sp = 0;
+}
+
+void pointer_range_assert( CPU *cpu )
+{
+    if( abs(cpu->ptr) > ADDR_ABS_MAX ){
+	exit( EXIT_FAILURE );
+    }
+}
+
+void write( CPU* cpu, uint8_t value )
+{
+    uint8_t *m = (cpu->ptr > 0) ? cpu->posMem : cpu->negMem;
+    pointer_range_assert( cpu );
+    *(m + abs( cpu->ptr )) = value;
+}
+
+uint8_t read( CPU* cpu )
+{
+    uint8_t *m = (cpu->ptr > 0) ? cpu->posMem : cpu->negMem;
+    pointer_range_assert( cpu );
+    return *(m + abs( cpu->ptr ));
+}
+
+void output( CPU* cpu )
+{
+    putchar( (char) read( cpu ) );
+}
+
+void input( CPU* cpu )
+{
+    write( cpu, (uint8_t) getchar() );
+}
+
+void push( CPU* cpu, char* p)
+{
+    if( cpu->sp >= STACK_SIZE )
+    {
+	fprintf( stderr, "stack overflow\n");
+	exit( EXIT_FAILURE );
+    }
+    
+    cpu->stack[ (cpu->sp)++ ] = p;
+}
+
+char* pop( CPU* cpu )
+{
+    if( cpu->sp <= 0 )
+    {
+	fprintf( stderr, "stack underflow\n");
+	exit( EXIT_FAILURE );
+    }
+
+    return cpu->stack[ --(cpu->sp) ];
+}
+
+/* string p must start with '[' */
+char* pairBrace( char *p )
+{
+    int depth = 0;
+    for(; *p; p++)
+    {
+	if( *p == '[' ){ depth++; }
+	else if( *p == ']' ){ depth--; }
+	
+	if( depth == 0 )
+	{
+	    return p;
+	}
+    }
+    
+    fprintf( stderr, "couln't fint closing brace\n" );
+    exit( EXIT_FAILURE );
+    return NULL;
+}
+
+void interpretBF( CPU* cpu, char *code )
+{
+
+    char c;
+    for( c = *code; c; c = *(++code) )
+    {
+	switch( c )
+	{
+	    case '>': ++(cpu->ptr); break;
+	    case '<': --(cpu->ptr); break;
+	    case '+': write( cpu, read( cpu ) + 1 ); break;
+	    case '-': write( cpu, read( cpu ) - 1 ); break;
+	    case '.': output( cpu ); break;
+	    case ',': input( cpu ); break;
+	    case '[':
+		if( read( cpu ) == 0 ){
+		    code = pairBrace( code );
+		}else{
+		    push( cpu, code );
+		}
+		break;
+	    case ']':
+		code = pop( cpu ) - 1; 
+		break;
+	    default: /*do nothing (treat as comment)*/ break;
+	} 
+	
+    }
+
+}

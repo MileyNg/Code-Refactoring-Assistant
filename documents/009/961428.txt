@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX 10
+#define INF 1e9
+typedef vector<int> Vec;
+
+Vec start, goal;
+int N;
+
+struct State{
+  Vec v;
+  int dist;
+};
+
+int bfs(){
+  int res;
+  State st;
+
+  map<Vec,bool> visited;
+
+  st.v = start;
+  st.dist = 0;
+
+  queue<State> que;
+  que.push(st);
+
+  while(!que.empty()){
+    State s = que.front(); que.pop();
+    
+    if(s.v == goal){
+      res = s.dist;
+      break;
+    }
+  
+    for(int i = 0 ; i < N-1 ; i++){
+      for(int j = i + 1 ; j < N ; j++){
+	Vec next = s.v;
+
+	reverse(next.begin()+i, next.begin()+j+1);
+
+	if(!visited[next]){
+	  visited[next] = true;
+
+	  st.v = next;
+	  st.dist = s.dist + 1;
+	  
+	  que.push(st);
+	} 
+      }
+    }
+  }
+
+  return res;
+}
+
+int main(){
+  cin >> N;
+  start.resize(N);
+  for(int i = 0 ; i < N ; i++){
+    cin >> start[i];
+  }
+  goal = start;
+  sort(goal.begin(), goal.end());
+
+  cout << bfs() << endl;
+
+  return 0;
+}

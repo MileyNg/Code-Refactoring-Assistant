@@ -1,0 +1,125 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef complex<double> P;
+
+const double eps = 1e-8;
+
+bool equals(double a, double b) {
+  return abs(a-b) < eps;
+}
+
+double cross(P a, P b) {
+  return a.real()*b.imag() - a.imag()*b.real();
+}
+
+double dot(P a, P b) {
+  return a.real()*b.real() + a.imag()*b.imag();
+}
+
+bool heikou(P a, P b) {
+  return equals(cross(a,b), 0.0);
+}
+
+P getCrossP(P a1, P a2, P b1, P b2) {
+  P a = a2 - a1;
+  P b = b2 - b1;
+  return a1 + a * cross(b, b1 - a1) / cross(b, a);
+}
+
+int ccw(P p, P a, P b) {
+  a -= p;
+  b -= p;
+  if(cross(a,b) > eps) return 1;
+  if(cross(a,b) < -eps) return -1;
+  if(dot(a,b) < -eps) return 2;
+  if(norm(b)-norm(a) > eps) return -2;
+  return 0;
+}
+
+double getDistanceLP(P s1, P s2, P p) {
+  return abs(cross(s2-s1, p-s1))/abs(s2-s1);
+}
+
+double W, H, N, R;
+vector<P> S, T;
+
+P getP(P a, P b, P c, P d) {
+  P s = a - b;
+  s /= abs(s);
+  P t = d - c;
+  t /= abs(t);
+  P M = getCrossP(a,b,c,d);
+  P st = s + t;
+  double H = abs(cross(s, t));
+  return M + st * R / H;
+}
+
+int main() {
+  while(cin >> W >> H >> N >> R) {
+    if(W == 0 && H == 0 && N == 0 && R == 0) break;
+    S.clear(); T.clear();
+    for(int i = 0; i < N; ++i) {
+      P a, b;
+      double t;
+      cin >> a.real() >> a.imag() >> b.real() >> b.imag() >> t;
+      P base = b - a;
+      P n(-base.imag(), base.real());
+      n /= abs(n);
+      S.push_back(a + n*t);
+      T.push_back(b + n*t);
+      S.push_back(b - n*t);
+      T.push_back(a - n*t);
+    }
+    S.push_back(P(0,0));
+    T.push_back(P(W,0));
+    S.push_back(P(W,0));
+    T.push_back(P(W,H));
+    S.push_back(P(W,H));
+    T.push_back(P(0,H));
+    S.push_back(P(0,H));
+    T.push_back(P(0,0));
+    vector<P> ps;
+    for(int i = 0; i < S.size(); ++i) {
+      for(int j = i+1; j < S.size(); ++j) {
+	if(heikou(T[i]-S[i], T[j]-S[j])) continue;
+	ps.push_back(getP(S[i],T[i],S[j],T[j]));
+      }
+    }
+
+    bool ans = false;
+    for(int k = 0; k < ps.size(); ++k) {
+      bool flag = true;
+      for(int i = 0; i < 2*N; i += 2) {
+	bool a, b;
+	{
+	  double d = getDistanceLP(S[i],T[i],ps[k]);
+	  a = (ccw(S[i],T[i],ps[k]) == 1 && (equals(d, R) || d > R));
+	}
+	{
+	  double d = getDistanceLP(S[i+1],T[i+1],ps[k]);
+	  b = (ccw(S[i+1],T[i+1],ps[k]) == 1 && (equals(d, R) || d > R));
+	}
+	if(!a && !b) {
+	  flag = false;
+	  break;
+	}
+      }
+      for(int i = 2*N; i < S.size(); ++i) {
+	double d = getDistanceLP(S[i],T[i],ps[k]);
+	bool a = (ccw(S[i],T[i],ps[k]) == 1 && (equals(d, R) || d > R));
+	if(!a) {
+	  flag = false;
+	  break;
+	}
+      }
+      if(flag) {
+	ans = true;
+	break;
+      }
+    }
+    if(ans) cout << "Yes" << endl;
+    else cout << "No" << endl;
+  }
+  return 0;
+}

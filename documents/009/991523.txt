@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef vector<int> vec;
+typedef vector<string> vecs;
+
+int main(){
+	int n;
+	//string str[10];
+	while( cin >> n, n ){
+	//while( scanf("%d", &n), n ){
+		vecs data(n);
+		for( int i = 0; i < n; i++ ){
+			cin >> data[i];
+			//scanf("%s", &data[i]);
+		}
+		vec perm;
+		for( int i = 0; i < n; i++ ){
+			perm.push_back(i);
+		}
+		int Min = 1000;
+		string ans;
+		do{
+			string str = data[perm[0]];
+			for( int i = 1; i < n; i++ ){
+				int sub1 = str.size();
+				if( Min < sub1 ) break;
+				int sub2 = data[perm[i]].size();
+				for( int j = 0; j < sub2; j++ ){
+					int len = sub2-j;
+					if( len > sub1 ) continue;
+					if( str.substr(sub1-len) == data[perm[i]].substr(0, len) ){
+						str += data[perm[i]].substr(len);
+						break;
+					}
+					if( j == sub2-1 ){
+						str += data[perm[i]];
+					}
+				}
+			}
+			if( Min > str.size() ){
+				Min = str.size();
+				ans = str;
+			}
+		}while( next_permutation(perm.begin(), perm.end()) );
+		cout << ans << endl;
+		//printf("%s\n", ans);
+	}
+}

@@ -1,0 +1,16 @@
+while 1:
+	n = input()
+	if n == 0: break
+	plant = map(int,raw_input().split())
+	a1,a2 = plant[1] - plant[0], plant[2] - plant[0]
+	b = plant[0]
+	for i in range(3,n + 1):
+		if plant[i] != a1*i + b:
+			if i == n or plant[i+1] == a1*i + b:
+				print plant[i]
+			else:
+				if plant[3] == a2*3 + b:
+					print plant[1]
+				else:
+					print plant[0]
+			break

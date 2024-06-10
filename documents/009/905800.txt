@@ -1,0 +1,192 @@
+#include<iostream>
+#include<stdio.h>
+#include<queue>
+#include<vector>
+#include<cmath>
+using namespace std;
+
+#define INF (1<<24)
+
+struct Event {
+  int id,u,v,w;
+  Event (int id=0,int u=0,int v=0,int w=0):id(id),u(u),v(v),w(w){}
+  bool operator < (const Event &p)const{
+    return (u == p.u && v == p.v && id > p.id)||(u == p.u && v > p.v)||(u > p.u);
+  }
+};
+
+priority_queue<Event> Q;
+
+int m,n;
+int U[2][10],ID[2][10];
+bool used[2][10];
+vector<int> ans;
+
+bool init();
+bool input();
+int minimamU();
+int check0();
+int check1(Event);
+void car_in(Event);
+void car_out(Event);
+
+int main(){
+  Event event;
+  while(init()&&input()){
+    while(!Q.empty()){
+      event=Q.top();Q.pop();
+      
+      if(event.v==1){
+	car_in(event);
+      }else if(event.v==0){
+	car_out(event);
+      }
+      /*
+      cout<<event.id<<' '<<event.u<<' '<<event.v<<' '<<event.w<<endl;
+      for(int i=0;i<2;i++){
+	for(int j=0;j<m;j++){
+	  if(ID[i][j]!=INF){
+	    printf("%2d %2d  ",ID[i][j],U[i][j]);
+	  }else{
+	    cout<<"       ";
+	  }
+	}
+	cout<<endl;
+      }
+      cout<<endl;
+      */
+    }
+      
+    for(int i=0;i<(int)ans.size();i++){
+      if(i)cout<<' ';
+      cout<<ans[i];
+    }
+    cout<<endl;
+  }
+
+  return 0;
+}
+
+
+void car_in(Event event){
+  int A=check0(),B;
+  if(A!=INF){
+    used[0][A]=true;
+    U[0][A]=event.u+event.w;
+    ID[0][A]=event.id;
+    Q.push(Event(ID[0][A],U[0][A],0,0));
+  }else{
+    B=check1(event);
+    if(B==INF){
+      event.u=minimamU();
+      Q.push(event);
+    }else{
+      used[1][B]=true;
+      U[1][B]=max(U[0][B],event.u+event.w);
+      ID[1][B]=ID[0][B];
+      U[0][B]=event.u+event.w;
+      ID[0][B]=event.id;
+      Q.push(Event(ID[0][B],U[0][B],0,0));
+    }
+  }
+}
+
+void car_out(Event event){
+  int I=-1,J=-1;
+  for(int i=0;i<2;i++)
+    for(int j=0;j<m;j++)
+      if(U[i][j]==event.u&&ID[i][j]==event.id){
+	I=i; J=j;
+      }
+  if(I==-1&&J==-1)return;
+  if(I==1)return;
+  
+  used[I][J]=false;
+  U[I][J]=INF;
+  ID[I][J]=INF;
+    
+  ans.push_back(event.id);
+
+  if(used[1][J]==true){
+    used[0][J]=true;
+    used[1][J]=false;
+    U[0][J]=U[1][J];
+    U[1][J]=INF;
+    ID[0][J]=ID[1][J];
+    ID[1][J]=INF;
+
+    if(U[0][J]==event.u){
+      ans.push_back(ID[0][J]);
+      ID[0][J]=U[0][J]=INF;
+      used[0][J]=false;
+    }else{
+      Q.push(Event(ID[0][J],U[0][J],0,0));
+    }
+  }
+    
+
+}
+
+int check0(){
+  for(int i=0;i<m;i++)if(used[0][i]==false)return i;
+  return INF;
+}
+int check1(Event event){
+  int mini=INF,miniI,x;
+  for(int i=0;i<m;i++){
+    if(used[1][i]==true)continue;
+    x=U[0][i]-(event.u+event.w);
+    if(x<0)continue;
+    if(x<mini){
+      mini=x;
+      miniI=i;
+    }
+  }
+  if(mini!=INF)return miniI;
+  
+  
+  for(int i=0;i<m;i++){
+    if(used[1][i]==true)continue;
+    x=(event.u+event.w)-U[0][i];
+    if(x<mini){
+      mini=x;
+      miniI=i;
+    }
+  }
+  if(mini!=INF)return miniI;
+  
+  return INF;
+}
+
+bool init(){
+  while(!Q.empty())Q.pop();
+  for(int i=0;i<2;i++){
+    for(int j=0;j<10;j++){
+      U[i][j]=ID[i][j]=INF;
+      used[i][j]=false;
+    }
+  }
+  ans.clear();
+  return true;
+}
+
+bool input(){
+  int a;
+  cin>>m>>n;
+  if(m==0&&n==0)return false;
+  for(int i=0;i<n;i++){
+    cin>>a;
+    Q.push(Event(i+1,i*10,1,a));
+  }
+  return true;
+}
+
+int minimamU(){
+  int res=INF;
+  for(int i=0;i<2;i++){
+    for(int j=0;j<m;j++){
+      res=min(res,U[i][j]);
+    }
+  }
+  return res;
+}

@@ -1,0 +1,26 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+double thrt(double q){
+  double x=q/2.0;
+  while(abs(x*x*x-q)>=0.00001*q){
+    x-=(x*x*x-q)/(3.0*x*x);
+  }
+  return x;
+}
+
+int main(){
+  vector<double> data;
+  double q;
+  while(cin>>q&&(q!=-1)){
+    data.push_back(q);
+  }
+  for(auto q:data){
+    cout<<setprecision(8)<<thrt(q)<<endl;
+  }
+
+}

@@ -1,0 +1,24 @@
+using System;
+
+class AOJ2197
+{
+    static void Main()
+    {
+        while (true)
+        {
+            int tgt = int.Parse(Console.ReadLine());
+            if (tgt == 0) break;
+            int to = tgt / 2;
+            int c = 0;
+            for (int i = 1; i < tgt; i++)
+            {
+                for (int j = i, cr = 0; cr < tgt; j++)
+                {
+                    cr += j;
+                    if (cr == tgt) c++;
+                }
+            }
+            Console.WriteLine(c);
+        }
+    }
+}

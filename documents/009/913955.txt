@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc,char*argv[]){
+
+  int j = 0;
+  int stac[99];
+  char str[16];
+
+  while(scanf("%s",str) != EOF){
+    switch(*str){
+    case '+':
+      j--;
+      stac[j-1] += stac[j];
+      break;
+    case '-':
+      j--;
+      stac[j-1] -= stac[j];
+      break;
+    case '*':
+      j--;
+      stac[j-1] *= stac[j];
+      break;
+    default:
+      stac[j++] = atoi(str);
+      break;  
+    }
+  }
+  printf("%d\n",*stac);
+  return 0;
+}

@@ -1,0 +1,59 @@
+#include<iostream>
+using namespace std ;
+
+int map[21][21] = {} ;
+int dx[] = { 0,1,0,-1 } ;
+int dy[] = { -1,0,1,0 } ;
+
+int main(){
+	
+	int n , x , y ;
+	char d ;
+	int m , k , dir;
+	int nx , ny , count ;
+	
+	while(1){
+		cin >> n ;
+		if( n==0 ) break;
+		
+		for( int i=0 ; i<n ; i++ ){
+			cin >> x >> y ;
+			map[x][y] = 1 ;
+		}
+		
+		cin >> m ;
+		nx = 10 ;
+		ny = 10 ;
+		count = 0 ;
+		
+		for( int i=0 ; i<m ; i++ ){
+			cin >> d >> k ;
+			if( d == 'N' ) dir = 2 ;
+			else if( d == 'E' ) dir = 1 ;
+			else if( d == 'S' ) dir = 0 ;
+			else if( d == 'W' ) dir = 3 ;
+			
+			for( int j=0 ; j<k ; j++ ){
+				nx += dx[dir] ;
+				ny += dy[dir] ;
+				if( map[nx][ny] == 1 ){
+					count++;
+					map[nx][ny] = 0 ;
+				}
+				
+			}
+
+		}
+		
+		if( count == n ) cout << "YES" << endl ;
+		else if( count != n ){
+			cout << "NO" << endl ;
+			
+			for( int i=0 ; i<21 ; i++ )
+				for( int j=0 ; j<21 ; j++ )
+					map[i][j] = 0;
+		}
+	}
+	
+return 0;
+}

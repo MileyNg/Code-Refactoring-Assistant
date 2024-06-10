@@ -1,0 +1,96 @@
+#include <iostream>
+#include <sstream>
+
+
+using namespace std;
+
+
+int day_per_month[13] ={0,31, 28, 31, 30, 31, 30 ,31, 31, 30, 31, 30, 31};
+int day_per_month_leap_year[13] ={0,31, 29, 31, 30, 31, 30 ,31, 31, 30, 31, 30, 31};
+
+int main(){
+
+    int y1, m1, d1, y2, m2, d2;
+    while(cin>>y1>>m1>>d1>>y2>>m2>>d2){
+        if(y1<0||m1<0||d1<0||y2<0||m2<0||d2<0){
+            break;
+        }
+        int y,m;
+        y=y1;
+        int day = 0;
+
+        
+        while(1){
+            if(y+1>y2)break;
+            
+            day+=365;
+            if(y%4==0){
+                day++;
+                if(y%100==0){
+                    day--;
+                    if(y%400==0){
+                        day++;
+                    }
+                }
+            }
+            y++;
+            
+        }
+        
+        if(m1<m2){
+            m=m1;
+            while(1){
+                if(m+1>m2)break;
+                double flag=false;
+                if(y2%4==0){
+                    flag=true;
+                    if(y2%100==0){
+                        flag=false;
+                        if(y2%400==0){
+                            flag=true;
+                        }
+                    }
+                }
+                
+                if(flag){
+                    day+=day_per_month_leap_year[m];
+                    m++;
+                }else{
+                    day+=day_per_month[m];
+                    m++;
+                }
+            }
+        }else if(m1>m2){
+            m=m2;
+            while(1){
+                if(m-1<m1)break;
+                double flag=false;
+                if(y2%4==0){
+                    flag=true;
+                    if(y2%100==0){
+                        flag=false;
+                        if(y2%400==0){
+                            flag=true;
+                        }
+                    }
+                }
+                
+                if(flag){
+                    m--;
+                    day-=day_per_month_leap_year[m];
+                }else{
+                    m--;
+                    day-=day_per_month[m];
+                }
+            }
+        }
+        //cout<<day<<endl;
+        
+        day+=d2-d1;
+        
+        cout<<day<<endl;
+        
+        
+        
+    }
+}

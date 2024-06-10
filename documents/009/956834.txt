@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <utility>
+#include <algorithm>
+
+using namespace std;
+
+typedef pair<int,int> pii;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int main(){
+    int n, m;
+    while(cin>>m, m){
+        set<pii> p;
+        for(int i=0; i<m; i++){
+            pii t;
+            cin >> t.first >> t.second;
+            p.insert(t);
+        }
+        cin >> n;
+        set<pii> q;
+        for(int i=0; i<n; i++){
+            pii t;
+            cin >> t.first >> t.second;
+            q.insert(t);
+        }
+
+        int ax=-1, ay=-1;
+        for(auto const& e: q){
+            int dx = e.first - p.begin()->first;
+            int dy = e.second - p.begin()->second;
+            bool ok = true;
+            for(auto const& f: p){
+                pii t(f.first + dx, f.second + dy);
+                if(q.count(t)==0){
+                    ok = false;
+                    break;
+                }
+            }
+            if(ok){
+                ax = dx;
+                ay = dy;
+                break;
+            }
+        }
+
+        cout << ax << " " << ay << endl;
+    }
+}

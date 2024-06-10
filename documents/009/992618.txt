@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+
+
+int n,Y,M,D;
+int ans;
+
+
+int main(){
+
+
+  cin >> n;
+  while(n){
+    cin >> Y >> M >> D;
+    ans = 0;
+    while( Y < 1000){
+
+      while( M <= 10 ){
+
+	if( Y%3 == 0 ){
+	  while( D <= 20 ){
+	    D++;
+	    ans++;
+	  }
+	  D = 1;
+	  M++;
+	}else{
+	  if( M%2 == 0 ){
+	    while( D <= 19){
+	      D++;
+	      ans++;
+	    }
+	    D = 1;
+	    M++;
+	  }else{
+	    while( D <= 20 ){
+	      D++;
+	      ans++;
+	    }
+	    D = 1;
+	    M++;
+	  }
+	}
+      }
+      M = 1;
+      Y++;
+    }
+    cout << ans << endl;
+    n--;
+  }  
+  return 0;
+}

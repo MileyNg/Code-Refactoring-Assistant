@@ -1,0 +1,16 @@
+n,q=map(int,raw_input().split())
+c=map(int,raw_input().split())
+p=[0]*(max(c)+1)
+for i in c:
+	p[i]=1
+
+for k in range(q):
+	m=int(raw_input())
+	flag=0
+	for i in range(m-1,0,-1):
+		for pi in p[i::m]:
+			if pi:
+				print i
+				flag=1
+				break
+		if flag: break

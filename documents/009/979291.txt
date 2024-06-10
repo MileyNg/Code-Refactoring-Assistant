@@ -1,0 +1,21 @@
+import sys
+readline = sys.stdin.readline
+
+while True:
+    A, L = (int(x) for x in readline().split())
+    if A == 0 and L == 0: break
+    cnt = 0
+    past = {A: 0}
+    while True:
+        A = list(str(A).rjust(int(L), '0'))
+        A.sort()
+        minA = int("".join(A))
+        maxA = int("".join(reversed(A)))
+        A = maxA - minA
+        try:
+            pre = past[A]
+            print "%d %d %d" % (cnt, A, cnt - pre + 1)
+            break
+        except:
+            cnt += 1
+            past[A] = cnt

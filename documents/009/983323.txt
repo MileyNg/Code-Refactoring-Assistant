@@ -1,0 +1,62 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int main(){
+  int n, k;
+  while(scanf("%d%d", &n, &k) && n+k){
+    int c[128];
+    rep(i, n) scanf("%d", c+i);
+
+    int t = 0;
+    int ck = 1;
+    rep(i, k) ck *= c[i];
+    t = max(t, ck);
+    rep(i, n-k){
+      ck /= c[i];
+      ck *= c[i+k];
+      t = max(t, ck);
+    }
+
+    int res = 0;
+    rep(i, n) REP(j, i+1, n){
+      swap(c[i], c[j]);
+      int ck = 1;
+      rep(l, k) ck *= c[l];
+      res = max(res, ck);
+      rep(l, n-k){
+	ck /= c[l];
+	ck *= c[l+k];
+	res = max(res, ck);
+      }
+    }
+
+    if(res < t) puts("NO GAME");
+    else printf("%d\n", res-t);
+  }
+  return 0;
+}

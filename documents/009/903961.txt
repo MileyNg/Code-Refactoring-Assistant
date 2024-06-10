@@ -1,0 +1,85 @@
+#include <iostream>
+
+using namespace std;
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, 1, 0, -1};
+char field[51][51];
+int w, h;
+bool b_flag;
+bool w_flag;
+int count;
+
+void dfs1(int y, int x)
+{
+	if(y < 0 || h <= y || x < 0 || w <= x || field[y][x] == '#')
+	{
+		return;
+	}
+	else
+	{
+		if(field[y][x] == 'W')
+		{
+			w_flag = true;
+			return;
+		}
+		else if(field[y][x] == 'B')
+		{
+			b_flag = true;
+			return;
+		}
+		else if(field[y][x] == '.')
+		{
+			field[y][x] = '#';
+			++count;
+		}
+	}
+	for(int i = 0; i < 4; ++i)
+	{
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		dfs1(ny, nx);
+	}
+}
+
+void solve()
+{
+	while(cin >> w >> h, w || h)
+	{
+		for(int i = 0; i < h; ++i)
+		{
+			for(int j = 0; j < w; ++j)
+			{
+				cin >> field[i][j];
+			}
+		}
+		int b_count = 0, w_count = 0;
+		for(int i = 0; i < h; ++i)
+		{
+			for(int j = 0; j < w; ++j)
+			{
+				if(field[i][j] == '.')
+				{
+					count = 0;
+					b_flag = false;
+					w_flag = false;
+					dfs1(i, j);
+					if(b_flag == true && w_flag == false)
+					{
+						b_count += count;
+					}
+					else if(b_flag == false && w_flag == true)
+					{
+						w_count += count;
+					}
+				}
+			}
+		}
+		cout << b_count << " " << w_count << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

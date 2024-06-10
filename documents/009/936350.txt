@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  char str[1001];
+  scanf("%s", str);
+  int ju[6] = {}, j;
+  rep(i, strlen(str)){
+    j = i;
+    while(j > -1){
+      switch(str[j]){
+      case 'A': ju[0]++; break;
+      case 'I': ju[1]++; break;
+      case 'D': ju[2]++; break;
+      case 'U': ju[3]++; break;
+      case 'Y': ju[4]++; break;
+      case 'N': ju[5]++; break;
+      default : j = -10; break;
+      }
+      if(ju[0]==2&&ju[1]==1&&ju[2]==1&&ju[3]==1&&ju[4]==1&&ju[5]==2){
+	str[i]='A'; str[i+1]='I';str[i+2]='Z';str[i+3]='U';str[i+4]='N';
+	str[i+5]='Y';str[i+6]='A';str[i+7]='N';
+	i += 7;
+	break;
+      }
+      j++;
+    }
+    ju[0]=ju[1]=ju[2]=ju[3]=ju[4]=ju[5]=0;
+  }
+  puts(str);
+  return 0;
+}

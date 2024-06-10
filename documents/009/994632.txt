@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int h, w;
+    int i, j;
+    int row;
+
+    while (1){
+        row = 1;
+        scanf("%d %d", &h, &w);
+        if (h == 0 && w == 0){
+            break;
+        /*when w is even*/
+        }else if (w % 2 == 0){
+            for (i = 1; i <= h; i++){
+                /*odd row*/
+                if (row % 2 == 1){
+                    for (j = 1; j <= (w / 2); j++){
+                        printf("#.");
+                    }
+                /*even row*/
+                }else{
+                    for (j = 1; j <= (w / 2); j++){
+                        printf(".#");
+                    }
+                }
+                /*go to next row*/
+                printf("\n");
+                row++;
+            }
+        /*when w is odd*/
+        }else{
+            for (i = 1; i <= h; i++){
+                /*odd row*/
+                if (row % 2 == 1){
+                    for (j = 1; j <= ((w - 1) / 2); j++){
+                        printf("#.");
+                    }
+                    printf("#");
+                /*even row*/
+                }else{
+                    for (j = 1; j <= ((w - 1) / 2); j++){
+                        printf(".#");
+                    }
+                    printf(".");
+                }
+                /*go to next row*/
+                printf("\n");
+                row++;
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+}

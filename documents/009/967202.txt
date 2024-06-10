@@ -1,0 +1,36 @@
+#include <stdio.h>
+#define N 20
+#define Q 200
+int n, A1[N], flg;
+
+void solve(int p, int q){
+  if(q > 0 && flg == 0 && p < n){
+    if( q == A1[p]){
+      flg = 1;
+      printf("yes\n");
+      return;
+    }
+    solve(p+1, q-A1[p]);
+    solve(p+1, q);
+  }
+}
+
+main(){
+  int i;
+  scanf("%d", &n);
+  for(i = 0; i < n; i++){
+    scanf("%d", &A1[i]);
+  }
+
+  int q, A2[Q];
+  scanf("%d", &q);
+  for(i = 0; i < q; i++){
+    scanf("%d", &A2[i]);
+    flg = 0;
+    solve(0, A2[i]);
+    if(flg == 0){
+      printf("no\n");
+    }
+  }
+  return 0;
+}

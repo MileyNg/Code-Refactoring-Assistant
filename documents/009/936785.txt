@@ -1,0 +1,34 @@
+#include <iostream>
+#include <queue>
+#include <string>
+using namespace std;
+
+int main(void){
+	int n, q;
+	queue<pair<string, int> > que;
+
+	cin >> n >> q;
+	for(int i=0; i<n; i++){
+		string s;
+		int t;
+
+		cin >> s >> t;
+		que.push(pair<string, int>(s, t) );
+	}
+
+	int time = 0;
+	while(!que.empty()){
+		pair<string, int> temp = que.front();
+		que.pop();
+		temp.second -= q;
+		time += q;
+		if(temp.second <= 0){
+			time = time + temp.second;
+			cout << temp.first << " " << time << endl;
+		}else{
+			que.push(temp);
+		}
+	}
+
+	return 0;
+}

@@ -1,0 +1,179 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+  struct node *ri;
+  struct node *le;
+  struct node *pa;
+  int key;
+};
+typedef struct node * Node;
+
+Node ne;
+
+Node treeMinimum(Node );
+Node treeSearch(Node,int );
+Node treeSuccessor(Node );
+void insert(int);
+void inorder(Node);
+void preorder(Node);
+void treeDelete(Node);
+void Transplant(Node,Node);
+
+Node treeMinimum(Node x){
+  
+  while(x->le != NULL)
+    x = x->le;
+  
+  return x;
+    
+}
+ 
+Node treeSearch(Node u, int k){
+ 
+  if(u == NULL || k == u->key)
+    return u;
+    
+  if(k < u->key)
+    return treeSearch(u->le, k);
+    
+  else
+    return treeSearch(u->ri, k);
+    
+}
+ 
+Node treeSuccessor(Node x){
+    
+  Node y;
+  
+  if(x->ri != NULL)
+    return treeMinimum(x->ri);
+  
+  y = x->pa;
+  
+  while(y != NULL && x == y->ri){
+    x = y;
+    y = y->pa;
+  }
+  
+  return y;
+  
+}
+ 
+void insert(int k){
+  Node y = NULL;
+  Node x = ne;
+  Node z;
+  
+  z = malloc(sizeof(struct node));
+  z->key = k;
+  z->le = NULL;
+  z->ri = NULL;
+  
+  while(x != NULL){
+    y = x;
+    if(z->key < x->key)
+      x = x->le;
+  
+    else
+      x = x->ri;
+  }
+    
+  z->pa = y;
+  
+  if(y == NULL)
+    ne = z;
+  
+  else if(z->key < y->key)
+    y->le = z;
+  
+  else
+    y->ri = z;
+}
+ 
+void treeDelete(Node z){
+  Node y;
+  if(z->le == NULL)
+    Transplant(z, z->ri);
+ 
+  else if(z->ri == NULL)
+    Transplant(z, z->le);
+ 
+  else{
+    y = treeMinimum(z->ri);
+    if(y->pa != z){
+      Transplant(y, y->ri);
+      y->ri = z->ri;
+      y->ri->pa = y;
+    }
+ 
+    Transplant(z,y);
+    y->le = z->le;
+    y->le->pa = y;
+  }
+}
+ 
+void Transplant(Node u, Node v){
+  if(u->pa == NULL)
+    ne = v;
+ 
+  else if(u == u->pa->le)
+    u->pa->le = v;
+ 
+  else
+    u->pa->ri = v;
+ 
+  if(v != NULL)
+    v->pa = u->pa;
+}
+ 
+void inorder(Node u){
+  if(u != NULL){
+    inorder(u->le);
+    printf(" %d",u->key);
+    inorder(u->ri);
+  }
+}
+ 
+void preorder(Node u){
+  if(u != NULL){
+    printf(" %d",u->key);
+    preorder(u->le);
+    preorder(u->ri);
+  }
+}
+ 
+int main(int argc, char *argv[]){
+  int n, i, x;
+  char com[20];
+  scanf("%d", &n);
+ 
+  for ( i = 0; i < n; i++ ){
+    scanf("%s", com);
+    if ( com[0] == 'f' ){
+      scanf("%d", &x);
+      Node t = treeSearch(ne, x);
+      if ( t != NULL )
+    printf("yes\n");
+      else
+    printf("no\n");
+    }
+     
+    else if ( com[0] == 'i' ){
+      scanf("%d", &x);
+      insert(x);
+    }
+    else if ( com[0] == 'p' ){
+      inorder(ne);
+      printf("\n");
+      preorder(ne);
+      printf("\n");
+    }
+    else if ( com[0] == 'd' ){
+      scanf("%d", &x);
+      treeDelete(treeSearch(ne, x));
+    }
+  }
+ 
+  return 0;
+}

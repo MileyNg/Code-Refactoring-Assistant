@@ -1,0 +1,26 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+
+string s = "kstnhmyrw";
+string b = "aiueo";
+
+int main(){
+	string input;
+	cin >> input;
+	for(int i=0; i < input.size(); i++){
+		string t = input.substr(i,1);
+		if((int)atoi(t.c_str()) != 0) cout << s[atoi(t.c_str())-2];
+
+		i++;
+		t = input.substr(i, 1);
+		if(t == "T") cout << "a";
+		else if(t == "L") cout << "i";
+		else if(t == "U") cout << "u";
+		else if(t == "R") cout << "e";
+		else cout << "o";
+	}
+	cout << endl;
+}

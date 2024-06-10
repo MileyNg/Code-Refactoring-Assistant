@@ -1,0 +1,77 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+string orCheck(bool matrix[21][21]){
+    for(int i = 0; i < 21; i++){
+        for(int j = 0; j < 21; j++){
+            if(matrix[i][j]) return "No";
+        }
+    }
+    return "Yes";
+};
+
+int main(int argc, const char * argv[])
+{
+    int n;
+    while(true){
+        cin >> n;
+        if(n == 0) break;
+        bool tile[21][21];
+        for(int i = 0; i < 21; i++){
+            for(int j = 0; j < 21; j++){
+                tile[i][j] = false;
+            }
+        }
+        
+        // 宝石
+        for(int i = 0; i < n; i++){
+            int gx, gy;
+            cin >> gx >> gy;
+            tile[gy][gx] = true;
+        }
+        
+        // 命令
+        int m;
+        cin >> m;
+        int x = 10, y = 10;
+        tile[y][x] = false;
+        for(int i = 0; i < m; i++){
+            char direction;
+            int distance;
+            cin >> direction >> distance;
+            //cout << "direction: " << direction << "\tdistance: " << distance << "\n";
+            
+            switch (direction) {
+                case 'N':
+                    for(int j = 1; j <= distance; j++)
+                        tile[y + j][x] = false;
+                    y += distance;
+                    break;
+                    
+                case 'S':
+                    for(int j = 1; j <= distance; j++)
+                        tile[y - j][x] = false;
+                    y -= distance;
+                    break;
+                    
+                case 'E':
+                    for(int j = 1; j <= distance; j++)
+                        tile[y][x + j] = false;
+                    x += distance;
+                    break;
+                    
+                case 'W':
+                    for(int j = 1; j <= distance; j++)
+                        tile[y][x - j] = false;
+                    x -= distance;
+                    break;
+            }
+            //cout << "position: " << x << " " << y << "\n";
+        }
+        cout << orCheck(tile) << "\n";
+    }
+    return 0;
+}

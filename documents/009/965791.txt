@@ -1,0 +1,127 @@
+#include<stdio.h>
+#include<string.h>
+#include<iostream>
+#include<algorithm>
+#define SIZE 102
+
+using namespace std;
+
+void Inputdate(void);             //データ入力
+void Solve(void);                 //データ処理と出力
+
+int  n,m;
+int  sum;                         //合計値
+int  Price[SIZE];                 //素材の値段  
+int  Quantity[SIZE];              //練金時に必要な素材の種類の数        
+char Item[SIZE][SIZE];            //素材の名前
+char Recipe[SIZE][SIZE];          //練金の結果
+char Material[SIZE][SIZE][SIZE];  //練金に必要な素材
+char Favorite[SIZE];              //最終練金結果
+
+int main(){
+  
+  int  i,j;
+  
+  while(1){
+   
+    scanf("%d",&n);
+
+    if(n==0){
+      break;
+    } 
+
+    /*データの入力*/
+    Inputdate();
+    
+    /*データ処理と出力*/
+    Solve();
+    
+  }
+
+  return 0;
+}
+void Inputdate(void){
+
+  int  i,j;
+  
+  /*素材とその値段の入力*/
+  
+  for(i=0;i<n;i++){
+    scanf("%s %d",Item[i],&Price[i]);
+  }
+
+  /*練金レシピの入力*/
+  
+  scanf("%d",&m);  //レシピ数の入力
+  
+  for(i=0;i<m;i++){
+    
+    scanf("%s %d",Recipe[i],&Quantity[i]);
+    
+    for(j=0;j<Quantity[i];j++){
+      scanf("%s",Material[i][j]);
+    }
+    
+  }
+  
+  /*最終練金結果の出力*/
+  
+  scanf("%s",Favorite);
+  
+  return;
+  
+}
+void Solve(void){
+  
+  int i,j,k;
+  int Total_Price=0;        //練金にかかった値段
+  int Usual_Price=0;        //練金結果の通常価格
+  
+  /*レシピ数だけ繰り返す*/
+  
+  for(i=0;i<m;i++){
+    
+    /*最終でない練金結果の通常価格を探す*/
+    
+    j=0;
+    while(strcmp(Item[j-1],Recipe[i])!=0){
+      Usual_Price=Price[j];
+      j++;
+    }
+    
+    /*練金にかかる値段を調べる*/
+    
+    for(j=0;j<Quantity[i];j++){
+      for(k=0;k<n;k++){
+	if(strcmp(Item[k],Material[i][j])==0){
+	  Total_Price+=Price[k];
+	  k=n;
+	}
+      }
+    }
+    
+    /*元値と練金後の価格を比較*/
+    
+    if(Total_Price<=Usual_Price){
+      for(k=0;k<n;k++){
+	if(strcmp(Item[k],Recipe[i])==0){
+      Price[k]=Total_Price;
+      k=n;
+      }
+    }
+    } 
+    
+    Total_Price=0;
+  }
+
+  /*最終練金結果の価格を調べる*/
+
+  for(i=0;i<n;i++){
+    if(strcmp(Favorite,Item[i])==0){
+      printf("%d\n",Price[i]);
+      break;
+    }
+  }
+
+  return;
+}

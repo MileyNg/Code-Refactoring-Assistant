@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <complex>
+#include <algorithm>
+
+using namespace std;
+
+typedef complex<double> P;
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+#define mp(a, b) make_pair(a, b)
+const double eps = 1e-9;
+
+double cross(const P &a, const P &b){
+    return imag(conj(a) * b);
+}
+
+double dot(const P &a, const P &b){
+    return real(conj(a) * b);
+}
+
+int ccw(P a, P b, P c){
+    b -= a; c -= a;
+    if(cross(b, c) > eps)return 1;
+    if(cross(b, c) < -eps)return -1;
+    if(dot(b, c) < 0)return 2;
+    if(norm(b) < norm(c))return -2;
+    return 0;
+}
+
+struct L:vector<P>{
+    L(const P &a, const P &b){
+        push_back(a); push_back(b);
+    }
+};
+
+bool interSS(const L &s, const L &t){
+    return ccw(s[0], s[1], t[0]) * ccw(s[0], s[1], t[1]) <= 0 &&
+           ccw(t[0], t[1], s[0]) * ccw(t[0], t[1], s[1]) <= 0;
+}
+
+P xptLL(const L &l, const L &m){
+    double d = cross(l[1] - l[0], m[1] - m[0]);
+    if(abs(d) < eps)return l[0];
+    return m[0] + (m[1] - m[0]) * cross(l[1] - l[0], l[1] - m[0]) / d;
+}
+
+int solve(vector<pair<int, int> > info, int l){
+    int res = 0;
+    for(auto x: info){
+        if(x.second & 2){
+            res += l != (x.second & 1);
+            l = x.second & 1;
+        }else{
+            res += l == (x.second & 1);
+            l = x.second ^ 1;
+        }
+    }
+    return res;
+}
+
+int main(){
+    int T;
+    cin >> T;
+    while(T--){
+        int xa, ya, xb, yb;
+        cin >> xa >> ya >> xb >> yb;
+        L linear(P(xa, ya), P(xb, yb));
+        int n;
+        cin >> n;
+        vector<L> line;
+        vector<pair<int, int> > info;
+        rep(i, n){
+            int xs, ys, xt, yt, o, l;
+            cin >> xs >> ys >> xt >> yt >> o >> l;
+            if(!interSS(linear, L(P(xs, ys), P(xt, yt))))continue;
+            line.push_back(L(P(xs, ys), P(xt, yt)));
+            info.push_back(mp((int)line.size() - 1, o << 1 | l << 0));
+        }
+        sort(all(info), [&](const pair<int, int> &a, const pair<int, int> &b){
+                return abs(linear[0] - xptLL(linear, line[a.first]))
+                           < abs(linear[0] - xptLL(linear, line[b.first]));});
+        cout << min(solve(info, 0), solve(info, 1)) << '\n';
+    }
+    return 0;
+}

@@ -1,0 +1,22 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(){
+  vector<int> weightarray;
+  int weight;
+  while(cin>>weight){
+    weightarray.push_back(weight);
+  }
+  
+  for(auto weight:weightarray){
+    for(int i=0;i<sizeof(weight)*8;i++){
+      int bit=1<<i;
+      if(weight&bit){
+        cout<<bit<<" ";
+      }
+    }
+    cout<<endl;
+  }
+}

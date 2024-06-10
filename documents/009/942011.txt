@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<vvi> vvvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+const double PI=acos(-1);
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+typedef complex<double> Point;
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		double r,t; cin>>r>>t; t=t*PI/180;
+		vector<Point> ps(n);
+		rep(i,n){
+			int x,y; cin>>x>>y;
+			ps[i]=Point(x,y);
+		}
+		
+		vvd d(n,vd(n));
+		rep(i,n) rep(j,n)
+			d[i][j]=abs(ps[j]-ps[i]);
+		vvvi g(n,vvi(n));
+		rep(i,n) rep(j,n) if(j!=i) rep(k,n) if(k!=j){
+			Point d1=ps[j]-ps[i],d2=ps[k]-ps[j];
+			if(abs(arg(d2/d1))<t)
+				g[i][j].push_back(k);
+		}
+		
+		queue<tuple<int,int,double>> q; // (prev,cur,len)
+		repi(i,1,n) if(d[0][i]<r) q.emplace(0,i,d[0][i]);
+		for(int c=0;;c++){
+			if(q.empty()){
+				cout<<c<<endl;
+				break;
+			}
+			vvd cand(n,vd(n,INF));
+			while(q.size()){
+				int prev,cur; double len;
+				tie(prev,cur,len)=q.front(); q.pop();
+				if(len>r) continue;
+				for(int next:g[prev][cur])
+					cand[cur][next]=min(cand[cur][next],len+d[cur][next]);
+			}
+			rep(i,n) rep(j,n) if(cand[i][j]<r)
+				q.emplace(i,j,cand[i][j]);
+		}
+	}
+}

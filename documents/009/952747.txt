@@ -1,0 +1,58 @@
+include Math
+
+def inc(arr,x2,y2,r2)
+	del = []
+	arr.each{|cir|
+		x1,y1,r1 = cir
+		d2 = ((x1-x2)**2 + (y1-y2)**2)
+		if (((r1-r2)**2) >= d2 ) then
+			if r1 < r2 then
+				del.push(cir)
+			else
+				return
+			end
+		end
+	}
+	
+	del.each{|cir|
+		arr.delete(cir)
+	}
+	arr.push([x2,y2,r2])
+end
+
+def calc(arr)
+	ans = 0
+	while(!arr.empty?) do
+		cir1 = arr.pop
+		x1,y1,r1 = cir1
+		ans += r1 * 2 * PI
+		arr.each{|cir2|
+			x2,y2,r2 = cir2
+			d2 = ((x1-x2)**2 + (y1-y2)**2)
+			if ((r1 - r2) ** 2) < d2 and (d2 < ((r1 + r2) ** 2)) then
+				d = sqrt(d2)
+				r12 = r1**2
+				r22 = r2**2
+				theta1 = Math.acos((d2+r12-r22)/(2*d*r1))
+				theta2 = Math.acos((d2-r12+r22)/(2*d*r2))
+				ans -= (r1 * theta1 + r2 * theta2) * 2
+			end
+		}
+	end
+	return ans
+end
+
+loop do
+	n = gets.to_i
+	if (n == 0) then
+		exit
+	end
+	
+	arr = []
+	sum = 0
+	n.times{|i|	
+		x,y,r = gets.chomp.split.map(&:to_i)
+		inc(arr,x,y,r)
+	}
+	p calc(arr)
+end

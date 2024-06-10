@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+  int right;
+  int left;
+  int parent;
+  int id;
+};
+
+#define MAX 251
+
+struct node T[MAX];
+
+int n;
+
+void insert(){
+  int i;
+  for(i = 2; i <= n; i++){
+    if(i%2 == 0)T[i/2].left = T[i].id;
+    else if(i%2 != 0)T[i/2].right = T[i].id;
+    T[i].parent = T[i/2].id;
+  }
+}
+
+void print(){
+  int i;
+  for( i = 1; i <= n; i++ ){
+    printf("node %d: key = %d, ", i, T[i].id);
+    if(T[i].parent != -1) printf("parent key = %d, ", T[i].parent);
+    if(T[i].left != -1) printf("left key = %d, ", T[i].left);
+    if(T[i].right != -1) printf("right key = %d, ", T[i].right);
+    printf("\n");
+  }
+}
+
+int main(){
+  int i;
+
+  scanf("%d", &n);
+  for( i = 1; i <= n; i++ ) T[i].right = T[i].left = T[i].parent =  -1;
+  for( i = 1; i <= n; i++ ) scanf("%d", &T[i].id);
+  insert();
+  print();
+  return 0;
+}

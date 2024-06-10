@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <numeric>
+#include <cstring>
+#include <cmath>
+
+using namespace std;
+
+int main(int argc, char *argv[]) {
+  int n, stair[31];
+  while (cin >> n, n) {
+    memset(stair, 0, sizeof(int) * 31);
+    stair[0] = 1;
+
+    for (int i = 1; i <= n; i++) {
+      stair[i] += stair[i-1];
+      if (i - 2 >= 0)
+        stair[i] += stair[i-2];
+      if (i - 3 >= 0)
+        stair[i] += stair[i-3];
+    }
+    cout << stair[n] / 3650 + 1 << endl;
+  }
+  return 0;
+}

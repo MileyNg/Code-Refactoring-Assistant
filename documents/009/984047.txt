@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 100001
+#define NIL -1
+
+typedef struct {
+	int parent;
+	int leftChild;
+	int rightSilbing;
+} Node;
+
+Node node[N];
+int depth = 1, n;
+
+void initNode(Node* node) {
+	int i;
+
+	for (i = 0; i < n; i++) {
+		node[i].parent = NIL;
+		node[i].leftChild = NIL;
+		node[i].rightSilbing = NIL;
+	}
+
+}
+
+int getDepth(int d) {
+
+	if (node[d].parent == NIL) {
+		return 0;
+	}
+
+	if (node[node[d].parent].parent != NIL) {
+		depth++;
+		getDepth(node[d].parent);
+	}
+
+	return depth;
+}
+
+int judgeNode(Node node) {
+
+	if (node.parent == NIL) {
+		return 0;
+	}
+
+	if (node.parent != NIL && node.leftChild != NIL) {
+		return 1;
+	} else if (node.leftChild == NIL) {
+		return -1;
+	}
+
+	return 0;
+}
+
+void displayNode(int id) {
+	int nodeType;
+	printf("node %d: parent = %d, depth = %d, ", id, node[id].parent,
+			getDepth(id));
+
+	nodeType = judgeNode(node[id]);
+
+	switch (nodeType) {
+	// nodeが内部ノードの場合
+	case 1:
+		printf("internal node, [%d", node[id].leftChild);
+		while (node[node[id].leftChild].rightSilbing != NIL) {
+			printf(", %d", node[node[id].leftChild].rightSilbing);
+			node[id].leftChild = node[node[id].leftChild].rightSilbing;
+		}
+		break;
+	// nodeがリーフの場合
+	case -1:
+		printf("leaf, [");
+		break;
+	// nodeがルートの場合
+	case 0:
+		printf("root, [");
+		if (node[id].leftChild != NIL) {
+			printf("%d", node[id].leftChild);
+			while (node[node[id].leftChild].rightSilbing != NIL) {
+				printf(", %d", node[node[id].leftChild].rightSilbing);
+				node[id].leftChild = node[node[id].leftChild].rightSilbing;
+			}
+		}
+		break;
+	}
+	printf("]\n");
+}
+
+int main() {
+	int nodeId, k, child, sibling;
+	int i, j;
+
+	scanf("%d", &n);
+
+	initNode(node);
+
+	for (i = 0; i < n; i++) {
+		scanf("%d %d", &nodeId, &k);
+		if (k == 0) {
+			continue;
+		}
+		for (j = 0; j < k; j++) {
+			scanf("%d", &child);
+			node[child].parent = nodeId;
+			if (j == 0) {
+				node[nodeId].leftChild = child;
+			} else {
+				node[sibling].rightSilbing = child;
+			}
+			sibling = child;
+		}
+	}
+
+	for (i = 0; i < n; i++) {
+		displayNode(i);
+	}
+
+	return 0;
+}

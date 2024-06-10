@@ -1,0 +1,82 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+using namespace std;
+
+typedef struct{
+	int wrong[11];
+	int correct;
+	int p_time;
+	int num;
+}Team;
+
+int T, P, R;
+
+bool judge(const Team rL, const Team rR){
+	bool temp;
+	if (temp = rL.correct > rR.correct)
+		return(temp);
+	else if (temp = rL.correct == rR.correct){
+		if (temp = rL.p_time < rR.p_time)
+			return(temp);
+		else if (temp = (rL.p_time == rR.p_time&&rL.num < rR.num))
+			return(temp);
+	}
+		return(temp);
+}
+
+void sswap(Team *a, Team *b){
+	Team temp = *a;
+	*a = *b;
+	*b = temp;
+}
+void solve(Team team[]){
+	rep(i, 0, T - 1)
+	for (int j = T - 1; j > i; j--)
+	{
+		if (team[j].correct > team[j - 1].correct)
+			sswap(team + j, team + j - 1);
+		else if (team[j].correct == team[j - 1].correct){
+			if (team[j].p_time < team[j - 1].p_time)
+				sswap(team + j, team + j - 1);
+			else if (team[j].p_time == team[j - 1].p_time&&team[j].num < team[j - 1].num)
+				sswap(team + j, team + j - 1);
+		}
+
+
+
+	}
+}
+
+int main(){
+
+	cin >> T >> P >> R;
+	while (T != 0){
+		Team team[51] = { { 0 }, 0, 0 };
+		rep(i, 0, T)team[i].num = i + 1;
+		rep(i, 0, R){
+			int t, p, time;
+			char str[20];
+			cin >> t >> p >> time >> str;
+			t--;
+			if (strcmp(str, "WRONG")){
+				team[t].correct++;
+				team[t].p_time += time + team[t].wrong[p] * 1200;
+			}
+			else{
+				team[t].wrong[p]++;
+			}
+
+		}
+		//solve(team);
+		sort(team, team + T, judge);
+		rep(i, 0, T){
+			cout << team[i].num << " " << team[i].correct << " " << team[i].p_time << endl;
+		}
+		cin >> T >> P >> R;
+	}
+	return(0);
+}

@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem0090 : Overlaps of Seals **/
+typedef struct {
+	double x, y;
+} Point;
+
+int main()
+{
+	int N;
+	while (cin>>N, N) {
+		vector<Point> points;
+		rep(k, N) {
+			Point p; char c;
+			cin >>p.x>>c>>p.y;
+			points.push_back(p);
+		}
+		
+		int ans=1;
+		rep(i, N) {
+			int tmp=1;
+			double x1=points[i].x, y1=points[i].y;
+			rep(j, N) {
+				if (i!=j) {
+					double x2=points[j].x, y2=points[j].y;
+					if ((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)<=4)
+						tmp++;
+				}
+			}
+			ans = max(ans, tmp);
+		}
+		cout << ans << endl;
+	}
+}

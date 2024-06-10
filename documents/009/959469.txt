@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<string.h>
+#include<vector>
+#include<algorithm>
+using namespace std;
+typedef vector<int>vec;
+typedef vector<vec>mat;
+int N,M,A,B,C,T;
+
+mat mat_mul(mat &A,mat &B)
+{
+	mat C(A.size(),vec(B[0].size()));
+	for(int i=0;i<A.size();i++)
+		for(int k=0;k<B.size();k++)
+			for(int j=0;j<B[0].size();j++)
+				C[i][j]=(C[i][j]+A[i][k]*B[k][j])%M;
+	return C;
+}
+
+
+mat mod_pow(mat A,int N)
+{
+	mat B(A.size(),vec(A.size()));
+	for(int i=0;i<A.size();i++)
+		B[i][i]=1;
+	while(N>0)
+	{
+		if(N&1)
+			B=mat_mul(B,A);
+		A=mat_mul(A,A);
+		N>>=1;
+	}
+	return B;
+}
+
+int main()
+{
+	for(;scanf("%d%d%d%d%d%d",&N,&M,&A,&B,&C,&T),N;)
+	{
+		mat X(N,vec(N));
+		mat Y(N,vec(N));
+		for(int i=0;i<N;i++)
+			scanf("%d",&X[i][0]);
+		for(int i=0;i<N;i++)
+		{
+			if(i-1>=0)Y[i][i-1]=A;
+			Y[i][i]=B;
+			if(i+1<N)Y[i][i+1]=C;
+		}
+		mat Z=mod_pow(Y,T);
+		mat R=mat_mul(Z,X);
+		for(int i=0;i<N;i++)
+			printf("%d%s",T==0?X[i][0]:R[i][0],i==N-1?"\n":" ");
+	}
+	return 0;
+}

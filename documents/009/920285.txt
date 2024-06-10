@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct Point{
+	int x, y;
+};
+
+const Point DIR[] = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
+//ななめ移動ができる
+
+int w,h;
+int map[50][50];//1:陸 0:海
+bool visited[50][50];
+
+bool inField(Point pos){
+	return 0<=pos.x && pos.x<w && 0<=pos.y && pos.y<h;
+}
+
+//同じ島のvisitedを埋める
+void dfs(Point pos){
+	visited[pos.y][pos.x] = true;
+	for(int i=0;i<8;i++){
+		Point next={pos.x + DIR[i].x, pos.y + DIR[i].y};
+		if(inField(next)==true){
+			if(visited[next.y][next.x] == false && map[next.y][next.x] == 1){
+				//未訪問かつ、陸
+				dfs(next);
+			}
+		}
+	}
+}
+
+int main(){
+	while(true){
+		cin >> w >> h;
+		if(w==0){
+			break;
+		}
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				cin >> map[i][j];
+				visited[i][j] = false;
+			}
+		}
+		int cnt = 0;//島の数
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				if(visited[i][j] == false && map[i][j] == 1){
+					Point pos = {j,i};
+					dfs(pos);
+					cnt++;
+				}
+			}
+		}
+		cout << cnt << endl;
+	}
+	return 0;
+}

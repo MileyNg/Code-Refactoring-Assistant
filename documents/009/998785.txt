@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <utility>
+#include <cstring>
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+typedef long long ll;
+
+void flip( vector<int>& v ) {
+	reverse( v.begin(), v.end() );
+	for(int i=1; i<v.size(); i+=2) {
+		v[i] *= -1;
+	}
+}
+
+int main() {
+	int n;
+	while(cin >> n, n) {
+		vector<int> lines[51];
+		rep(dn, n+1) {
+			int m, px, py, ppx, ppy;
+			cin >> m >> ppx >> ppy >> px >> py;
+			lines[dn].push_back(abs(px-ppx)+abs(py-ppy));
+			rep(i, m-2) {
+				int x, y;
+				cin >> x >> y;
+				int cross = (x-px)*(py-ppy) - (y-py)*(px-ppx);
+				lines[dn].push_back(cross>0 ? 1 : -1);
+				lines[dn].push_back(abs(x-px)+abs(y-py));
+				ppx=px; ppy=py;
+				px=x;   py=y;
+			}
+		}
+		for(int i=1; i<=n; i++) {
+			if(lines[0] == lines[i]) {
+				cout << i << endl;
+			} else {
+				flip(lines[i]);
+				if(lines[0] == lines[i]) {
+					cout << i << endl;
+				}
+			}
+		}
+		cout << "+++++" << endl;
+	}
+	return 0;
+}

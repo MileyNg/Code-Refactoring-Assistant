@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <memory.h>
+
+int main(void) {
+	char i, c;
+	int sum[26];
+	memset((char*)sum, 0x00, sizeof(sum));
+	
+    while ((c=getc(stdin))!=EOF) {
+    	if('A'<=c && c<='Z') {
+    		sum[c-'A']++;
+    	} else if('a'<=c && c<='z') {
+			sum[c-'a']++;
+    	}
+    }
+    
+    for(i=0;i<26;i++) {
+    	printf("%c : %d\n", i+'a', sum[i]);
+    }
+    
+	return 0;
+}

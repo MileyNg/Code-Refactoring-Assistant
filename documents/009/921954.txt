@@ -1,0 +1,24 @@
+import std.stdio;
+
+int f_debt(int n)
+{
+	n *= 1.05;
+	if(n % 1000 != 0)
+	{
+		n = n - (n%1000) + 1000;
+	}
+	return n;
+}
+
+
+int main()
+{
+	int i,debt=100000;
+	readf("%d",&i);
+	foreach(int j;0..i)
+	{
+		debt = f_debt(debt);
+	}
+	writeln(debt);
+	return 0;
+}

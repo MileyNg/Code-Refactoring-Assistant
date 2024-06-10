@@ -1,0 +1,125 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct node{
+  unsigned int key;
+  struct node *prev;
+  struct node *next;
+} Node;
+
+void firstdelete(void);
+void lastdelete(void);
+
+Node *firstnode, *lastnode, *thisnode, *newnode;
+
+void printlist(){
+  thisnode = firstnode;
+  while(1){
+    if (thisnode == NULL) break;
+    printf("%d", thisnode->key);
+    if (thisnode->next != NULL) printf(" ");
+    thisnode = thisnode->next;
+  }
+  printf("\n");
+}
+
+void insert(unsigned int key){
+ Node  *newnode = (Node*)malloc(sizeof(Node));
+   newnode->key = key;
+   newnode->prev = NULL;
+   if(firstnode != NULL){
+     firstnode->prev = newnode;
+     newnode->next = firstnode;
+     firstnode = newnode;
+   } else {
+     firstnode = lastnode = newnode;
+     newnode-> next  = NULL;
+   }
+   return;
+}
+
+void delete(unsigned int key){
+  thisnode = firstnode;
+  if(thisnode == NULL) return;
+
+  while(thisnode->key != key){
+    thisnode = thisnode->next;
+    if(thisnode == NULL) return;
+  }
+
+  /*
+  if(thisnode == firstnode && thisnode == lastnode){
+    free(thisnode);
+    firstnode = NULL;
+    lastnode = NULL;
+  }  
+  else
+  */
+  if(thisnode == firstnode) firstdelete();
+  else if (thisnode == lastnode) lastdelete();
+  else{
+    thisnode->prev->next = thisnode->next;
+    thisnode->next->prev = thisnode->prev;
+    free(thisnode);
+  }
+  return;
+}
+
+void firstdelete(void){
+  thisnode = firstnode;
+  if(thisnode == NULL) return;
+
+  if(thisnode == firstnode && thisnode == lastnode){
+    free(thisnode);
+    firstnode = NULL;
+    lastnode = NULL;
+  } else {   
+    firstnode = firstnode->next;
+    firstnode->prev = NULL;
+    free(thisnode);
+  }
+}
+
+void lastdelete(void){
+  thisnode = lastnode;
+  if(thisnode == NULL) return;
+
+  if(thisnode == firstnode && thisnode == lastnode){
+    free(thisnode);
+    firstnode = NULL;
+    lastnode = NULL;
+  }  else {
+    lastnode = lastnode->prev;
+    lastnode->next = NULL;
+    free(thisnode);
+  }
+}
+
+int main(void){
+  int n, key, i;
+  char com[20];
+  scanf("%d",&n);
+
+  
+  for (i = 0; i<n; i++){
+    scanf("%s", com);
+    if(com[0] == 'i'){
+      scanf("%d", &key);
+      insert(key);
+    }
+    else if(com[0] == 'd')
+      if(strlen(com) > 6){
+	if(com[6] == 'F') firstdelete();
+	else lastdelete();
+      } else {
+	scanf("%d", &key);
+	delete(key);
+      }
+  }
+  printlist();
+  return 0;
+}
+  
+    
+       
+  

@@ -1,0 +1,132 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <memory>
+#include <time.h>
+using namespace std;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) FOR(i,0,n)
+const double EPS = 1e-9;
+const double PI  = acos(-1.0);
+
+
+#define EACH(i,t,c) for(t::const_iterator i=(c).begin();i!=(c).end();++i)
+typedef int Weight;
+struct Edge {
+  int src, dst;
+  Weight weight;
+  Edge(int src, int dst, Weight weight) :
+    src(src), dst(dst), weight(weight) { }
+};
+bool operator < (const Edge &e, const Edge &f) {
+  return e.weight != f.weight ? e.weight > f.weight : // !!INVERSE!!
+    e.src != f.src ? e.src < f.src : e.dst < f.dst;
+}
+typedef vector<Edge> Edges;
+typedef vector<Edges> Graph;
+
+typedef vector<Weight> Array;
+typedef vector<Array> Matrix;
+
+const int INF=INT_MAX/10;
+
+#define RESIDUE(s,t) (capacity[s][t]-flow[s][t])
+Weight augment(const Graph &g, const Matrix &capacity, Matrix &flow,
+    const vector<int> &level, vector<bool> &finished, int u, int t, Weight cur) {
+  if (u == t || cur == 0) return cur;
+  if (finished[u]) return 0;
+  finished[u] = true;
+  EACH(e, Edges, g[u]) if (level[e->dst] > level[u]) {
+    Weight f = augment(g, capacity, flow, level, finished,
+        e->dst, t, min(cur, RESIDUE(u, e->dst)));
+    if (f > 0) {
+      flow[u][e->dst] += f; flow[e->dst][u] -= f;
+      finished[u] = false;
+      return f;
+    }
+  }
+  return 0;
+}
+Weight maximumFlow(const Graph &g, int s, int t, Matrix &flow) {
+  int n = g.size();
+  Matrix capacity(n, Array(n)); // adj. matrix
+  REP(u,n) EACH(e,Edges,g[u]) capacity[e->src][e->dst] += e->weight;
+
+  Weight total = 0;
+  for (bool cont = true; cont; ) {
+    cont = false;
+    vector<int> level(n, -1); level[s] = 0; // make layered network
+    queue<int> Q; Q.push(s);
+    for (int d = n; !Q.empty() && level[Q.front()] < d; ) {
+      int u = Q.front(); Q.pop();
+      if (u == t) d = level[u];
+      EACH(e, Edges, g[u]) if (RESIDUE(u,e->dst) > 0 && level[e->dst] == -1)
+        Q.push(e->dst), level[e->dst] = level[u] + 1;
+    }
+    vector<bool> finished(n); // make blocking flows
+    for (Weight f = 1; f > 0; ) {
+      f = augment(g, capacity, flow, level, finished, s, t, INF);
+      if (f == 0) break;
+      total += f; cont = true;
+    }
+  }
+  return total;
+}
+
+int main(){
+	int n,m;
+	cin>>n>>m;
+	Graph g(n,Edges());
+	Graph gNondir(n,Edges());
+	vi x(m),y(m);
+	REP(i,m){
+		cin>>x[i]>>y[i],x[i]--,y[i]--;
+		g[x[i]].push_back(Edge(x[i],y[i],1));
+		gNondir[x[i]].push_back(Edge(x[i],y[i],1));
+		gNondir[y[i]].push_back(Edge(y[i],x[i],1));
+	}
+	int start,goal;
+	cin>>start>>goal,start--,goal--;
+
+	Matrix flow(n, Array(n));
+	Weight mf=maximumFlow(gNondir,start,goal,flow);
+	cout<<mf<<endl;
+	vi reversed;
+	REP(i,m){
+		if(flow[y[i]][x[i]]>0){
+			reversed.push_back(i+1);
+		}
+	}
+	cout<<reversed.size()<<endl;
+	REP(i,reversed.size()){
+		cout<<reversed[i]<<endl;
+	}
+}

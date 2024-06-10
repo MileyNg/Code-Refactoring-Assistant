@@ -1,0 +1,61 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+int n;
+int g[110];
+int dp[110];
+
+int solve(int i, int k) {
+    if (i == n) return 0;
+    if (dp[i] != -1) return dp[i];
+    if (k > 1000) return 1000000;
+    int r = min(solve(g[i], k+1), solve(i+1, k+1)+1);
+    dp[i] = r;
+    return r;
+}
+
+int main() {
+    cin >> n;
+    map<string, int> m;
+    bool F[110];
+    string S[110];
+    for (int i = 0; i < n; i++) {
+        string s;
+        cin >> s;
+        F[i] = (s == "goto");
+        if (F[i]) {
+            cin >> s;
+            S[i] = s.substr(0, s.size()-1);
+        } else {
+            S[i] = s.substr(0, s.size()-1);
+            m[S[i]] = i;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (F[i]) {
+            assert(m.find(S[i]) != m.end());
+            g[i] = m[S[i]];
+        } else {
+            g[i] = i+1;
+        }
+    }
+    fill_n(dp, 110, -1);
+    cout << solve(0, 0) << endl;
+    return 0;
+}

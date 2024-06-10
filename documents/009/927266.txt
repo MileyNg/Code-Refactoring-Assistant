@@ -1,0 +1,154 @@
+#include<cstdio>
+#include<queue>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<set>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+typedef pair<int,int> pii;
+
+class Line{
+	public:
+	Line(){}
+	
+	int stx;
+	int sty;
+	int rot;
+	bool firstin;
+	
+	vector<pii> pos;
+	void add(pii p){
+		if(pos.size()==0){
+			stx = p.first;
+			sty = p.second;
+		}
+		
+		pos.push_back(pii(p.first-stx, p.second-sty));
+	}
+	
+	void rotate(){
+		rep(i,pos.size()){
+			pos[i] = pii(-pos[i].second, pos[i].first);
+		}
+	}
+	
+	void hoge(){
+		int rcont = 0;
+		if(pos[1].second>0)rcont=3;
+		if(pos[1].first<0)rcont=2;
+		if(pos[1].second<0)rcont=1;
+		
+		rep(i,rcont)rotate();
+	}
+	
+	bool equal(Line line){
+		if(pos.size()!=line.pos.size())return false;
+		
+		rep(i,pos.size()){
+			if(pos[i]!=line.pos[i])return false;
+		}
+		
+		return true;
+	}
+};
+
+
+int main(){
+	
+	A:;
+	int n;
+	cin>>n;
+	
+	if(n==0)return 0;
+	
+	vector<Line> lines;
+	
+	Line master;
+	
+	rep(i,n+1){
+		int t;
+		cin>>t;
+		
+		Line line;
+		rep(j,t){
+			int a,b;
+			cin>>a>>b;
+			
+			line.add(pii(a,b));
+		}
+		line.hoge();
+		
+		Line line2;
+		rep(j,t){
+			line2.add(line.pos[t-j-1]);
+		}
+		line2.hoge();
+		
+		
+		if(i==0){
+			master = line;
+		}else{
+			lines.push_back(line);
+			lines.push_back(line2);
+		}
+	}
+	
+	int count = 0;
+	rep(i,lines.size()){
+		if(master.equal(lines[i])){
+			printf("%d\n",(i/2)+1);
+			count++;
+		}
+	}
+	printf("+++++\n");
+	
+	goto A;
+}
+
+/*
+5
+5
+0 0
+2 0
+2 1
+4 1
+4 0
+5
+0 0
+0 2
+-1 2
+-1 4
+0 4
+5
+0 0
+0 1
+-2 1
+-2 2
+0 2
+5
+0 0
+0 -1
+2 -1
+2 0
+4 0
+5
+0 0
+2 0
+2 -1
+4 -1
+4 0
+5
+0 0
+2 0
+2 1
+4 1
+4 0
+
+*/

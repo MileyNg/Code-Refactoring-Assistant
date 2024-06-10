@@ -1,0 +1,45 @@
+//Name: The Lonely Girl's Lie
+//Level:
+//Category:
+//Note:
+
+/**
+ */
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool solve() {
+    int N;
+    if(!(cin >> N)) return false;
+    if(!N) return false;
+    vector<int> as(N), bs(N);
+    for(int i = 0; i < N; ++i) {
+        cin >> as[i];
+    }
+    for(int i = 0; i < N; ++i) {
+        cin >> bs[i];
+    }
+    sort(as.begin(), as.end());
+    sort(bs.begin(), bs.end());
+    int win = 0;
+    for(int i = N-1; i >= 0; --i) {
+        if(as[i] > bs[i]) ++win;
+        if(win > (N-i) / 2) {
+            cout << (N-i) << endl;
+            return true;
+        }
+    }
+    cout << "NA" << endl;
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

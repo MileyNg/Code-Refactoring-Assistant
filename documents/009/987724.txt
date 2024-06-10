@@ -1,0 +1,25 @@
+#include<iostream>
+#include<array>
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+const int MAX_V = 1001;
+array<array<int, MAX_V>,MAX_V> ary;
+string strx,stry;
+int minimum(int x,int y){
+  int res=strx[x]==stry[y]?ary[x-1][y-1]+1:ary[x-1][y-1];
+  if(res<ary[x][y-1]) res=ary[x][y-1];
+  if(res<ary[x-1][y]) res=ary[x-1][y];
+  return res;
+}
+
+int main(){
+  int n; cin>>n;
+  REP(i,n){
+    cin>>strx>>stry;
+    int sizex=strx.size(),sizey=stry.size();
+    REP(j,sizex)
+      REP(k,sizey)
+        ary[j+1][k+1]=minimum(j+1,k+1);
+    cout<<ary[strx.size()][stry.size()]<<endl;
+  }
+}

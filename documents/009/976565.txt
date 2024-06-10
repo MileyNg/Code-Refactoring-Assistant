@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+using namespace std;
+typedef pair<int,int> pii;
+
+const int dy[] = {-1,0,1,0}, dx[] = {0,1,0,-1};
+int h,w;
+string g[100];
+
+void dfs(int y, int x, vector<pii> &b){
+  rep(i,b.size()){
+    if(b[i] == pii(y,x))return;
+  }
+  b.push_back(pii(y,x));
+
+  rep(i,4){
+    int ny = y+dy[i], nx = x+dx[i];
+    if(ny<0 || nx<0 || ny>=h || nx>=w)continue;
+    if(g[ny][nx] == g[y][x])dfs(ny,nx,b);
+  }
+}
+
+bool rec(int y, int x, int &mid, int &num){
+  vector<pii> b;
+  dfs(y,x,b);
+
+  num = b.size(); mid = 0;
+  int l = 99, r = -l;
+  rep(i,4){
+    int by = b[i].first+1, bx = b[i].second;
+    if(by==h || (g[by][bx] != g[y][x] && g[by][bx] != '.')){
+      l = min(l, bx); r = max(r, bx+1);
+    }
+    mid += bx;
+    by -= 2;
+
+    if(by>=0 && (g[by][bx] != g[y][x] && g[by][bx] != '.')){
+      int tnum = 0, tmid = 0;
+      if(!rec(by,bx,tmid,tnum))return false;
+
+      num += tnum;
+      mid += tmid;
+    }
+  }
+
+  rep(i,4)g[b[i].first][b[i].second] = '.';
+  return (l*num < mid + num/2 && mid + num/2 < r*num);
+}
+
+int main(){
+  while(cin >> w >> h, h){
+    rep(i,h)cin >> g[i];
+
+    rep(i,w){
+      int num = 0, mid = 0;
+      if(g[h-1][i]!='.'){
+	cout << (rec(h-1,i,mid,num)?"":"UN") << "STABLE\n";
+	break;
+      }
+    }
+  }
+}

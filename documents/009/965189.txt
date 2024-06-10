@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pii;
+int main(){
+  int N, Q;
+  while(scanf("%d%d", &N, &Q) && N+Q){
+
+    vector<string>era(N);
+    vector<pii>year(N);
+    int a, b;
+    string s;
+    rep(i, N){
+      cin >> s;
+      era[i] = s;
+      scanf("%d%d", &a, &b);
+
+
+      year[i] = make_pair(b-a+1, b);
+    }
+
+    rep(i, Q){
+      scanf("%d", &a);
+      rep(i, year.size()){
+	if(i+1 == year.size() && (year[i].F > a || year[i].S < a)) puts("Unknown");
+	if(year[i].F > a || year[i].S < a) continue;
+	cout << era[i];
+	printf(" %d\n", a-year[i].F+1);
+	break;
+      }
+    }
+  }
+  return 0;
+}

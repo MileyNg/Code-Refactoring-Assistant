@@ -1,0 +1,19 @@
+#include<stdio.h>
+
+int main(void){
+	int N,x,y,Tile;
+	int i;
+	scanf("%d",&N);
+	scanf("%d",&Tile);
+
+	for(i=0;i<Tile;i++){
+		scanf("%d %d",&x,&y);
+
+		if(x*2>N) x=N-x+1;//入力されたｘ座標から見て端から短い方の距離をｘとする
+		if(y*2>N) y=N-y+1;
+
+		if(x<y) printf("%d\n",(x-1)%3+1);//短い方の距離を3で割った余りが答えになる。
+		else printf("%d\n",(y-1)%3+1);
+	}
+	return 0;
+}

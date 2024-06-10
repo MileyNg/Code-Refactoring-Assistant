@@ -1,0 +1,98 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+#define X real()
+#define Y imag()
+
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+typedef vector<P> Pol;
+
+const D EPS = 1e-8;
+
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+bool near(P a, P b) {return !sig(norm(a - b));}
+namespace std {
+  bool operator<(P a, P b) {return sig(a.X, b.X) ? a.X < b.X : a.Y < b.Y;}
+}
+
+D dot(P a, P b) {return a.X * b.X + a.Y * b.Y;}
+D det(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+
+P vec(L a) {return a.b - a.a;}
+
+bool eqL(L a, L b) {return !sig(det(vec(a), vec(b))) && !sig(det(vec(a), b.a - a.a));}
+bool iLS(L a, L b) {return sig(det(vec(a), b.a - a.a)) * sig(det(vec(a), b.b - a.a)) <= 0;}
+
+P pLL(L a, L b) {return a.a + vec(a) * (det(vec(b), b.a - a.a) / det(vec(b), vec(a)));}
+
+int sAP(P a, P b, P c) {return sig(det(a, c)) - sig(det(b, c)) - sig(det(a, b));}
+
+bool iGS(Pol pol, L s) {
+  int n = pol.size();
+  vector<int> sa(n + 1), sb(n + 1), sab(n + 1);
+  pol.push_back(pol[0]);
+  pol.push_back(pol[1]);
+  rep (i, n + 1) {
+    sa[i] = sig(det(pol[i + 1] - pol[i], s.a - pol[i]));
+    sb[i] = sig(det(pol[i + 1] - pol[i], s.b - pol[i]));
+    sab[i] = sig(det(s.b - s.a, pol[i] - s.a));
+  }
+  rep (i, n) if (sa[i] * sb[i] < 0 && sab[i] * sab[i + 1] < 0) return true;
+  rep (i, n) {
+    if (sa[i] == 0 && sb[i] > 0 && sig(dot(s.a - pol[i], s.a - pol[i + 1])) < 0) return true;
+    if (sb[i] == 0 && sa[i] > 0 && sig(dot(s.b - pol[i], s.b - pol[i + 1])) < 0) return true;
+  }
+  rep (i, n) if (sab[i + 1] == 0 && sig(dot(pol[i + 1] - s.a, pol[i + 1] - s.b)) <= 0) {
+    if (!near(pol[i + 1], s.a) && sAP(pol[i + 2] - pol[i + 1], pol[i] - pol[i + 1], s.a - pol[i + 1]) > 0) return true;
+    if (!near(pol[i + 1], s.b) && sAP(pol[i + 2] - pol[i + 1], pol[i] - pol[i + 1], s.b - pol[i + 1]) > 0) return true;
+  }
+  return false;
+}
+
+int main() {
+  while (true) {
+    int n;
+    cin >> n;
+    if (n == 0) break;
+    Pol pol(n);
+    rep (i, n) {
+      D x, y;
+      cin >> x >> y;
+      pol[i] = P(x, y);
+    }
+    reverse(pol.begin(), pol.end());
+    vector<P> vp[n];
+    rep (i, n) vp[i].push_back(pol[i]);
+    rep (i, n) vp[i].push_back(pol[(i + 1) % n]);
+    rep (i, n) rep (j, n) rep (k, j) if (j != i && j != (i + 1) % n && k != i && k != (i + 1) % n) {
+      L l1 = (L){pol[i], pol[(i + 1) % n]};
+      L l2 = (L){pol[j], pol[k]};
+      if (!eqL(l1, l2) && iLS(l2, l1)) vp[i].push_back(pLL(l1, l2));
+    }
+    rep (i, n) sort(vp[i].begin(), vp[i].end());
+    rep (i, n) if (i > 0) {
+      int comb = (1 << i) - 1;
+      while (comb < (1 << n)) {
+	rep (j, n) rep (k, vp[j].size() - 1) {
+	  bool ok = false;
+	  rep (p, n) if ((comb & 1 << p) && !iGS(pol, (L){pol[p], (vp[j][k] + vp[j][k + 1]) / (D)2})) {
+	    ok = true;
+	    break;
+	  }
+	  if (!ok) goto next;
+	}
+	cout << i << endl;
+	goto end;
+      next:;
+	int x = comb & -comb, y = comb + x;
+	comb = ((comb & ~y) / x >> 1) | y;
+      }      
+    }
+  end:;
+  }
+}

@@ -1,0 +1,146 @@
+#include <iostream>
+#include <cstdio>
+#include <complex>
+#include <cassert>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <algorithm>
+#include <map>
+#include <queue>
+#include <sstream>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define mp(a,b) make_pair(a,b)
+#define SZ(a) ((int)(a).size())
+#define FOR(it,a) for(__typeof(a.begin())it=a.begin();it!=a.end();++it)
+#define pb(a) push_back(a)
+#define F first
+#define S second
+typedef pair<int,int> PI;
+typedef complex<double> pt;
+
+int n;
+int x[100],y[100],r[100];
+
+
+
+vector<pt> cross(int c1,int c2){
+  int dx=x[c1]-x[c2];
+  int dy=y[c1]-y[c2];
+  int rr=r[c1]+r[c2];
+  if(dx*dx+dy*dy> rr*rr) return vector<pt>();
+
+  /*
+     /|\
+    /_|_\
+    x1
+
+    r1*r1 -x1*x1 = r2*r2-(rr-x1)*(rr-x1) = r2*r2-rr*rr+2*rr*x1-x1*x1
+    r1*r1 = r2*r2-rr*rr+2*rr*x1
+    2*rr*x1=r1*r1-r2*r2+rr*rr
+    x1 = (r1*r1-r2*r2+rr*rr)/2/rr
+  */
+  int r1 = r[c1];
+  int r2 = r[c2];
+  double rrr = sqrt(dx*dx+dy*dy);
+  double x1 = (r1*r1-r2*r2+rrr*rrr)/2./rrr;
+  //cout << x1 << endl;
+  double dd=sqrt(dx*dx+dy*dy);
+  double mx = -dx/dd*x1 + x[c1];
+  double my = -dy/dd*x1 + y[c1];
+  
+  double diax = -dy;
+  double diay = dx;
+  
+  double y1 = sqrt(r1*r1-x1*x1);
+  vector<pt> ret;
+  ret.pb(pt(mx+diax/dd*y1,my+diay/dd*y1));
+  ret.pb(pt(mx-diax/dd*y1,my-diay/dd*y1));
+  
+  return ret;
+}
+
+
+#define ALL(a) (a).begin(),(a).end()
+
+bool can(pt a, pt b){
+  vector<pair<double,double> > check;
+  if(abs(b-a) < 1e-5) return true;
+  
+  rep(i,n){
+    pt c(x[i],y[i]);
+    pt ac = c-a;
+    pt v=(b-a);
+    double acv = ac.real()*v.real()+ac.imag()*v.imag();
+    double cc=norm(ac)-r[i]*r[i];
+    double aa=norm(v);
+    double bb=-2.*acv;
+    if(bb*bb-4.*aa*cc < 1e-4) continue;
+    double p1 = (-bb-sqrt(bb*bb-4.*aa*cc))/2./aa;
+    double p2 = (-bb+sqrt(bb*bb-4.*aa*cc))/2./aa;
+    if(p1 > 1 - 1e-5) continue;
+    if(p2 < 1e-5) continue;
+    //cout << " " << p1 << " " << p2 << endl;
+    p1=max(0.,p1);
+    p2=min(1.,p2);
+    check.pb(mp(p1,p2));
+  }
+  sort(ALL(check));
+  
+  double cur = 0;
+  FOR(it,check){
+    if(it->F > cur + 1e-8) return false;
+    cur = max(it->S,cur);
+  }
+  
+  return cur > 1-1e-8;
+}
+  
+void solve(){
+  rep(i,n) cin >> x[i] >> y[i] >> r[i];
+  vector<pt> plist;
+  plist.pb(pt(x[0],y[0]));
+  plist.pb(pt(x[n-1],y[n-1]));
+  
+  rep(i,n-1){
+    vector<pt> t=cross(i,i+1);
+    rep(j,SZ(t)){
+      plist.pb(t[j]);
+      //cout << t[j].real() << " " << t[j].imag() << endl;
+    }
+  }
+
+  //can(pt(0,0),pt(5,4));
+  
+  //exit(0);
+  
+  priority_queue<pair<double,int> > q;
+  
+  q.push(mp(0,0));
+  vector<bool> vis(100000);
+  while(!q.empty()){
+    double cc = -q.top().F;
+    int cv = q.top().S;
+    q.pop();
+    if(vis[cv]) continue;
+    //cout << " " << plist[cv].real() << " " << plist[cv].imag() << " " << cc << endl;
+    vis[cv] = 1;
+    if(cv == 1){
+      printf("%.8f\n",cc);
+      return;
+    }
+    
+    rep(j,SZ(plist)){
+      if(!vis[j] && can(plist[cv],plist[j]))
+        q.push(mp(-cc-abs(plist[cv]-plist[j]),j));
+    }
+  }
+
+  cout << -1 << endl;
+}
+
+int main(){
+  while(cin >> n && n) solve();
+}

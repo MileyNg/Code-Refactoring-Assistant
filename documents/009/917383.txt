@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+
+using namespace std;
+typedef pair<int, int> pii;
+
+int main(){
+	while(true){
+		int n, w, d;
+		cin >> n >> w >> d;
+		if(n == 0 && w == 0 && d == 0){ break; }
+		vector<pii> rects;
+		rects.push_back(pii(w, d));
+		for(int i = 0; i < n; ++i){
+			int p, s;
+			cin >> p >> s;
+			const int lw = rects[p - 1].first;
+			const int lh = rects[p - 1].second;
+			s %= (lw + lh);
+			if(s < lw){
+				const int t = lw - s;
+				rects.push_back(pii(min(s, t), lh));
+				rects.push_back(pii(max(s, t), lh));
+			}else{
+				s -= lw;
+				const int t = lh - s;
+				rects.push_back(pii(lw, min(s, t)));
+				rects.push_back(pii(lw, max(s, t)));
+			}
+			rects.erase(rects.begin() + p - 1);
+		}
+		vector<int> pieces(rects.size());
+		for(int i = 0; i < rects.size(); ++i){
+			pieces[i] = rects[i].first * rects[i].second;
+		}
+		sort(pieces.begin(), pieces.end());
+		for(int i = 0; i < pieces.size(); ++i){
+			if(i != 0){ cout << " "; }
+			cout << pieces[i];
+		}
+		cout << endl;
+	}
+	return 0;
+}

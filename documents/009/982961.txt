@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+const long long int MAX_=100000000;
+vector<long long int> prime;
+bool is_prime[MAX_];
+
+void sieve(){
+	fill(is_prime,is_prime+MAX_,true);
+	is_prime[0]=is_prime[1]=false;
+	for(long long int i=2; i<MAX_; ++i){
+		if(is_prime[i]){
+			prime.push_back(i);
+			for(long long int j=i*2; j<MAX_; j+=i){
+				is_prime[j]=false;
+			}
+		}
+	}
+}
+
+long long int gcd(long long int a,long long int b){
+	while(b!=0){
+		long long int tmp=a%b;
+		a=b;
+		b=tmp;
+	}
+	return a;
+}
+
+vector<long long int>* divisor(long long int x){
+	static vector<long long int> result;
+	result.clear();
+	for(long long int i=1; i*i<=x; ++i){
+		if(x%i==0){
+			result.push_back(i);
+			long long int tmp=x/i;
+			if(i!=tmp) result.push_back(tmp);
+		}
+	}
+	sort(result.begin(),result.end());
+	return &result;
+}
+
+map<long long int,long long int>* prime_factor(long long int n){
+	static map<long long int,long long int> result;
+	result.clear();
+	for(auto it=prime.begin(); (*it)*(*it)<=n&&it!=prime.end(); ++it){
+		while(n%(*it)==0){
+			++result[(*it)];
+			n/=(*it);
+		}
+	}
+	if(n!=1) result[n]=1;
+	return &result;
+}
+
+int solve(long long int l){
+	int ans=0;
+	vector<long long int> v=(*divisor(l));
+	map<long long int,long long int> table=(*prime_factor(l));
+	for(auto it=v.begin(); it!=v.end(); ++it){
+		/*
+		for(auto it_=v.begin(); (*it_)<=(*it)&&it_!=v.end(); ++it_){
+			if((*it)*(*it_)/gcd((*it),(*it_))==l) ++ans;
+		}
+		*/
+		map<long long int,long long int> table_=(*prime_factor(*it));
+		long long int tmp=1;
+		for(auto it_=table.begin(); it_!=table.end(); ++it_){
+			if(table_[it_->first]==it_->second) tmp*=it_->second+1;
+			//cout << it_->second << endl;
+		}
+		//cout << tmp << endl;
+		ans+=tmp;
+	}
+	ans=(ans+1)/2;
+	return ans;
+}
+
+int main(){
+	sieve();
+	long long int L;
+	while(cin >> L&&L){
+		cout << solve(L) << endl;
+	}
+	return 0;
+}

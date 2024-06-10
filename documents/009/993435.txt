@@ -1,0 +1,111 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<double,P> PP;
+ 
+#define EPS (1e-10)
+ 
+class Point{
+public:
+  double x,y;
+  Point(double x=0,double y=0):x(x),y(y){}
+  Point operator + (Point p){return Point(x+p.x,y+p.y);}
+  Point operator - (Point p){return Point(x-p.x,y-p.y);}
+  Point operator * (double a){return Point(x*a,y*a);}
+  double abs(){return sqrt(norm());}
+  double norm(){return x*x+y*y;}
+};
+typedef Point Vector;
+class Segment{
+public:
+  Point p1,p2;
+  Segment(Point s=Point(),Point t=Point()):p1(s),p2(t){}
+};
+double norm(Vector a){return a.x*a.x + a.y*a.y;}
+double abs(Vector a){return sqrt(norm(a));}
+double getDistance(Vector a,Vector b){return abs(a-b);}
+double dot (Vector a,Vector b){return a.x*b.x + a.y*b.y;}
+double cross(Vector a,Vector b){return a.x*b.y - a.y*b.x;}
+ 
+static const int COUNTER_CLOCKWISE = 1;
+static const int CLOCKWISE=-1;
+static const int ONLINE_BACK=2;
+static const int ONLINE_FRONT=-2;
+static const int ON_SEGMENT=0;
+ 
+int ccw(Point p0,Point p1,Point p2){
+  Vector a = p1-p0;
+  Vector b = p2-p0;
+  if ( cross(a, b) > EPS ) return COUNTER_CLOCKWISE;
+  if ( cross(a, b) < -EPS ) return CLOCKWISE;
+  if ( dot(a,b) < -EPS ) return ONLINE_BACK;
+  if ( norm(a) < norm(b) ) return ONLINE_FRONT;
+  return ON_SEGMENT;
+}
+ 
+bool isIntersect(Segment s1,Segment s2){
+  Point p1=s1.p1, p2=s1.p2, p3=s2.p1, p4=s2.p2;
+  return (ccw(p1,p2,p3)*ccw(p1,p2,p4)<=0&&
+      ccw(p3,p4,p1)*ccw(p3,p4,p2)<=0);
+}
+ 
+Point getCrossPoint(Segment s1,Segment s2){
+ 
+  Vector base = s2.p2 - s2.p1;
+  double d1 = abs(cross(base,s1.p1-s2.p1));
+  double d2 = abs(cross(base,s1.p2-s2.p1));
+  double t = d1/(d1+d2);
+  return s1.p1+(s1.p2-s1.p1)*t;
+}
+ 
+ 
+int n,o,l;
+Segment seg,input;
+ 
+vector<PP> t;
+ 
+int main(){
+  int Tc;
+  cin>>Tc;
+  while(Tc--){
+    t.clear();
+    cin>>seg.p1.x>>seg.p1.y>>seg.p2.x>>seg.p2.y;
+    cin>>n;
+    for(int i=0;i<n;i++){
+ 
+      cin>>input.p1.x>>input.p1.y>>input.p2.x>>input.p2.y;
+      cin>>o>>l;
+      //cout<<i<<' '<<o<<' '<<l<<endl;
+       
+      if(isIntersect(seg,input)==false)continue;
+      Point a = getCrossPoint(seg,input);
+      double b = getDistance(a,seg.p1);
+       
+      //cout<<input.p1.x<<' '<<input.p1.y<<endl;
+      //cout<<input.p2.x<<' '<<input.p2.y<<endl;
+       
+      t.push_back(PP(b,P(o,l)));
+    }
+ 
+    if(t.size()<=1){cout<<"0"<<endl;continue;}
+ 
+    sort(t.begin(),t.end());
+    int ans=0,now;
+    if(t[0].second.first==1)now=t[0].second.second;
+    else now=1-t[0].second.second;
+    for(int i=1;i<(int)t.size();i++){
+      if(t[i].second.first==1){
+    if(now!=t[i].second.second)ans++;
+    now=t[i].second.second;
+      }else if(t[i].second.first==0){
+    if(now==t[i].second.second)ans++;
+    now=1-t[i].second.second;
+      }
+    }
+    cout<<ans<<endl;
+  }
+  return 0;
+}

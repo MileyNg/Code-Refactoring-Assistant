@@ -1,0 +1,56 @@
+#include <climits>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+constexpr int MAX_N = 10;
+int n;
+int w[MAX_N], s[MAX_N];
+string name[MAX_N];
+
+int ans_g;
+vector<int> ans;
+
+void dfs(int rest, int used, int g, vector<int> &order) {
+	if(g >= ans_g) return;
+	if(rest == 0) {
+		ans = order;
+		ans_g = g;
+		return;
+	}
+
+	int sum_wait = 0;
+	for(int i = 0; i < n; ++i) {
+		if((1 << i) & used) continue;
+		sum_wait += w[i];
+	}
+
+	for(int i = 0; i < n; ++i) {
+		if((1 << i) & used) continue;
+		if(sum_wait - w[i] > s[i]) continue;
+
+		order.emplace_back(i);
+		dfs(rest - 1, used | (1 << i), g + (n - rest + 1) * w[i], order);
+		order.pop_back();
+	}
+}
+
+int main() {
+	while(cin >> n && n) {
+		for(int i = 0; i < n; ++i) {
+			cin >> name[i] >> w[i] >> s[i];
+		}
+
+		vector<int> tmp;
+		ans_g = INT_MAX;
+		ans.clear();
+		dfs(n, 0, 0, tmp);
+
+		for(const auto &idx : ans) {
+			cout << name[idx] << endl;
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

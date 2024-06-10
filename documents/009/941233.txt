@@ -1,0 +1,78 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+vector<pair<int, int> > a[10010];
+vector<pair<int, int> > b[10010];
+
+int main() {
+  while (true) {
+    int n, r;
+    cin >> n >> r;
+    if (n == 0 && r == 0) break;
+    rep (i, 10010) a[i].clear();
+    rep (i, 10010) b[i].clear();
+    rep (i, n) {
+      int x1, y1, x2, y2;
+      cin >> x1 >> y1 >> x2 >> y2;
+      for (int x = x1; x < x2; ++x) {
+	a[x].push_back(make_pair(y1, -1));
+	a[x].push_back(make_pair(y2, 1));
+      }
+      for (int y = y1; y < y2; ++y) {
+	b[y].push_back(make_pair(x1, -1));
+	b[y].push_back(make_pair(x2, 1));
+      }
+    }
+    rep (i, 10010) {
+      sort(a[i].begin(), a[i].end());
+      sort(b[i].begin(), b[i].end());
+    }
+    int res = 0;
+    rep (i, 10010) {
+      int c = 0, pre = -1;
+      rep (j, a[i].size()) {
+	if (a[i][j].second == -1) {
+	  if (c == 0) pre = a[i][j].first;
+	  ++c;
+	} else {
+	  --c;
+	  if (c == 0) res += a[i][j].first - pre;
+	}
+      }
+    }
+    cout << res << endl;
+    if (r == 2) {
+      res = 0;
+      rep (i, 10010) {
+	int c = 0;
+	rep (j, a[i].size()) {
+	  if (a[i][j].second == -1) {
+	    if (c == 0) ++res;
+	    ++c;
+	  } else {
+	    --c;
+	    if (c == 0) ++res;
+	  }
+	}
+      }
+      rep (i, 10010) {
+	int c = 0;
+	rep (j, b[i].size()) {
+	  if (b[i][j].second == -1) {
+	    if (c == 0) ++res;
+	    ++c;
+	  } else {
+	    --c;
+	    if (c == 0) ++res;
+	  }
+	}
+      }
+    }
+    cout << res << endl;
+  }
+}

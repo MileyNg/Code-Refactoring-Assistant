@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#define INF 10000000
+using namespace std;
+typedef pair<int,int> P;
+
+int h,w;
+char map[100][100];
+
+void grouping(int x,int y,char f);
+
+int main(){
+  while(1){
+    cin >> h >> w;
+    if(h==0&&w==0)break;
+
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++){
+        cin >> map[i][j];
+      }
+    }
+    int x=0;
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++){
+        if(map[i][j]!='.'){
+          x++;
+          grouping(i,j,map[i][j]);
+        }
+      }
+    }
+    cout << x << endl;
+  }
+}
+
+void grouping(int x,int y,char f){
+  map[x][y] = '.';
+  if(x-1>0&&map[x-1][y]==f){
+    grouping(x-1,y,f);
+  }
+  if(x+1<h&&map[x+1][y]==f){
+    grouping(x+1,y,f);
+  }
+  if(y-1>0&&map[x][y-1]==f){
+    grouping(x,y-1,f);
+  }
+  if(y+1<w&&map[x][y+1]==f){
+    grouping(x,y+1,f);
+  }
+}

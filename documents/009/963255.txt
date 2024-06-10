@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{
+  for(;;){
+    int x;
+    cin >> x;
+
+    if(x==0)
+      break;
+
+    int count=0;
+    int count_ki=0;
+    int tmp;
+    
+
+    int coin[100000];
+    int coin_ki[100000];
+   
+    int tmp2=0;
+  
+    for(int i=1;i<x;i++){
+      tmp=i*(i+1)*(i+2)/6;
+      if(tmp>x)break;
+      coin[i-1]=tmp;
+      count=i;
+      if(coin[i-1]%2==1){
+	coin_ki[tmp2++]=coin[i-1];
+	count_ki=tmp2;
+      }
+    }
+    ////
+    int dp[10000];
+    fill(dp,dp + x+1,100000);
+  
+/*
+    dp[0]=0;
+    for(int i = 0;i<x+1;i++){
+      for(int j=0;j<count;j++){
+	if(i+coin[j]<=x){
+	  dp[i+coin[j]]=min(dp[i+coin[j]],dp[i]+1);
+	}
+      }
+    }
+
+    cout << dp[x] << " ";
+    //fill(dp,dp + x + 1,100000);
+  
+    //printf("%d\n",count_ki);
+    dp[0]=0;
+    for(int i = 0;i<x+1;i++){
+      for(int j=0;j<count_ki;j++){
+	if(i+coin_ki[j]<=x){
+	  dp[i+coin_ki[j]]=min(dp[i+coin_ki[j]],dp[i]+1);
+	}
+      }
+    }
+   
+    cout << dp[x] << endl;
+  
+    ///*/
+  }
+  return 0;
+}
+
+  

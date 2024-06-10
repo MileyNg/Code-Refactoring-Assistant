@@ -1,0 +1,24 @@
+#include <cstdio>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(x,a,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+int grid[5000][2];
+int main(){
+  int n, m;
+  scanf("%d%d", &n, &m);
+  rep(i, n){
+    scanf("%d%d", &grid[i][0], &grid[i][1]);
+  }
+  int x1, y1, x2, y2;
+  rep(i, m){
+    int res = 0;
+    scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+    rep(j, n)
+      if(between(grid[j][0], x1, x2) && between(grid[j][0], y1, y2))
+	res++;
+    printf("%d\n", res);
+  }
+  return 0;
+}

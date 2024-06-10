@@ -1,0 +1,36 @@
+#!/usr/bin/ruby
+def insertionSort(a, n, g)
+    for i in g..n-1
+        v = a[i]
+        j = i - g
+        while j >= 0 && a[j] > v
+            a[j+g] = a[j]
+            j = j - g
+            $cnt+=1
+            a[j+g] = v
+        end
+    end
+end
+ 
+def shellSort(a, n)
+    $cnt = 0
+    g = []
+    h = 1
+    while h <= n
+        g << h
+        h = 3*h+1
+    end
+    g.reverse!
+    m = g.size
+    p m
+    puts g*' '
+    for i in 0..m-1
+        insertionSort(a, n, g[i])
+    end
+end
+ 
+#a=[9,8,5,1,7,4,6,3,2]
+a=gets.to_i.times.map{gets.to_i}
+shellSort(a,a.size)
+p $cnt
+puts a

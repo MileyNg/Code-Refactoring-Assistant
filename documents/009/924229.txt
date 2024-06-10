@@ -1,0 +1,17 @@
+while 1:
+	n = input()
+	if n == 0: break
+	s = map(int,raw_input().split())
+	sm = sum(s)
+	dp = [0] * (sm+1)
+	ref = {i:[i] for i in s}
+	for i in s:
+		dp[i] = i
+	for i in s:
+		for j in range(sm+1):
+			if dp[j] > 0 and j not in ref[i]:
+				try:
+					dp[j+i] = dp[j] + i
+					ref[i].append(j + i)
+				except: break
+	print min([abs(sm-2*dp[i]) for i in range(sm)])

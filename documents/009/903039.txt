@@ -1,0 +1,68 @@
+#include <iostream>
+#include <map>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+typedef struct TEAM{
+	int tid;
+	map<int,int> ptf;
+	int score;
+	int pena;
+
+	bool operator < (const TEAM& oth)const{
+		if(score==oth.score) {
+			if(pena==oth.pena) return tid<oth.tid;
+			return pena<oth.pena;
+		}
+		return score>oth.score;
+	}
+
+}TEAM_t;
+
+int main(int argc, char const *argv[])
+ {
+ 	int T,P,R;
+ 	int t,p,time_;
+ 	string s;
+
+ 	while(1){
+ 		cin>>T>>P>>R;
+ 		if(T+P+R==0) break;
+
+ 		vector<TEAM_t> team(T);
+
+ 		for(int i1=0;i1<T;i1++){
+ 			team[i1].tid=i1;
+ 			team[i1].score=0;
+ 			team[i1].pena=0;
+
+ 			for(int i2=0;i2<P;i2++){
+				team[i1].ptf[i2]=0;
+			}
+ 		}
+
+ 		for(int i1=0;i1<R;i1++){
+ 			cin>>t>>p>>time_>>s;
+ 			if(s=="CORRECT"){
+ 				team[t-1].score++;
+ 				team[t-1].pena+=time_+1200*team[t-1].ptf[p-1];
+ 			}
+ 			else {
+ 				team[t-1].ptf[p-1]++;
+ 			}
+ 		}
+
+ 		sort(team.begin(), team.end());
+
+ 		for(int i1=0;i1<T;i1++){
+ 			cout<<team[i1].tid+1<<" "<<team[i1].score<<" "<<team[i1].pena<<endl;
+ 		}
+ 		
+
+
+ 	}
+ 	return 0;
+ } 

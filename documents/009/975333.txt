@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<vvi> vvvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int bfs(const vvvi& wall,pii src,pii dst)
+{
+	int h=wall.size(),w=wall[0].size();
+	vvi dist(h,vi(w,INF));
+	queue<tuple<int,int,int>> q;
+	q.emplace(src.first,src.second,0);
+	while(q.size()){
+		int ci,cj,cd; tie(ci,cj,cd)=q.front(); q.pop();
+		if(ci<0 || h<=ci || cj<0 || w<=cj || dist[ci][cj]!=INF) continue;
+		dist[ci][cj]=cd;
+		rep(k,4) if(!wall[ci][cj][k]){
+			int ni=ci+"\xff\x1\0\0"[k],nj=cj+"\0\0\xff\x1"[k];
+			q.emplace(ni,nj,cd+1);
+		}
+	}
+	int res=dist[dst.first][dst.second];
+	return res==INF?-1:res;
+}
+
+int main()
+{
+	for(int w,h,n;cin>>w>>h>>n && w|h|n;){
+		vvvi wall(h,vvi(w,vi(4)));
+		rep(i,h) rep(j,w) rep(k,4){
+			int ni=i+"\xff\x1\0\0"[k],nj=j+"\0\0\xff\x1"[k];
+			if(ni<0 || h<=ni || nj<0 || w<=nj) wall[i][j][k]=1;
+		}
+		rep(i,n){
+			int x1,y1,x2,y2; cin>>x1>>y1>>x2>>y2;
+			if(x1>x2) swap(x1,x2);
+			if(y1>y2) swap(y1,y2);
+			if(x1==x2)
+				repi(y,y1,y2)
+					wall[y][x1][2]=wall[y][x1-1][3]=1;
+			else
+				repi(x,x1,x2)
+					wall[y1][x][0]=wall[y1-1][x][1]=1;
+		}
+		
+		pii src,dst;
+		cin>>src.second>>src.first>>dst.second>>dst.first;
+		
+		int d0=bfs(wall,src,dst),d1=0;
+		rep(i,h) rep(j,w) rep(k,4) if(!wall[i][j][k]){
+			wall[i][j][k]=1;
+			d1=max(d1,bfs(wall,src,dst));
+			wall[i][j][k]=0;
+		}
+		cout<<d1-d0<<endl;
+	}
+}

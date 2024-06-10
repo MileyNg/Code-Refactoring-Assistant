@@ -1,0 +1,47 @@
+#include<cstdio>
+#include<string>
+#include<map>
+#include<utility>
+#include<queue>
+using namespace std;
+typedef struct pair<string,int> p;
+queue<p>Q;
+map<string,int>P;
+int pos;
+
+void setP(string S,int c,int mv)
+{
+	swap(S[pos],S[pos+mv]);
+	if(P.find(S)==P.end())
+	{
+		P[S]=c;
+		Q.push(make_pair(S,c));
+	}
+}
+
+int main()
+{
+	string S="01234567";
+	P.insert(map<string,int>::value_type(S,0));
+	Q.push(make_pair(S,0));
+	while(!Q.empty())
+	{
+		p tmp=Q.front();Q.pop();
+		pos=tmp.first.find('0');
+		if(pos<4)
+			setP(tmp.first,tmp.second+1,4);
+		if(pos>3)
+			setP(tmp.first,tmp.second+1,-4);
+		if(pos%4!=0)
+			setP(tmp.first,tmp.second+1,-1);
+		if(pos%4!=3)
+			setP(tmp.first,tmp.second+1,1);
+	}
+	char c[20];
+	for(;gets(c);)
+	{
+		string a;
+		for(int i=0;i<15;i+=2)a+=c[i];
+		printf("%d\n",P[a]);
+	}
+}

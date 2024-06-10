@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+int era_num;
+
+char *era(int y, int m, int d)
+{
+	if (y <= 1868 && m <= 9 && d <= 7){
+		era_num = -1;
+		return "pre-meiji";
+	}
+	else if (y <= 1912){
+		if (y < 1912 || m < 7 || d <= 29){
+			era_num = 1867;
+			return "meiji";
+		}
+		else {
+			era_num = 1911;
+			return "taisho";
+		}
+	}
+	else if (y <= 1926){
+		if (y < 1926 || m < 12 || d <= 24){
+			era_num = 1911;
+			return "taisho";
+		}
+		else {
+			era_num = 1925;
+			return "showa";
+		}
+	}
+	else if (y <= 1989){
+		if (y < 1989 || (m == 1 && d <= 7)){
+			era_num = 1925;
+			return "showa";
+		}
+		else {
+			era_num = 1988;
+			return "heisei";
+		}
+	}
+	else {
+		era_num = 1988;
+		return "heisei";
+	}
+}
+
+int main(void)
+{
+	int y, m, d;
+	//const char *era[] = {"meiji", "taisho", "showa", "heisei"};
+	//const int minus[] = {1867, 1911, 1925, 1988};
+	
+	while (scanf("%d %d %d", &y, &m, &d) != EOF){
+		char *str = era(y, m, d);
+		printf("%s", str);
+		if (era_num != -1){
+			printf(" %d %d %d", y - era_num, m, d);
+		}
+		puts("");
+	}
+	
+	return 0;
+}

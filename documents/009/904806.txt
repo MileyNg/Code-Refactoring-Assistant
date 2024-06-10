@@ -1,0 +1,25 @@
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main(){
+  int n,m;
+  char cha, chb;
+  char c;
+  map<char, char> conv;
+  map<char, char>::iterator itr;
+  while(cin >> n, n){
+    for(int i=0; i<n; i++){
+      cin >> cha >> chb;
+      conv.insert(make_pair(cha, chb));
+    }
+    cin >> m;
+    for(int i=0; i<m; i++){
+      cin >> c;
+      if((itr = conv.find(c)) != conv.end()) cout << itr->second;
+      else cout << c;
+    }
+    cout << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const double EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> PII;
+
+struct  P {
+	int x, y;
+	P() {}
+	P(int x_, int y_) : x(x_), y(y_) {}
+};
+
+/** Problem2005 : Water Pipe Construction **/
+int d[110][110];
+int V;
+
+void warshall_floyd()
+{
+	rep(k, V) {
+		rep(i, V) {
+			rep(j, V) {
+				d[i][j] = min(d[i][j], d[i][k]+d[k][j]);
+			}
+		}
+	}
+}
+
+int main()
+{
+	int M, S, G1, G2;
+	while (cin>>V>>M>>S>>G1>>G2, V||M||S||G1||G2) {
+		S--; G1--; G2--;
+		
+		fill(d[0], d[0]+110*110, INF);
+		rep(i, 110) {
+			d[i][i]=0;
+		}
+		
+		rep(i, M) {
+			int a, b, c;
+			cin>>a>>b>>c;
+			a--; b--;
+			d[a][b]=c;
+		}
+		
+		warshall_floyd();
+	
+		int ans=d[S][G1]+d[S][G2];
+		rep(i, V) {
+			if (i != S && i != G1 && i!=G2) {
+				int tmp = d[S][i]+d[i][G1]+d[i][G2];
+				ans = min(ans, tmp);
+			}
+		}
+		cout << ans << endl;
+	}
+}

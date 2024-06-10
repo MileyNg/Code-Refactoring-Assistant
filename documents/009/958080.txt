@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct team{
+	int name;
+	int s;
+};
+
+int main() {
+	int n;
+	int m[4];
+	int s[4];
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		vector<team> t(n);
+		for (int i = 0; i < n; i++) {
+			cin >> t[i].name >> m[0] >> s[0] >> m[1] >> s[1] >> m[2] >> s[2] >> m[3] >> s[3]; 
+			t[i].s = 0;
+			for (int j = 0; j < 4; j++) {
+				t[i].s += s[j];
+				t[i].s += (m[j] * 60);
+			}
+		}
+		int juni[4][2];
+		for (int i = 3; i > 0; i--) {
+			for (int j = 0; j < i; j++) {
+				if (t[j].s > t[j+1].s) {
+					swap(t[j].s, t[j+1].s);
+					swap(t[j].name, t[j+1].name);
+				}
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			juni[i][0] = t[i].name;
+			juni[i][1] = t[i].s;
+		}
+		for (int i = 4; i < n; i++) {
+			if (t[i].s < juni[0][1]) {
+				juni[1][1] = juni[0][1];
+				juni[1][0] = juni[0][0];
+				juni[0][1] = t[i].s;
+				juni[0][0] = t[i].name;
+			} else if (t[i].s < juni[1][1]) {
+				juni[1][1] = t[i].s;
+				juni[1][0] = t[i].name;
+			} else if (t[i].s > juni[3][1]) {
+				juni[2][1] = juni[3][1];
+				juni[2][0] = juni[3][0];
+				juni[3][1] = t[i].s;
+				juni[3][0] = t[i].name;
+			} else if (t[i].s > juni[2][1]) {
+				juni[2][1] = t[i].s;
+				juni[2][0] = t[i].name;
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			cout << juni[i][0] << endl;
+		}
+	}
+	return 0;
+}

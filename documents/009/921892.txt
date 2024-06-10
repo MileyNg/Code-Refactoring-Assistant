@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int f_debt(int n)
+{
+	n *= 1.05;
+	if(n % 1000 != 0)
+	{
+		n = n - (n%1000) + 1000;
+	}
+	return n;
+}
+
+int main()
+{
+	int i,n,debt=100000;
+	scanf("%d",&n);
+
+	for(i=0;i<n;i++)
+	{
+		debt = f_debt(debt);
+	}
+	printf("%d",debt);
+	return 0;
+}

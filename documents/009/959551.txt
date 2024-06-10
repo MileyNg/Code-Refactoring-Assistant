@@ -1,0 +1,54 @@
+POWER = {
+  "yotta" => 24,
+  "zetta" => 21,
+  "exa" => 18,
+  "peta" => 15,
+  "tera" => 12,
+  "giga" => 9,
+  "mega" => 6,
+  "kilo" => 3,
+  "hecto" => 2,
+  "deca" => 1,
+  "deci" => -1,
+  "centi" => -2,
+  "milli" => -3,
+  "micro" => -6,
+  "nano" => -9,
+  "pico" => -12,
+  "femto" => -15,
+  "ato" => -18,
+  "zepto" => -21,
+  "yocto" => -24,
+}
+
+gets.to_i.times do
+  case (line = gets.split).size
+    when 3
+      number, prefix, unit = line
+    else
+      number, unit = line
+  end
+
+  power = prefix ? POWER[prefix] : 0
+
+  if number.include?(".")
+    while(number[0] == "0")
+      number.slice!(0)
+      if number[0] == "."
+        number[0], number[1] = number[1], number[0]
+        power -= 1
+      end
+    end
+  else
+    number += "."
+  end
+
+  until (i = number.index(".")) == 1
+    number[i], number[i - 1] = number[i - 1], number[i]
+    power += 1
+  end
+
+  number.slice!(-1) if number[-1] == "."
+
+  puts "#{number} * 10^#{power} #{unit}"
+end

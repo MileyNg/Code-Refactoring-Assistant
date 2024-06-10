@@ -1,0 +1,28 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+
+int main(){
+	int n;
+	while(cin >> n, n){
+		int s[n];
+		int m = 0, sum_bunsan = 0;
+		int bunsan, heikin;
+
+		for(int i = 0; i < n; i++){
+			cin >> s[i];
+		}
+		//テ・ツケツウテ・ツ敖?テ」ツつ津ヲツアツづ」ツつ?」ツつ?
+		for(int i = 0; i < n; i++){
+			m += s[i];
+		}
+		heikin = m / n;
+
+		//テ・ツ按?ヲツ閉」テ」ツつ津ヲツアツづ」ツつ?」ツつ?
+		for(int i = 0; i < n; i++){
+			sum_bunsan += (s[i] - heikin) * (s[i] - heikin);
+		}
+		printf("%0.8lf\n", sqrt(sum_bunsan / n));
+	}
+}

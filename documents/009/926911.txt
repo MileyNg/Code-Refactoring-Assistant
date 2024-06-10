@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+#define MOD_BY 10007
+
+int N;
+char sekinin[1024];
+
+int memo[8][1000];
+
+int tansaku(int key,int day) {
+	int result=0;
+	int i;
+	if(day>=N)return 1;
+	if(memo[key][day]>0)return memo[key][day]-1;
+	for(i=0;i<8;i++) {
+		int j,valid=1;
+		for(j=0;j<3;j++) {
+			if(sekinin[day]=="JOI"[j] && !(i&(1<<j)))valid=0;
+		}
+		if(valid && (i&key)) {
+			result+=tansaku(i,day+1);
+		}
+	}
+	result%=MOD_BY;
+	memo[key][day]=result+1;
+	return result; 
+}
+
+int main(void) {
+	scanf("%d",&N);
+	scanf("%s",sekinin);
+	printf("%d\n",tansaku(1,0));
+	return 0;
+}

@@ -1,0 +1,33 @@
+#include<iostream>
+#include<algorithm>
+#include<functional>
+
+using namespace std;
+
+#define NMAX 100000
+#define KMAX 100000
+
+int main(){
+
+	int n,k;
+	int w[NMAX];
+	int track[KMAX]={0};
+
+	cin>>n>>k;
+
+	for(int i=0;i<n;i++){
+		cin>>w[i];
+	}
+
+	sort(w,w+n,greater<int>());
+	
+	for(int i=0;i<n;i++){
+		sort(track,track+k);
+		track[0]+=w[i];
+	}
+
+	sort(track,track+k,greater<int>());
+	cout<<track[0]<<endl;
+
+	return 0;
+}

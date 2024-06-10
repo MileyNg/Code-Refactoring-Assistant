@@ -1,0 +1,90 @@
+#include<iostream>
+using namespace std;
+int n,m;
+char t[100],ch;
+void putA();
+void putB();
+void putC();
+void putD();
+int main(){
+  while(cin>>n>>m){
+    if(n==0&&m==0)break;
+    for(int i=0;i<n;i++)t[i]='#';
+    for(int i=0;i<m;i++){
+      cin>>ch;
+      if(ch=='A')putA();
+      else if(ch=='B')putB();
+      else if(ch=='C')putC();
+      else putD();
+    }
+    for(int i=0;i<n;i++)cout<<t[i];
+    cout<<endl;
+  }
+  return 0;
+}
+void putA(){
+  for(int i=0;i<n;i++){
+    if(t[i]!='#')continue;
+    t[i]='A';
+    return;
+  }
+}
+void putB(){
+  for(int i=n-1;i>=0;i--){
+    if(t[i]!='#')continue;
+    if(i-1>=0&&t[i-1]=='A')continue;
+    if(i+1<n&&t[i+1]=='A')continue;
+    t[i]='B';
+    return;
+  }
+  for(int i=0;i<n;i++){
+    if(t[i]=='#'){
+      t[i]='B';
+      return;
+    }
+  }
+}
+void putC(){
+  for(int i=0;i<n;i++){
+    if(t[i]=='#')continue;
+    if(i+1<n&&t[i+1]=='#'){
+      t[i+1]='C';return;
+    }else if(i-1>=0&&t[i-1]=='#'){
+      t[i-1]='C';return;
+    }
+  }
+  t[n/2]='C';
+}
+void putD(){
+  bool flg=true;
+  for(int i=0;i<n;i++)if(t[i]!='#')flg=false;
+  if(flg){
+    t[0]='D';return;
+  }
+
+  int l[100],r[100],m[100];
+  l[0]=0;
+  for(int i=1;i<n;i++){
+    if(t[i]=='#')l[i]=l[i-1]+1;
+    else l[i]=0;
+  }
+  r[n-1]=0;
+  for(int i=n-2;i>=0;i--){
+    if(t[i]=='#')r[i]=r[i+1]+1;
+    else r[i]=0;
+  }
+  for(int i=0;i<n;i++){
+    m[i]=min(l[i],r[i]);
+  }
+  int pos=-1,mini=100;
+  for(int i=0;i<n;i++){
+    if(t[i]!='#')continue;
+    if(m[i]<mini){
+      pos=i;
+      mini=m[i];
+    }
+  }
+  if(pos!=-1){
+    t[pos]='D';
+  }
+}

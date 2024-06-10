@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+int main() {
+	int h, m;
+	int n;
+	cin >> n;
+	for(int i = 0; i < n; i++) {
+		scanf("%d:%d", &h, &m);
+		double sh, lh;
+
+		lh = 2 * M_PI * (m / 60.0);
+		sh = 2 * M_PI * ((h * 60 + m) / (60.0 * 12));
+
+		if(cos(lh - sh) > cos(M_PI / 6.0))
+			cout << "alert" << endl;
+		else if(cos(lh - sh) > cos(M_PI / 2.0))
+			cout << "warning" << endl;
+		else
+			cout << "safe" << endl;
+	}
+}

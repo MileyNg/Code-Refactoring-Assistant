@@ -1,0 +1,27 @@
+n = gets.to_i
+taro = 0
+hanako = 0
+n.times do
+  t, h = gets.split
+  # puts "#{t} #{h}"
+  if t == h
+    taro += 1
+    hanako += 1
+  else
+    # len = (t.length <= h.length)? t.length: h.length
+    i = 0
+    while true do
+      # puts "#{t[i, 1]} #{h[i, 1]}"
+      break if t[i, 1] != h[i, 1]
+      i += 1
+    end
+
+    if t[i, 1].nil? || t[i, 1] > h[i, 1]
+      taro += 3
+    else
+      hanako += 3
+    end
+
+  end
+end
+puts "#{taro} #{hanako}"

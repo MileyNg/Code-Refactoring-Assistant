@@ -1,0 +1,127 @@
+#include<stdio.h>
+#define compile 0
+
+void init(int array[], int length)
+{
+	int i = 0;
+	for(i = 0; i < length; i++)
+	{
+		array[i] = 0;
+	}
+}
+void merge(int separate1[], int length1, int separate2[], int length2, int array[])
+{
+	int i = 0, j = 0;
+	while(i < length1 || j < length2)
+	{
+		if((j >= length2) ||(i < length1 && (separate1[i] < separate2[j])))
+		{
+			array[i + j] = separate1[i];
+			i++;
+		}
+		else
+		{
+			array[i + j] = separate2[j];
+			j++;
+		}
+		#if compile == 2
+		output(array, length1 + length2);
+		#endif
+	}
+}
+void mergesort( int array[], int length)
+{
+	if(length > 1)
+	{
+		int m = length / 2;
+		int n = length - m;
+		int i = 0;
+		int separate1[m];
+		int separate2[n];
+		init(separate1, m);
+		init(separate2, n);
+		#if compile == 1
+		printf("separate1 = ");
+		#endif
+		for(i = 0; i < m; i++)
+		{
+			separate1[i] = array[i];
+			#if compile == 1
+			printf("%d ", separate1[i]);
+			#endif
+		}
+		
+		#if compile == 1
+		puts("");
+		printf("separate2 = ");
+		#endif
+		
+		for(i = 0; i < n; i++)
+		{
+			separate2[i] = array[i + m];
+			#if compile == 1
+			printf("%d ", separate2[i]);
+			#endif
+		}
+		
+		#if compile == 1
+		puts("");
+		#endif
+		
+		mergesort(separate1, m);
+		mergesort(separate2, n);
+		merge(separate1, m, separate2, n, array);
+		
+	}
+}
+int search(int array1[], int length1, int array2[], int length2)
+{
+	int counter = 0;
+	int i = 0, j = 0;
+	for(i = 0; i < length2; i++)
+	{
+		for(j = 0; j < length1; j++)
+		{
+			if(array2[i] == array1[j])
+			{
+				counter++;
+				break;
+			}
+		}
+	}
+	
+	return counter;
+}
+main()
+{
+	int n = 0, i = 0, q = 0;
+	int result = 0;
+	
+	scanf("%d", &n);
+	
+	int S[n];
+	init(S, n);
+	
+	for(i = 0; i < n; i++)
+	{
+		scanf("%d", &S[i]);
+	}
+	scanf("%d", &q);
+	
+	int T[q];
+	init(T, q);
+	
+	for(i = 0; i < q; i++)
+	{
+		scanf("%d", &T[i]);
+	}
+	
+	mergesort(S, n);
+	
+	mergesort(T, q);
+	
+	result = search(S, n, T, q);
+	
+	printf("%d\n", result);
+	return 0;
+}

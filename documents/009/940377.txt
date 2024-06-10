@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+//#define DEBUG
+
+using namespace std;
+struct node {
+    int id, point;
+} node[1<<18];
+//const int N=131072; // AC
+//const int N=131071; // WA
+const int N=130650; // WA
+int n, a[N];
+
+void add(int id, int x)
+{
+    id=n-1+id;
+    node[id].point+=x;
+
+    while (id>0) {
+        id=(id-1)/2;
+        int c1=2*id+1, c2=2*id+2;
+        if (node[c1].point>=node[c2].point)
+            node[id]=node[c1];
+        else
+            node[id]=node[c2];
+    }
+}
+
+void print()
+{
+#ifdef DEBUG
+    int k=1;
+    int x=0;
+    while (true) {
+        for(int i=0;i<k;++i) printf("(%d %d)", node[x+i].id, node[x+i].point);
+        puts("");
+        x+=k;
+        k<<=1;
+        if (x>=n) break;
+    }
+    puts("");
+#endif
+}
+
+int main()
+{
+    int m, r, l;
+    scanf("%d%d%d", &m, &r, &l);
+    n=1;
+    while (n<m) n<<=1;
+    for(int i=0;i<m;++i) node[n-1+i].id=i;
+
+    int pt=0;
+    for(int i=0;i<r;++i) {
+        int d, t, x;
+        scanf("%d%d%d", &d, &t, &x);
+
+        if (pt<t) {
+            int id=node[0].id;
+            a[id]+=t-pt;
+        }
+        add(d-1, x);
+        print();
+        pt=t;
+    }
+    print();
+    a[node[0].id]+=l-pt;
+#ifdef DEBUG
+    for(int i=0;i<n;++i) printf("%d ", a[i]); puts("");
+#endif
+    printf("%d\n", 1+(max_element(a, a+n)-a));
+}

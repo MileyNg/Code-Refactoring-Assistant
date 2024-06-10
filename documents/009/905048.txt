@@ -1,0 +1,60 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+double a,b,c,d;
+double cos_u;
+double rate;
+double ux=0.0,uy=0.0,uz=0.0;
+double uv,vw,uw;
+double vx,vy,vz,vx2,vy2,vz2,vx3,vy3,vz3;
+double wx,wy,wz,wx2,wy2,wz2,wx3,wy3,wz3;
+int main(){
+  while(cin>>a>>b>>c>>d){
+
+    if(a==-1.0&&b==-1.0&&c==-1&&d==-1.0)break;
+    a=a*M_PI/180.0;
+    b=b*M_PI/180.0;
+    c=c*M_PI/180.0;
+    d=d*M_PI/180.0;
+    uv=uw=6378.1;
+    
+    vx=6378.1;
+    vy=0;
+    vz=0;
+
+    vx2=vx*cos(a)+vz*sin(a);
+    vy2=vy;
+    vz2=-vx*sin(a)+vz*cos(a);
+
+    vx=vx2*cos(b)-vy2*sin(b);
+    vy=vx2*sin(b)+vy2*cos(b);
+    vz=vz2;
+
+    wx=6378.1;
+    wy=0;
+    wz=0;
+
+    wx2= wx*cos(c)+wz*sin(c);
+    wy2= wy;
+    wz2=-wx*sin(c)+wz*cos(c);
+
+    wx=wx2*cos(d)-wy2*sin(d);
+    wy=wx2*sin(d)+wy2*cos(d);
+    wz=wz2;
+
+
+    uv=sqrt(vx*vx + vy*vy + vz*vz);    uw=sqrt(wx*wx + wy*wy + wz*wz);
+    //cout<<uv<<' '<<uw<<endl;
+
+    vw=sqrt((vx-wx)*(vx-wx) + (vy-wy)*(vy-wy) + (vz-wz)*(vz-wz));
+    
+    cos_u=(vx*wx + vy*wy + vz*wz)/(uv*uw);
+    
+    cos_u=acos(cos_u);
+    
+    rate=cos_u/(2.0*M_PI);
+
+    printf("%.0f\n",6378.1*2.0*M_PI*rate);
+  }
+  return 0;
+}

@@ -1,0 +1,27 @@
+#include<iostream>
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int t[10000],size,sum;
+char ch;
+int main(){
+  while(cin>>t[0]&&t[0]!=0){
+    size=1;
+    while(1){
+      scanf("%c",&ch);
+      if(ch=='\n')break;
+      cin>>t[size++];
+    }
+    sort(t,t+size);
+    sum=0;
+    for(int i=size-1;i>=0;i--){
+      if(t[i]!=1)sum+=min(t[i],10);
+      else{
+	if(sum+11+i<=21)sum+=11;
+	else sum++;
+      }
+    }
+    cout<<(sum<=21?sum:0)<<endl;
+  }
+  return 0;
+}

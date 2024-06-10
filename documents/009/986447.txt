@@ -1,0 +1,32 @@
+### subroutines
+
+def score(ns)
+  sum = 0
+  ones = 0
+  for n in ns
+    if n == 1
+      sum += 1
+      ones += 1
+    elsif n < 10
+      sum += n
+    else
+      sum += 10
+    end
+  end
+
+  for i in (0...ones)
+    break if sum + 10 > 21
+    sum += 10
+  end
+
+  (sum <= 21) ? sum : 0
+end
+
+### main
+
+while true
+  ns = gets.strip.split(' ').map{|s| s.to_i}
+  break if ns[0] == 0
+
+  puts score(ns)
+end

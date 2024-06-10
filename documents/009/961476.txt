@@ -1,0 +1,150 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <complex>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+struct node {int to,cost; };
+
+typedef vector< vector<node> > G;
+
+inline void add_edge(G& g,int from,int to,int cost=1){
+	node in; in.to=to; in.cost=cost;
+	g[from].pb(in);
+}
+
+inline void add_both_edge(G& g,int from,int to,int cost=1){	
+	add_edge(g,from,to,cost);
+	add_edge(g,to,from,cost);
+}
+
+int n,m,l,k,a,h;
+
+bool r[110];
+
+int dist[110][110];
+
+
+struct state{
+	int n;
+	int d;
+	int t;
+	bool operator< (state a)const{ return  (d==a.d)? t<a.t: d<a.d;}
+	bool operator> (state a)const{ return  (d==a.d)? t>a.t: d>a.d;}
+};
+
+int solve(G& g){
+	state init;
+	init.n=a;init.d=0;init.t=m;
+	priority_queue < state,vector<state>, greater<state> > q;
+	q.push(init);
+	dist[a][m]=0;
+	
+	while(!q.empty()){
+		state cur=q.top(); q.pop();
+
+		if(dist[cur.n][cur.t] < cur.d) 
+			continue;
+			
+		if(cur.n==h)
+			return cur.d;
+
+		if(r[cur.n]&&cur.t<m){
+			state next=cur;
+			next.t++;
+			if(dist[next.n][next.t] > dist[cur.n][cur.t]+1){
+				dist[next.n][next.t]=dist[cur.n][cur.t]+1;
+				next.d=dist[next.n][next.t];
+				q.push(next);
+			}
+		}
+		
+		rep(i,g[cur.n].size()){
+			state next;
+			next.n=g[cur.n][i].to;
+			if(g[cur.n][i].cost > cur.t)
+				continue;
+			next.t=cur.t-g[cur.n][i].cost;
+			
+			if(dist[next.n][next.t] > dist[cur.n][cur.t]+g[cur.n][i].cost){
+				dist[next.n][next.t]=dist[cur.n][cur.t]+g[cur.n][i].cost;
+				next.d=dist[next.n][next.t];
+				q.push(next);
+			}
+		}
+	}
+	return -1;
+}
+
+
+int main(void){
+	while(cin >> n,n){
+		cin >> m >> l >> k >> a >> h;
+		clr(r,false);
+		rep(i,110)rep(j,110) dist[i][j]=inf;
+		G graph(n);
+		rep(i,l){
+			int tmp;
+			cin >> tmp;
+			r[tmp]=true;
+		}
+		rep(i,k){
+			int f,t,c;
+			cin >> f >> t >> c;
+			add_both_edge(graph,f,t,c);
+		}
+		int ans=solve(graph);
+		if(ans==-1)
+			cout << "Help!" << endl;
+		else
+			cout << ans << endl;
+	}
+	return 0;
+}

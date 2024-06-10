@@ -1,0 +1,63 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+int n,cost,limit;
+map<vector<int>,int> memo;
+vector<int> loop;
+
+int dfs(int cnt,int sum,vector<int> remain){
+  if( memo.find(remain) != memo.end() ) return memo[remain];
+  int maxcost = cnt;
+  rep(i,limit){
+    if( remain[loop[i]] == 0 ) continue;
+    int nsum = sum + loop[i];
+    if( nsum >  10 ) break;
+    remain[loop[i]]--;
+    if( nsum == 10 ) {
+      maxcost = max(maxcost,dfs(cnt+1,0,remain));
+      memo[remain] = maxcost;
+      remain[loop[i]]++;
+      return maxcost;
+    } else {
+      maxcost = max(maxcost,dfs(cnt,nsum,remain));
+    }
+    remain[loop[i]]++;
+  }
+  if( sum == 0 ) memo[remain] = maxcost;
+  return maxcost;  
+}
+
+
+int main() {
+  while( cin >> n, n ) { 
+    memo.clear();
+    vector<int> remain;
+    remain.resize(10);
+    cost = limit = 0;
+    int coef = 0,input;
+    rep(i,n) {
+      cin >> input;
+      if( input == 10 ) coef++;
+      if( input >= 10 ) continue;
+      remain[input]++;
+    }
+
+    REP(i,1,5) {
+      int tmp = min(remain[i],remain[10-i]);
+      coef += tmp;
+      remain[i] -= tmp, remain[10-i] -= tmp;
+    }
+    int tmp = remain[5] / 2;
+    coef += tmp, remain[5] -= 2*tmp;
+    REP(i,1,10) if( remain[i] ) loop.push_back(i);
+    limit = loop.size();
+
+    cout << coef + dfs(0,0,remain) << endl;
+
+  }
+  return 0;
+}

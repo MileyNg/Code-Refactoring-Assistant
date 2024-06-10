@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n1,n2,num,temp,flg=1;
+	cin>>num;
+	while(num--){
+		cin>>n1; cin>>n2;
+		for(int i=0;i<8;i++){
+			cin>>temp;
+			if(temp-n1<0&&temp-n2<0) flg=0;
+			if(temp-n1>temp-n2) n2=temp;
+			else if(temp-n2>temp-n1) n1=temp;
+		}if(flg==1) cout<<"YES"<<endl;
+		else cout<<"NO"<<endl;
+	}return 0;
+}

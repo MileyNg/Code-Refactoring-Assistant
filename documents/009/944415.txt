@@ -1,0 +1,25 @@
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    int n, S, q, T;
+    unordered_map<int, bool> um;
+    cin >> n;
+    for (int i=0; i<n; ++i) {
+        cin >> S;
+        um[S] = true;
+    }
+
+    int ans = 0;
+    cin >> q;
+    for (int i=0; i<q; ++i) {
+        cin >> T;
+        ans += um[T];
+    }
+    cout << ans << endl;
+
+    return 0;
+}

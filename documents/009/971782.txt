@@ -1,0 +1,11 @@
+while true
+  h, m, s = gets.chomp.split(" ").map{|s| s.to_i}
+  break if h == -1 && m == -1 && s == -1
+
+  ts = (h * 60 + m) * 60 + s
+  rs = 120 * 60 - ts
+  rs3 = rs * 3
+
+  printf("%02d:%02d:%02d\n", rs / 3600, (rs / 60) % 60, rs % 60)
+  printf("%02d:%02d:%02d\n", rs3 / 3600, (rs3 / 60) % 60, rs3 % 60)
+end

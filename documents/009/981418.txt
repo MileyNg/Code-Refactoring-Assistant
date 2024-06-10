@@ -1,0 +1,103 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+struct list {
+	P data;
+	struct list *next;
+};
+
+list* make_list(P a, list *r) {
+	list* z = (list*)malloc(sizeof(list));
+	z->data = a;
+	z->next = r;
+	return z;
+}
+
+list* insert_list(P a, list *r) {
+	list** x = &r;
+	bool hantei = true;
+	while (*x != NULL) {
+		if (((*x)->data).first == -1) {
+			((*x)->data).first = a.first;
+			if (((*x)->data).second < a.second) {
+				a.second = a.second - ((*x)->data).second;
+			} else if (((*x)->data).second > a.second){
+				int b = ((*x)->data).second - a.second;
+				((*x)->data).second = a.second;
+				(*x)->next = make_list(P(-1, b), (*x)->next);
+				hantei = false;
+				break;
+			} else {
+				hantei = false;
+				break;
+			}
+		}
+		x = &((*x)->next);
+	}
+	if (hantei) {
+		*x = make_list(a, NULL);
+	}
+	return r;
+}
+
+list* delete_list(int a, list* r) {
+	list** x = &r;
+	while (*x != NULL) {
+		if (((*x)->data).first == a) {
+			((*x)->data).first = -1;
+		}
+		x = &((*x)->next);
+	}
+	return r;
+}
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		char c;
+		P p;
+		int a;
+		list* z = NULL;
+		for (int i = 0; i < n; i++) {
+			cin >> c;
+			if (c == 'W') {
+				cin >> p.first >> p.second;
+				z = insert_list(p, z);
+			} else if (c == 'D') {
+				cin >> a;
+				z = delete_list(a, z);
+			} else {
+				cin >> a;
+				a++;
+				list** x = &z;
+				while (1) {
+					if ((*x) == NULL) {
+						cout << -1 << endl;
+						break;
+					}
+					P q = (*x)->data;
+					if (q.second >= a) {
+						cout << q.first << endl;
+						break;
+					} else {
+						a -= q.second;
+						if (a < 0) {
+							cout << -1 << endl;
+							break;
+						}
+					}
+					x = &((*x)->next);
+				}
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,105 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <queue>
+#include <deque>
+#include <ctime>
+#include <sstream>
+#include <fstream>
+#include <bitset>
+#include <iomanip>
+#include <assert.h>
+
+using namespace std;
+
+typedef long long int64;
+typedef long long LL;
+typedef long double real;
+typedef long double LD;
+
+#define mp make_pair
+#define PII pair<int, int>
+#define pb push_back
+#define sz(X) ((int)((X).size()))
+
+#define x first
+#define y second
+
+const double eps = 1e-8;
+const double PI = acos(0.) * 2;
+const int lim = 1000000000;
+const int inf = ~0U >> 1;
+
+template<class T> T abs(T x){return x < 0 ? -x : x;}
+
+const int N = 1005;
+
+int x[N], y[N], r[N], c[N];
+short f[1 << 24];
+int ans, n, fail[N];
+map<int, int> p;
+
+int low(int i){return i & -i;}
+
+int dfs(int state)
+{
+    if (f[state] != -1) return f[state];
+    f[state] = 0;
+    for (int s1 = state, ii = s1 & -s1; ii; s1 ^= ii, ii = s1 & -s1)
+    {
+        int i = p[ii];
+        if (!(state & (1 << i))) continue;
+        if (fail[i] & state) continue;
+        for (int s2 = s1 ^ ii, jj = s2 & -s2; jj; s2 ^= jj, jj = s2 & -s2)
+        {
+            int j = p[jj];
+            if (!(state & (1 << j))) continue;
+            if (fail[j] & state) continue;
+            if (c[i] != c[j]) continue;
+            int t = dfs(state ^ (1 << i) ^ (1 << j)) + 2;
+            if (t > f[state])
+                f[state] = t;
+        }
+    }
+    return f[state];
+}
+
+int main(){
+    #ifdef edly
+        freopen("input.txt", "r", stdin);
+	#endif
+    while (1)
+    {
+        scanf("%d", &n);
+        if(n == 0) break;
+        for (int i = 0; i <n; ++i)
+            scanf("%d%d%d%d", &x[i], &y[i], &r[i], &c[i]);
+        for(int i = 0; i < n; ++i)
+        {
+            fail[i] = 0;
+            for (int j = 0; j < i; ++j)
+            {
+                int dx = abs(x[i] - x[j]);
+                int dy = abs(y[i] - y[j]);
+                int dis = dx * dx + dy * dy;
+                int rr = r[i] + r[j];
+                if (dis < rr * rr)
+                    fail[i] |= (1 << j);
+            }
+            p[1 << i] = i;
+        }
+        ans = 0;
+        for (int i = 0; i < (1 << n); ++i)
+            f[i] = -1;
+        ans = dfs((1 << n) - 1);
+        printf("%d\n", ans);
+    }
+	return 0;
+}

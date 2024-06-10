@@ -1,0 +1,26 @@
+#include<stdio.h>
+
+int main(){
+	int S[10001],T[501];
+	int i,j,lenghS,lenghT,count=0;;
+	
+	scanf("%d",&lenghS);
+	for(i=1;i<=lenghS;i++){
+		scanf("%d",&S[i]);}
+	
+	scanf("%d",&lenghT);
+	for(i=1;i<=lenghT;i++){
+		scanf("%d",&T[i]);}
+	
+	for(i=1;i<=lenghS;i++){
+		for(j=1;j<=lenghT;j++){
+			if(S[i]==T[j]){
+				count++;
+				//break;
+		}}
+	}	
+	printf("%d\n",count);
+	
+	
+	return 0;
+}

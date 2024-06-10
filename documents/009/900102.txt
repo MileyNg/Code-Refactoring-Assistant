@@ -1,0 +1,17 @@
+def degToRad(deg)
+  return deg * Math::PI/ 180.0
+end
+
+currX, currY = [0.0, 0.0]
+currAngle = 0
+while true
+  hosuu, deg = gets().split(',').map{|i| i.to_i}
+  if hosuu == 0 && deg == 0
+    break
+  end
+  currX += hosuu * Math.cos(degToRad(currAngle))
+  currY += hosuu * Math.sin(degToRad(currAngle))
+  currAngle += deg
+end
+puts currY.to_i
+puts currX.to_i

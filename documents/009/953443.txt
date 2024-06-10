@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <math.h>
+
+//double x[0][0]=0.0;
+//double y=100.0;
+
+int Koch(double size, int n){
+    double x1=0,x2=0,y1=0,y2=0;
+    double px=0,py=0,tx=0,ty=0;
+    double v,a;
+    
+    if(n==0){
+        
+        return 0;
+    }else{
+        
+        px=size/3;
+        py=0;
+        x2=px+size/6;
+        y2=sqrt(-(x2-px)*(x2-px)+px*px);
+        tx=2*(size/3);
+        ty=0.0;
+        
+        
+        Koch(size/3,n-1);
+        
+        printf("%f %f\n",x1,y1);
+        printf("%f %f\n",px,py);
+        printf("%f %f\n",x2,y2);
+        printf("%f %f\n",tx,ty);
+        
+        
+        
+    }
+    return 0;
+}
+
+
+
+int main(int argc , char *argv[]){
+    
+    int n;
+    double len=100;
+    
+    scanf("%d",&n);
+    Koch(len,n);
+    printf("%f %f\n",100.0,0.0);
+    return 0;
+ }

@@ -1,0 +1,124 @@
+#include<functional>
+#include<algorithm>
+#include<iostream>
+#include<string>
+
+template<class T>
+class Vector{
+protected:
+	int sz,cap;
+	T *p;
+public:
+	Vector():sz(0),cap(0),p(0){}
+	~Vector(){
+		clear();
+	}
+	void swap(Vector &v){
+		std::swap(sz,v.sz);
+		std::swap(cap,v.cap);
+		std::swap(p,v.p);
+	}
+	int size()const{return sz;}
+	bool empty()const{return !sz;}
+	void push_back(T v){
+		if(sz==cap)reserve(sz?sz*2:1);
+		new(p+sz++) T(v);
+	}
+	void pop_back(){
+		p[--sz].~T();
+		if(sz&&sz*4<cap){
+			reserve(cap/2);
+		}
+	}
+	void resize(int n){
+		clear();
+		if(n==0)return;
+		cap=1;
+		while(cap<n)cap*=2;
+		reserve(cap);
+		for(int i=0;i<n;i++)new(p+i) T();
+		sz=n;
+	}
+	void reserve(int n){
+		T *p=(T*)operator new(n*sizeof(T));
+		for(int i=0;i<sz;i++){
+			new(p+i) T(this->p[i]);
+			this->p[i].~T();
+		}
+		if(this->p)operator delete(this->p);
+		this->p=p;
+		cap=n;
+	}
+	void clear(){
+		for(int i=0;i<sz;i++){
+			p[i].~T();
+		}
+		if(p)operator delete(p);
+		sz=cap=0;
+		p=0;
+	}
+	T& operator[](int i)const{
+		return p[i];
+	}
+	T& front()const{
+		return p[0];
+	}
+	T& back()const{
+		return p[sz-1];
+	}
+};
+
+
+template<class T,class C=std::less<T> >
+class BinaryHeap :private Vector<T>{
+	C cmp;
+public:
+	void push(T v){
+		Vector<T>::push_back(v);
+		int i=Vector<T>::size();
+		T * const q=Vector<T>::p-1;
+		while(1<i && cmp(q[i],q[i/2])){
+			std::swap(q[i/2],q[i]);
+			i/=2;
+		}
+	}
+	T top()const{
+		return Vector<T>::p[0];
+	}
+	void pop(){
+		std::swap(Vector<T>::front(),Vector<T>::back());
+		Vector<T>::pop_back();
+		int i=1;
+		T * const q=Vector<T>::p-1;
+		while(i*2<=Vector<T>::size()){
+			int j=2*i;
+			if(j+1<=Vector<T>::size() && cmp(q[j+1],q[j]))j++;
+			if(cmp(q[j],q[i])){
+				std::swap(q[i],q[j]);
+				i=j;
+			}else break;
+		}
+	}
+	bool empty()const{return Vector<T>::empty();}
+};
+
+
+using namespace std;
+
+int main(){
+	BinaryHeap<int,greater<int> > heap;
+	string s;
+	while(1){
+		cin>>s;
+		if(s=="end")break;
+		if(s=="insert"){
+			int n;
+			cin>>n;
+			heap.push(n);
+		}else if(s=="extract"){
+			cout<<heap.top()<<endl;
+			heap.pop();
+		}
+	}
+	return 0;
+}

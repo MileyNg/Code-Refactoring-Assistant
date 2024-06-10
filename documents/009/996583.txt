@@ -1,0 +1,38 @@
+/*
+    Takayuki Inubushi
+    2014.06.25
+    C language Lecture week 2
+    
+    
+    I thought about making a string instead of recording x and y, 
+    but this idea will use more memory than the following program.
+    
+*/
+
+#include <stdio.h>
+
+int main (void) {
+    
+    // 64 must be enough!
+    int limit = 64;
+    
+    int x[limit];
+    int y[limit];
+    
+    int max = -1;
+    
+    do{
+        max ++;
+        scanf ( "%d %d", &x[max], &y[max] );
+    }while ( x[max] != 0 || y[max] != 0 );
+    
+    for ( int cnt = 0; cnt < max; cnt ++ ){
+        if ( x[cnt] < y[cnt] ){
+            printf ("%d %d\n", x[cnt], y[cnt] );
+        } else {
+            printf ("%d %d\n", y[cnt], x[cnt] );
+        }
+    }
+    
+    return 0;
+}

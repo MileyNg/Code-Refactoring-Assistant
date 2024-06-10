@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+
+  long long int m, t, p, r, in_m, in_t, in_p, in_j;
+
+  while( true ) {
+
+    cin >> m >> t >> p >> r;
+    if ( m == 0 ) break;
+
+    vector< pair< long long int, pair< long long int, long long int > > > list;
+    for ( long long int i = 0; i < t; i++ ) {
+      list.push_back( make_pair( 0, make_pair( 0, -(i+1) ) ) );
+    }
+
+    long long int pena[51][11] = {0};
+
+    for ( long long int i = 0; i < r; i++ ) {
+      cin >> in_m >> in_t >> in_p >> in_j;
+      in_t--;
+      in_p--;
+      if ( in_j == 0 ) {
+	list[in_t].first--;
+	list[in_t].second.first += in_m + pena[in_t][in_p] * 20;
+      }else {
+	pena[in_t][in_p]++;
+      }
+    }
+
+    sort( list.begin(), list.end() );
+
+    for ( long long int i = 0; i < t; i++ ) {
+      if ( i > 0 ) {
+	if ( list[i].first == list[i-1].first && list[i].second.first == list[i-1].second.first ) {
+	  cout << "=";
+	}else {
+	  cout << ",";
+	}
+      }
+      cout << -list[i].second.second;
+    }
+    cout << endl;
+
+  }
+
+  return 0;
+
+}

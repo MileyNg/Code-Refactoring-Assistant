@@ -1,0 +1,58 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int main(){
+    int n;
+
+    while(cin >> n, n){
+        vi series;
+        bool player = true;
+        int count = 0;
+        for(int i=0; i < n; i++){
+            int m;
+            cin >> m;
+            series.push_back(m);
+        }
+        int hajiki = 32;
+        while(0 < hajiki){
+            if(player){
+                hajiki -= (hajiki-1)%5;
+            }else{
+                hajiki -= series[count%n];
+                count++;
+            }
+            player = !player;
+
+            if(0 < hajiki) cout << hajiki << endl;
+            else cout << 0 << endl;
+        }
+    }
+}

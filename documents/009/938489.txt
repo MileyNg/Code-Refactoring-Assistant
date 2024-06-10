@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+int main (void)
+{
+    int a,b,i,u,j,k,n,t,pos;
+    char c;
+    scanf("%d",&t);
+    a=b=0;
+    while(t--)
+    {
+        scanf("%d %c %d",&pos,&c,&n);
+        if(c==')')
+        {
+            b+=n;
+            if(a>=b)
+            {
+                a-=b;
+                b=0;
+            }
+            else
+            {
+                b-=a;
+                a=0;
+            }
+        }
+        else
+        {
+            a+=n;
+            if(a>=b)
+            {
+                a-=b;
+                b=0;
+            }
+            else
+            {
+                b-=a;
+                a=0;
+            }
+        }
+        if(!a&&!b)
+            printf("YES\n");
+        else
+            printf("NO\n");
+    }
+}

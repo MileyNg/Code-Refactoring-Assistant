@@ -1,0 +1,34 @@
+import std.algorithm;
+import std.array;
+import std.conv;
+import std.range;
+import std.stdio;
+import std.string;
+import std.typecons;
+import std.math;
+import std.exception;
+import std.bigint;
+
+
+T[] readlnSome(T)(){
+    return array(readln().split().map!(a => to!T(a))());
+}
+
+
+T readlnOne(T)(){
+    return to!T(readln().split()[0]);
+}
+
+
+void main()
+{
+    foreach(i; 0 .. readlnOne!uint())
+        writeln(solve(readlnSome!uint()[0 .. 3]) ? "YES" : "NO");
+}
+
+
+bool solve(uint[] nums)
+{
+    nums.sort!"a > b"();
+    return nums[0] ^^ 2 == nums[1] ^^ 2 + nums[2] ^^ 2;
+}

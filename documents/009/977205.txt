@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+  int n, i;
+  char buf[21];
+  char first[21];
+
+  first[0] = '\0';
+
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%s", buf);
+    if (first[0] == '\0') {
+      strcpy(first, buf);
+    } else if (strcmp(first, buf) > 0) {
+      strcpy(first, buf);
+    }
+  }
+
+  printf("%s\n", first);
+  return 0;
+}

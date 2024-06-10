@@ -1,0 +1,70 @@
+#include<cstring>
+#include<string>
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<map>
+#include<algorithm>
+using namespace std;
+int N;
+int A[5];
+int B[]={10,50,100,500};
+int C[5];
+int ans[5];
+int calc(int tr){
+
+  int sum = tr/500;
+  C[3] = tr/500;
+  tr -= 500 * (tr/500);
+
+  sum += tr/100;
+  C[2] = tr/100;
+  tr -= 100 * (tr/100);
+
+  sum += tr/50;
+  C[1] = tr/50;
+  tr -= 50 * (tr/50);
+
+  sum += tr/10;
+  C[0] = tr/10;
+
+  return sum;
+}
+int main(){
+  bool first = true;
+  while( cin >> N && N ){
+    if( !first ) cout << endl;
+    first = false;
+    for(int i=0;i<4;i++){
+      cin >> A[i];
+    }
+    int mins = 1000,mint;
+    for(int i=0;i<=A[0];i++){
+      for(int j=0;j<=A[1];j++){
+	for(int k=0;k<=A[2];k++){
+	  for(int l=0;l<=A[3];l++){
+	    //	    	    printf("%d %d %d %d\n",i,j,k,l);
+	    int t = B[0]*i + B[1] *j + B[2]*k + B[3] * l;
+	    if( t >= N ){
+	      int tr = t-N;
+	      int sum = A[0]+A[1]+A[2]+A[3]-i-j-k-l+calc(tr);
+	      //    printf("%d %d %d\n",t,tr,sum);
+	      if( mins > sum ){
+		mins = sum;
+		ans[0] = i;
+		ans[1] = j;
+		ans[2] = k;
+		ans[3] = l;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    for(int i=0;i<4;i++){
+      if( ans[i] > 0 ){
+	cout << B[i] << " " << ans[i] << endl;
+      }
+    }
+  }
+}

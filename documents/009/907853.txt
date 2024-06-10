@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+int main(void) {
+  int n;
+  int blood[4] = {0};
+  char tmp[4];
+
+  while (scanf("%d,%s", &n, tmp) == 2) {
+    switch (tmp[0]) {
+    case 'A':
+      if (tmp[1] == 'B') {
+        blood[2]++;
+      } else {
+        blood[0]++;
+      }
+      break;
+    case 'B':
+      blood[1]++;
+      break;
+    case 'O':
+      blood[3]++;
+      break;
+    }
+  }
+
+  for (int i = 0; i < 4; i++) {
+    cout << blood[i] << endl;
+  }
+
+  return 0;
+}

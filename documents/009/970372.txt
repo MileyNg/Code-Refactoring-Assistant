@@ -1,0 +1,86 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	string input_str = "", ts;
+	while(getline(cin, ts)){
+		for(int i=0; i<ts.size(); i++){
+				switch(ts[i]){
+				case ' ' :input_str += "101"	    ;break;
+				case '\'':input_str += "000000"		;break;
+				case ',' :input_str += "000011"		;break;
+				case '-' :input_str += "10010001"	;break;
+				case '.' :input_str += "010001"		;break;
+				case '?' :input_str += "000001"	    ;break;
+				case 'A' :input_str += "100101"		;break;
+				case 'B' :input_str += "10011010"	;break;
+				case 'C' :input_str += "0101"		;break;
+				case 'D' :input_str += "0001"		;break;
+				case 'E' :input_str += "110"		;break;
+				case 'F' :input_str += "01001"		;break;
+				case 'G' :input_str += "10011011"	;break;
+				case 'H' :input_str += "010000"		;break;
+				case 'I' :input_str += "0111"		;break;
+				case 'J' :input_str += "10011000"	;break;
+				case 'K' :input_str += "0110"		;break;
+				case 'L' :input_str += "00100"		;break;
+				case 'M' :input_str += "10011001"	;break;
+				case 'N' :input_str += "10011110"	;break;
+				case 'O' :input_str += "00101"		;break;
+				case 'P' :input_str += "111"		;break;
+				case 'Q' :input_str += "10011111"	;break;
+				case 'R' :input_str += "1000"		;break;
+				case 'S' :input_str += "00110"		;break;
+				case 'T' :input_str += "00111"		;break;
+				case 'U' :input_str += "10011100"	;break;
+				case 'V' :input_str += "10011101"	;break;
+				case 'W' :input_str += "000010"		;break;
+				case 'X' :input_str += "10010010"	;break;
+				case 'Y' :input_str += "10010011"	;break;
+				case 'Z' :input_str += "10010000"	;break;
+				}
+			}
+	}
+	int pad = 5 - input_str.size()%5;
+	for(int i=0; i<pad; i++)input_str += '0';
+	string out = "";
+	for(int i=0; i<input_str.size(); i+=5){
+		string output_str = input_str.substr(i, 5);
+		if(output_str== "00000"){ out += 'A'; }
+		else if( output_str=="00001") { out += 'B';}	
+		else if( output_str=="00010") { out += 'C';}	
+		else if( output_str=="00011") { out += 'D';}	
+		else if( output_str=="00100") { out += 'E';}	
+		else if( output_str=="00101") { out += 'F';}	
+		else if( output_str=="00110") { out += 'G';}	
+		else if( output_str=="00111") { out += 'H';}	
+		else if( output_str=="01000") { out += 'I';}	
+		else if( output_str=="01001") { out += 'J';}	
+		else if( output_str=="01010") { out += 'K';}	
+		else if( output_str=="01011") { out += 'L';}	
+		else if( output_str=="01100") { out += 'M';}	
+		else if( output_str=="01101") { out += 'N';}	
+		else if( output_str=="01110") { out += 'O';}	
+		else if( output_str=="01111") { out += 'P';}	
+		else if( output_str=="10000") { out += 'Q';}	
+		else if( output_str=="10001") { out += 'R';}	
+		else if( output_str=="10010") { out += 'S';}	
+		else if( output_str=="10011") { out += 'T';}	
+		else if( output_str=="10100") { out += 'U';}	
+		else if( output_str=="10101") { out += 'V';}	
+		else if( output_str=="10110") { out += 'W';}	
+		else if( output_str=="10111") { out += 'X';}	
+		else if( output_str=="11000") { out += 'Y';}	
+		else if( output_str=="11001") { out += 'Z';}	
+		else if( output_str=="11010") { out += ' ';}	
+		else if( output_str=="11011") { out += '.';}	
+		else if( output_str=="11100") { out += ',';}	
+		else if( output_str=="11101") { out += '-';}	
+		else if( output_str=="11110") { out += '\'';} 
+		else if( output_str=="11111") { out += '?';}
+	}
+	cout << out << endl;
+	return 0;
+}

@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int w[30];
+	int n, n2;
+	int a[30], b[30];
+	int i, j;
+	
+	scanf("%d", &n);
+	scanf("%d", &n2);
+	
+	for (i = 0; i < n2; i++){
+		scanf("%d,%d", &a[i], &b[i]);
+		a[i]--;
+		b[i]--;
+	}
+	
+	for (i = 0; i < n; i++){
+		w[i] = i;
+	}
+	for (i = 0; i < n; i++){
+		for (j = 0; j < n2; j++){
+			if (w[i] == a[j]){
+				w[i] = b[j];
+			}
+			else if (w[i] == b[j]){
+				w[i] = a[j];
+			}
+		}
+	}
+	for (i = 0; i < n; i++){
+		for (j = 0; j < n; j++){
+			if (w[j] == i){
+				printf("%d\n", j + 1);
+			}
+		}
+		printf("01\n");
+	}
+	
+	return (0);
+}

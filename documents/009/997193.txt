@@ -1,0 +1,27 @@
+<?php
+/*
+	AOJ 0184
+	title:Tsuruga Castle
+	@kankichi573
+*/
+
+while(fscanf(STDIN,"%d ",$n) && $n)
+  {
+	$bunpu=array();
+
+	for($i=0;$i<=6;$i++)
+		$bunpu[$i]=0;
+	for($i=0;$i<$n;$i++)
+	{	
+		fscanf(STDIN,"%d",$age);
+		$dankai = ($age+1)/10;
+		if($dankai>6)
+			$dankai=6;
+		$bunpu[$dankai]++;
+	}
+	for($i=0;$i<=6;$i++)	
+		fprintf(STDOUT,"%d\n",$bunpu[$i]);	
+  }
+  
+  return(0);
+?>

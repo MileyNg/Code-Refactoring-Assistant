@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<stdlib.h>
+int sort(const void*a,const void*b){
+    return (*(int*)a-*(int*)b);
+}
+int main(){
+    int n,i,j,m,count=0;
+    static int a[1000000];
+    static int b[500000];
+    scanf("%d",&n);
+    for(i=0;i<n;i++){
+        scanf("%d",&a[i]);
+    }
+    qsort(a,n,sizeof(int),sort);
+    scanf("%d",&m);
+    for(j=0;j<m;j++){
+        scanf("%d",&b[j]);
+    }
+    qsort(b,m,sizeof(int),sort);
+    for(i=0;i<m;i++){
+        for(j=0;j<n;j++){
+            if(b[i]==a[j]){
+                count++;
+                break;
+            }
+        }
+    }
+    printf("%d\n",count);
+    return 0;
+}

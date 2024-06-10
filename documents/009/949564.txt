@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX 100
+#define INF 1e9
+
+int main(){
+  int V,E,a,b,c;
+  int d[MAX][MAX];
+
+  fill(d[0],d[MAX],INF);
+
+  cin >> V >> E;
+  for(int i = 0 ; i < E ; i++){
+    cin >> a >> b >> c;
+    d[a][b] = c;
+  }
+
+  for(int i = 0 ; i < V ; i++){
+    d[i][i] = 0;
+  }
+
+  for(int k = 0 ; k < V ; k++){
+    for(int i = 0 ; i < V ; i++){
+      for(int j = 0 ; j < V ; j++){
+	d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+      }
+    }
+  }
+
+  bool check = false;
+
+  for(int i = 0 ; i < V ; i++){
+    for(int j = 0 ; j < V ; j++){
+      if(d[i][j] != INF && d[i][j] >= INF-20000000){
+	check = true;
+      }
+    }
+  }
+
+  if(check){
+    cout << "NEGATIVE CYCLE" << endl;
+  }else{
+    for(int i = 0 ; i < V ; i++){
+      for(int j = 0 ; j < V ; j++){
+	if(d[i][j] == INF){
+	  cout << "INF";
+	}else{
+	  cout << d[i][j];
+	} 
+
+	if(j != V-1){
+	  cout << " ";
+	}
+      }
+      cout << endl;
+    }
+  }
+  
+  return 0;
+}

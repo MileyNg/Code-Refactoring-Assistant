@@ -1,0 +1,35 @@
+def quick_sort(array, left_pos, right_pos)
+	return array if array.size == 0
+	if left_pos < right_pos
+	i, j = left_pos, right_pos
+	pivot = array[(left_pos + right_pos)/2]
+	while i <= j
+		while array[i] < pivot
+			i = i + 1
+		end
+		while array[j] > pivot
+		j = j - 1
+		end
+		if i <= j
+		array[i], array[j] = array[j], array[i]
+		i = i + 1
+		j = j - 1
+		end
+	end
+	quick_sort(array, left_pos, j)
+	quick_sort(array, i, right_pos)
+	end
+	return array
+end
+
+# str = Array.new(10)
+str=[]
+for i in 0..9 do
+	str.push(gets.to_i)
+end
+str1 = [1819,2003,876,2840,1723,1673,3776,2848,1592,922]
+# puts str.size
+ans = quick_sort(str, 0, str.size-1)
+puts ans[9]
+puts ans[8]
+puts ans[7]

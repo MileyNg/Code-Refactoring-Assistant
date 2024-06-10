@@ -1,0 +1,63 @@
+def paint(bd)
+  pl = bd.map{|bl| bl.map{0}}
+
+  max_y = bd.length - 1
+  max_x = bd[0].length - 1
+  num = 0
+
+  for y in (0..max_y)
+    for x in (0..max_x)
+      next if ! bd[y][x] || pl[y][x] > 0
+
+      num += 1
+      pl[y][x] = num
+      queue = [[x, y]]
+
+      while queue.length > 0
+        x0, y0 = queue.shift
+
+        if x0 > 0 && bd[y0][x0 - 1] && pl[y0][x0 - 1] == 0
+          pl[y0][x0 - 1] = num
+          queue.push [x0 - 1, y0]
+        end
+        if x0 < max_x && bd[y0][x0 + 1] && pl[y0][x0 + 1] == 0
+          pl[y0][x0 + 1] = num
+          queue.push [x0 + 1, y0]
+        end
+        if y0 > 0 && bd[y0 - 1][x0] && pl[y0 - 1][x0] == 0
+          pl[y0 - 1][x0] = num
+          queue.push [x0, y0 - 1]
+        end
+        if y0 < max_y && bd[y0 + 1][x0] && pl[y0 + 1][x0] == 0
+          pl[y0 + 1][x0] = num
+          queue.push [x0, y0 + 1]
+        end
+      end
+    end
+  end
+
+  return num
+end
+
+### main
+
+cont = true
+
+while cont
+  bd = []
+
+  while true
+    line = gets
+    if line.nil?
+      cont = false
+      break
+    end
+
+    line = line.chomp
+    break if line == ""
+
+    bd.push line.split("").map{|s| s == '1'}
+  end
+
+  puts paint(bd)
+end

@@ -1,0 +1,19 @@
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define rep(i,n) for (int i = 0; i < int(n); ++i)
+
+int n,r,p,c,a[50];
+
+int main() {
+  while (cin >> n >> r && n != 0 && r != 0) {
+    rep (i,n) a[i] = n-i;
+    rep (i,r) {
+      cin >> p >> c;
+      rotate(a, a+p-1, a+p-1+c);
+    }
+    cout << a[0] << endl;
+  }
+}

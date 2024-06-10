@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+#include <cstdio>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+template <class T>
+void initvv(vector<vector<T> > &v,int a,int b, const T  &t = T()){
+	v.assign(a,vector<T>(b,t));
+}
+int p,q,a,n;
+int gcd(int b,int c){
+	if(b>c) swap(b,c);
+	if(c%b==0) return b;
+	return gcd(c%b,b);
+}
+
+int rec(int n,int b,int c,vint v){
+	 // cout<<n<<" "<<b<<" "<<c<<endl;
+	// cout<<"v ";
+	// rep(i,v.size()) cout<<v[i]<<" ";
+	// cout<<endl;
+	int ret=0;
+	if(a<c) return 0;
+	int S=0;
+	if(v.size()!=0){
+		rep(i,v.size()){
+			S+=c/v[i];
+		}
+		// int t=gcd(c,S);
+		if(S*q>c*p) return 0;
+		if(S*q==c*p){
+			// cout<<"ans ";
+			// rep(i,v.size()){
+				// cout<<v[i]<<" ";
+			// }
+			// cout<<endl;
+			return 1;
+		}
+	}
+	// p/q  S/c + 1/i
+	// p*c*i < S*i*q + 1*q*c
+	// 2 3 4 4 6 128 144
+	//2*16*4 3*(8*4+16)
+	//96 
+	if(n==0) return 0;
+	double ss=0;
+	rep(i,v.size()){
+		ss+=1.0/v[i];
+	}
+	for(int i=b;;i++){
+		if(i*c>a) break;
+		// if(n==1&&v[0]==4&&v[1]==4) cout<<p<<" "<<q<<" "<<c<<" "<<i<<" "<<S<<" "<<endl;
+		// if(v.size()!=0) if(p*c*i>q*(S*i+c)) break;
+		v.PB(i);
+		ret+=rec(n-1,i,c*i,v);
+		v.pop_back();
+	}
+	return ret;
+}
+
+int solve(){
+	vint v;
+	return rec(n,1,1,v);
+}
+
+int main(){
+	while(cin>>p>>q>>a>>n,p||q||a||n){
+		cout<<solve()<<endl;
+	}
+	// cout<<rec(2,2,2)<<endl;
+	return 0;
+
+}

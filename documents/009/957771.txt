@@ -1,0 +1,146 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+#define WHITE 0
+#define BLACK 1
+#define DRAW -1
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+int peg[10][10][10]; // z, y, x order
+int zpos[10][10];	// zpos
+int x[350], y[350];
+
+// One-dimensional
+const int dz1[] = { 1,-1, 0, 0, 0, 0 };
+const int dy1[] = { 0, 0, 1,-1, 0, 0 };
+const int dx1[] = { 0, 0, 0, 0, 1,-1 };
+
+// Two-dimensional
+const int dz2[] = { 0, 0, 0, 0, 1,-1, 1,-1, 1,-1, 1,-1 };  
+const int dy2[] = { 1,-1, 1,-1, 0, 0, 0, 0, 1,-1,-1, 1 };
+const int dx2[] = { 1,-1,-1, 0, 1,-1,-1, 1, 0, 0, 0, 0 };
+
+// Three-dimensional
+const int dz3[] = { 1,-1, 1,-1, 1,-1, 1,-1 };
+const int dy3[] = { 1,-1,-1, 1,-1, 1, 1, 1 };
+const int dx3[] = { 1,-1,-1, 1, 1,-1,-1, 1 };
+
+int which_winner (int n, int m ){
+	int zmax = 0;
+	rep (i, n ) rep (j, n ) zmax = max (zmax, zpos[i][j] );
+	rep (cz, zmax ) rep (cy, n ) rep (cx, n ){
+		if (peg[cz][cy][cx] != DRAW ){
+			rep (k, sizeof (dz1 )/sizeof (dz1[0] ) ){
+				int cz2 = cz, cy2 = cy, cx2 = cx;
+				int cnt = 1;
+				for(; cnt < m; cnt++ ){
+					int nz = cz2 + dz1[k];
+					int ny = cy2 + dy1[k];
+					int nx = cx2 + dx1[k];
+					if (ny < 0 || ny >= n || nx < 0 || nx >= n || nz < 0 || nz >= zpos[ny][nx] ) break;
+					if (peg[nz][ny][nx] != peg[cz2][cy2][cx2] ) break;
+					cz2 = nz, cy2 = ny, cx2 = nx;
+				} // end if
+				if (cnt >= m ){
+//					cerr << "1D" << endl;
+					return peg[cz][cy][cx];
+				} // end if
+			} // end rep
+			rep (k, sizeof (dz2 )/sizeof (dz2[0] ) ){
+				int cz2 = cz, cy2 = cy, cx2 = cx;
+				int cnt = 1;
+				for(; cnt < m; cnt++ ){
+					int nz = cz2 + dz2[k];
+					int ny = cy2 + dy2[k];
+					int nx = cx2 + dx2[k];
+					if (ny < 0 || ny >= n || nx < 0 || nx >= n || nz < 0 || nz >= zpos[ny][nx] ) break;
+					if (peg[nz][ny][nx] != peg[cz2][cy2][cx2] ) break;
+					cz2 = nz, cy2 = ny, cx2 = nx;
+				} // end if
+				if (cnt >= m ){
+//					cerr << "2D" << endl;
+					return peg[cz][cy][cx];
+				} // end if
+			} // end rep
+			rep (k, sizeof (dz3 )/sizeof (dz3[0] ) ){
+				int cz2 = cz, cy2 = cy, cx2 = cx;
+				int cnt = 1;
+				for(; cnt < m; cnt++ ){
+					int nz = cz2 + dz3[k];
+					int ny = cy2 + dy3[k];
+					int nx = cx2 + dx3[k];
+					if (ny < 0 || ny >= n || nx < 0 || nx >= n || nz < 0 || nz >= zpos[ny][nx] ) break;
+					if (peg[nz][ny][nx] != peg[cz2][cy2][cx2] ) break;
+					cz2 = nz, cy2 = ny, cx2 = nx;
+				} // end if
+				if (cnt >= m ){
+//					cerr << "3D" << endl;
+					return peg[cz][cy][cx];
+				} // end if
+			} // end rep
+		} // end if		
+	} // end if
+
+	return DRAW;
+}
+ 
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int n, m, p;
+	while (cin >> n >> m >> p, n ){
+		memset (peg, -1, sizeof (peg ) );
+		memset (x, 0, sizeof (x ) );
+		memset (y, 0, sizeof (y ) );
+		memset (zpos, 0, sizeof (zpos ) );
+		int ok = DRAW;
+		rep (i, p ){
+			cin >> x[i] >> y[i];
+			x[i]--, y[i]--;
+		} // end rep
+
+		int t = 0;
+		for (; t < p; t++ ){
+			peg[zpos[y[t]][x[t]]][y[t]][x[t]] = (t % 2 == 0 ? WHITE : BLACK );
+			zpos[y[t]][x[t]]++;
+			ok = which_winner (n, m );
+			if (ok != DRAW ) break;
+		} // end rep
+		if (ok == DRAW ){
+			cout << "Draw" << endl;
+		}else
+		if (ok == WHITE ){
+			cout << "White " << t+1 << endl;
+		}else{
+			cout << "Black " << t+1 << endl;
+		} // end if
+	} // end while
+
+	return 0;
+}

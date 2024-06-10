@@ -1,0 +1,36 @@
+#include<iostream>
+#include<sstream>
+#include<map>
+#include<vector>
+#include<set>
+using namespace std;
+
+int main()
+{
+  int cnt=0;
+  map<int,int> data[2];
+  vector<int> numlist;
+  string str;
+  for(;getline(cin,str);)
+    {
+      if(str=="")
+	{
+	  cnt++;
+	  continue;
+	}
+      istringstream ss(str);
+      int num,day;
+      char buf;
+      ss>>num>>buf>>day;
+      data[cnt][num]++;
+      numlist.push_back(num);
+    }
+  set<int> s(numlist.begin(),numlist.end());
+
+  for(set<int>::iterator it=s.begin();it!=s.end();it++)
+    {
+      if(data[0].count(*it)!=0 &&data[1].count(*it)!=0 )
+	cout<<(*it)<<" "<<(data[0][*it]+data[1][*it])<<endl;
+    }
+
+}

@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+#define NUM 5
+
+int main(void){
+
+	int a[NUM];
+	int i, j;
+	
+	for(i=0; i<NUM; i++)
+		scanf("%d", &a[i]);
+		
+	for(i=0; i<NUM-1; i++) {
+		for(j=NUM-1; j>i; j--) {
+			if(a[j-1] < a[j]){
+				int temp = a[j-1];
+				a[j-1] = a[j];
+				a[j] = temp;
+			}
+		}
+	}
+	
+	for(i=0; i<NUM; i++)
+		printf("%d ", a[i]);
+	//printf("\n");
+		
+	return 0;
+}

@@ -1,0 +1,64 @@
+#include<iostream>
+#include<string>
+
+int main(){
+
+	std::string str;
+	while (std::cin >> str){
+
+		int res = -1;
+
+		for (int x = 0; x <= 9; x++){
+
+			int a = 0, b = 0, c = 0;
+
+			for (int i = 0; i < str.size(); i++){
+
+				if (str[i] == '+'){
+
+					for (int j = i + 1; j < str.size(); j++){
+
+						if (str[j] == '='){
+
+							for (int k = j + 1; k < str.size(); k++){
+
+								c *= 10;
+
+								if (str[k] == 'X')c += x;
+								else c += str[k] - '0';
+
+							}
+							goto end;
+						}
+
+						b *= 10;
+
+						if (str[j] == 'X')b += x;
+						else b += str[j] - '0';
+
+					}
+
+				}
+
+				a *= 10;
+
+				if (str[i] == 'X')a += x;
+				else a += str[i] - '0';
+
+			}
+
+		end:;
+
+			if (a + b == c){
+				res = x;
+				break;
+			}
+		}
+
+		if (res == -1)std::cout << "NA" << std::endl;
+		else std::cout << res << std::endl;
+
+	}
+
+	return 0;
+}

@@ -1,0 +1,50 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n, q;
+    cin >> n >> q;
+    deque<pair<string, int>> ps;
+    for (int i = 0; i < n; i++) {
+        string name;
+        int time;
+        cin >> name >> time;
+        ps.push_back(make_pair(name, time));
+    }
+
+    int t = 0;
+    while (!ps.empty()) {
+        auto p = ps.front();
+        ps.pop_front();
+        int use = min(q, p.second);
+        t += use;
+        p.second -= use;
+        if (p.second > 0) {
+            ps.push_back(p);
+        } else {
+            cout << p.first << " " << t << endl;
+        }
+    }
+}

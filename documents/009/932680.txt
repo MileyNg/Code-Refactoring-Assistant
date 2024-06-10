@@ -1,0 +1,39 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define PRIME_FLG_SIZE 1000000
+#define PRIME_SUM_SIZE 1000000
+
+bool primeFlg[PRIME_FLG_SIZE]; //[i]テ」ツ?古ァツエツ?ヲツ閉ーテ」ツ?凝」ツ?ゥテ」ツ??」ツ?凝」ツ?ョテァツョツ。テァツ青?
+int primeSum[PRIME_SUM_SIZE]; //[0, i]テ」ツ?ョテゥツ鳴禿」ツ?ォテ・ツュツ佚・ツ慊ィテ」ツ?凖」ツつ凝ァツエツ?ヲツ閉ーテ」ツ?ョテヲツ閉ーテ」ツ?ョテァツョツ。テァツ青?
+
+//テ」ツつィテ」ツδゥテ」ツδ暗」ツつケテ」ツδ?」ツδ催」ツつケテ」ツ?ョテ」ツ?オテ」ツつ凝」ツ??
+void erato(){
+  fill(primeFlg, primeFlg + PRIME_FLG_SIZE, true);
+  primeFlg[0] = primeFlg[1] = false;
+
+  for(int i = 2; i * i < PRIME_FLG_SIZE; i++){
+    if(!primeFlg[i]) continue;
+    for(int j = i * i; j < PRIME_FLG_SIZE; j += i){
+      primeFlg[j] = false;
+    }
+  }
+
+  fill(primeSum, primeSum + PRIME_SUM_SIZE, 0);
+
+  for(int i = 1; i < PRIME_SUM_SIZE; i++){
+    bool isPrime = primeFlg[i];
+    primeSum[i] = primeSum[i - 1] + (isPrime ? 1 : 0);
+  }
+}
+
+int main(){
+  erato();
+
+  int n;
+
+  while(cin >> n){
+    cout << primeSum[n] << endl;
+  }
+}

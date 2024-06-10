@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <cctype>
+#include <algorithm>
+#include <set>
+#include <cmath>
+#include <cassert>
+#include <array>
+using namespace std;
+
+#define dump(a) //(cerr << #a << " = " << (a) << endl)
+
+inline int match(const string &a, const string &b) {
+  const int n = a.size();
+  int res = 0;
+  for(int i = 0; i < n; ++i) {
+	if(a[i] == b[i]) ++res;
+  }
+  return res;
+}
+
+inline int count_blow(const string &a, const string &b) {
+  int res = 0;
+  for(int c = '0'; c <= '9'; ++c) {
+	res += min(count(a.begin(), a.end(), c), count(b.begin(), b.end(), c));
+  }
+  return res - match(a, b);
+}
+
+inline string to_leading_zero_string(int x, int n) {
+  char buf[256];
+  sprintf(buf, "%0*d", n, x);
+  return string(buf);
+}
+
+bool valid(const string &s) {
+  for(char c = '0'; c <= '9'; ++c) {
+	if(count(s.begin(), s.end(), c) > 1) return false;
+  }
+  return true;
+}
+
+vector<string> solve(const vector<string> &number, const vector<int> &hit, const vector<int> & blow) {
+  const int n = number.size();
+  const int l = number[0].size();
+  const int half = l / 2;
+
+  const int first_size = half;
+  const int second_size = l - half;
+
+  const int max_first = pow(10, first_size);
+  const int max_second = pow(10, second_size);
+
+  map<vector<int>, vector<string>> candidates;
+
+  for(int x = 0; x < max_first; ++x) {
+	const string str = to_leading_zero_string(x, first_size);
+	if(!valid(str)) continue;
+
+	vector<int> key(n);
+
+	for(int i = 0; i < n; ++i) {
+	  const string first = number[i].substr(0, half);
+	  const int rest_hit = hit[i] - match(str, first);
+	  if(rest_hit < 0) goto first_ng;
+	  key[i] = rest_hit;
+	}
+
+	candidates[key].emplace_back(str);
+
+  first_ng:;
+  }
+
+  vector<string> res;
+  for(int x = 0; x < max_second; ++x) {
+	const string str = to_leading_zero_string(x, second_size);
+	if(!valid(str)) continue;
+	vector<int> key(n);
+
+	for(int i = 0; i < n; ++i) {
+	  const string second = number[i].substr(half);
+	  key[i] = match(str, second);
+	  if(key[i] > hit[i]) goto second_ng;
+	}
+
+	if(str == "281") dump(str);
+	if(str == "281") for(auto &e : key) dump(e);
+	if(!candidates.count(key)) goto second_ng;
+	for(const auto &e : candidates.at(key)) {
+	  string s = e + str;
+	  if(!valid(s)) continue;
+
+	  bool ok = true;
+
+	  if(s == "637281") dump(s);
+
+	  for(int i = 0; i < n; ++i) {
+		if(s == "637281") dump(count_blow(s, number[i]));
+		if(count_blow(s, number[i]) != blow[i]) {
+		  ok = false;
+		  break;
+		}
+	  }
+
+	  if(ok) res.emplace_back(s);
+	}
+
+  second_ng:;
+  }
+
+  return res;
+}
+
+int main(){
+  cin.tie(nullptr);
+  ios::sync_with_stdio(false);
+
+  for(int l, h; cin >> l >> h && l;) {
+	vector<string> number(h);
+	vector<int> hit(h), blow(h);
+
+	for(int i = 0; i < h; ++i) {
+	  cin >> number[i] >> hit[i] >> blow[i];
+	}
+
+	const auto answers = solve(number, hit, blow);
+	dump(answers.size());
+	cout << (answers.size() == 1 ? answers.front() : "NO") << endl;
+  }
+
+  return 0;
+}

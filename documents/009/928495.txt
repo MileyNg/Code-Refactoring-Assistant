@@ -1,0 +1,68 @@
+#lenと等しいかより大きいものの最小値のpositionを返す
+def bound_up(arr,len)
+	l = 0
+	r = arr.size()
+	while(r-l > 1)
+		m = ((l+r)/2).to_i
+		if len == arr[m]then
+			return m
+		elsif len < arr[m] then
+			if len > arr[m-1] then
+				return  m
+			end
+		else
+			l = m
+		end
+	end
+	if r != 0 then
+		if arr[l] >= len then
+			return l
+		end
+	end
+	return r
+end
+
+
+loop{
+	
+	an,bn,r = gets.split.map(&:to_i)
+	if an==0 and bn == 0 then
+		break
+	end
+	rr = 16 * r * r
+	r4 = 4 * r
+	len = (0..r4).map{|y| Math.sqrt(rr - y*y).to_i}
+	#p len
+	as = []
+	as[0] = Hash.new([])
+	as[1] = Hash.new([])
+	as[2] = Hash.new([])
+	as[3] = Hash.new([])
+	
+	1.step(an){
+		ax,ay = gets.split.map(&:to_i)
+		as[(ax/25000).to_i][ay] += [ax]
+	}
+	
+	#as.each do |key,arr|
+		#as[key] = arr.sort()
+	#end
+	#p as
+	#as = an.times.map{gets.split.map(&:to_i)}
+	pow = 0
+	1.step(bn){
+		bx,by = gets.split.map(&:to_i)
+		[0,by-r4].max.step(by+r4){|ay|
+			dy = (ay - by).abs
+			arr = as[(bx/25000).to_i][ay]
+			arr.each{|ax|
+				dx = (ax-bx).abs
+				if dx < len[dy] then
+					pow += 1
+				end
+				#pow += bound_up(arr,bx + len[dy]) - bound_up(arr,bx - len[dy])
+			}
+		}
+	}
+	p pow
+}

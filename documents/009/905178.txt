@@ -1,0 +1,56 @@
+#include <iostream>
+#include <complex>
+#include <cassert>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
+typedef complex<double> P;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+const double eps = 1e-10;
+
+double cross(const P& a, const P& b) {
+    return imag(conj(a)*b);
+}
+double dot(const P& a, const P& b) {
+    return real(conj(a)*b);
+}
+
+struct L : public vector<P> {
+    L(const P &a, const P &b) {
+        push_back(a); push_back(b);
+    }
+};
+
+P crosspoint(const L &l, const L &m) {
+    double A = cross(l[1] - l[0], m[1] - m[0]);
+    double B = cross(l[1] - l[0], l[1] - m[0]);
+    if (abs(A) < eps && abs(B) < eps) return m[0]; // same line
+    if (abs(A) < eps) assert(false); // !!!PRECONDITION NOT SATISFIED!!!
+    return m[0] + B / A * (m[1] - m[0]);
+}
+
+int main(){
+    cout << setprecision(3) << fixed;
+    P ps[3];
+    int n; cin>>n;
+    rep(tt,n){
+        rep(i,3){
+            double x,y; cin>>x>>y;
+            ps[i] = P(x,y);
+        }
+        P mid1 = (ps[0]+ps[1])/2.0;
+        P mid2 = (ps[0]+ps[2])/2.0;
+
+        L l1(mid1, mid1+(ps[0]-ps[1])*P(0,1));
+        L l2(mid2, mid2+(ps[0]-ps[2])*P(0,1));
+
+        P cp = crosspoint(l1,l2);
+
+        cout << cp.real() << " " << cp.imag() << " " << abs(cp-ps[0]) << endl;
+    }
+}

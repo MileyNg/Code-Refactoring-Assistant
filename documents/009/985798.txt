@@ -1,0 +1,115 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<algorithm>
+
+class Graph{
+private:
+
+
+
+
+
+ class Node{
+ private:
+  unsigned long node_id_;
+  unsigned long depth_;
+  std::vector<unsigned long> adjnodes_;
+ public:
+
+  Node(unsigned long node_id,const std::vector<unsigned long> &adjnodes)
+      : node_id_(node_id),
+        depth_(0),
+        adjnodes_(adjnodes){
+  };
+
+  bool isDepth(){
+   if(node_id_ == 0) return false;
+   if(depth_ == 0) return true;
+   return false;
+  };
+
+  void CheckNode(std::queue<unsigned long>& queue_nextnode, std::vector<Node*>& node){
+   for(unsigned long adjnode_i = 0, adjnode_max = adjnodes_.size(); adjnode_i < adjnode_max; ++adjnode_i){
+    unsigned long nextadjnode = adjnodes_[adjnode_i]-1;
+    if(node[nextadjnode]->isDepth()){
+     node[nextadjnode]->depth_ = depth_ + 1;
+     queue_nextnode.push(nextadjnode);
+    }
+   }
+  };
+
+  void display(){
+   std::cout << node_id_ << " ";
+   std::cout << depth_ << " ";
+   std::cout << std::endl;
+  };
+ protected:
+ };
+
+
+
+
+
+ std::vector<Node*> node_;
+
+public:
+ Graph(unsigned long node_max) : node_(std::vector<Node*>(node_max, 0)){};
+ void CreateNode(unsigned long node_i, unsigned long node_id,std::vector<unsigned long>& adjnodes){
+  node_[node_i] = new Node(node_id, adjnodes);
+ };
+
+ void BreadthFirstSearch(){
+  if(node_.empty()) return ;
+
+  std::queue<unsigned long> queue_nextnode;
+  queue_nextnode.push(0);
+  while(!queue_nextnode.empty()){
+   unsigned long nextnode = queue_nextnode.front();
+   queue_nextnode.pop();
+   node_[nextnode]->CheckNode(queue_nextnode, node_);
+
+  }
+
+ };
+
+ void display(){
+  for(unsigned long node_i = 0, node_max = node_.size(); node_i < node_max; ++node_i){
+   node_[node_i]->display();
+  }
+ };
+protected:
+
+};
+
+
+int main(){
+
+ unsigned long node_max = 0; std::cin >> node_max;
+
+ /*
+  *  ノード数分の記憶領域を確保する。
+  */
+ Graph graph(node_max);
+
+ /*
+  *入力はテキスト。
+  *入力は一行目に    [ノード数]
+  *      二行目以降  [頂点id 接続ノード数 接続ノード1 接続ノード2 ...]
+  */
+ for(unsigned long node_i = 0; node_i < node_max; ++node_i){
+  unsigned long node_id = 0; std::cin >> node_id;
+  unsigned long adjnode_max = 0; std::cin >> adjnode_max;
+  std::vector<unsigned long> adjnodes(std::vector<unsigned long>(adjnode_max, 0));
+  for(unsigned long adjnode_i = 0; adjnode_i < adjnode_max; ++adjnode_i){
+   std::cin >> adjnodes[adjnode_i];
+  }
+
+  graph.CreateNode(node_i, node_id, adjnodes);
+ }
+
+ graph.BreadthFirstSearch();
+ graph.display();
+
+ return 0;
+};

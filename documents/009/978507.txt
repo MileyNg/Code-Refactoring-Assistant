@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+
+  long long int m;
+
+  cin >> m;
+
+  string input, t0, t1, t0_r, t1_r;
+
+  for ( long long int i = 0; i < m; i++ ) {
+
+    cin >> input;
+
+    vector< string > ans;
+
+    for ( long long int j = 1; j < input.size(); j++ ) {
+
+      t0 = "";
+      t1 = "";
+      t0_r = "";
+      t1_r = "";
+      for ( long long int x = 0; x < input.size(); x++ ) {
+	if ( x < j ) {
+	  t0 += input[x];
+	  t0_r = input[x] + t0_r;
+	}else {
+	  t1 += input[x];
+	  t1_r = input[x] + t1_r;
+	}
+      }
+      ans.push_back( t0   + t1   );
+      ans.push_back( t0   + t1_r );
+      ans.push_back( t0_r + t1   );
+      ans.push_back( t0_r + t1_r );
+      ans.push_back( t1   + t0   );
+      ans.push_back( t1   + t0_r );
+      ans.push_back( t1_r + t0   );
+      ans.push_back( t1_r + t0_r );
+
+    }
+
+    sort( ans.begin(), ans.end() );
+
+    ans.erase( unique( ans.begin(), ans.end() ), ans.end() );
+
+    cout << ans.size() << endl;
+
+  }
+
+  return 0;
+
+}

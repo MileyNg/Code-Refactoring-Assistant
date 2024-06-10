@@ -1,0 +1,51 @@
+#include <cstdio>
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+
+using namespace std;
+
+struct edge {
+	int u, v, w;
+	edge(int _u = 0, int _v = 0, int _w = 0) : u(_u), v(_v), w(_w) {}
+	bool operator<(const edge& o) const {
+		return w < o.w;
+	}
+};
+
+int fa[1005];
+
+int root(int x) {
+	return fa[x] = (x == fa[x] ? x : root(fa[x]));
+}
+
+int n, m;
+vector<edge> e;
+
+int main() {
+	while (scanf("%d%d", &n, &m) && n) {
+		e.clear();
+		for (int i = 0; i <= n; ++i) {
+			fa[i] = i;
+		}
+		int u, v, w;
+		for (int i = 0; i < m; ++i) {
+			scanf("%d%d%d", &u, &v, &w);
+			e.push_back(edge(u, v, w));
+		}
+		sort(e.begin(), e.end());
+		int cnt = 0;
+		for (int i = 0; i < m; ++i) {
+			int fa1 = root(e[i].u);
+			int fa2 = root(e[i].v);
+			if (fa1 != fa2) {
+				fa[fa1] = fa2;
+				if (++cnt == (n + 1)/2) {
+					printf("%d\n", e[i].w);
+					break;
+				}
+			}
+		}
+	}
+    return 0;
+}

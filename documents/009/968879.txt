@@ -1,0 +1,27 @@
+#include<stdio.h>
+//toriaezu
+int sort(int *A,int n){
+  int i,j;
+  int min=1000,max=0;
+  int cost=0;
+  
+  for(i=1;i<n;i++){
+    if(A[i]>max) max=A[i];
+    else if(A[i]<min) min=A[i];
+  }
+  cost+=max+min;
+  return cost;
+}
+int main(){
+
+  int i,n,cost;
+  int A[1000];
+
+  scanf("%d",&n);
+
+  for(i=0;i<n;i++) scanf("%d",&A[i]);
+  cost=sort(&A[0],n);
+  
+  printf("%d\n",cost);
+  return 0;
+}

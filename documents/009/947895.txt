@@ -1,0 +1,75 @@
+#include <stdio.h>
+
+typedef struct _tree_t {
+	int id;
+	struct _tree_t *p, *l, *r;
+} tree_t;
+
+tree_t* tree_insert(tree_t* root, int id){
+	tree_t *y = NULL;
+	tree_t *x = root;
+	tree_t *z = (tree_t*)malloc(sizeof(tree_t));
+	z->id = id;
+	z->l = z->r = z->p = NULL;
+
+	while(x != NULL) {
+	    y = x;
+	    if(z->id < x->id) {
+	        x = x->l;
+	    } else { 
+	        x = x->r;
+	    }
+	}
+	z->p = y;
+	if(y == NULL) {
+    	root = z;
+	} else if(z->id < y->id) {
+	    y->l = z;
+	} else { 
+	    y->r = z;
+	}
+	
+	return root;
+}
+
+void print_preorder(tree_t *tree) {
+    printf(" %d", tree->id);
+    if(tree->l != NULL) print_preorder(tree->l);
+    if(tree->r != NULL) print_preorder(tree->r);
+}
+
+void print_inorder(tree_t *tree) {
+    if(tree->r == NULL && tree->l == NULL) {
+        printf(" %d", tree->id);
+    } else if(tree->r == NULL) {
+        print_inorder(tree->l);
+        printf(" %d", tree->id);
+    } else if(tree->l == NULL) {
+        printf(" %d", tree->id);
+        print_inorder(tree->r);
+    } else {
+        print_inorder(tree->l);
+        printf(" %d", tree->id);
+        print_inorder(tree->r);
+    }
+}
+
+int main(void) {
+	int i, n, id;
+	char buff[100];
+	tree_t *root = NULL;
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%s %d\n", buff, &id);
+		if(buff[0] == 'i') {
+			root = tree_insert(root, id);
+		} else if(buff[0] == 'p') {
+			print_inorder(root);
+			printf("\n");
+			print_preorder(root);
+			printf("\n");
+		}
+	}
+	
+	return 0;
+}

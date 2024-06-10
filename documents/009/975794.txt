@@ -1,0 +1,23 @@
+THD = 1000000
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  totals = {}
+  totals.default = 0
+  ids = {}
+
+  n.times do
+    i, p, q = gets.chomp.split(" ").map{|s| s.to_i}
+
+    t = (totals[i] += p * q)
+    ids[i] = 1 if t >= THD && ids[i].nil?
+  end
+
+  if ids.empty?
+    puts "NA"
+  else
+    ids.keys.sort.each{|id| puts id}
+  end
+end

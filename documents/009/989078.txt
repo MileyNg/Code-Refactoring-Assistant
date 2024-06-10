@@ -1,0 +1,27 @@
+for(i = 0 ; i < n; i++){
+
+    //    if(tree[i].deg != 0) tree[i].height = tree[i].height + 1;                                                                                                                               
+
+    printf("node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d, ",tree[i].id,tree[i].parent,tree[i].s,tree[i].deg,tree[i].dep,tree[i].height);
+    if(tree[i].height == 0) printf("leaf\n");
+    else if(tree[i].dep == 0) printf("root\n");
+    else printf("internal node\n");
+  }
+  return 0;
+}
+
+
+
+void jisu(int now){
+  int i;
+
+  if(tree[now].right != -1) tree[now].deg = 2;
+  else {tree[now].deg = 0;
+    tree[now].height = 0;
+  }
+
+  if(tree[now].parent != -1) tree[now].dep = tree[tree[now].parent].dep + 1;
+
+  if(hhh <= tree[now].dep) hhh = tree[now].dep;
+
+}

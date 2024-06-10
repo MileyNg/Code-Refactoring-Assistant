@@ -1,0 +1,22 @@
+#include <iostream>
+#include <iomanip>
+
+int main() {
+  long a,b;
+
+  while(std::cin >> a >> b) {
+    long gcd = 1;
+    long lcm = 1;
+
+    for(int cnt = (a < b ? a : b); cnt > 1; --cnt) {
+      if((a % cnt == 0) && a % cnt == b % cnt) {
+        a /= cnt;
+        b /= cnt;
+        gcd *= cnt;
+      }
+    }
+    lcm = gcd * a * b;
+    std::cout << gcd << " " << lcm <<std::endl;
+  }
+
+}

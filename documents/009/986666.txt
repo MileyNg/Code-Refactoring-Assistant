@@ -1,0 +1,111 @@
+#include <stack>
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <string>
+#include <algorithm>
+#include <queue>
+#include <map>
+#include <set>
+#include <cstdlib>
+#define INF 2100000000
+#define eps 1e-8
+#define mem(a,b) memset((a),(b),sizeof((a)))
+#define lld long long
+
+using namespace std;
+
+int n, l;
+struct s{
+    int pos;
+    int dir;
+    int out;
+    int id;
+    bool operator <(const s &I) const {
+        if(out != I.out) return out < I.out;
+        if(pos == I.pos) return dir < I.dir;
+        return pos < I.pos;
+    }
+    int gettime(const s &I) const {
+        if(dir == I.dir) return INF;
+        if(dir == 0 && pos <= I.pos) return INF;
+        if(dir == 1 && pos >= I.pos) return INF;
+        return abs(pos - I.pos) / 2;
+    }
+    int outdis() const {
+        if(dir == 0) return pos;
+        else return (l) * 2 - pos;
+    }
+    void move(int ll) {
+        if(dir == 0) pos -= ll;
+        else pos += ll;
+    }
+    void changedir() {
+        if(pos % 2) return;
+        dir = 1 - dir;
+    }
+}num[29];
+int cnt;
+
+int MAIN() {
+    cnt = n;
+    char str[19];
+    mem(num, 0);
+    for(int i = 0; i < n; i++) {
+        scanf("%s%d", str, &num[i].pos);
+        num[i].id = i + 1;
+        if(str[0] == 'L') num[i].dir = 0;
+        else num[i].dir = 1;
+        num[i].pos *= 2;
+    }
+    int ans = 0;
+    int ans2 = 0;
+    while(cnt) {
+        sort(num, num + n);
+        int t = INF;
+        for(int i = 0; i < cnt - 1; i++) {
+            t = min(t, num[i].gettime(num[i + 1]));
+        }
+        for(int i = 0; i < cnt; i++) t = min(t, num[i].outdis());
+        for(int i = 0; i < cnt; i++) num[i].move(t);
+        sort(num, num + n);
+        ans += t;
+        if(num[cnt - 1].pos == (l) * 2) {
+            if(cnt == 1) {
+                ans2 = num[cnt - 1].id;
+                break;
+            } else {
+                num[cnt - 1].out = 1;
+                cnt--;
+            }
+        }
+        for(int i = cnt - 1; i >= 1; i--) {
+            if(num[i].pos == num[i - 1].pos) {
+                num[i].changedir();
+                num[i - 1].changedir();
+            }
+        }
+        if(num[0].pos == 0) {
+            if(cnt == 1) {
+                ans2 = num[0].id;
+                break;
+            } else {
+                cnt--;
+                num[0].out = 1;
+            }
+        }
+    }
+    printf("%d %d\n", ans / 2, ans2);
+    return 0;
+}
+
+int main()
+{
+    int cases;
+    while(~scanf("%d%d", &n, &l)) {
+        if(n == 0 && l == 0) break;
+        MAIN();
+    }
+	return 0;
+}

@@ -1,0 +1,36 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <conio.h>
+#include <cstring>
+
+using namespace std;
+
+int Coins[20];
+int Dest,hmCoins;
+
+const int INF = 99999999;
+
+int dfs(int DestMoney,int LeftCoins){
+	if(LeftCoins == 0){
+		return INF;
+	}else if(DestMoney == 0){
+		return 0;
+	}else{
+		return min(dfs(DestMoney - Coins[LeftCoins],LeftCoins - 1) + 1,dfs(DestMoney,LeftCoins - 1));
+	}
+}
+
+int main()
+{
+	cin >> Dest >> hmCoins;
+
+	for(int i = 0;i < hmCoins;i++){
+		cin >> Coins[i];
+	}
+
+	cout << dfs(Dest,hmCoins - 1);
+
+	return 0;
+}

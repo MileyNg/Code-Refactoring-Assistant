@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int from, to;
+  while(cin >> from >> to){
+    map<int, int> mp;
+    mp[from]++;
+    mp[to]++;
+    
+    while(cin >> from >> to, from|to){
+      mp[from]++;
+      mp[to]++;
+    }
+    
+    int cnt = 0;
+    for(map<int, int>::iterator it = mp.begin() ; it != mp.end() ; it++){
+      if(it->second % 2 == 1) cnt++;
+    }
+    if(cnt == 0 || cnt == 2) cout << "OK" << endl;
+    else cout << "NG" << endl;
+  }
+  
+  return 0;
+}

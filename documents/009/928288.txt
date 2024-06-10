@@ -1,0 +1,71 @@
+#include<stdio.h>
+#include<string.h>
+
+typedef struct pp{
+  char name[100];
+  int t;
+}P;
+
+P Q[10000+1];
+int head, tail, n;
+
+void enqueue(){
+  int i;
+  P temp;
+  
+  temp.t=Q[head].t;
+  strcpy(temp.name,Q[head].name);
+  for (i=head;i>=1;i--){
+    Q[i].t=Q[i-1].t;
+    strcpy(Q[i].name,Q[i-1].name);
+  }
+  Q[1].t=temp.t;
+  strcpy(Q[1].name,temp.name);
+  
+}
+
+int main(){
+  int elaps = 0, c;
+  int i, q;
+  P u[10000+1];
+  scanf("%d %d", &n, &q);
+  
+  for ( i = n; i >= 1; i--){
+    scanf("%s", Q[i].name);
+    scanf("%d", &Q[i].t);
+  }
+  tail = 1;
+  head = n;
+  
+  i=1;
+  while(head!=0){
+    for (c=1;c<=head;c++){
+      if (c!=1){
+	printf(" - ");
+      }
+
+      printf("%s(%d)",Q[c].name,Q[c].t);
+    }
+    printf(" elaps is %d\n",elaps);
+    if (Q[head].t<=q){
+      printf("//%s(%d) < %d, delete!\n",Q[head].name,Q[head].t,q);
+      elaps+=Q[head].t;
+      u[i].t=elaps;
+      strcpy(u[i].name,Q[head].name);
+      i++;
+      head--;
+    } else {
+      printf("//%s(%d) > %d, enqueue!\n",Q[head].name,Q[head].t);
+      elaps += q;
+      Q[head].t -= q;
+      enqueue();
+    }
+  }
+
+  printf("\n");
+  for (i=1;i<=n;i++){
+    printf("%s %d\n",u[i].name,u[i].t);
+  }
+
+  return 0;
+}

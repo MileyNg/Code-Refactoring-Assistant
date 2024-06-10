@@ -1,0 +1,39 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+int w, h;
+bool data[99][99]; //x, y
+int memo[99][99]; //x, y
+
+int solve(int x, int y){
+
+  if(y < 0 || x == w)  return 0;
+  if(data[x][y]) return 0;
+  if(memo[x][y]) return memo[x][y];
+  if(x == w-1 && !y) return 1;
+
+  return memo[x][y] = solve(x+1, y) + solve(x, y-1);
+}
+
+int main(){
+
+  int n;
+
+  while(true){
+    cin >> w >> h;
+    if(!w && !h) break;
+
+    memset(data, false, sizeof(data));
+    memset(memo, 0, sizeof(memo));
+
+    cin >> n;
+    for(int i=0;i<n;i++){
+      int a, b;
+      cin >> a >> b;
+      data[--a][--b] = true;
+    }
+
+    cout << solve(0, h-1) << endl;
+  }
+}

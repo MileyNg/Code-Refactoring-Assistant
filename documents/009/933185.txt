@@ -1,0 +1,44 @@
+#include <complex>
+#include <iostream>
+#include <vector>
+using namespace std;
+typedef complex<double> cd;
+vector<cd >A;
+cd j=sqrt(-1),p,p1,p2;
+double a,b;
+int n;
+int f(int m,int i1,int i2){
+	int i,s1=2,s2=2;
+	double c=acos(a/2);
+	p1=polar(1.0,b+c)+p;
+	p2=polar(1.0,b-c)+p;
+	for(i=0;i<n;i++){
+		if(i==i1||i==i2)continue;
+		if(abs(A[i]-p1)-1<1e-6)s1++;
+		if(abs(A[i]-p2)-1<1e-6)s2++;
+	}
+	if(m<s1)m=s1;
+	if(m<s2)m=s2;
+	return m;
+}
+int main(){
+	int m,i,i1;
+	char c;
+	while(cin>>n,n!=0){
+		A.clear();A.resize(n);
+		for(i=0;i<n;i++){
+			cin>>a>>c>>b;
+			A[i]=cd(a,b);
+		}
+		m=1;
+		for(i=0;i<n;i++){
+			p=A[i];
+			for(i1=i+1;i1<n;i1++){
+				a=abs(A[i1]-p);
+				b=arg(A[i1]-p);
+				if(a<=2)m=f(m,i,i1);
+			}
+		}
+		cout<<m<<endl;
+	}
+}

@@ -1,0 +1,58 @@
+
+#include <iostream>
+#include <algorithm>
+
+#define MAXNUM 1000001
+#define MAX 100
+using namespace std;
+
+int all[MAXNUM], odd[MAXNUM], fourall[1000], fourodd[1000];
+
+int main()
+{
+	int n;
+	int counter = 0;
+
+	//配列の初期化
+	for (int i = 1; i < MAXNUM; i++){
+		all[i] = MAX;
+		odd[i] = MAX;
+
+	}
+
+	//1からMAXNUMまでの中に存在する正四面体数を洗い出す．
+	int now = 0, four, allcounter = 1, oddcounter = 1;
+	while (1){
+		now++;
+		four = now  *(now + 1)*(now + 2) / 6;
+		all[four] = 1;
+		fourall[allcounter++] = four;
+		if (four % 2 == 1){
+			odd[four] = 1;
+			fourodd[oddcounter++] = four;
+		}
+		if (four > MAXNUM)
+			break;
+
+	}
+
+	//1からMAXNUMまで，配列を埋める.
+	for (int i = 1; i < MAXNUM; i++){
+		for (int j = 1; i > fourall[j]; j++){
+			all[i] = min(all[i], 1 + all[i - fourall[j]]);
+		}
+		for (int j = 1; i > fourodd[j]; j++){
+			odd[i] = min(odd[i], 1 + odd[i - fourodd[j]]);
+		}
+
+	}
+	cout << "a";
+
+
+	//入力
+	while (cin >> n, n)
+		cout << all[n] << " " << odd[n] << endl;
+
+	return 0;
+
+}

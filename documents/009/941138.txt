@@ -1,0 +1,81 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<complex>
+#include<set>
+#include<map>
+#include<queue>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int w,h;
+int ans;
+
+typedef pair<int,int> pii;
+
+int enx,eny;
+const int W = 22;
+int masu[W][W];
+
+void getans(int x, int y,int count){
+	int dx[]={1,0,-1,0};
+	int dy[]={0,1,0,-1};
+	
+	if(count>10)return;
+	/*
+	printf("%d %d %d\n",x,y,count);
+	rep(i,h){rep(j,w)printf("%d ",masu[i][j]);puts("");}
+	*/
+	rep(p,4){
+		rep(i,11111){
+			int nx = x+dx[p]*i;
+			int ny = y+dy[p]*i;
+			
+			if(nx>=w || ny>=h || nx<0 || ny<0)break;
+			if(nx==enx && ny==eny){
+				ans = min(ans, count);
+				break;
+			}
+			
+			if(masu[ny][nx]==1){
+				masu[ny][nx]=0;
+				if(i!=1)getans(nx-dx[p], ny-dy[p], count+1);
+				masu[ny][nx]=1;
+				break;
+			}
+		}
+	}
+}
+
+int main(){
+	A:;
+	int stx,sty;
+	cin>>w>>h;
+	if(w==0 || h==0)return 0;
+	
+	rep(i,h)rep(j,w){
+		cin>>masu[i][j];
+		if(masu[i][j]==3){
+			enx = j;
+			eny = i;
+		}
+		if(masu[i][j]==2){
+			stx = j;
+			sty = i;
+		}
+		if(masu[i][j]!=1)masu[i][j]=0;
+	}
+	
+	ans = 111;
+	getans(stx,sty,1);
+	
+	if(ans==111)puts("-1");
+	else printf("%d\n",ans);
+	
+	goto A;
+}

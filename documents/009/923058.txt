@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int b[11];
+char c[11];
+int dfs(int a){
+	if(a==(1<<9)-1)return 1;
+	for(int i=0;i<9;i++){
+		if(a&(1<<i))continue;
+		for(int j=i+1;j<9;j++){
+			if(a&(1<<j))continue;
+			for(int k=j+1;k<9;k++){
+				if(a&(1<<k))continue;
+				bool ok=false;
+				if(c[i]==c[j]&&c[j]==c[k]&&b[i]+1==b[j]&&b[j]+1==b[k]){
+					int val=dfs(a+(1<<i)+(1<<j)+(1<<k));
+					if(val)return 1;
+				}
+				if(c[i]==c[j]&&c[j]==c[k]&&b[i]==b[j]&&b[j]==b[k]){
+					int val=dfs(a+(1<<i)+(1<<j)+(1<<k));
+					if(val)return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+int main(){
+	int a;
+	scanf("%d",&a);
+	while(a--){
+		for(int i=0;i<9;i++)scanf("%d",b+i);
+		for(int i=0;i<9;i++)scanf("%s",c+i);
+		for(int i=0;i<9;i++){
+			for(int j=0;j<8;j++){
+				if(b[j]>b[j+1]||(b[j]==b[j+1]&&c[j]>c[j+1])){
+					int d=b[j];
+					b[j]=b[j+1];
+					b[j+1]=d;
+					char e=c[j];
+					c[j]=c[j+1];
+					c[j+1]=e;
+				}
+			}
+		}
+		printf("%d\n",dfs(0));
+	}
+}

@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<string.h>
+
+#define M 1000121
+#define L 14
+
+char H[M][L];
+
+int getChar(char ch) {
+	if (ch == 'A') {
+		return 1;
+	}
+	else if (ch == 'C') {
+		return 2;
+	}
+	else if (ch == 'G') {
+		return 3;
+	}
+	else if (ch == 'T') {
+		return 4;
+	}
+	return 0;
+}
+
+long long getKey(char str[]) {
+	long long sum = 0, p = 1, i;
+	for (i = 0; i < strlen(str); i++) {
+		sum += p * (getChar(str[i]));
+		p *= 5;
+	}
+	return sum;
+}
+
+int hash1(int key) {
+	return key % M;
+}
+
+int hash2(int key) {
+	return 1 + key % (M - 1);
+}
+
+int getHashValue(char str[]) {
+	long long hashval, i = 0;
+
+	do {
+		hashval = (hash1(getKey(str)) + i * hash2(getKey(str))) % M;
+		i++;
+	} while (H[hashval] == '\0');
+
+	return hashval;
+}
+
+int find(char str[]) {
+	return !strcmp(H[getHashValue(str)], str);
+}
+
+void insert(char str[]) {
+	strcpy(H[getHashValue(str)], str);
+}
+
+int main() {
+	int i, n;
+	char str[L], com[9];
+
+	for (i = 0; i < M; i++) {
+		H[i][0] = '\0';
+	}
+
+	scanf("%d", &n);
+
+	for (i = 0; i < n; i++) {
+		scanf("%s %s", com, str);
+
+		if (com[0] == 'i') {
+			insert(str);
+		} else {
+			if (find(str)) {
+				printf("yes\n");
+			} else {
+				printf("no\n");
+			}
+		}
+	}
+
+	return 0;
+}

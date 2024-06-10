@@ -1,0 +1,25 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+int main(){
+  const int min = 0;
+  const int max = 10000;
+  std::vector<int> mount(10);
+  int temp;
+
+  for(int i = 0; i < 10; ++i){
+    std::cin >> temp;
+    if(temp >= min && temp <= max)
+      mount[i] = temp;
+    else
+      --i;
+  }
+
+  std::sort(mount.begin(),mount.end(),std::greater<int>());
+
+  for(int i = 0; i < 3; ++i)
+    std::cout << mount[i] << std::endl;
+
+  return 0;
+}

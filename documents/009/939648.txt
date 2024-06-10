@@ -1,0 +1,51 @@
+function updateChildren(cid, pid) {
+	var node = T.filter(function(c){return c.id == cid;})[0];
+	node.parent = pid;
+	node.depth++;
+	node.children.forEach(function(id) {
+		updateChildren(id, cid);
+	});
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var n = +lines.shift()
+
+var T = [];
+for (var i = 0; i < n; i++) {
+	var u = lines.shift().split(' ');
+	var id = +u[0];
+	var k = +u[1];
+	var c = [];
+	for (var j = 0; j < k; j++) {
+		c.push(+u[2 + j]);
+	}
+
+	var node = {id: id, parent: -1, depth: 0, children: c};
+	T.push(node);
+}
+
+T.forEach(function(node) {
+	node.children.forEach(function(id) {
+		updateChildren(id, node.id);
+	});
+});
+
+T.sort(function(a, b){return a.id - b.id;});
+
+T.forEach(function(node) {
+	var type;
+	if (node.parent == -1) {
+		type = 'root';
+	}
+	else if (node.children.length == 0) {
+		type = 'leaf';
+	}
+	else {
+		type = 'internal node';
+	}
+
+	console.log('node ' + node.id + ': parent = ' + node.parent
+		+ ', depth = ' + node.depth + ', ' + type + ', [' + node.children.join(', ') + ']');
+});

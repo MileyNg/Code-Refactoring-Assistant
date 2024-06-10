@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int numofbits5(long bits) {
+    bits = (bits & 0x55555555) + (bits >> 1 & 0x55555555);
+    bits = (bits & 0x33333333) + (bits >> 2 & 0x33333333);
+    bits = (bits & 0x0f0f0f0f) + (bits >> 4 & 0x0f0f0f0f);
+    bits = (bits & 0x00ff00ff) + (bits >> 8 & 0x00ff00ff);
+    return (bits & 0x0000ffff) + (bits >>16 & 0x0000ffff);
+}
+
+int main(void) {
+	long w, n, i, c;
+	while(scanf("%ld\n", &w)==1) {
+		n = numofbits5(w);
+		c = 0;
+		for(i=0;i<=9;i++) {
+			if(w & (1<<i)) {
+				printf("%d", (1<<i));
+				c++;
+				if(c<n) {
+					printf(" ");
+				} else {
+					printf("\n");
+				}
+			}
+		}
+	}
+	
+	return 0;
+}

@@ -1,0 +1,66 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<functional>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+int D;
+int x;
+int y;
+
+//1画あたりの点数,複数マークか
+vector<pair<double,int> > data;
+
+
+int main() {
+    cin>>D;
+    cin>>x;
+    rep(i,x) {
+        string a;
+        int p;
+        cin>>a>>p;
+        if(a=="D") data.push_back(make_pair(p,0));
+    }
+    cin>>y;
+    rep(i,y) {
+        string a;
+        int p;
+        cin>>a>>p;
+        if(a=="DD") data.push_back(make_pair(p/2.0,1));
+    }
+
+    sort(data.begin(),data.end(),greater<pair<double,int> >() );
+    int cnt=0;
+    int ans=0;
+    rep(i,data.size()) {
+        int flag = data[i].second;
+        double score = data[i].first;
+        if(D==cnt) break;
+
+        if(D-cnt==1) {
+            if(!flag) {
+                ans+=score;
+                cnt++;
+                break;
+            }
+        }
+        else {
+            if(flag) {
+                ans+=(score*2);
+                cnt+=2;
+            }
+            else {
+                ans+=score;
+                cnt++;
+            }
+        }
+    }
+
+    cout<<ans<<endl;
+
+
+    return 0;
+}

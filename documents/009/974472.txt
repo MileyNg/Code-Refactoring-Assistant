@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+        int count[4][3][10];
+        int a;
+        scanf("%d",&a);
+        for(int x=0;x<4;x++){
+                for(int y=0;y<3;y++){
+                        for(int z=0;z<10;z++){
+                                count[x][y][z]=0;
+                        }
+                }
+        }
+        for(int i=0;i<a;i++){
+                int b,f,r,v;
+                scanf("%d %d %d %d",&b,&f,&r,&v);
+                count[b-1][f-1][r-1]+=v;
+        }
+        for(int x=0;x<4;x++){
+                for(int y=0;y<3;y++){
+                        for(int z=0;z<10;z++){
+                                if(z!=9){
+                                    printf(" %d",count[x][y][z]);
+                                }else{
+                                    printf(" %d\n",count[x][y][z]);
+                                }
+                        }
+                }
+                if(x!=3){
+                        printf("####################\n");
+                }
+        }
+        return 0;
+}

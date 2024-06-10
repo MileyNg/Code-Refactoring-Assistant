@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+void push_d(queue<vector<int> > &q, int x, int y, int l) {
+    vector<int> d;
+    d.push_back(x);
+    d.push_back(y);
+    d.push_back(l);
+    q.push(d);
+}
+
+int main() {
+    while (1) {
+        int w, h;
+        cin >> w >> h;
+        if (w == 0 && h == 0) break;
+
+        vector<vector<bool> > bw, bh;
+        bool c;
+        for (int i = 0; i < h; i++) {
+            vector<bool> _bh;
+            bh.push_back(_bh);
+            for (int x = 0; x < w - 1; x++) {
+                cin >> c;
+                bh[i].push_back(c);
+            }
+            if (i < h - 1) {
+                vector<bool> _bw;
+                bw.push_back(_bw);
+                for (int y = 0; y < w; y++) {
+                    cin >> c;
+                    bw[i].push_back(c);
+                }
+            }
+        }
+
+        queue<vector<int> > q;
+        vector<int> goal;
+        push_d(q, 0, 0, 0);
+        while (!q.empty()) {
+            vector<int> d = q.front();
+            q.pop();
+            int x = d[0], y = d[1], l = d[2] + 1;
+            if (x == w - 1 && y == h - 1) {
+                goal.push_back(l);
+                continue;
+            }
+            if (0 <= x && x < w && 0 <= y && y < h) {
+                // down
+                if (y < h-1 && !bw[y][x]) {
+                    bw[y][x] = true;
+                    push_d(q, x, y+1, l);
+                }
+                // up
+                if (0 <= y-1 && y-1 < h-1 && !bw[y-1][x]) {
+                    bw[y-1][x] = true;
+                    push_d(q, x, y-1, l);
+                }
+                // right
+                if (x < w-1 && !bh[y][x]) {
+                    bh[y][x] = true;
+                    push_d(q, x+1, y, l);
+                }
+                // left
+                if (0 <= x-1 && x-1 < w-1 && !bh[y][x-1]) {
+                    bh[y][x-1] = true;
+                    push_d(q, x-1, y, l);
+                }
+            }
+        }
+
+        int route = 0;
+        if (goal.size() > 0) {
+            route = *min_element(goal.begin(), goal.end());
+        }
+        cout << route << endl;
+    }
+}

@@ -1,0 +1,14 @@
+station = (?a.ord..?z.ord).to_a + (?A.ord..?Z.ord).to_a
+
+until gets.to_i == 0
+  list_key = gets.split.map(&:to_i)
+  visit_list = gets.chomp.split(//)
+
+  visit_list.each{|i|
+    goal = station.find_index(i.ord) - list_key.first
+    print station.slice(goal).chr
+    list_key.rotate!(1)
+  }
+
+  puts
+end

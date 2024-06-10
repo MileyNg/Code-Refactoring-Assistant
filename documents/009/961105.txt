@@ -1,0 +1,40 @@
+/*
+  AOJ 2048
+  Title:Everlasting...?
+  @kankichi573
+*/
+#include <stdio.h>
+
+int solve(int x)
+{
+  int i,sum,max_;
+
+  for(i=2;i<=x;i++)
+    if((x % i)==0)
+      {
+	sum += i;
+	max_ = i;
+	while((x % i)==0)
+	    x /= i;
+      }
+  return(max_-(sum-max_));
+}
+main()
+{
+  int a,b,i,reta,retb;
+
+  while(scanf("%d %d",&a,&b) && (a||b))
+    {
+	reta=solve(a);
+	retb=solve(b);
+#ifdef DEBUG
+      printf("%d %d\n",reta,retb);
+#endif
+      if(reta>retb)
+	printf("a\n");
+      else
+	printf("b\n");
+    }
+
+  return(0);
+}

@@ -1,0 +1,278 @@
+#define _USE_MATH_DEFINES
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <cassert>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <numeric>
+#include <list>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> Pii;
+typedef pair<ll, ll> Pll;
+
+#define FOR(i,n) for(int i = 0; i < (n); i++)
+#define sz(c) ((int)(c).size())
+#define ten(x) ((int)1e##x)
+#define tenll(x) ((ll)1e##x)
+
+class LCA {
+public:
+	const vector<vector<int>>& e;
+	int V, logV;
+	vector<int> depth;
+	vector<vector<int> > parent;
+
+	LCA(const vector<vector<int>>& e) : e(e) {
+		this->V = sz(e);
+		logV = 0;
+		while (V >= (1 << logV)) logV++;
+		this->depth = vector<int>(V);
+		this->parent = vector<vector<int> >(logV, vector<int>(V));
+
+		dfs(0, -1, 0);
+		build();
+	}
+
+	void dfs(int v, int par, int d) {
+		depth[v] = d;
+		parent[0][v] = par;
+		for (auto to : e[v]) {
+			if (par == to) continue;
+			dfs(to, v, d + 1);
+		}
+	}
+
+	void build() {
+		for (int k = 0; k + 1 < logV; k++) {
+			for (int v = 0; v < V; v++) {
+				if (parent[k][v] < 0) parent[k + 1][v] = -1;
+				else parent[k + 1][v] = parent[k][parent[k][v]];
+			}
+		}
+	}
+
+	int query(int u, int v) {
+		if (depth[u] > depth[v]) swap(u, v);
+		for (int k = 0; k < logV; k++) {
+			if ((depth[v] - depth[u]) >> k & 1)
+				v = parent[k][v];
+		}
+		if (u == v) return u;
+
+		for (int k = logV - 1; k >= 0; k--) {
+			if (parent[k][u] != parent[k][v]) {
+				u = parent[k][u];
+				v = parent[k][v];
+			}
+		}
+		return parent[0][u];
+	}
+};
+
+class RangeTree {
+public:
+	int n;
+	vector<vector<int>> dat;
+	RangeTree(vector<int>& a) {
+		n = 1;
+		while (n < sz(a)) n <<= 1;
+		dat.resize(2 * n - 1);
+		FOR(i, n) {
+			int k = n - 1 + i;
+			if (i < sz(a)) dat[k].push_back(a[i]);
+			else dat[k].push_back(ten(8));
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			dat[i].resize(sz(dat[2 * i + 1]) + sz(dat[2 * i + 2]));
+			merge(dat[2 * i + 1].begin(), dat[2 * i + 1].end(), dat[2 * i + 2].begin(), dat[2 * i + 2].end(), dat[i].begin());
+		}
+	}
+	int query(int l, int r, int val) {
+		return query(l, r, val, 0, 0, n);
+	}
+	int query(int l, int r, int val, int k, int a, int b) {
+		if (r <= a || b <= l) return 0;
+		if (l <= a && b <= r) {
+			return lower_bound(dat[k].begin(), dat[k].end(), val + 1) - dat[k].begin();
+		}
+		return query(l, r, val, 2 * k + 1, a, (a + b) / 2) + query(l, r, val, 2 * k + 2, (a + b) / 2, b);
+	}
+};
+
+//heavy-light decomposition
+class HL_decomposition {
+public:
+	const vector<vector<int>>& e;
+	const int n;
+	vector<int> par, depth, ord; //親,深さ、トポロジカルソート
+	vector<int> cluster; //decompositionした結果どのクラスタに属するか
+	vector<vector<int> > pathes; //各クラスタの、上から下へのパス
+	vector<int> path_idx; // path_idx[v] = 上記パスでのindex
+
+	void init(int v) {
+		depth.resize(n, 0);
+		par.resize(n, 0);
+		ord.resize(n, 0);
+
+		depth[v] = 0;
+		par[v] = -1;
+		ord[0] = v; //ordをキューとして使い、bfsする
+		for (int p = 0, r = 1; p < r; p++) {
+			int cur = ord[p];
+			for (int nv : e[cur]) {
+				if (nv == par[cur]) continue;
+				ord[r++] = nv;
+				par[nv] = cur;
+				depth[nv] = depth[cur] + 1;
+			}
+		}
+	}
+
+	void decomposition() {
+		vector<int> subtree_size(n, 1);
+		for (int i = n - 1; i > 0; i--) subtree_size[par[ord[i]]] += subtree_size[ord[i]];
+		cluster.resize(n, -1);
+		int cluster_type = 0;
+		FOR(i, n) {
+			int u = ord[i];
+			if (cluster[u] == -1) cluster[u] = cluster_type++;
+			int max_subsize = -1, selected = -1;
+			for (int v : e[u]) {
+				if (par[u] != v && max_subsize < subtree_size[v]) {
+					max_subsize = subtree_size[v];
+					selected = v;
+				}
+			}
+			if (selected != -1) cluster[selected] = cluster[u];
+		}
+	}
+
+	void enum_pathes() {
+		int cluster_num = 0;
+		vector<int> rp(n);
+		FOR(i, n) {
+			rp[cluster[i]]++;
+			cluster_num = max(cluster_num, cluster[i]);
+		}
+		cluster_num++;
+		pathes.resize(cluster_num);
+		FOR(i, cluster_num) pathes[i].resize(rp[i]);
+		for (int i = n - 1; i >= 0; i--) {
+			int u = ord[i];
+			pathes[cluster[u]][--rp[cluster[u]]] = u;
+		}
+	}
+
+	void set_path_idx() {
+		path_idx.resize(n);
+		for (const vector<int>& path : pathes) {
+			FOR(i, sz(path)) path_idx[path[i]] = i;
+		}
+	}
+
+public:
+	HL_decomposition(const vector<vector<int>>& e) : e(e), n(sz(e)) {
+		init(0);
+		decomposition();
+		enum_pathes();
+		set_path_idx();
+	}
+};
+
+// exsample of how to use
+class tree_query {
+	LCA* lca;
+	HL_decomposition *hl;
+	vector<RangeTree*> rts;
+	vector<int>& a;
+	int mx;
+public:
+	tree_query(vector<vector<int>>& e, vector<int>& a) : a(a) {
+		lca = new LCA(e);
+		hl = new HL_decomposition(e);
+		rts.resize(sz(hl->pathes));
+		FOR(i, sz(rts)) {
+			vector<int> dat;
+			for (int v : hl->pathes[i]) dat.push_back(a[v]);
+			rts[i] = new RangeTree(dat);
+		}
+		mx = *max_element(a.begin(), a.end()) + 1;
+	}
+
+	int count(int v, int val) {
+		int ret = 0;
+		while (v != -1) {
+			ret += rts[hl->cluster[v]]->query(0, hl->path_idx[v] + 1, val);
+			v = hl->par[hl->pathes[hl->cluster[v]][0]];
+		}
+		return ret;
+	}
+
+	int query(int u, int v, int idx) {
+		int p = lca->query(u, v);
+		int l = -1, r = mx - 1;
+		while (r - l != 1) {
+			int md = (l + r) / 2;
+			int a1 = count(u, md);
+			int a2 = count(v, md);
+			int a3 = count(p, md);
+			int a4 = a[p] <= md;
+			int cnt = a1 + a2 - a3 * 2 + a4;
+			if (cnt < idx) l = md;
+			else r = md;
+		}
+		return r;
+	}
+
+	~tree_query() {
+		delete lca;
+		delete hl;
+		FOR(i, sz(rts)) delete rts[i];
+	}
+};
+
+int main() {
+	int n, q; cin >> n >> q;
+	vector<int> a(n);
+	vector<vector<int>> e(n);
+	FOR(i, n) cin >> a[i];
+	FOR(i, n - 1) {
+		int a, b; cin >> a >> b;
+		a--; b--;
+		e[a].push_back(b);
+		e[b].push_back(a);
+	}
+
+	vector<int> compress = a;
+	sort(compress.begin(), compress.end());
+	compress.erase(unique(compress.begin(), compress.end()), compress.end());
+	FOR(i, n) a[i] = lower_bound(compress.begin(), compress.end(), a[i]) - compress.begin();
+
+	tree_query tq(e, a);
+
+	FOR(i, q) {
+		int u, v, t; cin >> u >> v >> t;
+		u--; v--;
+		int id = tq.query(u, v, t);
+		cout << compress[id] << endl;
+	}
+}

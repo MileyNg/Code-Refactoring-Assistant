@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+using namespace std;
+int main(){
+  int n,i,j;
+  int num[50010]={0};//0nara,sosu
+ 
+  for(i=3;i<50010;i+=2){
+    if(num[i]==1)
+      continue;
+    for(j=3*i;j<50010;j+=i*2)
+      num[j]=1;
+  }
+  for(i=4;i<50010;i+=2)
+    num[i]=1;
+	
+  int in;
+  while(cin>>in,in){
+  if(in%2==1){
+    if(num[in-2]==0)cout<<1<<endl;
+	else cout<<0<<endl;
+  }else{
+  int co=0;
+  loop(i,2,in/2+1){
+  if(num[in-i]==0)co++;
+  }
+  cout<<co<<endl;
+  }
+  }
+  }

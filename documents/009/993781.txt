@@ -1,0 +1,62 @@
+#include<stdio.h> 
+#define M 2000000
+int A[M],hs=0,n;
+void hik(int *A,int i,int key){
+  int temp;
+  A[i]=key;
+  while(i>1 && A[i/2]<A[i]){
+    temp=A[i];
+    A[i]=A[i/2];
+    A[i/2]=temp;
+    i=i/2;
+  }
+}
+void mhinsert(int key){
+  hs++;
+  A[hs]=-1;
+  hik(A,hs,key);
+}
+void maxHeapify(int *A,int i){
+  int l,r,largest,temp;
+  l = 2*i;
+  r = 2*i+1;
+  if(l<=n && A[l]>A[i])
+    largest = l;
+  else
+    largest = i;
+  if(r<=n && A[r]>A[largest])
+    largest = r;
+  if(largest != i){
+    temp=A[i];
+    A[i]=A[largest];
+    A[largest]=temp;
+    maxHeapify(A,largest);
+  }
+}
+int hem(int *A){
+  int max;
+  max=A[1];
+  A[1]=A[hs];
+  hs--;
+  maxHeapify(A,1);
+  return max;
+}
+int main(void){
+  char com[8];
+  int i=0,S[M];
+  while(1){
+    scanf("%s",com);
+    if(com[0]=='e'){
+      if(com[1]=='n')
+	break;
+      else
+	printf("%d\n",hem(A));
+    }
+    else{
+      scanf("%d",&S[i]);
+      mhinsert(S[i]);
+    }
+    i++;
+  }
+  return 0;
+}

@@ -1,0 +1,41 @@
+#include <iostream>
+#include <stack>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+typedef pair<int, int> pii;
+
+int const dx[] = { 1, 0, -1, 0 };
+int const dy[] = { 0, 1, 0, -1 };
+
+int main(){
+    int n;
+    while (cin >> n && n){
+        pii m[111];
+        m[0] = pii(0, 0);
+        rep(i, n-1){
+            int k, d;
+            cin >> k >> d;
+            pii p = m[k];
+            p.first += dx[d];
+            p.second += dy[d];
+            m[i + 1] = p;
+        }
+        int mx = 200, my = 200, Mx = -200, My = -200;
+        rep(i, n){
+            pii& p = m[i];
+            mx = min(p.first, mx);
+            my = min(p.second, my);
+            Mx = max(p.first, Mx);
+            My = max(p.second, My);
+        }
+        cout << Mx - mx + 1 << " " << My - my + 1 << endl;
+    }
+}

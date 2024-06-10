@@ -1,0 +1,47 @@
+#include<stdio.h>
+
+#ifndef __cplusplus
+typedef unsigned char bool;
+#define true 1
+#define false 0
+#endif
+
+#define N 1000000
+bool primes[N] = {false, false, true};
+int prime_count[N];
+void searchPrime()
+{
+	int i, j;
+	bool flag;
+	for (i = 2; i < N; ++i)
+	{
+		flag = true;
+		for (j = 0; j < i; ++j)
+		{
+			if (primes[j] && i % j == 0)
+			{
+				flag = false;
+				break;
+			}
+		}
+		primes[i] = flag;
+	}
+}
+
+void primeCount()
+{
+	int i;
+	for (i = 1; i < N; ++i)
+		prime_count[i] = prime_count[i - 1] + primes[i];
+}
+
+int main()
+{
+	searchPrime();
+	primeCount();
+	int n;
+	while (scanf("%d", n) != EOF)
+	{
+		printf("%d\n", prime_count[n]);
+	}
+}

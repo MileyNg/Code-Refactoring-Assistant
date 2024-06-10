@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+#define rrep_(v, f, l) for (int v = (l), v##_ = (f); v >= v##_; --v)
+#define rrep(v, n) rrep_(v, 0, n - 1)
+#define rlep(v, n) rrep_(v, 1, n)
+#define show_a(a, size) rep(a##_it, size) std::cout << a[a##_it] << " \n"[a##_it == a##_it_ - 1];
+#define show_v(v) show_a(v, v.size())
+#define eachv(v, i) rep(i, v.size())
+#define reachv(v, i) rrep(i, v.size())
+#define debug(x) std::cerr << #x << " = " << x << "\n";
+
+using namespace std;
+
+typedef long long int lint;
+struct Edge {
+    int src, dst, w;
+    Edge(int src, int dst, int w) : src(src), dst(dst), w(w) {}
+};
+bool operator<(const Edge& a, const Edge& b){
+    return a.w != b.w ? a.w > b.w : a.src != b.src ? a.src < b.src : a.dst < b.dst;
+}
+typedef vector<Edge> Edges;
+typedef vector<Edges> Graph;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+const int INF = 10000000;
+
+void shortestPath(const Graph &g, int s, vector<int>& dist, vector<int>& prev){
+    int n = g.size();
+    dist.assign(n, INF);
+    dist[s] = 0;
+    prev.assign(n, -1);
+    priority_queue<Edge> Q;
+    for (Q.push(Edge(-2, s, 0)); !Q.empty();){
+        Edge e = Q.top();
+        Q.pop();
+        if (prev[e.dst] != -1) continue;
+        prev[e.dst] = e.src;
+        eachv(g[e.dst], i){
+            int new_dist = e.w + g[e.dst][i].w;
+            int dest = g[e.dst][i].dst;
+            int source = g[e.dst][i].src;
+            if (dist[dest] > new_dist){
+                dist[dest] = new_dist;
+                Q.push(Edge(source, dest, new_dist));
+            }
+        }
+    }
+}
+
+int main()
+{
+    int h, w, n;
+    h = in();
+    w = in();
+    n = in();
+    vector<string> field;
+    rep(i, h){
+        string s;
+        cin >> s;
+        field.push_back(s);
+    }
+    Graph g(h * w);
+    vector<int> cheese(n + 1);
+    const int dx[] = {1, -1, 0, 0};
+    const int dy[] = {0, 0, 1, -1};
+    rep(i, h){
+        rep(j, w){
+            if (isdigit(field[i][j])){
+                cheese[field[i][j] - '0'] = i * w + j;
+            }
+            if (field[i][j] == 'S'){
+                cheese[0] = i * w + j;
+            }
+            if (field[i][j] != 'X'){
+                rep(k, 4){
+                    int nx, ny;
+                    nx = j + dx[k];
+                    ny = i + dy[k];
+                    if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+                    if (field[ny][nx] != 'X') g[i * w + j].push_back(Edge(i * w + j, ny * w + nx, 1));
+                }
+            }
+        }
+    }
+    int total_time = 0;
+    rep(i, n){
+        vector<int> dist, prev;
+        shortestPath(g, cheese[i], dist, prev);
+        total_time += dist[cheese[i + 1]];
+    }
+    printf("%d\n", total_time);
+    return (0);
+}

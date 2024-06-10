@@ -1,0 +1,72 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Heap{
+private:
+ vector<long> node;
+public:
+ Heap(){ node.push_back(0);};
+
+ void print(){
+  long n = node.size();
+  for(long i = 1; i < n; ++i)
+   cout << " " << node[i];
+  cout << endl;
+ };
+ 
+ void insert(long num){
+  node.push_back(num);
+ };
+
+ long left(long i){ return (2 * i); };
+ long right(long i){ return (2 * i + 1); };
+ long parent(long i){ return (i / 2); };
+
+ void maxHeapify(long i){
+  long l = left(i);
+  long r = right(i);
+  long nodeSize = node.size() - 1;
+  long largest = 0;
+
+  if(l <= nodeSize && node[l] > node[i]){
+   largest = l;
+  }else{
+   largest = i;
+  }
+
+  if(r <= nodeSize && node[r] > node[largest])
+   largest = r;
+  
+  if(largest != i){
+   long buf = node[i];
+   node[i] = node[largest];
+   node[largest] = buf;
+   maxHeapify(largest);
+  }
+  
+ };
+
+ void buildMaxHeap(){
+  long nodeSize = node.size() - 1;
+  for(long i = nodeSize; i > 0; --i)
+   maxHeapify(i);
+ };
+protected:
+};
+
+int main(){
+ Heap heap;
+ long n = 0; cin >> n;
+
+ for(long i = 0; i < n; ++i){
+  long num = 0; cin >> num;
+  heap.insert(num);
+ }
+
+ heap.buildMaxHeap();
+ heap.print();
+
+ return 0;
+}

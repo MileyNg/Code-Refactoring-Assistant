@@ -1,0 +1,82 @@
+#include <iostream>
+#include <complex>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,n) loop(i,0,n)
+typedef complex<int> P;
+
+const int MAX_M = 1.5e6+10;
+const int SIZE = 2000;
+int ps[MAX_M/2];
+bool isp[MAX_M];
+int grid[SIZE][SIZE]={};
+P itop[MAX_M];
+pair<int,int> dp[SIZE][SIZE];
+
+int cnt_p = 0;
+
+void make_es(){
+    fill(isp,isp+MAX_M,true);
+    isp[0]=isp[1]=false;
+    rep(i,MAX_M){
+        if(!isp[i]) continue;
+        ps[cnt_p++] = i;
+        for(int j=i<<1; j<MAX_M; j+=i){
+            isp[j] = false;
+        }
+    }
+}
+
+P const ii(0,1);
+
+int n,m;
+
+pair<int,int> rec(int y, int x){
+    auto & res = dp[y][x];
+    if(res.first!=-1) return res;
+    res = make_pair(0,0);
+    pair<int,int> best(0,0);
+    loop(i,-1,2){
+        if(grid[y+1][x+i]<=m){
+            auto t = rec(y+1,x+i);
+            best = max(t,best);
+        }
+    }
+
+    if(best.first != 0){
+        res.first = best.first + isp[grid[y][x]];
+        res.second = best.second;
+    } else {
+        res.first = isp[grid[y][x]];
+        res.second = grid[y][x];
+    }
+
+    return res;
+}
+
+int main(){
+    make_es();
+    P p(SIZE/2,SIZE/2);
+    P dir(0,1);
+    for(int i=1; i<MAX_M; i++){
+        grid[p.real()][p.imag()] = i;
+        itop[i]=p;
+        p+=dir;
+        P q = p+dir*ii;
+        if(grid[q.real()][q.imag()] == 0){
+            dir*=ii;
+        }
+    }
+
+    while(cin>>m>>n, n+m){
+        auto t = make_pair(-1,-1);
+        rep(i,SIZE)rep(j,SIZE) dp[i][j] = t;
+        P p = itop[n];
+        auto ans = rec(p.real(), p.imag());
+        cout << ans.first << " " << ans.second << endl;
+    }
+}

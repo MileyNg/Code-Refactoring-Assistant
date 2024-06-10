@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int max;
+int solve(int c, int a, int n, int depth)
+{
+	if (c == 0) return (max = fmax(max, depth));
+	if (a > 0 && n > 0) solve(c - 1, a - 1, n - 1, depth + 1);
+	if (c > 1 && a > 0) solve(c - 2, a - 1, n, depth + 1);
+	if (c > 2) solve(c - 3, a, n, depth + 1);
+	return (max = fmax(max, depth));
+}
+
+int main(void)
+{
+	int q, i;
+	scanf("%d", &q);
+	for (i = 0; i < q; i++){
+		int c, a, n;
+		max = 0;
+		scanf("%d %d %d", &c, &a, &n);
+		printf("%d\n", solve(c, a, n, 0));
+	}
+	return (0);
+}

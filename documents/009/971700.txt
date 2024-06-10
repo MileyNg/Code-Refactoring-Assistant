@@ -1,0 +1,75 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+int w,h;
+char maps[51][51];
+bool closed[51][51];
+int dx[]={0,0,1,-1};
+int dy[]={-1,1,0,0};
+
+char check(int i,int j)
+{
+  // cout<<i<<" "<<j<<endl;
+  if(i<0 || i>=h || j<0 || j>=w)
+    return 'X';
+  if(maps[i][j]!='.')
+    return maps[i][j];
+  if(closed[i][j])
+    return 'X';
+  closed[i][j]=true;
+  char tmp='X';
+  for(int xx=0;xx<4;xx++)
+    {
+      char tt=check(i+dx[xx],j+dy[xx]);
+      if(tmp=='X' || tmp==tt)
+	tmp=tt;
+      else if(tt!='X')
+	{
+	  tmp='Z';
+	  break;
+	}
+    }
+  //maps[i][j]=tmp;
+  //  cout<<i<<" "<<j<<" "<<tmp<<endl;
+  return tmp;
+}
+
+int main()
+{
+  for(;cin>>w>>h,w;)
+    {
+      int ans[2]={0,0};
+      for(int i=0;i<h;i++)
+	for(int j=0;j<w;j++)
+	  {
+	    cin>>maps[i][j];
+	    if(maps[i][j]=='B')
+	      ans[0]--;
+	    if(maps[i][j]=='W')
+	      ans[1]--;
+	  }
+
+      for(int i=0;i<h;i++)
+	for(int j=0;j<w;j++)
+	  {
+	    memset(closed,false,sizeof(closed));
+	    maps[i][j]=check(i,j);
+	    char tmp=maps[i][j];
+	    if(tmp=='B')
+	      ans[0]++;
+	    if(tmp=='W')
+	      ans[1]++;
+	  }
+      /*
+      for(int i=0;i<h;i++)
+	for(int j=0;j<w;j++)
+	  {
+	    cout<<	    maps[i][j];
+	    if(j==w-1)
+	      cout<<endl;
+	  }
+      */
+      cout<<ans[0]<<" "<<ans[1]<<endl;
+    }
+}

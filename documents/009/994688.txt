@@ -1,0 +1,66 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+bool check[101];
+bool u[50];
+int v[50];
+int t[50],n;
+
+
+
+bool dfs(){
+
+  int x=-1,cnt=0;
+  for(int i=0;i<n;i++){
+    if(u[i]==false&&x==-1)x=i;
+    if(0<v[i]&&v[i]<t[i])cnt++;
+  }
+
+  if(cnt==0&&x==-1)return true;
+  if(cnt>n-x)return false;
+  /*
+  for(int i=0;i<n;i++)cout<<u[i]<<' ';cout<<endl;
+  for(int i=0;i<n;i++)cout<<v[i]<<' ';cout<<endl;
+  cout<<"cnt "<<cnt<<";  x"<<x<<endl;
+  */
+
+  v[x]=t[x];
+  u[x]=true;
+  int check[101];
+  for(int i=0;i<=100;i++)check[i]=false;
+  check[0]=true;
+  for(int i=0;i<n;i++){
+    if(u[i])continue;
+    for(int j=100;j>=v[i];j--){
+      check[j]|=check[j-t[i]];
+    }
+  }
+
+  for(int i=0;i<x;i++){
+    if(v[i]<t[x])continue;
+
+    if(!check[v[i]-t[x]])continue;
+    v[i]-=t[x];
+    if(dfs())return true;
+    v[i]+=t[x];
+  }
+  v[x]=0;
+  u[x]=false;
+  return false;
+}
+
+int main(){
+  while(cin>>n&&n){
+
+    for(int i=0;i<n;i++)cin>>t[i];
+    sort(t,t+n);
+    reverse(t,t+n);
+
+    for(int i=0;i<n;i++)u[i]=false,v[i]=0;
+    u[0]=true;
+    v[0]=t[0];
+    cout<<(dfs()?"YES":"NO")<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,51 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <tuple>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+typedef tuple<int, int, int> T;
+
+int l[100010];
+ll t[100010] = {};
+int main() {
+    int n, m;
+    cin >> n >> m;
+    l[0] = -1;
+    l[n+1] = -2;
+    for (int i = 1; i <= n; i++) {
+        scanf("%d", l+i);
+    }
+    for (int i = 1; i <= n; i++) {
+        if (l[i-1] < l[i] && l[i] > l[i+1]) {
+            t[i] = m-l[i];
+            for (int j = i-1; j >= 1; j--) {
+                if (l[j] > l[j+1]) break;
+                t[j] = max(t[j], t[j+1] + m-l[j]);
+            }
+            for (int j = i+1; j <= n; j++) {
+                if (l[j] > l[j-1]) break;
+                t[j] = max(t[j], t[j-1] + m-l[j]);
+            }
+        }
+    }
+    ll r = 0;
+    for (int i = 1; i <= n; i++) {
+        r = max(r, t[i]);
+    }
+    printf("%lld\n", r);
+    return 0;
+}

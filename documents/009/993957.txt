@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+int main()
+{
+  int n;
+  while (n = in()){
+    vector<string> names;
+    vector<vector<int> > table(31);
+    rep(i, n){
+      string name;
+      cin >> name;
+      names.push_back(name);
+      rep(j, in()){
+        table[in() - 1].push_back(i);
+      }
+    }
+    vector<int> score(n, 0);
+    rep(i, 31){
+      rep(j, table[i].size()){
+        score[table[i][j]] += n + 1 - table[i].size();
+      }
+    }
+    vector<pair<int, string> > res;
+    rep(i, n){
+      res.push_back(make_pair(score[i], names[i]));
+    }
+    sort(res.begin(), res.end());
+    cout << res[0].first << " " << res[0].second << endl;
+  }
+  return 0;
+}

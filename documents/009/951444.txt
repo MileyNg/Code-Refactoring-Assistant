@@ -1,0 +1,29 @@
+/*
+	0063:Palindrome
+*/
+#include	<iostream>
+#include	<string>
+
+using namespace std;
+
+int main(void) {
+	int count = 0; 
+	while(1) {
+		string str, rstr;
+		
+		cin >> str;
+		if( cin.eof() ) { break; }
+		
+		string::reverse_iterator it = str.rbegin();
+		while(it != str.rend()) {
+			rstr += *it;
+			++it;
+		}
+		
+		if(str == rstr) {
+			count++;
+		}
+	}
+	cout << count << endl;
+	return 0;
+}

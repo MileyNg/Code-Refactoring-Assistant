@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<map>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+typedef pair<int,int> pii;
+
+int n,s;
+int l[555],r[555];
+int w[555][555];
+pii p[555];
+int t[555];
+
+int main(){
+  cin.tie(0);
+  std::ios::sync_with_stdio(0);
+
+  cin >> n >> s; s--;
+  rep(i,n){
+    cin >> l[i] >> r[i];
+    p[i] = pii(r[i],i);
+  }
+  rep(i,n)rep(j,n)cin >> w[i][j];
+  
+  sort(p,p+n);
+  rep(i,n)t[i] = min(r[i]-l[i], r[i] - w[s][i]);
+
+  rep(i,n){
+    int v = p[i].second;
+    if(t[i]<0)continue;
+
+    rep(j,n){
+      if(r[v]+w[v][j] <= r[j]){
+	t[j] = max(t[j], t[v] + min(r[j]-w[v][j]-r[v], r[j]-l[j]) );
+      }
+    }
+  }
+
+  cout << *max_element(t,t+n) << endl;
+}  

@@ -1,0 +1,68 @@
+#include<iostream>
+#include<cstdlib>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<cmath>
+
+using namespace std;
+
+int main(){
+
+	int N;
+	string cstr[12],str[12];
+	vector<char> data;
+	long long end;
+	int sam[10],tm;
+	bool f;
+	int cnt,sum;
+
+	while(1){
+		cin>>N;
+		if(N==0) break;
+
+		for(int i=0;i<N;i++) cin>>cstr[i];
+
+		for(int i=0;i<N;i++){
+			for(int j=0;j<cstr[i].size();j++){
+				if(find(data.begin(),data.end(),cstr[i][j])==data.end()) data.push_back(cstr[i][j]);
+			}
+		}
+
+		end=pow(10.0,(double)data.size());
+		cnt=0;
+		for(long long i=0;i<end;i++){
+			for(int j=0;j<10;j++) sam[j]=0;
+			f=true;
+			tm=i;
+			for(int j=0;j<data.size();j++){
+				sam[tm%10]++;
+				if(sam[tm%10]==2) f=false;
+				tm/=10;
+			}
+			tm=i;
+			if(!f) continue;
+			for(int j=0;j<data.size();j++){
+				sam[j]=tm%10;
+				tm/=10;
+			}
+			f=true;
+			for(int j=0;j<N;j++){
+				str[j]=cstr[j];
+				for(int k=0;k<cstr[j].size();k++){
+					str[j][k]=sam[distance(data.begin(),find(data.begin(),data.end(),str[j][k]))]+'0';
+					if(k==0&&str[j][k]=='0') f=false;
+				}
+			}
+			if(!f) continue;
+			sum=0;
+			for(int j=0;j<N-1;j++){
+				sum+=atoi(str[j].c_str());
+			}
+			if(sum==atoi(str[N-1].c_str())){
+				cnt++;
+			}
+		}
+		cout<<cnt<<endl;
+	}
+}

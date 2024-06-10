@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+#define mp(a, b) make_pair(a, b)
+
+int m, n;
+bool prime[1000010];
+
+void init(){
+    fill(prime, prime+1000010, true);
+    prime[0] = prime[1] = false;
+    rep(i, 1000010)if(prime[i]){
+        for(int j=i*2; j<1000010; j+=i)prime[j] = false;
+    }
+}
+
+void makeCave(vector<vector<int> > &cave, int &sx, int &sy){
+    int k = 1;
+    for(; k*k<m; k+=2);
+    cave.assign(k, vector<int>(k, 0));
+    const int dx[] = {0, -1, 0, 1}, dy[] = {1, 0, -1, 0};
+    int x = k / 2, y = k/ 2, dir = 0, mask = 1;
+    for(int i=1; i<=m; ++i){
+        cave[x][y] = i;
+        if(i == n)sx = x, sy = y;
+        if(i == (2 * mask + 1) * (2 * mask + 1))mask++;
+        int nx = x + dx[dir], ny = y + dy[dir];
+        if(mask < max(abs(nx - k/2), abs(ny - k/2)))(dir += 1) %= 4;
+        x += dx[dir]; y += dy[dir];
+    }
+}
+
+pair<int, int> proc(pair<int, int> p, int x){
+    return mp(p.first + prime[x], prime[x]? x: p.second);
+}
+
+pair<int, int> solve(){
+    vector<vector<int> > cave;
+    int sx, sy;
+    makeCave(cave, sx, sy);
+    vector<vector<pair<int, int> > > dp(cave.size(), vector<pair<int, int> >(cave.size(), mp(0, 0)));
+    if(prime[cave[sx][sy]])dp[sx][sy] = mp(1, cave[sx][sy]);
+    int l = sy, r = sy + 1;
+    for(int x=sx+1; x<(int)cave.size(); ++x){
+        l = max(0, l-1); r = min(r+1, (int)cave.size());
+        for(int y=l; y<r; ++y){
+            for(int dy=-1; dy<=1; ++dy){
+                if(y + dy < 0 || (int)cave.size() <= y + dy)continue;
+                dp[x][y] = max(dp[x][y], proc(dp[x-1][y+dy], cave[x][y]));
+            }
+        }
+    }
+    return *max_element(all(dp.back()));
+}
+
+int main(){
+    init();
+    while(cin >> m >> n, m|n){
+        pair<int, int> ans(solve());
+        cout << ans.first << ' ' << ans.second << '\n';
+    }
+    return 0;
+}

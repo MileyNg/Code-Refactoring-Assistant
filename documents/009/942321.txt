@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int main(void) {
+	int i,n;
+	int hi;
+	int ou;
+	int point;
+	char buff[100];
+	
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		ou = 0;
+		hi = 0;
+		point = 0;
+		while(ou<3) {
+			scanf("%s\n", buff);
+			switch(buff[1]) {
+				case 'I':
+					hi++;
+					if(hi > 3) {
+						point++;
+						hi = 3;
+					}
+				break;
+				case 'O':
+					point = point + hi + 1;
+					hi = 0;
+				break;
+				case 'U':
+					ou++;
+				break;
+			}
+/*			printf("%s %d\n", buff, point);*/
+		}
+		printf("%d\n", point);
+	}
+	
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include<iostream>
+#include<algorithm>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+using namespace std;
+typedef long long ll;
+ 
+const ll INF = (ll)1e16;
+ll n,m,l,s,t;
+ll a,b,c;
+ll r[20],e[20];
+ll d[330][300], dis[20][20];
+ll cycle[1<<20][20];
+ 
+int main(){
+  while(cin >> n >> m >> l >> s >> t, n){
+    rep(i,n)rep(j,n)d[i][j] = INF;
+    rep(i,n)d[i][i] = 0;
+ 
+    rep(i,m){
+      cin >> a >> b >> c; a--; b--;
+      d[a][b] = d[b][a] = c;
+    }
+ 
+    rep(k,n)rep(i,n)rep(j,n)d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+ 
+    rep(i,l)cin >> r[i] >> e[i];
+    
+    rep(i,l+1)rep(j,l+1)dis[i][j] = INF;
+    rep(i,l+1)dis[i][i] = 0;
+ 
+    rep(i,l)dis[l][i] = dis[i][l] = d[s-1][r[i]-1];
+    rep(i,l)rep(j,l)dis[i][j] = d[r[i]-1][r[j]-1];
+ 
+    rep(i,1<<(l+1))rep(j,l+1)cycle[i][j] = INF;
+    cycle[0][l] = 0;
+ 
+    rep(i,1<<(l+1)){
+      rep(j,l+1){
+	rep(k,l+1){
+	  cycle[i|1<<j][k] = min(cycle[i|1<<j][k], cycle[i][j] + dis[j][k]);
+	}
+      }
+    }
+ 
+    int ans = 0;
+    rep(bit,1<<(l+1)){
+      ll sum = 0;
+      rep(i,l){
+	if((bit>>i)&1)sum += e[i];
+      }
+      if(sum + cycle[bit][l] <= t)ans = max(ans,__builtin_popcount(bit));
+    }
+    cout << ans-1 << endl;
+  }
+}

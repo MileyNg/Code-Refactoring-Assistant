@@ -1,0 +1,55 @@
+#include <cstdio>
+using namespace std;
+
+bool g[100][100];
+
+void clear(int n) {
+  for (int i=0; i<n; i++) {
+    for (int j=0; j<n; j++) {
+      g[i][j] = false;
+    }
+  }
+}
+
+void draw(int n) {
+  int i = 0, j = 0, k = n-1;
+  bool b = true;
+  for (int l=0; l<n; l++) g[l][0] = true;
+  while (k > 0) {
+    if (b) {
+      for (int l=0; l<k; l++) g[i][++j] = true;
+      if (k>1) {
+        for (int l=0; l<k; l++) g[++i][j] = true;
+      }
+    } else {
+      for (int l=0; l<k; l++) g[i][--j] = true;
+      if (k>1) {
+        for (int l=0; l<k; l++) g[--i][j] = true;
+      }
+    }
+    k -= 2;
+    b = !b;
+  }
+}
+
+void print(int n) {
+  for (int i=0; i<n; i++) {
+    for (int j=0; j<n; j++) {
+      putchar(g[i][j] ? '#' : ' ');
+    }
+    putchar('\n');
+  }
+}
+
+int main() {
+  int d, n;
+  scanf("%d", &d);
+  for (int i=0; i<d; i++) {
+    scanf("%d", &n);
+    if (i) putchar('\n');
+    clear(n);
+    draw(n);
+    print(n);
+  }
+  return 0;
+}

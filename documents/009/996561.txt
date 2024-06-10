@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> PII;
+
+struct  P {
+	int x, y;
+	P() {}
+	P(int x_, int y_) : x(x_), y(y_) {}
+};
+
+P s;
+int W, H, N;
+char field[20][20];
+int G[10][10];
+int dp[1<<10][10];
+
+int rec(int S, int v)
+{
+	if (dp[S][v]>=0) {
+		return dp[S][v];
+	}
+	
+	if (S==(1<<N)-1) {
+		return dp[S][v]=0;
+	}
+	
+	int res=INF;
+	rep(u, N) {
+		if (!(S>>u&1)) {
+			res = min(res, rec(S|1<<u, u)+G[v][u]);
+		}
+	}
+	return dp[S][v] = res;
+}
+
+int dis(P p1, P p2)
+{
+	queue<P> Q;
+	int d[20][20];
+	fill(d[0], d[0]+20*20, INF);
+	Q.push(p1);
+	d[p1.x][p1.y]=0;
+	
+	while (Q.size()) {
+		P p = Q.front(); Q.pop();
+
+		rep(i, 4) {
+			P np = P(p.x+dx[i], p.y+dy[i]);
+			if_range(np.x, np.y, W, H) {
+				if (field[np.x][np.y]!='x' && d[np.x][np.y]==INF) {
+					Q.push(np);
+					d[np.x][np.y] = d[p.x][p.y]+1;
+				}
+			}
+		}
+	}
+	
+	return d[p2.x][p2.y];
+}
+
+int main()
+{
+	while (cin>>W>>H, W||H) {
+		vector<P> stain;
+		
+		rep(y, H) {
+			rep(x, W) {
+				char c;
+				cin>>c;
+				if (c=='o') { s.x=x; s.y=y; }
+				else if (c=='*') {stain.push_back(P(x, y));}
+				field[x][y]=c;
+			}
+		}
+		N = (int)stain.size();
+		
+		fill(G[0], G[0]+10*10, INF);
+		for (int i=0; i<N; i++) {
+			for (int j=0; j<N; j++) {
+				if (i!=j) {
+					int dd = dis(stain[i], stain[j]);
+					G[i][j] = dd;
+					G[j][i] = dd;
+				} else {
+					G[i][j] = 0;
+				}
+			}
+		}
+			
+		int ans = INF;
+
+		rep(i, N) {
+			memset(dp, -1, sizeof(dp));
+			int tmp=dis(s, stain[i]);
+			ans = min(ans, tmp+rec(1<<i, i));
+		}
+		
+		 cout << (ans<INF ? ans : -1) << endl;
+	}
+}

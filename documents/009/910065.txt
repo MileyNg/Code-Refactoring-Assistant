@@ -1,0 +1,20 @@
+#include <stdio.h>
+int GCD(int,int);
+int main()
+{
+  int com=0; /*comは最大公約数*/
+  int a,b;
+
+  scanf("%d%d",&a,&b);
+
+  com = GCD(a,b);
+
+  printf("%d\n",com);
+  return 0;
+}
+
+int GCD(int a,int b) /*ユークリットの互除法*/
+{
+  if(b==0) return a;
+  return GCD(b,a%b);
+}

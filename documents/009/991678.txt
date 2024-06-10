@@ -1,0 +1,85 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define ALL(T) T.begin(),T.end()
+
+unsigned nCk(unsigned n, unsigned k);
+
+int main(){
+	string S; cin >> S;
+	map<char, int> chrs;
+
+	for (char c = 'a'; c <= 'z'; c++) { chrs[c] = 0; }
+
+	for (int i = 0; i < S.size(); i++) { chrs[S[i]]++; }
+
+	int oddc = 0, evenc = 0;
+	int odd = 0;
+	vector<int> hchrc;
+
+	for (map<char, int>::iterator it = chrs.begin(); it != chrs.end(); it++) {
+		if (it->second % 2) {
+			odd = it->second;
+			oddc++;
+		} else {
+			if (it->second) {
+				hchrc.push_back((it->second)/2);
+				evenc++;
+			}
+		}
+	}
+
+	long long int res = 0;
+
+	if (oddc < 2) {
+		int sum = 0;
+		for (int i = 0; i < hchrc.size(); i++) {
+			sum += hchrc[i];
+		}
+		if (oddc && odd) {
+			odd = (odd-1)/2;
+			sum += odd;
+		}
+		res = 1;
+		int i = 1, j = 0;
+		while (i <= sum || j < hchrc.size()) {
+			while (sum < hchrc[j] || i <= sum) {
+				if (i <= sum) {
+					res *= i;
+					i++;
+				}
+			}
+			if (j < hchrc.size()) {
+				res /= hchrc[j];
+				j++;
+			}
+		}
+		if (oddc && odd) {
+			res /= odd;
+		}
+	}
+
+	cout << res << endl;
+
+
+	return 0;
+}
+
+unsigned nCk(unsigned n, unsigned k){
+	if (k > n) return 0;
+	if (k * 2 > n) k = n-k;
+	if (k == 0) return 1;
+
+	int res = n;
+	for (int i = 2; i <= k; ++i) {
+		res *= (n-i+1);
+		res /= i;
+	}
+	return res;
+}

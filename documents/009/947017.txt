@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+constexpr long long mod = 1000000007;
+typedef pair<long long, long long> result; // true, false
+#define T first
+#define F second
+
+result expression(string::const_iterator &it);
+result term(string::const_iterator &it);
+result factor(string::const_iterator &it);
+result variable(string::const_iterator &it);
+
+result expression(string::const_iterator &it) {
+	result res = term(it);
+
+	while(*it == '|') {
+		++it; // |
+		const auto tmp = term(it);
+		const long long num_true = (res.T * ((tmp.T + tmp.F) % mod) % mod + res.F * tmp.T % mod) % mod;
+		const long long num_false = (res.F * tmp.F) % mod;
+		res = result(num_true, num_false);
+	}
+
+	return res;
+}
+
+result term(string::const_iterator &it) {
+	result res = factor(it);
+
+	while(*it == '&') {
+		++it; // &
+		const auto tmp = factor(it);
+		const long long num_true = (res.T * tmp.T) % mod;
+		const long long num_false = (res.T * tmp.F % mod + res.F * ((tmp.T + tmp.F) % mod) % mod) % mod;
+		res = result(num_true, num_false);
+	}
+
+	return res;
+}
+
+result factor(string::const_iterator &it) {
+	if(*it == '~') {
+		++it; // ~
+		const result tmp = factor(it);
+		return result(tmp.F, tmp.T);
+	}
+	else if(*it == '(') {
+		++it; // (
+		const result res = expression(it);
+		++it; // )
+		return res;
+	}
+	else if(*it == 'x') {
+		return variable(it);
+	}
+	else {
+		assert(false);
+	}
+}
+
+result variable(string::const_iterator &it) {
+	++it; // x
+	while(isdigit(*it)) ++it; // number
+	return result(1, 1);
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	string input;
+	cin >> input;
+
+	auto it = input.cbegin();
+	cout << expression(it).T << endl;
+
+	return EXIT_SUCCESS;
+}

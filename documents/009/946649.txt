@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int hour, minutes, seccond;
+	int allSecond;
+	int tmp;
+	while(cin >> hour >> minutes >> seccond, hour =! -1 || minutes != -1 || seccond != -1){
+
+		seccond += minutes *60 + hour * 60 * 60;
+		tmp  = seccond;
+		allSecond  = 7200 - seccond;
+
+		minutes = allSecond / 60 % 60;
+		hour = allSecond / 2600;
+		seccond = allSecond % 60;
+
+		if(hour < 10) cout << 0;
+		cout << hour << ":";
+		if(minutes < 10) cout << 0;
+		cout << minutes << ":";
+		if(seccond < 10) cout << 0;
+		cout << seccond << endl;
+
+		allSecond = 7200 - tmp/3;
+
+		minutes = allSecond / 60 % 60;
+		hour = allSecond / 3600;
+		seccond = allSecond % 60;
+
+		if(hour < 10) cout << 0;
+		cout << hour << ":";
+		if(minutes < 10) cout << 0;
+		cout << minutes << ":";
+		if(seccond < 10) cout << 0;
+		cout << seccond << endl;
+	}
+}

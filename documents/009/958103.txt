@@ -1,0 +1,37 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		int retu[26] ={0};
+		for (int i = 0; i < n; i++) {
+			cin >> retu[i];
+		}
+		int oha = 32;
+		bool hantei = true;
+		int j = 0;
+		while (oha > 0) {
+			if (hantei) {
+				oha -= (oha-1)%5;
+				hantei = false;
+			} else {
+				oha -= retu[j];
+				j++;
+				if (j >= n) {
+					j = 0;
+				}
+				hantei = true;
+				if (oha < 0) {
+					oha = 0;
+				}
+			}
+			cout << oha << endl;
+		}
+	}
+	return 0;
+}

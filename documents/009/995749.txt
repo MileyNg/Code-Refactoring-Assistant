@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <set>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+
+set<string> dir, file;
+
+void enumerate(string s){
+    file.insert(s);
+    for(auto p=s.find_last_of('/'); p!=string::npos; p=s.find_last_of('/')){
+        s = s.substr(0, p);
+        if(!dir.insert(s + '/').second)return;
+    }
+}
+
+bool exist(string &s){
+    if(s[0] != '/')return false;
+    vector<string> name;
+    for(auto c: s){
+        if(c == '/'){
+            if(!name.empty())name.back() += '/';
+            name.push_back("");
+        }
+        else name.back() += c;
+    }
+    s = "/";
+    for(auto str: name){
+        if(!dir.count(s))return false;
+        if(str == "./" || str == ".")continue;
+        if(str.find("..") != string::npos){
+            if(s == "/")return false;
+            auto p = s.find_last_of('/');
+            s = s.substr(0, s.find_last_of('/', p - 1) + 1);
+        }
+        else s += str;
+    }
+    if(file.count(s + "/index.html"))s += "/index.html";
+    else if(file.count(s + "index.html"))s += "index.html";
+    return file.count(s);
+}
+
+int main(){
+    int N, M;
+    while(cin >> N >> M, N|M){
+        dir.clear(); file.clear();
+        rep(i, N){
+            string s;
+            cin >> s;
+            enumerate(s);
+        };
+        rep(_, M){
+            string s, t;
+            cin >> s >> t;
+            cout << (!exist(s) || !exist(t)? "not found\n": s == t? "yes\n": "no\n");
+        }
+    }
+    return 0;
+}

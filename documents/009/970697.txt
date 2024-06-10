@@ -1,0 +1,35 @@
+#include <iostream>
+
+using namespace std;
+
+int main(void) {
+    int N, a, b, c, x[10];
+    cin >> N;
+    for (; N--; ) {
+        bool ok = true;
+        b = c = 0;
+        for (int i = 0; i < 10; i++) {
+            cin >> x[i];
+        }
+        cerr << b << endl;
+        cerr << c << endl;
+        for (int i = 0; i < 10; i++) {
+            a = x[i];
+            if (a < b && a < c) {
+                ok = false;
+                break;
+            } else if (a < b) {
+                c = a;
+            } else if (a < c) {
+                b = a;
+            } else if (b < c) {
+                c = a;
+            } else {
+                b = a;
+            }
+        }
+        if (ok) cout << "YES" << endl;
+        else cout << "NO" << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,61 @@
+#include<iostream>
+using namespace std;
+
+static int cnt = 0;
+
+template<class T>
+void selectionSort(T* array, int size, int g)
+{
+        int min;
+        for(int i=g-1; i<size-1; i+=g){
+                min = i;
+                for(int j=i+g; j<size; j+=g){
+                        if( array[j] < array[min] ){ min = j; }
+                }
+                T tmp;
+                if( min != i){
+                        tmp = array[min];
+                        array[min] = array[i];
+                        array[i] = tmp;
+                        cnt++;
+                }
+        }
+}
+
+// ソートする配列、配列の要素数
+template<class T>
+void shellSort(T* array, int size)
+{
+        int m=5;
+        int G[] = {121, 40, 13, 4, 1}; // h_{k} = 3*h_{k+1}+1
+        cout << m << endl;
+        cout << G[0];
+        for(int i=1; i<m; i++){
+                cout << " " << G[i];
+        }
+        cout << endl;
+
+        for(int i=0; i<m; i++){
+                selectionSort(array, size, G[i]);
+        }
+}
+
+
+
+int main()
+{
+        int n;
+        cin >> n;
+        int a[n];
+        for(int i=0; i<n; i++){
+                cin >> a[i];
+        }
+
+        shellSort(a, n);
+        cout << cnt << endl;
+        for(int i=0; i<n; i++){
+                cout << a[i] << endl;
+        }
+
+        return 0;
+}

@@ -1,0 +1,35 @@
+#include<cstdio>
+#include<vector>
+#include<cmath>
+#define ALL(v) (v).begin(), (v).end()
+using namespace std;
+
+void fuga(vector<vector<int> > *result, const vector<int> &a, int rest){
+  if(rest == 0){
+    (*result).push_back(a);
+    return;
+  }
+  for(int i = a.size() == 0 ? rest : min(rest, a[a.size()-1]); i > 0; i--){
+    vector<int> b;
+    copy(ALL(a), back_inserter(b));
+    b.push_back(i);
+    fuga(result, b, rest-i);
+  }
+}
+
+int main(){
+  for(;;){
+    int n;
+    scanf("%d", &n);
+    if(!n) break;
+    vector<vector<int> > result;
+    vector<int> v;
+    fuga(&result, v, n);
+    for(auto i : result){
+      for(auto j = i.begin(); j < i.end(); j++){
+	printf("%d", (*j));
+	printf(j+1 == i.end() ? "\n" : " ");
+      }
+    }
+  }
+}

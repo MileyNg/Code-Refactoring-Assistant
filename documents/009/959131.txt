@@ -1,0 +1,27 @@
+#include <iostream>
+
+//a>bのときの最大公約数(greatest common divisor)を計算する関数
+long int get_gcd(long int a, long int b){
+    long int r,gcd;
+	r = a % b;
+	if(r == 0)
+		gcd = b;
+	else 
+		gcd = get_gcd(b,r);
+    return gcd;
+}
+			
+
+int main(){
+	long int a, b,tmp,gcd;
+	while(std::cin >> a >> b){
+		if(b>a){
+		tmp = a;
+		a = b;
+		b = tmp;
+	}
+		gcd = get_gcd(a,b);
+		std::cout << gcd << " " << a*b/gcd << std::endl;
+	}
+	return 0;
+}

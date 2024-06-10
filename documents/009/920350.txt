@@ -1,0 +1,50 @@
+#include<cstdio>
+#include<cstdlib>
+#include<ctime>
+#include<cmath>
+#include<cstring>
+#include<cctype>
+#include<complex>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<vector>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+#include<set>
+#include<bitset>
+#include<numeric>
+using namespace std;
+const int dx[] = {1,0,-1,-1,-1,0,1,1};
+const int dy[] = {1,1,1,0,-1,-1,-1,0};
+const int dx4[]={1,0,-1,0};
+const int dy4[]={0,1,0,-1};
+#define INF 1e+8
+#define EPS 1e-7
+#define PB push_back
+#define fi first
+#define se second
+#define ll long long 
+#define reps(i,j,k) for(int i = (j); i < (k); i++)
+#define rep(i,j) reps(i,0,j)
+typedef pair<int,int> Pii;
+typedef vector<int> vi;
+int solve(int dep,int sum,int f,int res){
+	if(dep == 0 && sum == res) return 1;
+	int ret = 0;
+	reps(i,f+1,101){
+		if(res+i > sum)break;
+		ret += solve(dep-1,sum,i,res+i);
+	}
+	return ret;
+}
+int main(){
+	int n,s;
+	while(scanf("%d%d",&n,&s),(n|s)){
+		printf("%d\n",solve(n,s,-1,0));
+	}
+	return 0;
+}

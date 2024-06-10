@@ -1,0 +1,54 @@
+#include<iostream>
+#include<cmath>
+#include<queue>
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<double,P> PP;
+#define INF (1<<24)
+#define EPS 1e-10
+int n;
+double sx,sy,tx,ty,px[20],py[20];
+double tab[(1<<20)][20];
+
+double dis(double a,double b,double c,double d)
+{return sqrt((a-c)*(a-c)+(b-d)*(b-d));}
+double dis(int a,int b){return dis(px[a],py[a],px[b],py[b]);}
+
+int main(){
+  while(1){
+    cin>>n>>sx>>sy>>tx>>ty;
+    if(n==0&&sx==0&&sy==0&&tx==0&&ty==0)break;
+    for(int i=0;i<n;i++)cin>>px[i]>>py[i];
+    for(int i=0;i<(1<<n);i++)
+      for(int j=0;j<n;j++)tab[i][j]=INF;
+    priority_queue<PP> Q;
+    for(int i=0;i<n;i++){
+      Q.push( PP(dis(sx,sy,px[i],py[i]),P((1<<i),i) ) );
+      tab[(1<<i)][i]=dis(sx,sy,px[i],py[i]);
+    }
+
+    while(!Q.empty()){
+      PP tmp=Q.top();Q.pop();
+      double total=tmp.first;
+      int S=tmp.second.first,pos=tmp.second.second;
+
+      bool flg=false;    
+      for(int i=0;i<n;i++)
+	if(total+dis(pos,i)>dis(tx,ty,px[i],py[i]))flg=true;
+      if(flg)continue;
+      
+      for(int i=0;i<n;i++){
+	if((S>>i)&1)continue;
+	if(total+dis(pos,i)>=tab[S|(1<<i)][i])continue;
+	if(total+dis(pos,i)>=dis(tx,ty,px[i],py[i]))continue;
+	tab[S|(1<<i)][i]=total+dis(pos,i);
+	Q.push( PP(total+dis(pos,i),P(S|(1<<i),i)) );
+      }
+    }
+    
+    bool flag=false;
+    for(int i=0;i<n;i++)if(tab[(1<<n)-1][i]!=INF)flag=true;
+    cout<<(flag?"YES":"NO")<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,25 @@
+while true
+    n = gets.to_i
+    if n ==0
+        break
+    end
+    h = Hash.new([])
+    for i in 0..n-1 do
+        line = gets
+        h[line.split[0]] = line.split[1]
+    end
+    a = h.sort {|a,b| a[1]<=>b[1]}
+    sum = 0
+    b = false
+    for i in 0..n-1 do
+        sum += a[i][0].to_i
+        if sum > a[i][1].to_i
+            puts "No"
+            b = true
+            break
+        end
+    end
+    if !b
+        puts "Yes"
+    end
+end

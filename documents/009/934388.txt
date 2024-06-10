@@ -1,0 +1,40 @@
+#include <iostream>
+
+using namespace std;
+/** Problem0104 : Magical Tiles **/
+int main()
+{
+	char room[110][110];
+	int w, h, x, y;
+	
+	while (cin >> h >> w, w != 0 && h != 0) {
+		for (int y=0; y<h; y++) {
+			for (int x=0; x<w; x++) {
+				cin >> room[x][y];
+			}
+		}
+
+		x=0; y=0;
+		while (1) {
+			if (room[x][y] == '>') {
+				room[x][y] = 'L';
+				x++;
+			} else if (room[x][y] == '<') {
+				room[x][y] = 'L';
+				x--;
+			} else if (room[x][y] == '^') {
+				room[x][y] = 'L';
+				y--;
+			} else if (room[x][y] == 'v') {
+				room[x][y] = 'L';
+				y++;
+			} else if (room[x][y] == 'L') {
+				cout << "LOOP" << endl;
+				break;
+			} else if (room[x][y] == '.') {
+				cout << x << " " << y << endl;
+				break;
+			}
+		}
+	}
+}

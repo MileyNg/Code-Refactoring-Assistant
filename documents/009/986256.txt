@@ -1,0 +1,44 @@
+### constant
+
+FEES = [
+  [   0,  300,  500,  600,  700, 1350, 1650],
+  [ 300,    0,  350,  450,  600, 1150, 1500],
+  [ 500,  350,    0,  250,  400, 1000, 1350],
+  [ 600,  450,  250,    0,  250,  850, 1300],
+  [ 700,  600,  400,  250,    0,  600, 1150],
+  [1350, 1150, 1000,  850,  600,    0,  500],
+  [1650, 1500, 1350, 1300, 1150,  500,    0]
+]
+
+DISTS = [0, 6, 13, 18, 23, 43, 58]
+
+### global variables
+
+### subroutines
+
+def discount?(h, m)
+  (h == 17 && m >= 30 || h == 18 || h == 19 && m <= 30)
+end
+
+### main
+
+while true
+  ic0 = gets.strip.to_i
+  break if ic0 == 0
+
+  h0, m0 = gets.strip.split(' ').map{|s| s.to_i}
+  ic1 = gets.strip.to_i
+  h1, m1 = gets.strip.split(' ').map{|s| s.to_i}
+
+  ic0 -= 1
+  ic1 -= 1
+
+  fee = FEES[ic0][ic1]
+
+  if (discount?(h0, m0) || discount?(h1, m1)) &&
+      (DISTS[ic1] - DISTS[ic0]).abs <= 40
+    fee = (fee / 100) * 50 + (fee % 100 != 0 ? 50 : 0)
+  end
+
+  puts fee
+end

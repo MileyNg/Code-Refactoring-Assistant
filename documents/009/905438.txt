@@ -1,0 +1,106 @@
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+typedef int weight;
+typedef pair<weight, int> P;
+constexpr weight EPS = 1e-8;
+
+class edge {
+public:
+	int to;
+	int cap;
+	weight cost;
+	int rev;
+	edge(int to_, int cap_, weight cost_, int rev_):to(to_), cap(cap_), cost(cost_), rev(rev_){};
+};
+
+vector<vector<edge> > G;
+
+void init(int V) {
+	G.assign(V, vector<edge>());
+}
+
+void add_edge(int from, int to, int cap, weight cost) {
+	G[from].emplace_back(to, cap, cost, G[to].size());
+	G[to].emplace_back(from, 0, -cost, G[from].size() - 1);
+}
+
+weight min_cost_flow(int s, int t, int f) {
+	const int n = G.size();
+	weight res = 0;
+	vector<int> prevv(n), preve(n);
+	vector<weight> h(n, 0);
+	while(f > 0) {
+		priority_queue<P, vector<P>, greater<P> > que;
+		vector<weight> dist(n, INT_MAX);
+		dist[s] = 0;
+		que.push({0, s});
+		while(!que.empty()) {
+			const int d = que.top().first;
+			const int v = que.top().second;
+			que.pop();
+
+			if(dist[v] < d) continue;
+
+			for(unsigned i = 0; i < G[v].size(); ++i) {
+				const edge &e = G[v][i];
+				if(e.cap > 0 && dist[e.to] > d + e.cost + h[v] - h[e.to] + EPS) {
+					dist[e.to] = d + e.cost + h[v] - h[e.to];
+					prevv[e.to] = v;
+					preve[e.to] = i;
+					que.push({dist[e.to], e.to});
+				}
+			}
+		}
+
+		if(dist[t] == INT_MAX) return -1;
+
+		for(int v = 0; v < n; ++v) {
+			h[v] += dist[v];
+		}
+
+		int d = f;
+		for(int v = t; v != s; v = prevv[v]) {
+			d = min(d, G[prevv[v]][preve[v]].cap);
+		}
+
+		f -= d;
+		res += d * h[t];
+		for(int v = t; v != s; v = prevv[v]) {
+			edge &e = G[prevv[v]][preve[v]];
+			e.cap -= d;
+			G[v][e.rev].cap += d;
+		}
+	}
+
+	return res;
+}
+
+constexpr int NUMBER_OF_DAYS = 365;
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		init(NUMBER_OF_DAYS + 1);
+		for(int i = 0; i < NUMBER_OF_DAYS; ++i) {
+			add_edge(i, i + 1, 2, 0);
+		}
+
+		for(int i = 0; i < n; ++i) {
+			int l, r, w;
+			cin >> l >> r >> w;
+			add_edge(l - 1, r, 1, -w);
+		}
+
+		cout << -min_cost_flow(0, NUMBER_OF_DAYS, 2) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

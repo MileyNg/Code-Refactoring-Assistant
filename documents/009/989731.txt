@@ -1,0 +1,23 @@
+#include <stdio.h>
+#define BUFFER 128
+
+int main(void)
+{
+  char c;
+  int moji[BUFFER]={0};
+
+  while(scanf("%c",&c)!=EOF){
+    if('A' <= c && c <= 'Z'){
+      c = c - ('A'-'a');
+    }
+
+    moji[c]++;
+  }
+
+  int i;
+
+  for(i='a';i<='z';i++)
+    printf("%c : %d\n",i,moji[i]);
+
+  return 0;
+}

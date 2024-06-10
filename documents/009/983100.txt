@@ -1,0 +1,86 @@
+//include
+//------------------------------------------
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+
+using namespace std;
+
+//debug
+#define DUMP(x)  cerr << #x << " = " << (x) << endl;
+#define DEBUG(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+int w, h;
+
+int dx[4] = {1,0,-1,0};
+int dy[4] = {0,1,0,-1};
+
+bool B[50][50], W[50][50];
+char field[50][50];
+
+void dfs(int y, int x, bool color){
+	for(int k=0; k<4; k++){
+		if(x+dx[k]<0 || x+dx[k]>=w || y+dy[k]<0 || y+dy[k]>=h) continue;
+		if(field[y+dy[k]][x+dx[k]]=='.'){
+			if(color){
+				if(!W[y+dy[k]][x+dx[k]]){
+					W[y+dy[k]][x+dx[k]] = true;
+					dfs(y+dy[k],x+dx[k],1);
+				}
+			}else{
+				if(!B[y+dy[k]][x+dx[k]]){
+					B[y+dy[k]][x+dx[k]] = true;
+					dfs(y+dy[k],x+dx[k],0);
+				}
+			}
+		}
+	}
+}
+
+int main(){
+	int b_count, w_count;
+	while(cin >> w >> h){
+		if(!(w||h)) break;
+		b_count = 0;
+		w_count = 0;
+		for(int i=0; i<h; i++){
+			for(int j=0; j<w; j++){
+				cin >> field[i][j];
+				B[i][j] = false;
+				W[i][j] = false;
+			}
+		}
+		for(int i=0; i<h; i++){
+			for(int j=0; j<w; j++){
+				if(field[i][j] == 'B') dfs(i,j,0);
+				if(field[i][j] == 'W') dfs(i,j,1);
+			}
+		}
+		for(int i=0; i<h; i++){
+			for(int j=0; j<w; j++){
+				if( B[i][j] && !W[i][j]) b_count++;
+				if(!B[i][j] &&  W[i][j]) w_count++;
+			}
+		}
+		cout << b_count << " " << w_count << endl;
+	}
+    return 0;
+}

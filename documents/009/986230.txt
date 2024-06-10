@@ -1,0 +1,41 @@
+## constants
+
+PRIMES = [2, 3, 5]
+N_PRIMES = PRIMES.length
+
+### global variables
+
+$ch_cache = []
+
+### subroutines
+
+def count_hamming(k, n)
+  return 1 if k >= N_PRIMES
+  return $ch_cache[k][n] if ! $ch_cache[k][n].nil?
+
+  c = 0
+  m = 1
+
+  while m <= n
+    c += count_hamming(k + 1, n / m)
+    m *= PRIMES[k]
+  end
+
+  $ch_cache[k][n] = c
+end
+
+### main
+
+$ch_cache = PRIMES.map{[]}
+
+while true
+  line = gets.strip
+  break if line == '0'
+
+  m, n = line.split(' ').map{|s| s.to_i}
+
+  mh = count_hamming(0, m - 1)
+  nh = count_hamming(0, n)
+
+  puts (nh - mh)
+end

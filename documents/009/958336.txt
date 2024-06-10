@@ -1,0 +1,45 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n, m;
+	while (cin >> n >> m) {
+		if (n == 0 && m == 0) {
+			break;
+		}
+		int h[1510];
+		int w[1510];
+		for (int i = 0; i < n; i++) {
+			cin >> h[i];
+		}
+		for (int j = 0; j < m; j++) {
+			cin >> w[j];
+		}
+		int sq = 0;
+		int hs = 0;
+		int ws = 0;
+		for (int i = 0; i < n; i++) {
+			for (int p = i+1; p <= n; p++) {
+				hs = 0;
+				for (int j = i; j < p; j++) {
+					hs += h[j];
+				}
+				for (int b = 0; b < m; b++) {
+					for (int q = b+1; q <= m; q++) {
+						ws = 0;
+						for (int k = b; k < q; k++) {
+							ws += w[k];
+						}
+						//cout << hs << " " << ws << endl;
+						if (hs == ws) {
+							sq++;
+						}
+					}
+				}
+			}
+		}
+		cout << sq << endl;
+	}
+	return 0;
+}

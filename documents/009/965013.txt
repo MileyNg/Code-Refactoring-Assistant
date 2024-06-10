@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	
+	scanf("%d", &n);
+	while (n != 0){
+		int person[4000] = {0};
+		int i;
+		int num, price, volume;
+		int flag = 0;
+		
+		for (i = 0; i < n; i++){
+			scanf("%d %d %d", &num, &price, &volume);
+			person[num - 1] += price * volume;
+		}
+		for (i = 0; i < 4000; i++){
+			if (person[i] >= 1000000){
+				flag = 1;
+				printf("%d\n", i + 1);
+			}
+		}
+		if (flag == 0){
+			puts("NA");
+		}
+		
+		scanf("%d", &n);
+	}
+	
+	return 0;
+}

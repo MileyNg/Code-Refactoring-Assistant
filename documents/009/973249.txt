@@ -1,0 +1,33 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+#define PI acos(-1)
+using namespace std;
+int main(){
+  int n,m;
+  vector<int>in;
+  cin>>n>>m;
+  vector<int>han(n,0);
+  rep(i,n){
+    int tmp;
+    cin>>tmp;
+    pb(in,tmp);
+  }
+  rep(i,m){
+    int tmp;
+    cin>>tmp;
+    rep(j,n)if(in[j]<=tmp){han[j]++;break;}
+  }
+  int max=0;
+  int mai=0;
+  rep(i,n)if(max<han[i]){max=han[i];mai=i;}
+    cout<<mai+1<<endl;
+}

@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+int main(){
+
+    int n;
+    while(cin >> n, n){
+        map<int, long long int> m;
+        for(int i=0; i < n; i++){
+            int num, cost, goodsNum;
+            cin >> num >> cost >> goodsNum;
+            m[num] += cost*goodsNum;
+        }
+
+        bool exist = false;
+        map<int, long long int>::iterator it = m.begin();
+        while(it != m.end()){
+            if(1000000 <= (*it).second){
+                cout << (*it).first << endl;
+                exist = true;
+            }
+            ++it;
+        }
+
+        if(!exist)cout << "NA" << endl;
+    }
+}

@@ -1,0 +1,88 @@
+def expr( str, i )
+  s, i, value = term( str, i )
+
+  loop do
+    s, ni = sp( str, i )
+    break unless s
+
+    break if str[ni...ni+2] != ">>"
+    ni = ni + 2
+
+    s, ni = sp( str, ni )
+    s, ni, v = term( str, ni )
+    break unless s
+
+    value = value / (2 ** v)
+
+    i = ni
+  end
+
+  return true, i, value
+end
+
+def term( str, i )
+  s, i, v = number( str, i )
+  return s, i, v if s
+
+  return false, i, nil if str[i] != "S"
+  i = i + 1 #str[i] == "S"
+
+  s, i = sp( str, i )
+  i = i + 1 #str[i] == "<"
+  s, i = sp( str, i )
+  s, i, v = expr( str, i )
+  s, i = sp( str, i )
+  i = i + 1 #str[i] == ">"
+
+  return true, i, v ** 2 % 1000000007
+end
+
+def sp( str, i )
+  loop do
+    return false, i if i >= str.length
+    break if str[i] != " "
+    i = i + 1
+  end
+
+  return true, i
+end
+
+def number( str, i )
+  value = ""
+
+  s, i, v = digit( str, i )
+  return false, i, nil unless s
+  value << v
+
+  loop do
+    s, i, v = digit( str, i )
+    break unless s
+    value << v
+  end
+
+  return true, i, value.to_i
+end
+
+def digit( str, i )
+  return false, i, nil if i >= str.length
+
+  if str[i] >= '0' && str[i] <= '9'
+    return true, i + 1, str[i]
+
+  else
+    return false, i, nil
+  end
+end
+
+
+def eval( str )
+  _, _, v = expr( str, 0 )
+
+  puts v.to_s
+end
+
+STDIN.each_line.map(&:chomp).each do |line|
+  break if line == "#"
+
+  eval line
+end

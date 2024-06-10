@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+
+const char red_tile = '#';
+const int step[][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+int count_area(char t[][21], int x, int y, int w, int h) {
+    int i, count = 0;
+    if (x < 0 || w <= x || y < 0 || h <= y) return 0;
+    if (t[y][x] == red_tile) return 0;
+    t[y][x] = red_tile;
+    count += 1;
+    for (i = 0; i < 4; i++) {
+        count += count_area(t, x+step[i][0], y+step[i][1], w, h);
+    }
+    return count;
+}
+
+int main() {
+    int w, h, i, sx, sy;
+    char *p;
+    char tile[20][21];
+
+    while (scanf("%d%d\n", &w, &h) != EOF && w && h) {
+        for (i = 0; i < h; i++) {
+            scanf("%s", &tile[i]);
+            if ((p = strchr(tile[i], '@')) != NULL) {
+                sx = p - (char*)&tile[i];
+                sy = i;
+            }
+        }
+        printf("%d\n", count_area(tile, sx, sy, w, h));
+    }
+
+    return 0;
+}

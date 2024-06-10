@@ -1,0 +1,24 @@
+#include<stdio.h>
+#include<ctype.h>
+int main(){
+    int table[26];
+    char c;
+    int i,n;
+    for(i=0;i<26;i++){
+        table[i]=0;
+    }
+    while((scanf("%c",&c)!=EOF))
+    {
+        if('a'<=c&&c<='z'){
+            n=c-'a';
+            table[n]++;
+        }else if('A'<=c&&c<='Z'){
+            n=c-'A';
+            table[n]++;
+        }
+    }
+    for(i=0;i<26;i++){
+        printf("%c : %d\n",'a'+i,table[i]);
+    }
+    return 0;
+}

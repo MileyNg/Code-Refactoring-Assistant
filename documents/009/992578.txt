@@ -1,0 +1,135 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <complex>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+string S;
+ 
+int digit(int cur){
+    return S[cur]-'0';
+}
+ 
+set<int> number(int cur){
+    int res=digit(cur++);
+    while(isdigit(S[cur])){
+        res=10*res+digit(cur++);
+    }
+    set<int> ans;
+    ans.insert(res);
+    return ans;
+}
+ 
+set<int> exp(int l,int r){
+
+    if(isdigit(S[l])){
+		bool isall=true;
+		for(int i=l;i<r;i++)
+			if(!isdigit(S[i])) isall=false;
+		if(isall)
+			return number(l);
+	}
+	
+	if(S[l]=='('){
+		bool all=true;
+		for(int i=l,depth=0;i<r;i++){
+			if(S[i]=='(') depth++;
+			else if(S[i]==')') depth--;
+			if(i<r-1&&depth==0) all=false;
+		}
+		if(all) return exp(l+1,r-1);
+	}
+
+    int num=0;
+    set<int> res;
+ 
+    for(int i=l;i<r;i++){
+        if(isdigit(S[i])){
+            continue;
+        }else if(S[i]=='('){
+            num++;
+        }else if(S[i]==')'){
+            num--;
+        }else if(num==0){
+            char op=S[i];
+            set<int> a=exp(l,i);
+            set<int> b=exp(i+1,r);
+            set<int> res2;
+            switch(op){
+                case '+':
+                    each(j,a)each(k,b) res2.insert((*j)+(*k));
+                    break;
+                case '-':
+                    each(j,a)each(k,b) res2.insert((*j)-(*k));
+                    break;
+                case '*':
+                    each(j,a)each(k,b) res2.insert((*j)*(*k));
+                    break;
+                case '/':
+                    each(j,a)each(k,b)if((*k)!=0)res2.insert((*j)/(*k));
+                    break;
+ 
+            }
+            each(j,res2) res.insert(*j);
+        }
+    }
+	return res;
+}
+  
+int main(void){
+    while(cin >> S){
+        int n=S.size();
+        if(S=="#")
+            break;
+		set<int> ans=exp(0,n);
+        cout << ans.size() << endl;
+    }
+    return 0;
+}

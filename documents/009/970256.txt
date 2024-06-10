@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+
+void input_dolls(vector<pair<int, int>> &dolls, int n) {
+	for(int i = 0; i < n; ++i) {
+		int h, r;
+		cin >> h >> r;
+		dolls.emplace_back(h, r);
+	}
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		vector<pair<int, int>> dolls;
+		input_dolls(dolls, n);
+
+		int m;
+		cin >> m;
+		input_dolls(dolls, m);
+
+		sort(dolls.begin(), dolls.end());
+
+		int prev_r = -1;
+		vector<int> dp(1000, 0);
+		vector<int> tmp(dp);
+
+		for(const auto &doll : dolls) {
+			const int r = doll.second;
+			if(prev_r != r) {
+				tmp = dp;
+				prev_r = r;
+			}
+
+			const int num = *max_element(tmp.begin(), tmp.begin() + r);
+			chmax(dp[r], num + 1);
+		}
+
+		cout << *max_element(dp.begin(), dp.end()) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

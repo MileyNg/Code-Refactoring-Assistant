@@ -1,0 +1,30 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int N,n,M,m=0,A,max=0;
+	int i,j;
+	int kyougi[1200]={0},kai[1200]={0};
+	
+	scanf("%d %d",&N,&M);
+
+	for(i=1;i<N+1;i++)  scanf("%d",&kyougi[i]);
+	
+	for(i=0;i<M;i++){
+		scanf("%d",&n);
+		j=1;
+		while(j!=N+1){
+			if(kyougi[j]<=n){
+				kai[j]++;
+				if(max<kai[j]){
+					max=kai[j];
+					A=j;
+				}
+				break;
+			}
+			j++;
+		}
+	}
+	printf("%d\n",A);
+	return 0;
+}

@@ -1,0 +1,103 @@
+#include<stdio.h>
+#define MAX 100005
+#define NIL -1
+
+struct Node{int p,l,r,ls,rs;}; 
+struct Node T[MAX];
+int n, root;
+
+void findRoot()
+{
+  int i;
+  for(i=0; i<n; i++)
+    {
+      if(T[i].p == NIL) 
+	{
+	  root = i;
+	  break;
+	}
+    }   
+}
+
+void preorderPrint(int value)
+{
+ printf(" %d",value);
+  if(T[value].l != -1)
+    {   
+      preorderPrint(T[value].l);
+    }
+  if(T[value].r != -1)
+    {
+      preorderPrint(T[value].r);
+    } 
+}
+
+void inorderPrint(int value){
+  if(T[value].l != -1)
+    {   
+      inorderPrint(T[value].l);
+    }
+  
+  printf(" %d",value);
+  
+  if(T[value].r != -1)
+    {
+      inorderPrint(T[value].r);
+    } 
+}
+
+void postorderPrint(int value){
+  if(T[value].l != -1)
+    {   
+      postorderPrint(T[value].l);
+    }
+
+  if(T[value].r != -1)
+    {   
+      postorderPrint(T[value].r);
+    } 
+
+  printf(" %d",value);
+ 
+}
+
+main(){
+  int i,j,d,v,c,l;
+  
+  scanf("%d",&n);
+  
+  for (i=0; i<n; i++){
+    T[i].p = T[i].l = T[i].r = T[i].ls = T[i].rs = NIL;
+  }
+  
+  for (i=0; i<n; i++){
+    scanf("%d",&v);
+    for (j=0; j<2; j++){
+      scanf("%d",&c);
+      
+      if(j == 0){
+	T[v].l = c;
+	T[c].p = v;
+	T[v].rs = c; 
+      }
+      else if(j == 1){
+	T[v].r = c;
+	T[c].p = v;
+	T[v].ls = c;
+      }
+    }
+  }
+  
+  
+  findRoot();
+  printf("Preorder\n");
+  preorderPrint(root);
+  printf("\n");
+  printf("Inorder\n");
+  inorderPrint(root);
+  printf("\n");
+  printf("Postorder\n");
+  postorderPrint(root);
+  printf("\n");
+    return 0;
+}

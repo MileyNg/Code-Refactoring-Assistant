@@ -1,0 +1,12 @@
+until (n = gets.to_i).zero?
+  dp = Array.new(n / 2 + 1){0}
+  dp[1] = 1
+  (2 .. n / 2).each do |i| dp[i] = 3 * dp[i - 1] + 1 end
+
+  result = n
+  (1 ... n / 2).each do |i|
+    result += 4 * dp[i]
+  end
+  result += 2 * dp[n / 2] if n.odd?
+  p result
+end

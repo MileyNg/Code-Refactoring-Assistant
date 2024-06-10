@@ -1,0 +1,49 @@
+def paint(x, y, w, h, id, flds, ids)
+  f = flds[y][x]
+  ids[y][x] = id
+  queue = [[x, y]]
+
+  while ! queue.empty?
+    x0, y0 = queue.shift
+
+    q0 = []
+    q0.push [x0 - 1, y0] if x0 > 0
+    q0.push [x0 + 1, y0] if x0 < w - 1
+    q0.push [x0, y0 - 1] if y0 > 0
+    q0.push [x0, y0 + 1] if y0 < h - 1
+
+    for xy in q0
+      x1, y1 = xy
+      if flds[y1][x1] == f && ids[y1][x1] == 0
+        ids[y1][x1] = id
+        queue.push xy
+      end
+    end
+  end
+end
+
+while true
+  h, w = gets.chomp.split(" ").map{|s| s.to_i}
+  break if h == 0 && w == 0
+
+  flds = []
+  ids = []
+
+  h.times.each do
+    hl = gets.chomp.split("")
+    flds.push hl
+    ids.push hl.map{0}
+  end
+
+  id = 0
+  for y in (0...h)
+    for x in (0...w)
+      if ids[y][x] == 0
+        id += 1
+        paint(x, y, w, h, id, flds, ids)
+      end
+    end
+  end
+
+  puts id
+end

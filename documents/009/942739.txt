@@ -1,0 +1,26 @@
+#include <stdio.h>
+int main(){
+int a, b, c, h, w;
+
+	while(1){
+	scanf("%d %d", &h, &w);
+		if(h >= 300 && w >= 300) break;
+		if(h == 0 && w == 0) break;
+		if(h >= 3 && w <= 100){ 
+		for(a = 0; a < h ; a++){
+			for(b = 0 ; b < w ; b++){
+					if(a == 0 || a == h - 1 || b == 0 || b == w - 1){
+						printf("#");
+					}else{
+						printf(".");
+					}
+				}
+			printf("\n");
+			}
+	}
+	}
+	printf("\n");
+	
+	return 0;
+
+}

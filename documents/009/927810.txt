@@ -1,0 +1,53 @@
+#include<stdio.h>
+#define LEN 1000000
+
+typedef struct{
+  char name[20];
+  int time;
+}que;
+
+que Que[LEN];
+int head=0, tail=0;
+
+void enQue(que q){
+  Que[head]=q;
+  head++;
+}
+
+que deQue(void){
+  tail++;
+  return Que[tail-1];
+}
+
+int size(void){
+  return head-tail;
+}
+
+int main(){
+  int N, q;
+  que Q;
+  int i, j, k;
+  int time=0;
+  
+  scanf("%d %d", &N, &q);
+  for(i=0; i<N; i++){
+    scanf("%s %d", Q.name, &Q.time);
+    enQue(Q);
+  }
+  
+  while(1){
+    Q=deQue();
+    if(Q.time<=q){
+      time+=Q.time;
+      printf("%s %d\n", Q.name, time);
+    }
+    else{
+      Q.time-=q;
+      time+=q;
+      enQue(Q);
+    }  
+      if(size()==0) break;
+  }
+  
+  return 0;
+}

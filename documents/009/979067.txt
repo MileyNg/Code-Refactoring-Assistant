@@ -1,0 +1,37 @@
+#include<stdio.h>
+
+#define NUMMAX 1000000
+
+
+int main(void){
+	int i,j, n, count;
+	int prime[NUMMAX+1];
+
+	while(1){
+    if(scanf("%d",&n)==EOF) break;
+
+	for(i = 0; i < n+1; i++){
+		prime[i] = 1; //フラグをセット
+	}
+
+	prime[0] = 0; //0は素数じゃない
+	prime[1] = 0; //1は素数じゃない
+
+	for(i = 2; i<=n+1; i++){
+		if(prime[i] == 1){
+			for(j = i*2; j<=n+1; j +=i){
+				prime[j] = 0; //素数iの倍数は弾く
+			}
+		}
+	}
+
+	for(i = 0; i <=n+1; i++){
+		if(prime[i] == 1){
+			count++;
+		}
+	}
+	printf("%d\n",count);
+	}
+
+	return 0;
+}

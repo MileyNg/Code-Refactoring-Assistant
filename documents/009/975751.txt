@@ -1,0 +1,87 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <sstream>
+#include <unordered_map>
+using namespace std;
+
+string characters[38];
+
+void init() {
+	for(int i = 0; i < 26; ++i) {
+		characters[i] = 'a' + i;
+	}
+	characters[26] = "ld";
+	characters[27] = "mb";
+	characters[28] = "mp";
+	characters[29] = "nc";
+	characters[30] = "nd";
+	characters[31] = "ng";
+	characters[32] = "nt";
+	characters[33] = "nw";
+	characters[34] = "ps";
+	characters[35] = "qu";
+	characters[36] = "cw";
+	characters[37] = "ts";
+}
+
+string get_char(int &idx, const string &word) {
+	if(idx + 1 < word.size()) {
+		const string tmp = word.substr(idx, 2);
+		if(find(begin(characters), end(characters), word.substr(idx, 2)) != end(characters)) {
+			idx += 2;
+			return tmp;
+		}
+	}
+
+	return idx < word.size() ? string(1, word[idx++]) : "";
+}
+
+void calc_input(unordered_map<string, unordered_map<string, int>> &cnt) {
+	string sentence;
+	getline(cin, sentence);
+
+	istringstream iss(sentence);
+	for(string word; iss >> word;) {
+		int idx = 0;
+		string current = get_char(idx, word);
+		string next;
+
+		for(string next; (next = get_char(idx, word)) != "";) {
+			++cnt[current][next];
+			current = move(next);
+		}
+	}
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	init();
+
+	int n;
+	cin >> n;
+	cin.ignore();
+
+	unordered_map<string, unordered_map<string, int>> cnt;
+	while(n--) calc_input(cnt);
+
+	for(const auto &character : characters) {
+		int max_cnt = 0;
+		string max_char = "a";
+		const auto &c_cnt = cnt[character];
+
+		for(const auto &target : characters) {
+			if(c_cnt.count(target) && max_cnt < c_cnt.at(target)) {
+				max_cnt = c_cnt.at(target);
+				max_char = target;
+			}
+
+		}
+
+		cout << character << " " << max_char << " " << max_cnt << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

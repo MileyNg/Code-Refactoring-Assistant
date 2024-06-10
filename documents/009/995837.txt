@@ -1,0 +1,44 @@
+#define _USE_MATH_DEFINES
+ 
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+
+int main(){
+	int n;
+
+	while(cin >> n){
+		int max = 0;
+		int soremade = 0;
+		int mae = 0;
+		int ima = 0;
+
+		if(n==0) break;
+		
+		cin >> mae;
+
+		for(int i=1;i<n;i++){
+			if(mae > soremade+mae){
+				soremade = mae;
+			}else{
+				soremade += mae;
+			}
+			
+			cin >> ima;
+			
+			if(max < ima+soremade){
+				max = ima+soremade;
+			}
+			mae = ima;
+		}
+
+		cout << max << endl;
+	}
+
+	return 0;
+}

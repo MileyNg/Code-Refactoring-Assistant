@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+#include "../geometry.h"
+
+P input(){
+    double x, y;
+    cin >> x >> y;
+    return {x, y};
+}
+struct S{
+    int cur, prev;
+    double cost;
+    bool operator < (const S& s) const {
+        if(cost != s.cost) return cost > s.cost;
+        return make_pair(cur, prev) < make_pair(s.cur, s.prev);
+    }
+    void print(){
+        printf("%d -> %d : %f\n", prev, cur, cost);
+    }
+};
+int main(){
+    int N;
+    int casenum = 0;
+    while(cin >> N && N){
+        P sp = input();
+        P gp = input();
+        vector<L> elec(N);
+        REP(i, N) {
+            P pa = input();
+            P pb = input();
+            elec[i] = {pa, pb};
+        }
+
+        vector<L> route;
+        REP(i, N) {
+            P v = vec(elec[i]) * P(0, 1);
+            L l = {sp, sp + v};
+            if(iLS(l, elec[i])) {
+                route.push_back(l);
+            }
+        }
+        priority_queue<S> que;
+        int M = route.size();
+        REP(i, N) {
+            P v = vec(elec[i]) * P(0, 1);
+            route.push_back({elec[i][0], elec[i][0] + v});
+            route.push_back({elec[i][1], elec[i][1] + v});
+        }
+        REP(i, N) {
+            P v = vec(elec[i]) * P(0, 1);
+            L l = {gp, gp + v};
+            if(iLS(l, elec[i])) {
+                route.push_back(l);
+            }
+        }
+        // REP(i, route.size()){
+        //     cout << "route " << i << " " << route[i][0] << " " << route[i][1] << endl;
+        // }
+        bool adj[500][500] = {};
+        P cpp[500][500] = {};
+        REP(i, route.size()) REP(j, route.size()) {
+            if(!paralell(route[i], route[j])){
+                cpp[i][j] = pLL(route[i], route[j]);
+                adj[i][j] = true;
+            }
+        }
+        // [0, M) [M, M + 2 * N) [M + 2 * N, route.size())
+        for(int i = 0; i < M; i++) {
+            for(int j = M; j < M + 2 * N; j++){
+                if(adj[i][j]) {
+                    que.push({j, i, abs(sp - cpp[i][j])});
+                }
+            }
+        }
+
+        double res = DBL_MAX;
+        double mind[500][500] = {};
+        REP(i, route.size()) REP(j, route.size()) {
+            mind[i][j] = DBL_MAX;
+        }
+        while(!que.empty()){
+            S s = que.top(); que.pop();
+            // s.print();
+            if(s.cur >= M + 2 * N) {
+                res = min(res, s.cost + abs(gp - cpp[s.cur][s.prev]));
+                continue;
+            }
+            if(mind[s.cur][s.prev] < s.cost) {
+                continue;
+            }
+            for(int i = M; i < route.size(); i++) if(adj[i][s.cur]) {
+                double ncost = s.cost + abs(cpp[s.cur][s.prev] - cpp[i][s.cur]);
+                if(ncost < mind[i][s.cur]){
+                    mind[i][s.cur] = ncost;
+                    que.push({i, s.cur, ncost});
+                }
+            }
+        }
+        if(res < DBL_MAX) {
+            printf("Case %d: %.5f\n", ++casenum, res);
+        }else {
+            printf("Case %d: Impossible\n", ++casenum);
+        }
+
+    }
+    return 0;
+}

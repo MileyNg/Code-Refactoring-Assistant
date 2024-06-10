@@ -1,0 +1,88 @@
+#include<iostream>
+#include<cmath>
+ 
+using namespace std;
+
+void ans_print(int a[],int b,int c){
+	int dat[501]={0};
+	int data[]={10,50,100,500};
+	for(int i=0;i<c;i++){
+		if((b&1)==1) dat[a[i]]++;
+		b>>=1;
+	}
+	for(int i=0;i<4;i++){
+		if(dat[data[i]]>=1){
+			cout<<data[i]<<" "<<dat[data[i]]<<endl;
+		}
+	}
+}
+
+int mai(int b,int c){
+	int cnt=0;
+	for(int i=0;i<c;i++){
+		if((b&1)==1) cnt++;
+		b>>=1;
+	}
+	return cnt;
+}
+
+int gaku(int a[],int b,int c){
+	int sum=0;
+	for(int i=0;i<c;i++){
+		if((b&1)==1) sum+=a[i];
+		b>>=1;
+	}
+	return sum;
+}
+
+int oturi(int n){
+	int data[]={10,50,100,500};
+	int cnt=0;
+	for(int i=3;i>=0;i--){
+		cnt+=n/data[i];
+		n%=data[i];
+	}
+	return cnt;
+}
+
+int main(){
+
+	int n,k[20],ci;
+	int data[]={10,50,100,500};
+	int cnt;
+	int tnum,mnum,sum;
+	int min_turi,min_use,ans;
+
+	while(1){
+
+		cin>>n;
+		if(n==0) break;
+
+		cnt=0;
+		min_turi=10000000;
+		min_use=10000000;
+
+		for(int i=0;i<4;i++){
+			cin>>ci;
+			for(int j=0;j<ci;j++){
+				k[cnt]=data[i];
+				cnt++;
+			}
+		}
+
+		for(long long i=0;i<(1<<cnt);i++){
+			sum=gaku(k,i,cnt);
+			if(sum>=n){
+				mnum=mai(i,cnt);
+				tnum=oturi(sum-n)+cnt;
+				if(min_turi>tnum||(min_turi==tnum&&min_use>mnum)){
+					min_turi=tnum;
+					min_use=mnum;
+					ans=i;
+				}
+			}
+		}
+		ans_print(k,ans,cnt);
+	}
+
+}

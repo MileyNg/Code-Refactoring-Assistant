@@ -1,0 +1,18 @@
+while (line = gets)
+  a, b, c, d, e, f = line.chop.split(/\s+/).map { |s| s.to_f }
+  #puts a, b, c, d, e, f
+
+  if (a != 0)
+    b /= a
+    c /= a
+    e -= d * b
+    f -= d * c
+    y = f / e
+    x = c - b * y
+  else
+    y = c / b
+    x = (f - e * y) / d
+  end
+
+  printf("%.3f %.3f\n", x, y)
+end

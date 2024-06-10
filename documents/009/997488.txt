@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+const int inf = 1 << 28;
+
+template<typename T> void chmin(T &t, T f){if(t > f)t = f;}
+
+int n, m, c, s, g;
+vector<vector<vector<int> > > dist, cost;
+
+void init(){
+    dist.assign(c, vector<vector<int> >(n, vector<int>(n, inf)));
+    cost.assign(c, vector<vector<int> >(n, vector<int>(n, inf)));
+    rep(i, c)rep(j, n)dist[i][j][j] = cost[i][j][j] = 0;
+}
+
+void doWF(){
+    rep(r, c)rep(k, n)rep(i, n)rep(j, n){
+        chmin(dist[r][i][j], dist[r][i][k] + dist[r][k][j]);
+    }
+}
+
+void calc(int k, vector<int> q, vector<int> r){
+    vector<int> f(r.size());
+    rep(i, (int)q.size())f[i+1] = f[i] + (q[i] - (i? q[i-1]: 0)) * r[i];
+    q.insert(q.begin(), 0);
+    rep(i, n)rep(j, i){
+        if(dist[k][i][j] == inf)continue;
+        int p = upper_bound(all(q), dist[k][i][j]) - q.begin();
+        cost[k][i][j] = cost[k][j][i] = f[p-1] + (dist[k][i][j] - q[p-1]) * r[p-1];
+    }
+}
+
+int solve(){
+    vector<int> mem(n, inf);
+    mem[s] = 0;
+    map<int, int> q;
+    for(q[s]=0; !q.empty();){
+        int v, cc;
+        tie(v, cc) = *q.begin(); q.erase(q.begin());
+        if(v == g)return cc;
+        rep(r, c)rep(u, n){
+            if(dist[r][v][u] == inf)continue;
+            int nc = cost[r][v][u] + cc;
+            if(mem[u] <= nc)continue;
+            mem[u] = nc;
+            q[u] = nc;
+        }
+    }
+    return -1;
+}
+
+int main(){
+    while(cin >> n >> m >> c >> s >> g, n|m|c|s|g){
+        s--; g--;
+        init();
+        while(m--){
+            int x, y, d, k;
+            cin >> x >> y >> d >> k;
+            x--; y--; k--;
+            chmin(dist[k][x][y], d);
+            dist[k][y][x] = dist[k][x][y];
+        }
+        doWF();
+        vector<int> p(c);
+        rep(i, c)cin >> p[i];
+        rep(i, c){
+            vector<int> q(p[i]-1), r(p[i]);
+            for(auto& x: q)cin >> x;
+            for(auto& x: r)cin >> x;
+            calc(i, q, r);
+        }
+        cout << solve() << '\n';
+    }
+    return 0;
+}

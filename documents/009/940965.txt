@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cmath>
+#include<vector>
+using namespace std;
+
+// bool isPrime(unsigned int n);
+
+int main()
+{
+    int n;
+    while(cin>>n){
+        vector<int> primeTable;
+        if( n==1 ){ cout << "0" << endl; continue; }
+        primeTable.push_back(2);
+        for(int i=3; i<=n; i++){
+            vector<int>::iterator j;
+            for(j=primeTable.begin(); j!=primeTable.end(); j++){
+                if(!(i%(*j))) break; // i%j!=0
+            }
+            if( j==primeTable.end() ) primeTable.push_back(i);
+        }
+        cout << primeTable.size() << endl;
+    }
+    
+
+    return 0;
+}

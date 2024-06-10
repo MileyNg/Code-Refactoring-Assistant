@@ -1,0 +1,65 @@
+#include<iostream>
+#include<list>
+#include<string>
+#include<cctype>
+using namespace std;
+
+bool checkString(int* key, string s);
+void rotateChar(string* s, int i);
+
+int main()
+{
+    list<string> table;
+    string s;
+
+    while(cin>>s) table.push_back(s);
+    
+    int key;
+    list<string>::iterator i;
+    for(i=table.begin(); i!=table.end(); i++){
+        // cout << *i << " ";
+        if( i->size() == 3 || i->size() == 4 )
+            if( checkString(&key, *i) ) break;
+    }
+    
+    int flag = 0;
+    for(i=table.begin(); i!=table.end(); i++){
+        if(!flag){
+            rotateChar( &(*i), key);
+            cout << *i;
+            flag = 1;
+        }else{
+            rotateChar( &(*i), key);
+            cout << " " << *i ;
+        }
+    }
+    cout << endl;
+            
+    return 0;
+}
+
+void rotateChar(string* s, int i) // iは何文字ずらしたいか
+{
+
+    for(int j=0; j<s->size(); j++){
+        if(!isalpha(s->at(j))){continue;}
+        char c = s->at(j) - 'a';
+        s->at(j) = 'a' + (c+i)%26;
+    }
+}
+
+bool checkString(int* key, string s)
+{
+
+    for(int i=0; i<26; i++){
+        string tmp = s;
+        rotateChar(&tmp, i);
+        // cout << tmp << endl;
+        if( tmp=="the" || tmp=="this" || tmp=="that" ){
+            *key=i;
+            return true;
+        }
+    }
+    return false;
+}
+        

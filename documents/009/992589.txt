@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+long long dp[30] = {1,1,2};
+int ans[30];
+int n;
+
+int main(){
+  
+  for(int i = 3 ; i < 30 ; i++){
+    dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
+  }
+  for(int i = 0; i < 30 ; i++){
+    ans[i] = dp[i] / 10;
+    if(dp[i] % 10 != 0) ans[i]++;
+    ans[i] = ans[i] / 365 ;
+    if(ans[i] % 365 != 0) ans[i]++;
+    if(ans[i] == 0) ans[i]++;
+  }
+
+  while(cin >> n, n != 0){
+
+    cout << ans[n] << endl; 
+  }
+  
+  return 0;
+}

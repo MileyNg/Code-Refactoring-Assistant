@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace SearchII
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Calc calc = new Calc();
+            int n = int.Parse(System.Console.ReadLine());
+            int[] S = new int[n];
+            string[] sStrNum = new string[n];
+            sStrNum = System.Console.ReadLine().Split(' ');
+            S = calc.intArrayTo(n,sStrNum);
+            int q = int.Parse(System.Console.ReadLine());
+            int[] T = new int[q];
+            string[] tStrNum = new string[n];
+            tStrNum = System.Console.ReadLine().Split(' ');
+            T = calc.intArrayTo(q, tStrNum);
+            int[] intersect = T.Intersect<int>(S).ToArray<int>();       
+            Console.WriteLine(intersect.Length.ToString());
+        }
+    }
+    public class Calc
+    {
+        public int[] intArrayTo(int n, string[] strNum)
+        {
+            int[] intArray = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                intArray[i] = int.Parse(strNum[i]);
+            }
+            return intArray;
+        }
+    }
+}

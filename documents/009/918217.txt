@@ -1,0 +1,158 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CSharpTest
+{
+    class Card {
+        public char Suit { get; set; }
+        public int Value { get; set; }
+
+        public Card(char suit, int value)
+        {
+            Suit = suit;
+            Value = value;
+        }
+
+        public override string ToString()
+        {
+            return Suit + Value.ToString();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var cards = inputCards();
+
+            var bubbleSortedCards = bubbleSort(cards);
+            outputCards(bubbleSortedCards);
+            Console.WriteLine(isStable(cards, bubbleSortedCards) ? "Stable" : "Not Stable");
+
+            var selectionSortedCards = selectionSort(cards);
+            outputCards(selectionSortedCards);
+            Console.WriteLine(isStable(cards, selectionSortedCards) ? "Stable" : "Not Stable");
+
+            Console.ReadKey();
+        }
+
+        static Card[] inputCards()
+        {
+            Console.ReadLine();
+            var inputStrings = Console.ReadLine().Split(' ');
+
+            var cards = new Card[inputStrings.Length];
+            for (var i = 0; i < inputStrings.Length; i++)
+            {
+                cards[i] = new Card(inputStrings[i][0], int.Parse(inputStrings[i].Substring(1)));
+            }
+            return cards;
+        }
+
+        static void outputCards(Card[] cards)
+        {
+            var cardStrings = new string[cards.Length];
+            for (var i = 0; i < cards.Length; i++)
+            {
+                cardStrings[i] = cards[i].ToString();
+            }
+            Console.WriteLine(string.Join(" ", cardStrings));
+        }
+
+        static Card[] bubbleSort(Card[] cards)
+        {
+            var sortedCards = new Card[cards.Length];
+            cards.CopyTo(sortedCards, 0);
+
+            for (var i = 0; i < sortedCards.Length; i++)
+            {
+                for (var j = sortedCards.Length - 1; j >= i + 1; j--)
+                {
+                    if (sortedCards[j].Value < sortedCards[j - 1].Value)
+                    {
+                        var tmp = sortedCards[j];
+                        sortedCards[j] = sortedCards[j - 1];
+                        sortedCards[j - 1] = tmp;
+                    }
+                }
+            }
+
+            return sortedCards;
+        }
+
+        static Card[] selectionSort(Card[] cards)
+        {
+            var sortedCards = new Card[cards.Length];
+            cards.CopyTo(sortedCards, 0);
+
+            for (var i = 0; i < sortedCards.Length; i++)
+            {
+                var min = i;
+                for (var j = i; j < sortedCards.Length; j++)
+                {
+                    if (sortedCards[j].Value < sortedCards[min].Value)
+                    {
+                        min = j;
+                    }
+                }
+                if (min != i)
+                {
+                    var tmp = sortedCards[min];
+                    sortedCards[min] = sortedCards[i];
+                    sortedCards[i] = tmp;
+                }
+            }
+
+            return sortedCards;
+        }
+
+        static List<int> getCardValues(Card[] cards)
+        {
+            var values = new List<int>();
+            foreach(var card in cards) {
+                if (!values.Contains(card.Value))
+                {
+                    values.Add(card.Value);
+                }
+            }
+
+            return values;
+        }
+
+        static Dictionary<int, List<char>> getSuitOrders(Card[] cards)
+        {
+            var suitOrders = new Dictionary<int, List<char>>();
+            foreach (var value in getCardValues(cards))
+            {
+                suitOrders.Add(value, new List<char>());
+            }
+
+            foreach (var card in cards)
+            {
+                suitOrders[card.Value].Add(card.Suit);
+            }
+            return suitOrders;
+        }
+
+        static bool isStable(Card[] originalCards, Card[] sortedCards) {
+            var originalSuitOrders = getSuitOrders(originalCards);
+            var sortedSuitOrders = getSuitOrders(sortedCards);
+            
+            foreach (var key in originalSuitOrders.Keys)
+            {
+                for (var i = 0; i < originalSuitOrders[key].Count; i++)
+                {
+                    if (originalSuitOrders[key][i] != sortedSuitOrders[key][i])
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
+}

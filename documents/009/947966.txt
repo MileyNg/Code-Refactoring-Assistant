@@ -1,0 +1,33 @@
+#include<iostream>
+#include<map>
+#include<string>
+using namespace std;
+
+int main(){
+	map<string,int> m;
+	string s;
+	while(cin >> s){
+		m[s]++;
+	}
+	int max_word = 0;
+	string ans1;
+	/*出現頻度が最大*/
+	for(map<string,int>::iterator it = m.begin(); it != m.end(); ++it){
+		if(it->second > max_word){
+			ans1 = it->first;
+			max_word = it->second;
+		}
+	}
+
+	int max_length = 0;
+	string ans2;
+	/*文字数が最大*/
+	for(map<string,int>::iterator it = m.begin(); it != m.end(); ++it){
+		if(it->first.size() > max_length){
+			ans2 = it->first;
+			max_length = it->first.size();
+		}
+	}
+
+	cout << ans1 << " " << ans2 << endl;
+}

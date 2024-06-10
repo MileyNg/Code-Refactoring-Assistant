@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <map>
+
+#define rep(i,a,b)(long long i=a;i<b;i++)
+
+int beki(int n){
+	int ans=1;
+	for(int i=0;i<n;i++)
+		ans*=10;
+	return ans;
+}
+
+using namespace std;
+
+
+struct POINT {
+	int x;
+	int y;
+	POINT(int X, int Y){
+		x = X;y = Y;
+	}
+};
+
+struct NOBU{
+	bool flag;
+	int nn;
+};
+
+typedef map<char,NOBU>::iterator	wababi;
+
+	unsigned long num;
+	string str[12];
+	int kirei[10][3]={0};
+	int kr;
+	bool suji[10]={0};
+	int nakaji=0;
+	map<char,NOBU> nobu;
+	wababi it = nobu.begin();
+
+
+	int cul(){
+		int number[12]={0};
+		int sum=0;
+		for(int i=0;i<num;i++){
+			for(int j=str[i].length();j>0;j--){
+				number[i]+=((beki(j-1))*nobu[str[i][str[i].length()-j]].nn);
+			}
+			sum+=number[i];
+		}
+
+		if(sum==(number[num-1]*2)){
+			return 1;
+		}else
+			return 0;
+	}
+
+
+void saiki(wababi it){
+	for(int x=0;x<10;x++){
+		if(!suji[x]&&!(x==0&&it->second.flag==true)){
+
+			int tmp=it->second.nn;
+			it->second.nn=x;
+			suji[x]=true;
+
+			if(++it==nobu.end())
+				nakaji+=cul();
+			else
+				saiki(it);
+
+			it->second.nn=tmp;
+			suji[x]=false;
+		}
+	}
+}
+
+int main(void){
+
+	while(1){
+
+	bool abc[26][2]={0};
+	kr=0;
+
+	nakaji=0;
+
+	nobu.clear();
+	for(int i=0;i<10;i++){
+		suji[i]=0;
+	}
+
+	cin >> num;
+	if(num==0)
+		break;
+
+	for(int i=0;i<num;i++){
+		cin >> str[i];
+		if(str[i].length()!=1)
+			abc[str[i][0]-'A'][1]=true;
+		for(int j=0;j<str[i].length();j++){
+			abc[str[i][j]-'A'][0]=true;
+		}
+	}
+
+	for(int i=0;i<26;i++){
+		if(abc[i][0]){
+			nobu[i+'A'].flag=abc[i][1];
+			kr++;
+		}
+	}
+
+	it=nobu.begin();
+	saiki(it);
+
+	cout << nakaji <<endl;
+
+}
+
+	return 0;
+}

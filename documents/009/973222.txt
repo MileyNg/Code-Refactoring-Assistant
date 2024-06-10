@@ -1,0 +1,41 @@
+#include <bits/stdc++.h> // only for GCC
+using namespace std;
+
+vector<int> card;
+int n,m;
+
+void cut(int k){
+    vector<int> forward, backward;
+    for(int i=0; i < card.size(); i++){
+        if(i < k) forward.push_back(card[i]);
+        else backward.push_back(card[i]);
+    }
+    card.clear();
+    for(int i=0; i < backward.size(); i++) card.push_back(backward[i]);
+    for(int i=0; i < forward.size(); i++) card.push_back(forward[i]);
+}
+
+void shuffle(){
+    vector<int> v = card;
+    card.clear();
+    for(int i=0; i < n; i++){
+        card.push_back(v[i]);
+        card.push_back(v[i+n]);
+    }
+}
+
+int main(){
+    cin >> n >> m;
+    for(int i=1; i <= 2*n; i++){card.push_back(i);}
+
+    for(int i=0; i < m; i++){
+        int command;
+        cin >> command;
+
+        if(command == 0) shuffle();
+        else cut(command);
+    }
+    for(int i=0; i < 2*n; i++){
+        cout << card[i] << endl;
+    }
+}

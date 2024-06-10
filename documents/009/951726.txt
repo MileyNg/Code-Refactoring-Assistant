@@ -1,0 +1,64 @@
+//============================================================================
+// Name        : aoj1188.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <cctype>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+
+
+string s;
+
+int solve(int l,int r){
+	if(s[l] == '['){
+		int i, cnt = 0; // 次に要素番号 l の後ろに'['があった場合 +1,']'があった場合 -1 とするcntである
+		vector<int> each;
+		while(l < r){
+			for(i = l + 1;i < r && !(s[i] == ']' && cnt == 0);i++){ // そのcntが0でかつs[l]が']'(この選挙区の終端)であるときに終了
+				if(s[i] == '['){
+					cnt++;
+				}else if(s[i] == ']'){
+					cnt--;
+				}
+			}
+			each.push_back(solve(l + 1,i));
+			l = i + 1;
+		}
+		sort(each.begin(),each.end());
+		int sum = 0;
+		for(int i = 0;i < (each.size() + 1) / 2;i++){
+			//cout << each[i] << " ";
+			sum += each[i];
+		}
+		//cout << endl;
+		//cout << sum << endl;
+		return sum;
+	}
+	if(isdigit(s[l])){
+		int d = 0;
+		for(int i = l;i < r && isdigit(s[i]);i++){
+			d = d * 10 + (s[i] -'0');
+		}
+		return (d + 1) / 2; // 過半数
+	}
+}
+
+int main(void){
+	int n;
+	cin >> n;
+	cin.get();
+	for(int i = 0;i < n;i++){
+		getline(cin,s);
+		cout << solve(1,s.size() - 2) << endl;
+	}
+}

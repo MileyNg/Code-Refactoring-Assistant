@@ -1,0 +1,13 @@
+def solve():
+	for k in range(n):
+		for i in range(n):
+			for j in range(n):
+				d[i][j] = min(d[i][j],d[i][k] + d[k][j])
+
+n,m = map(int,raw_input().split())
+d = [[1e10]*n for i in range(n)]
+for i in range(m):
+	a,b,c = map(int,raw_input().split())
+	d[a][b] = -c
+solve()
+print abs(d[0][n-1])

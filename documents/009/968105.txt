@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define Y first
+#define X second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+bool cmp(const pi &a, const pi &b){
+  int adis = a.Y*a.Y+a.X*a.X, bdis = b.Y*b.Y+b.X*b.X;
+  if(adis != bdis) return adis > bdis;
+  return a.X > b.X;
+}
+
+
+int main(){
+  int N, dx, dy;
+  scanf("%d", &N);
+  while(N--){
+    int x = 0, y = 0;
+    vector<pi>rank;
+    while(scanf("%d%d", &dx, &dy) && dx+dy){
+      x += dx, y += dy;
+      rank.push_back(make_pair(y, x));
+    }
+    //    rep(i, rank.size()) printf("%d %d\n", rank[i].Y, rank[i].X);
+
+    sort(rank.begin(), rank.end(), cmp);
+    printf("%d %d\n", rank[0].X, rank[0].Y);
+  }
+  return 0;
+}

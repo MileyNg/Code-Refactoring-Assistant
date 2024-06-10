@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+#include <string.h>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++) 
+#define ascent(i,a,b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+
+#define MAX 10000010
+
+using namespace std;
+
+bool flg[200000];
+int  isprime[MAX];
+
+int main() {
+  //  vector<int> p1,p2;
+  vector<int> p;
+
+  ascent(i, 0, MAX) {
+     isprime[i] = 1;
+  }
+   isprime[0] =  isprime[1] = 0;
+  
+  int cnt = 0;
+  ascent(i, 2, MAX) {
+    if(isprime[i]) {
+      for(int j = 2*i; j <= MAX; j += i) {
+	 isprime[j] = 0;
+      }
+    }
+  }
+  
+  int N, P;
+  while(cin >> N >> P) {
+    if(N == -1 && P == -1) break;
+
+    memset(flg, true, sizeof(flg));
+
+    int k = N+1;
+    int l = 0;
+    p.clear();
+    while(l < P) {
+      if(isprime[k]) {
+	p.pb(k);
+	l ++;
+      }
+      k ++;
+    }
+
+    vector<int> vec;
+    vec.clear();
+    ascent(i, 0, p.size()) {
+      ascent(j, i, p.size()) {
+	  vec.pb(p[i] + p[j]);
+	  //	  cout << p[i] + p[j] << endl;
+      }
+    }
+
+    sort(vec.begin(), vec.end());
+    cout << vec[P-1] << endl;
+  }
+
+  return 0;
+}

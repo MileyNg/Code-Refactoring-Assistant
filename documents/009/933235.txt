@@ -1,0 +1,14 @@
+import sys
+
+cards = {"S":[], "H":[], "C":[], "D":[]}
+n = int(input())
+
+for i in range(n):
+    d, i = input().split(" ")
+    cards[d].append(int(i))
+
+for suit in "SHCD":
+    card = cards[suit]
+    l = sorted(list(set(range(1, 14)) - set(card)))
+    for c in l:
+        print(suit, c)

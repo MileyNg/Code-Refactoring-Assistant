@@ -1,0 +1,93 @@
+#include<stdio.h>
+#define compile 0
+#define LENGTH_W 11
+#define LENGTH_T 1001
+main()
+{
+	char W[LENGTH_W];
+	char T[LENGTH_T];
+	int counter = 0, i = 0, j = 0, k = 0;
+	
+	scanf("%s", W);
+
+	#if compile == 3
+	printf("W = %s\n", W);
+	#endif
+	
+	while(strcmp(T, "END_OF_TEXT") != 0)
+	{
+		fflush(stdin);
+		scanf("%s", T);
+		
+		#if compile == 3
+		printf("T = %s\n", T);
+		#endif
+		
+		for(i = 0; T[i] != '\0'; i++)
+		{
+			if(T[i] == W[0])
+			{
+				#if compile == 3
+				puts("if(T[i] == W[0])");
+				printf("T[%d] = %c\n", i + j, T[i + j]);
+				printf("W[%d] = %c\n", j, W[j]);
+				#endif
+				
+				for(j = 0; W[j] != '\0'; j++)
+				{
+					if(T[i + j] != W[i + j])
+					{
+						#if compile == 3
+						printf("T[%d] = %c\n", i + j, T[i + j]);
+						printf("W[%d] = %c\n", j, W[j]);
+						printf("roop break\n");
+						#endif
+						break;
+					}
+					else if((W[j] == T[i + j]) && (W[j + 1] == '\0') && ((T[i + j + 1] == 0x20) || (T[i + j + 1] == 0x0a) || (T[i + j + 1] == 0x00)))
+					{
+						counter++;
+						#if compile == 3
+						printf("T[%d] = %c\n", i + j, T[i + j]);
+						printf("W[%d] = %c\n", j, W[j]);
+						printf("counter = %d\n", counter);
+						#endif
+					}
+					
+					#if compile == 3
+					puts("else");
+					printf("T[%d] = %c\n", i + j, T[i + j]);
+					printf("W[%d] = %c\n", j, W[j]);
+					#endif
+					/*if((W[j] == '\0')
+					{
+						if((T[i + j] == 0x0a) || (T[i + j] == 0x20)))
+						{
+							counter++;
+							#if compile == 3
+							printf("counter = %d\n", counter);
+							#endif
+						}
+					}
+					else if(T[i + j] != W[j])
+					{
+						#if compile == 3
+						printf("roop break\n");
+						#endif
+						break;
+					}
+					*/
+				}
+			}
+			
+			#if compile == 1
+			printf("i = %d\n", i);
+			#endif
+			
+		}
+	}
+	
+	printf("%d\n", counter);
+	
+	return 0;
+}

@@ -1,0 +1,68 @@
+#include<iostream>
+#include<complex>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+#define X real()
+#define Y imag()
+
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+
+const D EPS = 1e-8;
+
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+bool near(P a, P b) {return !sig(norm(a - b));}
+namespace std {
+  bool operator<(P a, P b) {return sig(a.X, b.X) ? a.X < b.X : a.Y < b.Y;}
+}
+
+P vec(L a) {return a.b - a.a;}
+
+D det(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+
+enum CCW{FRONT = 1, RIGHT = 2, BACK = 4, LEFT = 8, ON = 16};
+int ccw(P a, P b, P c) {
+  if (near(a, c) || near(b, c)) return ON;
+  int s = sig(det(b - a, c - a));
+  if (s) return s > 0 ? LEFT : RIGHT;
+  return (a < b) == (b < c) ? FRONT : (c < a) == (a < b) ? BACK : ON;
+}
+
+bool iSSs(L a, L b) {
+  int cwa = ccw(a.a, a.b, b.a) | ccw(a.a, a.b, b.b);
+  int cwb = ccw(b.a, b.b, a.a) | ccw(b.a, b.b, a.b);
+  return (cwa & cwb) == (LEFT | RIGHT);
+}
+
+P pLL(L a, L b) {return a.a + vec(a) * (det(vec(b), b.a - a.a) / det(vec(b), vec(a)));}
+
+void solve() {
+  D x1, y1, x2, y2;
+  cin >> x1 >> y1 >> x2 >> y2;
+  L a = {P(x1, y1), P(x2, y2)};
+  int n;
+  cin >> n;
+  vector<pair<P, bool> > vp;
+  rep (i, n) {
+    int o, l;
+    cin >> x1 >> y1 >> x2 >> y2 >> o >> l;
+    L b = {P(x1, y1), P(x2, y2)};
+    if (iSSs(a, b)) vp.push_back(make_pair(pLL(a, b), o == l));
+  }
+  sort(vp.begin(), vp.end());
+  int res = 0;
+  rep (i, vp.size() - 1) if (vp[i].second != vp[i + 1].second) ++res;
+  cout << res << endl;
+}
+
+int main() {
+  int t;
+  cin >> t;
+  rep (i, t) solve();
+}

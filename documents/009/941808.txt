@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+struct Player {
+    int point;
+    int id;
+    Player(int id, int point) : id(id), point(point) {}
+};
+
+bool operator<(const Player& a, const Player& p){
+    return a.point == p.point ? a.id < p.id : a.point > p.point;
+}
+int main()
+{
+    int n;
+    while (n = in()){
+        vector<Player> players;
+        rep(i, n){
+            int id = in();
+            bool is_frame_end = true;
+            int multi[32] = {};
+            int frame = 1;
+            int now = 0;
+            int point = 0;
+            int prev = 0;
+            while (frame < 10){
+                int b = in();
+                point += b + multi[now] * b;
+                if (is_frame_end){
+                    if (b == 10){
+                        multi[now + 1]++;
+                        multi[now + 2]++;
+                        frame++;
+                    }
+                    else {
+                        prev = b;
+                        is_frame_end = false;
+                    }
+                }
+                else {
+                    if (b + prev == 10) multi[now + 1]++;
+                    frame++;
+                    is_frame_end = true;
+                }
+                now++;
+            }
+            int f, s, t;
+            f = in();
+            s = in();
+            if (f + s >= 10) t = in();
+            else t = 0;
+            point += f + s + t;
+            point += f * multi[now] + s * multi[now + 1];
+            players.push_back(Player(id, point));
+        }
+        sort(players.begin(), players.end());
+
+        rep(i, n){
+            printf("%d %d\n", players[i].id, players[i].point);
+        }
+    }
+
+    return (0);
+}

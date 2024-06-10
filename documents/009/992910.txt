@@ -1,0 +1,96 @@
+#include <string>
+#include <vector>
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<stack>
+#include<queue>
+#include<cmath>
+#include<algorithm>
+#include<functional>
+//--
+#include<list>
+#include<deque>
+#include<bitset>
+#include<set>
+#include<map>
+#include<cstdio>
+#include<cstring>
+#include<sstream>
+#include<complex>
+#define X first
+#define Y second
+#define pb push_back
+#define rep(X,Y) for (int (X) = 0;(X) < (Y);++(X))
+#define rrep(X,Y) for (int (X) = Y-1;(X) >=0;--(X))
+#define all(X) (X).begin(),(X).end()
+#define rall(X) (X).rbegin(),(X).rend()
+
+#define re real()
+#define im imag()
+
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef complex<double> pt;
+typedef pair<pt,pt> line; //sX+tY
+
+double dot(pt a,pt b){return (conj(a)*b).real();}
+double cros(pt a,pt b){return (conj(a)*b).imag();}
+pt proj(pt a,pt to){
+  return dot(a,to)/norm(to)*to;
+}
+
+pt refle(pt a,pt mirror){
+  return pt(2)*proj(a,mirror)-a;
+}
+
+int pt3(pt a,pt b,pt c){
+  pt p=b-a,q=c-a;
+  double tmp;
+  tmp=cros(p,q);
+  if(tmp>0){
+    return 0;
+  }else if(tmp<0){
+    return 1;
+  }else if(norm(p+q)<max(norm(p),norm(q))){
+    return 2;
+  }else if(norm(q)>norm(p)){
+    return 3;
+  }else if(norm(q)<norm(p)){
+    return 4;
+  }
+  return 5;
+}
+
+pt dir(line a){return a.Y-a.X;}
+
+int line2(line a,line b){
+  if(dot(dir(a),dir(b))==0)
+    return 1;//直交
+  if(cros(dir(a),dir(b))==0)
+    return 2;//平行
+  return 0;
+}
+
+int intersect(line a,line b){
+  return cros(dir(a),b.X-a.X)*cros(dir(a),b.Y-a.X)<=0
+    && cros(dir(b),a.X-b.X)*cros(dir(b),a.Y-b.X)<=0;
+}
+
+int main(){
+  int i,j,k,n,re;
+  line s1,s2;
+  double a[8];
+  cin>>n;
+  rep(i,n){
+    rep(j,8)
+      cin>>a[j];
+    s1.X=pt(a[0],a[1]);
+    s1.Y=pt(a[2],a[3]);
+    s2.X=pt(a[0+4],a[1+4]);
+    s2.Y=pt(a[2+4],a[4+3]);
+    cout<<intersect(s1,s2)<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,14 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var DAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var line;
+while (line = lines.shift()) {
+	var arr = line.split(' ').map(function(n){return +n;});
+	if (arr[0] == 0 && arr[1] == 0) {
+		break;
+	}
+
+	var d = new Date(2004, arr[0] - 1, arr[1]);
+	console.log(DAY[d.getDay()]);
+}

@@ -1,0 +1,18 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int N = 300000;
+int p[N];
+
+int main(){
+  for(int i=2;i<=N;i++)p[i] = 1;
+  for(int i=2;i<=N;i++){
+    if(p[i]){
+      for(int j=2*i;j<=N;j+=i)p[j] = 0;
+    }
+    p[i] += p[i-1];
+  }
+
+  int n;
+  while(cin >> n,n)cout << p[2*n] - p[n] << endl;
+}

@@ -1,0 +1,76 @@
+#include <iostream>
+using namespace std;
+
+int m, n, table[20][20];
+
+int tatami(int d){
+    int i;
+    bool cross;
+    for(i = 0; i < m*n; i++){
+        if( table[i/n][i%n] == 0 ) break;
+    }
+    int ans = 0;
+    if( i%n < n-1 && !table[i/n][i%n]  && !table[i/n][i%n+1] ){
+        table[i/n][i%n] = d;
+        table[i/n][i%n+1] = d;
+        if( d == m*n/2 ){
+            cross = false;
+            for(int j = 0; j < m-1 && !cross; j++){
+                for(int k = 0; k < n-1 && !cross; k++){
+                    if( table[j][k] != table[j+1][k] &&
+                            table[j][k] != table[j][k+1] &&
+                            table[j+1][k] != table[j+1][k+1] &&
+                            table[j][k+1] != table[j+1][k+1] ){
+                        cross = true;
+                    }
+                }
+            }
+            if( !cross ) ans++;
+        }else{ 
+            ans += tatami(d+1);
+        }
+        table[i/n][i%n] = 0;
+        table[i/n][i%n+1] = 0;
+    }
+    if( i/n < m-1 && table[i/n][i%n] == 0 && table[i/n+1][i%n] == 0){
+        table[i/n][i%n] = d;
+        table[i/n+1][i%n] = d;
+        if( d == m*n/2 ){
+            cross = false;
+            for(int j = 0; j < m-1 && !cross; j++){
+                for(int k = 0; k < n-1 && !cross; k++){
+                    if( table[j][k] != table[j+1][k] &&
+                            table[j][k] != table[j][k+1] &&
+                            table[j+1][k] != table[j+1][k+1] &&
+                            table[j][k+1] != table[j+1][k+1] ){
+                        cross = true;
+                    }
+                }
+            }
+            if( !cross ) ans++;
+        }else{
+            ans += tatami(d+1);
+        }
+        table[i/n][i%n] = 0;
+        table[i/n+1][i%n] = 0;
+    }
+    return ans;
+}
+
+int main(){
+    cin >> m >> n;
+    while(m + n > 0){
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                table[i][j] = 0;
+            }
+        }
+        if( m%2 && n%2 ){
+            cout << 0 << endl;
+        }else{
+            cout << tatami(1) << endl;
+        }
+        cin >> m >> n;
+    }
+    return 0;
+}

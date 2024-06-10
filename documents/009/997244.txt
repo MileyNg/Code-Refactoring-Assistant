@@ -1,0 +1,89 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+#include <limits.h>
+#define exchange(a, b){tmp=a;a=b;b=tmp;}
+
+int A[251], n,tmp;
+int parent(int i){
+	return i / 2;
+}
+
+int left(int i){
+	return 2 * i;
+}
+
+int right(int i){
+	return 2 * i + 1;
+}
+
+void maxHeapify(int i){
+	int largest, tmp;
+	int l = left(i);
+	int r = right(i);
+	if (l <= n && A[l] > A[i])
+		largest = l;
+	else{
+		largest = i;
+	}
+	if (r <= n && A[r] > A[largest])
+		largest = r;
+	if (largest != i){
+		tmp = A[i];
+		A[i] = A[largest];
+		A[largest] = tmp;
+		maxHeapify(largest);
+
+	}
+}
+
+void heapIncreaseKey(int i,int key){
+	if (key < A[i]){
+		//error 新しいキーは現在のキーより小さい
+		//return;
+	}
+	A[i] = key;
+	while (i > 1 && A[parent(i)] < A[i]){
+		exchange(A[i], A[parent(i)]);
+		i = parent(i);
+	}
+}
+
+void maxHeapInsert(int key){
+	n++;
+	A[n] = INT_MIN;
+	heapIncreaseKey(n, key);
+}
+
+
+int heapExtractMax(){
+	if (n < 1)
+		return;// error ヒープアンダーフロー
+	int max = A[1];
+	A[1] = A[n];
+	n = n - 1;
+	maxHeapify(1);
+	return max;
+}
+
+int main(){
+	
+	int i,max=INT_MIN;
+	char s[10];
+	while (1){
+		scanf("%s", &s);
+		
+		if (s[2] == 's'){
+			scanf("%d",&i);
+			maxHeapInsert(i);
+		}
+		else if (s[2] == 't'){
+			printf("%d\n", heapExtractMax());
+		}
+		else{
+			break;
+		}
+	}
+	printf("\n");
+	return 0;
+}

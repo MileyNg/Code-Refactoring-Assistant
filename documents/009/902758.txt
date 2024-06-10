@@ -1,0 +1,176 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+const double EPS = 1e-9;
+
+struct point {
+	double x, y;
+	point(double x = 0.0, double y = 0.0):x(x), y(y) {}
+	point(const point& p):x(p.x), y(p.y) {}
+
+	point operator+ (const point& p) const {
+		return point(x + p.x, y + p.y);
+	}
+
+	point operator- (const point& p) const {
+		return point(x - p.x, y - p.y);
+	}
+
+	point operator* (const double s) const {
+		return point(x * s, y * s);
+	}
+
+	point operator* (const point& p) const {
+		return point(x * p.x - y * p.y, x * p.y + y * p.x);
+	}
+
+	point operator/ (const double s) const {
+		return point(x / s, y / s);
+	}
+
+	bool operator< (const point& p) const {
+		return x + EPS < p.x || abs(x - p.x) < EPS && y + EPS < p.y;
+	}
+
+	bool operator== (const point& p) const {
+		return abs(x - p.x) < EPS && abs(y - p.y) < EPS;
+	}
+};
+
+inline double angle(const point& p) {
+	return atan2(p.y, p.x);
+}
+
+inline double abs(const point& p) {
+	return sqrt(p.x * p.x + p.y * p.y);
+}
+
+inline double norm(const point& p) {
+	return p.x * p.x + p.y * p.y;
+}
+
+inline double dot(const point& l, const point& r) {
+	return l.x * r.x + l.y * r.y;
+}
+
+struct line {
+	point a, b;
+	line(const point& a, const point& b):a(a), b(b){}
+};
+
+struct segment {
+	point a, b;
+	segment(const point& a, const point& b):a(a), b(b){}
+};
+
+typedef vector<point> polygon;
+
+inline point project(const line& l, const point& p) {
+	const point dif = l.b - l.a;
+	const double tmp = dot(p - l.a, dif) / norm(dif);
+	return l.a + dif * tmp;
+}
+
+inline point next_point() {
+	double x, y;
+	cin >> x >> y;
+	return point(x, y);
+}
+
+typedef pair<double, double> angle_t; // (from, to)
+
+inline double angle_size(const angle_t &a) {
+	double res = a.second - a.first;
+	return res < -EPS ? res + 2 * M_PI : res;
+}
+
+inline void normalize(angle_t &a) {
+	if(angle_size(angle_t(a.second, a.first)) < angle_size(a))
+		swap(a.first, a.second);
+}
+
+inline bool compare(const angle_t &a, const angle_t &b) {
+	return angle_size(a) + EPS < angle_size(b);
+}
+
+inline bool contain(const angle_t &a, const double theta) {
+	const double tmp = angle_size(a);
+	return angle_size(angle_t(a.first, theta)) < tmp + EPS && angle_size(angle_t(theta, a.second)) < tmp + EPS;
+}
+
+inline angle_t merge(const angle_t &a, const angle_t &b) {
+	if(!(contain(a, b.first) || contain(a, b.second) || contain(b, a.first) || contain(b, a.second)))
+	   return angle_t(0, 0);
+	return min({a, b, angle_t(a.first, b.second), angle_t(b.first, a.second)}, compare);
+}
+
+inline void reflect(point &a, const segment &target) {
+	const point p = project(line(target.a, target.b), a);
+	a = a + (p - a) * 2;
+}
+
+inline void reflect(vector<segment> &segments, const segment &target) {
+	for(auto& seg : segments) {
+		reflect(seg.a, target);
+		reflect(seg.b, target);
+	}
+}
+
+int n;
+double ans;
+point start;
+polygon walls;
+vector<segment> edges;
+
+bool ok(const vector<int> &order) {
+	angle_t range;
+
+	vector<segment> t_edges(edges);
+
+	for(int i = 0; i < static_cast<int>(order.size()); ++i) {
+		const int idx = order[i];
+		angle_t tmp(angle(t_edges[idx].a - start), angle(t_edges[idx].b - start));
+		normalize(tmp);
+		range = (i ? merge(range, tmp) : tmp);
+		reflect(t_edges, t_edges[idx]);
+	}
+
+	return angle_size(range) > EPS;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	while(cin >> n && n) {
+		start = next_point();
+
+		walls.clear();
+		walls.reserve(n);
+		for(int i = 0; i < n; ++i) {
+			walls.emplace_back(next_point());
+		}
+
+		edges.clear();
+		edges.reserve(n);
+		for(int i = 0; i < n; ++i) {
+			edges.emplace_back(walls[i], walls[(i + 1) % n]);
+		}
+
+		int ans = 0;
+		vector<int> order(n);
+		iota(order.begin(), order.end(), 0);
+
+		do {
+			if(ok(order)) ++ans;
+		} while(next_permutation(order.begin(), order.end()));
+
+		cout << ans << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

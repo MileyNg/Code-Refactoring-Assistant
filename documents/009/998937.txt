@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+// n以上の2の冪乗
+int Need(int n)
+{
+	n--;
+	for(int i=1;i<32;i<<=1) n|=n>>i;
+	return n+1;
+}
+
+struct SegmentTree{
+	const int I=numeric_limits<int>::max();
+	int F(int a,int b){return min(a,b);}
+	int size;
+	vi data;
+	SegmentTree(int s):size(Need(s)),data(size*2,I){
+		Build();
+	}
+	SegmentTree(const vi& a):size(Need(a.size())),data(2*size,I){
+		copy(all(a),begin(data)+size);
+		Build();
+	}
+	void Build(){
+		peri(i,1,size){
+			int u=i*2,v=i*2+1;
+			if(v<size) u=data[u],v=data[v];
+			data[i]=data[u]==F(data[u],data[v])?u:v;
+		}
+	}
+	int Get(int i){
+		return data[size+i];
+	}
+	void Update(int i,int x){
+		data[size+i]=x;
+		for(;i;i/=2){
+			int u=i*2,v=i*2+1;
+			if(v<size) u=data[u],v=data[v];
+			data[i]=data[u]==F(data[u],data[v])?u:v;
+		}
+	}
+	int QueryIndex(int a,int b,int i,int l,int r){
+		if(b<=l || r<=a) return 0;
+		if(a<=l && r<=b) return i<size?data[i]:i;
+		int u=QueryIndex(a,b,i*2,l,(l+r)/2),v=QueryIndex(a,b,i*2+1,(l+r)/2,r);
+		return data[u]==F(data[u],data[v])?u:v;
+	}
+	int QueryIndex(int a,int b){
+		int res=QueryIndex(a,b,1,0,size);
+		return res==0?-1:res-size;
+	}
+	int Query(int a,int b){
+		return data[QueryIndex(a,b,1,0,size)];
+	}
+};
+
+int main()
+{
+	for(int n,q;cin>>n>>q && n|q;){
+		SegmentTree st(n);
+		//SegmentTree st(vi(n,numeric_limits<int>::max()));
+		rep(_,q){
+			int t; cin>>t;
+			if(t==0){
+				int i,x; cin>>i>>x;
+				st.Update(i,x);
+			}
+			else{
+				int a,b; cin>>a>>b; b++;
+				cout<<st.Query(a,b)<<endl;
+			}
+		}
+	}
+}

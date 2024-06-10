@@ -1,0 +1,32 @@
+n = gets.chomp.to_i
+
+n.times do
+  chs = gets.chomp.split("")
+
+  base = "a".ord
+  found = false
+
+  for a in (1..26)
+    next if a % 2 == 0 || a % 13 == 0
+
+    for b in (0..25)
+      dec = ""
+
+      for ch in chs
+        if /[a-z]/ =~ ch
+          dec += ((a * (ch.ord - base) + b) % 26 + base).chr
+        else
+          dec += ch
+        end
+      end
+
+      if dec.include?("this") || dec.include?("that")
+        puts dec
+        found = true
+        break
+      end
+
+      break if found
+    end
+  end
+end

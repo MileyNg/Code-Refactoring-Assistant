@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+long long int pos(long long int m, long long int n) {
+	long long int res;
+	if(n == 0) return 1;
+	
+    res = pos(m*m, n / 2);
+    if(n % 2) {
+        res = res * m;
+    }
+    return res;
+}
+
+long long int mymod(long long int m, long long int n) {
+	while(m-n>=n) {
+		m -= n;
+	}
+	return m;
+}
+
+int main(void) {
+	long long int m, n;
+	long long int d = 1000000007;
+	
+	scanf("%lld %lld\n", &m, &n);
+	printf("%lld\n", mymod(pos(m, n),d));
+	
+	return 0;
+}

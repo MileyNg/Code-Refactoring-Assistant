@@ -1,0 +1,21 @@
+import std.stdio;
+import std.conv;
+import std.string;
+
+void main(string[] args){
+	while(1){
+		int n = to!int(readln.chomp);
+		if(n == 0) break;
+		int S = 0;
+		int Smin = 0;
+		int Smax = int.min;
+		int dmax = int.min;
+		for(int i = 0; i < n; i ++){
+			S += to!int(readln.chomp);
+			if(S > Smax) Smax = S;
+			if(Smax - Smin > dmax) dmax = Smax - Smin;
+			if(S < Smin) Smin = S, Smax = int.min;
+			}
+		writeln(dmax);
+		}
+	}

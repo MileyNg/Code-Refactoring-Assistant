@@ -1,0 +1,41 @@
+#include <cstdio>
+#include <cstring>
+using namespace std;
+#define RBSIZE 400
+
+int main() {
+  int n, p, h, t;
+  char rb[RBSIZE];
+  char c, ar[2];
+  scanf("%d\n", &n);
+  for (int i=0; i<n; i++) {
+    memset(rb, (char)-1, RBSIZE);
+    p = h = t = 0;
+    rb[p] = getchar();
+    while (1) {
+      ar[0] = getchar();
+      if (ar[0] == '\n' || ar[0] == EOF) break;
+      ar[1] = getchar();
+      c = getchar();
+      if (ar[0]=='-') {
+        p = (p+1)%RBSIZE;
+        if (rb[p] == -1) {
+          t = p;
+        }
+      } else {
+        p = (p+RBSIZE-1)%RBSIZE;
+        if (rb[p] == -1) {
+          h = p;
+        }
+      }
+      rb[p] = c;
+    }
+    p = h;
+    while (1) {
+      putchar(rb[p]);
+      if (p == t) break;
+      p = (p+1)%RBSIZE;
+    }
+    putchar('\n');
+  }
+}

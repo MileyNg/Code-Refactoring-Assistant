@@ -1,0 +1,74 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#define N 38
+
+using namespace std;
+
+string STR[38] =
+  {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+   "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+   "ld", "mb", "mp", "nc", "nd", "ng", "nt", "nw", "ps", "qu", "cw", "ts"};
+
+struct DATA{
+  int n, cnt[38];
+  DATA(){
+    for(int i=0; i<N; ++i) cnt[i]=0;
+  }
+  void print(int& n){
+    int k=0;
+    for(int i=1; i<N; ++i){
+      if(cnt[k]<cnt[i]) k=i;
+    }
+    cout << STR[n] << " " << STR[k] << " " << cnt[k] << endl;
+  }
+};
+
+DATA data[N];
+
+int two_char(const char& c1, const char& c2){
+  for(int i=26; i<N; ++i){
+    if(c1==STR[i][0] && c2==STR[i][1]) return i;
+  }
+  return -1;
+}
+
+int one_char(const char& c){
+  for(int i=0; i<26; ++i){
+    if(c==STR[i][0]) return i;
+  }
+  return -1;
+}
+
+void solve(string& s){
+  vector<int> code;
+  int i;
+  for(i=0; i<s.size()-1; ++i){
+    int k = two_char(s[i],s[i+1]);
+    if(k!=-1){
+      code.push_back(k); ++i; continue;
+    }else{
+      code.push_back(one_char(s[i]));
+    }
+  }
+  if(i<s.size()) code.push_back(one_char(s[i]));
+
+  for(i=0; i<code.size()-1; ++i){
+    if(code[i]!=-1 && code[i]!=-1)
+      ++data[code[i]].cnt[code[i+1]];
+  }
+}
+
+int main(){
+  int n;
+  string s;
+  cin >> n;
+  for(int i=-1; i<n; ++i){
+    getline(cin, s);
+    if(i==-1) continue;
+    solve(s);
+  }
+  for(int i=0; i<N; ++i) data[i].print(i);
+  return 0;
+}

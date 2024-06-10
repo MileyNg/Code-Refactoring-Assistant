@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef pair<int,int> P;
+int ans,w,h;
+int dx[4]={0,0,1,-1};
+int dy[4]={1,-1,0,0};
+P fromto[20][20][4]={};
+int board[20][20];			//h,w
+void dfs(int x,int y,int cnt,vector<P>& broken){
+	if(cnt>ans || cnt>10) return;
+	for(int i=0;i<4;i++){
+		int nx=x,ny=y;
+		while(true){
+			P p=fromto[nx][ny][i];
+			nx=p.first;
+			ny=p.second;
+			if(nx==-1 || board[nx][ny]==3) break;
+			if( find(broken.begin(),broken.end(),p)==broken.end() ) break;
+		}
+		if(nx==-1) continue;
+		if(board[nx][ny]==3){
+			ans=min(ans,cnt);
+			continue;
+		}
+		if(x==nx-dx[i] && y==ny-dy[i]) continue;
+		vector<P> nbroken=broken;
+		nbroken.insert( lower_bound(nbroken.begin(),nbroken.end(),P(nx,ny)) , P(nx,ny) );
+		dfs(nx-dx[i],ny-dy[i],cnt+1,nbroken);
+	}
+}
+int main(){
+	while(true){
+		int sx,sy;
+		scanf("%d%d",&w,&h);
+		if(!w) break;
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				scanf("%d",&board[j][i]);
+				if(board[j][i]==2){
+					sx=j;
+					sy=i;
+				}
+			}
+		}
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				for(int k=0;k<4;k++){
+					int nx=j+dx[k],ny=i+dy[k];
+					while(!(nx<0 || w<=nx || ny<0 || h<=ny)){
+						if(board[nx][ny]%2==1) break;
+						nx+=dx[k];
+						ny+=dy[k];
+					}
+					if(nx<0 || w<=nx || ny<0 || h<=ny) nx=-1;
+					fromto[j][i][k]=P(nx,ny);
+				}
+			}
+		}
+		/*
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				cout << fromto[j][i][0].first << fromto[j][i][0].second << " ";
+			}
+			cout << endl;
+		}
+		*/
+		ans=20;
+		vector<P> emp;
+		dfs(sx,sy,1,emp);
+		if(ans==20) ans=-1;
+		cout << ans << endl;
+	}
+	return 0;
+}

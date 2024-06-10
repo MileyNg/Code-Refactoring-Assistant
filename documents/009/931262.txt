@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <algorithm>
+#include <set>
+using namespace std;
+
+int main(){
+	vector<int> num(3);
+	set<string> rectangle, lozenge;
+	while( ~scanf("%d,%d,%d", &num[0], &num[1], &num[2]) ){
+		sort(num.begin(), num.end());
+		string temp = "";
+		for(int i=0; i<3; i++) temp += '0'+num[i];
+		if( temp[0] == temp[1] || temp[1] == temp[2] ) lozenge.insert(temp);
+		else if( num[0]*num[0]+num[1]*num[1] == num[2]*num[2] ) rectangle.insert(temp);
+	}
+	/*
+	set<string>::iterator it1 = rectangle.begin();
+	set<string>::iterator it2 = lozenge.begin();
+	for(; it1!=rectangle.end(); it1++ ) cout << *it1 << endl;
+	cout << endl;
+	for(; it2!=lozenge.end(); it2++ ) cout << *it2 << endl;
+	cout << endl;
+	*/
+	cout << rectangle.size() << endl;
+	cout << lozenge.size() << endl;
+}

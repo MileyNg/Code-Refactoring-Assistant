@@ -1,0 +1,18 @@
+var weights = [];
+for (var i = 0; i < 10; i++) {
+	weights[i] = 1 << i;
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var line;
+while (line = lines.shift()) {
+	var w = +line;
+	var result = [];
+	for (var i = 0; i < weights.length; i++) {
+		if (w & weights[i])
+			result.push(weights[i]);
+	}
+	console.log(result.length == 0 ? 0 : result.join(' '));
+}

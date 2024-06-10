@@ -1,0 +1,42 @@
+
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+const string NIL = "zzzzz";
+
+int n, a, s, g;
+vector<vector<string>> cost;
+
+bool operator<(const string& s1, const string& s2) {
+    for(int i = 0; i < min(s1.size(), s2.size()); ++i) if(s1[i] != s2[i]) return s1[i] < s2[i];
+    return s1.size() < s2.size();
+}
+
+void WarshalFloyd() {
+    for(int k = 0; k < n; ++k)
+        for(int i = 0; i < n; ++i)
+            for(int j = 0; j < n; ++j)
+    if(cost[i][k] != NIL && cost[k][j] != NIL) cost[i][j] = min(cost[i][j], cost[i][k] + cost[k][j]);
+}
+
+int main() {
+    while(cin >> n >> a >> s >> g, n | a | s | g) {
+        cost.clear();
+        cost.resize(n);
+        for(auto& c: cost) c.resize(n, NIL);
+        for(int i = 0; i < a; ++i) {
+            int x, y;
+            string lab;
+            cin >> x >> y >> lab;
+            cost[x][y] = (cost[x][y] == NIL ? lab : min(cost[x][y], lab));
+        }
+        WarshalFloyd();
+        string result1 = cost[s][g];
+        WarshalFloyd();
+        string result2 = cost[s][g];
+        cout << (result1 != NIL && result1 == result2 ? result1 : "NO") << endl;
+    }
+}

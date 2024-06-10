@@ -1,0 +1,185 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+
+namespace MGraph{
+	typedef int Cost;Cost CINF=1<<28;
+	typedef  vector<vector<Cost> > Mat;
+}
+namespace ShortestPath{
+    using namespace MGraph;
+    // O(n^3) n≦100
+    void warshall_floyd(Mat& d){
+        const int V=d.size();
+        REP(k,V)
+            REP(i,V)REP(j,V){
+                if(d[i][j]>d[i][k] + d[k][j]){
+                    d[i][j]=d[i][k] + d[k][j];
+                }
+            }
+    }
+}
+using namespace ShortestPath;
+
+
+class Main{
+	public:
+
+	void run(){
+		// ifstream cin("D2");
+//		ofstream cout( "D2.out" );
+		
+		while(true){
+			int n,m,c,s,g;cin >> n >> m >> c >> s >> g;s--;g--;if(n==0 && m==0 && c==0)break;
+			vector<Mat> ds(c,Mat(n,vector<Cost>(n,CINF)));
+			REP(i,c)REP(j,n)ds[i][j][j]=0;
+			REP(i,m){
+				int x,y,d,c;cin >> x >> y >> d >> c;x--;y--;c--;
+				ds[c][x][y]=min(ds[c][x][y],d);
+				ds[c][y][x]=min(ds[c][y][x],d);
+			}
+			REP(i,c)warshall_floyd(ds[i]);
+
+			vector<int> ps(c);REP(i,c)cin >> ps[i];
+			vector<vector<int>> qs(c);
+			vector<vector<int>> rs(c);
+			REP(i,c){
+				qs[i]=vector<int>(ps[i]+1);
+				for(int j=1;j<=ps[i]-1;j++)cin >> qs[i][j];
+				qs[i][ps[i]]=CINF;
+				rs[i]=vector<int>(ps[i]+1);
+				for(int j=1;j<=ps[i];j++)cin >> rs[i][j];
+			}
+
+			vector<Mat> cs(c,Mat(n,vector<Cost>(n,CINF)));
+			REP(i,c)REP(j,n)REP(k,n){
+				int d=ds[i][j][k];
+				if(d==CINF){
+					cs[i][j][k]=CINF;continue;
+				}
+				//料金計算
+				int c=0;
+				int q=1;
+				while(q<qs[i].size() && qs[i][q]<d){
+					c+=rs[i][q]*(qs[i][q]-qs[i][q-1]);
+					q++;
+				}
+				if(q<qs[i].size())c+=rs[i][q]*(d-qs[i][q-1]);
+
+				cs[i][j][k]=c;
+			}
+
+			Mat allcs(n,vector<Cost>(n,CINF));
+			REP(i,c)REP(j,n)REP(k,n)allcs[j][k]=min(allcs[j][k],cs[i][j][k]);
+			warshall_floyd(allcs);
+
+			if(allcs[s][g]>=CINF) cout <<-1 <<endl;
+			else cout << allcs[s][g]<<endl;
+		}
+	}
+
+
+};
+int main(){
+	cout <<fixed<<setprecision(15);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

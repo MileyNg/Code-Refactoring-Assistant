@@ -1,0 +1,48 @@
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+
+int ta[1000],tb[1000],tc[1000];
+int a,b,c,m,n,cn;
+
+
+int main(){
+
+  while(cin>>n){
+    cin>>m;
+    for(int I=0;I<n;I++)tc[I]=I;
+    for(int I=0;I<m;I++){
+      cin>>c;
+      for(int i=0;i<(n/2);i++){
+	tb[i]=tc[i];
+	//cout<<tb[i]<<' ';
+      }
+      //cout<<endl;
+
+      for(int i=n/2;i<n;i++){
+	ta[i-n/2]=tc[i];
+	//cout<<tc[i]<<' ';
+      }
+      //cout<<endl;
+      
+
+      cn=a=b=0;
+
+      while(1){
+	for(int i=0;i<c;i++){
+	  tc[cn++]=ta[a++];
+	  if(cn==n||a==n-n/2)break;
+	}
+	if(cn==n)break;
+	for(int i=0;i<c;i++){
+	  tc[cn++]=tb[b++];
+	  if(cn==n||b==n/2)break;
+	}
+	if(cn==n)break;
+      }
+
+    }
+    cout<<tc[n-1]<<endl;
+  }
+  return 0;
+}

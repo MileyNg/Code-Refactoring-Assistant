@@ -1,0 +1,22 @@
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+using namespace std;
+
+int main(int argc, char** argv){
+	double n, s, sum = 0.0, sqsum = 0.0, avg, var;
+
+	while (cin >> n, n){
+		for (int i = 0; i < n; i++){
+			cin >> s;
+			sum += s;
+			sqsum += s * s;
+		}
+		avg = sum / n;
+		var = (sqsum / n) - (avg * avg);
+		cout.precision(10);
+		cout << showpoint << (var == 0.0 ? 0.0 : sqrt(var)) << endl;
+	}
+}

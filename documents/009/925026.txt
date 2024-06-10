@@ -1,0 +1,142 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define upper_point(dim, p, q) ((dim) ? (p)->y >= (q)->y: (p)->x >= (q)->x)
+
+typedef struct _point point;
+struct _point {
+    int id;
+    int x;
+    int y;
+};
+
+typedef struct _kdt_node kdt_node;
+struct _kdt_node {
+    point p;
+    kdt_node *left, *right;
+};
+
+
+static kdt_node *nodes;
+static int node_index;
+static int tree_size;
+
+void kdt_init(int size) {
+    node_index = 0;
+    tree_size = size;
+    nodes = (kdt_node *)malloc(sizeof(kdt_node) * size);
+    // return nodes;
+}
+
+void kdt_destruct() {
+    free(nodes);
+}
+
+kdt_node *new_node() {
+    return &(nodes[node_index++]);
+}
+
+int cmp_x(const void *a, const void *b) {
+    int ax, bx;
+    ax = ((point *)a)->x;
+    bx = ((point *)b)->x;
+    if (ax < bx) {
+        return -1;
+    }
+    else if (ax == bx) {
+        return 0;
+    }
+    return 1;
+}
+
+int cmp_y(const void *a, const void *b) {
+    int ay, by;
+    ay = ((point *)a)->y;
+    by = ((point *)b)->y;
+    if (ay < by) {
+        return -1;
+    }
+    else if (ay == by) {
+        return 0;
+    }
+    return 1;
+}
+
+int cmp_int(const void *a, const void *b) {
+    int ia, ib;
+    ia = *(int *)a;
+    ib = *(int *)b;
+    if (ia < ib) {
+        return -1;
+    }
+    else if (ia == ib) {
+        return 0;
+    }
+    return 1;
+}
+
+kdt_node *build_tree(point *ps, int len, int depth) {
+    int med_idx;
+    if (len < 1) return NULL;
+
+    qsort((void *)ps, len, sizeof(point), depth%2 ? cmp_y: cmp_x);
+    med_idx = len / 2;
+
+    kdt_node *node = new_node();
+    node->p = ps[med_idx];
+    node->left = build_tree(ps, med_idx, depth+1);
+    node->right = build_tree(&(ps[med_idx+1]), len-med_idx-1, depth+1);
+    return node;
+}
+
+void points_in_range(kdt_node *node, int dim, point *bl, point *tr, int *pid, int *pcnt) {
+    if (node == NULL) return;
+    point *p = &(node->p);
+    if (p->x >= bl->x && p->x <= tr->x &&
+        p->y >= bl->y && p->y <= tr->y) {
+        *(pid+*pcnt) = p->id;
+        (*pcnt)++;
+    }
+    if (upper_point(dim, p, bl)) points_in_range(node->left, !dim, bl, tr, pid, pcnt);
+    if (upper_point(dim, tr, p)) points_in_range(node->right, !dim, bl, tr, pid, pcnt);
+}
+
+int main() {
+    int i, n, q, x, y;
+    point *ps, *p;
+    kdt_node *tree;
+    point bl, tr;
+    int *pid;
+    int pcnt;
+
+    scanf("%d", &n);
+    ps = (point *)malloc(sizeof(point) * n);
+    pid = (int *)malloc(sizeof(int) * n);
+    kdt_init(n);
+
+    for (i = 0; i < n; i++) {
+        p = &(ps[i]);
+        scanf("%d %d", &x, &y);
+        p->id = i;
+        p->x = x;
+        p->y = y;
+    }
+    tree = build_tree(ps, n, 0);
+
+    scanf("%d", &q);
+    while (q--) {
+        scanf("%d %d %d %d", &(bl.x), &(tr.x), &(bl.y), &(tr.y));
+        pcnt = 0;
+        points_in_range(tree, 0, &bl, &tr, pid, &pcnt);
+        qsort((void *)pid, pcnt, sizeof(int), cmp_int);
+        for (i = 0; i < pcnt; i++) {
+            printf("%d\n", pid[i]);
+        }
+        printf("\n");
+    }
+    
+
+    kdt_destruct();
+
+    return 0;
+}

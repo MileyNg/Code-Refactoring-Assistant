@@ -1,0 +1,89 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int H,W,T;
+string str,u;
+bool used[26],flg;
+
+int A[26],B[26],C[26],D[26];
+
+char t[50][50];
+
+char tmp;
+
+void input();
+void init();
+
+bool check(char ch){
+  int z= ch-'A';
+  for(int i=A[z];i<=C[z];i++){
+    for(int j=D[z];j<=B[z];j++){
+      if(t[i][j]!='.'&&used[t[i][j]-'A']==false)continue;
+      if(t[i][j]!=ch)return false;
+    }
+  }
+  return true;
+}
+
+
+
+int main(){
+  cin>>T;
+  while(T--){
+    init();
+    input();
+
+    while(1){
+ 
+      flg=false;
+
+      for(int i=0;i<(int)u.size();i++){
+	
+	if(used[u[i]-'A']==false)continue;
+	if(check(u[i])==true){
+	  flg=true;
+	  used[u[i]-'A']=false;
+	  break;
+	}
+      }
+      if(flg==false)break;
+    }
+
+    flg=false;
+    for(int i=0;i<26;i++)flg|=used[i];
+    cout<<(flg?"SUSPICIOUS":"SAFE")<<endl;
+  }
+  return 0;
+}
+
+void input(){
+  int X;
+  cin>>H>>W;
+  for(int i=0;i<H;i++){
+    cin>>str;
+    for(int j=0;j<W;j++){
+      t[i][j]=str[j];
+      if(t[i][j]=='.')continue;
+      X=t[i][j]-'A';
+      if(used[X]==false)u.push_back(t[i][j]);
+      used[X]=true;
+      A[X]=min(A[X],i);
+      B[X]=max(B[X],j);
+      C[X]=max(C[X],i);
+      D[X]=min(D[X],j);
+    }
+  }
+}
+
+void init(){
+  for(int i=0;i<26;i++){
+    A[i]=50;
+    B[i]=0;
+    C[i]=0;
+    D[i]=50;
+    used[i]=false;
+  }
+  u="";
+}

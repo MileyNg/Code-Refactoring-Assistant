@@ -1,0 +1,44 @@
+#include <iostream>
+
+int n,x;
+using namespace std;
+int main(){
+  cin>>n;
+  bool close = true;
+  char pre;
+  cin>>pre>>x;
+  if(n ==1|| pre ==')'){
+    cout <<"NO"<<endl;
+    return 0;
+  }
+  bool flag = true;
+  int left = x;
+  int right = 0;
+  for(int i = 1;i < n;i++){
+    char c;
+    cin>>c>>x;
+    if(c =='('){
+      if(right){
+	flag = false;
+	break;
+      }
+      left += x;
+    }else{
+      if(left == x + right){
+	left = 0;
+	right = 0;
+      }else if (left < x + right){
+	flag = false;
+	break;
+      }else{
+	right += x;
+      }
+    }
+  }
+  if(left != right){
+    flag =false;
+  }
+  if(flag)cout <<"YES"<<endl;
+  else cout <<"NO"<<endl;
+  return 0;
+}

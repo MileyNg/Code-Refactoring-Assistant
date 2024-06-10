@@ -1,0 +1,54 @@
+#include <iostream>
+#include <queue>
+#include <map>
+#include <string>
+#include <algorithm>
+using namespace std;
+typedef pair<string, int> P;
+const int INF = 100000000;
+string a;
+int op[4] = {-1, 1, -4, 4};
+
+map<string, int> dp;                        //菫晏ュ倅サ市tring蜿伜芦"01234567"逧?nt
+
+//隶。邂嶺サ?01234567"霓ャ謐「蛻ー蜈カ莉門コ丞?謇?怙逧?怙蟆乗ュ・謨ー
+void bfs(){
+    //蛻晏ァ句喧
+    queue<P> que;
+    que.push(P("01234567", 0));
+    dp["01234567"] = 0;
+    //螳ス蠎ヲ莨伜?謳懃エ「
+    while(!que.empty()){
+        P p = que.front();
+        que.pop();
+        string s = p.first;
+        int cur = p.second;
+        for(int i = 0; i < 4; i ++){
+            //譫??荳倶ク?ャ。莠、謐「
+            int next = cur + op[i];
+            string str = s;
+            swap(str[cur], str[next]);
+            map<string, int>::iterator it = dp.find(str);
+            //蛻、譁ュ譏ッ蜷ヲ蜿ッ遘サ蜉ィ莉・蜿頑弍蜷ヲ隶ソ髣ョ霑?            if(0 <= next && next < 8&& !(cur == 3 && next == 4) && !(cur == 4 && next == 3)&& it == dp.end())
+            {
+             que.push(P(str, next));
+              dp[str] = dp[s] + 1;
+            }
+        }
+    }
+}
+
+void solve(){
+    //蛻?勁遨コ譬シ
+    a.erase(remove(a.begin(), a.end(), ' '), a.end());
+    cout<<dp[a]<<endl;
+}
+
+int main(){
+    //蜈磯?蜷第桷騾?園譛画ュ蜀オ?悟錘逶エ謗・隸サ蜿冶セ灘?逕ィ萓狗噪扈捺棡
+    bfs();
+    while(getline(cin, a)){
+        solve();
+    }
+    return 0;
+}

@@ -1,0 +1,14 @@
+loop{
+	n,k = gets.split.map(&:to_i)
+	if n == 0 and k == 0 then
+		break
+	end
+	s = gets.split.map(&:to_i)
+	
+	n.times do
+		s = gets.split.each_with_index.map{|b,i| (s[i] - b.to_i())}
+	end
+	
+	print s.all?{|a| a >= 0} ? "Yes" : "No"
+	print "\n"
+}

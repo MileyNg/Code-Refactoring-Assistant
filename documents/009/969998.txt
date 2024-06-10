@@ -1,0 +1,23 @@
+#include<cstdio>
+#include<vector>
+using namespace std;
+vector<int>combination(int n,int from){
+  if(n<=0){return vector<int>{0};}
+  vector<int> result;
+  for(int i=from;i<10;i++){
+    for(int r:combination(n-1,i+1)){
+      result.push_back(r+i);
+    }
+  }
+  return result;
+}
+int main(){
+  int n,s;
+  while(scanf("%d %d",&n,&s)>0){
+    if(!(n|s)){break;}
+    int count =0;
+    for(int a:combination(n,0))
+      if(a==s) count++;
+    printf("%d\n",count);
+  }
+}

@@ -1,0 +1,81 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int toInt(string s){
+	int su,i;
+	su=i=0;
+	
+	while(s[i]!='\0'){
+		su*=10;
+		su += (s[i] - '0');
+		++i;
+	}
+	
+	return su;
+}
+
+bool Judge(string s){
+	string a,b,c;
+	int i=0;
+	a=b=c="";
+	
+	while(s[i] != '+'){
+		a += s[i];
+		++i;
+	}
+	++i;
+	while(s[i] != '='){
+		b += s[i];
+		++i;
+	}
+	++i;
+	while(s[i] != '\0'){
+		c+=s[i];
+		++i;
+	}
+	
+	if( a[0] =='0' || b[0] == '0' || c[0] == '0' ){
+		return 0;
+	}
+	
+	
+	if( toInt(a) + toInt(b) == toInt(c) ){
+		return 1;
+	}
+	
+	return 0;
+}
+
+
+int main() {
+	
+	string s,t,n;
+	int r;
+	
+	while(getline(cin,s)){
+		r=-1;
+		
+		for(int j=0;j<=9;++j){
+			t="";
+			for(int i=0;i<s.length();++i){
+				if(s[i] == 'X'){
+					t += (char)(j+'0');
+				}else{
+					t += s[i];
+				}
+			}
+			if(Judge(t)){
+				r=j;
+				break;
+			}
+		}
+		
+		if(r==-1){
+			cout<<"NA"<<endl;
+		}else{
+			cout<<r<<endl;
+		}
+	}
+	return 0;
+}

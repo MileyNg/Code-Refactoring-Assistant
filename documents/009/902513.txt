@@ -1,0 +1,142 @@
+#include<iostream>
+using namespace std;
+string t[2][2][2];
+string u[192];
+bool used[8];
+int n,flg;
+bool input();
+
+bool check_ch(char,char);
+string ra(string,int);
+string rb(string,int);
+string rc(string,int);
+void dfs(int,int,int);
+bool used_c(int);
+bool check_x(string,string);
+bool check_y(string,string);
+bool check_z(string,string);
+void print_f(string str){
+  cout<<" "<<str[4]<<"  "<<endl;
+  cout<<str[3]<<str[0]<<str[2]<<str[5]<<endl;
+  cout<<" "<<str[1]<<"  "<<endl;
+  cout<<endl;
+}
+
+int main(){
+  /*
+  print_f(rc("zabznq",0));
+  print_f(rc("zabznq",1));
+  print_f(rc("zabznq",2));
+  print_f(rc("zabznq",3));
+  print_f(rc("zabznq",4));
+  */
+  while(input()){
+    for(int i=0;i<8;i++)used[i]=false;
+    
+    flg=0;
+    dfs(0,0,0);
+    if(flg)cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;
+  }
+  return 0;
+}
+
+void dfs(int x,int y,int z){
+  //cout<<x<<' '<<y<<' '<<z<<endl;
+  if(x==2){x=0;y++;}
+  if(y==2){y=0;z++;}
+  if(x==0&&y==0&&z==2)flg=1;
+
+  for(int i=0;i<192;i++){
+    if(flg)return;
+    if(used[i/24]==true)continue;
+    
+    if(x>0)if(check_x(t[x-1][y][z],u[i])==false)continue;
+    if(y>0)if(check_y(t[x][y-1][z],u[i])==false)continue;
+    if(z>0)if(check_z(t[x][y][z-1],u[i])==false)continue;
+
+    used[i/24]=true;
+    t[x][y][z]=u[i];
+    dfs(x+1,y,z);
+    used[i/24]=false;
+  }
+  
+}
+
+
+
+bool input(){
+  string in,str,str2;
+  n=0;
+  for(int i=0;i<8;i++){
+    cin>>in;if(in=="0")return false;
+    for(int j=0;j<6;j++){
+      if(j<4)str=ra(in,j);
+      else if(j==4)str=rb(in,1);
+      else str=rb(in,3);
+      for(int k=0;k<4;k++){
+	str2=rc(str,k);
+	u[n++]=str2;
+      }
+    }
+    
+  }
+  return true;
+}
+
+string ra(string str,int x){
+  char tmp;
+  for(int i=0;i<x;i++){
+    tmp=str[3];
+    str[3]=str[0];
+    str[0]=str[2];
+    str[2]=str[5];
+    str[5]=tmp;
+  }
+  return str;
+}
+string rb(string str,int x){
+  char tmp;
+  for(int i=0;i<x;i++){
+    tmp=str[5];
+    str[5]=str[4];
+    str[4]=str[0];
+    str[0]=str[1];
+    str[1]=tmp;
+  }
+  return str;
+}
+string rc(string str,int x){
+  char tmp;
+  for(int i=0;i<x;i++){
+    tmp=str[1];
+    str[1]=str[2];
+    str[2]=str[4];
+    str[4]=str[3];
+    str[3]=tmp;
+  }
+  return str;
+}
+
+bool used_c(int x){
+  int y=x/24*24;
+  for(int i=y;i<y+24;i++){
+    if(used[i]==true)return true;
+  }
+  return false;
+}
+
+int checkch='A'-'a';
+bool check_ch(char x,char y){
+  return (x+checkch==y||x-checkch==y);
+}
+
+bool check_x(string a,string b){
+  return check_ch(a[2],b[3]);
+}
+bool check_y(string a,string b){
+  return check_ch(a[4],b[1]);
+}
+bool check_z(string a,string b){
+  return check_ch(a[0],b[5]);
+}

@@ -1,0 +1,115 @@
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+using namespace std;
+
+class Maze {
+public:
+	map<char, char> next;
+	map<char, char> prev;
+	map<char, pair<int,int>> xy;
+
+	Maze(vector<string> maze) : maze(maze), rest(-1) {
+		map<char, char> next = { {'N','E'}, {'E','S'}, {'S','W'}, {'W','N'} };
+		map<char, char> prev = { {'E','N'}, {'S','E'}, {'W','S'}, {'N','W'} };
+		map<char, pair<int,int>> xy = { {'N', {0, -1}}, {'E', {1, 0}}, {'S', {0, 1}}, {'W', {-1, 0}} };
+		H = maze.size();
+		W = maze[0].size();
+		rest = countPeople();
+	}
+
+	void move() {
+		changeDirection();
+		goAhead();
+	}
+
+	int countPeople() {
+		if (0 <= rest) return rest;
+		int count = 0;
+		for (string str : maze) {
+			for (char c : str) {
+				count += isPerson(c);
+			}
+		}
+		return count;
+	}
+
+private:
+	vector<string> maze;
+	int H, W;
+	int rest;
+
+	bool isPerson(char c) {
+		return (isalpha(c) && c != 'X');
+	}
+
+	bool isPassable(char c) {
+		return (c == '.' || c == 'X');
+	}
+
+	void changeDirection() {
+		for (int i=0; i<H; ++i) {
+			for (int j=0; j<W; ++j) {
+				if ( ! isPerson(maze[i][j])) continue;
+				char dir = next[maze[i][j]];
+				for (int k=0; k<4; ++k) {
+					int x = j + xy[dir].first;
+					int y = i + xy[dir].second;
+					if (maze[y][x] == '.' || maze[y][x] == 'X') {
+						maze[i][j] = dir;
+						break;
+					}
+					dir = prev[dir];
+				}
+			}
+		}
+	}
+
+	void goAhead () {
+		for (int i=0; i<H; ++i) {
+			for (int j=0; j<W; ++j) {
+				if ( ! isPassable(maze[i][j])) continue;
+				char dir = 'E';
+				for (int k=0; k<4; ++k) {
+					int x = j + xy[dir].first;
+					int y = i + xy[dir].second;
+					if (0 <= x && x < W && 0 <= y && y < H && maze[y][x] == next[next[dir]]) {
+						maze[y][x] = '.';
+						if (maze[i][j] == '.') {
+							maze[i][j] = tolower(next[next[dir]]);
+						} else {
+							rest --;
+						}
+						break;
+					}
+					dir = prev[dir];
+				}
+			}
+		}
+		for (int i=0; i<(int)maze.size(); ++i) {
+			for (int j=0; j<(int)maze[i].size(); ++j) {
+				maze[i][j] = toupper(maze[i][j]);
+			}
+		}
+	}
+};
+
+int main() {
+	int W, H;
+	while (cin >> W >> H && (W || H)) {
+		vector<string> input(H);
+		for (int i=0; i<H; ++i) cin >> input[i];
+
+		Maze maze(input);
+
+		int second = 0;
+		while (0 < maze.countPeople() && second <= 180) {
+			maze.move();
+			second ++;
+		}
+		if (second <= 180) cout << second << endl;
+		else cout << "NA" << endl;
+	}
+	return 0;
+}

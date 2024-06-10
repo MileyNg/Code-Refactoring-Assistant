@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <math.h>
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem2364 : Lucky Dip **/
+char field[1000][1000];
+int d[1000][1000];
+
+int W, H, N;
+
+
+int maxD=1;
+
+bool search()
+{
+	fill(d[0], d[0]+1000*1000, INF);
+	
+	queue<P> Q;
+	Q.push(P(0,0));
+	d[0][0] = 1;
+	
+	while (Q.size()) {
+		P p = Q.front(); Q.pop();
+		
+		rep(i, 4) {
+			int nx=p.first+dx[i], ny=p.second+dy[i];
+			if_range(nx, ny, W, H) {
+				if (field[nx][ny]=='t')
+					return true;
+				
+				if (field[nx][ny] == '.' && d[nx][ny]==INF) {
+					Q.push(P(nx, ny));
+					d[nx][ny]=d[p.first][p.second]+1;
+					maxD = max(maxD, d[nx][ny]);
+				}
+			}
+		}
+	}
+	
+	return false;
+}
+
+int main()
+{
+	cin>>W>>H;
+	rep(y, H) {
+		rep(x, W) {
+			char c;
+			cin>>c; field[x][y]=c;
+		}
+	}
+	
+	if (search()) {
+		cout << 0 << endl;
+		return 0;
+	}
+	
+	cin>>N;
+	int i=1;
+	for (;i<N;i++) {
+		int xx, yy;
+		cin >> xx >> yy;
+		field[xx][yy] = '.';
+		
+		if (search()) {
+			cout << i << endl;
+			return 0;
+		}
+	}
+	
+	cout << -1 << endl;
+	return 0;
+
+}

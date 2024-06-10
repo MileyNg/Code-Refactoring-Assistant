@@ -1,0 +1,19 @@
+#include <cstdio>
+#include <vector>
+using namespace std;
+#define MAX_N 100000
+
+int main(){
+	int n, k;
+	scanf("%d %d", &n,&k);
+	vector<int> data(MAX_N);
+	for( int i=0; i<n; i++ ){
+		scanf("%d", &data[i]);
+	}
+	int ans = 0;
+	for( int i=0; i<n-k; i++ ){
+		int sum = data[i] + data[i+1] + data[i+2];
+		ans = max(ans, sum);
+	}
+	printf("%d\n", ans);
+}

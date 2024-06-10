@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+/*
+	一年 10ヵ月 （大の月＝20日、小の月＝19日）
+1年	大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、195 日
+2年	大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、195 日
+3年	大の月、大の月、大の月、大の月、大の月、大の月、大の月、大の月、大の月、大の月、200 日
+4年	大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、195 日
+5年	大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、大の月、小の月、195 日
+6年	大の月、大の月、大の月、大の月、大の月、大の月、大の月、大の月、大の月、大の月、200 日
+...
+*/
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int n; cin >> n;
+	while (n-- ){
+		int y, m, d; cin >> y >> m >> d;
+		int res = 0;
+
+		if (y % 3 != 0 ){
+			if (m % 2 != 0 ){	// 大の月
+				res = 20 - d + 1;
+			}else{			// 小の月
+				res = 19 - d + 1;
+			} // end if
+		}else{
+			res = 20 - d + 1;
+		} // end if
+
+		for (int nm = m + 1; nm < 11; nm++ ){
+			res += (y % 3 == 0 ? 20 : (nm % 2 != 0 ? 20 : 19 ) );
+		} // end for
+
+		for (int ny = y+1; ny < 1000; ny++ ){
+			res += (ny % 3 == 0 ? 200 : 195 );
+		} // end for
+		cout << res << endl;
+	} // end while
+		
+	return 0;
+}

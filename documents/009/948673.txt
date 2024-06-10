@@ -1,0 +1,60 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+
+
+
+int main(int argc, const char * argv[])
+{
+    int n, r;
+    while(cin >> n >> r){
+        if(n == 0 || r == 0) return 0;
+        
+        int cards[n];
+        int next[n];
+        
+        for(int i = 0; i < n; i++){
+            cards[i] = n - i;
+        }
+        
+        // 　DEBUG
+        /*
+        for(int i = 0; i < n; i++){
+            cout << cards[i] << " ";
+        }
+        cout << "\n";
+        */
+        
+        int p, c;
+        for(int i = 0; i < r; i++){
+            cin >> p >> c;
+            int j = 0;
+            for(j = 0; j < c; j++){
+                next[j] = cards[p+j-1];
+            }
+            for(int k = 0; k < p-1; k++){
+                next[j] = cards[k];
+                j++;
+            }
+            for(;j < n; j++){
+                next[j] = cards[j];
+            }
+            
+            for(int j = 0; j < n; j++){
+                cards[j] = next[j];
+            }
+            /*
+            for(int i = 0; i < n; i++){
+                cout << cards[i] << " ";
+            }
+            cout << "\n";
+             */
+        }
+        
+        cout << cards[0] << "\n";
+    }
+    return 0;
+}

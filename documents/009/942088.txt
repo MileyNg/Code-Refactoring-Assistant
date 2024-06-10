@@ -1,0 +1,55 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0189 : Convenient Location **/
+int d[10][10];
+int E;
+
+
+int main()
+{
+	int a, b, c, sum[10], minSum, minN;
+	while (cin >> E, E!=0) {
+		rep(i, 10) rep(j, 10) d[i][j]=INF;
+		memset(sum, 0, sizeof(sum));
+		minSum=INF;
+		
+		rep(i, E) {
+			cin >> a >> b >> c;
+			d[a][b] = c;
+			d[b][a] = c;
+		}
+		
+		rep(k, 10)
+			rep(i, 10)
+				rep(j, 10)
+					d[i][j] = min(d[i][j], d[i][k]+d[k][j]);
+		
+		rep(i, 10) {
+			rep(j, 10) {
+				if (d[i][j]<INF && i!=j)
+					sum[i] += d[i][j];
+			}
+			if (minSum > sum[i]) {
+				if (sum[i]<=0) continue;
+				minSum = sum[i];
+				minN = i;
+			}
+		}
+		cout << minN << " " << minSum << endl;
+	}
+	return 0;
+}

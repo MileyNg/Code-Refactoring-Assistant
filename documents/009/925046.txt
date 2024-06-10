@@ -1,0 +1,22 @@
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main(){
+    char s[1200];
+    
+    scanf("%[^\n]s",s);
+    
+    for (int i=0; i < 1200; i++) {
+        if (s[i] != tolower(s[i])) {
+            s[i] = tolower(s[i]);
+        }else if(s[i] != toupper(s[i])){
+            s[i] = toupper(s[i]);
+        }else if (s[i] == '\n') {
+            break;
+        }
+    }
+    printf("%s",s);
+    return 0;
+}

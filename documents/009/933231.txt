@@ -1,0 +1,92 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+#include<map>
+using namespace std;
+int I,J,x,y,mas[110][110]={{0}};
+int dy[6]={-1,-1, 0, 0, 1, 1};
+int dx_k[6]={ 0, 1,-1, 1, 0, 1};
+int dx_g[6]={-1, 0,-1, 1,-1, 0};
+int d[110][110];
+int wall=0;
+long long int wall_len=0;
+typedef pair<int,int>P;
+int bfs();
+int wall_reck(int,int);
+int main(){
+  cin >> x >> y;
+ memset(mas,true,sizeof(mas));
+  for(int i=1;i<y+1;i++){
+    for(int j=1;j<x+1;j++){
+      cin >> mas[i][j];
+    }
+  }
+ 
+  for(int i=0;i<y+2;i++){
+    for(int j=0;j<x+2;j++){
+      if(mas[i][j]==0){
+    if(i==0 || j==0 || i==y+1 || j==x+1){
+      wall_reck(i,j);
+    }
+    else{
+      I=i;
+      J=j;
+      bfs();
+      //帰ってきた値が1（つまり、抜けられた）、または範囲外（必ず１）なら、周り(六方)の壁の数を計算。
+      if(wall == 1){
+        wall=0;
+        wall_reck(i,j);
+      }
+    }
+      }
+    }
+  }
+  cout << wall_len << endl;
+}
+ 
+int bfs(){
+  queue<P>que;
+  memset(d,-1,sizeof(d));
+  que.push(P(I,J));
+  d[I][J] = 0;
+  while(!que.empty()){
+    P p = que.front();
+    que.pop();
+    //外につながったか。
+    if(p.first==0 || p.second==0 || p.first==y+1 || p.second==x+1){
+      wall=1;
+      break;
+    }
+    for(int i=0;i<6;i++){
+      int ny,nx;
+    ny=p.first+dy[i];
+      if(!(p.first&1)){
+    nx=p.second+dx_g[i];
+      }
+      else{
+    nx=p.second+dx_k[i];
+      }
+      if(mas[ny][nx]==0 && d[ny][nx]==-1){
+    que.push(P(ny,nx));
+    d[ny][nx]=d[p.first][p.second]+1;
+      }
+    }
+ 
+  }
+}
+ 
+int wall_reck(int i,int j){
+  for(int k=0;k<6;k++){
+    if(!(i&1)){
+      if(mas[i+dy[k]][j+dx_g[k]]==1){
+    wall_len++;
+      }
+    }
+    else{
+      if(mas[i+dy[k]][j+dx_k[k]]==1){
+    wall_len++;
+      }
+    }
+ 
+  }
+}

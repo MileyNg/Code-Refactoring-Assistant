@@ -1,0 +1,43 @@
+class Point
+  attr_reader :x, :y
+  def initialize(x, y)
+    @x, @y = [x, y].map(&:to_f)
+  end
+  def distance(p)
+    Math::hypot(@x - p.x, @y - p.y)
+  end
+end
+
+def bfs(*vertex)
+  edge = Hash.new{|h, k| h[k] = Hash.new}
+  vertex.each do |u|
+    vertex.each do |v|
+      if u == vertex.first || v == vertex.first
+        edge[u][v] = true if u.distance(v) <= 10.0
+      else
+        edge[u][v] = true if u.distance(v) <= 50.0
+      end
+    end
+  end
+
+  visited = Hash.new
+  q = Array.new
+  q.push([vertex.first, 0])
+  until q.empty?
+    current, depth = q.shift
+    next if visited[current]
+    visited[current] = depth
+    vertex.each do |v|
+      q.push([v, depth + 1]) if edge[current][v]
+    end
+  end
+  visited.values.max
+end
+
+gets.to_i.times do
+  n, x, y = gets.split.map(&:to_i)
+  natsume = Point.new(*gets.split)
+  customer = n.times.map{Point.new(*gets.split)}
+  number = bfs(natsume, *customer)
+  puts (x > y && number > 1) ? "You're always welcome!" : number * x
+end

@@ -1,0 +1,30 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+
+int main(){
+    int n; cin >> n;
+    vvb G(n);
+    rep(i,n)rep(j,n){
+        char c; cin>>c;
+        G[i][j] = c=='.';
+    }
+
+    vvi dp(n+1, vi(n+1));
+    int ans = 0;
+    loop(i,1,n+1)loop(j,1,n+1)if(G[i+1][j+1]){
+        dp[i][j] = min({dp[i-1][j-1],dp[i-1][j],dp[i][j-1]})+1;
+        ans = max(ans,dp[i][j]);
+    }
+    cout << ans << endl;
+}

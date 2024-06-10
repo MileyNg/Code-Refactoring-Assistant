@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char surface[16][16] = {0};
+	
+	while (scanf("%s", surface[0]) != EOF){
+		int i;
+		char figure;
+		
+		for (i = 1; i < 8; i++){
+			scanf("%s", surface[i]);
+		}
+		
+		for (i = 0; i < 64; i++){
+			if (surface[i / 8][i % 8] == '1'){
+				if (surface[i / 8 + 1][i % 8] == '1'){
+					if (surface[i / 8][i % 8 + 1] == '1'){
+						if (surface[i / 8 + 1][i % 8 + 1] == '1'){
+							puts("A");
+						}
+						else if (surface[i / 8 + 2][i % 8 + 1] == '1'){
+							puts("F");
+						}
+						else {
+							puts("G");
+						}
+					}
+					else if (i % 8 > 0 && surface[i / 8 + 1][i % 8 - 1] == '1'){
+						puts("D");
+					}
+					else if (surface[i / 8 + 2][i % 8] == '1' && surface[i / 8 + 3][i % 8] == '1'){
+						puts("B");
+					}
+				}
+				else if (surface[i / 8 + 1][i % 8 + 1] == '1'){
+					puts("E");
+				}
+				else {
+					puts("C");
+				}
+				break;
+			}
+		}
+	}
+	
+	return 0;
+}

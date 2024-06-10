@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<climits>
+#include<algorithm>
+#include<functional>
+
+using namespace std;
+
+long maxBurdenVolume(vector<long> &track){
+ long maxBurdenSum = 0;
+
+ for(long track_i = 0, trackNum = track.size(); track_i < trackNum; ++track_i){
+  if(maxBurdenSum < track[track_i]) maxBurdenSum = track[track_i];
+ }
+
+ return maxBurdenSum;
+};
+
+long minTrack(const vector<long> &track){
+ unsigned long  min_tracki   = -1;
+ unsigned long minBurdenSum = ULONG_MAX;
+ for(unsigned long track_i = 0, trackNum = track.size(); track_i < trackNum; ++track_i){
+
+  if(minBurdenSum > track[track_i]){
+   min_tracki = track_i;
+   minBurdenSum = track[min_tracki];
+  }
+ }
+
+ return min_tracki;
+};
+
+int main(){
+
+ ios_base::sync_with_stdio(false);
+ cin.tie(0);
+
+ unsigned long burdenNum = 0;  cin >> burdenNum;
+ unsigned long trackNum  = 0;  cin >> trackNum;
+
+ vector<long> burden(burdenNum, 0);
+
+ for(unsigned long burden_i = 0; burden_i < burdenNum; ++burden_i){
+
+  unsigned long burdenVolume = 0; cin >> burdenVolume;
+  burden[burden_i] = burdenVolume;
+
+ }
+
+ sort(burden.begin(), burden.end(), greater<unsigned long>());
+
+ vector<long> track(trackNum, 0);
+
+ for(unsigned long burden_i = 0; burden_i < burdenNum; ++burden_i){
+  unsigned long burdenPutTrackNum = minTrack(track);
+  track[burdenPutTrackNum] += burden[burden_i];
+ }
+
+ cout << maxBurdenVolume(track) << endl;
+
+ return 0;
+}

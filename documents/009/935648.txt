@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h> 
+
+int stack[100],i = 0;
+
+void slaid(int a) 
+{
+  stack[i++] = a;
+}
+
+int main()
+{
+  int x,k;
+  char s[100];
+  
+  while(scanf("%s", s) != EOF)
+    {
+      if (s[0] == '+' )
+	{
+	  x = stack[--i] ;
+	  k = stack[--i] + x;
+	  slaid(k);
+	} 
+      else if (s[0] == '-' )
+	{
+	  x = stack[--i];
+	  k = stack[--i] - x;
+	  slaid(k);
+	} 
+      else if (s[0] == '*' )
+	{
+	  x = stack[--i];
+	  k = stack[--i] * x;
+	  slaid(k);
+	} 
+      else 
+	{
+	  x = atoi(s);
+	  slaid(x);
+	}
+    }
+  
+  printf("%d\n",stack[--i]);
+  
+  return 0;
+}

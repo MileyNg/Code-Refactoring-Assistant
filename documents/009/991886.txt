@@ -1,0 +1,95 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define NIL NULL
+ 
+struct node{
+  struct node *l;
+  struct node *r;
+  struct node *p;
+  int key;
+};
+ 
+typedef struct node * Node;
+ 
+Node root;
+
+main(){
+  int n, i, x;
+  char str[20];
+   
+  scanf("%d",&n);
+ 
+  for ( i = 0; i < n; i++ ){
+    scanf("%s",str);
+ 
+    if (str[0]=='i'){
+      scanf("%d",&x);
+      insert(x);
+    } 
+    else if(str[0]=='f'){
+      scanf("%d",&x);
+      Node s=Search(root,x);
+      if (s!= NIL ) printf("yes\n");
+      else printf("no\n");
+    }
+    else if (str[0]=='p'){
+      Inorder(root);
+      printf("\n");
+       
+      Preorder(root);
+      printf("\n");
+    }
+  }
+  return 0;
+}
+
+void Preorder(Node t){
+  printf(" %d",t->key);
+  if(t!=NIL){
+    if(t->l!=NIL)Preorder(t->l);
+    if(t->r!=NIL)Preorder(t->r);
+  }
+}
+ 
+void Inorder(Node t){
+   
+  if(t!=NIL){
+    if(t->l!=NIL){
+      Inorder(t->l);
+      }
+    printf(" %d",t->key);
+     
+    if(t->r!=NIL){
+      Inorder(t->r);
+      }
+  }
+}
+ 
+void insert(int k){
+  Node y=NIL;
+  Node x=root;
+  Node z;
+ 
+  z = malloc(sizeof(struct node));
+  z->key=k;
+  z->l=NIL;
+  z->r=NIL;
+   
+  while(x!=NIL){
+    y=x;
+ 
+    if(z->key<x->key) x=x->l;
+    else x=x->r;
+  }
+  z->p=y;
+   
+  if(y==NIL) root=z;
+  else if(z->key<y->key) y->l=z;
+  else y->r=z;
+}
+ 
+Node Search(Node t,int k){
+  if(t==NIL || k==t->key) return t;
+  if(k<t->key) return Search(t->l,k);
+  else return Search(t->r,k);
+}

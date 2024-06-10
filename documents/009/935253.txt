@@ -1,0 +1,165 @@
+
+class Company
+  def initialize(q, r)
+    @q = q
+    @r = r
+    now = 0
+    @hash = {}
+    @hash[0] = 0
+    return if @q.size == 0
+    (1..@q.last).each do |n|
+      if @q[now] < n
+        now = now + 1
+      end
+      @hash[n] = @r[now]
+    end
+  end
+
+  def next_price(now_distance, next_distance)
+    p = 0
+    (now_distance+1..next_distance).each do |d|
+      if @hash[d]
+        p = p + @hash[d]
+      else
+        p = p + @r.last
+      end
+    end
+    return p
+  end
+end
+
+class PathState
+  # 現在の鉄道 現在の駅 その鉄道の距離 現在のコスト
+  attr_accessor :company, :point, :distance, :cost
+
+  def initialize(company, point, distance, cost)
+    self.company = company
+    self.point = point
+    self.distance = distance
+    self.cost = cost
+  end
+
+  def next_path(xydc_arr, companies)
+    x, y, d, c = xydc_arr
+    if self.point == x
+      next_point = y
+    elsif self.point == y
+      next_point = x
+    else
+      return false
+    end
+    next_point = self.point == x ? y : x
+    if self.company != c
+      distance = d
+      company_model = companies[c]
+      cost = self.cost + company_model.next_price(0, distance)
+    else
+      company_model = companies[self.company]
+      distance = d + self.distance
+      cost = self.cost + company_model.next_price(self.distance, distance)
+    end
+    PathState.new(c, next_point, distance, cost)
+  end
+end
+
+def next_roots(xydcs, pathstate, points, companies)
+  next_roots = []
+  xydcs.each do |arr|
+    next_path = pathstate.next_path(arr, companies)
+    next unless next_path
+
+    if points[next_path.point]
+      if points[next_path.point] > next_path.cost
+        points[next_path.point] = next_path.cost
+        next_roots.push next_path
+      end
+    else
+      points[next_path.point] = next_path.cost
+      next_roots.push next_path
+    end
+  end
+  next_roots
+end
+
+objects = []
+
+lines = []
+state = 0
+now_company = 0
+n, m, c, s, g, xydc, p, q, r = [0,0,0,0,0,[],[],{},{}]
+while line = gets
+  line = line.chomp
+  if line == "0 0 0 0 0"
+    break
+  end
+
+  arr = line.split(" ").map(&:to_i)
+  if state == 0
+    n, m, c, s, g = arr
+    xydc = []
+    p = []
+    q = {}
+    r = {}
+    now_company = 0
+    state = 1
+    if m.to_i == 0
+      state = 2
+    end
+    next
+  end
+  if state == 1
+    xydc.push arr
+    if xydc.size == m
+      state = 2
+    end
+    next
+  end
+  if state == 2
+    p = arr
+    state = 3
+    next
+  end
+  if state == 3
+    q[now_company] = arr
+    state = 4
+    next
+  end
+  if state == 4
+    r[now_company] = arr
+    now_company += 1
+    if now_company == c.to_i
+      state = 5
+    else
+      state = 3
+      next
+    end
+  end
+  if state == 5
+    companies = {}
+    c.times.each do |i|
+      companies[i+1] = Company.new(q[i], r[i])
+    end
+
+    paths = [PathState.new(-1, s, 0, 0)]
+    points = {s => 0}
+    goal = -1
+    while paths.size != 0 do
+      path = paths.shift
+      if path.point == g
+        if goal == -1
+          goal = path.cost
+        elsif goal > path.cost
+          goal = path.cost
+        end
+        next
+      end
+      next if goal != -1 && path.cost >= goal
+      paths += next_roots(xydc, path, points, companies)
+    end
+
+    puts goal
+
+    state = 0
+    next
+  end
+end

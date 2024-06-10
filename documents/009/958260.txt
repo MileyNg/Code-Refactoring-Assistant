@@ -1,0 +1,78 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<algorithm>
+ using namespace std;
+ 
+ #define mkp make_pair
+ #define F first
+ #define S second
+ #define rep(i,n) for(int i=0;i<n;i++)
+ 
+ typedef vector<int> vint;
+ typedef pair<int,int> pii;
+ 
+int main(){
+	int w,h;
+	while(cin>>w>>h,w||h){
+		vint tt(h,0);
+		vector<vint> vv(w,tt);
+		vector<vint> table=vv;
+		int v[4][2]={0,1,1,0,0,-1,-1,0};
+		rep(i,w){
+			rep(j,h){
+				char t;
+				cin>>t;
+				if(t=='.') vv[i][j]=0;
+				else if(t=='W'){
+					vv[i][j]=1;
+					table[i][j]=-1;
+				}
+				else{
+					vv[i][j]=2;
+					table[i][j]=-1;
+				}
+			}
+		}
+		rep(i,w){
+			rep(j,h){
+				if(vv[i][j]==0) continue;
+				else{
+					queue<pii> q;
+					q.push(mkp(i,j));
+					while(!q.empty()){
+						pii t=q.front();
+						q.pop();
+						rep(k,4){
+							int x=t.F+v[k][0],y=t.S+v[k][1];
+							if(x>=0&&y>=0&&x<w&&y<h){
+								if(table[x][y]==0||table[x][y]==3-vv[i][j]){
+									table[x][y]+=vv[i][j];
+									q.push(mkp(x,y));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		int answ=0,ansb=0;
+		rep(i,w){
+			rep(j,h){
+				//cout<<table[i][j]<<" ";
+				if(table[i][j]==1){
+					answ++;
+				}
+				else if(table[i][j]==2){
+					ansb++;
+				}
+			}
+			//cout<<endl;
+		}
+		//cout<<endl;
+		cout<<ansb<<" "<<answ<<endl;
+		
+	}
+	return 0;
+}
+		

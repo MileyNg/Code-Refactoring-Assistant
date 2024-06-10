@@ -1,0 +1,83 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <set>
+using namespace std;
+typedef pair<int,int> P;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<EPS)
+int stx,sty;
+int n;
+bool ans=false;
+P sp[12];
+int dx[12]={2,2,2,1,1,0,0,-1,-1,-2,-2,-2};
+int dy[12]={1,0,-1,2,-2,2,-2,2,-2,1,0,-1};
+bool ok(int num,int x,int y)
+{
+	return (abs(sp[num].fi-x)<2)&&(abs(sp[num].sec-y)<2);
+}
+void dfs(int num,int x,int y)
+{
+	if(ans==true)return;
+	if(num==n)
+	{
+		ans=true;
+		return;
+	}
+	for(int i=0;i<12;i++)
+	{
+		int sx=dx[i]+x,sy=dy[i]+y;
+		if(sx<0||sx>9||sy<0||sy>9)continue;
+		if(!ok(num,sx,sy))continue;
+		//cout << num << " OK" << endl;
+		dfs(num+1,sx,sy);
+	}
+	return ;
+}
+int main()
+{
+	while(1)
+	{
+		ans=false;
+		scanf("%d %d",&stx,&sty);
+		if(stx==0&&sty==0)break;
+		scanf("%d",&n);
+		for(int i=0;i<n;i++)
+		{
+			scanf("%d %d",&sp[i].fi,&sp[i].sec);
+		}
+		dfs(0,stx,sty);
+		if(ans)
+		{
+			cout << "OK" << endl;
+		}
+		else
+		{
+			cout << "NA" << endl;
+		}
+	}
+	return 0;
+}

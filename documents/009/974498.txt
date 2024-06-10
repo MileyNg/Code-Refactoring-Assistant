@@ -1,0 +1,433 @@
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
+#include <tuple>
+#include <vector>
+#include <set>
+
+using namespace std;
+
+const double EPS = 1e-9;
+const double PI = acos(-1.0);
+const double INF = 1e3;
+bool EQ(double a, double b) { return abs(a - b) < EPS; }
+
+struct Point
+{
+	double x, y;
+	Point operator + (Point a) { return Point{x + a.x, y + a.y}; }
+	Point operator - (Point a) { return Point{x - a.x, y - a.y}; }
+	Point operator * (double a) { return Point{x * a, y * a}; }
+	double operator * (Point a) { return x * a.y - y * a.x; }
+	Point operator / (double a) { return Point{x / a, y / a}; }
+	
+	bool operator == (const Point a) const { return EQ(x, a.x) && EQ(y, a.y); }
+	bool operator != (const Point a) const { return !(*this == a); }
+	bool operator < (const Point a) const
+	{
+		if(!EQ(x, a.x)) return x < a.x;
+		if(EQ(y, a.y)) return false;
+		return y < a.y;
+	}
+	bool operator > (const Point a) const { return a < (*this); }
+
+	Point norm() { double d = hypot(x, y); return Point{x / d, y / d}; }
+	double size() { return hypot(x, y); }
+	Point rotate(double rad) { return Point{x * cos(rad) - y * sin(rad), x * sin(rad) + y * cos(rad)}; }
+	Point reflect(Point p1, Point p2)
+	{
+		Point originRoot = p2 - p1;
+		double rad = atan2(originRoot.y, originRoot.x);
+		if(rad < 0) rad += 2 * PI;
+		rad *= 2;
+
+		Point tar = (*this) - p1;
+
+		Point ret = {tar.x * cos(rad) + tar.y * sin(rad), tar.x * sin(rad) - tar.y * cos(rad)};
+		ret = ret + p1;
+
+		return ret;
+	}
+
+	void print() const { printf("(%lf %lf) ", x, y); }
+};
+
+double ccw(Point a, Point b, Point c) // ab to ac
+{
+	double gap[2][2] = {{b.x - a.x, c.x - a.x}, {b.y - a.y, c.y - a.y}};
+	double ret = gap[0][0] * gap[1][1] - gap[0][1] * gap[1][0];
+	if(EQ(ret, 0)) ret = 0;
+	return ret;
+}
+
+struct Segment
+{
+	Point from, to;
+
+	bool covers(Point tar)
+	{
+		if(tar == from) return true;
+
+		Point dv = to - from;
+		Point dv2 = tar - from;
+		
+		return (dv.size() > dv2.size() || EQ(dv.size(), dv2.size())) && (dv.norm() == dv2.norm());
+	}
+
+	bool isCross(Segment tar, bool orTouch = true)
+	{
+		double product[4] = {ccw(from, to, tar.from), ccw(from, to, tar.to), ccw(tar.from, tar.to, from), ccw(tar.from, tar.to, to)};
+
+		if(orTouch)
+		{
+			if(product[0] * product[1] <= 0 && product[2] * product[3] <= 0)
+			{
+				if(product[0] == 0 && product[1] == 0)
+					return covers(tar.from) || covers(tar.to) || tar.covers(from) || tar.covers(to);
+
+				return true;
+			}
+		}
+		else
+		{
+			if(product[0] * product[1] < 0 && product[2] * product[3] < 0) return true;
+		}
+
+		return false;
+	}
+
+	tuple<int, Point> getCross(Segment tar)	// 0 for valid, 1 for non-cross point, 2 for much cross points
+	{
+		if(isCross(tar) == false) return make_tuple(1, Point{0, 0});
+		
+		Point p1 = from, p2 = to, p3 = tar.from, p4 = tar.to;
+		if(p1 > p2) swap(p1, p2);
+		if(p3 > p4) swap(p3, p4);
+	
+		Segment s1 = *this, s2 = tar;
+		if(p1 > p3) { swap(s1, s2); swap(p1, p3); swap(p2, p4); }
+
+		bool isMuch = false;
+		if((s1.covers(p3) && s1.covers(p4)) || (s2.covers(p1) && s2.covers(p2))) isMuch = true;
+		if(s1.covers(p3) && s2.covers(p2) && p2 != p3) isMuch = true;
+
+		if(isMuch) return make_tuple(2, Point{0, 0});
+
+		if(p2 == p3) return make_tuple(0, p2);
+
+		Point dv = p2 - p1, dv2 = p4 - p3;
+		double t = (p3 - p1) * dv2 / (dv * dv2);
+//		double s = (p1 - p3) * dv / (dv2 * dv);
+
+		return make_tuple(0, p1 + dv * t);
+	}
+
+	double dist(Point a)
+	{
+		double ret = min((from - a).size(), (to - a).size());
+		Point orth = (to - from).rotate(PI / 2).norm() * ret;
+
+		int flag;
+		Point intersect;
+		tie(flag, intersect) = getCross(Segment{a - orth, a + orth});
+
+		if(flag == 0) ret = (intersect - a).size();
+
+		return ret;
+	}
+};
+
+struct Convex
+{
+	vector <Point> p;
+
+	Point at(int ind) const { return p[ind % p.size()]; }
+
+	bool contains(Point tar, bool orTouch = true) const
+	{
+		for(int i = 0; i < p.size(); i++)
+		{
+			Point next = at(i + 1);
+			double ccwval = ccw(p[i], next, tar);
+			if(orTouch)
+			{
+				if(ccwval < 0) return false;
+			}
+			else
+			{
+				if(ccwval <= 0) return false;
+			}
+		}
+		
+		return true;
+	}
+
+	bool isCross(const Convex &tar) // have common area
+	{
+		for(const auto &pt: p)
+			for(const auto &pt2: tar.p)
+			{
+				int flag[2] = {0, 0};
+				for(const auto &curp: p)
+				{
+					double ccwval = ccw(pt, pt2, curp);
+					if(ccwval > 0) flag[0] |= 2;
+					else if (ccwval < 0) flag[0] |= 1;
+				}
+
+				for(const auto &curp: tar.p)
+				{
+					double ccwval = ccw(pt, pt2, curp);
+					if(ccwval > 0) flag[1] |= 2;
+					else if (ccwval < 0) flag[1] |= 1;
+				}
+
+				if(flag[0] > flag[1]) swap(flag[0], flag[1]);
+				if(flag[0] == 1 && flag[1] == 2) return false;
+			}
+
+		return true;
+	}
+
+	tuple<Convex, Convex> cut(Point p1, Point p2) // two points from the cutting line
+	{
+		Point dir = (p2 - p1).norm();
+		p1 = p1 - dir * INF; // to be updated
+		p2 = p2 + dir * INF;
+
+		bool isCut = false;
+		Segment line = Segment{p1, p2};
+		for(int i = 0; i < p.size(); i++)
+		{
+			Segment seg = Segment{at(i), at(i + 1)};
+			if(get<0>(line.getCross(seg)) == 0)
+			{
+				isCut = true;
+				break;
+			}
+		}
+
+		if(isCut == false)
+		{
+			for(const Point &pt: p)
+			{
+				double ccwval = ccw(p1, p2, pt);
+				if(ccwval < 0) return make_tuple(*this, Convex());
+				else if (ccwval > 0) return make_tuple(Convex(), *this);
+			}
+
+			fprintf(stderr, "Not a convex\n"); 
+			while(1) ;
+		}
+
+		Convex res[2];
+		for(int i = 0; i < p.size(); i++)
+		{
+			double ccwval = ccw(p1, p2, p[i]);
+
+			if(ccwval < 0) res[0].p.push_back(p[i]);
+			else if (ccwval > 0) res[1].p.push_back(p[i]);
+			else { res[0].p.push_back(p[i]); res[1].p.push_back(p[i]); }
+
+			if(ccwval != 0)
+			{
+				Point next = at(i + 1);
+				int type;
+				Point crossPoint;
+				tie(type, crossPoint) = line.getCross(Segment{p[i], next});
+
+/*
+				printf("%lf, type: %d, cross: ", ccwval, type);
+				line.from.print();
+				line.to.print();
+				printf(", ");
+				p[i].print();
+				next.print();
+				printf("=> ");
+				crossPoint.print();
+				printf("\n");
+				*/
+
+				if(type == 0 && crossPoint != next) { res[0].p.push_back(crossPoint); res[1].p.push_back(crossPoint); }
+			}
+		}
+
+/*
+		for(int i = 0; i < 2; i++)
+		{
+			res[i].p.erase(unique(res[i].p.begin(), res[i].p.end()), res[i].p.end());
+			while(res[i].p.size() > 1 && res[i].p[0] == res[i].p[res[i].p.size() - 1])
+				res[i].p.pop_back();
+			if(res[i].p.size() == 1) res[i].p.pop_back();
+		}
+		*/
+
+		if(res[0].p.size() == 1) res[0].p.pop_back();
+		if(res[1].p.size() == 1) res[1].p.pop_back();
+
+		return make_tuple(res[0], res[1]);
+	}
+
+	void print()
+	{
+		for(const auto &pt: p) pt.print();
+		printf("\n");
+	}
+};
+
+vector <tuple<Convex, int>> cvs, stayConvex, foldConvex;
+bool isVisited[5000];
+
+bool isConnected(const Convex &a, const Convex &b)
+{
+	for(int i = 0; i < a.p.size(); i++)
+	{
+		auto p1 = a.p[i];
+		auto p2 = a.p[(i + 1) % a.p.size()];
+
+		if(p1 > p2) swap(p1, p2);
+
+		for(int j = 0; j < b.p.size(); j++)
+		{
+			auto p3 = b.p[j];
+			auto p4 = b.p[(j + 1) % b.p.size()];
+
+			if(p3 > p4) swap(p3, p4);
+
+	//		if(p1 == p3 && p2 == p4) return true;
+			auto res = Segment{p1, p2}.getCross(Segment{p3, p4});
+			if(get<0>(res) == 2) return true;
+		}
+	}
+
+	return false;
+}
+
+int __foldCnt = 0;
+
+void fold(Point p, Point q, int ind)
+{
+	__foldCnt++;
+	isVisited[ind] = true;
+	Convex folded, stay;
+	tie(folded, stay) = get<0>(cvs[ind]).cut(p, q);
+	int curZ = get<1>(cvs[ind]);
+
+/*
+	printf("Base\n");
+	get<0>(cvs[ind]).print();
+	printf("Stay\n");
+	stay.print();
+	*/
+
+	if(stay.p.size() > 0) stayConvex.push_back(make_tuple(stay, curZ));
+	if(folded.p.size() > 0)
+	{
+		for(int i = 0; i < cvs.size(); i++)
+		{
+			if(isVisited[i]) continue;
+
+			Convex &tar = get<0>(cvs[i]);
+
+			int newZ = get<1>(cvs[i]);
+			if(curZ < newZ && folded.isCross(tar)) fold(p, q, i);
+			else if (isConnected(folded, tar)) fold(p, q, i);
+		}
+/*
+		printf("base points: ");
+		p.print();
+		q.print();
+		printf("\n");
+		*/
+		for(auto &pt: folded.p) pt = pt.reflect(p, q);
+//		folded.print();
+		reverse(folded.p.begin(), folded.p.end());
+		foldConvex.push_back(make_tuple(folded, curZ));
+	}
+}
+
+int main(void)
+{
+	/*
+	Point pt[4];
+	for(int i = 0; i < 4; i++) scanf("%lf %lf", &pt[i].x, &pt[i].y);
+	auto res = Segment{pt[0], pt[1]}.getCross(Segment{pt[2], pt[3]});
+	printf("res: %d, ", get<0>(res));
+	get<1>(res).print();
+	printf("\n");
+	*/
+
+	int n;
+	while(scanf("%d", &n), n > 0)
+	{
+		cvs.clear();
+		Convex init = Convex{vector<Point>{Point{0, 0}, {100, 0}, {100, 100}, {0, 100}}};
+		cvs.push_back(make_tuple(init, 0));
+
+		for(int i = 0; i < n; i++)
+		{
+			Point p, q;
+			scanf("%lf %lf %lf %lf", &p.x, &p.y, &q.x, &q.y);
+
+			int maxZ = -1, ind;
+			for(int i = 0; i < cvs.size(); i++)
+			{
+				auto &cv = get<0>(cvs[i]);
+				int z = get<1>(cvs[i]);
+				
+				if(cv.contains(p) && z > maxZ) { maxZ = z; ind = i; }
+			}
+
+			fill(isVisited, isVisited + 5000, false);
+			stayConvex.clear();
+			foldConvex.clear();
+
+			Point mid = (p + q) / 2;
+			Point onLine = (p - q).rotate(PI / 2) + mid;
+
+			__foldCnt = 0;
+			fold(mid, onLine, ind);
+
+			vector <tuple<Convex, int>> ncvs;
+			for(int j = 0; j < cvs.size(); j++)
+				if(isVisited[j] == false)
+					ncvs.push_back(cvs[j]);
+			for(auto &stay: stayConvex) ncvs.push_back(stay);
+			
+			maxZ = -1;
+			for(const auto &cv: ncvs) maxZ = max(maxZ, get<1>(cv));
+
+			vector <int> zs;
+			for(auto &folded: foldConvex) zs.push_back(get<1>(folded));
+			sort(zs.begin(), zs.end());
+			for(auto &folded: foldConvex)
+			{
+				int curZ = get<1>(folded);
+				int ind = lower_bound(zs.begin(), zs.end(), curZ) - zs.begin();
+				get<1>(folded) = maxZ + zs.size() - ind;
+			}
+			for(auto &folded: foldConvex) ncvs.push_back(folded);
+
+			cvs = ncvs;
+
+/*
+			for(auto &cv: cvs)
+			{
+				get<0>(cv).print();
+				printf("%d\n", get<1>(cv));
+			}
+*/				
+//			printf("%d\n", (int)cvs.size());
+		}
+
+		Point pin;
+		scanf("%lf %lf", &pin.x, &pin.y);
+		int ans = 0;
+		for(auto &cv: cvs)
+			if(get<0>(cv).contains(pin, false)) ans++;
+
+		printf("%d\n", ans);
+	}
+
+	return 0;
+}

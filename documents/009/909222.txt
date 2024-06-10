@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main(){
+
+  int n,i,j;
+
+  while(1){
+
+    scanf("%d",&n);
+
+    if(n==0){
+      break;
+    }
+
+  int data[10][10]={0};
+  int sum[10]={0};
+  int sum2[10]={0};
+  int sum3=0;
+
+  for(i=0;i<n;i++){
+    for(j=0;j<n;j++){
+      scanf("%d",&data[i][j]);
+      sum[i]+=data[i][j];
+    }
+  }
+
+  for(i=0;i<n;i++){
+    for(j=0;j<n;j++){
+      sum2[i]+=data[j][i];
+    }
+  }
+
+  for(i=0;i<n;i++){
+    for(j=0;j<n;j++){
+      printf("%5d",data[i][j]);
+    }
+    printf("%5d\n",sum[i]);
+    sum3+=sum[i];
+  }
+
+  for(i=0;i<n;i++){
+    printf("%5d",sum2[i]);
+  }
+  printf("%5d\n",sum3);
+
+  }
+
+  return 0;
+}
+
+ 

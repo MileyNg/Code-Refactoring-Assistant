@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+
+struct State{
+    int score, time, num;
+    State(int score, int time, int num)
+        :score(score), time(time), num(num){}
+};
+
+bool operator<(const State &a, const State &b){
+    return tie(b.score, b.time, b.num) < tie(a.score, a.time, a.num);
+}
+
+bool operator==(const State &a, const State &b){
+    return tie(a.score, a.time) == tie(b.score, b.time);
+}
+
+int main(){
+    int M, T, P, R;
+    while(cin >> M >> T >> P >> R, P|T|P|R){
+        vector<State> team;
+        rep(i, T)team.emplace_back(0, 0, i+1);
+        vector<vector<int> > pen(T, vector<int>(P));
+        while(R--){
+            int m, t, p, j;
+            cin >> m >> t >> p >> j;
+            t--; p--;
+            if(j)pen[t][p]++;
+            else{
+                team[t].score++;
+                team[t].time -= m + 20 * pen[t][p];
+            }
+        }
+        sort(all(team));
+        rep(i, T){
+            if(i)cout << (team[i-1] == team[i]? '=': ',');
+            cout << team[i].num;
+        }
+        cout << '\n';
+    }
+    return 0;
+}

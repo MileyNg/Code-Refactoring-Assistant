@@ -1,0 +1,36 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+string s_toupper(string x);
+
+int main()
+{
+	string W,T[1000];
+	int cnt = 0,i = 0;
+
+	cin >> W;
+	W = s_toupper(W);
+
+	while(1){
+		cin >> T[i];
+		T[i] = s_toupper(T[i]);
+		if(T[i] == "END_OF_TEXT")
+			break;
+		else if(W == T[i])
+			cnt++;
+		i++;
+	}
+
+	cout << cnt << endl;
+
+	return 0;
+}
+
+string s_toupper(string x)
+{
+	for(int j = 0;j < x.size();j++)
+		x[j] = toupper(x[j]);
+	return x;
+}

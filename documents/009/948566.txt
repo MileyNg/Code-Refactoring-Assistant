@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+#include <iostream>
+#include <math.h>
+#include <assert.h>
+#include <vector>
+#include <queue>
+#include <string>
+#include <map>
+#include <set>
+
+using namespace std;
+typedef long long ll;
+typedef unsigned int uint;
+typedef unsigned long long ull;
+static const double EPS = 1e-9;
+static const double PI = acos(-1.0);
+
+#define REP(i, n) for (int i = 0; i < (int)(n); i++)
+#define FOR(i, s, n) for (int i = (s); i < (int)(n); i++)
+#define FOREQ(i, s, n) for (int i = (s); i <= (int)(n); i++)
+#define FORIT(it, c) for (__typeof((c).begin())it = (c).begin(); it != (c).end(); it++)
+#define MEMSET(v, h) memset((v), h, sizeof(v))
+
+#include <complex>
+
+typedef complex<double> Point;
+
+static const double INF = 1e+10;
+
+#define CURR(P, i) (P[i])
+#define NEXT(P, i) (P[(i + 1) % P.size()])
+
+struct Line : public vector<Point> {
+  Line() {;}
+  Line(Point a, Point b) { push_back(a); push_back(b); }
+};
+
+struct Circle {
+  Point p;
+  double r;
+  Circle() {;}
+  Circle(Point p, double r) : p(p), r(r) {;}
+};
+
+namespace std {
+  bool operator<(const Point &lhs, const Point &rhs) {
+    return lhs.real() == rhs.real() ? lhs.imag() < rhs.imag() : lhs.real() < rhs.real();
+  }
+}
+
+inline double cross(const Point &a, const Point &b) {
+  return imag(conj(a) * b);
+}
+
+inline double dot(const Point &a, const Point &b) {
+  return real(conj(a) * b);
+}
+
+inline int ccw(Point a, Point b, Point c) {
+  b -= a;
+  c -= a;
+  if (cross(b, c) > 0) { return 1; }
+  if (cross(b, c) < 0) { return -1; }
+  if (dot(b, c) < 0) { return 2; }
+  if (norm(b) < norm(c)) { return -2; }
+  return 0;
+}
+
+
+Point projection(const Line &l, const Point &p) {
+  double t = dot(p - l[0], l[0] - l[1]) / norm(l[0] - l[1]);
+  return l[0] + t * (l[0] - l[1]);
+}
+
+vector<Point> crosspointLC(const Line &l, const Circle &c) {
+  vector<Point> ret;
+  Point center = projection(l, c.p);
+  double d = abs(center - c.p);
+  double t = sqrt(c.r * c.r - d * d);
+  if (isnan(t)) { return ret; }
+  Point vect = (l[1] - l[0]);
+  vect /= abs(vect);
+  ret.push_back(center - vect * t);
+  if (t > EPS) {
+    ret.push_back(center + vect * t);
+  }
+  return ret;
+}
+
+vector<Point> crosspointCC(const Circle &c1, const Circle &c2) {
+  vector<Point> ret;
+  double d = abs(c1.p - c2.p);
+  if (max(c1.r, c2.r) - min(c1.r, c2.r) - d> -EPS) { return ret; }
+  double x = (d * d + c1.r * c1.r - c2.r * c2.r) / (2 * d);
+  Point start = c1.p + (c2.p - c1.p) / d * x;
+  Point vect = (c1.p - c2.p) * Point(0.0, 1.0);
+  return crosspointLC(Line(start, start + vect), c1);
+}
+
+
+int n;
+Circle cs[100];
+inline double square(double x) { return x * x; }
+
+bool isok(const Point &p, double h) {
+  REP(i, n) {
+    if (norm(p - cs[i].p) + square(h) - square(cs[i].r) > EPS) { return false; }
+  }
+  return true;
+}
+
+bool calc(Circle c1, Circle c2, double h) {
+  c1.r = sqrt(square(c1.r) - square(h));
+  c2.r = sqrt(square(c2.r) - square(h));
+  vector<Point> ps = crosspointCC(c1, c2);
+  bool ret = false;
+  FORIT(it, ps) {
+    ret |= isok(*it, h);
+  }
+  return ret;
+}
+
+int main() {
+  while (cin >> n, n) {
+    REP(i, n) {
+      double x, y, l;
+      cin >> x >> y >> l;
+      cs[i] = Circle(Point(x, y), l);
+    }
+    double low = 1;
+    double upper = 300;
+    REP(iter, 200) {
+      double mid = (low + upper) / 2.0;
+      bool ok = false;
+      REP(i, n) {
+        ok |= isok(cs[i].p, mid);
+        REP(j, n) {
+          if (ok) { break; }
+          ok |= calc(cs[i], cs[j], mid);
+        }
+      }
+      if (ok) {
+        low = mid;
+      } else {
+        upper = mid;
+      }
+    }
+    printf("%.10f\n", low);
+  }
+}

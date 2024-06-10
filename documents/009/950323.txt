@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAX_V = 110;
+const int INF = (1<<29);
+
+int n, m, s, g1, g2;
+int cost[MAX_V][MAX_V];
+
+void init(){
+  for(int i = 0 ; i < MAX_V ; i++)
+    for(int j = 0 ; j < MAX_V ; j++) cost[i][j] = INF;
+  
+  for(int i = 0 ; i < MAX_V ; i++) cost[i][i] = 0;
+}
+
+
+void wf(){
+  for(int k = 0 ; k < n ; k++){
+    for(int i = 0 ; i < n ; i++){
+      for(int j = 0 ; j < n ; j++){
+	cost[i][j] = min(cost[i][j], cost[i][k] + cost[k][j]);
+      }
+    }
+  }    
+}
+
+int main(){
+  while(cin >> n >> m >> s >> g1 >> g2, n|m|s|g1|g2){
+    init();
+    s--, g1--, g2--;
+    int from, to, C;
+    for(int i = 0 ; i < m ; i++){
+      cin >> from >> to >> C;
+      cost[from-1][to-1] = C;
+    }
+    
+    wf();
+        
+    int ans = INF;
+    for(int i = 0 ; i < n ; i++){
+      ans = min(ans, cost[s][i] + cost[i][g1] + cost[i][g2]);
+    }
+    cout << ans << endl;    
+  }
+  return 0;
+}

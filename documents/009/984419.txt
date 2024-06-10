@@ -1,0 +1,82 @@
+
+NUM_C = 17;
+
+### subroutines
+
+def n_grp(i)
+  (i % 5 == 1) ? 5 : 2;
+end
+
+def t_grp(i)
+  17 * (i % 2) + 3 * (i % 3) + 19
+end
+
+def find_seats(seats, n)
+  st = 0
+  while st < NUM_C
+    while st < NUM_C && ! seats[st].nil?
+      st += 1
+    end
+
+    k = 0;
+    while st + k < NUM_C && seats[st + k].nil?
+      k += 1
+      return st if k >= n
+    end
+    st += k
+  end
+  nil
+end
+
+### main
+
+seats = (0...NUM_C).map{nil}
+
+t = 0
+queue = []
+waits = []
+
+while (t < 500 || ! queue.empty?)
+  # check if customers finish eating
+  for i in (0...NUM_C)
+    if ! seats[i].nil? && seats[i][1] == t
+      seats[i] = nil
+    end
+  end
+
+  # check if new group arrives
+  if t < 500 && t % 5 == 0
+    i = t / 5
+    queue.push [i, n_grp(i), t_grp(i)]
+  end
+
+  # check if seats are available
+  while ! queue.empty?
+    gid, gn, gtime = queue[0]
+    sid = find_seats(seats, gn)
+    break if sid.nil?
+
+    ginfo = [gid, t + gtime]
+    for i in (0...gn)
+      seats[sid + i] = ginfo
+    end
+
+    waits[gid] = t - 5 * gid
+
+    queue.shift
+  end
+
+  # print current status
+  #p [t, [seats]]
+
+  # next time
+  t += 1
+end
+
+#p waits
+
+while (line = gets)
+  gid = line.strip.to_i
+
+  puts waits[gid]
+end

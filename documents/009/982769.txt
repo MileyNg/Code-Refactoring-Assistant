@@ -1,0 +1,72 @@
+#include <stdio.h>
+typedef struct node{
+  int p,lc,rb;
+  
+} node;
+
+node tree[100000];
+
+int getdepth(int x){
+  if(tree[x].p==-1){
+    return 0;
+  } else{
+    return getdepth(tree[x].p)+1;
+  }
+}
+
+int main(){
+
+ 
+  int n,d,d2,k,l,id;
+  int i,j;
+
+  for(i=0;i<100000;i++){
+    tree[i].p=-1;
+    tree[i].lc=-1;
+    tree[i].rb=-1;
+  }
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&id);
+    scanf("%d",&k);
+    for(j=0;j<k;j++){
+      d2=d;
+      scanf("%d",&d);
+      tree[d].p=id;
+      if(j==0){
+	tree[id].lc=d;
+      }else{
+	tree[d2].rb=d;
+      }
+
+    }
+    
+  }
+
+
+  for(i=0;i<n;i++){
+    printf("node %d: parent = %d, depth = %d, ",i,tree[i].p,getdepth(i));
+    if(tree[i].p==-1){
+      printf("root, ");
+    } else if(tree[i].lc==-1){
+      printf("leaf, ");
+    } else {
+      printf("internal node, ");
+    }
+    printf("[");
+    if(tree[i].lc!=-1){
+      printf("%d",tree[i].lc);
+      j=tree[i].lc;
+      while(1){
+	j=tree[j].rb;
+	if(j==-1)break;
+	printf(", %d",j);
+      }
+    }
+    printf("]\n");
+  }
+  
+
+
+  return 0;
+}

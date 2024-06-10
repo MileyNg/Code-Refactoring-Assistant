@@ -1,0 +1,64 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+
+#define NUM 16
+
+bool from_left_block[NUM][NUM];
+bool from_up_block[NUM][NUM];
+
+long long dp[NUM][NUM];
+
+int main(void) {
+    int N;
+    cin >> N;
+    int gx, gy;
+    for (int i = 0; i < N; i++) {
+        cin >> gx >> gy;
+        for (int k = 0; k < NUM; k++) {
+            for (int j = 0; j < NUM; j++) {
+                from_left_block[k][j] = false;
+                from_up_block[k][j] = false;
+                dp[k][j] = 0;
+            }
+        }
+        int p;
+        cin >> p;
+        for (int i = 0; i < p; i++) {
+            int x1, y1, x2, y2;
+            cin >> x1 >> y1 >> x2 >> y2;
+            if (x1 == x2) {
+                from_up_block[max(y1, y2)][x1] = true;
+            }
+            if (y1 == y2) {
+                from_left_block[y1][max(x1, x2)] = true;
+            }
+        }
+        dp[0][0] = 1;
+        for (int y = 0; y <= gy; y++) {
+            for (int x = 0; x <= gx; x++) {
+                if (x > 0) {
+                    if (!from_left_block[y][x]) dp[y][x] += dp[y][x-1];
+                }
+                if (y > 0) {
+                    if (!from_up_block[y][x]) dp[y][x] += dp[y-1][x];
+                }
+            }
+        }
+        if (dp[gy][gx] == 0) cout << "Miserable Hokusai!" << endl;
+        else cout << dp[gy][gx] << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,114 @@
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+int W, H;
+#define MH 60
+#define MW 10
+string F[MH + 1];
+
+bool input() {
+    cin >> W >> H;
+    if (W == 0 && H == 0) return false;
+    for (int i = 0; i < H; i++) {
+        cin >> F[i];
+    }
+    reverse(F, F + H);
+    return true;
+}
+
+double ml, mr, M;
+int C;
+const int dy[] = {0, 1, 0, -1},
+          dx[] = {1, 0, -1, 0};
+bool used[MH + 1][MW + 1];
+bool used2[MH + 1][MW + 1];
+void dfs2(int y, int x) {
+    char c = F[y][x];
+    double m = x + 0.5;
+    M += m;
+    C++;
+    for (int i = 0; i < 4; i++) {
+        int ny = y + dy[i], nx = x + dx[i];
+        if (ny < 0 || ny >= H) continue;
+        if (nx < 0 || nx >= W) continue;
+        if (used2[ny][nx]) continue;
+        if (F[ny][nx] != c && ny <= y) continue; 
+        if (F[ny][nx] != '.') {
+            used2[ny][nx] = true;
+            dfs2(ny, nx);
+        }
+    }
+}
+void dfs(int y, int x) {
+    char c = F[y][x];
+    double m = x + 0.5;
+    if (y == 0 || (F[y - 1][x] != '.' && F[y - 1][x] != c)) {
+        ml = min(m - 0.5, ml);
+        mr = max(m + 0.5, mr);
+    }
+    for (int i = 0; i < 4; i++) {
+        int ny = y + dy[i], nx = x + dx[i];
+        if (ny < 0 || ny >= H) continue;
+        if (nx < 0 || nx >= W) continue;
+        if (used[ny][nx]) continue;
+        if (F[ny][nx] == c) {
+            used[ny][nx] = true;
+            dfs(ny, nx);
+        }
+    }
+}
+
+void solve() {
+    memset(used, 0, sizeof(used));
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            if (F[i][j] != '.' && !used[i][j]) {
+                ml = 1e10; mr = 0;
+                M = 0;
+                C = 0;
+                used[i][j] = true;
+                dfs(i, j);
+                memset(used2, 0, sizeof(used2));
+                used2[i][j] = true;
+                dfs2(i, j);
+                double M1 = M;
+                M /= C;
+                if (ml < M && M < mr) {
+                    //cout << F[i][j] << "\t" ;
+                    //cout << M1 << "\t" << C << "\t";
+                    //cout << ml << " " << M << " " << mr << endl;
+                    continue;
+                } else {
+                    //cout << F[i][j] << endl;
+                    //cout << ml << " " << M << " " << mr << endl;
+                    cout << "UNSTABLE" << endl;
+                    return;
+                }
+            }
+        }
+    }
+    cout << "STABLE" << endl;
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

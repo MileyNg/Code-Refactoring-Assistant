@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAX = 100010;
+const int INF = 1e9;
+
+struct State{
+  int pos, c;
+  State(int pos, int c) : pos(pos), c(c){}
+};
+
+int n;
+int dp[MAX], cost[MAX];
+
+int solve(){
+  fill(dp, dp+MAX, INF);
+
+  queue<State> que;
+  que.push(State(0, 0));
+  
+  while(!que.empty()){
+    State q = que.front(); que.pop();
+    
+    q.pos = min(n-1, q.pos);
+    
+    if(q.pos == n-1) return q.c;
+    
+    if(dp[q.pos] <= q.c || q.pos >= n) continue;
+    dp[q.pos] = q.c;
+    
+    if(cost[q.pos] != 0){
+      que.push(State(q.pos + cost[q.pos], q.c));
+      continue;
+    }
+    
+    for(int i = 1 ; i <= 6 ; i++){
+      que.push(State(q.pos + i, q.c + 1));
+    }
+  }
+  return dp[n-1];
+}
+
+int main(){
+  while(cin >> n){
+    for(int i = 0 ; i < n ; i++) cin >> cost[i];
+    cout << solve() << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,77 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+    int number_of_datasets;
+    cin >> number_of_datasets;
+
+    char A[81];
+    char B[81];
+    while (number_of_datasets-- > 0) {
+        fill_n(A, 81, '\0');
+        fill_n(B, 81, '\0');
+        string input;
+        cin >> input;
+        if (input.length() > 80) {
+            cin >> input;
+            cout << "overflow" << endl;
+            continue;
+        }
+        copy(input.rbegin(), input.rend(), A);
+        cin >> input;
+        if (input.length() > 80) {
+            cout << "overflow" << endl;
+            continue;
+        }
+        copy(input.rbegin(), input.rend(), B);
+
+        for (char & n : A) {
+            if (n == '\0') {
+                break;
+            }
+
+            n -= '0';
+        }
+
+        for (char & n : B) {
+            if (n == '\0') {
+                break;
+            }
+
+            n -= '0';
+        }
+
+        char carry = 0;
+        for (int i = 0; i < 81; i++) {
+            A[i] += B[i] + carry;
+            if (A[i] >= 10) {
+                A[i] -= 10;
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+        }
+        
+        if (A[80] != 0) {
+            cout << "overflow";
+        } else {
+            int last_valid_place = 0;
+            for (int i = 80; i >= 0; i--) {
+                if (A[i] != 0) {
+                    last_valid_place = i;
+                    break;
+                }
+            }
+
+            for (int i = last_valid_place; i >= 0; i--) {
+                A[i] += '0';
+                cout << A[i];
+            }
+        }
+
+        cout << endl;
+    }
+}

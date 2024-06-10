@@ -1,0 +1,38 @@
+#include<iostream>
+#include<algorithm>
+using namespace std ;
+
+int main(){
+	
+	int m , sum ;
+	int c , a , n ;
+	int x ;
+	
+	cin >> m ;
+	for( int i=0 ; i<m ; i++ ){
+		cin >> c >> a >> n ;
+		
+		sum = 0 ;
+		
+		if( c >= 1 && a >= 1 && n >= 1 ){
+			if( c <= a && c <= n ) x = c ;
+			else if( a <= c && a <= n ) x = a ;
+			else x = n ;
+			sum += x ;
+			c -= x ;
+			a -= x ;
+			n -= x ;
+		}
+		if( c >= 2 && a >= 1 ){
+			x = min( c/2 , a ) ;
+			sum += x ;
+			c -= x*2 ;
+			a -= x ;
+		}
+		if( c >= 3 ) sum += c/3 ;
+		
+		cout << sum << endl ;
+	}
+	
+return 0; 
+}

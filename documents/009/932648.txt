@@ -1,0 +1,102 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef complex<double> P;
+
+const double eps = 1e-8;
+
+struct C {
+  P p;
+  double r;
+  C() : p(P(0,0)), r(0) {}
+  C(P p, double r) : p(p), r(r) {}
+};
+
+double cross(P a, P b) {
+  return a.real()*b.imag() - a.imag()*b.real();
+}
+
+double dot(P a, P b) {
+  return a.real()*b.real() + a.imag()*b.imag();
+}
+
+int ccw(P p, P a, P b) {
+  a -= p;
+  b -= p;
+  if(cross(a,b) > eps) return 1;
+  if(cross(a,b) < -eps) return -1;
+  if(dot(a,b) < -eps) return 2;
+  if(norm(b)-norm(a) > eps) return -2;
+  return 0;
+}
+
+double getDistanceLP(P s1, P s2, P p) {
+  return abs(cross(s2-s1,p-s1))/abs(s2-s1);
+}
+
+double getDistanceSP(P s1, P s2, P p) {
+  if(dot(s2-s1, p-s1) < 0.0) return abs(p-s1);
+  if(dot(s1-s2, p-s2) < 0.0) return abs(p-s2);
+  return getDistanceLP(s1, s2, p);
+}
+
+bool involve(const C &c, const P &s1, const P &s2) {
+  double dist = max(abs(c.p - s1), abs(c.p - s2));
+  return c.r - dist > -eps;
+}
+
+bool involve(const vector<P> &g, const C &c) {
+  int n = g.size();
+  for(int i = 0; i < n; ++i) {
+    P a = g[i], b = g[(i+1)%n];
+    double dist = getDistanceLP(a,b,c.p);
+    if(cross(b-a, c.p-a) > -eps && dist - c.r > -eps) {
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool involve(const C &c, const vector<P> &g) {
+  int n = g.size();
+  for(int i = 0; i < n; ++i) {
+    P a = g[i], b = g[(i+1)%n];
+    if(!involve(c, a, b)) return false;
+  }
+  return true;
+}
+
+bool isIntersect(const P &s1, const P &s2, const C &c) {
+  if(involve(c, s1, s2)) return false;
+  double dist = getDistanceSP(s1, s2, c.p);
+  return c.r - dist > eps;
+}
+
+bool isIntersect(const vector<P> &g, const C &c) {
+  int n = g.size();
+  for(int i = 0; i < n; ++i) {
+    P a = g[i], b = g[(i+1)%n];
+    if(isIntersect(a,b,c)) return true;
+  }
+  return false;
+}
+
+int main() {
+  vector<P> g(3);
+  C c;
+  while(1) {
+    for(int i = 0; i < g.size(); ++i) {
+      cin >> g[i].real() >> g[i].imag();
+      if(g[0].real() == 0 && g[0].imag() == 0) return 0;
+    }
+    if(cross(g[1]-g[0], g[2]-g[0]) < 0) swap(g[0], g[1]);
+    cin >> c.p.real() >> c.p.imag();
+    cin >> c.r;
+    if(involve(g,c)) cout << "a" << endl;
+    else if(involve(c,g)) cout << "b" << endl;
+    else if(isIntersect(g,c)) cout << "c" << endl;
+    else cout << "d" << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#include<stack>
+
+int main(){
+
+	std::string str;
+	while (true){
+		std::getline(std::cin, str);
+		std::stack<char>s;
+
+		if (str == ".")break;
+
+		bool flg = true;
+		for (int i = 0; i < str.size(); i++){
+			if (str[i] == '(' || str[i] == '[')s.push(str[i]);
+			if (str[i] == ')' || str[i] == ']'){
+				if (s.empty()){
+					flg = false;
+					break;
+				}
+
+				char a = s.top();
+				s.pop();
+				
+				if (a == '('&&str[i] == ')');
+				else if (a == '['&&str[i] == ']');
+				else {
+					flg = false;
+					break;
+				}
+			}
+		}
+		if (s.empty() && flg)std::cout << "yes" << std::endl;
+		else std::cout << "no" << std::endl;
+	}
+	return 0;
+}

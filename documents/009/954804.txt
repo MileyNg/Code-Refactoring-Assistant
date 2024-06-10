@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<stdlib.h>
+void judge(int n, int *A, int *B);
+
+int main(){
+  int n,i;
+  int *A, *B;
+  //init
+  scanf("%d",&n);
+  while(n != 0){
+    A = (int*)malloc(sizeof(int) * n);
+    B = (int*)malloc(sizeof(int) * n);
+
+    for(i=0;i<n;i++){
+      scanf("%d %d",&A[i], &B[i]); 
+    }   
+    //Judge and Output
+    judge(n, A, B);
+
+    free(A); free(B);
+    scanf("%d",&n);
+  }
+
+  return 0;
+}
+
+/* 勝敗の判定と出力する関数 */
+void judge(int n, int *A, int *B){
+  int i;
+  int Ap=0, Bp=0;
+
+  for(i=0; i<n; i++){
+    if(A[i] == B[i]){
+      Ap += A[i];
+      Bp += B[i];
+    }
+    else if(A[i] > B[i]){
+      Ap += A[i] + B[i];
+    }
+    else{
+      Bp += A[i] + B[i];
+    }
+  }
+
+  printf("%d %d\n",Ap ,Bp);
+}

@@ -1,0 +1,41 @@
+<?php
+/*
+	AOJ 0164
+	title:Ohajiki Game
+	@kankichi573
+*/
+
+while(fscanf(STDIN,"%d ",$n) && $n)
+  {
+    $a=array();
+    $x=fgets(STDIN);
+    $a=explode(" ",$x);
+    //fprintf(STDOUT,"%d:%d:%d:%d",$a[0],$a[1],$a[2],$a[3]);
+
+
+    $yama=32;$turn=0;
+    $yama -= 1;
+    fprintf(STDOUT,"%d\n",$yama);
+    while($yama >0)
+      {
+	//fprintf(STDOUT,"=%d[%d]\n",$a[$turn % $n],$turn % $n);
+	if($a[$turn % $n] > $yama)
+	  $tori=$yama;
+	else
+	  $tori=$a[$turn % $n];
+	$yama -= $tori;
+	if($yama==0)
+	  break;
+	fprintf(STDOUT,"%d\n",$yama);
+	$tori= (($yama % 5)-1);
+	if($tori < 0)
+	  $tori += 5;
+	$yama -= $tori;
+	fprintf(STDOUT,"%d\n",$yama);
+	$turn++;
+      
+	}
+     fprintf(STDOUT,"%d\n",0);
+  }
+  return(0);
+?>

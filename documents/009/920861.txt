@@ -1,0 +1,38 @@
+while 1:
+	m,n = map(int,raw_input().split())
+	if m==0: break
+	book = [int(raw_input()) for i in range(n)]
+	
+	for i in range(n):
+		max_shelf = sum(book[:i+1])
+		cur_shelf,num = 0,2
+		j = i+1
+		while j < n:
+			if num > m: break
+			if cur_shelf + book[j] > max_shelf:
+				num += 1
+				cur_shelf = 0
+			else:
+				cur_shelf += book[j]
+				j += 1
+		else:
+			break
+	
+	flag = 0
+	unit = min(book)
+	while 1:
+		max_shelf -= unit
+		cur_shelf,num = 0,2
+		j = i+1
+		while j < n:
+			if num > m:
+				flag = 1
+				break
+			if cur_shelf + book[j] > max_shelf:
+				num += 1
+				cur_shelf = 0
+			else:
+				cur_shelf += book[j]
+				j += 1
+		if flag == 1: break
+	print max_shelf+unit

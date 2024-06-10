@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+vector<P> graph[6];
+
+int main() {
+	string p;
+
+	graph[0].push_back(P(0, 2));
+	graph[0].push_back(P(1, 3));
+	graph[2].push_back(P(1, 4));
+	graph[3].push_back(P(0, 2));
+	graph[4].push_back(P(0, 5));
+	graph[4].push_back(P(1, 1));
+	graph[5].push_back(P(0, 1));
+	graph[5].push_back(P(1, 3));
+	graph[1].push_back(P(0, 3));
+	graph[1].push_back(P(1, 2));
+
+	while (cin >> p) {
+		if (p == "#") {
+			break;
+		}
+		int ichi = 0;
+		bool hantei = false;
+		for (int i = 0; i < p.size(); i++) {
+			bool hantei2 = true;
+			int j;
+			for (j = 0; j < graph[ichi].size(); j++) {
+				if (graph[ichi][j].first == p[i]-'0') {
+					ichi = graph[ichi][j].second;
+					hantei2 = false;
+					break;
+				}
+			}
+			if (hantei2) {
+				break;
+			}
+			if (i == p.size()-1 && ichi == 1) {
+				hantei = true;
+			}
+		}
+		if (hantei) {
+			cout << "Yes" << endl;
+		} else {
+			cout << "No" << endl;
+		}
+	}
+	return 0;
+}

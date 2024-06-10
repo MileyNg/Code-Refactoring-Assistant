@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+long long int GCD(long long int a,long long int b){
+	if(b==0) return a;
+	return GCD(b,a%b);
+}
+
+long long int LCM(long long int a,long long int b){
+	return a/GCD(a,b)*b;
+}
+
+int main(){
+	long long int a[3],m[3],xyz[3];
+	long long int n[3];
+	for(long long int i=0; i<3; ++i){
+		cin >> a[i] >> m[i];
+		xyz[i]=1;
+		n[i]=0;
+		do{
+			xyz[i]=(xyz[i]*a[i])%m[i];
+			++n[i];
+		}while(xyz[i]!=1);
+	}
+	long long int ans=LCM(LCM(n[0],n[1]),n[2]);
+	cout << ans << endl;
+	return 0;
+}

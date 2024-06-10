@@ -1,0 +1,40 @@
+/*
+AOJ_0003_IsitaRightTriangle?
+
+EOFはWindowsはCtrl+Z,UNIXはCtrl+D
+
+方針
+配列入れて昇順ソートして　１番目と２番目の二乗の合計が
+三番目の二乗になってるか確かめる。
+
+配列の大きさが３固定なので、multisetに格納するのはもったいない
+普通の配列に入れて、sortを使う
+
+*/
+
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int N, side[3], i,j;
+
+	cin >> N;
+
+	for (i = 0; i < 3; i++){
+		cin >> side[0] >> side[1] >> side[2];
+		sort(side, side + 3, greater<int>());
+
+		if (pow(side[0], 2) + pow(side[1], 2) == pow(side[2], 2)){
+			cout << "YES" << endl;
+		}
+		else {
+			cout << "NO" << endl;
+		}	
+	}
+	return 0;
+}

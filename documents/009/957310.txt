@@ -1,0 +1,38 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+typedef std::pair<int, int> P;
+
+int main(){
+
+	int n, q;
+	std::cin >> n >> q;
+
+	std::vector<int>v(n, 0);
+
+	std::priority_queue<P>que;
+
+	for (int i = 0; i < q; i++){
+
+		int a, b;
+		std::cin >> a >> b;
+		a--;
+
+		v[a] += b;
+
+		que.push(P(v[a], -a));
+
+		while (!que.empty()){
+			P res = que.top();
+
+			if (res.first == v[-res.second]){
+				std::cout << -res.second + 1 << " " << res.first << std::endl;
+				break;
+			}
+			que.pop();
+		}
+	}
+
+	return 0;
+}

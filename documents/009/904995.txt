@@ -1,0 +1,79 @@
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+constexpr int MAX_SIZE = 10;
+constexpr int dx[4] = {1, -1, 0, 0};
+constexpr int dy[4] = {0, 0, 1, -1};
+constexpr char dc[4] = {'R', 'L', 'D', 'U'};
+
+int h, w;
+string field[MAX_SIZE];
+string ans = "";
+
+inline bool out(int x, int y) {
+	return x < 0 || y < 0 || x >= w || y >= h;
+}
+
+bool dfs(int rest, int x, int y, int d) {
+	if(rest == 0) return true;
+
+	for(int nd = 0; nd < 4; ++nd) {
+		if(d == (nd ^ 1)) continue;
+
+		int nx = x + dx[nd];
+		int ny = y + dy[nd];
+
+		while(!out(nx, ny)) {
+			if(field[ny][nx] == 'o') {
+				field[ny][nx] = '.';
+				if(dfs(rest - 1, nx, ny, nd)) {
+					ans = dc[nd] + ans;
+					return true;
+				}
+
+				field[ny][nx] = 'o';
+				break;
+			}
+			nx += dx[nd];
+			ny += dy[nd];
+		}
+	}
+
+	return false;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	cin >> h >> w;
+	for(int i = 0; i < h; ++i) {
+		cin >> field[i];
+	}
+
+	int sx, sy, sd;
+	int cnt = 0;
+	for(int i = 0; i < h; ++i) {
+		for(int j = 0; j < w; ++j) {
+			if(field[i][j] == 'o') {
+				++cnt;
+			}
+			else if(field[i][j] != '.') {
+				sx = j;
+				sy = i;
+				for(int d = 0; d < 4; ++d) {
+					if(field[i][j] == dc[d]) {
+						sd = d;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	dfs(cnt, sx, sy, sd);
+	cout << ans << endl;
+
+	return EXIT_SUCCESS;
+}

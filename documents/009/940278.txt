@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int ar[1000010];
+
+int main(void){
+	int n, i, j, h, t;
+	scanf("%d", &n);
+	for(i = 0; i < n; ++i){
+		scanf("%d", &ar[i]);
+	}
+	
+	for(h = 1; h < n; h = h * 3 + 1);
+	for(; h /= 3; ){
+		for(i = h; i < n; ++i){
+			t = ar[i];
+			for(j = i; j >= h && ar[j - h] > t; j -= h){
+				ar[j] = ar[j - h];
+			}
+			ar[j] = t;
+		}
+	}
+
+	for(i = 0; i < n; ++i){
+		printf("%d%c", ar[i], i + 1 == n ? '\n' : ' ');
+	}
+
+	return 0;
+}

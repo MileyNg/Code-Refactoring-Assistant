@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+int n;
+const int m = 10;
+int *data;
+int *lp;
+int *rp;
+
+bool dfs(int i, int j) {
+	if (i+j == 10) return true;
+	
+		if (!i || (i>0 && data[i+j] > lp[i-1])) {
+			lp[i] = data[i+j];
+			if (dfs(i+1, j)) return true;
+		}
+
+		if (!j || (j>0 && data[i+j] > rp[j-1])) {
+			rp[j] = data[i+j];
+			if (dfs(i, j+1)) return true;
+		}
+
+	return false;
+}
+
+int main()
+{
+	int i, j;
+	data = (int *)calloc(m, sizeof(int));
+	lp = (int *)calloc(m, sizeof(int));
+	rp = (int *)calloc(m, sizeof(int));
+	
+	scanf("%d ", &n);
+	for (i=0; i<n; i++) {
+		for (j=0; j<m; j++)
+			scanf("%d ", &(data[j]));
+
+		memset(lp, 0, sizeof(int));
+		memset(rp, 0, sizeof(int));
+
+		lp[0] = data[0];	
+		if (dfs(1, 0))
+			printf("YES\n");
+		else
+			printf("NO\n");
+	}
+
+	free(data);
+	free(lp);
+	free(rp);
+	return 0;
+}

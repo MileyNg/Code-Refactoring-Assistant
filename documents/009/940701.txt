@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+class Point
+{
+public:
+	int x, y;
+};
+
+void solve()
+{
+	int count = 1;
+	int n;
+	while(cin >> n, n)
+	{
+		vector<Point> p(n);
+		for(int i = 0; i < n; ++i)
+		{
+			cin >> p[i].x >> p[i].y;
+		}
+		double sum = 0.0;
+		for(int i = 1; i < n - 1; ++i)
+		{
+			double x1 = p[i].x - p[0].x;
+			double y1 = p[i].y - p[0].y;
+			double x2 = p[i + 1].x - p[0].x;
+			double y2 = p[i + 1].y - p[0].y;
+			sum += x1 * y2 - x2 * y1;
+		}
+		printf("%d %.1f\n", count, abs(sum) / 2);
+		++count;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

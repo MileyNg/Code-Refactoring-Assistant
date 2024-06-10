@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+int search(char *text,char *key)
+{
+  int m,n,i;
+  char *p;
+  m=strlen(text);n=strlen(key);
+  for(p=text;p<=text+m-n;p++){
+    if(strncmp(p,key,n)==0)
+      return 1;
+  }
+  return -1;
+
+}
+
+int main(void)
+{
+  char str[80];
+  int i,j,k;
+  while(fgets(str,sizeof(char)*80,stdin)){
+    while(1){  
+      for(i=0;i<strlen(str);i++)
+	if(isalnum(str[i])){
+	  if(str[i]=='z')
+	    str[i]='a';
+	  else
+	    str[i]=str[i]+1;
+	}
+      if(search(str,"the")==1 ||search(str,"this")==1||search(str,"that")==1){
+	printf("%s",str);
+	break;
+      }
+    }
+
+  }
+ 
+
+  return 0;
+}

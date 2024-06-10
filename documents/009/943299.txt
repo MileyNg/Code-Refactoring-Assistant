@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stdio.h>
+using namespace std;
+const string NO = "no guest";
+const int dt[6] = {11,15,18,21,21,26};
+
+int main(){
+  vector<string> time(3);
+  time[0] = "lunch";
+  time[1] = "dinner";
+  time[2] = "midnight";
+  int n;
+  while(cin >> n,n != 0){
+    vector<pair<int,int> > per(3,pair<int,int>(0,0));
+    for(int i = 0;i < n;i++){
+      int h,m,t;
+      scanf("%d:%d %d",&h,&m,&t);
+      if(h < 2)h+=24;
+      if(m > t)t+=60;
+      for(int k =0;k < 6;k+=2){
+	if(dt[k] <= h &&  h < dt[k+1]){
+	  
+	  if(t-m <= 8){
+	    per[k/2].first++;
+	  }
+	  per[k/2].second++;
+	}
+      }
+    }
+    for(int i = 0;i < 3;i++){
+      cout << time[i] << " ";
+      if(per[i].second == 0)cout << NO << endl;
+      else cout << per[i].first*100/per[i].second << endl;
+    }
+  }
+  
+  return 0;
+}

@@ -1,0 +1,33 @@
+/*
+	0160:Delivery Fee
+*/
+#include	<iostream>
+
+using namespace std;
+
+int main(void) {
+	while(1) {
+		int n, sum = 0;
+		
+		cin >> n;
+		if(n == 0) { break; }
+		
+		for(int i = 0; i < n; i++) {
+			int x, y, h, w;
+			int l;
+			
+			cin >> x >> y >> h >> w;
+			
+			l = x + y + h;
+			if(l <= 60 && w <= 2) { sum += 600; }
+			else if(l <= 80 && w <= 5) { sum += 800; }
+			else if(l <= 100 && w <= 10) { sum += 1000; }
+			else if(l <= 120 && w <= 15) { sum += 1200; }
+			else if(l <= 140 && w <= 20) { sum += 1400; }
+			else if(l <= 60 && w <= 25) { sum += 1600; }
+		}
+		
+		cout << sum << endl;
+	}
+	return 0;
+}

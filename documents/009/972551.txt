@@ -1,0 +1,34 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+
+/** Problem2197 : Sum of Consecutive Integers **/
+int main()
+{
+	int N;
+	while (cin>>N, N) {
+		int ans=0, sum;
+		REP(i, 1, 1000) {
+			sum=i;
+			REP(j, i+1, 1000) {
+				sum += j;
+				if (sum == N) {
+					ans++;
+					break;
+				} else if (sum > N)
+					break;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

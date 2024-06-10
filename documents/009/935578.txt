@@ -1,0 +1,31 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int x,S[99],top=0,ans=0;
+  char s[100];
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      ans=S[top-2]+S[top-1];
+      top--;
+      S[top-1]=ans;
+    } else if ( s[0] == '-' ){
+       ans=S[top-2]-S[top-1];
+       top--;
+       S[top-1]=ans;
+    } else if ( s[0] == '*' ){
+       ans=S[top-2]*S[top-1];
+       top--;
+       S[top-1]=ans;
+    } else {
+       x = atoi(s);
+       S[top]=x;
+       top++;
+    }
+  }
+  printf("%d\n",S[top-1]);
+
+  printf("\n");
+}

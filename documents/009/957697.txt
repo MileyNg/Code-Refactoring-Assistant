@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <limits.h>
+#include <cctype>
+
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+
+using namespace std;
+
+#define Max INT_MAX
+#define Inf INT_MIN
+
+
+#define rep(i, n) for(int i = 0; i < n; i++)
+#define repi(i,l,n) for(int (i)=(int)(l);(i)<(int)(n);(i)++)
+// s <= x < g ?
+#define IN(x,s,g) ((x) >= (s) && (x) < (g))
+// 0 <= x < w && 0 <= y < h ?
+#define ISIN(x,y,w,h) (IN((x),0,(w)) && IN((y),0,(h)))
+
+
+
+struct edge {
+    int to, cost;
+    edge(int t, int c){
+        to = t;
+        cost = c;
+    }
+};
+
+//first=最短距離 second=頂点の番号
+typedef pair<int, int> P;
+
+int d[100];
+
+
+//sからの最短距離をdに格納する
+void dijkstra(int s, vector<edge> *G ){
+    //フロンティア頂点集合
+    priority_queue<P, vector<P>, greater<P> > que; //小さい順指定
+    fill(d, d+100, Max);
+
+    d[s] = 0;
+    que.push( P(0,s) ); //s -> sは距離0
+
+    while(!que.empty() ) {
+        P p = que.top(); que.pop(); //フロンティアの中から一番小さい辺を取り出す 
+        int v = p.second;
+        if( d[v] < p.first) continue;
+
+        rep(i, G[v].size() ) {
+            edge e = G[v][i];
+            //cout << "i = " << i << endl;
+            //cout << "G[v][i].to = " << G[v][i].to<< endl;
+            //cout << "G[v][i].cost = " << G[v][i].cost << endl;
+
+            //cout << "v = " << v << endl; 
+            //cout << "d[v] = " << d[v] << endl;
+            //cout << "e.to = " << e.to << endl;
+            //cout << "e.cost = " << e.to << endl;
+            //cout << "d[e.to] = " << d[e.to] << endl;
+            if( d[e.to] > d[v] + e.cost){
+                d[e.to] = d[v] + e.cost;
+                que.push( P(d[e.to], e.to) );
+            }
+        }
+    }
+}
+
+vector<edge> costs[100];
+vector<edge> times[100];
+
+int main()
+{
+    int tmp = 0;
+
+    int n,m;
+    cin >> n >> m;
+    rep(i,n){
+        int a,b, cost_v,time_v;
+        cin >> a >> b >> cost_v >> time_v;
+        //edge ee = edge(b,cost_v);
+        //cout << "ee.to = "  << ee.to << endl; 
+        //cout << "ee.cost = " << ee.cost << endl;
+        costs[a].push_back( edge(b, cost_v) );
+        times[a].push_back( edge(b, time_v) );
+
+        //cout << "_cost = " << cost_v << endl;
+        //cout << "_time = " << time_v << endl;
+        //cout << "a,b = " << a << " " << b << endl;
+        //cout << endl;
+    }
+
+    int k;
+    cin >> k;
+
+    rep(i,k){
+        int p,q,r;
+        cin >> p >> q >> r;
+        if( r == 0){
+            dijkstra(p, costs);
+        } else {
+            dijkstra(p, times);
+        }
+        cout << d[q] << endl;
+    }
+    return 0;
+
+
+}

@@ -1,0 +1,125 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+using namespace std;
+#define rep(i,n) for (int i=0; i < (n); i++)
+
+const int INF = 100000000;
+
+struct Edge {
+  int to;
+  int cap;
+  int rev;
+  Edge(int to, int cap, int rev) : to(to), cap(cap), rev(rev) {}
+};
+
+typedef vector<vector<Edge> > Graph;
+
+void add_edge(Graph& g, int from, int to, int cap) {
+  g[from].push_back(Edge(to, cap, g[to].size()));
+  g[to].push_back(Edge(from, 0, g[from].size() - 1));
+}
+
+// 幅優先探索で増加道を探す
+vector<Edge*> compute_augmented_path(Graph& g, int s, int t) {
+  int n = g.size();
+
+  // ある頂点の　「直前の頂点」と「直前の辺のインデックス」を格納しておく配列
+  vector<int> prevv(n, -1);  // まだ訪れていないなら-1
+  vector<int> preve(n);
+
+  queue<int> que;
+  que.push(s);
+  prevv[s] = -2;  // スタート時点より前はないのでダミーで-2とする
+
+  while (!que.empty()) {
+    int v = que.front();
+    que.pop();
+    rep(ei, g[v].size()) {
+      Edge& e = g[v][ei];
+      if (e.cap > 0 && prevv[e.to] == -1) {
+        // 容量に余裕があり、e.to が未訪問なら記録しつつキューに入れる
+        prevv[e.to] = v;
+        preve[e.to] = ei;
+        que.push(e.to);
+      }
+    }
+  }
+
+  // 逆順に増加道を格納していく。
+  // 後に容量を更新したい & 参照型のvectorは作れない　ため、エッジへのポインタのvectorを作る
+  vector<Edge*> ret;
+  if (prevv[t] == -1) return ret;  // 増加道がない
+
+  for (int v = t; prevv[v] != -2; v = prevv[v]) {
+    Edge* e = &g[prevv[v]][preve[v]];
+    ret.push_back(e);
+  }
+  return ret;
+}
+
+// gのsからtの最大流を求める。
+// gは破壊される（残余ネットワークとなる）。
+int max_flow(Graph& g, int s, int t) {
+  int f = 0;  // 現在の最大フロー　初期値0
+
+  while (1) {
+    // 増加道を探す。増加道がなければその時点のfが最大フローである
+    vector<Edge*> augpath = compute_augmented_path(g, s, t);
+    if (augpath.empty()) break;
+
+    // 増加道に流れるフローを求め、最大フローに加える
+    int inc = INF;
+    rep(i, augpath.size()) inc = min(inc, augpath[i]->cap);
+    f += inc;
+
+    rep(i, augpath.size()) {
+      Edge* e = augpath[i];
+      Edge& rev_e = g[e->to][e->rev];
+      // 増加道の辺eの容量をincだけ減らし、eの逆辺の容量をincだけ増やす
+      e->cap -= inc;
+      rev_e.cap += inc;
+    }
+  }
+
+  return f;
+}
+
+
+int gcd(int a, int b) {
+  if (b == 0) return a;
+  return gcd(b, a % b);
+}
+
+int solve(int m, int n) {
+  vector<int> b(m);
+  vector<int> r(n);
+
+  rep(i, m) cin >> b[i];
+  rep(i, n) cin >> r[i];
+
+  // グラフを構築　各頂点の意味は以下の通り
+  // 0: 始点
+  // 1 + i: i番目の青のカード
+  // 1 + m + i: i番目の赤のカード
+  // 1 + m + n: 終点
+  int gn = 1 + m + n + 1;
+  Graph g(gn);
+  rep(mi, m) rep(ni, n) {
+    if (gcd(b[mi], r[ni]) > 1) {
+      add_edge(g, 1 + mi, 1 + m + ni, 1);
+    }
+  }
+  rep(mi, m) add_edge(g, 0, 1 + mi, 1);
+  rep(ni, n) add_edge(g, 1 + m + ni, 1 + m + n, 1);
+
+  return max_flow(g, 0, 1 + m + n);
+}
+
+int main() {
+  int m, n;
+  while (cin >> m >> n, n||m) cout << solve(m, n) << endl;
+
+  return 0;
+}

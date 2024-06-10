@@ -1,0 +1,15 @@
+def solve(a):
+	if len(a) == m: return a
+	for x,y in xy:
+		if y in a and x not in a:
+			r = solve([x] + a)
+			if r:
+				return r
+
+m = input()
+xy = [map(int,raw_input().split()) for i in range(input())]
+for i in range(m):
+	ans = solve([i])
+	if ans:
+		break
+for i in ans: print i

@@ -1,0 +1,249 @@
+/*
+
+	シーザー暗号で暗号化された文字列1行にが与えられる。
+	元の文字列を出力せよ。
+	
+	元の文字列には必ず"this", "that", "the"のいずれか1つは含まれる。
+
+
+*/
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+
+#define N 100
+
+
+int isExist(const char str[], const int len);
+
+void allPlus(char str[], const int len, const char baseStr[]);
+void allMinus(char str[], const int len, const char baseStr[]);
+
+
+int main(){
+	
+	char str[N] = "\0";
+	char str2[N];
+	
+	int len, p;
+	
+	
+	//入力が続いている間
+	while(fgets(str, sizeof(str), stdin) != NULL){
+		
+		
+		//lenの更新
+		len = strlen(str);
+		
+		
+		//str2のリセット
+		strcpy(str2, str);
+		
+		
+		//str2からthis, that, theのいずれも見つからない or str2のいずれの要素も255を超えない間
+		while(1){
+			
+			p = isExist(str2, len);
+			
+			if(p == 1 || p == -1){
+				
+				break;
+				
+			}
+			
+			//+1し続ける。
+			allPlus(str2, len, str);
+			
+		}
+		
+		
+		//+1の方向には正解の文字列がなかった：
+		if(p == -1){
+			
+			//str2のリセット
+			strcpy(str2, str);
+			
+			
+			//str2からthis, that, theのいずれも見つからない or str2のいずれの要素も0より大きい間
+			while(1){
+				
+				p = isExist(str2, len);
+				
+				if(p == 1 || p == -1){
+					
+					break;
+					
+				}
+				
+				
+				//-1し続ける。
+				allMinus(str2, len, str);
+				
+			}
+			
+		}
+		
+		//str2の出力
+		printf("%s", str2);
+		
+		
+	}
+	
+	
+	return 0;
+	
+}
+
+
+
+//文字列内にthis, that, theのいずれかがあるなら1を返す
+//文字列のいずれかの要素が1〜255の範囲外なら-1を返す
+//それ以外の場合は0を返す。
+int isExist(const char str[], const int len){
+	
+	int ret = 0;
+	int i, p;
+	
+	const char this[] = "this";
+	const char that[] = "that";
+	const char the[] = "the";
+	
+	
+	//1〜255の範囲内であるかをチェック
+	for(i=0; i<len; i++){
+		
+		if(str[i] <= 0 || str[i] >= 255){
+			
+			ret = -1;
+			break;
+			
+		}
+		
+	}
+	
+	if(ret == 0){
+		
+		
+		//thisを探す
+		p = 0;
+		for(i=0; i<len; i++){
+			
+			if(str[i] == this[p]){
+				
+				p++;
+				if(p == strlen(this)){
+					
+					ret = 1;
+					break;
+					
+				}
+				
+			}
+			else{
+				
+				p = 0;
+				
+			}
+			
+		}
+		
+		
+		if(ret == 0){
+			
+			//thatを探す
+			p = 0;
+			for(i=0; i<len; i++){
+				
+				if(str[i] == that[p]){
+					
+					p++;
+					if(p == strlen(that)){
+						
+						ret = 1;
+						break;
+						
+					}
+					
+				}
+				else{
+					
+					p = 0;
+					
+				}
+				
+			}
+			
+			
+			if(ret == 0){
+				
+				//theを探す
+				p = 0;
+				for(i=0; i<len; i++){
+					
+					if(str[i] == the[p]){
+						
+						p++;
+						if(p == strlen(the)){
+							
+							ret = 1;
+							break;
+							
+						}
+						
+					}
+					else{
+						
+						p = 0;
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	return ret;
+	
+}
+
+
+void allPlus(char str[], int const len, const char baseStr[]){
+	
+	int i;
+	
+	for(i=0; i<len; i++){
+		
+		if(isalpha(baseStr[i])){
+			
+			str[i]++;
+			
+		}
+		
+	}
+	
+}
+
+
+
+void allMinus(char str[], const int len, const char baseStr[]){
+	
+	int i;
+	
+	for(i=0; i<len; i++){
+		
+		if(isalpha(baseStr[i])){
+			
+			str[i]--;
+			
+		}
+		
+	}
+	
+}

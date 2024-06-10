@@ -1,0 +1,20 @@
+def quick_sort(arr)
+  return arr if arr.length <= 1
+  n = (arr.length - 1)/2
+  left, right = [], []
+
+  arr.each do |a|
+    if arr[n] > a
+      left.push(a)
+    else
+      right.push(a)
+    end
+  end
+
+  quick_sort(left) + quick_sort(right)
+end
+
+n = gets.to_i
+arr = gets.split(' ').map(&:to_i)
+
+puts quick_sort(arr).join(', ')

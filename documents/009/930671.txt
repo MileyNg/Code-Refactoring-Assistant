@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cctype>
+
+using namespace std;
+
+int main(void)
+{
+    int i;
+    int alp[26];
+    char ch;
+    int num;
+    
+    for (i = 0; i < 26; i++) {
+        alp[i] = 0;
+    }
+    
+    while (cin >> ch) {
+        if (isupper(ch)) {
+            num = ch - 'A';
+            alp[num]++;
+        }
+        else if (islower(ch)){
+            num = ch - 'a';
+            alp[num]++;
+        }
+        else ;
+    }
+    
+    for (i = 0; i < 26; i++) {
+        cout << (char)(i + 'a') << " : " << alp[i] << endl;
+    }
+    
+    return 0;
+}

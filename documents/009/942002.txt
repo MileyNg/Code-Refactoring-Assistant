@@ -1,0 +1,36 @@
+# 最大公約数
+while line = gets do
+	# 前処理
+	num = line.split
+	if num[0].to_i < num[1].to_i 
+		small = num[0].to_i
+		big = num[1].to_i
+	else
+		small = num[1].to_i
+		big = num[0].to_i
+	end
+
+	# 処理
+	diff = big - small
+
+	if diff == 0
+		puts big
+
+	else
+		loop do
+			if big%diff == 0 && small%diff == 0
+				puts diff
+				break
+			end
+
+			if diff%2 == 0 
+				diff = diff / 2
+			else
+				diff = diff / 2 + 1
+			end
+
+		end
+
+	end
+
+end

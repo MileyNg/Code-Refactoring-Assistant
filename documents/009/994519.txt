@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool pr[150000];
+
+void erato(){
+	fill(pr, pr+150000, true);
+	pr[0] = pr[1] = false;
+	
+	for(int i=2; i < 150000; i++){
+		if(!pr[i]) continue;
+		for(int j=i+i; j < 150000; j+=i) pr[j] = false;
+	}
+}
+
+int main(){
+	erato();
+	int n, p;
+	while(cin >> n >> p, n+p!=-2){
+		vector<int> prime;
+		int count = 0;
+		for(int i=n+1;; i++){
+			if(pr[i]){ prime.push_back(i); count++;}
+			if(count == 100) break;
+		}
+		
+		vector<int> prime_w;
+		for(int i=0; i < prime.size(); i++){
+			for(int j=i; j < prime.size(); j++){
+				prime_w.push_back(prime[i]+prime[j]);
+			}
+		}
+		sort(prime_w.begin(), prime_w.end());
+		
+		cout << prime_w[p-1] << endl;
+	}
+}

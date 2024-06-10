@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int a[9], j;
+bool used[11];
+
+int judge(){
+  int A = (a[0]+a[1]+a[2])%j, B = (a[3]+a[4]+a[5])%j, C = (a[6]+a[7]+a[8])%j;
+  int D = (a[0]+a[3]+a[6])%j, E = (a[1]+a[4]+a[7])%j, F = (a[2]+a[5]+a[8])%j;
+  int G = (a[0]+a[4]+a[8])%j, H = (a[2]+a[4]+a[6])%j;
+  if(A != B || B != C || C != D || D != E || E != F || F != G || G != H || H != A) return 0;
+  /*  rep(i, 3){
+    rep(j, 3) printf("%d ", a[i*3+j]);
+    puts("");
+    }*/
+  return 1;
+}
+
+int dfs(int n){
+  if(n == 9) return judge();
+  if(a[n]) return dfs(n+1);
+  int res = 0;
+  REP(i, 1, 11){
+    if(used[i]) continue;
+    a[n] = i;
+    used[i] = 1;
+    res += dfs(n+1);
+    a[n] = 0;
+    used[i] = 0;
+  }
+  return res;
+}
+
+int main(){
+  while(scanf("%d%d%d%d%d%d%d%d%d%d", &a[0],&a[1],&a[2],&a[3],&a[4],&a[5],&a[6],&a[7],&a[8],&j) && j != -1){
+    fill(used, used + 11, false);
+    rep(i, 9) if(a[i]) used[a[i]] = 1;
+    used[0] = used[j] = 1;
+  //  printf("%d\n", dfs(0));
+  }
+  return 0;
+}

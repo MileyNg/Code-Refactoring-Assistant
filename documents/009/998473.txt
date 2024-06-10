@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int Left(int i){
+  return 2*i;
+}
+
+int Right(int i){
+  return 2*i+1;
+}
+
+void exchange(int *A,int x,int y){
+  int tmp;
+
+  tmp=A[x];
+  A[x]=A[y];
+  A[y]=tmp;
+}
+
+void maxHeapify(int *A,int i,int n){
+  int l=Left(i);
+  int r=Right(i);
+  int largest;
+
+  if(l<=n && A[l]>A[i]) largest=l;
+  else largest=i;
+
+  if(r<=n && A[r]>A[largest])largest=r;
+
+  if(largest!=i){
+    exchange(A,i,largest);
+    maxHeapify(A,largest,n);
+  }
+}
+
+void buildMaxHeap(int *A,int n){
+  int i;
+  for(i=n;i>=1;i--) maxHeapify(A,i,n);
+}
+    
+main(){
+  int n,i;
+  int *A;
+
+  scanf("%d",&n);
+
+  A=(int *)malloc((n+1)*sizeof(int));
+
+  for(i=1;i<=n;i++) scanf("%d",&A[i]);
+
+  buildMaxHeap(A,n);
+
+  for(i=1;i<=n;i++) printf(" %d",A[i]);
+  printf("\n");
+
+  return 0;
+}

@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct Point {
+	double x, y;
+};
+
+bool PointInTri(const vector<Point>& tri, const Point& p) {
+	int cnt = 0;
+	for (int i=1; i<4; i++) {
+		Point p0 = tri[i-1], p1 = tri[i%3];
+		bool flag0x = (p.x <= p0.x), flag0y = (p.y <= p0.y);
+		bool flag1x = (p.x <= p1.x), flag1y = (p.y <= p1.y);
+		
+		if (flag0y != flag1y) {
+			if ( (flag0x == flag1x) && flag0x) {
+				cnt += flag0y ? -1 : 1;
+			} else if (p.x <= ( p0.x+(p1.x-p0.x)*(p.y-p0.y)/(p1.y-p0.y) ) ) {
+				cnt += flag0y ? -1 : 1;
+			}
+		}
+	}
+	return cnt!=0;
+}
+
+int main() {
+	int n; cin >> n;
+	
+	vector<Point> tri(3);
+	for (int i=0; i<n; i++) {
+		cin >> tri[0].x >> tri[0].y >> tri[1].x >> tri[1].y >> tri[2].x >> tri[2].y;
+		Point p1; cin >> p1.x >> p1.y;
+		Point p2; cin >> p2.x >> p2.y;
+		bool flag1 = PointInTri(tri, p1), flag2 = PointInTri(tri, p2);
+		if ( (flag1 && !flag2) || (!flag1 && flag2) ) cout << "OK" << endl;
+		else cout << "NG" << endl;
+	}
+	
+	return 0;
+}

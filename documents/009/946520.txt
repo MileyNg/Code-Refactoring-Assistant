@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(void) {
+	char buff[255];
+	char ball[255];
+	ball['A'] = 1;
+	ball['B'] = ball['C'] = 0;
+	char t;
+	char i;
+	
+	while(scanf("%s\n", buff)==1) {
+		t = ball[buff[0]];
+		ball[buff[0]] = ball[buff[2]];
+		ball[buff[2]] = t;
+	}
+	
+	for(i='A';i<='C';i++) {
+		if(ball[i]) {
+			printf("%c\n", i);
+			break;
+		}
+	}
+	
+	return 0;
+}

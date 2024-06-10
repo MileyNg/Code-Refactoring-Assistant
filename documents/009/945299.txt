@@ -1,0 +1,36 @@
+#include<stdio.h>
+#define compile 0
+int func_debtHell(int money, int n);
+void func_output(int money);
+main()
+{
+	int money = 100000, n = 0, result = 0;
+	scanf("%d", &n);
+	result = func_debtHell(money, n);
+	printf("%d\n", result);
+	return 0;
+}
+int func_debtHell(int money, int n)
+{
+	static int i = 0;
+	int money_a = money * 1.05;
+#if compile == 1
+	printf("利子計算後のmoney_a = %d\n", money_a);
+#endif
+	if(0 != (money_a % 1000))
+	{
+		money_a = ((money_a / 1000) + 1) * 1000; //端数切り上げ処理
+	}
+#if compile == 1
+	printf("端数切り上げ後のmoney_a = %d\n", money_a);
+#endif
+	if(i == n - 1)
+	{
+		return money_a;
+	}
+	else
+	{
+		i++;
+		func_debtHell(money_a, n);
+	}
+}

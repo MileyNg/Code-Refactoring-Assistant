@@ -1,0 +1,39 @@
+#include<stdio.h>
+
+void prans(int tsm,int t){
+  if(tsm<t){
+    printf("%d\n",t-tsm);
+  }
+  else{
+    printf("OK\n");
+  }
+}
+
+int sumup(int n){
+  if(n!=0){
+    int st,et;
+    scanf("%d %d",&st,&et);
+    return (et-st)+sumup(n-1);
+  }
+  else{
+    return 0;
+  }
+}
+
+void doit(){
+  int t;
+  scanf("%d",&t);
+  if(t!=0){
+    int n;
+    int stm;
+    scanf("%d",&n);
+    stm=sumup(n);
+    prans(stm,t);
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

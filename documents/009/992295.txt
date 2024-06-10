@@ -1,0 +1,38 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+vector<int> G[5000];
+bool p[5000];
+vector<int> v;
+
+void dfs(int x){
+  if(p[x]++)return;
+  for(auto e:G[x]){
+    dfs(e);
+  }
+  v.push_back(x);
+}
+
+int main(){
+  int n,m;
+  cin>>n>>m;
+  while(m--){
+    int i,j;
+    cin>>i>>j;
+    G[i-1].push_back(j-1);
+  }
+  for(int i=0;i<n;i++){
+    dfs(i);
+  }
+  bool f=false;
+  for(int i=0;i+1<n;i++){
+    f|=find(begin(G[v[i+1]]),end(G[v[i+1]]),v[i])==end(G[v[i+1]]);
+  }
+  for(auto it=v.rbegin();it!=v.rend();it++){
+    cout<<*it+1<<endl;
+  }
+  cout<<f<<endl;
+}

@@ -1,0 +1,64 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  prices = {}
+
+  n.times.each do
+    i, pr = gets.strip.split(' ')
+    prices[i] = pr.to_i
+  end
+
+  m = gets.strip.to_i
+
+  recipes = {}
+
+  m.times.each do
+    i, k, *rs = gets.strip.split(' ')
+    recipes[i] = rs
+  end
+
+  target = gets.strip
+  mccache = {}
+  q = [target]
+
+  while ! q.empty?
+    i = q.last
+
+    if ! mccache[i].nil?
+      q.pop
+      next
+    end
+
+    if recipes[i].nil?
+      mccache[i] = prices[i]
+      q.pop
+      next
+    end
+
+    sum = 0
+    recflag = false
+
+    for ri in recipes[i]
+      if mccache[ri].nil?
+        q << ri
+        recflag = true
+      else
+        sum += mccache[ri]
+      end
+    end
+
+    next if recflag
+
+    if ! prices[i].nil? && sum > prices[i]
+      sum = prices[i]
+    end
+
+    mccache[i] = sum
+    q.pop
+  end
+
+  puts mccache[target]
+end

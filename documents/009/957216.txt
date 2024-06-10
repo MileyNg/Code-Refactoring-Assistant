@@ -1,0 +1,35 @@
+#include<iostream>
+#include<sstream>
+using namespace std;
+
+#define REP(i,n) for(int i = 0; i < (int)(n); i++)
+int main(){
+  for(;;){
+    int n;
+    cin >> n;
+    if(!n) { break; }
+    string str;
+    cin >> str;
+    REP(i,n){
+      stringstream s;
+      int iter = 1;
+      char num = str[0];
+      for(int j = 1; j < (int)str.size(); j++){
+	if(num == str[j]){
+	  iter++;
+	} else {
+	  stringstream tmp;
+	  tmp << iter;
+	  s << tmp.str() << num;
+	  num = str[j];
+	  iter = 1;
+	}
+      }
+      stringstream tmp;
+      tmp << iter;
+      s << tmp.str() << num;
+      str = s.str();
+    }
+    cout << str << endl;
+  }
+}

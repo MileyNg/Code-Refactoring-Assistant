@@ -1,0 +1,66 @@
+#include<iostream>
+#include<complex>
+#include<utility>
+#include<vector>
+#include<cmath>
+
+using namespace std;
+
+typedef complex<double> P;
+typedef pair<P,P> Line;
+
+double eps=1e-9;
+
+double cross(P a,P b){
+  return a.real()*b.imag()-a.imag()*b.real();
+}
+
+P cp(Line a,Line b){
+  P bv=b.second-b.first;
+  P av=a.second-a.first;
+  return a.first+av*cross(bv,b.first-a.first)/cross(bv,av);
+}
+
+double ail(Line l,P p){
+  return arg(((abs(l.first-p)>abs(l.second-p))?l.first:l.second)-p);
+}
+
+int main(){
+  for(int n;cin>>n,n;){
+    int y[100],x[100];
+    for(int i=0;i<n;i++){
+      cin>>x[i]>>y[i];
+    }
+    vector<Line> edges;
+    for(int i=0;i<n;i++){
+      edges.emplace_back(P(x[i],y[i]),P(x[(i+1)%n],y[(i+1)%n]));
+    }
+    double md=-1;
+    for(int i=0;i<n;i++){
+      for(int j=i+1;j<n;j++){
+	for(int k=j+1;k<n;k++){
+	  Line e[3]={edges[i],edges[j],edges[k]};
+	  vector<Line> v;
+	  for(int l=0;v.size()<2;l++){
+	    Line a=e[l],b=e[(l+1)%3];
+	    if(fabs(cross(a.second-a.first,b.second-b.first))<eps)continue;
+	    P p=cp(a,b);
+	    v.emplace_back(p,p+polar(1.,(ail(a,p)+ail(b,p))/2));
+	  }
+	  P candp=cp(v[0],v[1]);
+	  double cmd=1e9;
+	  bool f=false;
+	  for(auto elm:edges){
+	    P vec=elm.second-elm.first;
+	    cmd=min(cmd,fabs(cross(vec,candp-elm.first))/abs(vec));
+	    f|=cross(candp-elm.first,elm.second-elm.first)>0;
+	  }
+	  if(!f){
+	    md=max(md,cmd);
+	  }
+	}
+      }
+    }
+    cout<<fixed<<md<<endl;
+  }
+}

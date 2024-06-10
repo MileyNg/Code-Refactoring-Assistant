@@ -1,0 +1,36 @@
+#include<iostream>
+#include<vector>
+
+int main(){
+
+	int n, m;
+	while (std::cin >> n >> m){
+		if (n == 0 && m == 0)break;
+
+		std::vector<int>p(m, 0);
+		for (int i = 0; i < n; i++){
+			for (int j = 0; j < m; j++){
+				int a;
+				std::cin >> a;
+				if (a == 1)p[j]++;
+			}
+		}
+
+		bool f = true;
+		for (int i = n; i >= 0; i--){
+			for (int j = 0; j < m; j++){
+				if (p[j] == i){
+					if (f){
+						std::cout << j + 1;
+						f = false;
+					}
+					else std::cout << " " << j + 1;
+				}
+			}
+		}
+		std::cout << std::endl;
+
+	}
+
+	return 0;
+}

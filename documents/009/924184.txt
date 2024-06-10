@@ -1,0 +1,15 @@
+import itertools
+while 1:
+	n = input()
+	if n == 0: break
+	s = sorted(map(int,raw_input().split()))
+	sm = sum(s)
+	dp = [0] * sm
+	for i in s:
+		dp[i] = i
+	for i in s:
+		for j in range(sm):
+			if dp[j] > 0 and dp[j] != i:
+				try: dp[j+i] = dp[j] + i
+				except: break
+	print min([abs(sm-dp[i]) for i in range(sm)])

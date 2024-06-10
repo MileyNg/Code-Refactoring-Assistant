@@ -1,0 +1,27 @@
+while (line = gets)
+  a, b, c = line.chomp.split(/[\+\=]/)
+  #p [a, b, c]
+
+  ans = -1
+
+  min_x = 0
+  if (a.length > 1 && a[0] == "X") ||
+      (b.length > 1 && b[0] == "X") ||
+      (c.length > 1 && c[0] == "X")
+    min_x = 1
+  end
+
+  for x in (min_x..9)
+    ax = a.gsub(/X/, x.to_s)
+    bx = b.gsub(/X/, x.to_s)
+    cx = c.gsub(/X/, x.to_s)
+    #p [x, ax, bx, cx]
+
+    if ax.to_i + bx.to_i == cx.to_i
+      ans = x
+      break
+    end
+  end
+
+  puts (ans >= 0) ? ans : "NA"
+end

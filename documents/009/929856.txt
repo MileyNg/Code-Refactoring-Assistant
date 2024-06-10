@@ -1,0 +1,90 @@
+#include <iostream>
+#include <stack>
+#include <utility>
+using namespace std;
+
+int park[10][10] = {{0}};
+int x, y, n;
+
+bool can_move(int x, int y){
+    return (0 <= x && x <= 9) && (0 <= y && y <= 9);
+}
+
+bool solve(int x, int y, int this_sprinkler){
+    if (!can_move(x, y)) return false;
+    if (park[x][y] != this_sprinkler) return false;
+    if (park[x][y] == n) return true;
+//     if (park[x][y] == n)
+//         return
+//             (can_move(x-1, y-2) && !park[x-1][y-2]
+//              or
+//              can_move(x, y-2) &&   !park[x][y-2]
+//              or 
+//              can_move(x+1, y-2) && !park[x+1][y-2]
+//              or
+//              can_move(x-2, y+1) && !park[x-2][y+1]
+//              or
+//              can_move(x+2, y+1) && !park[x+2][y+1]
+//              or
+//              can_move(x-2, y) &&   !park[x-2][y]
+//              or
+//              can_move(x+2, y) &&   !park[x+2][y]
+//              or
+//              can_move(x-2, y+1) && !park[x-2][y+1]
+//              or
+//              can_move(x+2, y+1) && !park[x+2][y+1]
+//              or
+//              can_move(x-1, y+2) && !park[x-1][y+2]
+//              or
+//              can_move(x, y+2) &&   !park[x][y+2]
+//              or
+//              can_move(x+1, y+2) && !park[x+1][y+2]);
+    return
+        (solve(x-1, y-2, this_sprinkler+1)
+         or
+         solve(x,y-2, this_sprinkler+1)
+         or
+         solve(x+1, y-2, this_sprinkler+1)
+         or
+         solve(x-2, y+1, this_sprinkler+1)
+         or
+         solve(x+2, y+1, this_sprinkler+1)
+         or
+         solve(x-2, y, this_sprinkler+1)
+         or
+         solve(x+2, y, this_sprinkler+1)
+         or
+         solve(x-2, y+1, this_sprinkler+1)
+         or
+         solve(x+2, y+1, this_sprinkler+1)
+         or
+         solve(x-1, y+2, this_sprinkler+1)
+         or
+         solve(x, y+2, this_sprinkler+1)
+         or
+         solve(x+1, y+2, this_sprinkler+1));
+}
+
+int main(){
+    while (1){
+        cin >> x >> y;
+        if (x == 0 && y == 0) break;
+        cin >> n;
+        int n_ = n;
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                park[i][j] = -1;
+        park[x][y] = 0;
+        int x_, y_;
+        while (n_--){
+            cin >> x_ >> y_;
+            for (int i = -1; i <= 1; i++)
+                for (int j = -1; j <= 1; j++)
+                    park[x_+i][y_+j] = n - n_;
+        }
+        
+        bool result = solve(x, y, 0);
+        if (result) cout << "OK" << endl;
+        else cout << "NA" << endl;
+    }
+}

@@ -1,0 +1,26 @@
+#include<iostream>
+#include<sstream>
+
+using namespace std;
+
+int main(){
+  int N,T;
+  cin>>N>>T;
+  int c=0;
+  stringstream ss;
+  int l=99999;
+  while(N--){
+    int h1,m1,h2,m2;
+    char s1[51],s2[51];
+    char d1,d2;
+    cin>>h1>>d1>>m1>>s1>>h2>>d2>>m2>>s2;
+    int i=h1*60+m1-l;
+    if(i>=T){
+      c++;
+      ss<<s1<<' '<<i<<endl;
+    }
+    l=h2*60+m2;
+  }
+  cout<<c<<endl;
+  cout<<ss.str();
+}

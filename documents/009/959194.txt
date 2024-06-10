@@ -1,0 +1,87 @@
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+map<int, int> hit;
+
+
+int swap_pos(int value, int i, int j)
+{
+	int vi, vj;
+	i*=3; j*=3;
+	vi = (value>>i) & 7;
+	vj = (value>>j) & 7;
+
+	value = (value & ~(7<<i)) | (vj<<i);
+	value = (value & ~(7<<j)) | (vi<<j);
+	return value;
+
+}
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	int target, src;
+	int i, j;
+
+	target=0;
+	for (i=0; i<=7; i++) {
+		target = (target<<3)|i;
+	}
+
+	while (scanf("%d", &src)==1) {
+		for (i=1; i<=7; i++) {
+			int tmp;
+			scanf("%d", &tmp);
+			src = (src<<3) | tmp;
+		}
+
+		//printf("target=%d, src=%d\n", target, src);
+
+		hit.clear();
+
+		hit[src] = 0;
+
+		queue<int> q1, q2, *q, *nq, *qtmp;
+		q = &q1; nq = &q2;
+		q1.push(src);
+
+		if (target==src) {
+			printf("0\n");
+			continue;
+		}
+
+		bool flag = false;
+
+		while (!flag) {
+			while (!nq->empty()) nq->pop();
+
+			while (!q->empty()) {
+				int value = q->front(); q->pop();
+				int step = hit[value];
+				int next_value;
+				for (i=0; i<7; i++) {
+					next_value = swap_pos(value, i, i+1);
+					if (hit[next_value]==0 && next_value!=src) {
+						hit[next_value] = step+1;
+						nq->push(next_value);
+						if (next_value == target) flag = true;
+					}
+				}
+
+			}
+
+			qtmp = q; q = nq; nq = qtmp;
+
+		}
+		printf("%d\n", hit[target]);
+
+	}
+
+	return 0;
+}

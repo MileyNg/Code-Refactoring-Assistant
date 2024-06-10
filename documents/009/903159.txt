@@ -1,0 +1,50 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> P;
+ll n;
+ll INF = (1LL<<32);
+P A,B;
+P t[100];
+ll dp[100][100];
+
+P on(P x,P y){
+  return P(x.first,y.second);
+}
+int cost(P x,P y){
+  return x.first*x.second*y.first*y.second;
+}
+
+int compute(int a,int b){
+  if(dp[a][b]!=-1)return dp[a][b];
+  if(a==b)return 0;
+
+  if(a+1==b)return cost(t[a],t[b]);
+  if(a+2==b)return min(cost(t[a],t[a+1])+cost(on(t[a],t[a+1]),t[a+2]) , cost(t[a+1],t[a+2])+cost(t[a],on(t[a+1],t[a+2])) );
+
+  ll res=INF;
+  ll cost;
+
+  for(int i=a+1;i+1<b;i++){
+
+    cost=t[a].first*t[i].second*t[i+1].first*t[b].second;
+
+    res=min(res, compute(a,i)+ cost +compute(i+1,b) );
+
+  }
+  return dp[a][b]=res;
+}
+
+int main(){
+  cin>>n;
+  for(int i=0;i<n;i++)cin>>t[i].first>>t[i].second;
+
+  if(n==1){cout<<"0"<<endl;return 0;}
+
+  for(int i=0;i<100;i++)for(int j=0;j<100;j++)dp[i][j]=-1;
+
+  cout<<compute(0,n-1)<<endl;
+
+  return 0;
+}

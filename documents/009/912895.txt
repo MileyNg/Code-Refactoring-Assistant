@@ -1,0 +1,34 @@
+#include<iostream>
+using namespace std;
+int n,m,ans;
+
+string t[100];
+int u[100];
+string str;
+
+bool check(string a,string b){
+  for(int i=0;i<8;i++){
+    if(b[i]=='*')continue;
+    if(a[i]!=b[i])return false;
+  }
+  return true;
+}
+
+int main(){
+  while(cin>>n>>m){
+    if(n==0&&m==0)break;
+    ans=0;
+    for(int i=0;i<n;i++)cin>>t[i]>>u[i];
+
+    for(int i=0;i<m;i++){
+      cin>>str;
+      for(int j=0;j<n;j++){
+	if(check(str,t[j])){
+	  ans+=u[j];
+	  break;
+	}
+      }
+    }
+    cout<<ans<<endl;
+  }
+}

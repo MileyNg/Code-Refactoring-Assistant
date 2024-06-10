@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+void shuffle(int h, char *str)
+{
+    int i;
+    char buf[10000];
+    
+    for (i = 0; i < h; i++) {
+        buf[i] = str[i];
+    }
+    buf[i] = '\0';
+    for (i = h; str[i] != '\0'; i++) {
+        str[i - h] = str[i];
+    }
+    strcpy(&str[strlen(str) - h], buf);
+    for (i = 0; i < 10000; i++) buf[i] = 0;
+}  
+
+int main(){
+    int i,n,h;
+    char str[10000];
+    
+    while (1) {
+        
+        scanf("%s", str);
+        if (str[0] == '-' && str[1] == '\0') {
+            break;
+        }
+        
+        scanf("%d",&n);
+        for (i=0; i<n; i++) {
+            scanf("%d",&h);
+            shuffle(h,str);
+            
+        }
+        printf("%s\n",str);
+    }
+    return 0;
+}

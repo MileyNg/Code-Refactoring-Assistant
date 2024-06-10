@@ -1,0 +1,41 @@
+import std.algorithm;
+import std.conv;
+import std.datetime;
+import std.format;
+import std.math;
+import std.range;
+import std.stdio;
+import std.string;
+import std.typecons;
+
+void main() {
+  readln;
+
+  foreach (string line; stdin.lines) {
+    auto a = line.chomp.split.map!(to!int);
+
+    int[] b, c;
+
+    string mes = "YES";
+    while (!a.empty) {
+      if (b.empty) {
+        b ~= a.front;
+        a.popFront;
+      } else if (c.empty) {
+        c ~= a.front;
+        a.popFront;
+      } else if (b.back < a.front) {
+        b ~= a.front;
+        a.popFront;
+      } else if (c.back < a.front) {
+        c ~= a.front;
+        a.popFront;
+      } else {
+        mes = "NO";
+        break;
+      }
+    }
+
+    mes.writeln;
+  }
+}

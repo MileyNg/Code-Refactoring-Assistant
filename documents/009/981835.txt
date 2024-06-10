@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+  int t,n,block[100]={},up,down,climb;
+
+  cin >> t;
+  for(int i=0;i<t;i++){
+    up=0; down=0; climb=0;
+    cin >> n;
+    for(int j=0;j<n;j++){
+      cin >> block[j];
+    }
+    for(int j=0;j<n-1;j++){
+      climb=block[j]-block[j+1];
+      if(climb<up){
+	up=climb;
+      }
+      if(climb>down){
+	down=climb;
+      }
+    }
+    up*=-1;
+    cout << up << " " << down << endl;
+  }
+
+}

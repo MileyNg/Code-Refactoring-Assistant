@@ -1,0 +1,32 @@
+class CountingSort
+  def solve
+    n    = gets.chomp.to_i
+    a    = gets.scan(/\d+/).map(&:to_i)
+
+    return counting_sort(a, 10000).join(" ")
+  end
+
+  def counting_sort(a, k)
+    c = Array.new(k+1){0}
+    b = Array.new(a.length){0}
+
+    a.each do |x|
+      c[x] += 1
+    end
+
+    (1..k).each do |i|
+      c[i] += c[i-1]
+    end
+
+    a.reverse.each do |x|
+      b[c[x]-1] = x
+      c[x] -= 1
+    end
+
+    return b
+  end
+end
+
+if $0 == __FILE__
+  puts CountingSort.new.solve
+end

@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+typedef struct {
+	int from, to;
+	int weight;
+} Edge;
+
+const int INF = 10000000000;
+
+int main(void)
+{
+	Edge edges[10000];
+	int n, m; 
+	int i, j;
+	int a, b, v;
+	int min, sum;
+	int ch[105], ind;
+	
+	while (1){
+		scanf("%d", &n);
+		
+		if (n == 0){
+			break;
+		}
+		scanf("%d", &m);
+		
+		for (i = 0; i < m; i++){
+			scanf("%d,%d,%d", &a, &b, &v);
+			edges[i].from = a;
+			edges[i].to = b;
+			edges[i].weight = (v / 100) - 1;
+		}
+		for (i = 0; i < n; i++) ch[i] = 0;
+		
+		sum = 0;
+		ch[0] = 1;
+		
+		for (i = 0; i < n; i++){
+			min = INF;
+			for (j = 0; j < m; j++){
+				
+				if ( (ch[edges[j].from] == 1 && ch[edges[j].to] == 0) || (ch[edges[j].from] == 0 && ch[edges[j].to] == 1)){
+					if (edges[j].weight < min){
+						min = edges[j].weight;
+						ind = j;
+					}
+				}
+			}
+			
+			
+			if (min == INF){
+				break;
+			}
+			if (ch[edges[ind].from] == 1 && ch[edges[ind].to] == 0){
+				ch[edges[ind].to] = 1;
+			}
+			else {
+				ch[edges[ind].from] = 1;
+			}
+			sum += edges[ind].weight;
+		}
+		
+		printf("%d\n", sum);
+	}
+	
+	
+	return (0);
+}

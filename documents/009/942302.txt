@@ -1,0 +1,76 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+
+int main(void){
+
+	bool T[201], H[201];
+	int tc, hc;
+	int n, k;
+	int turn;
+	int fi;
+
+	while (1){
+		cin >> n;
+		if (n == 0) break;
+		tc = n, hc = n;
+		for (int i = 1; i <= 2 * n; i++) T[i] = false, H[i] = false;
+		for (int i = 0; i < n; i++){
+			cin >> k;
+			T[k] = true;
+		}
+		for (int i = 1; i <= 2 * n; i++){
+			if (T[i] == false) H[i] = true;
+		}
+
+		turn = 1;
+		fi = 0;
+		while (tc != 0 && hc != 0){
+			if (turn == 1){
+				if (fi == 20) {
+					fi = 0;
+					turn = 2;
+					continue;
+				}
+				for (int i = fi+1; i <= 2 * n; i++){
+					if (T[i] == true){
+						tc--;
+						T[i] = false;
+						fi = i;
+						break;
+					}
+					if (i == 2 * n){
+						fi = 0;
+						break;
+					}
+				}
+				turn = 2;
+			}
+			else{
+				if (fi == 20) {
+					fi = 0;
+					turn = 1;
+					continue;
+				}
+				for (int i = fi + 1; i <= 2 * n; i++){
+					if (H[i] == true){
+						hc--;
+						H[i] = false;
+						fi = i;
+						break;
+					}
+					if (i == 2 * n){
+						fi = 0;
+						break;
+					}
+				}
+				turn = 1;
+			}
+		}
+		cout << hc << endl << tc << endl;
+	}
+
+	return 0;
+}

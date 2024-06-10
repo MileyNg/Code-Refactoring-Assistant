@@ -1,0 +1,26 @@
+#include <stdio.h>
+ 
+#define OVER_SIX_DIGITS 1000000
+ 
+int sosuu_num[OVER_SIX_DIGITS];
+ 
+void make_sosuu_num_list(void) {
+    int i,j;
+    for(i=0;i<OVER_SIX_DIGITS;i++)sosuu_num[i]=1;
+    sosuu_num[0]=sosuu_num[1]=0;
+    for(i=2;i<OVER_SIX_DIGITS;i++) {
+        if(sosuu_num[i]) {
+            for(j=i+i;j<OVER_SIX_DIGITS;j+=i)sosuu_num[j]=0;
+        }
+    }
+    for(i=1;i<OVER_SIX_DIGITS;i++)sosuu_num[i]+=sosuu_num[i-1];
+}
+ 
+int main(void) {
+    int n;
+    make_sosuu_num_list();
+    while(scanf("%d",&n)==1) {
+        printf("%d\n",sosuu_num[n]);
+    }
+    return 0;
+}

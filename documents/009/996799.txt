@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+double EPS = 1e-4;
+
+struct Edge {
+	int to, dist;
+	Edge(int _t, int _d) : to(_t), dist(_d) {}
+};
+
+struct Path {
+	int cur;
+	double cost;
+	int ticket;
+	Path(int _c, double _co, int _ti) : cur(_c), cost(_co), ticket(_ti) {}
+};
+
+bool operator < (const Path& p1, const Path& p2) {
+	if (p1.cost < p2.cost) return true;
+	else if (p1.cur < p2.cur) return true;
+	return p1.ticket < p2.ticket;
+}
+bool operator == (const Path& p1, const Path& p2) {
+	if (p1.cur == p2.cur && p1.cost == p2.cost && p1.ticket == p2.ticket) return true;
+	return false;
+}
+bool operator != (const Path& p1, const Path& p2) { return !(p1 == p2); }
+bool operator > (const Path& p1, const Path& p2) { return (p1 != p2) && !(p1 < p2); }
+bool operator <= (const Path& p1, const Path& p2) { return (p1 < p2) || (p1 == p2); }
+bool operator >= (const Path& p1, const Path& p2) { return (p1 > p2) || (p1 == p2); }
+
+int n, m, p, a, b;
+double t[10];
+
+double INF = 1e9;
+double d[50][2050];
+bool v[50][2050];
+
+void solve() {
+	vector< vector<Edge> > G(m+1, vector<Edge>());
+	
+	for (int i=0; i<p; i++) {
+		int x, y, z; cin >> x >> y >> z;
+		G[x].push_back( Edge(y, z) );
+		G[y].push_back( Edge(x, z) );
+	}
+	
+	for (int i=0; i<=m; i++) fill(d[i], d[i]+2050, INF);
+	memset(v, 0, sizeof(v));
+	
+	priority_queue<Path, vector<Path>, greater<Path> > q;
+	q.push( Path(a, 0, 0) );
+	
+	while (!q.empty()) {
+		Path p = q.top(); q.pop();
+		
+		for (int i=0; i<(int)G[p.cur].size(); i++) {
+			Edge e = G[p.cur][i];
+			
+			for (int c = 0; c < n; c++) {
+				if ( !(p.ticket>>c & 1) ) {
+					if (d[e.to][p.ticket | 1<<c] > p.cost + e.dist/t[c]) {
+						d[e.to][p.ticket | 1<<c] = p.cost + e.dist/t[c];
+						q.push( Path(e.to, p.cost + e.dist/t[c], p.ticket | 1<<c ) );
+					}
+				}
+			}
+		}
+	}
+	
+	double ans = INF;
+	for (int c=0; c<(1<<n); c++) ans = min(ans, d[b][c]);
+	if (abs(INF-ans)<=EPS) cout << "Impossible" << endl;
+	else cout << ans << endl;
+}
+
+int main() {
+	while (1) {
+		cin >> n >> m >> p >> a >> b;
+		if (n==0 && m==0 && p==0 && a==0 && b==0) break;
+		for (int i=0; i<n; i++) cin >> t[i];
+		
+		solve();
+	}
+	
+	return 0;
+}

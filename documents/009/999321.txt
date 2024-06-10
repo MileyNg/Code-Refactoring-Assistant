@@ -1,0 +1,88 @@
+#include <stdio.h>
+int A[2000001];
+char B[100];
+int hs=0;
+
+int parent(int x){
+  return (x/2);
+}
+
+int left(int x){
+  return 2*x;
+}
+
+int right(int x){
+  return 2*x+1;
+}
+
+void maxHeapify(int i){
+  int l,r,tmp;
+  int largest;
+  l = left(i);
+  r = right(i);
+  if(l <= hs && A[l] > A[i]){
+    largest = l;
+  } else {
+    largest = i;
+  }
+  if(r <= hs && A[r] > A[largest]){
+    largest = r;
+  }
+  if(largest !=i){
+    tmp = A[i];
+    A[i]=A[largest];
+    A[largest]= tmp;
+    maxHeapify(largest);
+  }
+  
+}
+
+void heapIncreaseKey(int,int);
+
+void maxHeapInsert(int key){
+  hs = hs+1;
+  A[hs]=-1;
+  heapIncreaseKey(hs,key);
+}
+
+void heapIncreaseKey(int i,int key){
+  int t;
+  if(key < A[i]){
+    return ;
+  }
+  A[i]=key;
+  while(i > 1 && A[parent(i)]<A[i]){
+    t=A[i];
+    A[i]=A[parent(i)];
+    A[parent(i)]=t;
+    i = parent(i);
+  }
+}
+
+int heapExtractMax(){
+  int max;
+  if(hs<1){
+    return -1;
+  }
+  max = A[1];
+  A[1]=A[hs];
+  hs = hs -1;
+  maxHeapify(1);
+  return max;
+}
+
+int main(){
+  int i;
+  while(1){
+    scanf("%s",B);
+    if(B[0]=='i'){
+      scanf("%d",&i);
+      maxHeapInsert(i);
+    } else if(B[2]=='d'){
+      break;
+    } else {
+      printf("%d\n",heapExtractMax());
+    } 
+  }
+  return 0;
+}

@@ -1,0 +1,32 @@
+#include <iostream>
+#include <iomanip>
+
+int main(){
+    int n;
+    int *table;
+    while(1){
+        std::cin >> n;
+        if(!n){
+            return 0;
+        }
+        table = new int [(n + 1) * (n + 1)];
+        for(int i = 0; i < n * n; i++){
+            std::cin >> table[i / n * (n + 1) + i % n];
+        }
+        for(int r = 0; r < n; r++){
+            for(int c = 0; c < n; c++){
+                table[r * (n + 1) + n] += table[r * (n + 1) + c];
+                table[n * (n + 1) + c] += table[r * (n + 1) + c];
+                table[n * (n + 1) + n] += table[r * (n + 1) + c];
+            }
+        }
+        
+        for(int i = 0; i < (n + 1) * (n + 1); i++){
+            std::cout << std::setw(5) << std::right << table[i];
+            if(i % (n + 1) == n){
+                std::cout << std::endl;
+            }
+        }
+        delete [] table;
+    }
+}

@@ -1,0 +1,113 @@
+$stack = []
+$cost=[]
+$x=0
+$y=0
+$bord = []
+$cnt = 0
+
+
+def calc()
+	findpush()
+	max = -1
+	while $stack.size() != 0 do
+		(nowx,nowy) = $stack.pop()
+		c = $cost.pop()
+		f = 0
+		if $bord[nowy][nowx+1] != -1 then
+			$stack.push([nowx+1,nowy])
+			$cost.push(c * 10 + $bord[nowy][nowx+1])
+			f += 1
+		end
+		if $bord[nowy+1][nowx] != -1 then
+			$stack.push([nowx,nowy+1])
+			$cost.push(c * 10 + $bord[nowy+1][nowx])
+			f += 1
+		end
+		if f == 0 and max < c then
+			max = c
+		end
+	end
+	return max
+end
+
+def findpush()
+	flag = 1
+	for i in 0..$x-1
+		if flag == 0 then
+			if $bord[0][i] == -1 then  
+				flag = 1
+			end
+			next
+		end
+		
+		if $bord[0][i] >= 0 then
+			$stack.push([i,0])
+			$cost.push($bord[0][i])
+			flag = 0
+		end
+	end
+	
+	for j in 1..$y-1
+		if $bord[j][0] >= 0 then
+			if $bord[j-1][0] == -1 then
+				$stack.push([0,j])
+				$cost.push($bord[j][0])
+			end
+		end
+		
+		for i in 1..$x-1
+			if $bord[j][i] >= 0 and $bord[j-1][i] == -1 and $bord[j][i-1] == -1 then
+				$stack.push([i,j])
+				$cost.push($bord[j][i])
+			end
+		end
+	end
+end
+
+def check(x,y)
+	tmp = $bord[y][x]
+	if tmp == 0 then
+		$bord[y][x] = 2
+		$stack.push([x,y])
+		$cnt += 1
+	end
+end
+	
+loop{
+	line = gets
+	if line==nil then
+		break
+	end
+	sp = line.split(nil)
+	
+	if sp.count() != 2 then
+		break
+	else
+		$x = sp[0].to_i()
+		$y = sp[1].to_i()
+		if $x == 0 and $y == 0 then
+			break
+		end
+		
+		sx = 0
+		sy = 0
+		$cnt = 1 
+		$bord = Array.new($y+1).map{Array.new($x+1,0)}
+		for i in 0..$y-1
+			line = gets
+			$bord[i][$x] = -1
+			for j in 0..$x-1
+				tmp = -1
+				if line[j] =~ /\d/ then
+					tmp = line[j].to_i() 
+				end
+				$bord[i][j] = tmp
+			end
+		end
+		for j in 0..$x-1
+			$bord[$y][j] = -1	
+		end
+		print calc()
+		print("\n")
+	end
+}

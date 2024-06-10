@@ -1,0 +1,175 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+
+int dx[2]={1,0},dy[2]={0,1};
+int INF=1<<28;
+
+class Main{
+public:
+
+	int dfs(int y1,int x1,int y2,int x2){
+		if(!(y1<=y2 && x1<=x2))return 0;
+		if(!(IN(0,y1,N) && IN(0,x1,M) && IN(0,y2,N) && IN(0,x2,M))) return -INF;
+		if(dp[y1][x1][y2][x2]!=-1)return dp[y1][x1][y2][x2];
+
+
+		if(!move[y1][x1][y2][x2])return  dp[y1][x1][y2][x2]=-1;
+
+		int res=-1;
+		REP(d1,2)res=max(res,dfs(y1+dy[d1],x1+dx[d1],y2,x2));
+
+		if(islower(board[y1][x1])){
+			int c=board[y1][x1]-'a';
+			REP(i,holes[c].size()){
+				int ny=holes[c][i].first,nx=holes[c][i].second;
+				if(!(move[y1][x1][ny][nx] && (y1<=ny && ny <=y2) && (x1<=nx && nx<=x2)))continue;
+				DUMP(y1);DUMP(x1);DUMP(ny);DUMP(nx);
+				REP(d1,2)REP(d2,2){
+					res=max(res,dfs(y1+dy[d1],x1+dx[d1],ny-dy[d2],nx-dx[d2])+dfs(ny,nx,y2,x2)+1);
+				}
+			}
+		}
+		return dp[y1][x1][y2][x2]=res;
+	}
+
+	int N,M;
+	vector<string> board;
+	vector<vector<vector<vector<int> > > > dp;
+	vector<vector<vector<vector<bool> > > > move;
+	vector<vector<pair<int,int>>> holes;
+
+	void run(){
+		// ifstream cin("in");
+		// ofstream cout( "out" );
+		while(true){
+			cin >> N >> M;
+			if(N==0)break;
+			board=vector<string>(N);
+			REP(i,N) cin >> board[i];
+
+			holes=vector<vector<pair<int,int>>> (26);
+			REP(y,N)REP(x,M){
+				if(isupper(board[y][x]))holes[board[y][x]-'A'].push_back(make_pair(y,x));
+			}
+
+			move=vector<vector<vector<vector<bool> > > >(N,vector<vector<vector<bool> > >(M,	vector<vector<bool> >(N,vector<bool>(M))));
+			REP(y1,N)REP(x1,M){
+				if(board[y1][x1]!='#') move[y1][x1][y1][x1]=true;
+				REP(y2,N)REP(x2,M){
+					if(y2-1>=y1) move[y1][x1][y2][x2] = move[y1][x1][y2][x2] | move[y1][x1][y2-1][x2];
+					if(x2-1>=x1) move[y1][x1][y2][x2] = move[y1][x1][y2][x2] | move[y1][x1][y2][x2-1];
+					if(board[y2][x1]=='#') move[y1][x1][y2][x2]=false;
+				}
+			}
+
+			dp=vector<vector<vector<vector<int> > > >(N,vector<vector<vector<int> > >(M,	vector<vector<int> >(N,vector<int>(M,-1))));	
+			//h=0 w=0
+			REP(y,N)REP(x,M)if(board[y][x]!='#') dp[y][x][y][x]=0;
+			cout <<dfs(0,0,N-1,M-1)<<endl;
+		}
+	}
+};
+int main(){
+	cout <<fixed<<setprecision(13);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

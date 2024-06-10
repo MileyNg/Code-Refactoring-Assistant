@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <memory.h>
+#include <stdbool.h>
+
+#define NUM 100000000
+bool prime[NUM];
+
+void createprime(void)
+{
+    unsigned i, j;
+    unsigned sq_num = (int)sqrt((double)NUM);
+
+	for(i=0;i<NUM+1;i++) {
+		prime[i] = true;
+	}
+	prime[0] = false;
+	prime[1] = false;
+
+    for (i=2;i<=sq_num;i++) {
+    	if (prime[i]==true) {
+    		for (j=i;(i*j)<=NUM;j++){
+        		prime[i*j-1] = false;
+    		}
+    	}
+    }
+}
+
+int main(void) {
+	int i, n, value;
+	int count = 0;
+	
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%d\n", &value);
+		if(prime[value]==true) {
+			count++;
+		}
+	}
+	
+	printf("%d\n", count);
+	return 0;
+}

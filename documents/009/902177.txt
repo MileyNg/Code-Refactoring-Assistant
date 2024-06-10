@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+inline double sq(double x){
+	return x*x;
+}
+
+double x[100], y[100], z[100];
+
+double dist(int i, int j){
+	return sqrt(sq(x[i] - x[j]) + sq(y[i] - y[j]) + sq(z[i] - z[j]));
+}
+
+double EPS = 1e-4;
+bool check(double a, double b, double c){
+	if (abs(a - b) > EPS) return false;
+	if (abs(b - c) > EPS) return false;
+	if (abs(c - a) > EPS) return false;
+	return true;
+}
+
+int main(){
+	int T;
+	cin >> T;
+	while (T--){
+		double a, b, c;
+		cin >> a >> b >> c;
+		int n;
+		cin >> n;
+		rep(i, n) cin >> x[i] >> y[i] >> z[i];
+
+		rep(i, n) rep(j, n) rep(k, n){
+			if (i == j && j == k) continue;
+			if (check(dist(j, k) / a, dist(k, i) / b, dist(i, j) / c)){
+				cout << i+1 << " " << j+1 << " " << k+1 << endl;
+			}
+		}
+	}
+
+	return 0;
+}

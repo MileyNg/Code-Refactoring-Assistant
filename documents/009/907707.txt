@@ -1,0 +1,21 @@
+def judge(exp,torf,i):
+	if i==len(dic):
+		return eval(exp)
+	else:
+		return judge(exp,dic+[True],i+1) or judge(exp,dic+[False],i+1)
+while 1:
+	exp=list(raw_input())
+	if exp[0]=="#":break
+	dic=[]
+	for i in range(len(exp)):
+		if exp[i]=="&":exp[i]="and"
+		elif exp[i]=="~":exp[i]="not"
+		elif exp[i]=="|":exp[i]="or"
+		elif exp[i]!="(" and exp[i]!=")":
+			if exp[i] not in dic:
+				dic.append(exp[i])
+				exp[i]="torf["+str(len(dic)-1)+"]"
+			else:
+				exp[i]="torf["+str(dic.index(exp[i]))+"]"
+	exp=" ".join(map(str,exp))
+	print "yes" if judge(exp,[],0) else "no"

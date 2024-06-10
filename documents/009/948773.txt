@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef map<char, int> State;
+
+bool finished(State &m){
+  for(char c = '1' ; c <= '9' ; c++){
+    if(m[c]) return false;
+  }
+  return true;
+}
+
+bool bfs(string s){
+  State start;
+  for(int i = 0 ; i < (int)s.size() ; i++) start[s[i]]++;
+  
+  queue<State> que;
+  for(char c = '1' ; c <= '9' ; c++){
+    if(start[c] > 4) continue;
+    if(start[c] >= 2){
+      State nex = start;
+      nex[c] -= 2;
+      que.push(nex);     
+    }
+  }
+  
+  while(!que.empty()){
+    State q = que.front(); que.pop();
+    
+    if(finished(q)) return true;
+    
+    for(char c = '1' ; c <= '9' ; c++){
+      if(q[c] >= 3){
+	State nex = q;
+	nex[c] -= 3;
+	que.push(nex);
+      }
+    }
+    for(char c = '1' ; c <= '7' ; c++){
+      if(q[c] >= 1 && q[c+1] >= 1 && q[c+2] >= 1){
+	State nex = q;
+	nex[c] -= 1, nex[c+1] -= 1, nex[c+2] -= 1;
+	que.push(nex);
+      }
+    }
+  }
+  return false;
+}
+
+int main(){
+  string s;
+  while(cin >> s){
+    vector<char> ans;
+    for(char c = '1' ; c <= '9' ; c++){
+      if(bfs(s + c)) ans.push_back(c);
+    }
+    if(ans.size() == 0) cout << 0 << endl;
+    else{
+      for(int i = 0 ; i < (int)ans.size() ; i++){
+	cout << ans[i];
+	if(i == (int)ans.size()-1) cout << endl;
+	else cout << ' ';
+      }
+    }
+  }
+  
+  return 0;
+}

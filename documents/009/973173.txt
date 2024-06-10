@@ -1,0 +1,61 @@
+# include <stdio.h>
+
+
+int y[100], m[100], d[100], out[100];
+
+
+void input(int n){
+	scanf("%d%d%d", &y[n], &m[n], &d[n]);
+}
+
+void output(int n){
+	printf("%d\n", out[n]);
+}
+
+int main(void){
+
+	int n, i, num;
+	int year, month, day;
+
+	scanf("%d", &n);
+
+	for(i=0; i<n; i++){
+		input(n);
+	}
+
+	for(i=0; i<n; i++){
+
+		if(y[i] % 3 == 0){
+			num = 20;
+		}
+		else if(m[i] % 2 == 0){
+			num = 19;
+		}else{
+			num = 20;
+		}
+		out[i] += (num - d[i]);
+
+		for(year=y[i]; year<1000; year++){
+			for(month=m[i]+1; month<10; month++){
+				if(year % 3 == 0){
+					num = 20;
+				}
+				else if(month % 2 == 0){
+					num = 19;
+				}else{
+					num = 20;
+				}
+				out[i] += num;
+			}
+		}
+	}
+
+
+
+
+	for(i=0; i<n; i++){
+		output(n);
+	}
+
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef long long ll;
+const ll LLINF = LLONG_MAX;
+int N,len[110];
+
+int main(){
+  while(cin>>N,N){
+    vector<ll> buf[N];
+    vector<ll> tmp[25];
+    rep(i,N){
+      int cur;
+      cin >> len[i] >> cur;
+      buf[i].resize(len[i]);
+      rep(j,len[i]){
+        cin >> buf[i][(j-cur+len[i])%len[i]];
+      }
+      if( tmp[len[i]].empty() ) tmp[len[i]] = buf[i];
+      else rep(j,len[i]) tmp[len[i]][j] += buf[i][j];
+    }
+
+    int cnt = 0,sp = 0;
+    rep(i,25) if( !tmp[i].empty() ) cnt++;
+    vector<ll> nbuf[cnt];
+    rep(i,25) if( !tmp[i].empty() ){
+      rep(j,tmp[i].size()) nbuf[sp].push_back(tmp[i][j]);
+      sp++;
+    }
+
+    ll ans = 0;
+    rep(i,nbuf[0].size()){
+      ll cost = nbuf[0][i];
+      REP(j,1,cnt){
+        set<int> used;
+        int cur = i % (int)nbuf[j].size();
+        ll tmp_max = nbuf[j][cur];
+        while(true){
+          if( used.find(cur) != used.end() ) break;
+          used.insert(cur);
+          tmp_max = max(tmp_max,nbuf[j][cur]);
+          ( cur += (int)nbuf[0].size() )  %= (int)nbuf[j].size();
+        }
+        cost += tmp_max;
+      }
+      ans = max(ans,cost);
+    }
+    cout << ans << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,27 @@
+#include <iostream>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+int main(void){
+  int a, b, sum = 0;
+  char c;
+  double r;
+  vector<pair<int, int> > v;
+
+  while(cin >> a >> c >> b){
+    v.push_back(make_pair(a, b));
+  }
+
+  vector<pair<int, int> >::iterator it;
+  for(it = v.begin(); it != v.end(); it++){
+    sum += (*it).first * (*it).second;
+    r += (*it).second;
+  }
+
+  cout << sum << endl;
+  cout << (r + 1.0) / v.size() << endl;
+
+  return 0;
+}

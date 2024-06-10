@@ -1,0 +1,99 @@
+#include <iostream>
+#include <array>
+#include <string>
+
+class Baseball{
+	
+private:
+	//アウトカウント
+	int out_count;
+	//ランナー
+	std::array<bool, 3> runner;
+	//点数
+	int point;
+	
+public:
+	//コンストラクタ
+	Baseball(){
+		out_count = 0;
+		for(int i = 0; i < 3; ++i) runner[i] = false;
+		point = 0;
+	}
+	
+	//デストラクタ
+	~Baseball(){}
+	
+	//点数出力
+	int get_point(){ return point; }
+	
+	//ゲーム開始
+	void playball();
+	
+	//アウト判定
+	void process_out();
+	
+	//ヒット判定
+	void process_hit();
+	
+	//ホームラン判定
+	void process_homerun();
+};
+
+//ゲーム開始
+void Baseball::playball(){
+	while(out_count < 3){
+		std::string str;
+		std::cin >> str;
+		if(str == "OUT") process_out();
+		else if(str == "HIT") process_hit();
+		else if(str == "HOMERUN") process_homerun();
+	}
+}
+
+//アウト判定
+void Baseball::process_out(){
+	++out_count;
+}
+
+//ヒット判定
+void Baseball::process_hit(){
+	if(runner[2]){
+		++point;
+		runner[2] = false;
+	}
+	if(runner[1]){
+		runner[1] = false;
+		runner[2] = true;
+	}
+	if(runner[0]){
+		runner[0] = false;
+		runner[1] = true;
+	}
+	runner[0] = true;
+}
+
+//ホームラン判定
+void Baseball::process_homerun(){
+	++point;
+	for(int i = 0; i < 3; ++i){
+		if(runner[i]){
+			++point;
+			runner[i] = false;
+		}
+	}
+}
+
+
+int main(){
+	int count;
+	std::cin >> count;
+	
+	for(int i = 0; i < count; ++i){
+		Baseball baseball;
+		
+		baseball.playball();
+		std::cout << baseball.get_point() << std::endl;
+	}
+	
+	return 0;
+}

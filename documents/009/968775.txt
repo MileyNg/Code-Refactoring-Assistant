@@ -1,0 +1,31 @@
+n = gets.to_i
+
+n.times do
+  bs = gets.chop.split(" ").map{|s| s.to_i}
+  #p bs
+
+  b0 = 0
+  b1 = 0
+  ok = 1
+
+  for b in bs
+    if b0 > b
+      if b1 > b
+        ok = 0
+        break
+      end
+
+      b1 = b
+    elsif b1 > b
+      b0 = b
+    elsif b0 < b1
+      b1 = b
+    else
+      b0 = b
+    end
+
+    #puts "b=#{b}, " + [b0,b1].join(",")
+  end
+
+  puts (ok > 0 ? "YES" : "NO")
+end

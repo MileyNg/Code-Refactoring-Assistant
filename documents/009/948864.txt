@@ -1,0 +1,21 @@
+#include<stdio.h>
+int main(void){
+  int cu,cd,input,t,last,i,g,j;
+  
+  scanf("%d",&g);
+  for(j=0;j<g;j++){
+    scanf("%d",&t);
+    cu=cd=last=0;
+    scanf("%d",&last);
+    for(i=0;i<t-1;i++){
+      scanf("%d",&input);
+      if(last-input<0)
+      if(input-last>=cu)cu=input-last;
+      if(last-input>=cd)cd=last-input;
+      last=input;
+    }
+    if(last==cu)  printf("%d %d\n",0,cd);
+    else    printf("%d %d\n",cu,cd);
+  }   
+  return 0;
+}

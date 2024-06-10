@@ -1,0 +1,67 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+int main(){
+		  int N,M,r,q,loop,sum;
+		  vector<int> st[1001],end[1001];
+		  int count[1001];
+		  int t,n,m,s;
+		  int ts,te,qm;
+
+		  while(1){
+					 cin>>N>>M;
+					 if(N==0) break;
+					 memset(count,0,sizeof(count));
+
+					 cin>>r;
+					 for(int i=0;i<r;i++){
+								cin>>t>>n>>m>>s;
+								if(s==1){
+										  count[m]+=1;
+										  if(count[m]==1) st[m].push_back(t);
+								}
+								else if(s==0){
+										  count[m]-=1;
+										  if(count[m]==0) end[m].push_back(t);
+								}
+					 }
+
+					 cin>>q;
+					 for(int i=0;i<q;i++){
+								cin>>ts>>te>>qm;
+
+								loop=0;sum=0;
+								while(1){
+										  if(loop==st[qm].size()) break;
+										  else if(st[qm][loop]>te) break;
+										  else if(st[qm][loop]<ts && end[qm][loop]<ts){
+										  }
+										  else if(st[qm][loop]<=ts && end[qm][loop]>ts && end[qm][loop]<=te){
+													 sum+=end[qm][loop]-ts;
+										  }
+										  else if(st[qm][loop]<=ts && end[qm][loop]>=te){
+													 sum+=te-ts;
+										  }
+										  else if(st[qm][loop]>ts && end[qm][loop]<=te){
+													 sum+=end[qm][loop]-st[qm][loop];
+										  }
+										  else if(st[qm][loop]<te && end[qm][loop]>te){
+													 sum+=te-st[qm][loop];
+										  }
+										  loop++;
+								}
+								cout<<sum<<endl;
+					 }
+					 for(int i=0;i<M;i++){
+								while(!st[i].empty()){
+										  st[i].pop_back();
+										  end[i].pop_back();
+								}
+					 }
+		  }
+		  return 0;
+}

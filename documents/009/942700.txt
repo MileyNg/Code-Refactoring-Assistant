@@ -1,0 +1,52 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+const int MAX = 10000;
+
+/** Problem0137 : Middle-Square Method **/
+int main()
+{
+	int n, s, ts;
+	string str, sq;
+	cin >> n;
+	rep(k, n) {
+		cin >> s;
+		
+		cout << "Case " << k+1 << ":" << endl;
+		rep(j, 10) {
+			ts = s*s;
+			str = "";
+			while (ts!=0) {
+				str += ts%10+'0';
+				ts/=10;
+			}
+			reverse(str.begin(), str.end());
+			if (str.length()<8) {
+				string tt;
+				rep(i, 8-str.length()) tt+='0';
+				str = tt+str;
+			}
+			string sub = str.substr(2, 4);
+			s=0;
+			rep(i, 4) {
+				s*=10; s+=sub[i]-'0';
+			}
+			cout << s << endl;
+		}
+	}
+	return 0;
+}

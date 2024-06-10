@@ -1,0 +1,55 @@
+////   template  ///////////////////////////////////////////////////////
+#include <stdlib.h>
+#include <sys/time.h>
+#include <stdio.h>
+#include <sys/resource.h>
+#include <iostream>
+#include <string>
+using namespace std;
+
+class timer{
+	enum KIND{ REAL, CPU }; // real_time or cpu_time
+	double t0; // start
+	double t1; // end
+	KIND kind_of_time; // default is real_time
+	double get_realtime(){struct timeval tv; gettimeofday(&tv, NULL);
+		return tv.tv_sec + (double)tv.tv_usec*1e-6;}
+	double get_cputime(){struct rusage RU; getrusage(RUSAGE_SELF, &RU); 
+		return RU.ru_utime.tv_sec + (double)RU.ru_utime.tv_usec*1e-6;}
+public:
+	timer(){kind_of_time = REAL;}
+	void set(KIND k){kind_of_time = k;}
+	void start(){t0 = get_realtime();}
+	void stop(){t1 = get_realtime();}
+	void print(){printf("TotalTime : %.3fsec\n", t1-t0);}
+};
+////////////////////////////////////////////////////////////////////////
+
+void shuffle(string *s, int pos);
+
+int main()
+{
+	string str;
+	while(1){
+		cin >> str;
+		if(str == "-") break;
+		int n;
+		cin >> n;
+		for(int i=0; i<n; i++){
+			int pos;
+			cin >> pos;
+			shuffle(&str, pos);
+		}
+		cout << str << endl;
+	}
+
+    return 0;
+}
+
+void shuffle(string *s, int pos)
+{
+	string left, right;
+	left = s->substr(0, pos);
+	right = s->substr(pos,s->size()-pos);
+	*s = right + left;
+}

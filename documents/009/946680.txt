@@ -1,0 +1,21 @@
+R, C = map(int, raw_input().split(" "))
+
+matrix = []
+for i in range(R):
+    matrix.append(map(int, raw_input().split(" ")))
+
+ans = 0
+for i in xrange(1<<R):
+    tmatrix = []
+    tans = 0
+    for j in range(R):
+        turn =  i>>j & 1
+        tmatrix.append([turn^v for v in matrix[j]])
+    for j in range(C):
+        cnt = 0
+        for k in range(R):
+            cnt += tmatrix[k][j]
+        tans += max(cnt, R-cnt)
+    ans = max(ans, tans)
+
+print ans    

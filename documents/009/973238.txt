@@ -1,0 +1,47 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+int main (){
+
+  int n,a,b;
+
+  while(1){
+
+    a=0;
+    
+    cin >>n;
+    
+    if( n == 0 )break;
+
+    for(int i=1; i <=  sqrt(n) ; i++){
+      for(int j=sqrt(n) ; j <= n ; j++){
+	if( i*j == n){
+	  a+=i+j;
+	}
+      }
+    }
+
+    
+    b=a-n;
+
+    if( n == 1 ){
+      b=0;
+    }
+
+    cout <<b<< endl;
+
+    if( n == b ){
+      cout <<"perfect number"<<endl;
+    }else if( n > a ){
+      cout <<"deficient number"<<endl;
+    }else if( n < a ){
+      cout <<"abundant number"<<endl;
+    }
+
+  }
+    
+
+
+  
+  return 0;
+}

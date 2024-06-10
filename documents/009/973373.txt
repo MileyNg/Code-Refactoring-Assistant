@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+	string d = "AIDUNYAN", z = "AIZUNYAN", s;
+	sort(d.begin(), d.end());
+	cin >> s;
+	for(int i=0;i+d.size()<=s.size();i++){
+		string a = s.substr(i, d.size());
+		sort(a.begin(), a.end());
+		if(d == a){
+			for(int j=0;j<z.size();j++){
+				s[i + j] = z[j];
+			}
+			i += z.size() - 1;
+		}
+	}
+	cout << s << endl;
+	return 0;
+}

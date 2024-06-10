@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a[7],n;
+    cin>>n;
+    for(int i=0;i<n;i++)
+        cin>>a[i];
+    int minimum,f,index,c=0,firstIndex;
+    for(int i=0;i<n;i++)
+    {
+        firstIndex=a[i];
+        f=0;
+        for(int j=i+1;j<n;j++)
+        {
+            if(firstIndex>a[j]){
+                firstIndex=a[j];
+                index=j;
+                f=1;
+            }
+        }
+        if(f==1)
+        {
+            int temp;
+            temp=a[i];
+            a[i]=a[index];
+            a[index]=temp;
+            c++;
+        }
+
+
+    }
+    for(int i=0;i<n;i++)
+        cout<<a[i]<<" ";
+        cout<<endl<<c;
+    return 0;
+}

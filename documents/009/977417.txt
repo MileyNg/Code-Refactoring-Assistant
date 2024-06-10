@@ -1,0 +1,35 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+
+void main() {
+  string[][] q;
+
+  int n = readln.chomp.to!int;
+  q.length = n;
+
+  foreach (string line; stdin.lines) {
+    if (line == "quit\n") break;
+
+    auto s = line.chomp.split;
+
+    switch (s[0]) {
+    case "push":
+      q[s[1].to!ulong-1] ~= s[2];
+      break;
+    case "move":
+      q[s[2].to!ulong-1] ~= q[s[1].to!ulong-1].back;
+      q[s[1].to!ulong-1].popBack;
+      break;
+    case "pop":
+      q[s[1].to!ulong-1].back.writeln;
+      q[s[1].to!ulong-1].popBack;
+      break;
+    default:
+    }
+  }
+}

@@ -1,0 +1,17 @@
+while true
+  n, m = gets.chomp.split(" ").map{|s| s.to_i}
+  break if n == 0 && m == 0
+
+  ps = (1..n).map{|p| p}
+  k = n - 1
+  ds = []
+
+  while ps.length > 1
+    k = (k + m) % ps.length
+    ds.push ps.delete_at(k)
+    k -= 1
+  end
+  #p ds
+
+  puts ps[0]
+end

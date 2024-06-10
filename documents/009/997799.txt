@@ -1,0 +1,96 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define NIL NULL
+   
+struct node{
+  struct node *right;
+  struct node *left;
+  struct node *parent;
+  int key;
+};
+   
+typedef struct node * Node;
+   
+Node root= NIL;
+Node treeSu(Node,int);
+void insert(int);
+void preorder(Node);
+void inorder(Node);
+
+
+void inorder(Node n){
+  if(n->left != NIL)
+    inorder(n->left);
+  printf(" %d", n->key);
+  if(n->right != NIL)
+    inorder(n->right);
+}
+
+void preorder(Node n){
+  printf(" %d", n->key);
+  if(n->left != NIL)
+    preorder(n->left); 
+  if(n->right != NIL)
+    preorder(n->right);
+}
+void insert(int n){
+  Node y = NIL;
+  Node x = root;
+  Node z;
+  z = malloc(sizeof(struct node));
+  z->key = n;
+  z->left = NIL;
+  z->right = NIL;
+   
+  while(x != NIL){
+    y = x;
+    if(z->key < x->key)
+      x = x->left; 
+    else
+      x = x->right;  }
+  z->parent = y;
+  if(y == NIL)
+    root = z;
+  else if(z->key < y->key)
+    y->left = z;
+  else
+    y->right = z; 
+}
+   
+Node treeSu(Node u, int k){
+  while(u != NIL && k != u->key){
+    if(k < u->key)
+      u = u->left;
+    else
+      u = u->right;
+  }
+  return u;
+}
+
+int main(){
+  int i;
+  int n,m;
+  char cha[20];
+   scanf("%d", &n);
+   for(i = 0;i < n;i++){
+     scanf("%s",cha);
+     if(cha[0] == 'f'){
+       scanf("%d",&m);
+       if(treeSu(root,m) != NIL)
+	 printf("yes\n");
+       else
+	 printf("no\n");
+     } 
+     else if (cha[0] == 'i' ){
+       scanf("%d",&m);
+       insert(m);
+     }
+     else if (cha[0] == 'p' ){
+       inorder(root);
+       printf("\n");
+       preorder(root);
+       printf("\n");
+     }
+   }
+   return 0;
+}

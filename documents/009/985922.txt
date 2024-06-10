@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+#include<vector>
+using namespace std;
+
+void array(int size){
+    int number;
+    int sum=0;
+    vector< vector<int> > colm(size+1, vector<int>(size+1));
+   
+   for(int i=0;i<size;i++){
+        for(int j=0;j<size;j++){
+            cin >> number;
+            sum += number;
+            colm[i][j] = number; 
+        }
+        colm[i][size] = sum;
+        sum=0;
+   }
+   //sum=0;
+   
+   for(int j=0;j<=size;j++){
+      for(int i=0;i<size;i++){
+        sum += colm[i][j];
+      }
+      colm[size][j] = sum;
+      sum=0;
+   }
+   
+   for(int i=0;i<=size;i++){
+       for(int j=0;j<=size;j++){
+           cout.width(5);
+           cout << colm[i][j];
+       }
+       cout << endl;
+   }
+}
+
+
+int main(){
+   int size;
+    string str;
+    cin >> size;
+    cin.ignore();
+    while(size != 0){
+        array(size);
+        cin >> size;
+    }
+    return 0;
+}

@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+
+using namespace std;
+
+int main() {
+	int n;
+	string tama[10] = {"* = ****", "* =* ***", "* =** **", "* =*** *", "* =**** ",
+					   " *= ****", " *=* ***", " *=** **", " *=*** *", " *=**** "};
+
+	while (cin >> n) {
+		int a[5];
+		for (int i = 4; i >= 0; i--) {
+			a[4-i] = n / (int)pow(10, i);
+			n = n % (int)pow(10, i);
+		}
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (tama[a[j]][i] == ' ') {
+					bool hantei = false;
+					for (int k = j+1; k < 5; k++) {
+						if (tama[a[k]][i] != ' ') {
+							hantei = true;
+							break;
+						}
+					}
+					if (hantei) {
+						cout << tama[a[j]][i];
+					} else {
+						break;
+					}
+				} else {
+					cout << tama[a[j]][i];
+				}
+			}
+			cout << endl;
+		}
+		cout << endl;
+	}
+	return 0;
+}

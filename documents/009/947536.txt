@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+int greedy1(vector<int> v) {
+    int res = 0;
+    for(int i = 0; i < v.size(); i++) {
+        int e = i;
+        while(v[e] != i + 1) e++;
+        if(e > i) {
+            res++;
+        }
+        while(e > i) {
+            swap(v[e - 1], v[e]);
+            e--;
+        }
+    }
+    return res;
+}
+int greedy2(vector<int> v) {
+    int res = 0;
+    for(int i = v.size() - 1; i >= 0; i--) {
+        int b = i;
+        while(v[b] != i + 1) b--;
+        if(b < i) {
+            res++;
+        }
+        while(b < i) {
+            swap(v[b], v[b + 1]);
+            b++;
+        }
+    }
+    return res;
+}
+int greedy3(vector<int> v) {
+    int n = v.size();
+    int dp[22][22] = {};
+    REP(i, n + 1) REP(j, n + 1) dp[i][j] = INT_MAX;
+    dp[0][n] = 0;
+    for(int t = n; t > 0; t--) {
+        for(int l = 0; l + t <= n; l++) {
+            int r = l + t;
+            vector<int> a;
+            for(int i = 0; i < n; i++) {
+                if(l + 1 <= v[i] && v[i] <= r) {
+                    a.push_back(v[i]);
+                }
+            }
+            int first = a[0];
+            int last = a.back();
+            dp[l + 1][r] = min(dp[l + 1][r], dp[l][r] + (first == l + 1 ? 0 : 1));
+            dp[l][r - 1] = min(dp[l][r - 1], dp[l][r] + (last == r ? 0 : 1));
+        }
+    }
+    int res = INT_MAX;
+    for(int l = 0; l < n; l++) {
+        res = min(res, dp[l][l]);
+    }
+    return res;
+}
+
+int main(){
+    int n;
+    while(cin >> n){
+        vector<int> v(n);
+        REP(i, n) cin >> v[i];
+        // cout << greedy1(v) << endl;
+        // cout << greedy2(v) << endl;
+        cout << greedy3(v) << endl;
+        assert(greedy3(v) <= greedy2(v));
+        assert(greedy3(v) <= greedy1(v));
+    }
+    return 0;
+}

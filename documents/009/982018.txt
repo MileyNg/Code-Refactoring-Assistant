@@ -1,0 +1,169 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<cstring>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+class Rule{
+	public:
+	bool isempty(char c){
+		return c==':' || c==' ' || c=='\n' || c==0;
+	}
+	Rule(char* str){
+		int len = strlen(str);
+		rep(i,len){
+			if(isempty(str[i]))str[i]=0;
+		}
+		int count = 0;
+		rep(i,len){
+			if(!isempty(str[i])){
+				if(i==0)name = string(str+i);
+				else if(isempty(str[i-1]))to.push_back(string(str+i));
+				count++;
+			}
+		}
+	}
+	string name;
+	vector<string> to;
+};
+
+class S{
+	public:
+	bool a,t,g,c;
+	S(string str){
+		a=t=g=c=false;
+		rep(i,str.size()){
+			if(str[i]=='A')a=true;
+			if(str[i]=='T')t=true;
+			if(str[i]=='G')g=true;
+			if(str[i]=='C')c=true;
+		}
+	}
+};
+
+int na,ng,nt,nc;
+vector<Rule> rules;
+map<string,int> rmap;
+
+void input(){
+	cin>>na>>nt>>ng>>nc;
+	int r;
+	cin>>r;
+	bool b=false;
+	rep(i,r){
+		char str[3000];
+		string s;
+		getline(cin,s);
+		if(!b){
+			b=true;
+			i--;
+			continue;
+		}
+		str[s.size()]=0;
+		rep(j,s.size())str[j]=s[j];
+		rules.push_back(Rule(str));
+		rmap[rules[i].name]=i;
+	}
+}
+
+vector<S> state;
+
+bool isend(string& str){
+	return str[0]=='[';
+}
+void make_state_req(int num){
+	rep(i,rules[num].to.size()){
+		string next = rules[num].to[i];
+		if(isend(next)){
+			if(state.size()>na+nt+ng+nc)continue;
+			state.push_back(S(next));
+		}else{
+			make_state_req(rmap[next]);
+		}
+	}
+}
+
+void printstate(){
+	rep(i,state.size()){
+		cout<<state[i].a<<" "<<state[i].t<<" "<<state[i].g<<" "<<state[i].c<<endl;
+	}
+}
+
+void make_state(){
+	make_state_req(0);
+}
+
+
+const int N = 51;
+const int MOD = 1000000007;
+
+int memo[N][N][N][N];
+
+int solve_dp_req(int na,int nt,int ng, int nc){
+	int sum = na+nt+ng+nc;
+	if(na<0 || nt<0 || ng<0 || nc<0)return 0;
+	if(sum==0)return 1;
+	if(memo[na][nt][ng][nc]!=-1)return memo[na][nt][ng][nc];
+	
+	int ans = 0;
+	if(state[sum-1].a && na!=0){
+		//printf("****************** %d %d %d %d CALL %d %d %d %d\n",na,nt,ng,nc,na-1,nt,ng,nc);
+		ans = (ans + solve_dp_req(na-1, nt, ng, nc))%MOD;
+	}
+	if(state[sum-1].t && nt!=0){
+		//printf("****************** %d %d %d %d CALL %d %d %d %d\n",na,nt,ng,nc,na,nt-1,ng,nc);
+		ans = (ans + solve_dp_req(na, nt-1, ng, nc))%MOD;
+	}
+	if(state[sum-1].g && ng!=0){
+		//printf("****************** %d %d %d %d CALL %d %d %d %d\n",na,nt,ng,nc,na,nt,ng-1,nc);
+		ans = (ans + solve_dp_req(na, nt, ng-1, nc))%MOD;
+	}
+	if(state[sum-1].c && nc!=0){
+		//printf("****************** %d %d %d %d CALL %d %d %d %d\n",na,nt,ng,nc,na,nt,ng,nc-1);
+		ans = (ans + solve_dp_req(na, nt, ng, nc-1))%MOD;
+	}
+	
+	/*
+	cout<<state[sum-1].a<<" "<<state[sum-1].t<<" "<<state[sum-1].g<<" "<<state[sum-1].c<<"| ";
+	printf("%d %d %d %d : %d\n",na,nt,ng,nc,ans);
+	*/
+	return memo[na][nt][ng][nc]=ans;
+}
+int solve_dp(){
+	rep(i,N)rep(j,N)rep(k,N)rep(p,N)memo[i][j][k][p]=-1;
+	if(na+nt+ng+nc!=state.size())return 0;
+	return solve_dp_req(na,nt,ng,nc);
+}
+
+int solve(){
+	make_state();
+	//printstate();
+	return solve_dp();
+}
+
+int main(){
+	input();
+	printf("%d\n",solve());
+}
+
+/*
+1 0 1 4
+4
+dna: a b c
+a: c [AT]
+b: c c [CG]
+c: [ACT]
+
+1 1 1 0
+2
+dna: a a
+a: [ATCG]
+
+*/

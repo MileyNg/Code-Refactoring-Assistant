@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+
+
+int main() {
+	int m; cin >> m;
+	
+	for (int rep = 0; rep < m; rep++) {
+		string train; cin >> train;
+		
+		set<string> make;
+		int n = (int)train.size();
+		for (int i=1; i<n; i++) {
+			string s1 = train.substr(0, i), s2 = train.substr(i);
+			
+			make.insert(s1 + s2);
+			make.insert(s2 + s1);
+			
+			string _s1 = s1;
+			reverse(_s1.begin(), _s1.end());
+			make.insert(_s1 + s2);
+			make.insert(s2 + _s1);
+			
+			string _s2 = s2;
+			reverse(_s2.begin(), _s2.end());
+			make.insert(s1 + _s2);
+			make.insert(_s2 + s1);
+			
+			make.insert(_s1 + _s2);
+			make.insert(_s2 + _s1);
+		}
+		cout << (int)make.size() << endl;
+	}
+	
+	return 0;
+}

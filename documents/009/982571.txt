@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace content4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //連立方程式を解く
+            //ax + by = c
+            //dx + ey = f
+            while (true)
+            {
+                //空白で分割する
+                var line = Console.ReadLine().Split();
+
+                if (string.IsNullOrEmpty(line[0]))
+                {
+                    break;
+                }   
+                //配列の要素、すべてに処理を行う
+                var num_array = Array.ConvertAll(line, len => int.Parse(len));
+
+                double a = num_array[0];
+                double b = num_array[1];
+                double c = num_array[2];
+                double d = num_array[3];
+                double e = num_array[4];
+                double f = num_array[5];
+
+                double x = (b * f - c * e) / (b * d - a * e);
+                double y = (c * d - a * f) / (b * d - a * e);
+
+                x = 1.2345;
+                y = 1.2341;
+
+                x = Math.Round(x * 1000, MidpointRounding.AwayFromZero) / 1000;
+                y = Math.Round(y * 1000, MidpointRounding.AwayFromZero) / 1000;
+                Console.WriteLine("{0:0.000} {1:0.000}", x.ToString("0.000"), y.ToString("0.000"));
+            }
+                //            Console.ReadKey();
+        }
+    }
+}

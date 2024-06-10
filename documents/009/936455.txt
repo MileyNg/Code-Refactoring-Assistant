@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct {
+  char name[10];
+  int speed;
+}  Process;
+
+Process S[10000];
+int s_top=0,s_tail=0;
+
+void Enqueue(Process );
+Process Dequeue(void );
+int main()
+{
+  Process in;
+  int i;
+  int z,num=0,qua=0;
+  int time_spend=0;
+  
+  scanf("%d %d",&num,&qua);
+  //printf("%d %d\n",num,qua);
+  for(i=0;i<num;i++)
+    {
+      z=scanf("%s %d",S[i].name,&S[i].speed);
+      //printf("%s %d\n",S[i].name,S[i].speed);
+      if(z==EOF) break;
+    }
+  s_tail = num;
+  
+  for(i=0;i<10000;i++)
+    {
+      in=Dequeue();
+      if(qua >= in.speed)
+    	{
+     	time_spend+=in.speed;
+      	printf("%s %d\n",in.name,time_spend);
+    	}
+      else
+    	{
+      	time_spend+= qua;
+      	in.speed -= qua;
+      	Enqueue(in);
+      	//printf("%s %d\n",S[s_tail].name,S[s_tail].speed);
+	    }
+	    if(s_tail== s_top) break;
+    }
+   return 0;
+}
+void Enqueue(Process in)
+{
+   s_tail++;
+   S[s_tail-1] = in;
+}
+
+Process Dequeue()
+{
+   s_top++;
+   return S[s_top-1];
+}

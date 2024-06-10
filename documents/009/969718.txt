@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = 20;
+
+int w, h, res;
+int dx[] = {-1, 0, 1, 0};
+int dy[] = {0, -1, 0, 1};
+int m[N][N];
+
+void dfs(pii, int);
+
+int main(void){
+    for(; cin >> w >> h, w; cout << res << endl){
+        res = INF;
+        pii p;
+
+        rep(y, h)
+            rep(x, w){
+                cin >> m[y][x];
+
+                if(m[y][x] == 2) p = mp(x, y), m[y][x] = 0;
+            }
+       
+       dfs(p, 10); 
+       if(res == INF) res = -1;
+    }
+
+    return 0;
+}
+
+void dfs(pii p, int n){
+    if(!n) return;
+    
+    n--;
+    rep(i, 4){
+        pii next = p;
+        rep(j, N){
+            next = mp(next.X + dx[i], next.Y + dy[i]);
+            if(next.X < 0 || w <= next.X ||
+               next.Y < 0 || h <= next.Y) break;
+            if(m[next.Y][next.X] == 3){
+                res = min(res, 10 - n);
+                break;
+            }
+            if(m[next.Y][next.X] == 1){
+                if(!j) break;
+
+                m[next.Y][next.X] = 0;
+                dfs(mp(next.X - dx[i], next.Y - dy[i]), n);
+                m[next.Y][next.X] = 1;
+                break;
+            }
+        }
+    }
+}

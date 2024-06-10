@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	
+	string s;
+	string ab[10]={"* = ****","* =* ***","* =** **","* =*** *","* =**** "," *= ****"," *=* ***"," *=** **"," *=*** *"," *=**** "};
+	string res[8];
+	
+	while(cin>>s){
+		
+		for(int i=0;i<8;++i)res[i]="";
+		
+		int l=s.length();
+		
+		for(int i=0;i<5-l;++i){
+			s = "0" + s;
+		}
+		
+		for(int j=0;j<5;++j){
+			for(int i=0;i<8;++i){
+				res[i] += ab[s[j]-'0'][i];
+			}
+		}
+		for(int i=0;i<8;++i){
+			cout<<res[i]<<endl;
+		}
+		cout<<endl;
+	}
+	return 0;
+}

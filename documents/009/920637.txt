@@ -1,0 +1,43 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define W 30
+#define N 30
+
+int change(int *); 
+int main(void)
+{
+	int w,n,i;
+	int amida[W];
+
+	scanf("%d %d",&w,&n);//縦棒と横棒の数
+
+ 	for(i = 0;i <= w;i ++){
+		amida[i]=i+1;
+	}
+
+	for(i = 0;i < n;i ++){
+		change(amida);
+	}
+	for(i = 0;i < w;i ++){
+		printf("%d",amida[i]);
+		if(i != w -1){
+			printf("\n");
+		}
+	}
+	return 0;
+}
+
+int change(int *amida){
+	char skip;
+	int a,b,temp,i;
+
+	scanf("%d",&a);
+	scanf("%c ",&skip);
+	scanf("%d", &b);	
+	
+	temp = *(amida + a - 1);
+	*(amida + a - 1) = *(amida + b - 1);
+	*(amida + b - 1) = temp;
+	return 0;
+}

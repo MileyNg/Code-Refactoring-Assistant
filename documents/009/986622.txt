@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest13
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Stack<string> car_list = new Stack<string>();
+            while (true)
+            {
+                var read_line_origin = Console.ReadLine();
+                if (read_line_origin == null)
+                {
+                    break;
+                }
+
+                //FIFO
+//                int input = int.Parse(read_line_origin);
+
+
+                //0なら車をだす
+                //それ以外ならスタックに入れる
+
+                if (read_line_origin == "0")
+                {
+                    if (car_list.Count == 0)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        string car = car_list.Pop();
+                        Console.WriteLine(car.ToString());
+                    }
+                }
+                else
+                {
+                    car_list.Push(read_line_origin);
+                }
+
+                
+
+            }
+        }
+    }
+}

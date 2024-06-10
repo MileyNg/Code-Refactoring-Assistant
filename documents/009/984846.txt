@@ -1,0 +1,144 @@
+## constant
+
+MAX_DIST = 1 << 30
+
+### subroutines
+
+def paint(x, y, n, m, chmap, armap, aid)
+  ch = chmap[y][x]
+  area = [aid, ch, false]
+  armap[y][x] = area
+
+  queue = [[x, y]]
+  while ! queue.empty?
+    x0, y0 = queue.shift
+    cands = []
+    if x0 > 0
+      cands << [x0 - 1, y0]
+    else
+      area[2] = true
+    end
+    if x0 < n - 1
+      cands << [x0 + 1, y0]
+    else
+      area[2] = true
+    end
+    if y0 > 0
+      cands << [x0, y0 - 1]
+    else
+      area[2] = true
+    end
+    if y0 < m - 1
+      cands << [x0, y0 + 1]
+    else
+      area[2] = true
+    end
+
+    for c in cands
+      nx, ny = c
+      if armap[ny][nx].nil? && chmap[ny][nx] == ch
+        armap[ny][nx] = area
+        queue << [nx, ny]
+      end
+    end
+  end
+
+  area
+end
+
+def gen_areas(n, m, chmap, armap)
+  areas = []
+  aid = 0
+
+  for y in (0...m)
+    for x in (0...n)
+      if armap[y][x].nil?
+        area = paint(x, y, n, m, chmap, armap, aid)
+        areas << area
+        aid += 1
+      end
+    end
+  end
+
+  areas
+end
+
+def gen_nbrs(n, m, armap, areas)
+  nbrs = (0...areas.length).map{[]}
+
+  for y in (0...m)
+    for x in (0...n)
+      aid, ach = armap[y][x]
+      cands = []
+      cands << armap[y][x - 1] if x > 0
+      cands << armap[y][x + 1] if x < n - 1
+      cands << armap[y - 1][x] if y > 0
+      cands << armap[y + 1][x] if y < m - 1
+
+      for ar0 in cands
+        nbrs[aid] << ar0[0] if ! nbrs[aid].include? ar0[0]
+      end
+    end
+  end
+
+  nbrs
+end
+
+### main
+
+while true
+  n, m = gets.strip.split(' ').map{|s| s.to_i}
+  break if n == 0 && m == 0
+
+  chmap = []
+  armap = []
+
+  m.times.each do
+    hl = gets.strip
+    chmap << hl
+    armap << ([nil] * n)
+  end
+
+  areas = gen_areas(n, m, chmap, armap)
+  an = areas.length
+  nbrs = gen_nbrs(n, m, armap, areas)
+
+  st = nil
+  for area in areas
+    if area[1] == '&'
+      st = area[0]
+      break
+    end
+  end
+
+  dist = areas.map{MAX_DIST}
+  dist[st] = 0
+  prev = areas.map{nil}
+  queue = areas.map{|ar| ar[0]}
+
+  while ! queue.empty?
+    u = queue.min{|a, b| dist[a] <=> dist[b]}
+    queue.delete u
+
+    for v in nbrs[u]
+      ndist = dist[u] + ((areas[v][1] == '#') ? 2 : 1)
+      if dist[v] > ndist
+        dist[v] = ndist
+        prev[v] = u
+      end
+    end
+  end
+
+  gl = (0...an).select{|i| areas[i][2]}.min{|a, b| dist[a] <=> dist[b]}
+
+  count = 0
+  v = gl
+  while v != st
+    if areas[v][1] == '#'
+      count += 1
+    end
+    v = prev[v]
+  end
+
+  puts count
+end

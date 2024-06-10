@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+
+
+class Baseball{
+	int out;
+	std::string runner;
+	int score;
+public:
+	Baseball(){
+		out = 0;
+		runner.clear();
+		score = 0;
+	}
+	
+	int get_score(){ return score;}
+	void event_out(){ ++out;}
+	void event_hit();
+	void event_homerun();
+	void play_game();
+};
+
+
+void Baseball::event_hit(){
+	int place;
+	if((place = runner.find("3", 0)) != -1){
+		runner.erase(place);
+		++score;
+	}
+	
+	if((place = runner.find("2", 0)) != -1){
+		runner.replace(place, 1, "3");
+	}
+	
+	if((place = runner.find("1", 0)) != -1){
+		runner.replace(place, 1, "2");
+	}
+	
+	runner.insert(0, "1");
+}
+
+void Baseball::event_homerun(){
+	score += runner.size() + 1;
+}
+
+void Baseball::play_game(){
+	std::string event;
+	while(std::cin >> event){
+		if(event == "HIT"){
+			event_hit();
+		}
+		if(event == "HOMERUN"){
+			event_homerun();
+		}
+		if(event == "OUT"){
+			event_out();
+			if(out == 3){
+				break;
+			}
+		}
+	}
+}
+
+int main(){
+	int game_num;
+	std::cin >> game_num;
+	for(int i = 0; i < game_num; ++i){
+		Baseball baseball;
+		baseball.play_game();
+		std::cout << baseball.get_score() << std::endl;
+	}
+	
+	return 0;
+}

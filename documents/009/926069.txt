@@ -1,0 +1,33 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+int main()
+{
+	int line = readln.chomp.to!int;
+	int n = readln.chomp.to!int;
+
+	int[31] values;
+	foreach(int i;0..line)
+	{
+		values[i] = i+1;
+	}
+
+	foreach(int i;0..n)
+	{
+		auto input = readln.chomp.split(",");
+		int a = to!int(input[0]);
+		int b = to!int(input[1]);
+
+		int value = values[a-1];
+		values[a-1] = values[b-1];
+		values[b-1] = value;
+	}
+
+	foreach(int i;0..line)
+	{
+		writeln(values[i]);
+	}
+
+	return 0;
+}

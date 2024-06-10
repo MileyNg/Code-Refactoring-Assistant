@@ -1,0 +1,14 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8').trim();
+var lines = input.split('\n');
+
+var n = +lines.shift();
+
+for (var i = 0; i < n; i++) {
+    var str = lines.shift();
+    var min = str.split('').sort();
+    var max = str.split('').sort(function(a,b){
+        return b.charCodeAt(0) - a.charCodeAt(0);
+    });
+    var diff = (max.join('') - 0) - (min.join('') - 0);
+    console.log(diff);
+}

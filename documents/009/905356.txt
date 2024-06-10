@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	string l;
+	int p,a,b,c,d,e,f,s,m;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		map<double,set<string> > mp;
+		for(int i1=0;i1<n;i1++){
+			cin>>l>>p>>a>>b>>c>>d>>e>>f>>s>>m;
+			int sumt=a+b+c+m*(d+e);
+			int money=f*s*m-p;
+			double ratio=(double)money/(double)sumt;
+
+			mp[ratio].insert(l);
+		}
+
+		for(map<double,set<string> >::reverse_iterator it=mp.rbegin();it!=mp.rend();it++){
+			for(set<string>::iterator it2=(*it).second.begin();it2!=(*it).second.end();it2++){
+				cout<<(*it2)<<endl;
+			}
+		}
+		cout<<"#"<<endl;
+
+
+	}
+	return 0;
+}

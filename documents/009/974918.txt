@@ -1,0 +1,116 @@
+INF = 10000
+$dx = [1,0,-1,0]
+$dy = [0,1,0,-1]
+$dp = []
+$n = 100
+
+def bfs(pos,queue,bb) 
+	while(not queue.empty?) do
+		pos = queue.shift
+		cnt = bb[pos[0]][pos[1]]
+		npos = []
+		4.times{|i|
+			npos[0] = pos[0] + $dy[i]
+			npos[1] = pos[1] + $dx[i]
+			if ((0..$h-1).include?(npos[0]) and (0..$w-1).include?(npos[1])) then
+				if ($b[npos[0]][npos[1]] == 0 and bb[npos[0]][npos[1]] == -1) then
+					bb[npos[0]][npos[1]] = cnt + 1
+					queue.push([npos[0],npos[1]])
+				end
+			end
+		}
+	end
+end
+
+def rec(s,v)
+	if $dp[s][v] >= 0 then
+		return $dp[s][v]
+	end
+	
+	if ( s == ((1 << $n) -1)) then
+		return $dp[s][v] = $dist[0][v+1]
+	end
+	
+	res = INF
+	$n.times{|u|
+		if ((s >> u & 1) == 0) then
+			tmp = (rec(s | 1 << u,u) + $dist[v+1][u+1] )
+			if tmp < res then
+				res = tmp
+			end
+		end
+	}
+	
+	return $dp[s][v] = res
+end
+
+loop{
+
+	$w,$h =gets.split.map(&:to_i)
+	if ($w==0 and $h == 0) then
+		break
+	end
+	$b = Array.new($h).map{Array.new($w)}
+	d = Array.new()
+	dcost = Array.new()
+	s = Array.new(2)
+	
+	$h.times{|hh|
+		$b[hh] = gets.chomp.chars.each_with_index.map{|c,i|
+			case c 
+			when '.'
+				0
+			when '*'
+				d.push([hh,i])
+				0
+			when 'o'
+				s = [hh,i]
+				0
+			else
+				-100
+			end
+		}
+	}
+	bb = Array.new($h).map{Array.new($w,-1)}
+	queue = []
+	queue.push(s)
+	bb[s[0]][s[1]] = 0
+	bfs(s,queue,bb)
+
+	flag = true
+	
+	dsize = d.size()
+	$n = dsize
+	$dist = Array.new(dsize+1).map{Array.new(dsize+1,-1)}
+	d.each_with_index{|pos,i|
+		$dist[0][i+1] = bb[pos[0]][pos[1]]
+		$dist[i+1][0] = bb[pos[0]][pos[1]]
+		
+		if bb[pos[0]][pos[1]] == -1 then
+			flag = false
+		end
+	}
+	
+	if (!flag) then
+		print "-1\n"
+		next
+	end
+	
+	
+
+	d.each_with_index{|pos,i|
+		bb = Array.new($h).map{Array.new($w,-1)}
+		queue = []
+		queue.push(pos)
+		bb[pos[0]][pos[1]] = 0
+		bfs(pos,queue,bb)
+		dsize.times{|j|
+			pos2 = d[j]
+			$dist[i+1][j+1] = bb[pos2[0]][pos2[1]]
+		}
+		
+	}
+	$dp = Array.new(1 << $n).map{Array.new($n,-1)}
+	p rec(0,0)
+
+}

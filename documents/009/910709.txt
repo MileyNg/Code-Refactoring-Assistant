@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+using namespace std;
+
+int main(){
+  int n;
+  while(cin >> n,n){
+    map<string,vector<int> > d;
+    map<string,vector<int> >::iterator itr;
+    for(int i=0;i<n;i++){
+      string s; int m; cin >> s >> m;
+      for(int j=0;j<m;j++){
+	int t; cin >> t;
+	d[s].push_back(t);
+      }
+    }
+    int mini = (2 << 20); string name;
+    for(itr=d.begin();itr!=d.end();itr++){
+      int sum = 0;
+      for(int i=0;i<(itr->second).size();i++){
+	int cnt = 0;
+	for(map<string,vector<int> >::iterator it=d.begin();it!=d.end();it++){
+	  if(it == itr) continue;
+	  for(int j=0;j<(it->second).size();j++){
+	    if((itr->second)[i] == (it->second)[j]){ cnt++; break; }
+	  }
+	}
+	sum = sum +  (n - cnt);
+      }
+      if(mini > sum){
+	mini = sum; name = itr->first;
+      }
+    }
+    cout << mini << " " << name << endl;
+  }
+}
+	

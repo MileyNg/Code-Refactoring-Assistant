@@ -1,0 +1,95 @@
+#include <iostream>
+using namespace std;
+
+
+
+int main()
+{
+	int p, q, a, n, m[8];
+	while (cin >> p >> q >> a >> n, p || q || a || n){
+		int counter = 0;
+		for (int i0 = 1; i0 <a / 10; i0++){
+			m[0] = i0;
+			if (n >= 1){
+				int s = q * m[0];
+				if (s * p / q == s / m[0]){
+					counter++;
+				}
+			}
+			for (int i1 = 1; i1 <= i0; i1++){
+				m[1] = i1;
+				if (m[0] * m[1] > a || n < 2){
+					break;
+				}
+				else{
+					int s = q * m[0] * m[1];
+					if (s * p / q == s / m[0] + s / m[1]){
+						counter++;
+					}
+				}
+				for (int i2 = 1; i2 <= i1; i2++){
+					m[2] = i2;
+					if (m[0] * m[1] * m[2] > a || n < 3){
+						break;
+					}
+					else{
+						int s = q * m[0] * m[1] * m[2];
+						if (s * p / q == s / m[0] + s / m[1] + s / m[2]){
+							counter++;
+						}
+					}
+					for (int i3 = 1; i3 <= i2; i3++){
+						m[3] = i3;
+						if (m[0] * m[1] * m[2] * m[3] > a || n < 4){
+							break;
+						}
+						else {
+							int s = q * m[0] * m[1] * m[2] * m[3];
+							if (s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3]){
+								counter++;
+							}
+						}
+						for (int i4 = 1; i4 <= i3; i4++){
+							m[4] = i4;
+							if (m[0] * m[1] * m[2] * m[3] * m[4] > a || n < 5){
+								break;
+							}
+							else {
+								int s = q * m[0] * m[1] * m[2] * m[3] * m[4];
+								if (s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4]){
+									counter++;
+								}
+							}
+							for (int i5 = 1; i5 <= i4; i5++){
+								m[5] = i5;
+								if (m[0] * m[1] * m[2] * m[3] * m[4] * m[5] > a || n < 6){
+									break;
+								}
+								else{
+									int s = q * m[0] * m[1] * m[2] * m[3] * m[4] * m[5];
+									if (s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4] + s / m[5]){
+										counter++;
+									}
+								}
+								for (int i6 = 1; i6 <= i5; i6++){
+									m[6] = i6;
+									if (m[0] * m[1] * m[2] * m[3] * m[4] * m[5] * m[6] > a || n < 7){
+										break;
+									}
+									else{
+										int s = q * m[0] * m[1] * m[2] * m[3] * m[4] * m[5] * m[6];
+										if (s * p / q == s / m[0] + s / m[1] + s / m[2] + s / m[3] + s / m[4] + s / m[5] + s / m[6]){
+											counter++;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,46 @@
+def main():
+
+    count = -1
+    data = input()
+    before_number = data[0]
+    output = []
+    for n in data:
+        if before_number == n:
+            count += 1
+
+        else:
+#             print('before_number: ' + before_number + ', count:  ' + str(count))
+#             print()
+            if before_number == '0':
+                for zero in range(count):
+                    output.append(' ')
+            else:
+                output.append(keys[int(before_number)][count])
+#                 print(keys[int(before_number)][count], end='')
+
+            before_number = n
+            count = 0
+
+    else:
+#         print('before_number: ' + before_number + ', count:  ' + str(count))
+#         print()
+        if before_number == '0':
+            for zero in range(count):
+                output.append(' ')
+        else:
+            output.append(keys[int(before_number)][count])
+#             print(keys[int(before_number)][count], end='')
+
+
+#         output.append(keys[int(before_number)][count])
+#         print(keys[int(n)][count])
+
+    print(''.join(output))
+
+
+if __name__ == '__main__':
+    while True:
+        try:
+            main()
+        except EOFError:
+            break

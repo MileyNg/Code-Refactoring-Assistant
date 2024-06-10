@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(void){
+	int n,i,j,k,*x,ic=0,del,temp;
+	char l[10];
+
+	scanf("%d",&n);
+	
+	x = malloc(sizeof(int) * n);
+
+	for(i = 0;i < n;i++){
+		scanf("%s",l);
+		if(strcmp(l,"insert") == 0){
+			scanf("%d",(x + ic));
+			ic++;
+		}else if(strcmp(l,"delete") == 0){
+			scanf("%d",&del);
+			for(j = 0;j < n;j++){
+				if(*(x + j) == del){
+					for(k = j;k < ic-1;k++){
+						temp = *(x + k);
+						*(x + k) = *(x + (k + 1));
+						*(x + (k + 1)) = temp;
+					}
+					ic--;
+					break;
+				}
+			}
+		}else if(strcmp(l,"deleteFirst") == 0){
+			scanf("%d",&del);
+				for(k = 0;k < ic;k++){
+					temp = *(x + k);
+					*(x + k) = *(x + (k + 1));
+					*(x + (k + 1)) = temp;
+				}
+			ic--;
+		}else if(strcmp(l,"deleteLast") == 0){
+			ic--;
+		}
+	}
+	k = 0;
+	for(i = ic - 1;i >= 0;i--){
+		if(k != 0){
+			printf(" ");
+		}
+		printf("%d",*(x + i));
+		k++;
+	}
+	printf("\n");
+
+	return 0;
+}

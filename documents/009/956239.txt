@@ -1,0 +1,33 @@
+#include <stdio.h>
+ 
+int main()
+{
+  char card[201] = {};
+  char *p;
+  int h, m, len, shuffle;
+  int i;
+ 
+  for(;;)
+    {
+      len = 0;
+      shuffle = 0;
+ 
+      scanf("%s", card);
+      if(card[0] == '-')
+    break;
+      for(i = 0; card[i]; i++)
+    len++;
+      scanf("%d", &h);
+      for(i = 0; i < h; i++)
+    {
+      scanf("%d", &m);
+      shuffle += m;
+    }
+ 
+      printf("%s", p=card+shuffle%len);
+      *p = '\0';
+      printf("%s\n", card);
+    }
+ 
+  return 0;
+}

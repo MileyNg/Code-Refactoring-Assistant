@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void)
+{
+    int alp[26];
+    int i=0;
+    char ch;
+    //scanf("%[^\n]s",&str);// [^]で囲むとその文字は読み込まないらしい
+    for(i=0;i<26;i++){
+        alp[i]=0;
+    }
+    // EOF:End Of File
+    while(scanf("%c",&ch)!=EOF){
+        //printf("%c",ch);//１文字の出力
+        if(('a'<=ch)&&(ch<='z')){
+            alp[ch-'a']++;//小文字の場合カウント
+        }else if(('A'<=ch)&&(ch<='Z')){
+            alp[ch-'A']++;
+        }
+    }
+    for(i=0;i<26;i++){
+        printf("%c : %d\n",'a'+i,alp[i]);
+    }
+    return 0;
+}

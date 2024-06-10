@@ -1,0 +1,29 @@
+#include<stdio.h>
+main(){
+  int a[12],i,sum=0,km=0;
+  double x,y;
+
+  while(1){
+    if(scanf("%d",&a[0]) == EOF) break;
+    for(i=1;i<12;i++){
+      scanf(",%d",&a[i]);
+    }
+    
+    for(i=0;i<10;i++){
+      sum += a[i];
+    }
+    
+    x = (double)sum/(a[10]+a[11]);
+    y = a[10]*x;
+    
+    for(i=0;i<10;i++){
+      km += a[i];
+      if(y<=km){
+	printf("%d\n",i+1);
+	sum=0; km=0;
+	break;
+      }
+    }
+  }
+  return 0;
+}

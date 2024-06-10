@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+typedef pair<string, double> sd;
+bool cmp(const sd &a, const sd &b){
+  //  if(a.second == b.second) return a.first < b.first;
+  if(a.second != b.second) return a.second > b.second;
+  else return a.first < b.first;
+}
+
+int main(){
+  int N;
+  while(scanf("%d", &N) && N){
+    int P, A, B, C, D, E, F, S, M;
+    char L[32];
+    vector<sd >ef(N);
+    rep(i, N){
+      scanf("%s%d%d%d%d%d%d%d%d%d",  L, &P, &A, &B, &C, &D, &E, &F, &S, &M);
+      ef[i] = make_pair(string(L),(double)(S * F * M - P) / (double)(A + B + C + (D + E) * M));
+      //      printf("%d %d\n", N, i);
+    }
+
+    sort(ef.begin(), ef.end(), cmp);
+    rep(i, N) puts(ef[i].first.c_str());
+    puts("#");
+  }
+  return 0;
+}

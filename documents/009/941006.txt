@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+struct State {
+    int tx, ty;
+    int kx, ky;
+    State(int tx, int ty, int kx, int ky) : tx(tx), ty(ty), kx(kx), ky(ky) {}
+    string getString(){
+        stringstream ss;
+        ss << tx << ":" << ty << ":" << kx << ":" << ky;
+        return ss.str();
+    }
+    bool isComplete(){
+        return tx == kx && ty == ky;
+    }
+};
+
+int range(int maxi, int x, int mini)
+{
+    if (maxi <= x) return maxi;
+    if (mini >= x) return mini;
+    return x;
+}
+
+int dx[] = {1, -1, 0, 0};
+int dy[] = {0, 0, 1, -1};
+
+int main()
+{
+    int w, h;
+    while (w = in(), h = in(), w){
+        int tx, ty, kx, ky;
+        tx = in();
+        ty = in();
+        kx = in();
+        ky = in();
+
+        int field[128][128] = {};
+        rep(i, h){
+            rep(j, w){
+               field[i + 1][j + 1] = in();
+            }
+        }
+
+        queue<State> Q;
+        set<string> visited;
+        State init = State(tx, ty, kx, ky);
+        visited.insert(init.getString());
+        Q.push(init);
+        bool ok = false;
+        rep(turn, 101){
+            queue<State> nQ;
+            while (!Q.empty()){
+                State state = Q.front();
+                Q.pop();
+                if (state.isComplete()){
+                    ok = true;
+                    break;
+                }
+                rep(i, 4){
+                    State n = state;
+                    n.tx = range(w, n.tx + dx[i], 1);
+                    n.kx = range(w, n.kx - dx[i], 1);
+                    n.ty = range(h, n.ty + dy[i], 1);
+                    n.ky = range(h, n.ky - dy[i], 1);
+                    if (field[n.ty][n.tx]){
+                        n.ty = state.ty;
+                        n.tx = state.tx;
+                    }
+                    if (field[n.ky][n.kx]){
+                        n.ky = state.ky;
+                        n.kx = state.kx;
+                    }
+
+                    string s = n.getString();
+                    if (visited.find(s) == visited.end()){
+                        visited.insert(s);
+                        nQ.push(n);
+                    }
+                }
+            }
+            if (ok){
+                printf("%d\n", turn);
+                break;
+            }
+            Q = nQ;
+        }
+        if (!ok){
+            puts("NA");
+        }
+    }
+    return (0);
+}

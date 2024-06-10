@@ -1,0 +1,35 @@
+#include<iostream>
+#include<list>
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#define MIN(a,b) ((a) > (b) ? (b) : (a))
+using namespace std;
+
+
+int main(){
+	long a,b,r,x,y;
+	list<long> aby;
+	
+	while(!(cin>>a>>b).eof()){
+		x=a,y=b;
+		while(1){
+			r=MAX(x,y)%MIN(x,y);
+			if(r==0) break;
+			x=MIN(x,y);
+			y=r; 
+		}
+		aby.push_back(a);
+		aby.push_back(b);
+		aby.push_back(MIN(a,b));
+		
+	}
+	list<long>::iterator it = aby.begin();
+	while(it != aby.end()){
+		a = *it, it++;
+		b = *it, it++;
+		y = *it;
+		cout << y << " "<<(a*b)/y <<endl;
+		it++;
+	}
+	
+	return 0;
+}

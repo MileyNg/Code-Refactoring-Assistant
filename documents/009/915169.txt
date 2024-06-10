@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include<string>
+#include<string.h>
+#include <math.h>
+#include<iostream>
+#include <algorithm>
+#include <map>
+#include <vector>
+#include <queue>
+using namespace  std;
+
+
+/*
+//my header
+#include "define.h"
+#include "geometry.h"*/
+
+#define MyAbs(a) ((a)>0?(a):-(a))
+#define MyEqualDoule(a,b) (MyAbs(a-b)<1e-6)
+
+#define foreach(i,n) for(i=0;i<n;++i)
+#define foreachd(i,n) for(int i=0;i<n;++i)
+#define printfInt1(n) printf("%d\n",n)
+#define scanfInt1(n) scanf("%d",&n)
+#define scanfInt2(a,b) scanf("%d%d", &a, &b)
+#define scanfInt3(a,b,c) scanf("%d%d%d", &a, &b, &c)
+#define scanfFloat2(a,b) scanf("%f%f", &a,&b)
+
+
+void init()
+{
+#ifdef _WIN32
+	freopen("1.txt", "r", stdin);
+#endif
+}
+
+void func();
+
+int main()
+{
+	init();
+	func();
+
+	return 0;
+}
+
+
+
+//譁ケ遞?class CMathEquation 
+{
+public:
+	//ax + by = c;dx + ey = d;荳疲婿遞矩怙隕∽ソ晁ッ∵怏隗」
+	static void CalcuXY(double&x, double&y, double a, double b, double c, double d,double e,double f)
+	{
+		x = (c*e-f*b)*1.0/(a*e - b*d);
+		y = (c*d-a*f)*1.0/(b*d - a*e);
+		if(MyEqualDoule(x, 0))
+			x = 0;
+		if(MyEqualDoule(y, 0))
+			y = 0;
+	}
+
+	//蟾イ遏・荳臥せ蟆ア蝨?噪蝨?ソバx?経y蜥悟濠蠕в
+	static void CalcuCircleByPoint3(double& ox, double& oy, double& r, double x1, double y1, double x2, double y2,double x3, double y3)
+	{
+		double a,b,c,d,e,f;
+
+		double dx12,dx13,dy12,dy13,dx12_2,dy12_2,dx13_2,dy13_2;
+		dx12 = x1 - x2;
+		dx12_2 = dx12 * (x1 + x2);
+		dy12 = y1 - y2;
+		dy12_2 = dy12 * (y1 + y2);
+		dx13 = x1 - x3;
+		dx13_2 = dx13 * (x1 + x3);
+		dy13 = y1 - y3;
+		dy13_2 = dy13 * (y1 + y3);
+		
+		a = dx12;
+		b = dy12;
+		c = (dx12_2 + dy12_2) / 2.0;
+		d = dy13;
+		e = dy13;
+		f = (dx13_2 + dy13_2) / 2.0;
+		CalcuXY(ox, oy, a, b, c, d, e, f);
+		r = pow((ox - x1), 2) + pow((oy - y1), 2);
+		r = sqrt(r);
+	}
+};
+
+
+void func()
+{
+	int n;
+	scanf("%d", &n);
+	while(n--)
+	{
+		double x1,y1, x2,y2,x3,y3;
+		scanf("%lf%lf%lf%lf%lf%lf", &x1, &y1, &x2, &y2, &x3, &y3);
+		double ox, oy, r;
+		CMathEquation::CalcuCircleByPoint3(ox, oy, r, x1, y1, x2, y2, x3, y3);
+		printf("%.3lf %.3lf %.3lf\n", ox, oy, r);
+	}
+}

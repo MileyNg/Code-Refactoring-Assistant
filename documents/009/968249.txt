@@ -1,0 +1,28 @@
+def caesar(enc, n)
+  dec = ""
+  a = "a".ord
+
+  for ch in enc.split("")
+    if /[a-z]/ =~ ch
+      dec += ((ch.ord - a + n) % 26 + a).chr
+    else
+      dec += ch
+    end
+  end
+
+  dec
+end
+
+### main
+
+while (line = gets)
+  enc = line.chop
+
+  for n in (0..25)
+    dec = caesar(enc, n)
+    if /\b(the|this|that)\b/ =~ dec
+      puts dec
+      break
+    end
+  end
+end

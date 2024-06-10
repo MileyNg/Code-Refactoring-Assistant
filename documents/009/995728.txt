@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> II;
+
+/** Problem0059 : Intersection of Rectangles **/
+struct  P {
+	D x, y;
+	P() {}
+	P(D x_, D y_) : x(x_), y(y_) {}
+};
+
+struct Rec {
+	P p1, p2;
+};
+
+int main()
+{
+	Rec r1, r2;
+	while (cin>>r1.p1.x>>r1.p1.y>>r1.p2.x>>r1.p2.y>>r2.p1.x>>r2.p1.y>>r2.p2.x>>r2.p2.y) {
+		if (r1.p2.x < r2.p1.x || r1.p1.x > r2.p2.x || r1.p2.y < r2.p1.y || r1.p1.y > r2.p2.y)
+			cout << "NO" << endl;
+		else
+			cout << "YES" << endl;
+	}
+}

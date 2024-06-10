@@ -1,0 +1,54 @@
+#include<stdio.h>
+
+void scan(int*[],int);
+int search(int*[],int*[],int);
+
+int main(){
+
+  int n=0,q=0,c=0;
+  int* s[10000];
+  int* t[500];
+
+  scanf("%d",&n);
+  scan(s,n);
+ 
+  scanf("%d",&q);
+  scan(t,q);
+
+  c=search(s,t,n);
+ 
+  printf("%d\n",c);
+
+  return 0;
+}
+
+void scan(int* a[], int m){
+
+  int i;
+  for(i=0;i<m;i++){
+    scanf("%d",&a[i]);
+  }
+}
+
+int search(int* s[],int* t[],int n){
+
+  int i=0,c=0;
+  int left=0;
+  int right=n;
+  int mid=0;
+
+  while(left<=right){
+    mid = (left + right) / 2;
+    if(s[mid]==t[i]){
+      c++;
+      i++;
+    } else if(s[mid] < t[i]){
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+  
+  return c;
+  
+}

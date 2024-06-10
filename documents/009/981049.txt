@@ -1,0 +1,92 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 4;
+const int M = 16;
+const int T = (1<<N);
+const double INF = (1<<30);
+
+int n,m;
+double cat[N][M];
+double memo[2][T][N];
+
+void input(){
+	cin>>n>>m;
+	rep(i,n)rep(j,m)cin>>cat[i][j];
+}
+
+bool has(int state, int i){
+	return (state&(1<<i))>0;
+}
+
+string bitstr(int state){
+	string ret = "";
+	rep(i,n) ret += has(state,i) ? "1" : "0";
+	return ret;
+}
+
+void setEdge(int state, int e[N], int* esum){
+	(*esum)=0;
+	rep(i,n){
+		if(has(state,i)){
+			e[(*esum)]=i;
+			(*esum)++;
+		}
+	}
+}
+
+double solve_dp(){
+	rep(i,2)rep(j,T)rep(k,N)memo[i][j][k]=0;
+	
+	int t = (1<<n);
+	for(int i=m-1;i>=0;i--){
+		rep(j,T)rep(k,N)memo[i%2][j][k]=0;
+		rep(j,t){
+			int edge[N];
+			int esum = 0;
+			setEdge(j, edge, &esum);
+			
+			rep(k,n){
+				if(!has(j,k))continue;
+				double maxi = 0;
+				double val1=0;
+				double winrate = cat[k][i];
+				
+				if(i!=m-1)val1 = winrate * memo[(i+1)%2][j][k];
+				else val1 = winrate;
+				
+				maxi = max(maxi, val1);
+				
+				int dstate = j^(1<<k);
+				rep(p,esum){
+					int e = edge[p];
+					if(!has(dstate,e))continue;
+					maxi = max(maxi, val1 + (1-winrate)*memo[i%2][dstate][e]);
+				}
+				memo[i%2][j][k] = maxi;
+			}
+		}
+	}
+	
+	double ans = 0;
+	rep(i,n) ans = max(ans, memo[0][t-1][i]);
+	
+	return ans;
+}
+double solve(){
+	
+	return solve_dp();
+}
+
+int main(){
+	input();
+	printf("%.12f\n",solve());
+}

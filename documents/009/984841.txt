@@ -1,0 +1,45 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<functional>
+#include<utility>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int N;
+  cin>>N;
+  vector<pair<int,int> > v;
+  while(N--){
+    int a,b;
+    cin>>a>>b;
+    v.emplace_back(b,a);
+  }
+  sort(begin(v),end(v));
+  priority_queue<int> in;
+  priority_queue<int,vector<int>,greater<int> > out;
+  long long s=0;
+  for(int i=100000;i>=0;i--){
+    while(!v.empty()&&v.back().first==i){
+      out.push(v.back().second);
+      v.pop_back();
+    }
+    while(!in.empty()&&!out.empty()&&in.top()>out.top()){
+      s+=-in.top()+out.top();
+      out.push(in.top());
+      in.push(out.top());
+      out.pop();
+      in.pop();
+    }
+    while(!out.empty()){
+      if(i*1LL*(in.size()+1)<s+out.top())break;
+      s+=out.top();
+      in.push(out.top());
+      out.pop();
+    }
+  }
+  cout<<in.size()<<endl;
+}
+
+  

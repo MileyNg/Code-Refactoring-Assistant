@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+int solve(vi v,int k){
+    int ans = 0;
+    for(int i=0; i<k; i++){
+        ans+=v[i];
+        v[i+1]^=1;
+    }
+    for(int i=v.size()-1; i>k; i--){
+        ans+=v[i];
+        v[i-1]^=1;
+    }
+    return ans+v[k];
+}
+
+int main(){
+    // vi v(100,0);
+    // rep(i,100)rep(j,100)dp[i][j]=-1;
+    // cout << solve(v,0,v.size()-1) << endl;
+    // return 0;
+
+    int h,w;
+    while(cin >> h>>w){
+        vvi c(h,vi(w));
+        rep(i,h)rep(j,w){
+            cin >> c[i][j];
+            if(i&1) c[i][j]^=1;
+        }
+
+        int ans = 0;
+        rep(i,h){
+            int t = 0;
+            rep(j,w) t = max(t, solve(c[i],j));
+            ans += t;
+        }
+        cout << ans << endl;
+    }
+}

@@ -1,0 +1,127 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct node {
+  int key;
+  struct node *next;
+  struct node *prev;
+};
+typedef struct node * NodePointer;
+NodePointer nil;
+NodePointer insert(int key);
+NodePointer delete(int key);
+void deleteFirst(void);
+void deleteLast(void);
+void deleteNode(NodePointer t);
+NodePointer finditem(int key);
+NodePointer head  ,tail;
+NodePointer n;
+int N=20;
+NodePointer insert(int key){
+  NodePointer x;
+  x = malloc(sizeof(struct node));
+  x->key = key;
+  x->next = head->next;
+  head->next = x;
+  return x;
+}
+NodePointer delete(int key){
+  NodePointer x, y;
+  x = finditem(key);
+  if(x != NULL){
+    y = x->next;
+    x->next = y->next;
+    free(y);
+  }
+  return x;
+}
+void deleteNode(NodePointer t){
+  t->prev->next = t->next;
+  t->next->prev = t->prev;
+}
+NodePointer finditem(int v){
+  NodePointer x, y;
+  y = head;
+  x = y->next;
+  while(x != tail)
+    {
+      if(x->key == v){
+	return y;
+      }
+      y = x;
+      x = y->next;
+    }
+  return NULL;
+}
+void deleteFirst(void){ 
+  NodePointer P;
+  P=head->next;
+   if(head != NULL){
+     head->next = P->next;
+   }
+   if(P->next != NULL){
+     P->next->prev=head;
+   }
+   free(P);
+}
+void deleteLast(void){
+  NodePointer t = tail->prev;
+  if(t==nil)return;
+  deleteNode(t);
+  /*  NodePointer temp;
+  temp=tail->prev;
+  puts("here");
+  tail->prev=temp->prev;
+  temp->prev->next=tail;
+  free(temp);
+  */ 
+}
+
+void trace(){
+ for(  n = head->next  ;  n != tail; n=n->next){
+    printf("%d ",n->key);
+    if(n->next != tail)
+      printf(" ");
+  }
+ printf("\n");
+}
+
+int main(){
+  int i;
+  int key;
+  char meirei[15];
+  int meireinum;
+  head =malloc(sizeof(struct node));
+  tail =malloc(sizeof(struct node));
+  n =malloc(sizeof(struct node));
+  head->next=tail;
+  scanf("%d",&key);
+  for(i=0;i<key;i++){
+    scanf(" %s",meirei);
+    if(strcmp(meirei,"deleteFirst") == 0)
+      {
+	deleteFirst();
+	continue;
+      }
+    else if(strcmp(meirei,"deleteLast") == 0)
+      {
+	deleteLast();
+	continue;
+      }
+    scanf("%d",&meireinum);
+    if(strcmp(meirei,"insert")==0){
+      insert(meireinum);
+    }
+    else if(strcmp(meirei,"delete")==0){
+      delete(meireinum);
+    }
+    trace();
+  }
+  for(  n = head->next  ;  n != tail; n=n->next){
+    printf("%d ",n->key);
+    if(n->next != tail)
+      printf(" ");
+  }
+  printf("\n");
+  return 0;
+}

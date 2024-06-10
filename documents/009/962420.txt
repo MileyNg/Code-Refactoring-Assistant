@@ -1,0 +1,31 @@
+from collections import deque
+
+def deletefirst():
+    q.popleft()
+
+def deletelast():
+    q.pop()
+
+def insert():
+    q.appendleft(cmd[1])
+
+def delete():
+    try:
+        q.remove(cmd[1])
+    except:
+        pass
+
+run = {
+    'insert': insert,
+    'delete': delete,
+    'deleteFirst': deletefirst,
+    'deleteLast': deletelast,
+}
+n = int(input())
+
+q = deque()
+for i in range(n):
+    cmd = input().strip().split()
+    run[cmd[0]]()
+
+print(' '.join(q))

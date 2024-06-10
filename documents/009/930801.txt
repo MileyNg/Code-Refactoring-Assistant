@@ -1,0 +1,46 @@
+// 2014/04/27 Tazoe
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	bool is_hamming[1000001];
+
+	for(int i=0; i<1000001; i++){
+		is_hamming[i] = false;
+	}
+
+	for(int i=1; i<1000001; i*=2){
+		for(int j=i; j<1000001; j*=3){
+			for(int k=j; k<1000001; k*=5){
+				is_hamming[k] = true;
+			}
+		}
+	}
+
+	int n_hamming[1000001];
+
+	int cnt = 0;
+	for(int i=0; i<1000001; i++){
+		if(is_hamming[i]){
+			cnt++;
+		}
+		n_hamming[i] = cnt;
+	}
+
+	while(true){
+		int m;
+		cin >> m;
+
+		if(m==0)
+			break;
+
+		int n;
+		cin >> n;
+
+		cout << n_hamming[n]-n_hamming[m-1] << endl;
+	}
+
+	return 0;
+}

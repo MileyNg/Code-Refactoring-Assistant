@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+typedef long long LL;
+bool go(LL x, LL y, LL a, LL b) {
+    if(x == a) return true;
+    if(y == b) return true;
+    if(x + y == a + b) return true;
+    if(x - y == a - b) return true;
+    return false;
+}
+
+int main(){
+    int T;
+    cin >> T;
+    while(T--){
+        LL x1, y1, x2, y2, X, Y;
+        cin >> x1 >> y1 >> x2 >> y2 >> X >> Y;
+        if(x1 == X && y1 == Y) {
+            cout << 0 << endl;
+        } else if(x2 == X && y2 == Y) {
+            cout << 0 << endl;
+        } else if(go(x1, y1, X, Y) && go(x2, y2, X, Y)) {
+            cout << 1 << endl;
+        } else if(go(x1, y1, X, Y) || go(x2, y2, X, Y)) {
+            cout << 2 << endl;
+        } else {
+            cout << 3 << endl;
+        }
+    }
+    return 0;
+}

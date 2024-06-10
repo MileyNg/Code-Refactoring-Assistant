@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int N;
+  while(scanf("%d", &N) && N){
+    int r = sqrt(N);
+    int sum = 0;
+    for(int i = 1; i <= r; i++){
+      if(i == N) continue;
+      if(N%i == 0){
+	sum += i;
+	if(N/i == N || N/i == i) continue;
+	sum += N/i;
+      }
+    }
+
+    if(sum == N) puts("perfect number");
+    else if(sum < N) puts("deficient number");
+    else if(sum > N) puts("abundant number");
+  }
+  return 0;
+}

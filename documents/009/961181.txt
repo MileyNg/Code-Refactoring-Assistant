@@ -1,0 +1,163 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+
+ll nCk(int n,int k){
+  if(n<k)return 0;
+  ll res = 1;
+  for(int i=n-k+1;i<=n;i++)res*=i;
+  for(int i=1;i<=k;i++)res/=i;
+  return res;
+}
+
+int N,M,L;
+vector<string> in;
+int a[10],b[10],c[10];
+void start_init(){
+  N=M=L=0;
+  in.clear();
+  for(int i=0;i<10;i++){
+    a[i]=b[i]=c[i]=0;
+  }
+}
+
+int input(){
+  cin>>N>>M>>L;
+  if(N==0&&M==0&&L==0)return false;
+  in.clear();in.resize(L);
+  for(int i=0;i<L;i++){
+    cin>>in[i];
+  }
+  return true;
+}
+
+bool over(vector<int>& n,vector<int>& h){
+  for(int i=0;i<n.size();i++){
+    if(n[i]>h[i]){
+      return true;
+    }
+  }
+  return false;
+}
+bool match(vector<int>& hand,vector<int>& h){
+  //cerr<<" h[0]::"<<h[0];
+  for(int i=0;i<h.size();i++){
+    if(h[i]>N){
+      return false;
+    }
+  }
+  for(int i=0;i<hand.size();i++){
+    for(int j=0;j<hand.size();j++){
+      for(int k=0;k<hand.size();k++){
+        vector<int> n(20,0);
+        for(int l=0;l<10;l++){
+          n[hand[i]+l] += a[l];
+          n[hand[j]+l] += b[l];
+          n[hand[k]+l] += c[l];
+        }
+        if(!over(n,h))return true;
+      }
+    }
+  }
+  return false;
+}
+ll count(vector<int>& hands,vector<int>& h,int s){
+  ll res = 1;
+  for(int i=0;i<h.size();i++){
+    res *= nCk(N,h[i]);
+  }
+  const int c = M - (hands[hands.size()-1] + 1) + s;
+  res *= nCk(c,s);
+  ////cerr<<"count::"<<res<<endl;
+  return res;
+}
+
+void print(vector<int> h){
+  for(auto i:h){
+    //cerr<<i<<" ";
+  }
+}
+
+ll ans = 0;
+vector<int> hands;
+void init(){
+  ans = 0;
+  hands = vector<int>(L,0);
+  for(int i=0;i<10;i++){
+    a[i]=b[i]=c[i]=0;
+  }
+  sort(in.begin(),in.end());
+  for(auto i:in){
+    switch(i[0]){
+      case 'a':
+        a[i.size()-1]++;
+        break;
+      case 'b':
+        b[i.size()-1]++;
+        break;
+      case 'c':
+        c[i.size()-1]++;
+        break;
+    }
+  }
+}
+
+void solve(int n,int startings){
+  if(!(hands[n-1]<M)){
+    //cerr<<"number err "<<n<<"::";print(hands);//cerr<<endl;
+    return;
+  }
+  if(n==L){
+    vector<int> h(20,0);
+    for(int i=0;i<hands.size();i++){
+      h[hands[i]]++;
+    }
+    //cerr<<"match    ::"<<n<<"::";print(hands);
+    if(match(hands,h)){
+      //cerr<<" true::";
+      ll tmp = count(hands,h,startings);
+      //cerr<<tmp;
+      ans += tmp;
+    }
+    //cerr<<endl;
+    return;
+  }
+  //cerr<<"pass     ::"<<n<<"::";print(hands);//cerr<<endl;
+  hands[n] = hands[n-1];
+  solve(n+1,startings);
+  hands[n] = hands[n-1]+1;
+  solve(n+1,startings);
+  hands[n] = hands[n-1]+2;
+  solve(n+1,startings+1);
+}
+
+void printabc(){
+  //cerr<<"a:";
+  for(int i=0;i<7;i++){
+    //cerr<<a[i]<<" ";
+  }//cerr<<endl;
+  //cerr<<"b:";
+  for(int i=0;i<7;i++){
+    //cerr<<b[i]<<" ";
+  }//cerr<<endl;
+  //cerr<<"c:";
+  for(int i=0;i<7;i++){
+    //cerr<<c[i]<<" ";
+  }//cerr<<endl;
+}
+
+int main(){
+  while(start_init(),input()){
+    init();
+    solve(1,1);
+    /*
+    cout<<N<<" "<<M<<" "<<L<<endl;
+    for(auto i:in){
+      cout<<i<<" ";
+    }cout<<endl;
+    */
+    printabc();
+    cout<<fixed<<setprecision(10)<<(double(ans))/(nCk(N*M,L))<<endl;
+  }
+}

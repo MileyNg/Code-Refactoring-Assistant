@@ -1,0 +1,280 @@
+#include<stdio.h>
+
+#define MAX 10
+
+int n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0, n6 = 0, n7 = 0, n8 = 0, n9 = 0;
+
+main()
+{
+	int n = 0, s = 0;
+	while(1)
+	{
+		scanf("%d %d", &n, &s);
+		if((n == 0) && (s == 0))
+		{
+			return 0;
+		}
+		printf("%d\n", calculation(n, s));
+	}
+}
+
+int calculation(int n, int s)
+{
+	int result = 0;
+	switch(n)
+	{
+	case 1:
+		result = cal1(s);
+		break;
+	case 2:
+		result = cal2(s);
+		break;
+	case 3:
+		result = cal3(s);
+		break;
+	case 4:
+		result = cal4(s);
+		break;
+	case 5:
+		result = cal5(s);
+		break;
+	case 6:
+		result = cal6(s);
+		break;
+	case 7:
+		result = cal7(s);
+		break;
+	case 8:
+		result = cal8(s);
+		break;
+	case 9:
+		result = cal9(s);
+		break;
+	}
+	return result;
+}
+
+int cal1(int s)
+{
+	int result_cal1 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		if(n1 == s)
+		{
+			result_cal1++;
+		}
+	}
+	return result_cal1;
+}
+
+int cal2(int s)
+{
+	int result_cal2 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			if((n1 + n2) == s)
+			{
+				result_cal2++;
+			}
+		}
+	}
+	return result_cal2;
+}
+
+int cal3(int s)
+{
+	int result_cal3 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				if((n1 + n2 + n3) == s)
+				{
+					result_cal3++;
+				}
+			}
+		}
+	}
+	return result_cal3;
+}
+
+int cal4(int s)
+{
+	int result_cal4 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				for(n4 = n3 + 1; n4 < MAX; n4++)
+				{
+					if((n1 + n2 + n3 + n4) == s)
+					{
+						result_cal4++;
+					}
+				}
+			}
+		}
+	}
+	return result_cal4;
+}
+
+int cal5(int s)
+{
+	int result_cal5 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				for(n4 = n3 + 1; n4 < MAX; n4++)
+				{
+					for(n5 = n4 + 1; n5 < MAX; n5++)
+					{
+						if((n1 + n2 + n3 + n4 + n5) == s)
+						{
+							result_cal5++;
+						}
+					}
+				}
+			}
+		}
+	}
+	return result_cal5;
+}
+
+int cal6(int s)
+{
+	int result_cal6 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				for(n4 = n3 + 1; n4 < MAX; n4++)
+				{
+					for(n5 = n4 + 1; n5 < MAX; n5++)
+					{
+						for(n6 = n5 + 1; n6 < MAX; n6++)
+						{
+							if((n1 + n2 + n3 + n4 + n5 + n6) == s)
+							{
+								result_cal6++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return result_cal6;
+}
+
+int cal7(int s)
+{
+	int result_cal7 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				for(n4 = n3 + 1; n4 < MAX; n4++)
+				{
+					for(n5 = n4 + 1; n5 < MAX; n5++)
+					{
+						for(n6 = n5 + 1; n6 < MAX; n6++)
+						{
+							for(n7 = n6 + 1; n7 < MAX; n7++)
+							{
+								if((n1 + n2 + n3 + n4 + n5 + n6 + n7) == s)
+								{
+									result_cal7++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return result_cal7;
+}
+
+int cal8(int s)
+{
+	int result_cal8 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				for(n4 = n3 + 1; n4 < MAX; n4++)
+				{
+					for(n5 = n4 + 1; n5 < MAX; n5++)
+					{
+						for(n6 = n5 + 1; n6 < MAX; n6++)
+						{
+							for(n7 = n6 + 1; n7 < MAX; n7++)
+							{
+								for(n8 = n7 + 1; n8 < MAX; n8++)
+								{
+									if((n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8) == s)
+									{
+										result_cal8++;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return result_cal8;
+}
+
+int cal9(int s)
+{
+	int result_cal9 = 0;
+	for(n1 = 0; n1 < MAX; n1++)
+	{
+		for(n2 = n1 + 1; n2 < MAX; n2++)
+		{
+			for(n3 = n2 + 1; n3 < MAX; n3++)
+			{
+				for(n4 = n3 + 1; n4 < MAX; n4++)
+				{
+					for(n5 = n4 + 1; n5 < MAX; n5++)
+					{
+						for(n6 = n5 + 1; n6 < MAX; n6++)
+						{
+							for(n7 = n6 + 1; n7 < MAX; n7++)
+							{
+								for(n8 = n7 + 1; n8 < MAX; n8++)
+								{
+									for(n9 = n8 + 1; n9 < MAX; n9++)
+									{
+										if((n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9) == s)
+										{
+											result_cal9++;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return result_cal9;
+}

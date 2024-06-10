@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+static vector< int > sum[5011];
+int main(){
+  for(int i = 0; i <= 5010 ; i++){
+    sum[i].resize(i + 10, 0);
+  }
+  int N, M;
+  cin >> N >> M;
+  for(int i = 0; i < M; i++){
+    int a, b, x;
+    cin >> a >> b >> x;
+    ++sum[a][b];
+    --sum[a][b + 1];
+    ++sum[a + x + 1][b + x + 2];
+    --sum[a + x + 2][b + x + 2];
+    ++sum[a + x + 2][b + 1];
+    --sum[a + x + 1][b];
+  }
+
+  for(int i = 1; i <= N + 10; i++){
+    for(int j = 1; j <= i + 5; j++){
+      sum[i][j] += sum[i - 1][j - 1];
+    }
+  }
+  for(int i = 1 ; i <= N + 10 ; i++){
+    for(int j = 1 ; j <= i + 5; j++){
+      sum[i][j] += sum[i][j - 1];
+    }
+  }
+  for(int i = 1; i <= N + 10; i++){
+    for(int j = 1; j <= i + 5; j++){
+      sum[i][j] += sum[i - 1][j];
+    }
+  }
+
+  int ret = 0, cnt = 0;
+  for(int i = 1; i <= N; i++){
+    for(int j = 1; j <= i; j++){
+      if(sum[i][j] != 0) ret++;
+    }
+  }
+  cout << ret << endl;
+}

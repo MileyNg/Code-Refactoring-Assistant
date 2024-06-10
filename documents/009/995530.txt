@@ -1,0 +1,167 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+typedef pair<int,string> term;
+
+vector<term> normalize(const vector<term>& a)
+{
+	map<string,int> f;
+	for(auto x:a){
+		sort(all(x.second));
+		f[x.second]+=x.first;
+	}
+	vector<term> b;
+	for(auto p:f) if(p.second) b.emplace_back(p.second,p.first);
+	return b;
+}
+
+vector<term> add(const vector<term>& a,const vector<term>& b)
+{
+	map<string,int> f;
+	for(auto x:a){
+		sort(all(x.second));
+		f[x.second]+=x.first;
+	}
+	for(auto x:b){
+		sort(all(x.second));
+		f[x.second]+=x.first;
+	}
+	vector<term> c;
+	for(auto p:f) if(p.second) c.emplace_back(p.second,p.first);
+	return c;
+}
+
+vector<term> mul(const vector<term>& a,const vector<term>& b)
+{
+	map<string,int> f;
+	for(auto x:a) for(auto y:b){
+		string s=x.second+y.second; sort(all(s));
+		f[s]+=x.first*y.first;
+	}
+	vector<term> c;
+	for(auto p:f) if(p.second) c.emplace_back(p.second,p.first);
+	return c;
+}
+
+vector<term> pow(const vector<term>& a,int r)
+{
+	vector<term> b(1,term(1,""));
+	rep(i,r) b=mul(b,a);
+	return b;
+}
+
+pair<vector<term>,int> parse_expr(string f,int i);
+
+pair<vector<term>,int> parse_fact(string f,int i)
+{
+	while(i<f.size() && f[i]==' ') i++;
+	vector<term> x;
+	if(f[i]=='('){
+		i++;
+		tie(x,i)=parse_expr(f,i);
+		while(i<f.size() && f[i]==' ') i++;
+		i++;
+	}
+	else if(isdigit(f[i])){
+		int n=0;
+		while(i<f.size() && isdigit(f[i]))
+			n=n*10+f[i++]-'0';
+		x.emplace_back(n,"");
+	}
+	else if(isalpha(f[i])){
+		x.emplace_back(1,f.substr(i,1));
+		i++;
+	}
+	
+	while(i<f.size() && f[i]==' ') i++;
+	if(i<f.size() && f[i]=='^'){
+		i++;
+		while(i<f.size() && f[i]==' ') i++;
+		int n=0;
+		while(i<f.size() && isdigit(f[i])){
+			n=n*10+f[i]-'0';
+			i++;
+		}
+		x=pow(x,n);
+	}
+	return mp(x,i);
+}
+
+pair<vector<term>,int> parse_term(string f,int i)
+{
+	while(i<f.size() && f[i]==' ') i++;
+	vector<term> x; tie(x,i)=parse_fact(f,i);
+	while(i<f.size() && f[i]==' ') i++;
+	while(i<f.size() && (f[i]=='(' || isdigit(f[i]) || isalpha(f[i]))){
+		vector<term> y; tie(y,i)=parse_fact(f,i);
+		x=mul(x,y);
+		while(i<f.size() && f[i]==' ') i++;
+	}
+	return mp(x,i);
+}
+
+pair<vector<term>,int> parse_expr(string f,int i)
+{
+	while(i<f.size() && f[i]==' ') i++;
+	vector<term> x; tie(x,i)=parse_term(f,i);
+	while(i<f.size() && f[i]==' ') i++;
+	while(i<f.size() && (f[i]=='+' || f[i]=='-')){
+		i++;
+		vector<term> y; tie(y,i)=parse_term(f,i);
+		x=add(x,y);
+		while(i<f.size() && f[i]==' ') i++;
+	}
+	return mp(x,i);
+}
+
+int main()
+{
+	for(string line;getline(cin,line) && line!=".";){
+		vs fs;
+		do{
+			fs.push_back(line);
+			getline(cin,line);
+		}while(line!=".");
+		
+		auto t0=normalize(parse_expr(fs[0],0).first);
+		repi(i,1,fs.size())
+			cout<<(normalize(parse_expr(fs[i],0).first)==t0?"yes":"no")<<endl;
+		cout<<'.'<<endl;
+	}
+}

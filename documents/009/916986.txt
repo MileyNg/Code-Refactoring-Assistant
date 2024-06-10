@@ -1,0 +1,163 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<map>
+#include<stack>
+#include<cstring>
+#include<cstdlib>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+
+typedef pair<int,int> pii;
+
+class Line{
+	public:
+	int sx,sy;
+	Line(){}
+	Line(int sx,int sy):sx(sx),sy(sy){}
+	
+	vector<pii> body;
+	void add(int x,int y){
+		body.push_back(pii(x-sx,y-sy));
+	}
+	
+	void rotate(){
+		rep(i,body.size()){
+			pii next;
+			next.first = -1*body[i].second;
+			next.second = body[i].first;
+			
+			body[i]=next;
+		}
+	}
+	
+	void chosei(){
+		int dx = body[1].first - body[0].first;
+		int dy = body[1].second - body[0].second;
+		
+		if(dy>0){
+			rotate();
+			rotate();
+			rotate();
+		}
+		if(dx<0){
+			rotate();
+			rotate();
+		}
+		if(dy<0){
+			rotate();
+		}
+	}
+	
+	void print(){
+		puts("print");
+		rep(i,body.size()){
+			printf("%d %d\n",body[i].first,body[i].second);
+		}puts("");
+	}
+	
+	bool equal(Line line){
+		if(body.size()!=line.body.size())return false;
+		rep(i,line.body.size()){
+			if(body[i]!=line.body[i])return false;
+		}
+		return true;
+	}
+	bool invequal(Line line){
+		if(body.size()!=line.body.size())return false;
+		rep(i,body.size()){
+			if(body[body.size()-i-1]!=line.body[i])return false;
+		}
+		return true;
+	}
+};
+int main(){
+	while(1){
+		int n;
+		cin>>n;
+		if(n==0)break;
+		
+		Line lines[111];
+		Line invlines[111];
+		rep(i,n+1){
+			int m;
+			cin>>m;
+			
+			rep(j,m){
+				int x,y;
+				cin>>x>>y;
+				
+				if(j==0)lines[i] = Line(x,y);
+				lines[i].add(x,y);
+			}
+			lines[i].chosei();
+			
+			rep(j,m){
+				int x = lines[i].body[m-j-1].first;
+				int y = lines[i].body[m-j-1].second;
+			
+				if(j==0)invlines[i] = Line(x,y);
+				invlines[i].add(x,y);
+			}
+			invlines[i].chosei();
+		}
+		
+		int ans = 0;
+		reps(i,1,n+1){
+			if(lines[0].equal(lines[i]) || lines[0].equal(invlines[i])){
+				ans++;
+				printf("%d\n",i);
+			}
+		}
+		
+		printf("+++++\n");
+	}
+}
+
+/*
+5
+5
+0 0
+2 0
+2 1
+4 1
+4 0
+5
+0 0
+0 2
+-1 2
+-1 4
+0 4
+5
+0 0
+0 1
+-2 1
+-2 2
+0 2
+5
+0 0
+0 -1
+2 -1
+2 0
+4 0
+5
+0 0
+2 0
+2 -1
+4 -1
+4 0
+5
+0 0
+2 0
+2 1
+4 1
+4 0
+
+*/

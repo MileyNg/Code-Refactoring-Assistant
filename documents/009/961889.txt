@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int MM = 10;
+int DD = 20;
+int DD_ = 19;
+
+int calc(int y, int m, int d) {
+	int ret = 0;
+	for (int i=1; i<=y; i++) {
+		if (i %3 == 0) {
+			if (i == y) {
+				ret += DD * (m-1) + d;
+			} else {
+				ret += DD * MM;
+			}
+		} else {
+			if (i == y) {
+				int dai = m/2 + m%2, shou = m/2;
+				if (m%2==0) ret += DD*dai + DD_*(shou-1) + d;
+				if (m%2==1) ret += DD*(dai-1) + DD_*shou + d;
+			} else {
+				ret += DD*MM/2 + DD_*MM/2;
+			}
+		}
+	}
+	return ret;
+}
+
+int main() {
+	int n; cin >> n;
+	
+	int kinen = calc(1000, 1, 1);
+	for (int i=0; i<n; i++) {
+		int y, m, d; cin >> y >> m >> d;
+		int birth = calc(y, m, d);
+		cout << kinen - birth << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,78 @@
+/*
+	0118:Property Distribution
+*/
+#include	<iostream>
+
+void draw(int x, int y, char c);
+bool isPointJudge(int x, int y);
+void refmap(void);
+
+char vx[4] = { 1, 0, -1, 0 };
+char vy[4] = { 0, 1, 0, -1 };
+char map[100][100];
+int mx, my;
+
+using namespace std;
+
+int main(void) {
+	while(1) {
+		refmap();
+		
+		int count = 0;
+		cin >> my >> mx;
+		if(mx == 0 && my == 0) { break; }
+		
+		for(int i = 0; i < my; i++) {
+			for(int j = 0; j < mx; j++) {
+				cin >> map[i][j];
+			}
+		}
+		for(int i = 0; i < my; i++) {
+			for(int j = 0; j < mx; j++) {
+				if(map[i][j] != 'x') {
+					if(map[i][j] == '#') {
+						count++;
+						draw(i, j, '#');
+					} else if(map[i][j] == '*') {
+						count++;
+						draw(i, j, '*');
+					} else {
+						count++;
+						draw(i, j, '@');
+					} 
+				}
+			}
+		}
+		
+		cout << count << endl;
+	}
+	
+	return 0;
+}
+
+void refmap(void) {
+	for(int i = 0; i < 100; i++) {
+		for(int j = 0; j < 100; j++) {
+			map[i][j] = 'x';
+		}
+	}
+}
+
+bool isPointJudge(int x, int y) {
+	if( (0 <= x && x < mx) && (0 <= y && y < my) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void draw(int x, int y, char c) {
+	map[x][y] = 'x';
+	for(int i = 0; i < 4; i++) {
+		int px = x + vx[i];
+		int py = y + vy[i];
+		if( isPointJudge(px, py) && map[px][py] == c ) {
+			draw(px, py, c);
+		}
+	}
+}

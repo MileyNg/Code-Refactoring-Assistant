@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+typedef pair<int, pair<int, int> > tpair;
+
+
+bool cmp(const tpair &a, const tpair &b){
+  if(a.second.first != b.second.first) return a.second.first > b.second.first;
+  else if(a.second.second != b.second.second) return a.second.second < b.second.second;
+  else return a.first < b.first;
+}
+
+
+int main(){
+  int T, P, R;
+  while(scanf("%d%d%d", &T, &P, &R) && (T||P||R)){
+    //    vector<pair<int, pair<int, int> > > t(T); // team ac p
+    vector<tpair> t(T+1);
+    int fail[11][11] = {};
+    int tid, pid, time;
+    char message[64];
+    rep(i, T+1) t[i] = make_pair(i, make_pair(0, 0));
+    rep(i, R){
+      scanf("%d%d%d", &tid, &pid, &time);
+
+      scanf("%s", message);
+      if(message[0] == 'C'){
+//	  t[tid].second.first += 1;
+//	  t[tid].second.second += fail[tid][pid] * 1200 + time;
+	  fail[tid][pid] = -1;
+      }else  fail[tid][pid]++;
+    }
+    sort(t.begin(), t.end(), cmp);
+    rep(i, T+1) if(t[i].first) printf("%d %d %d\n", t[i].first, t[i].second.first, t[i].second.second);
+  }
+  return 0;
+}

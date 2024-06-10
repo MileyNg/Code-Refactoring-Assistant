@@ -1,0 +1,25 @@
+#include<stdio.h>
+main(){
+  int w,n,A,B,a[30],b[30],c[30],i,tmp;
+
+  scanf("%d\n%d",&w,&n);
+  
+  for(i=0;i<n;i++){
+    scanf("%d,%d",&a[i],&b[i]);
+  }
+
+  for(i=0;i<w;i++){
+    c[i]=i+1;
+  }
+
+  for(i=0;i<n;i++){
+    A=a[i]-1; B=b[i]-1;
+    tmp=c[A]; c[A]=c[B]; c[B]=tmp;
+  }
+
+  for(i=0;i<w;i++){
+    printf("%d\n",c[i]);
+  }
+
+  return 0;
+}

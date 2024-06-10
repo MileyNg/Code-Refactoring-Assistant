@@ -1,0 +1,30 @@
+int main() {
+  int a[10], b, c, n;
+  bool judge;
+ 
+  cin >> n;
+  REP(i, n) {
+    REP(j, 10) cin >> a[j];
+    b = 0;
+    c = 0;
+    judge = true;
+    REP(j, 10) {
+      if(a[j] < b && a[j] < c) {
+    judge = false;
+    break;
+      }
+      else if(b < a[j] && c < a[j]) {
+    if(b > c) b = a[j];
+    else c = a[j];
+      }
+      else if(b < a[j] && c > a[j]) b = a[j];
+      else if(b > a[j] && c < a[j]) c = a[j];
+      else {
+    if(b > c) b = a[j];
+    else c = a[j];
+      }
+    }
+    if(judge) cout << "YES" << endl;
+    else cout << "NO" << endl;
+  }
+}

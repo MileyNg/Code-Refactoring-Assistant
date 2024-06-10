@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int a, b, d;
+
+bool cmp(int ax, int ay, int bx, int by){
+  if(ax+ay != bx+by) return ax+ay < bx+by;
+  return a*ax+b*ay < a*bx+b*by;
+}
+
+int main(){
+  while(scanf("%d%d%d", &a, &b, &d) && a+b+d){
+    int resx = (INF)/2, resy = (INF)/2, r, l, y;
+    rep(x, 100000){
+      r = a*x + d;
+      //      printf("%d\n", r);
+      if(!(r%b)){
+	y = r/b;
+	if(cmp(x,y,resx,resy)) resx = x, resy = y;
+      }
+      l = a*x - d;
+      if(l >= 0 && !(l%b)){
+	y = l/b;
+	if(cmp(x,y,resx,resy)) resx = x, resy = y;
+      }
+      l = d - a*x;
+      if(l >= 0 && !(l%b)){
+	y = l/b;
+	if(cmp(x,y,resx,resy)) resx = x, resy = y;
+      }
+    }
+
+    printf("%d %d\n", resx, resy);
+  }
+  return 0;
+}

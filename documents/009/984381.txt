@@ -1,0 +1,34 @@
+#include<iostream>
+
+int main(){
+    int H, W;
+    bool check;
+    while(true){
+        check = true;
+        std::cin >> H >> W;
+        if(H == 0 && W == 0)
+            break;
+        for(int i = 0; i != H; i++){
+            for(int j = 0; j != W; j++){
+                if(check){
+                    std::cout << "#";
+                    check = false;
+                }
+                else{
+                    std::cout << ".";
+                    check = true;
+                }
+            }
+            std::cout << std::endl;
+            if(W % 2 == 0){
+                if(check)
+                    check = false;
+                else
+                    check = true;
+                
+            }
+        }
+        std::cout << std::endl;
+    }
+    return 0;
+}

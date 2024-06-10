@@ -1,0 +1,23 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int keisan(int a[], int n, int limit, int c, int count, int kiji, int top) {
+	if (n == limit) {
+		return c/(kiji+count*top);
+	} else {
+		return max(keisan(a, n+1, limit, c, count, kiji, top), keisan(a, n+1, limit, c+a[n], count+1, kiji, top));
+	}
+}
+
+int main() {
+	int hyou[100] = {0};
+	int n, a, b, c, d;
+	cin >> n >> a >> b >> c;
+	for (int i = 0; i < n; i++) {
+		cin >> hyou[i];
+	}
+	cout << keisan(hyou, 0, n, c, 0, a, b) << endl;
+	return 0;
+}

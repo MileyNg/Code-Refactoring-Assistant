@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <math.h>
+double last_x;
+double last_y;
+
+void draw_polar_line(double r, double theta) {
+    double radians;
+
+    radians = theta / 180 * M_PI;
+    last_x = last_x + r*cos(radians);
+    last_y = last_y + r*sin(radians);
+    printf("%.8lf %.8lf\n", fabs(last_x), fabs(last_y));
+    if(fabs(last_x-100) < 0.00001) {
+    	exit(0);
+    }
+}
+
+void draw_fractal_line(double len, double theta, int order) {
+    if (order == 0) {
+        draw_polar_line(len, theta);
+    } else {
+        draw_fractal_line(len/3, theta, order - 1);
+        draw_fractal_line(len/3, theta + 60, order - 1);
+        draw_fractal_line(len/3, theta - 60, order - 1);
+        draw_fractal_line(len/3, theta, order - 1);
+    }
+}
+
+void koch_fractal(double size, int order) {
+    draw_fractal_line(size, 0, order);
+    draw_fractal_line(size, 120, order);
+    draw_fractal_line(size, 240, order);
+}
+
+int main(void) {
+    int n;
+    scanf("%d\n", &n);
+    last_x = 0.0;
+    last_y = 0.0;
+ 
+    printf("%.8lf %.8lf\n", 0.0, 0.0);
+    koch_fractal(100.0, n);
+    return 0;
+}

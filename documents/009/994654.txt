@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <iomanip>
+using namespace std;
+ 
+int main() {
+ 
+  string in;
+ 
+  while( true ) {
+   if ( cin.eof() ) break;
+ 
+    getline( cin, in );
+    if ( in.size() == 0 ) break;
+ 
+    stack<double> s;
+ 
+    long long int k = 0;
+    long long int d = 0;
+    
+    bool input_num = false;
+    for ( int i = 0; i < in.size(); i++ ) {
+      if ( in[i] >= '0' && in[i] <= '9' ) {
+        k *= 10;
+        k += in[i] - '0';
+        d *= 10;
+        input_num = true;
+      }else if ( input_num && in[i] == ' ' ) {
+        if ( d == 0 ) {
+          s.push( 1.00 * k );
+        }else {
+          s.push( 1.00 * k / d );
+        }
+        k = 0;
+        d = 0;
+        input_num = false;
+      }else if ( in[i] == '.' ) {
+        d = 1;
+	input_num = false;
+      }else {
+        double a, b;
+        a = s.top();
+        s.pop();
+        b = s.top();
+        s.pop();
+        if ( in[i] == '+' ) {
+          //      cout << a << " + " << b << endl;
+          b += a;
+        }else if ( in[i] == '-' ) {
+          //cout << a << " - " << b << endl;
+          b -= a;
+        }else if ( in[i] == '*' ) {
+          //cout << a << " * " << b << endl;
+          b *= a;
+        }else if ( in[i] == '/' ) {
+          //cout << a << " / " << b << endl;
+          b /= a;
+        }
+        s.push( b );
+        i++;
+        input_num = false;
+      }
+    }
+ 
+    cout << fixed << setprecision( 10 ) << s.top() << endl;
+ 
+  }
+ 
+  return 0;
+ 
+}

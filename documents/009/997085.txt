@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int n;
+
+int parent(int i) {
+	return i / 2;
+}
+
+int left(int i) {
+	return 2 * i;
+}
+
+int right(int i) {
+	return 2 * i + 1;
+}
+
+void swap(int *x, int *y) {
+	int tmp;
+
+	tmp = *x;
+	*x = *y;
+	*y = tmp;
+}
+
+void maxHeapify(int *A, int i) {
+	int l, r, largest;
+
+	l = left(i);
+	r = right(i);
+
+	if (l <= n && A[l] > A[i]) largest = l;
+	else largest = i;
+
+	if (r <= n && A[r] > A[largest]) largest = r;
+	if (largest != i) {
+		swap(&A[i], &A[largest]);
+		maxHeapify(A, largest);
+	}
+}
+
+void buildHeap(int *A) {
+	int i;
+
+	for (i = (n / 2); i >= 1; i--) {
+		maxHeapify(A, i);
+	}
+}
+
+main() {
+	int *node;
+	int i;
+
+	scanf("%d", &n);
+
+	node = (int*)malloc(sizeof(int) * (n + 1));
+
+	for (i = 1; i <= n; i++) scanf("%d", &node[i]);
+
+	buildHeap(node);
+
+	for (i = 1; i <= n; i++) printf(" %d", node[i]);
+
+	free(node);
+
+	return 0;
+}

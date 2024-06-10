@@ -1,0 +1,44 @@
+import std.algorithm;
+import std.array;
+import std.conv;
+import std.range;
+import std.stdio;
+import std.string;
+import std.typecons;
+import std.math;
+import std.exception;
+import std.bigint;
+
+
+T[] readlnSome(T)(){
+    return array(readln().split().map!(a => to!T(a))());
+}
+
+
+T readlnOne(T)(){
+    return to!T(readln().split()[0]);
+}
+
+
+void main()
+{
+    while(!stdin.eof)
+    {
+        auto coefs = readlnSome!int()[0 .. 6];
+        writefln("%(%.3f %)", solve([coefs[0 .. 2], coefs[3 .. 5]], [coefs[2], coefs[5]]));
+    }
+}
+
+
+real[] solve(int[][] a, int[] x)
+{
+    real det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+
+    real[][] invA = [
+        [a[1][1] / det, -a[0][1] / det],
+        [-a[1][0] / det, a[0][0] / det]
+    ];
+
+    return [invA[0][0] * x[0] + invA[0][1] * x[1],
+            invA[1][0] * x[0] + invA[1][1] * x[1]];
+}

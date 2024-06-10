@@ -1,0 +1,67 @@
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+
+/** Problem 1130 : Red and Black **/
+int main()
+{
+	bool field[20][20];
+	bool vis[20][20];
+	int W, H, sx, sy; char c;
+	
+	while (cin >> W >> H, W||H) {
+		int ans = 0;
+		
+		rep(y, H) {
+			rep(x, W) {
+				cin >> c;
+				if (c=='.') {
+					field[x][y]=true;
+				} else if (c=='@') {
+					field[x][y]=true;
+					sx = x; sy = y;
+				} else {
+					field[x][y] = false;
+				}
+				vis[x][y] = false;
+			}
+		}
+		
+		queue<P> Q;
+		Q.push(P(sx, sy));
+		
+		while (Q.size()!= 0) {
+			P p = Q.front(); Q.pop();
+			if (!vis[p.first][p.second]) {
+				ans++;
+				vis[p.first][p.second]=true;
+			}
+			
+			rep(i, 4) {
+				int nx = p.first+dx[i], ny=p.second+dy[i];
+				if (0<= nx && nx < W && 0 <= ny && ny < H && field[nx][ny] && !vis[nx][ny])
+					Q.push(P(nx, ny));
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void) {
+	int a;
+	int ans[3]={0,0,0};
+	int i,j,k;
+	int flag;
+	
+	for(i=0;i<10;i++){
+		scanf("%d",&a);
+		j=0;
+		flag=0;
+		while((flag==0)&&(j<3)){
+			if(ans[j]<a){
+				for(k=2;k>j;k--){
+					ans[k]=ans[k-1];
+				}
+				ans[j]=a;
+				flag=1;
+			}
+			j++;
+		}
+	}
+	
+	for(i=0;i<3;i++){
+		printf("%d\n",ans[i]);
+	}
+	
+	return 0;
+}

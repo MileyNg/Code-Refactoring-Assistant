@@ -1,0 +1,25 @@
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i < ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 0, n )
+
+#define MAX_N 100000
+
+int main() {
+	int n, q;
+	int nums[ MAX_N ];
+	scanf( "%d", &n );
+	REP( i, n ) scanf( "%d", &nums[ i ] );
+	scanf( "%d", &q );
+	int ans = 0;
+	REP( i, q ) {
+		int num;
+		scanf( "%d", &num );
+		if( binary_search( nums, nums + n, num ) ) ++ans;  // 二分探索
+	}
+	printf( "%d\n", ans );
+	return 0;
+}

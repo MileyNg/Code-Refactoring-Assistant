@@ -1,0 +1,21 @@
+#include<stdio.h>
+#include<math.h>
+
+int main(){
+  int i,j,n,array[10000],sum=0;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&array[i]);
+  }
+  for(i=0;i<n;i++){
+    for(j=2;j<=sqrt(array[i]);j++){
+      if(array[i]%j == 0){
+	sum--;
+	break;
+      }
+    }
+    sum++;
+  }
+  
+  printf("%d\n",sum);
+}

@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int p;
+string s;
+
+bool is_digit(char ch){
+    if ('0' <= ch && ch <= '9') {
+        return true;
+    }
+    return false;
+}
+
+int dfs(){
+    vector<int> v;
+    while (p < s.size()) {
+        if (is_digit(s[p])) {
+            int res = 0;
+            while (is_digit(s[p])) {
+                res *= 10;
+                res += s[p] - '0';
+                p++;
+            }
+            v.push_back((res + 1) / 2);
+        }else if (s[p] == '['){
+            p++;
+            v.push_back(dfs());
+        }else if (s[p] == ']'){
+            p++;
+            int res = 0;
+            int n = v.size();
+            vector<int> a = v;
+            sort(a.begin(), a.end());
+            for (int i = 0; i <= n / 2; i++) {
+                res += a[i];
+            }
+            return res;
+        }
+    }
+    return 0;
+}
+
+int main(){
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> s;
+        p = 1;
+        cout << dfs() << endl;
+    }
+    return 0;
+}

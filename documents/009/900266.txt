@@ -1,0 +1,50 @@
+#include <iostream>
+#include <queue>
+
+#define MAX_N 100
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n,r;
+	int p,c;
+	int h[MAX_N];
+
+	while(1){
+
+		cin>>n>>r;
+		if (n+r==0){
+			break;
+		}
+
+		for(int i1=0;i1<n;i1++){
+			h[i1]=n-i1;
+		}
+
+		for(int i1=0;i1<r;i1++){
+			cin>>p>>c;
+			queue<int> q1;
+			queue<int> q2;
+
+			for(int i2=0;i2<p-1;i2++){
+				q1.push(h[i2]);
+			}
+			for(int i2=0;i2<c;i2++){
+				q2.push(h[i2+p-1]);
+			}
+			for(int i2=0;i2<p-1+c;i2++){
+				if(i2<c) {
+					h[i2]=q2.front();
+					q2.pop();
+				}
+				else {
+					h[i2]=q1.front();
+					q1.pop();
+				}
+			}
+		}
+		cout<<h[0]<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+struct Edge {
+    int to, t, m;
+    LL v;
+};
+
+void dfs(int v, int parent, const vector<vector<Edge>> &graph, vector<pair<int,Edge>> &ord) {
+    for(const auto &e : graph[v]) {
+        if(e.to == parent) continue;
+        ord.push_back(make_pair(e.to, e));
+        dfs(e.to, v, graph, ord);
+        ord.push_back(make_pair(v, e));
+    }
+}
+
+bool solve() {
+    int N, T;
+    if(!(cin >> N >> T)) return false;
+    if(!N && !T) return false;
+
+    vector<vector<Edge>> graph(N);
+    for(int i = 0; i < N-1; ++i) {
+        int a, b, t, m;
+        LL v;
+        cin >> a >> b >> t >> m >> v;
+        --a; --b;
+        graph[a].push_back((Edge){b, t, m, v});
+        graph[b].push_back((Edge){a, t, m, v});
+    }
+    
+    vector<pair<int,Edge>> ord;
+    ord.push_back(make_pair(0, Edge()));
+    dfs(0, -1, graph, ord);
+    const int M = ord.size();
+    vector<vector<LL>> dp(M, vector<LL>(T+1, -1));
+    dp[0][0] = 0;
+    for(int i = 1; i < M; ++i) {
+        const int v = ord[i].first;
+        const Edge &e = ord[i].second;
+        if(v != e.to) { //back
+            int rem = e.m;
+            // should pay 2
+            for(int t = T; t >= 0; --t) {
+                if(t-e.t*2 >= 0 && dp[i-1][t-e.t*2] >= 0) dp[i][t] = dp[i-1][t-e.t*2] + min(2, e.m)*e.v;
+            }
+            rem -= min(2, e.m);
+            // optionally pay 1 if e.m is odd
+            if(rem % 2 == 1) {
+                for(int t = T; t >= 0; --t) {
+                    if(t-e.t*2 >= 0 && dp[i][t-e.t*2] >= 0) dp[i][t] = max(dp[i][t], dp[i][t-e.t*2] + e.v);
+                }
+                --rem;
+            }
+            // binary dp
+            for(int k = 2; rem > 0; k *= 2) {
+                const int s = min(k, rem);
+                const int dt = e.t * s;
+                const int dv = e.v * s;
+                for(int t = T; t >= 0; --t) {
+                    if(t-dt >= 0 && dp[i][t-dt] >= 0) dp[i][t] = max(dp[i][t], dp[i][t-dt] + dv);
+                }
+                rem -= s;
+            }
+        } else {
+            dp[i] = dp[i-1];
+        }
+        // Ignore current subtree
+        for(int j = i-1; j >= 0; --j) {
+            if(ord[j].first == v) {
+                for(int t = 0; t <= T; ++t) {
+                    dp[i][t] = max(dp[i][t], dp[j][t]);
+                }
+                break;
+            }
+        }
+        /*
+        cout << i << ' ' << v << ": ";
+        for(auto val : dp[i]) {
+            cout << val << ' ';
+        }
+        cout << endl;
+        */
+    }
+    cout << *max_element(dp[M-1].begin(), dp[M-1].end()) << endl;
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

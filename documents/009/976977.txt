@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+vector<string>con(10);
+
+int main(){
+  con[1] = "',.!?";
+  con[2] = "abcABC";
+  con[3] = "defDEF";
+  con[4] = "ghiGHI";
+  con[5] = "jklJKL";
+  con[6] = "mnoMNO";
+  con[7] = "pqrsPQRS";
+  con[8] = "tuvTUV";
+  con[9] = "wxyzWXYZ";
+
+  char in[1000000];
+  while(~scanf("%s", in)){
+    int now;
+    string res = "";
+    int c = 0;
+    rep(i, strlen(in)){
+      //      printf("%d ", i);
+      if(i == 0){ now = in[i]-'0'; c = -1;}
+      if(now == in[i]-'0'){
+	if(now == 0){
+	  res += " ";
+	}else{
+c++;
+//	  c = (c+1)%con[now].size();
+	}
+      }else{
+	res += con[now][c%con[now].size()];
+	now = in[i]-'0';
+	c = 0;
+      }
+      //      printf("%d\n", now);
+    }
+    if(now) res += con[now][c];
+    cout << res << endl;
+  }
+  return 0;
+}

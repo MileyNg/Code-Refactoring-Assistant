@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+typedef struct command{
+	int data;
+	struct command *next;
+	struct command *prev;
+}COMMAND;
+COMMAND *root;
+
+void add(COMMAND *);
+void de(COMMAND *,int *);
+void delast(COMMAND *);
+void fre(COMMAND *);
+
+int main(void){
+	COMMAND *p;
+	int n,i,j,k,del,temp,count=0;
+	char l[10];
+
+	scanf("%d",&n);
+
+
+	p->prev = NULL;
+
+	for(i = 0;i < n;i++){
+		scanf("%s",l);
+		if(strcmp(l,"insert") == 0){
+			if(p->prev == NULL){//１週目
+				root = p;
+				add(p);
+			}else{//２週目以降
+				add(p);
+			}
+			p = p->next;
+			count ++;
+		}else if(strcmp(l,"delete") == 0){
+			p = root;
+			de(p,&count);
+			count --;
+			for(p = root->next;;p = p->next){
+				if(p->next == NULL){
+					break;
+				}
+			}
+		}
+		else if(strcmp(l,"deleteFirst") == 0){
+			p = p->prev;
+			free(p->next);
+			p->next = NULL;
+		}else if(strcmp(l,"deleteLast") == 0){
+			p = root;
+			delast(p);
+			for(p = root->next;;p = p->next){
+				if(p->next == NULL){
+					break;
+				}
+			}
+		}
+	}
+
+	for(p = root->next;p->next != NULL;p = p->next){
+		printf("%d\n",p->data);
+	}
+	printf("%d\n",p->data);
+	fre(p);
+
+	return 0;
+}
+
+void add(COMMAND *p){
+	COMMAND *tem;
+	
+	tem = (COMMAND *)malloc(sizeof(COMMAND));
+	tem->next = NULL;
+	tem->prev = p;
+	scanf("%d",&tem->data);
+	p->next = tem;
+}
+
+void de(COMMAND *p,int *count){
+	COMMAND *keep;
+	int key;
+	
+	scanf("%d",&key);
+	
+	while(p->data != key){
+		p = p->next;
+	}
+	if(*count == 1){
+		keep = p;
+		p->next = NULL;
+	}else if(p->next == NULL){
+		keep = p;
+		p = p->prev;
+		p->next = NULL;
+	}else{
+		p = p->prev;
+		p->next = p->next->next;
+		p = p->next;
+		keep = p->prev;
+		p->prev = p->prev->prev;
+	}
+	p = keep;
+	free(p);
+}
+void delast(COMMAND *p){
+	COMMAND *keep;
+	
+	keep = p->next;
+	p->next = p->next->next;
+	p = p->next;
+	p->prev = p->prev->prev;
+	p = keep;
+	free(p);
+}
+
+void fre(COMMAND *p){
+	COMMAND *tmp;
+	while (p->next != NULL) {
+		tmp = p->next;
+  		p->next = tmp->next;
+   		free(tmp);
+	}
+}

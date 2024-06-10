@@ -1,0 +1,150 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+typedef std::string::const_iterator State;
+
+// expr: term (+/-) term
+// term: number (*//) number
+// factor: (expr) / number
+// number: [0-9]+
+
+int expr(State&, const int&);
+
+int mod_inv(int a, int p){
+    int n = p - 2, res = 1;
+    
+    while(n > 0){
+        if(n & 1){res = res * a % p;}
+        a = a * a % p;
+        n >>= 1;
+    }
+
+    return res;
+}
+
+int number(State& begin, const int& p){
+    int res = 0;
+
+    while(std::isdigit(*begin)){
+        res = (res * 10 + *begin - '0') % p;
+        begin += 1;
+    }
+
+    return res;
+}
+
+int factor(State& begin, const int& p){
+    int res;
+
+    if(*begin == '('){
+        begin += 1;
+        res = expr(begin, p);
+        begin += 1;
+    }else{
+        res = number(begin, p);
+    }
+
+    return res;
+}
+
+int term(State& begin, const int& p){
+    int res = factor(begin, p);
+
+    for(;;){
+        if(*begin == '*'){
+            begin += 1;
+            res = (res * factor(begin, p)) % p;
+        }else if(*begin == '/'){
+            begin += 1;
+
+            int rhs = factor(begin, p);
+            if(rhs == 0){return -1;}
+            res = (res * mod_inv(rhs, p)) % p;
+        }else{
+            break;
+        }
+    }
+
+    return res;
+}
+
+int expr(State& begin, const int& p){
+    int res = term(begin, p);
+    if(res == -1){return -1;}
+
+    for(;;){
+        if(*begin == '+'){
+            begin += 1;
+            
+            int rhs = term(begin, p);
+            if(rhs == -1){return -1;}
+            res = (res + rhs) % p;
+        }else if(*begin == '-'){
+            begin += 1;
+
+            int rhs = term(begin, p);
+            if(rhs == -1){return -1;}
+            res = (res + p - rhs) % p;
+        }else{
+            break;
+        }
+    }
+    
+    return res;
+}
+
+int main(){
+    std::string line;
+    while(true){
+        std::getline(std::cin, line);
+
+        int p = 0;
+        std::string expression;
+        bool didAcross = false;
+
+        REP(i, line.size()){
+            if(!didAcross){
+                if(std::isdigit(line[i])){
+                    p = 10 * p + line[i] - '0';
+                }else{
+                    didAcross = true;
+                }
+            }else{
+                if(!std::isspace(line[i])){
+                    expression += line[i];
+                }
+            }
+        }
+
+        if(p == 0){break;}
+
+        State begin = expression.begin();
+
+        int res = expr(begin, p);
+        if(res > 0){
+            std::cout << expression << " = " << res << " (mod " << p << ")" << std::endl;
+        }else{
+            std::cout << "NG" << std::endl;
+        }
+    }
+}

@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, sales, num, sales;
+	int i, j, mem;
+	long long int staf[4005][2];
+	int flag;
+	
+	while (1){
+		
+		scanf("%d", &n);
+		
+		if (n == 0) break;
+		
+		mem = 0;
+		
+		for (i = 0; i < n; i++){
+			scanf("%d %d %d", &num, &cost, &sales);
+			flag = 0;
+			
+			for (j = 0; j < mem; j++){
+				if (staf[j][0] == num){
+					staf[j][1] += cost * sales;
+					flag = 1;
+				}
+			}
+			
+			if (flag == 0) {
+				staf[i][0] = num;
+				staf[i][1] = cost * sales;
+				mem++;
+			}
+		}
+		flag = 0;
+		for (i = 0; i < mem; i++){
+			if (staf[i][1] >= 1000000){
+				printf("%lld\n", staf[i][0]);
+				flag = 1;
+			}
+		}
+		
+		if (flag == 0) puts("NA");
+	}
+	return (0);
+}
+		
+		

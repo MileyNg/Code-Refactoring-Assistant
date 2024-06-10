@@ -1,0 +1,15 @@
+#include <stdio.h>
+#define N 200000
+int main(){
+  int i,j,n,A[N];
+  int max=0;
+  scanf("%d",&n);
+  for(i=0;i<n;i++) scanf("%d",&A[i]);
+  for(i=0;n-i-1!=0;i++){
+    for(j=1;n-j-1>=0;j++){
+      if(max<A[n-i-1]-A[n-j-1])
+	max=A[n-i-1]-A[n-j-1];}
+  }
+  printf("%d\n",max);
+  return 0;
+}

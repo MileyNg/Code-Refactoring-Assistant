@@ -1,0 +1,73 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cassert>
+using namespace std;
+#define INF (1<<24)
+
+bool isNum(char ch){return ('0'<=ch&&ch<='9');}
+
+struct calcStr{
+  string s;
+  int pos,len;
+
+  void init(){ pos=0;len=s.size();}
+
+  int head2Num(){
+    //bool f=false;
+    //if(s[pos]=='-'){f=true;pos++;}
+    int res=0;
+    while(pos<len){
+      if(isNum(s[pos])){
+	res*=10;
+	res+=(s[pos]-'0');
+	pos++;
+      }else break;
+    }
+    //if(f)res*=-1;
+    return res;
+  }
+  
+  int getNum(){
+    int res;
+    if(s[pos]=='('){
+      pos++;
+      res = getAns();
+    }else res=head2Num();
+
+    if(s[pos]=='*'){
+      pos++;
+      return res*getNum();
+    }else if(s[pos]=='/'){
+      pos++;
+      return res/getNum();
+    }else{
+      return res;
+    }
+  }
+  
+  int getAns(){
+    int res=getNum(),num;
+    while(1){
+      if(s[pos]==')'){pos++;break;}
+      if(s[pos]=='=')break;
+      char ch=s[pos++];
+      num=getNum();
+      if(ch=='+')res+=num;
+      else if(ch=='-')res-=num;
+      else assert(0);
+    }
+    return res;
+  }
+};
+
+int main(){
+  int Tc;cin>>Tc;
+  calcStr a;
+  while(Tc--){
+    cin>>a.s;
+    a.init();
+    cout<<a.getAns()<<endl;
+  }
+  return 0;
+}

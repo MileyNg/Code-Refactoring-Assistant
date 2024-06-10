@@ -1,0 +1,91 @@
+#include <stdio.h>
+
+#define N 2000001
+#define SENTINEL -1
+
+int count = 0;
+int A[N];
+
+int parent(int i){
+  return i / 2;
+}
+
+int left(int i){
+  return 2 * i;
+}
+
+int right(int i){
+  return 2 * i + 1;
+}
+
+void maxHeapify(int A[], int i){
+  int l, r, largest, buf;
+  
+  l = left(i);
+  r = right(i);
+  
+  if(l <= count && A[l] > A[i]) largest = l;
+  else largest = i;
+  
+  if(r <= count && A[r] > A[largest]) largest = r;
+  
+  if(largest != i){
+    buf = A[i];
+    A[i] = A[largest];
+    A[largest] = buf;
+    maxHeapify(A, largest);
+  }
+}
+
+void heapIncreaseKey(int A[], int i, int key){
+  int buf;
+  
+  if(key < A[i]) return;  
+  
+  A[i] = key;
+  while(i > 1 && A[parent(i)] < A[i]){
+    buf = A[i];
+    A[i] = A[count / 2];
+    A[count / 2] = buf;
+    i = count / 2;    
+  }
+}
+
+void maxHeapInsert(int A[], int key){
+  count++;
+  
+  A[count] = SENTINEL;
+  
+  heapIncreaseKey(A, count, key);
+}
+
+int heapExtractMax(int A[]){
+  int max;
+  
+  if(count < 1) return;
+  
+  max = A[1];
+  A[1] = A[count];
+  count--;
+  
+  maxHeapify(A, 1);
+  return max;
+}
+
+int main(){
+  int key;
+  char c[7];
+  
+  for(;;){
+    scanf("%s", c);
+    if(c[0] == 'i'){
+      scanf("%d", &key);
+      maxHeapInsert(A, key);
+    }
+    else if(c[0] == 'e' && c[1] == 'x'){
+      printf("%d\n",heapExtractMax(A));
+    }
+    else break;
+  }
+  return 0;
+}

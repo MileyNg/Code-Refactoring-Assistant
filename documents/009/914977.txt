@@ -1,0 +1,43 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+using namespace std;
+
+stack<char> block;
+queue<char> output;
+
+void push(char a) {
+    block.push(a);
+}
+
+void pop() {
+    block.pop();
+}
+
+int main(void) {
+    string buf_opt;
+    char buf_value;
+    int counter = 0;
+    
+    while(true) {
+        cin >> buf_opt;
+        
+        if(buf_opt == "push") {
+            cin >> buf_value;
+            push(buf_value);
+            counter++;
+        } else if(buf_opt == "pop") {
+            output.push(block.top());
+            pop();
+        } else {
+            break;
+        }
+    }
+    
+    while(!output.empty()) {
+        cout << output.front() << endl;
+        output.pop();
+    }
+    
+    return(0);
+}

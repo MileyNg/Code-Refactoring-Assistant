@@ -1,0 +1,257 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <complex>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 30;
+
+
+// 以下 幾何部分
+template<class T> bool operator==(T a, T b){return abs(a-b)< eps;}
+template<class T> int sig(T r) {return (r==0||r==-0) ? 0 : r > 0 ? 1 : -1;}
+#define X real()
+#define Y imag()
+#define mp make_pair
+
+typedef bool B;
+typedef long double D;
+typedef complex<D> P;
+typedef pair <P,P> L;
+typedef struct {P c;D r;} C;
+typedef struct {P c;D a,b;} E; // 楕円も追加予定
+typedef vector <P>Pol;
+
+// ソートのキー
+B cmp_x(const P &a,const P &b){ return (abs(a.X-b.X)<eps ) ?  a.Y<b.Y : a.X<b.X;}  // base x
+B cmp_y(const P &a,const P &b){ return (abs(a.Y-b.Y)<eps ) ?  a.X<b.X : a.Y<b.Y;}  // base y
+B cmp_a(const P &a,const P &b){ return (abs(arg(a)-arg(b))<eps ) ?  norm(a) < norm(b) : arg(a)<arg(b);} // base arg
+
+
+// 基本操作
+// verify
+D ip(P a, P b) {return a.X * b.X + a.Y * b.Y;}
+D ep(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+D sr(D a) {return sqrt(max(a, (D)0));}
+P vec(L l){return l.second-l.first;}
+
+
+// 点
+D toRagian(D degree){ return degree*pi/180.0;}
+D ang (P p){return arg(p);}
+D ang (P base, P a, P b) {return arg( (b - base) / (a - base) );} // base 中心
+P rot (P base, P a, D theta){return base+polar( abs(a-base), arg(a-base)+theta );}
+
+
+// ccw 
+enum CCW{FRONT = 1, RIGHT = 2, BACK = 4, LEFT = 8, MID = 16, ON=FRONT|BACK|MID };
+
+int ccw(P base, P a, P b) {              //点aと点bが与えられた問いに
+  a -= base; b -= base;
+  if (ep(a, b) > 0)   	 return LEFT;    // counter clockwise
+  if (ep(a, b) < 0)      return RIGHT;   // clockwise
+  if (ip(a, b) < 0)      return BACK;    // b--base--a on line
+  if (norm(a) < norm(b)) return FRONT;   // base--a--b on line
+  						 return MID;     // base--b--a on line  aとbの線分判定はこれ
+}
+
+
+
+// 線分 直線
+	// 点と直線の距離
+	// 点と線分の距離
+	// 直線と直線の距離
+	
+
+B iver(L a, L b) {return ip(vec(a),vec(b) )== 0.0;}
+B ipar(L a, L b) {return ep(vec(a),vec(b) )== 0.0;}
+
+
+// 交点
+P pLL(L a,L b){ return a.first+vec(a)*ep(vec(b),b.first-a.first)/ep(vec(b), vec(a));}
+
+
+// 点と直線と線分関連の交差判定
+
+B iLL(L l1,L l2){ return !ipar(l1,l2);}
+B eqL(L a, L b) {return !iLL(a, b) && ep(vec(a), b.first - a.first)==0;}
+B iLS(L a, L b)  {return sig(ep(vec(a), b.first - a.first)) * sig(ep(vec(a), b.second - a.first)) <= 0;}
+B iLSs(L a, L b) {return sig(ep(vec(a), b.first - a.first)) * sig(ep(vec(a), b.second - a.first)) <  0;}
+B iSS(L a, L b) {
+	int cwa = ccw(a.first,a.second, b.first) | ccw(a.first,a.second, b.second);
+	int cwb = ccw(b.first,b.second, a.first) | ccw(b.first,b.second, a.second);
+	return ((cwa | cwb) & MID) || ((cwa & cwb) == (LEFT | RIGHT));
+}
+B iSSs(L a, L b) {
+	int cwa = ccw(a.first,a.second, b.first) | ccw(a.first,a.second, b.second);
+	int cwb = ccw(b.first,b.second, a.first) | ccw(b.first,b.second, a.second);
+	return (cwa & cwb) == (LEFT | RIGHT);
+}
+
+// 点と直線と線分関連の距離
+
+D dLP(L l,P p){ return abs( ep(vec(l),p-l.first) )/abs(vec(l));}
+D dSP(L s,P p){
+	if (sig( ip( vec(s), p - s.first)) <= 0) return abs(p - s.first);
+	if (sig( ip(-vec(s), p - s.second)) <= 0) return abs(p - s.second);
+	return dLP(s,p);
+}
+D dLL(L a,L b){ return iLL(a,b) ? 0 : dLP(a,b.first);}
+D dLS(L a,L b){ return iLS(a,b) ? 0 : min(dLP(a, b.first), dLP(a, b.second));}
+D dSS(L a,L b){ return iSS(a,b) ? 0 : min( min(dSP(a,b.first),dSP(a,b.second)),min(dSP(b,a.first),dSP(b,a.second)));}
+
+
+
+// 円
+
+enum RCC{A_IN_B=1,B_IN_A=2,A_ON_B=4,B_ON_A=8,ISC=16,ON_OUT=32,OUT=64 };
+
+
+int rCC(C a,C b){
+	D d=abs(a.c-b.c);
+	int res=0;
+	if(a.r+b.r< d) res|=OUT;
+	if(a.r+b.r==d) res|=ON_OUT;
+	if(abs(a.r-b.r) < d && d < a.r+b.r) res|=ISC;
+	if(d==b.r-a.r) res|=A_ON_B;
+	if(d< b.r-a.r) res|=A_IN_B;
+	if(d==a.r-b.r) res|=B_ON_A;
+	if(d< a.r-b.r) res|=B_IN_A;
+	return res;
+}
+
+Pol pCC(C a,C b){
+	Pol res;
+	int rel=rCC(a,b);
+	if(rel==(A_ON_B|B_ON_A)){
+		res.pb(a.c+P(a.r,0));
+		res.pb(a.c+P(-a.r,0));
+		res.pb(a.c+P(0,a.r));
+		res.pb(a.c+P(0,-a.r));
+	}else if(rel==ISC){
+		D d = abs(b.c - a.c);
+		D x = (d * d + a.r * a.r - b.r * b.r) / (2 * d);
+		P e = (b.c - a.c) / abs(b.c - a.c), w = e * P(0, 1) * sqrt(max(a.r * a.r - x * x, (D)0));
+		res.pb(a.c + e * x - w);
+		res.pb(a.c + e * x + w);	
+	}else if(rel&(A_ON_B|B_ON_A|ON_OUT)){
+		D d = abs(b.c - a.c);
+ 		D x = (d * d + a.r * a.r - b.r * b.r) / (2 * d);
+ 		P e = (b.c - a.c) / abs(b.c - a.c);
+  		res.pb(a.c + e * x);
+	}
+	return res;
+}
+
+D cost[210][210];
+C cir[110];
+L lines[110];
+P points[210];
+int n,m;
+
+int convert(int i){
+	if(i==0)
+		return -1;
+	else if(i==m-1)
+		return n-1;
+	else
+		return (i-1)/2;
+}
+
+int main(void){
+	while(cin >> n,n){
+		rep(i,210)rep(j,210) cost[i][j]=((i==j)?0:inf);
+
+		rep(i,n){
+			int x,y,r;
+			cin >> x >> y >> r;
+			cir[i].c=P(x,y);
+			cir[i].r=r;
+		}
+
+		m=2*n;
+
+		points[0]=cir[0].c;
+		rep(i,n-1){
+			Pol res=pCC(cir[i],cir[i+1]);
+			points[2*i+1]=res[0];
+			points[2*i+2]=res[1];
+			lines[i]=L(res[0],res[1]);
+		}
+		points[m-1]=cir[n-1].c;
+
+		
+		rep(j,m)rep(i,j){
+			int f=convert(i);
+			int t=convert(j);
+			L tar=L(points[i],points[j]);
+
+			bool ok=true;
+			
+			for(int k=f+1;k<t;k++){
+				if(!iSS(tar,lines[k]))
+					ok=false;
+			}
+			if(ok) cost[i][j]=cost[j][i]=abs(points[i]-points[j]);
+		}
+		rep(k,m)rep(i,m)rep(j,m) cost[i][j]=min(cost[i][j],cost[i][k]+cost[k][j]);
+		
+		cout.precision(9);
+		cout << fixed << cost[0][m-1] << endl;
+
+		/*dump(points[m-1])
+		rep(i,m){
+			rep(j,m) cout << cost[i][j] << " ";
+			cout << endl;
+		}
+		dump( iSS( L(points[3],points[4]),L(points[3],points[5]) ) )
+		*/
+	}
+	return 0;
+}

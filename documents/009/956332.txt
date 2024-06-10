@@ -1,0 +1,177 @@
+#include<iostream>
+#include<map>
+using namespace std;
+
+class Puzzle{
+ public:
+  int H,W,S;
+  char t[20][20];
+  bool operator < (const Puzzle &p)const{
+    for(int i=0;i<H;i++){
+      for(int j=0;j<W;j++){
+	if(t[i][j]==p.t[i][j])continue;
+	return t[i][j]<p.t[i][j];
+      }
+    }
+    return false;
+  }
+};
+
+Puzzle p;
+map<Puzzle,bool> vd;
+
+int H,W;
+
+char u[40][20][20];
+
+int  h[40],w[40];
+int n,m,a,b;
+int v;
+ 
+bool ans[2048];
+ 
+void input();
+void init();
+void rotate(int,int);
+ 
+void dfs(int,int,int);
+
+void check();
+bool on_check(int,int,int);
+ 
+void on_tab(int,int,int);
+void off_tab(int,int,int);
+ 
+ 
+int main(){
+  int S;
+  while(cin>>H>>W){
+    if(H==0&&W==0)break;
+    p.H=H;p.W=W;
+    input();
+    init();
+ 
+    cin>>m;
+    for(int i=0;i<m;i++){
+      cin>>a;
+      S=0;
+      for(int j=0;j<a;j++){
+	cin>>v;
+	v--;
+	S+=(1<<v);
+      }
+      
+      if(ans[S])cout<<"YES"<<endl;
+      else cout<<"NO"<<endl;
+    }
+     
+  }
+  return 0;
+}
+ 
+ 
+void dfs(int S,int y,int x){
+    
+  int next=S;
+  
+  if(p.t[y][x]=='#'){
+    for(int i=0;i<H;i++){
+      for(int j=0;j<W;j++){
+	if(p.t[i][j]=='#')continue;
+	dfs(S,i,j);
+      }
+    }
+    ans[S]=true;
+    return;
+  }
+
+  if(vd[p]==true)return;
+  vd[p]=true; 
+
+  for(int i=0;i<n;i++){
+    if((S>>i)&1==1)continue;
+    for(int j=0;j<4;j++){
+
+      if(on_check(y,x,4*i+j)==false)continue;
+       
+      next=S+(1<<i);
+ 
+       on_tab(y,x,4*i+j);
+      dfs(next,y,x);
+      off_tab(y,x,4*i+j);
+    }
+  }
+}
+ 
+ 
+ 
+void rotate(int a,int b){
+  for(int i=0;i<h[a];i++){
+    for(int j=0;j<w[a];j++){
+      u[a][i][j]=u[b][j][h[a]-i-1];
+    }
+  }
+}
+ 
+ 
+void init(){
+  vd.clear();
+  for(int i=0;i<2048;i++)ans[i]=false;
+  
+}
+ 
+ 
+void input(){
+  string str;
+  for(int i=0;i<H;i++){
+    cin>>str;
+    for(int j=0;j<W;j++){
+      p.t[i][j]=str[j];
+    }
+  }
+  cin>>n;
+  for(int k=0;k<n;k++){
+    cin>>h[k*4]>>w[k*4];
+    for(int i=0;i<h[k*4];i++){
+      cin>>str;
+      for(int j=0;j<w[k*4];j++){
+	u[k*4][i][j]=str[j];
+      }
+    }
+    for(int i=1;i<4;i++){
+      h[k*4+i]=w[k*4+i-1];
+      w[k*4+i]=h[k*4+i-1];
+      rotate(k*4+i,k*4+i-1);
+    }
+  }
+}
+ 
+
+ 
+bool on_check(int y,int x,int A){
+  if(y+h[A]>H||x+w[A]>W)return false;
+  for(int i=y;i<y+h[A];i++){
+    for(int j=x;j<x+w[A];j++){
+      if(u[A][i-y][j-x]=='#'&&p.t[i][j]=='#')return false;
+    }
+  }
+  return true;
+}
+ 
+ 
+void on_tab(int y,int x,int A){
+  for(int i=y;i<y+h[A];i++){
+    for(int j=x;j<x+w[A];j++){
+      if(u[A][i-y][j-x]=='#')p.t[i][j]='#';
+    }
+  }
+}
+ 
+ 
+void off_tab(int y,int x,int A){
+  for(int i=y;i<y+h[A];i++){
+    for(int j=x;j<x+w[A];j++){
+      if(u[A][i-y][j-x]=='#')p.t[i][j]='.';
+    }
+  }
+}

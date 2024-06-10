@@ -1,0 +1,34 @@
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<string>
+
+using namespace std;
+
+
+int main(void){
+
+	map<string, int> pro;
+	int n;
+	int num;
+	string name;
+    map<string, int>::iterator it;
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		cin >> name >> num;
+		if (pro.find(name) != pro.end()) pro[name] += num;
+		else pro[name] = num;
+	}
+
+	for (int i = 1; i <= 5; i++){
+		it = pro.begin();
+		while (it != pro.end()){
+			if ((*it).first.size() == i){
+				cout << (*it).first << " " << (*it).second << endl;
+			}
+			it++;
+		}
+	}
+
+	return 0;
+}

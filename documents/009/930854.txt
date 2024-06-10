@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+//qsortを使いたい!
+int compare_int(const void *a, const void *b)
+{return *(int*)a - *(int*)b;}
+
+int main()
+{
+	int S[100001],T[50001];
+	int n,q,i,j,C=0;
+	
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+		scanf("%d",&S[i]);
+	
+	qsort(S,n,sizeof(int),compare_int);
+	
+	scanf("%d",&q);
+	for(i=0;i<q;i++)
+		scanf("%d",&T[i]);
+	
+	qsort(T,q,sizeof(int),compare_int);
+	
+	for(i=0;i<n;i++){
+		for(j=0;j<q;j++){
+			if(S[j]==T[i]){
+				C++;
+				j++;
+				break;
+			}
+			else if(S[j] > T[i])
+				break;
+		}
+	}
+	printf("%d\n",C);
+	
+	return 0;
+}

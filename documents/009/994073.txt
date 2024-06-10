@@ -1,0 +1,16 @@
+X, Y, V = *0..2
+EPS = 1e-9
+until (n = gets.to_i).zero?
+  cafe = n.times.map{gets.split.map(&:to_f)}
+  x, y = cafe.first
+  d = 50.0
+  r = 0.9
+  until d < EPS
+    farthermost = cafe.max_by{|c| Math.hypot(c[X] - x, c[Y] - y) / c[V]}
+    angle = Math::atan2(farthermost[Y] - y, farthermost[X] - x)
+    x += Math::cos(angle) * d
+    y += Math::sin(angle) * d
+    d *= r
+  end
+  puts "%.8f"%cafe.map{|c| Math.hypot(c[X] - x, c[Y] - y) / c[V]}.max
+end

@@ -1,0 +1,32 @@
+#include <iostream>
+#include<list>
+#include<map>
+using namespace std;
+
+int printIndex(){
+    int number=0;
+    string word;
+    map<string,list<int> > index;
+    
+    while(!(cin>>word>>number).eof()){
+        index[word].push_back(number);
+        
+    }
+    map<string, list<int> >::iterator it = index.begin();
+    while(it != index.end()){
+        it->second.sort();
+        list<int>::iterator ite = it->second.begin();
+        cout << it->first << endl;
+        while(ite!=it->second.end()){
+            cout << *ite << " ";
+            ite++;
+        }
+        cout << endl;
+        it++;
+    }
+}
+
+int main(){
+    printIndex();
+    return 0;
+}

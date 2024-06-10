@@ -1,0 +1,118 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+int ans;
+int h,w,c;
+
+void showv(vector<vint> vv){
+	rep(i,vv.size()){
+		rep(j,vv[0].size()){
+			cout<<vv[i][j];
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+int dfs(vector<vint> v,int r){
+	//showv(v);
+	if(r==0){
+		//showv(v);
+		queue<pii> q;
+		q.push(mkp(0,0));
+		int S=0;
+		while(!q.empty()){
+			pii t=q.front();
+			q.pop();
+			if(v[t.F][t.S]==c){
+				S++;
+				v[t.F][t.S]=0;
+				int vec[4][2]={0,1,1,0,0,-1,-1,0};
+				rep(i,4){
+					int x=t.F+vec[i][0],y=t.S+vec[i][1];
+					if(x>=0&&y>=0&&x<h&&y<w){
+						q.push(mkp(x,y));
+					}
+				}
+			}
+		}
+		//showv(v);
+		ans=max(ans,S);
+		//if(ans==S) showv(v);
+	}
+	else{
+		for(int i=1;i<7;i++){
+			vector<vint> tv=v,tt=v;;
+			queue<pii> q;
+			q.push(mkp(0,0));
+			tt[0][0]=0;
+			while(!q.empty()){
+				pii tp = q.front();
+				q.pop();
+				tv[tp.F][tp.S]=i;
+				int vec[4][2]={0,1,1,0,-1,0,0,-1};
+				rep(j,4){
+					int x=tp.F+vec[j][0],y=tp.S+vec[j][1];
+					if(x>=0&&y>=0&&x<h&&y<w){
+						if(tv[x][y]==v[0][0]&&tt[x][y]!=0){
+							q.push(mkp(x,y));
+							tt[x][y]=0;
+						}
+					}
+				}
+			}
+			dfs(tv,r-1);
+		}
+	}
+	return 0;
+}
+				
+
+
+int main(){
+	while(cin>>h>>w>>c,h||w||c){
+		//cout<<"hoge"<<endl;
+		ans=0;
+		vector<vint> vv(h);
+		rep(i,h){
+			rep(j,w){
+				int a;
+				cin>>a;
+				//cout<<a<<endl;
+				vv[i].PB(a);
+			}
+		}
+		//showv(vv);
+		dfs(vv,5);
+		cout<<ans<<endl;
+	}
+	return 0;
+}

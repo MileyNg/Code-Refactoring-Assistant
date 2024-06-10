@@ -1,0 +1,56 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+
+  while (true) {
+	int n, k;
+	scanf( "%d %d\n", &n, &k );
+	if ( n == 0 && k == 0 ) break;
+
+	vector<int> v( k );
+	for ( int i = 0; i < k; i++ ) {
+	  int val;
+	  scanf( "%d\n", &val );
+	  v[ i ] = val;
+	}
+	
+	sort( v.begin(), v.end() );
+	bool hasWhite = ( v[ 0 ] == 0 );
+	if ( hasWhite ) {
+	  
+	}
+	
+	vector<pair<int, int>> ps;
+	int start = v[ 0 ];
+	int before = v[ 0 ];
+	for ( int i = 1; i < k; i++ ) {
+	  if ( v[ i ] - before == 1 ) {
+		before = v[ i ];
+	  } else {
+		ps.push_back( make_pair( start, before ) );
+		start = before = v[ i ];
+	  }
+	}
+	ps.push_back( make_pair( start, before ) );
+
+	int maxSize = 0;
+	for ( auto p : ps ) {
+	  maxSize = max( maxSize, p.second - p.first + 1 );
+	}
+
+	if ( hasWhite ) {
+	  for ( int i = 0; i < ps.size() - 1; i++ ) {
+		if ( ps[ i + 1 ].first - ps[ i ].second == 2 ) {
+		  maxSize = max( maxSize, ps[ i + 1 ].second - ps[ i ].first + 1 );
+		}
+	  }
+	}
+	cout << maxSize << endl;
+  }
+  return 0;
+}

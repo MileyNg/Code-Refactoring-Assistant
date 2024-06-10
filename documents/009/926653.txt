@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+	int N;
+	while (cin >> N) {
+		if (N == 0) {
+			break;
+		}
+		int n, d;
+		int x[300] = {0};
+		int y[300] = {0};
+		int vx[] = {-1, 0, 1, 0};
+		int vy[] = {0, -1, 0, 1};
+		int maxx, maxy, minx, miny;
+		maxx = maxy = 0;
+		minx = miny = 0;
+		for (int i = 1; i < N; i++) {
+			cin >> n >> d;
+			x[i] = x[n]+vx[d];
+			y[i] = y[n]+vy[d];
+			maxx = max(maxx, x[i]);
+			maxy = max(maxy, y[i]);
+			minx = min(minx, x[i]);
+			miny = min(miny, y[i]);
+			//cout << endl << x[i] << " " << y[i] << endl;
+		}
+		cout << maxx-minx+1 << " " << maxy-miny+1 << endl;
+	}
+	return 0;
+}

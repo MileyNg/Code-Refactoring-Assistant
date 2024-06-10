@@ -1,0 +1,23 @@
+#include<cstdio>
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+bool check(double s){
+  double num;
+  for(double i=1;(s-i)>=(2*i+1);i++)
+     if(modf((s-i)/(2*i+1),&num)==0.0) return true;
+  return false;
+}
+
+int main(){
+  int n,cnt=0;
+  double s;
+  scanf("%d",&n);
+  for(int i=0;i<n;i++){
+    scanf("%lf",&s);
+    if(check(s)==false) cnt++;
+  }
+  printf("%d\n",cnt);
+  return 0;
+}

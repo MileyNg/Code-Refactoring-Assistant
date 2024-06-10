@@ -1,0 +1,27 @@
+#include<iostream>
+#include<string>
+#include<cmath>
+using namespace std;
+
+#define TOTAL 120*60 // sec
+
+int main()
+{
+	int a, b, c;
+	while(cin>>a>>b>>c){
+		if(a==-1&&b==-1&&c==-1) break;
+		const int input = a*60*60 + b*60 + c;
+		int sec = TOTAL - input;
+		int h, m;
+		h = (int)floor(sec/3600); sec -= 3600*h;
+		m = (int)floor(sec/60); sec -= 60*m;
+		printf("%02d:%02d:%02d\n", h, m, sec);
+		
+		int sec3 = 3*(TOTAL-input);
+		h = (int)floor(sec3/3600); sec3 -= 3600*h;
+		m = (int)floor(sec3/60); sec3 -= 60*m;
+		printf("%02d:%02d:%02d\n", h, m, sec3);
+	}
+	
+	return 0;
+}

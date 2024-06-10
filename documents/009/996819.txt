@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+int N;
+
+class Q {
+    public:
+    long long a,b;
+    Q (long long a,long long b) :
+        a(a),b(b) {
+        };
+
+    bool operator <(const Q &q) const {
+        return a*q.b < b*q.a;
+    }
+    bool operator >(const Q &q) const {
+        return a*q.b > b*q.a;
+    }
+    bool operator ==(const Q &q) const {
+        return a*q.b == b*q.a;
+    }
+
+
+};
+bool comp(const pair<Q,string> &arg1,const pair<Q,string> &arg2) {
+    if(arg1.first.a*arg2.first.b == arg1.first.b*arg2.first.a)
+       return arg1.second < arg2.second;
+    return arg1.first.a*arg2.first.b > arg1.first.b*arg2.first.a;
+
+}
+
+void solve() {
+    vector<string> L(N);
+    vector<pair<Q,string> > ans;
+    rep(i,N) {
+        string ss;
+        long long p,a,b,c,d,e,f,s,m;
+        cin>>ss>>p>>a>>b>>c>>d>>e>>f>>s>>m;
+        long long mm = a+b+c;
+        mm += (d+e)*m;
+        long long pp = f*s;
+        pp = pp*m-p;
+        Q q(pp,mm);
+        ans.push_back(make_pair(q, ss));
+    }
+    sort(ans.begin(), ans.end(), comp);
+    rep(i,ans.size()) {
+        cout<<ans[i].second<<endl;
+    }
+}
+int main() {
+    while(cin>>N) {
+        if(!N) return 0;
+        solve();
+        cout<<"#"<<endl;
+    }
+
+    return 0;
+}

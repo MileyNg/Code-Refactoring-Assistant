@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+
+#define f(x,y,x1,x2,y1,y2) (y2-y1)*(x-x1)-(x2-x1)*(y-y1)  
+
+int determine(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4)//(x3,y3)と(x4,y4)が同じ側にある
+{
+  //if((f(x3,y3,x1,x2,y1,y2)*f(x4,y4,x1,x2,y1,y2))>0)
+  if((f(x3,y3,x1,x2,y1,y2)>0 &&f(x4,y4,x1,x2,y1,y2)>0) ||(f(x3,y3,x1,x2,y1,y2)<0 &&f(x4,y4,x1,x2,y1,y2)<0) )  
+    return 1; //同じ側なら1
+  else
+    return 0; //異なれば0
+}
+
+int intri(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4)//(x4,y4)が三角形の中にある 
+{
+  if(determine(x1,y1,x2,y2,x3,y3,x4,y4)==1 && determine(x3,y3,x2,y2,x1,y1,x4,y4)==1 && determine(x3,y3,x1,y1,x2,y2,x4,y4)==1)
+    return 1;
+  else 
+    return 0;
+}
+
+int main(void)
+{
+
+  double x1,y1,x2,y2,x3,y3,x4,y4;
+  // printf("%d,%d\n",f(1,1,0,0,10,0),f(5,5,0,0,10,0));
+
+   while(scanf("%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",&x1,&y1,&x2,&y2,&x3,&y3,&x4,&y4)!=EOF){
+     if(intri(x1,y1,x2,y2,x3,y3,x4,y4)==1 || intri(x2,y2,x3,y3,x4,y4,x1,y1)==1 || intri(x3,y3,x4,y4,x1,y1,x2,y2)==1 ||intri(x4,y4,x1,y1,x2,y2,x3,y3)==1)
+       printf("NO\n");
+     else
+       printf("YES\n");
+   }
+   
+  return 0;
+}

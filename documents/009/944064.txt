@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <cctype>
+
+using namespace std;
+
+int main(void){
+  string in;
+  int len;
+
+  while(true){
+    
+    cin >> in;
+   
+    if(in[0] == EOF){
+      break;
+    }
+
+    cout << " ";
+
+    len = in.length();
+    for(int i = 0; i < len; i++){
+      if(islower(in[i])){
+	in[i] = toupper(in[i]);
+      } else if(isupper(in[i])){
+	in[i] = tolower(in[i]);
+      }
+    }
+    
+    cout << in;
+  }
+
+  return 0;
+}

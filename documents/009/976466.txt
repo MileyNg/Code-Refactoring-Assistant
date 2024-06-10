@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  int n;
+  cin >> n;
+  REP(i,n) {
+    double xa,ya,ra,xb,yb,rb;
+    cin>>xa>>ya>>ra>>xb>>yb>>rb;
+    double d2 = (xa-xb)*(xa-xb) + (ya-yb)*(ya-yb);
+    if((ra+rb)*(ra+rb) < d2) {
+      cout << 0 << endl;
+    } else if(ra > sqrt(d2) + rb) {
+      cout << 2 << endl;
+    } else if(rb > sqrt(d2) + ra) {
+      cout << -2 << endl;
+    } else {
+      cout << 1 << endl;
+    }
+  }
+  return 0;
+}

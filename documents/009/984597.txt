@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+#define INF 99999999
+using namespace std;
+
+
+struct order{
+	int start;
+	int end;
+	int kind;
+};
+
+struct edge{
+	int from;
+	int to;
+	int cost;
+	int time;
+};
+
+
+int dis[2][100][100];//種類、出発駅、各駅 cost:0 time:1
+int counter=0;
+//答えのカウンタ
+edge Eg[3000];
+
+int ans[100000];//答えの保存先
+int flag=0;
+
+//グローバルな配列 :dis, eg,ans
+
+void shortest(int start,int N,int E,int KIND){//出発駅,N:フィールド幅,E:エッジ本数
+	for(int i=0;i<N;i++)
+	dis[KIND][start][i]=INF;
+	
+	dis[KIND][start][start]=0;
+	
+	if(KIND==0){
+	while(true){
+		bool update=false; //updateあればtrue
+		
+		for(int j=0;j<E;j++){//エッジでまわす
+			edge es=Eg[j];
+			if(dis[KIND][start][es.from]!=INF && 
+						dis[KIND][start][es.to]>dis[KIND][start][es.from]+es.cost){
+				dis[KIND][start][es.to]=dis[KIND][start][es.from]+es.cost;
+				update=true;
+			}
+		}
+		for(int j=0;j<E;j++){//エッジでまわす
+			edge es=Eg[j];
+			if(dis[KIND][start][es.to]!=INF && 
+						dis[KIND][start][es.from]>dis[KIND][start][es.to]+es.cost){
+				dis[KIND][start][es.from]=dis[KIND][start][es.to]+es.cost;
+				update=true;
+			}
+		}
+		if(!update) break;
+		}
+	}
+	
+	if(KIND==1){
+	while(true){
+		bool update=false; //updateあればtrue
+		
+		for(int j=0;j<E;j++){//エッジでまわす
+			edge es=Eg[j];
+			if(dis[KIND][start][es.from]!=INF && 
+						dis[KIND][start][es.to]>dis[KIND][start][es.from]+es.time){
+				dis[KIND][start][es.to]=dis[KIND][start][es.from]+es.time;
+				update=true;
+			}
+		}
+		for(int j=0;j<E;j++){//エッジでまわす
+			edge es=Eg[j];
+			if(dis[KIND][start][es.to]!=INF && 
+						dis[KIND][start][es.from]>dis[KIND][start][es.to]+es.time){
+				dis[KIND][start][es.from]=dis[KIND][start][es.to]+es.time;
+				update=true;
+			}
+		}
+		if(!update) break;
+		}
+	}
+}
+
+void solve(){
+	int E,N,k;
+	cin >> E >> N;
+	if(E==0) {flag=1; return;}
+	
+	for(int i=0;i<E;i++){
+		cin >> Eg[i].from >> Eg[i].to >> Eg[i].cost >> Eg[i].time;
+		Eg[i].from--; Eg[i].to--; //駅の番号-1
+	}
+	cin>>k;
+	order O[200];
+	for(int i=0;i<k;i++){
+		cin >> O[i].start >> O[i].end >> O[i].kind;
+		O[i].start--; O[i].end--;//駅の番号-1
+	}
+	
+
+	
+	for(int x=0;x<k;x++){
+		shortest(O[x].start,N,E,O[x].kind);
+		ans[counter]=dis[O[x].kind][O[x].start][O[x].end];
+		counter++;
+	}
+}
+
+
+
+int main (){
+	
+	while(flag==0){
+		solve();
+	}
+	
+	for(int i=0;i<counter;i++)
+	cout << ans[i]<<"\n";
+}
+	

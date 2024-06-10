@@ -1,0 +1,74 @@
+#include <iostream>
+#include <queue>
+#include <map>
+#include <utility>
+using namespace std;
+using namespace std::rel_ops;
+
+#define PAIR pair<double, int>
+
+/**********オーバーロード**********/
+bool operator>(const PAIR &a, const PAIR &b){	
+	return a.first > b.first;
+}
+bool operator<(const PAIR &a, const PAIR &b){	
+	return a.first < b.first;
+}
+
+
+int main(){
+	priority_queue<PAIR, vector<PAIR>, greater<PAIR> > race1, race2, race3, fainal;
+	//map<double, int>fainal;
+
+	for(int i = 0; i < 8; i++){
+		int player;
+		double tim;
+		cin >> player >> tim;
+		race1.push(PAIR(tim, player));
+	}
+	for(int i = 0; i < 8; i++){
+		int player;
+		double tim;
+		cin >> player >> tim;
+		race2.push(PAIR(tim, player));
+	}
+	for(int i = 0; i < 8; i++){
+		int player;
+		double tim;
+		cin >> player >> tim;
+		race3.push(PAIR(tim, player));
+	}
+
+	//上位２位
+	for(int i = 0; i < 2; i++){
+		cout << race1.top().second << " " << race1.top().first << endl;
+		race1.pop();
+	}
+	for(int i = 0; i < 2; i++){
+		cout << race2.top().second << " " << race2.top().first << endl;
+		race2.pop();
+	}
+	for(int i = 0; i < 2; i++){
+		cout << race3.top().second << " " << race3.top().first << endl;
+		race3.pop();
+	}
+
+	//Time抜け
+	for(int i = 0; i < 2; i++){
+		fainal.push(race1.top());
+		race1.pop();
+	}
+	for(int i = 0; i < 2; i++){
+		fainal.push(race2.top());
+		race2.pop();
+	}
+	for(int i = 0; i < 2; i++){
+		fainal.push(race3.top());
+		race3.pop();
+	}
+	for(int i = 0; i < 2; i++){
+		cout << fainal.top().second << " " << fainal.top().first << endl;
+		fainal.pop();
+	}
+
+}

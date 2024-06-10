@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+typedef vector<int> V;
+typedef vector<V> M;
+
+enum Status{OK, AMB, NONE};
+Status gauss_jordan(M m, V v) {
+  for (int r = m.size(); r--; ) {
+  back:;
+    int p = r;
+    rep (i, r) if (abs(m[i][r]) > abs(m[p][r])) p = i;
+    swap(m[r], m[p]);
+    swap(v[r], v[p]);
+    if (m[r][r] == 0) {
+      rep (j, r) if (m[r][j]) {
+	rep (k, m.size()) swap(m[k][j], m[k][r]);
+	goto back;
+      }
+      if (v[r]) return NONE;
+    }
+    rep (i, m.size()) if(i != r) {
+      v[i] ^= m[i][r] & v[r];
+      rep (k, r) m[i][k] ^= m[i][r] & m[r][k];
+    }
+  }
+  if (m[0][0] == 0) return AMB;
+  return OK;
+}
+
+int main() {
+  while (true) {
+    int m, n, d;
+    cin >> m >> n >> d;
+    if (m == 0 && n == 0 && d == 0) break;
+    V v(n * m);
+    rep (i, n * m) cin >> v[i];
+    M mat(n * m, V(n * m, 0));
+    rep (i, n * m) mat[i][i] = 1;
+    rep (i, n) rep (j, m) rep (ii, n) rep (jj, m) if (abs(i - ii) + abs(j - jj) == d) mat[i * m + j][ii * m + jj] = 1;
+    if (gauss_jordan(mat, v) == NONE) cout << 0 << endl;
+    else cout << 1 << endl;
+  }
+}

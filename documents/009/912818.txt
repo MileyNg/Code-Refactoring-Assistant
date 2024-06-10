@@ -1,0 +1,52 @@
+#include<iostream>
+using namespace std;
+
+#define N 107
+#define MOD 10000
+
+#define rep(i, n) for(int i=0; i<n; ++i)
+#define repl(i, j, n) for(int i=j; i<n; ++i)
+
+int main() {
+	int dp[N][3][2], spe[N], n, k;
+	cin >> n >> k;
+	rep(i, n+1) {
+		spe[i] = -1;
+		rep(j, 3) rep(k, 2) dp[i][j][k] = 0;
+	}
+	rep(i, k) {
+		int a, b;
+		cin >> a >> b;
+		spe[a-1] = b-1;
+	}
+	if(spe[0]==-1) rep(i, 3) dp[0][i][0] = 1;
+	else dp[0][spe[0]][0] = 1;
+	rep(i, n-1) {
+		if(spe[i+1]==-1) {
+			rep(j, 3) {
+				rep(k, 3) {
+					if(j==k) {
+						dp[i+1][j][1] = (dp[i+1][j][1] + dp[i][j][0])%MOD;
+					}else {
+						dp[i+1][j][0] = (dp[i+1][j][0] + dp[i][k][0] + dp[i][k][1])%MOD;
+					}
+				}
+				//cout << i+1 << " " << j << " : " << dp[i+1][j][0] << " " << dp[i+1][j][1] << endl;
+			}
+		}else {
+			int s = spe[i+1];
+			rep(j, 3) {
+				if(s==j) {
+					dp[i+1][s][1] = (dp[i+1][s][1] + dp[i][s][0])%MOD; 
+				}else {
+					dp[i+1][s][0] = (dp[i+1][s][0] + dp[i][j][0] + dp[i][j][1])%MOD;
+				}
+			}
+			//cout << i+1 << " " << s << " : " << dp[i+1][s][0] << " " << dp[i+1][s][1] << endl;
+		}
+	}
+	int sum = 0;
+	rep(i, 3) sum += dp[n-1][i][0] + dp[n-1][i][1];
+	cout << sum%MOD << endl;
+	return 0;
+}

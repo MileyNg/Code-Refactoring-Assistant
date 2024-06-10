@@ -1,0 +1,120 @@
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<cmath>
+#include<cstdlib>
+#include<iomanip>
+#include<ctime>
+#include<cstring>
+#include<climits>
+#include<string>
+#include<vector>
+#include<map>
+#include<queue>
+#include<set>
+#include<algorithm>
+#include<stack>
+#include<deque>
+#include<list>
+#include<vector>
+#define LL long long
+/*
+#ifdef unix
+#define INT64 "%lld"
+#else
+#define INT64 "%I64d"
+#endif
+*/
+using namespace std;
+int n,m,cnt,snt,K,times;
+LL oo=1000000007;
+struct dic
+{
+	int x,y,r;
+	int c;
+}p[110],q[110];
+int num[110];
+int ans;
+bool vis[110];
+double dis(double x1,double y1,double x2,double y2)
+{
+	return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+}
+bool cover(int pos)
+{
+	for (int i=1;i<pos;i++)
+	if (!vis[i]&&dis(p[i].x,p[i].y,p[pos].x,p[pos].y)<(p[i].r+p[pos].r)*(p[i].r+p[pos].r)) 
+	return true;
+	return false;
+}
+bool covero(int pos)
+{
+	for (int i=pos+1;i<=n;i++)
+	if (!vis[i]&&dis(p[i].x,p[i].y,p[pos].x,p[pos].y)<(p[i].r+p[pos].r)*(p[i].r+p[pos].r)) 
+	return true;
+	return false;
+}
+void dfs(int x,int y)
+{
+	ans=max(ans,y);
+	int cc=0,minn=100;
+	for (int k=1;k<=4;k++)
+	{
+		int snt=0;
+		for (int i=1;i<=n;i++)
+		if ((!vis[i])&&p[i].c==k&&(!cover(i))) snt++;
+		if (snt>=2&&snt<minn) 
+		{
+			minn=snt;
+			cc=k;
+		}
+	}
+	if (!cc) 
+	{
+		return;
+	}
+	dic q[10];
+	int num[10];
+	int m=0;
+	for (int i=1;i<=n;i++)
+	if ((!vis[i])&&p[i].c==cc&&(!cover(i))) 
+	{
+		q[++m]=p[i];
+		num[m]=i;
+	}
+	if  (m%2==0)
+	{
+		for (int i=1;i<=m;i++) vis[num[i]]=true;
+		dfs(x+1,y+m);
+		for (int i=1;i<=m;i++) vis[num[i]]=false;
+	}
+	else 
+	{
+		int pp=m/2;
+		for (int i=1;i<=m;i++)
+		{
+			for (int j=1;j<=m;j++) if (j!=i) vis[num[j]]=true;
+			dfs(x+1,y+pp*2);
+			for (int j=1;j<=m;j++) if (j!=i) vis[num[j]]=false;
+		}
+	}
+}
+void work()
+{
+	for (int i=1;i<=n;i++)
+	scanf("%d%d%d%d",&p[i].x,&p[i].y,&p[i].r,&p[i].c);
+	memset(vis,0,sizeof(vis));
+	ans=0;
+	dfs(1,0);
+	printf("%d\n",ans);
+}
+int main()
+{
+	scanf("%d",&n);
+	while (n!=0)
+	{
+		work();
+		scanf("%d",&n);
+	}
+    return 0;
+}

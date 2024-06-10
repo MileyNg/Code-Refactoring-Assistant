@@ -1,0 +1,33 @@
+#include<stdio.h>
+
+int p[1000000];
+
+int main()
+{
+    int pi,katakati, inspect, counter;
+    p[0] = p[1] = 1;
+
+    for(pi=2; pi*pi<1000000; pi++)
+    {
+        if (p[pi] == 0)
+        {
+            for(katakati = pi*2; katakati<1000000; katakati+=pi)
+            {
+                p[katakati] = 1;
+            }
+        }
+    }
+
+    while(scanf("%d",&inspect)==1)
+    {
+        for(pi=1, counter=0; pi<=inspect; pi++)
+        {
+            if(p[pi]==0)
+            {
+                counter++;
+            }
+        }
+        printf("%d\n",counter);
+    }
+    return 0;
+}

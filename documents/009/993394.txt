@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstring>
+#include <climits>
+
+using namespace std;
+
+int N, M;
+int C[20];
+int X[20020];
+
+int INF = 1300500001;
+int dp[20020][300];
+
+void solve() {
+	for (int i=0; i<20020; i++) fill(dp[i], dp[i]+300, INF);
+	
+	dp[0][128] = 0;
+	for (int i=0; i<N; i++) {
+		
+		for (int j=0; j<=255; j++) {
+		
+			for (int k=0; k<M; k++) {
+				int jck = j+C[k];
+				if (jck < 0) jck = 0;
+				if (jck > 255) jck = 255;
+				if (dp[i][j] == INF) continue;
+				dp[i+1][jck] = min(dp[i+1][jck], dp[i][j] + (jck-X[i])*(jck-X[i]) );
+			}
+			
+		}
+	}
+	
+	int ans = INF;
+	for (int i=0; i<=255; i++) ans = min(ans, dp[N][i]);
+	cout << ans << endl;	
+}
+
+int main() {
+
+	while(1) {
+		cin >> N >> M; if (N==0 && M==0) break;
+		for (int i=0; i<M; i++) cin >> C[i];
+		for (int i=0; i<N; i++) cin >> X[i];
+		
+		solve();
+	}
+	
+	return 0;
+}

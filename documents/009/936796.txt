@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int rec(int sum, const vector<int> &v, int k) {
+  if(k == v.size()) return sum <= 21 ? sum : 0;
+  if(v[k] == 1) return max(rec(sum+1, v, k+1), rec(sum+11, v, k+1));
+  else return rec(sum+v[k], v, k+1);
+}
+
+int main() {
+  string s;
+  while(getline(cin,s) && s != "0") {
+    stringstream ss(s);
+    int a;
+    vector<int> v;
+    while(ss >> a) {
+      v.push_back(min(a,10));
+    }
+    cout << rec(0, v, 0) << endl;
+  }
+  return 0;
+}

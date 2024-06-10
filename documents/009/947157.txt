@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+int main(){
+    int N, M;
+    while(cin >> N >> M){
+        vector<int> a(M);
+        REP(i, M) cin >> a[i];
+        REP(i, M) a[i]--;
+        vector<int> height(M);
+        vector<int> perm(N);
+        REP(i, N) perm[i] = i;
+        REP(i, M) swap( perm[ a[i] ], perm[ a[i] + 1 ] );
+
+        function<int(int)> dfs = [&](int k) {
+            if(k == M) {
+                for(int i = 0; i < M; i++){
+                    for(int j = i + 1; j < M; j++) {
+                        if(height[i] == height[j]) {
+                            if(abs(a[i] - a[j]) <= 1){
+                                return INT_MAX;
+                            }
+                        }
+                    }
+                }
+                vector<int> p(N);
+                REP(i, N) p[i] = i;
+                for(int h = 0; h < M; h++){
+                    for(int i = 0; i < M; i++) {
+                        if(height[i] == h) {
+                            swap( p[ a[i] ], p[ a[i] + 1 ] );
+                        }
+                    }
+                }
+                if(perm == p) {
+                    return *max_element(height.begin(), height.end()) + 1;
+                } else {
+                    return INT_MAX;
+                }
+            } else {
+                int res = INT_MAX;
+                for(int h = 0; h < M; h++){
+                    height[k] = h;
+                    res = min(res, dfs(k + 1));
+                }
+                return res;
+            }
+        };
+        int res = dfs(0);
+        assert(res != INT_MAX);
+        cout << res << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,78 @@
+#include<iostream>
+#define INF (1<<24)
+using namespace std;
+int W,H,mini,mini_x,mini_y,ny,nx,cost;
+string str;
+
+int dx[4]={0,1,0,-1};
+int dy[4]={-1,0,1,0};
+
+char t[102][102];
+bool vd[102][102];
+int u[102][102];
+
+int main(){
+  while(cin>>W>>H){
+    for(int i=0;i<102;i++)for(int j=0;j<102;j++){
+	t[i][j]='.';
+	vd[i][j]=false;
+	u[i][j]=INF;
+      }
+
+    for(int i=1;i<=H;i++){
+      cin>>str;
+      for(int j=1;j<=W;j++){
+	t[i][j]=str[j-1];
+	if(t[i][j]=='&')u[i][j]=0;
+      }
+    }
+    /*
+    for(int i=0;i<H+2;i++){
+      for(int j=0;j<W+2;j++){
+	cout<<t[i][j];
+      }
+      cout<<endl;
+    }
+    */
+    
+    while(1){
+      mini=INF;
+      for(int i=0;i<H;i++){
+	for(int j=0;j<W;j++){
+	  if(mini>u[i][j]&&vd[i][j]==false){
+	    mini=u[i][j];
+	    mini_y=i;
+	    mini_x=j;
+	  }
+	}
+      }
+
+      if(mini==INF)break;
+
+      vd[mini_y][mini_x]=true;
+
+      //cout<<mini_y<<' '<<mini_x<<' '<<u[mini_y][mini_x]<<endl;
+
+      
+      if(mini_y==0||mini_x==0||mini_y==H+1||mini_x==W+1){
+	cout<<u[mini_y][mini_x]<<endl;
+	break;
+      }
+      
+
+      for(int i=0;i<4;i++){
+	ny=mini_y+dy[i];
+	nx=mini_x+dx[i];
+
+	cost=((t[mini_y][mini_x]!='#'&&t[ny][nx]=='#')?1:0);
+
+	if(u[ny][nx]>u[mini_y][mini_x]+cost){
+	  u[ny][nx]=u[mini_y][mini_x]+cost;
+	}
+      }
+	
+      
+    }
+  }
+  return 0;
+}

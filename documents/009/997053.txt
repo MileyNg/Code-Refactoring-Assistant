@@ -1,0 +1,68 @@
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <map>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <queue>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> P;
+#define ISEQ(c) (c).begin(), (c).end()
+int main() {
+	
+		int n, m;
+		const ll INF = 1000000100LL;
+		cin >> n >> m;
+		vector<ll> s(n), t(n);
+		for (int i = 0; i < n; i++) {
+			scanf("%lld%lld", &s[i], &t[i]);
+		}
+		vector<ll> p(m+2);
+		p[0] = -1;
+		for (int i = 1; i <= m; i++) {
+			scanf("%lld", &p[i]);
+		}
+		p[m+1] = INF;
+		sort(ISEQ(p));
+		vector<ll> podd, peven;
+		ll sumo = 0, sume = 0;
+		for (int i = 1; i <= m+1; i++) {
+			if (i % 2) {
+				sumo += p[i] - p[i-1];
+				podd.push_back(sumo);
+			} else {
+				sume += p[i] - p[i-1];
+				peven.push_back(sume);
+			}
+		}
+		ll res = 0LL;
+		for (int i = 0; i < n; i++) {
+			int a = lower_bound(ISEQ(p), s[i]) - p.begin();
+			int b = lower_bound(ISEQ(p), t[i]) - p.begin();
+			if (a == b) {
+				res += abs(s[i] - t[i]);
+			} else {
+				ll temp;
+				if (a % 2) {
+					if (b % 2) {
+						temp = podd[b/2] - podd[a/2] - (p[b] - t[i]) + (p[a] - s[i]);
+					} else {
+						temp = podd[b/2-1] - podd[a/2] + p[a] - s[i];
+					}
+				} else {
+					if (b % 2) {
+						temp  = peven[b/2-1] - peven[a/2-1] + p[a] - s[i];
+					} else {
+						temp = peven[b/2-1] - peven[a/2-1]  - (p[b] - t[i]) + (p[a] - s[i]);
+					}
+				}
+				if (temp < 0) temp = -temp;
+				res += temp;
+			}
+		}
+		cout << res << endl;
+	
+}

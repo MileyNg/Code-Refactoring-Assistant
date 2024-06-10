@@ -1,0 +1,35 @@
+def get_prime_nums(max_p)
+  primes = (0..max_p).map{true}
+  primes[0] = primes[1] = false
+
+  smp = Math::sqrt(0.5 + max_p).to_i
+
+  for p in (2..smp)
+    if (primes[p])
+      (p * p).step(max_p, p){|q| primes[q] = false}
+    end
+  end
+
+  #puts "#{primes.select{|p| p }.length} primes"
+
+  return primes
+end
+
+### main
+
+max_p = 110000
+primes = get_prime_nums(max_p)
+
+p_nums = (2..max_p).select{|p| primes[p]}
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  sum = 0
+  for i in (0...n)
+    sum += p_nums[i]
+  end
+
+  puts sum
+end

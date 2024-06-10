@@ -1,0 +1,77 @@
+#include <algorithm>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+template<class T> inline void chmin(T &a, const T &b) { if(a > b) a = b; }
+
+vector<int> find_pattern() {
+	vector<int> ticks(3);
+	for(auto &e : ticks) cin >> e;
+
+	vector<int> res;
+	res.reserve(360);
+	for(int i = 0; i < 60; ++i) {
+		for(auto &e : ticks) {
+			e = (e + 1) % 60;
+		}
+
+		sort(ticks.begin(), ticks.end());
+		do {
+			const int t = ticks[0] % 5;
+			if(t != ticks[1] / 12) continue;
+			res.emplace_back(720 * ticks[0] + 60 * (ticks[1] % 12) + ticks[2]);
+		} while(next_permutation(ticks.begin(), ticks.end()));
+	}
+
+	sort(res.begin(), res.end());
+	res.erase(unique(res.begin(), res.end()), res.end());
+	return res;
+}
+
+string format(int time) {
+	const int h = time / 3600;
+	time %= 3600;
+	const int m = time / 60;
+	const int s = time % 60;
+	char buf[128];
+	sprintf(buf, "%02d:%02d:%02d", h, m, s);
+	return string(buf);
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		vector<vector<int>> pattern;
+		pattern.reserve(n);
+		for(int i = 0; i < n; ++i) {
+			pattern.emplace_back(find_pattern());
+		}
+
+		pair<int, int> ans(INT_MAX, INT_MAX); //
+		for(int i = 0; i < n; ++i) {
+			for(const auto &s : pattern[i]) {
+				int t = s;
+				for(int j = 0; j < n; ++j) {
+					if(i == j) continue;
+					const auto it = lower_bound(pattern[j].begin(), pattern[j].end(), s);
+					if(it == pattern[j].end()) goto ng;
+					chmax(t, *it);
+				}
+
+				chmin(ans, make_pair(t - s, s));
+			ng:;
+			}
+		}
+
+		cout << format(ans.second) << " " << format(ans.first + ans.second) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

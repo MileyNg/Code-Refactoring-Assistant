@@ -1,0 +1,60 @@
+#include<iostream>
+#include<cstdio>
+
+using namespace std;
+ 
+#define NMAX 1000
+#define tMAX 1260
+int main(void){
+	
+	int N,M;
+	int r;
+	int use[NMAX+1][tMAX+1];
+	int t,n,m,s;
+	int q;
+	int ts,te;
+	int cnt;
+	bool f;
+
+	while(1){
+		cin>>N>>M;
+		if(N==0&&M==0) break;
+
+		for(int i=1;i<=N;i++){
+			for(int j=0;j<=tMAX;j++){
+				use[i][j]=0;
+			}
+		}
+
+		cin>>r;
+		for(int i=0;i<r;i++){
+			cin>>t>>n>>m>>s;
+			if(s==1) use[n][t]=m;
+			else use[n][t]=-1*m;
+		}
+
+		for(int i=1;i<=N;i++){
+			for(int j=1;j<=tMAX;j++){
+				use[i][j]+=use[i][j-1];
+			}
+		}
+
+		cin>>q;
+
+		for(int i=0;i<q;i++){
+			cin>>ts>>te>>m;
+			cnt=0;
+			for(int j=ts;j<te;j++){
+				f=false;
+				for(int i=1;i<=N;i++){
+					if(use[i][j]==m) f=true; 
+				}
+				if(f) cnt++;
+			}
+			cout<<cnt<<endl;
+		}
+
+	}
+
+	return 0;
+}

@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+#include <queue>
+
+int main(){
+    std::string str;
+    std::queue<char> que;
+    std::cin >> str;
+    const int size = str.size();
+    for(int i = 0; i < size; ++i){
+        que.push(str.back());
+        str.erase(str.size() - 1, 1);
+    }
+    for(int i = 0; i < size; ++i){
+        if(i != size - 1){
+            std::cout << que.front();
+            que.pop();
+        }else{
+            std::cout << que.front() << std::endl;
+        }
+    }
+    return 0;
+}

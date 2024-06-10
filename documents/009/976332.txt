@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <queue>
+using namespace std;
+
+int main(){
+    int n;
+    int m;
+    while(cin >> n, n){
+        cin >> m;
+        int mat[n][n];
+        for(int k(0); k < n; ++k)
+            for(int l(0); l < n; ++l)
+                mat[k][l] = 1 << 30;
+        for(int i(0); i < n; ++ i) mat[i][i]=0;
+        for(int i(0);i < m;++i){
+            int a, b, d;
+            char g;
+            cin >> a;
+            cin >> g;
+            cin>> b;
+            cin >> g;
+            cin>> d;
+
+            d = d / 100 - 1;
+            mat[a][b] = mat[b][a] = d;
+            // map[a].push_back(make_pair(b, d/100 -1));
+            // map[b].push_back(make_pair(a, d/100 -1));
+        }
+        // for(int k(0); k < n; ++k){
+        //     for(int l(0); l < n; ++l){
+        //      cout << mat[k][l] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        vector<int> vs, nvs;
+        for(int i(1); i < n; ++ i) nvs.push_back(i);
+        // vector<pair<int,int>> es;
+        int sum=0;
+        vs.push_back(0);
+        while(vs.size() < n){
+            pair<int,int> tmp = {0,0};
+            int d = 1 << 30;
+            for(int i: vs){
+                for(int j: nvs){
+                    if(mat[i][j] < d){
+                        d = mat[i][j];
+                        tmp = make_pair(i,j);
+                    }
+                }
+            }
+            vs.push_back(tmp.second);
+//          std::remove(nvs.begin(), nvs.end(), tmp.second);
+            nvs.erase(std::remove(nvs.begin(), nvs.end(), tmp.second), nvs.end());
+            sum += d;
+        }
+        cout << sum << endl;
+    }
+
+}

@@ -1,0 +1,58 @@
+
+def slide_char(char, num):
+
+    if char == '.':
+        return char
+
+    if ord('A') <= ord(char) <= ord('Z'):
+
+        if (ord(char) + num) <= ord('Z'):
+            return chr(ord(char) + num)
+
+        else:
+            return chr(ord('A') + ord(char) + num - ord('Z') - 1)
+
+    else:
+        if (ord(char) + num) <= ord('z'):
+            return chr(ord(char) + num)
+
+        else:
+            return chr(ord('a') + ord(char) + num - ord('z') - 1)
+
+
+def main():
+
+    check_words = ('the', 'this', 'that')
+
+    caesar_chipher_text = tuple(map(str,raw_ input().split()))
+
+    for i in range(26):
+        after_text = []
+        flag = False
+
+        for word in caesar_chipher_text:
+
+            after_word = []
+
+            for char in word:
+
+                char = slide_char(char, i)
+                after_word.append(char)
+
+            after_text.append(after_word)
+
+            if ''.join(after_word) in check_words:
+                flag = True
+
+
+        if flag:
+            anser = []
+            for text in after_text:
+                anser.append(''.join(text))
+
+            print(' '.join(anser))
+            break
+
+
+if __name__ == '__main__':
+    main()

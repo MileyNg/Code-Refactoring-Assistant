@@ -1,0 +1,44 @@
+#include<algorithm>
+#include<iostream>
+
+#define NOMAL ((5*19)+(5*20)) 
+#define THREE__YEAR (10*20)
+using namespace std;
+
+int main(){
+	int date;
+
+	cin>>date;
+	for(int i=0;i<date;i++){
+		int year,month,day;
+		long int ans=0;
+		int nokori[3]={0,};	//nokori[0]=year,nokori[1]=month,nokori[2]=day
+		int n3years,nomal_years;
+
+		cin>>year>>month>>day;
+
+		nokori[0]=999-year;
+		nokori[1]=10-month;
+		nokori[2]=20-day;
+
+		n3years=nokori[0]/3;
+		nomal_years=nokori[0]-n3years;
+
+		ans=NOMAL*nomal_years+THREE__YEAR*n3years;
+		if(year%3==0){
+			ans+=(nokori[1]*20+nokori[2]);
+		}
+		else{
+			nokori[1]/=2;
+			if(month%2==0){
+				nokori[2]--;
+				ans+=(nokori[1]*19+nokori[1]*20+nokori[2]);
+			}
+			else{
+				ans+=((nokori[1]+1)*19+nokori[1]*20+nokori[2]+5);
+			}
+		}
+		cout<<ans+1<<endl;
+	}
+	return 0;
+}

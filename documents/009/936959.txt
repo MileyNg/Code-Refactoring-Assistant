@@ -1,0 +1,10 @@
+def f(weeks)
+  acc = 100000
+  weeks.times do
+    acc *= 1.05
+    acc = (acc / 1000 + 1).to_i * 1000 if acc % 1000 > 0 
+  end
+  acc
+end
+
+puts f(gets.to_i)

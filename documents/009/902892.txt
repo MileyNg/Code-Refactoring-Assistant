@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <string.h>
+
+void rev(char* input)
+{
+	int index;
+	int i;
+	
+	index = strlen(input) - 1;
+	
+	for( i = 0; i < index; i++, index-- )
+	{
+		char buf;
+		buf = input[i];
+		input[i] = input[index];
+		input[index] = buf;
+	}
+}
+
+char calcNum(char num1, char num2, int* over)
+{
+	char result = ( (num1 - '0') + (num2 - '0') + *over) % 10 + '0';
+	if( (num1 - '0') + (num2 - '0') + *over > 9 )
+	{
+		*over = 1;
+	}
+	else
+	{
+		*over = 0;
+	}
+	
+	return result;
+}
+
+void add(char* strnum1, char* strnum2, char* result)
+{
+	char* longstrnum;
+	int i;
+	int len1 = strlen( strnum1 );
+	int len2 = strlen( strnum2 );
+	int over = 0;
+	int min;
+	int max;
+	
+	rev( strnum1 );
+	rev( strnum2 );
+	
+	if( len1 > len2 )
+	{
+		longstrnum = strnum1;
+		min = len2;
+		max = len1;
+	}
+	else
+	{
+		longstrnum = strnum2;
+		min = len1;
+		max = len2;
+	}
+	
+	for( i = 0; i < min; i++ )
+	{
+		result[i] = calcNum( strnum1[i], strnum2[i], &over );
+	}
+	
+	for(; i < max; i++ )
+	{
+		result[i] = calcNum( longstrnum[i], '0', &over );
+	}
+	result[i] = '\0';
+	
+	rev( result );
+}
+
+int main(void)
+{
+	int n;
+	char strnum[2][128];
+	char result[128];
+	char* resultp;
+	int i;
+	
+	scanf( "%d", &n );
+	for( i = 0; i < n; i++ )
+	{
+		scanf( "%s%s", strnum[0], strnum[1] );
+		add( strnum[0], strnum[1], result );
+		if( strlen( result ) <= 80 )
+		{
+			resultp = result;
+			for(; *resultp == '0'; resultp++ );
+			printf( "%s\n", resultp );
+		}
+		else
+		{
+			printf( "overflow\n" );
+		}
+	}
+	
+	return (0);
+}

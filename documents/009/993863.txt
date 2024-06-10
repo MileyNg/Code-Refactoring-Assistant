@@ -1,0 +1,61 @@
+### constant
+
+MAX_INT = (1 << 31) - 1
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  m = 0
+  rs = []
+
+  n.times.each do
+    ri = gets.strip.split(' ').map{|s| s.to_i}
+    rs << ri
+
+    m = ri[0] if m < ri[0]
+    m = ri[1] if m < ri[1]
+  end
+
+  edges = (m + 1).times.map{(m + 1).times.map{nil}}
+
+  rs.each do |ai, bi, ci|
+    edges[ai][bi] = edges[bi][ai] = ci
+  end
+
+  cities = (0..m).map{|i| i}
+
+  min_st = -1
+  min_sum = MAX_INT
+
+  for st in cities
+    q = cities.clone
+    dists = cities.map{MAX_INT}
+    dists[st] = 0
+
+    while ! q.empty?
+      u = q.min{|a, b| dists[a] <=> dists[b]}
+      q.delete(u)
+
+      for v in cities
+        c = edges[u][v]
+        next if c.nil?
+
+        if dists[v] > dists[u] + c
+          dists[v] = dists[u] + c
+        end
+      end
+    end
+
+    sum = dists.inject(0){|s, d| s + d}
+
+    if min_sum > sum
+      min_sum = sum
+      min_st = st
+    end
+  end
+
+  puts [min_st, min_sum].join(' ')
+end

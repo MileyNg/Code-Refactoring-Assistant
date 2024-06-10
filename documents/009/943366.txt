@@ -1,0 +1,41 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    { 
+      int cnt=-1;
+      for(int i=0;i<n;i++)
+	{
+	  int tmp;
+	  cin>>tmp;
+	  if(i==0)
+	    {
+	      cnt=tmp;
+	      cout<<cnt;
+	    }
+	  else if(tmp!=cnt+1)
+	    {
+	      cnt=tmp;
+	      cout<<"-"<<cnt;
+	      if(i!=n-1)
+		{
+		  cin>>tmp;
+		  cout<<" "<<tmp;
+		  cnt=tmp;
+		  i++;
+		}
+	    }
+	  else if(i==n-1)
+	    {
+	      if(cnt!=-1)
+		cout<<"-";
+	      cout<<tmp;
+	    }
+	}
+      cout<<endl;
+    }
+
+}

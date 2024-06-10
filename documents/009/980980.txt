@@ -1,0 +1,26 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+using namespace std;
+
+string solve(int n){
+	long long int sum=0;
+	for(int i=1; i*i<=n; ++i){
+		if(n%i==0&&n!=1){
+			sum+=i;
+			if(i!=n/i&&i!=1) sum+=n/i;
+		}
+	}
+	//cout << sum << endl;
+	if(sum<n) return "deficient number";
+	else if(n<sum) return "abundant number";
+	else return "perfect number";
+}
+
+int main(){
+	int N;
+	while(cin >> N&&N){
+		cout << solve(N) << endl;
+	}
+}

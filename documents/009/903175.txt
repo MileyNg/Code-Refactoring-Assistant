@@ -1,0 +1,38 @@
+#include <stdio.h>
+#define BUILDING 4
+#define FLOOR  	 3
+#define ROOM	 10
+
+void input(int cnt[][FLOOR][ROOM]){
+	int max, b, f, r, v;
+	scanf("%d", &max);
+	while (max--){
+		scanf("%d %d %d %d", &b, &f, &r, &v);
+		cnt[b-1][f-1][r-1] += v;
+	}
+}
+void output(int cnt[][FLOOR][ROOM]){
+	unsigned int i, j, k;
+	for (i = 0; i < BUILDING; i++){
+		for (j = 0; j < FLOOR; j++){
+			for (k = 0; k < ROOM; k++){
+				if (!(k == ROOM))printf(" ");
+				printf("%d",cnt[i][j][k]);
+			}
+			printf("\n");
+			if ((j == FLOOR - 1)&&(i<BUILDING-1)){
+				for (k = 0; k < ROOM*2; k++){
+					printf("#");
+				}
+				printf("\n");
+			}
+		}
+	}
+}
+int main(void){
+	int cnt[BUILDING][FLOOR][ROOM] = { 0 };
+	int(*pcnt)[FLOOR][ROOM] = cnt;
+	input(pcnt);
+	output(pcnt);
+	return 0;
+}

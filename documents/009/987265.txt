@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <bitset>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int popcnt(int n) {
+  n = ((n & 0xAAAAAAAA) >>  1) + (n & 0x55555555);
+  n = ((n & 0xCCCCCCCC) >>  2) + (n & 0x33333333);
+  n = ((n & 0xF0F0F0F0) >>  4) + (n & 0x0F0F0F0F);
+  n = ((n & 0xFF00FF00) >>  8) + (n & 0x00FF00FF);
+  n = ((n & 0xFFFF0000) >> 16) + (n & 0x0000FFFF);
+  return n;
+}
+
+int main() {
+  while(1){
+    int n,c;
+    cin >> n >> c;
+    if(!n) break;
+    vector<int> a(n);
+    vector<int> b(c);
+    for (int i = 0; i < n; ++i) {
+      bitset<16> bs;
+      for (int j = 0; j < 16; ++j) {
+        int t;
+        cin >> t;
+        bs[j] = t == 1;
+      }
+      a[i] = bs.to_ulong();
+    }
+    for (int i = 0; i < c; ++i) {
+      bitset<16> bs;
+      for (int j = 0; j < 16; ++j) {
+        int t;
+        cin >> t;
+        bs[j] = t == 1;
+      }
+      b[i] = bs.to_ulong();
+    }
+    vector<vector<int>> dp(n+1, vector<int>(1<<16,-1000000000));
+    dp[0][0] = 0;
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < (1 << 16); ++j) {
+        bitset<16> bs(j);
+        for (int k = 0; k < 16; ++k) {
+          if ((a[i] >> k) & 1) bs[k] = true;
+        }
+        for (int k = 0; k < c; ++k) {
+          int cp = bs.to_ulong();
+          int point = dp[i][j];
+          int and_cp = cp & b[k];
+          cp ^= and_cp;
+          point += popcnt(and_cp);
+          dp[i+1][cp] = max(dp[i+1][cp], point);
+        }
+      }
+    }
+    cout << *max_element(begin(dp[n]),end(dp[n])) << endl;
+  }
+  return 0;
+}

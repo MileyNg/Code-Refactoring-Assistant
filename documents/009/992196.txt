@@ -1,0 +1,53 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+class team{
+	private:
+		int teamID, penalty, accept;
+		vector<int> wrong;
+	public:
+		team(int ID, int numpro):teamID(ID), penalty(0),accept(0), wrong(numpro, 0){}
+		void correct(int pID, int time){
+			accept++;	
+			penalty+=1200*wrong[pID]+time;
+		}
+		void notCorrect(int pID){
+			wrong[pID]++;
+		}
+		void print()const {
+			cout << teamID << " " << accept << " " << penalty << endl;
+		}
+		bool operator<(const team & t)const{
+			if(accept != t.accept) return accept < t.accept;
+			if(penalty != t.penalty) return penalty > t.penalty;
+			return teamID > t.teamID;
+		}
+};
+int main(){
+	int T,P,R;
+	while((cin>>T>>P>>R)&&T!=0){
+		vector<team> teams;
+		for(int i=1;i<=T;i++){
+			teams.push_back(team(i,P));
+		}
+		for(int i=1;i<=R;i++){
+			int tid, pid, time;
+			string message;
+			cin>>tid>>pid>>time>>message;
+			tid--;
+			pid--;
+			if(message == "CORRECT"){
+				teams[tid].correct(pid,time);
+			}
+			else{
+				teams[tid].notCorrect(pid);
+			}
+		}
+		sort(teams.rbegin(), teams.rend());
+		for(const team& t : teams) {
+			t.print();
+		}
+	}
+}

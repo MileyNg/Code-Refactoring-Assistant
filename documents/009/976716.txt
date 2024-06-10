@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int depth[2][101];
+
+string pad(int height) {
+    int len = (height <= 0 ? 0 : 3 * ((1 << height) - 1));
+    string ret = "";
+    for (int i=0; i<len; ++i) {
+        ret += " ";
+    }
+    return ret;
+}
+
+void pad(vector<string> &t, int height) {
+    vector<string> ts(t.size(), ""); // tree with spaces;
+    for (int i=0; i<(int)t.size(); ++i) {
+        for (int j=0; j<(int)t[i].size(); ++j) {
+            if (t[i][j] == ',') {
+                if (t[i][j - 1] == '(') ts[i] += pad(height - depth[i][j]);
+                ts[i] += ',';
+                if (t[i][j + 1] == ')') ts[i] += pad(height - depth[i][j]);
+            } else {
+                ts[i] += t[i][j];
+            }
+        }
+        t[i] = ts[i];
+    }
+}
+
+string intersection(vector<string> &t, int height) {
+    pad(t, height);
+    string ret = "";
+    for (int i=0; i<(int)t[0].size(); ++i) {
+        if (t[0][i] != ' ' && t[1][i] != ' ') ret += t[0][i];
+    }
+    return ret;
+}
+
+string unite(vector<string> &t, int height) {
+    pad(t, height);
+    string ret = "";
+    for (int i=0; i<(int)t[0].size(); ++i) {
+        if (t[0][i] != ' ') {
+            ret += t[0][i];
+        } else if (t[1][i] != ' ') {
+            ret += t[1][i];
+        }
+    }
+    return ret;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+
+    char op;
+    vector<string> t(2);
+    while (cin >> op) {
+        cin >> t[0] >> t[1];
+
+        vector<int> height(2, 0);
+        for (int i=0; i<2; ++i) {
+            int c = 0;
+            for (int j=0; j<(int)t[i].size(); ++j) {
+                if (t[i][j] == '(') c ++;
+                depth[i][j] = c;
+                if (t[i][j] == ')') c --;
+                height[i] = max(height[i], c);
+            }
+        }
+
+        switch (op) {
+            case 'i':
+                cout << intersection(t, max(height[0], height[1])) << endl;
+                break;
+            case 'u':
+                cout << unite(t, max(height[0], height[1])) << endl;
+                break;
+        }
+    }
+
+    return 0;
+}

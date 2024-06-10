@@ -1,0 +1,23 @@
+while (line = gets)
+  rs = line.chomp.split(" ").map{|s| s.to_f}
+
+  bl = rs.shift
+  m = rs.length
+  tf = false
+
+  for rs0 in rs.permutation(m)
+    l = rs0[0] + rs0[m - 1]
+    for i in (1...m)
+      rp = rs0[i - 1] + rs0[i]
+      rm = rs0[i - 1] - rs0[i]
+      l += Math.sqrt(rp * rp - rm * rm)
+    end
+
+    if bl >= l
+      tf = true
+      break
+    end
+  end
+
+  puts tf ? "OK" : "NA"
+end

@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+struct edge{
+  int to, cost;
+  edge(int to,int cost): to(to), cost(cost){};
+};
+vector< edge > info[30];
+int ticket[8];
+int n, m, p, a, b;
+bool used[1 << 8][30];
+typedef pair< int, int > Pi;
+typedef pair< double, Pi > Pii;
+#define fr first
+#define sc second
+double Dijkstra() {
+  priority_queue< Pii, vector< Pii >, greater< Pii > > que;
+  que.push( Pii( 0.0, Pi( a, 0)));
+  fill_n( *used, 30 * (1 << 8), false);
+  used[0][a] = true;
+  while(!que.empty()){
+    Pii p = que.top();
+    que.pop();
+    if(p.sc.fr == b) return p.fr;
+    for(int i = 0; i < info[p.sc.fr].size(); i++){
+      edge e = info[p.sc.fr][i];
+      for(int j = 0; j < n; j++){ //チケット
+        if( p.sc.sc >> j & 1) continue;
+        if(used[p.sc.sc|1<<j][e.to]++) continue;
+        que.push( Pii( p.fr + (double)e.cost / ticket[j], Pi( e.to, p.sc.sc|1<<j)));
+      }
+    }
+  }
+  return -1;
+}
+
+
+int main(){
+
+  while(cin >> n >> m >> p >> a >> b, n){
+    a--, b--;
+    for(int i = 0; i < n; i++){
+      cin >> ticket[i];
+    }
+    for(int i = 0; i < p; i++){
+      int x, y, z;
+      cin >> x >> y >> z;
+      x--, y--;
+      info[x].push_back( edge( y, z));
+      info[y].push_back( edge( x, z));
+    }
+    double ret = Dijkstra();
+    if(ret == -1) cout << "Impossible" << endl;
+    else cout << fixed << setprecision(5) << ret << endl;
+    
+    for(int i = 0; i < m; i++) info[i].clear();
+  }
+  return(0);
+}

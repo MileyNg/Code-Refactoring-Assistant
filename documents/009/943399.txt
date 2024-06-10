@@ -1,0 +1,39 @@
+#include <iostream>
+#include <algorithm>
+#include <list>
+using namespace std;
+
+int main(void){
+	std::ios_base::sync_with_stdio(false);
+	list<int> l;
+	string s;
+	int d;
+	int n;
+
+	cin >> n;
+	for(int i=0; i<n; i++){
+		cin >> s;
+		if(s[0] == 'i'){
+			cin >> d;
+			l.push_front(d);
+		}else if(s == "delete"){
+			cin >> d;
+			list<int>::iterator pos;
+			pos = find(l.begin(), l.end(), d);
+			l.erase(pos);
+		}else if(s == "deleteFirst"){
+			l.pop_front();
+		}else if(s == "deleteLast"){
+			l.pop_back();
+		}
+	}
+
+	list<int>::iterator pos;
+	for(pos=l.begin(); pos!=l.end(); pos++){
+		if(pos != l.begin()) cout << " ";
+		cout << *pos;
+	}
+	cout << endl;
+
+	return 0;
+}

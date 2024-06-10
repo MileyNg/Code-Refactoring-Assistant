@@ -1,0 +1,124 @@
+#include<stdio.h>
+#include<math.h>
+
+int FLG = 0;
+
+typedef struct{
+	double x,y;
+}POINT;
+
+POINT point(POINT p1,POINT p2);
+double incl(POINT p1,POINT p2,int plus);
+double cept(double x,double y,double a);
+double cut(double x);
+
+int main(){
+  POINT p1,p2,p3,lp1,lp2;
+  int n;
+  double la1,la2,lb1,lb2;
+  double x,y,r,tmp;
+  
+  scanf("%d",&n);
+  
+  while(n>0){
+	scanf("%lf %lf %lf %lf %lf %lf",&p1.x,&p1.y,&p2.x,&p2.y,&p3.x,&p3.y);
+	
+	lp1 = point(p1,p2);
+	la1 = incl(p1,p2,1);
+	lb1 = cept(lp1.x,lp1.y,la1);
+
+	lp2 = point(p1,p3);
+	la2 = incl(p1,p3,2);
+	lb2 = cept(lp2.x,lp2.y,la2);
+
+	if(FLG == 0){
+		x = -1*(lb1-lb2)/(la1-la2);
+		y = la1*x+lb1;
+		tmp = ((x - p1.x)*(x - p1.x))+((y - p1.y)*(y - p1.y));
+		r = sqrt(tmp);
+	}
+
+
+	//la1が無限
+	else if(FLG == 1){
+
+		x = lp1.x;
+		y = la2 * x + lb2;
+		tmp = ((x - p1.x)*(x - p1.x))+((y - p1.y)*(y - p1.y));
+		r = sqrt(tmp);
+
+	}
+	//la2が無限
+	else if(FLG == 2){
+
+		x = lp2.x;
+		y = la1 * x + lb1;
+		tmp = ((x - p1.x)*(x - p1.x))+((y - p1.y)*(y - p1.y));
+		r = sqrt(tmp);
+
+	}
+
+	x = cut(x);
+	y = cut(y);
+	r = cut(r);
+
+	printf("%.3f %.3f %.3f\n",x,y,r);
+
+	n--;
+
+	}
+
+	return 0;
+}
+
+//中点座標
+POINT point(POINT p1,POINT p2){
+	POINT P;
+
+	P.x = (p1.x + p2.x)/2;
+	P.y = (p1.y + p2.y)/2;
+
+	return (P);
+}
+
+//傾き
+double incl(POINT p1,POINT p2,int plus){
+	double a;
+
+	double tmp;
+
+	tmp = p2.x - p1.x;
+
+	if((tmp != 0) && (tmp>0 || tmp<0)) a = (p2.y - p1.y)/tmp;
+
+	else return 0;
+
+	if(a==0) FLG += plus;
+	else{
+	a = -1*(1/a);
+	}
+
+	return a;
+}
+
+//切片
+double cept(double x,double y,double a){
+  double b;
+  
+  b = y-(a*x);
+  
+  return (b);
+}
+
+//四捨五入
+double cut(double x){
+  double src,d;
+
+  if(x<0) d=-0.5;
+  else d=0.5;
+
+  src = (int)(x*pow(10,3)+d);
+  x = (double)src*pow(10,-3);
+
+  return (x);
+}

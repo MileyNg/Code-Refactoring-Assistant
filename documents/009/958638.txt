@@ -1,0 +1,82 @@
+//0037
+//include-------------------------------------
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<cmath>
+#include<map>
+#include<stack>
+
+using namespace std;
+
+//typedef--------------------------------------
+typedef vector<int> VI;
+typedef vector<string> VS;
+typedef pair<int, int> PII;
+
+#define MP make_pair
+
+//repetition-----------------------------------
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,n) FOR(i,0,n)
+
+//constant-------------------------------------
+const double PI = acos(-1.0);
+
+//cout,cin-------------------------------------
+#define COUT(x) cout<<(x)<<endl
+#define CIN(x) cin>>(x)
+
+int main(){
+	int wall[5][5][4] = { { 0 }, { 0 }, { 0 } };
+	int now[5][5];
+	string dir = "RDLU";
+	string ans = "R";
+	int dx[] = { 0, 1, 0, -1 };
+	int dy[] = { 1, 0, -1, 0 };
+
+	REP(i, 9){
+		string st;
+		CIN(st);
+		if (i % 2) REP(j, 5){
+			wall[(i - 1) / 2][j][1] = st[j]-'0';
+			wall[(i - 1) / 2 + 1][j][3] = st[j] - '0';
+		}
+		else REP(j, 4){
+			wall[i / 2][j][0] = st[j] - '0';
+			wall[i / 2][j + 1][2] = st[j] - '0';
+		}
+	}
+
+	int x = 0;
+	int y = 1;
+	now[x][y] = 0;
+	
+
+	while (!(x == 0 && y == 0)){
+		int p=now[x][y];
+		if (wall[x][y][(now[x][y] + 3) % 4] == 1){
+			x += dx[(now[x][y] + 3) % 4];
+			y += dy[(now[x][y] + 3) % 4];
+			now[x][y] = (p + 3) % 4;
+			ans += dir[(now[x][y] + 3) % 4];
+		}
+		else if (wall[x][y][now[x][y]] == 1){
+			x += dx[now[x][y]];
+			y += dy[now[x][y]];
+			now[x][y] = p;
+			ans += dir[now[x][y]];
+		}
+		else{
+			x += dx[(now[x][y] + 1) % 4];
+			y += dy[(now[x][y] + 1) % 4];
+			now[x][y] = (p + 1) % 4;
+			ans += dir[(now[x][y] + 1) % 4];
+		}
+	}
+
+	COUT(ans);
+
+	return 0;
+}

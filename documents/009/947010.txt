@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string
+caesar (string str, int n)
+{
+  const string table = "abcdefghijklmnopqrstuvwxyz";
+  string ans (str.length (), ' ');
+  for (int i = 0; i < str.length (); i++)
+    {
+      int buf = table.find (str[i]);
+      if (buf == string::npos)
+	{
+	  ans[i] = str[i];
+	}
+      else
+	{
+	  ans[i] = (buf + n < table.length ())? table[buf + n]
+	    : table[buf + n - table.length ()];
+	}
+    }
+  return ans;
+}
+
+int
+main ()
+{
+  string str;
+  while (getline (cin, str))
+    {
+      string after;
+      for (int i = 0; i <= 25; i++)
+	{
+	  after = caesar (str, i);
+	  if (after.find ("the") != string::npos)
+	    break;
+	  if (after.find ("this") != string::npos)
+	    break;
+	  if (after.find ("that") != string::npos)
+	    break;
+	}
+      cout << after << endl;
+    }
+}

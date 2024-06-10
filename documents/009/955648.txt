@@ -1,0 +1,25 @@
+#include<stdio.h>
+int main(){
+    int i,j,x,count=0,y,z;
+    scanf("%d %d",&y,&x);
+    z=x;
+    for(i=1;i<=x/2;i++){
+        x-=i;
+        for(j=i+1;j<=y-1;j++){
+            x-=j;
+            if(x<0){
+                x+=j;
+                continue;
+            }
+            if(x==0){
+                count++;
+                x=z;
+                break;
+            }
+            if(x==j)x+=i;
+        }
+        x=z;
+    }
+    printf("%d\n",count);
+    return 0;
+}

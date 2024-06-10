@@ -1,0 +1,36 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+const int dx[] = { -1, 0, 1, 0 };
+const int dy[] = { 0, -1, 0, 1 };
+
+int main(){
+	int W, H;
+	while( cin >> W >> H, W, H ){
+		char room[20][20];
+		queue< pair<int, int> > xy;
+		for( int i = 0; i < H; i++ ){
+			for( int j = 0; j < W; j++ ){
+				cin >> room[i][j];
+				if( room[i][j] == '@' ){
+					xy.push(pair<int, int>(i, j));
+					room[i][j] = '#';
+				}
+			}
+		}
+		int sum = 1;
+		while( !xy.empty() ){
+			for( int i = 0; i < 4; i++ ){
+				int x = xy.front().second + dx[i];
+				int y = xy.front().first + dy[i];
+				if( 0 <= x && x < W && 0 <= y && y < H && room[y][x] == '.' ){
+					room[y][x] = '*';
+					xy.push(pair<int, int>(y, x));
+					sum++;
+				}
+			}
+			xy.pop();
+		}
+		cout << sum << endl;
+	}
+}

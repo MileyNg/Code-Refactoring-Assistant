@@ -1,0 +1,62 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define ALL(T) T.begin(),T.end()
+
+long long fact(long long n);
+
+int main(){
+	string S; cin >> S;
+	map<char, int> chrs;
+
+	for (char c = 'a'; c <= 'z'; c++) { chrs[c] = 0; }
+
+	for (int i = 0; i < S.size(); i++) { chrs[S[i]]++; }
+
+	int oddc = 0;
+	int odd = 0;
+	vector<int> hchrc;
+
+	for (map<char, int>::iterator it = chrs.begin(); it != chrs.end(); it++) {
+		if (it->second % 2) {
+			odd = it->second;
+			oddc++;
+		} else {
+			if (it->second) {
+				hchrc.push_back((it->second)/2);
+			}
+		}
+	}
+
+	long long int res = 0;
+
+	if (oddc < 2) {
+		odd = (odd-1)/2;
+		hchrc.push_back(odd);
+		int sum = 0;
+		for (int i = 0; i < hchrc.size(); i++) {
+			sum += hchrc[i];
+		}
+		res = 1;
+		res *= fact(sum);
+		for (int i = 0; i < hchrc.size(); i++) {
+			res /= fact(hchrc[i]);
+		}
+	}
+
+	cout << res << endl;
+
+
+	return 0;
+}
+
+long long fact(long long n){
+	if (n <= 1) { return 1; }
+	else { return n * fact(n-1); }
+}

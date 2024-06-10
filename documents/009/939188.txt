@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+
+using namespace std;
+
+string A,B;
+int ans = 0;
+
+void dfs(int p, string C, int k, int c)
+{
+	if(p < 0)
+	{
+		if(c == 0)
+		{
+			ans = max(ans, atoi(C.c_str()));
+		}
+		return;
+	}
+	else
+	{
+		int calc = A[p] - B[p] - c;
+		if(calc >= 0)
+		{
+			dfs(p - 1, string(1, '0' + calc) + C, k, 0);
+		}
+		else
+		{
+			calc += 10;
+			dfs(p - 1, string(1, '0' + calc) + C, k, 1);
+			if(k)
+			{
+				dfs(p - 1, string(1, '0' + calc) + C, k - 1, 0);
+			}
+		}
+	}
+}
+
+void solve()
+{
+	int K;
+	cin >> A >> B >> K;
+	while(A.size() > B.size())
+	{
+		B = "0" + B;
+	}
+	while(B.size() > A.size())
+	{
+		A = "0" + A;
+	}
+	dfs(A.size() - 1, "", K, 0);
+	cout << ans << endl;
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

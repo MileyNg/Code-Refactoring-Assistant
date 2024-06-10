@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<queue>
+using namespace std;
+int main()
+{
+  int n,m;
+  for(;cin>>n>>m,n;)
+    {
+      int edge[n][n];
+      memset(edge,-1,sizeof(edge));
+      for(int i=0;i<m;i++)
+	{
+	  int a,b,cost;
+	  cin>>a>>b>>cost;
+	  edge[a][b]=cost;
+	  edge[b][a]=cost;
+	}
+      bool closed[n];
+      memset(closed,false,sizeof(closed));
+      int cnt=n-1;
+      int ans=0;
+      closed[0]=true;
+      priority_queue<pair<int,int>, vector<pair<int,int> > ,greater<pair<int,int> > > qu;
+      for(int i=0;i<n;i++)
+	{
+	  if(edge[0][i]!=-1)
+	    qu.push(make_pair(edge[0][i],i));
+	}
+      while(true)
+	{
+	  int pos=qu.top().second;
+	  int cost=qu.top().first;
+	  //  cout<<"#"<<pos<<" "<<cost<<endl;
+	  qu.pop();
+	  if(closed[pos])
+	    continue;
+	  closed[pos]=true;
+	  ans+=cost;
+	  cnt--;
+	  if(cnt<=0)
+	    break;
+	  for(int i=0;i<n;i++)
+	    {
+	      if(edge[pos][i]!=-1)
+		qu.push(make_pair(edge[pos][i],i));
+	    }
+	}
+      cout<<ans<<endl;
+    }
+
+}

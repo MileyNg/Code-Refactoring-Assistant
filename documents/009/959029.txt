@@ -1,0 +1,19 @@
+#include<algorithm>
+#include<iostream>
+using namespace std;
+int t, n, k, X[100000], A[100000], total;
+int main(){
+	cin >> t;
+	for (int i=0; i<t; i++){
+		cin >> n >> k;
+		for (int j=0; j<n; j++){
+			cin >> X[j];
+			total=total+X[j];
+		}
+		for (int l=0; l+1<n; l++) A[l]=X[l+1]-X[l];
+		sort(A,A+n-1);
+		total=0;
+		for (int m=0; m<max(0,n-k); m++) total=total+A[m];
+		cout << total << endl;
+	}
+}

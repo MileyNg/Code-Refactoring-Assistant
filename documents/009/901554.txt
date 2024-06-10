@@ -1,0 +1,130 @@
+#include<iostream>
+#include<cmath>
+#define INF 9999999.9999999
+using namespace std;
+
+int n,m,a,b;
+int id[1000];
+double x[1000],y[1000];
+double t[1000][1000];
+
+void init();
+void input();
+void make_table();
+void dijkstra(int,int);
+int change(int);
+int main(){
+  while(cin>>n&&n){
+    init();
+    input();
+    make_table();
+    for(int i=0;i<m;i++){
+      cin>>a>>b;
+      
+      dijkstra(change(a),change(b));
+    }
+  }
+  return 0;
+}
+
+void init(){
+  for(int i=0;i<1000;i++){
+    for(int j=0;j<1000;j++){
+      t[i][j]=INF;
+    }
+  }
+}
+
+void input(){
+  for(int i=0;i<n;i++){
+    cin>>id[i]>>x[i]>>y[i];
+  }
+  cin>>m;
+}
+
+void make_table(){
+  double a;
+  for(int i=0;i<n;i++){
+    for(int j=0;j<n;j++){
+      if(i==j)continue;
+      a=sqrt(pow(x[i]-x[j],2.0)+pow(y[i]-y[j],2.0));
+
+      if(a<=50.0)t[i][j]=a;
+    }
+  }
+
+  /*
+  for(int i=0;i<n;i++){
+    for(int j=0;j<n;j++){
+      if(t[i][j]==INF)cout<<"-- ";
+      else{
+	if((int)t[i][j]<10)cout<<' ';
+	cout<<(int)t[i][j]<<' ';
+      }
+    }
+    cout<<endl;
+  }
+  */
+}
+
+void dijkstra(int S,int T){
+  //cout<<"S T "<<S<<' '<<T<<endl;
+  int pi[1000];
+  int mini_no;
+  bool vd[1000];
+  double u[1000];
+  double mini;
+  
+
+  for(int i=0;i<n;i++){
+    vd[i]=false;
+    u[i]=INF;
+  }
+
+  u[S]=0.0;
+  pi[S]=-1;
+
+  while(1){
+    mini=INF;
+    for(int i=0;i<n;i++){
+      if(mini>u[i]&&vd[i]==false){
+	mini=u[i];
+	mini_no=i;
+      }
+    }
+
+    if(mini==INF)break;
+    vd[mini_no]=true;
+
+    for(int i=0;i<n;i++){
+      if(t[mini_no][i]==INF)continue;
+      if(u[i]>u[mini_no]+t[mini_no][i]){
+	u[i]=u[mini_no]+t[mini_no][i];
+	pi[i]=mini_no;
+      }
+    }
+  }
+
+
+  int ans[1000],cnt=0;
+  
+    
+  if(u[T]==INF)cout<<"NA"<<endl;
+  else {
+    //cout<<vd[T]<<endl;
+    for(;T!=-1;T=pi[T])ans[cnt++]=T;
+
+
+    for(int i=cnt-1;i>=0;i--){
+      if(i!=cnt-1)cout<<' ';
+      cout<<id[ans[i]];
+    }
+    cout<<endl;
+  }
+}
+
+int change(int x){
+  for(int i=0;i<n;i++){
+    if(id[i]==x)return i;
+  }
+}

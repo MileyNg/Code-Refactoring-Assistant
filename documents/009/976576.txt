@@ -1,0 +1,45 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+
+    int d;
+    while (cin >> d && d) {
+        int n, m;
+        cin >> n >> m;
+
+        vector<int> S(1, 0);
+        int di;
+        for (int i=0; i<n-1; ++i) {
+            cin >> di;
+            S.push_back(di);
+        }
+        sort(S.begin(), S.end());
+
+        long long sum = 0;
+        int ki;
+        for (int i=0; i<m; ++i) {
+            cin >> ki;
+            int j = lower_bound(S.begin(), S.end(), ki) - S.begin();
+            int add = 1000000000;
+            add = min(add, abs(S[j % n] - ki));
+            add = min(add, abs(S[j % n] + d - ki));
+            add = min(add, abs(S[j % n] - d - ki));
+            add = min(add, abs(S[(j + 1) % n] - ki));
+            add = min(add, abs(S[(j + 1) % n] + d - ki));
+            add = min(add, abs(S[(j + 1) % n] - d - ki));
+            add = min(add, abs(S[(j + n - 1) % n] - ki));
+            add = min(add, abs(S[(j + n - 1) % n] + d - ki));
+            add = min(add, abs(S[(j + n - 1) % n] - d - ki));
+            sum += add;
+        }
+        cout << sum << endl;
+    }
+
+    return 0;
+}

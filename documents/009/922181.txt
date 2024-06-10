@@ -1,0 +1,37 @@
+class Staff_manage
+  def initialize()
+    @arr = []
+  end
+  def set(size)
+    @hash = Hash.new(0)
+    size.times do
+      @no, @price ,@num= gets.chomp.split(' ').each{|x| x.to_i}
+      @hash[@no] += @price.to_i * @num.to_i
+    end
+  end
+
+  def check()
+    no_arr = []
+    @hash.each do |key, value|
+        if value >= 1000000
+            no_arr << key
+        end
+    end
+    no_arr << 'NA' if no_arr.size == 0
+    @arr << no_arr
+  end
+
+  def output()
+    @arr.each{|no| puts no}
+  end
+end
+
+staff = Staff_manage.new()
+loop do
+  size = gets.chomp.to_i
+  break if size == 0
+
+  staff.set(size)
+  staff.check()
+end
+staff.output()

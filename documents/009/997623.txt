@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);i++)
+int N;
+vector<int> t[20];
+int dp[16][1<<16];
+
+int dfs(int pos, int S) {
+    if(S == (1<<N)-1) return 0;
+    if(dp[pos][S] != -1) return dp[pos][S];
+    int ret = 1000000000;
+
+    //i番目をj番目の装備で攻略
+    rep(i,N) {
+        if(i == pos) continue;
+        if((S>>i)&1) continue;
+        rep(j,N) {
+            if(i==j) continue;
+            if(!((S>>j)&1)) continue;
+
+            ret = min(ret, dfs(i,S|(1<<i)) + t[i][j+1]);
+        }
+        ret = min(ret, dfs(i, S|(1<<i)) + t[i][0]);
+    }
+    return dp[pos][S]=ret;
+
+}
+
+void solve() {
+    rep(i,16) rep(j,1<<16) dp[i][j]=-1;
+    rep(i,N) {
+        t[i].resize(N+1);
+        rep(j,N+1) {
+            int a;
+            cin>>a;
+            t[i][j]=a;
+        }
+    }
+    int ans = 1000000000;
+    rep(i,N) {
+        ans = min(ans,dfs(i, 1<<i)+t[i][0]);
+    }
+    cout<<ans<<endl;
+
+    rep(i,N) t[i].clear();
+
+}
+int main() {
+
+    while(cin>>N) {
+        if(!N) return 0;
+        solve();
+    }
+
+    return 0;
+}

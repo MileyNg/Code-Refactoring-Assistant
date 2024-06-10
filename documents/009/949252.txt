@@ -1,0 +1,43 @@
+#include<stdio.h>
+
+int main(){
+    int i,j,w[20],k[20];
+    int aw[20], ak[20];
+    int sw, sk;
+
+    for(i=0;i<10;i++)
+        scanf("%d",&w[i]);
+    for(i=0;i<10;i++)
+        scanf("%d",&k[i]);
+
+    for(j=0;j<10;j++){
+        int use;
+        ak[j] = 1000000000;
+        for(i=0;i<10;i++){
+            if(k[i] < ak[j]){
+                ak[j] = k[i];
+                use = i;
+            }
+        }
+        k[use] = 100000000;
+    }
+
+    for(j=0;j<10;j++){
+        int use;
+        aw[j] = 1000000000;
+        for(i=0;i<10;i++){
+            if(w[i] < aw[j]){
+                aw[j] = w[i];
+                use = i;
+            }
+        }
+        w[use] = 100000000;
+    }
+
+    sw=aw[9]+aw[8]+aw[7];
+    sk=ak[9]+ak[8]+ak[7];
+
+    printf("%d %d\n",sw,sk);
+
+    return 0;
+}

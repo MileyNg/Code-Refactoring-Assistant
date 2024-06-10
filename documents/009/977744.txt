@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int n;
+int a[128];
+
+int dfs(int p, int g, int c){
+  if(n == c) return abs(p-g);
+  return min(dfs(p+a[c], g, c+1), dfs(p, g+a[c], c+1));
+}
+
+int main(){
+  while(scanf("%d", &n) && n){
+    rep(i, n) scanf("%d", a+i);
+    printf("%d\n", dfs(0, 0, 0));
+  }
+  return 0;
+}

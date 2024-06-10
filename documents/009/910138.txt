@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(void){
+  long N,i,j,max;
+  long *R;
+
+  scanf("%ld",&N);
+
+  R=(long *)malloc(N*sizeof(long));
+
+  for(i=0;i<N;i++){
+    scanf("%ld",&R[i]);
+    if(i<2){
+      max=R[1]-R[0];
+    }
+    else{
+      for(j=0;j<i;j++){
+	if(max<R[i]-R[j]) max=R[i]-R[j];
+      }
+    }
+  }
+
+  printf("%ld\n",max);
+
+  free(R);
+
+  return 0;
+}

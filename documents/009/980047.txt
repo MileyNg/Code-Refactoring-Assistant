@@ -1,0 +1,75 @@
+#include <iostream>
+using namespace std;
+
+int M, N, MM, tw[3][20], c1[15], c2[15];
+
+int min(int a, int b){
+    return a<b?a:b;
+}
+
+int abs(int a){
+    return a<0?-a:a;
+}
+
+void set(){
+    for(int x = 0; x < 15; x++){
+        c1[x] = 0;
+        c2[x] = 0;
+    }
+    for(int x = 1; x <= M; x++){
+        for(int y = 0; y < 20 && !(c1[x] && c2[x]); y++){
+            for(int z = 0; z < 3; z++){
+                if( tw[z][y] == x ){
+                    c1[x] = z;
+                    c2[x] = 2-z;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+int count(int n,int d){
+    int a = 1;
+    while( n++ < M ) a *= 3;
+    return (a-1)*d + d;
+}
+        
+int solve(){
+    set();
+    int ans1 = 0, ans2 = 0;
+    for(int x = 1; x <= M; x++){
+        ans1 += count(x, c1[x]);
+        if(c1[x] == 1){
+            for(int y = x+1; y <= M; y++){
+                c1[y] = 2 - c1[y];
+            }
+        }
+        ans2 += count(x, c2[x]);
+        if(c2[x] == 1){
+            for(int y = x+1; y <= M; y++){
+                c2[y] = 2 - c2[y];
+            }
+        }
+    }
+    return min(ans1, ans2);
+}
+
+int main(){
+    cin >> M >> N;
+    while( M + N > 0 ){
+        for(int i = 0; i < 3; i++){
+            int j,k;
+            cin >> k;
+            for(j = 0; j < k; j++){
+                cin >> tw[i][j];
+            }
+            for(; j < 20; j++){
+                tw[i][j] = 0;
+            }
+        }
+        cout << solve() << endl;
+        cin >> M >> N;
+    }
+    return 0;
+}

@@ -1,0 +1,27 @@
+#include<iostream>
+ 
+using namespace std;
+
+int main(){
+ 
+    int e;
+    int ans;
+	int find;
+
+    while(1){
+        cin>>e;
+        if(e==0) break;
+ 
+        ans=10000000;
+		for(int i=0;i*i<=e;i++){
+			for(int j=0;i*i+j*j*j<=e;j++){
+				if(i+j+(e-i*i-j*j*j)<ans&&e-i*i-j*j*j>=0){
+					ans=i+j+(e-i*i-j*j*j);
+				}
+            }
+        }
+        cout<<ans<<endl;
+    }
+ 
+}
+ 

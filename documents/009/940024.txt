@@ -1,0 +1,42 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int n,have[110],stage,turn,tmp;
+  char c[110];
+  while(1){
+    cin >> n;
+    if(n==0) break;
+    stage=0;
+    memset(have,0,sizeof(have));
+    cin << c;
+    for(int i=0,turn=0;i<100;i++,turn++){
+      if(turn>=n) turn=0;
+      if(c[i]=='M'){ //男の場合。
+        have[turn]++;
+      }
+      else if(c[i]=='S'){ //坊主の場合。
+        stage+=have[turn]+1;
+        have[turn]=0;
+      }
+      else if(c[i]=='L'){ //姫の場合。
+        have[turn]+=stage+1;
+        stage=0;
+      }
+    }
+    //ソート
+    for(int i=0;i<n;i++){
+      for(int j=n-1;j>i;j--){
+        if(have[j]<have[j-1]){
+          tmp=have[j];
+          have[j]=have[j-1];
+          have[j-1]=tmp;
+        }
+      }
+    }
+    for(int i=0;i<n;i++){
+      cout << have[i];
+      if(i==n-1) cout << endl;
+      else cout << " ";
+    }
+  }
+}

@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+#define ICPC_2010_A
+//#define ICPC_2010_B
+
+#ifdef ICPC_2010_A
+
+int ary[410][410]={0};
+
+int main(void){
+
+	while(1){
+
+		for(int i=0;i<410;i++)
+			for(int j=0;j<410;j++)
+				ary[i][j]=-1;
+
+		int n;
+		int nn,dd;
+		ary[200][200]=0;
+		int left=0,right=0,up=0,down=0;
+
+
+		cin >> n;
+		if(!n)break;
+
+		for(int k=1;k<n;k++){
+			cin >> nn >>dd;
+			for(int i=0;i<410;i++)
+				for(int j=0;j<410;j++)
+					if(ary[i][j]==nn){
+						if(dd==0){
+							ary[i][j-1]=k;
+							if(j-1-200<left)left--;
+						}
+						else if(dd==1){
+							ary[i+1][j]=k;
+							if(i+1-200>down)down++;
+						}
+						else if(dd==2){
+							ary[i][j+1]=k;
+							if(j+1-200>right)right++;
+						}
+						else{
+							ary[i-1][j]=k;
+							if(i-1-200<up)up--;
+						}
+						break;
+					}
+		}
+
+		cout << right-left+1<<" "<<down-up+1<<endl;
+
+	}
+
+	return 0;
+}
+
+#endif
+
+#ifdef ICPC_2010_B
+
+bool Wall[32][32];
+
+int main(){
+	
+	while(true){
+		//	init
+		memset(Wall,true, sizeof(bool)*32*32);
+
+		int w,h;
+		cin >> w >> h;
+
+		for(int i = 0 ; i < (2*h-1) ; ++i){
+			//	|の壁
+			for(int j = 0 ; j < (w-1) ; ++j){
+				int tmp;
+				cin >> tmp;
+
+				if(tmp == 0)
+					Wall[j][i] = false;
+				else
+					Wall[j][i] = true;
+
+				
+			}
+			i++;
+			//	--の壁
+			for(int j = 0 ; j < w ; ++j){
+				int tmp;
+				cin >> tmp;
+
+				if(tmp == 0)
+					Wall[j][i] = false;
+				else
+					Wall[j][i] = true;
+
+				
+			}
+				
+		}
+
+	}
+}
+
+#endif

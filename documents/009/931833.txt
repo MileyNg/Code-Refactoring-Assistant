@@ -1,0 +1,39 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main() {
+
+int a[50010];
+a[0]=0;
+a[1]=0;
+a[2]=1;
+a[3]=1;
+a[5]=1;
+for(int kk=2;kk<25001;kk++){
+	a[2*kk]==0;
+}
+for(int k=3;k<25000;k++){
+	int n,q=1;
+	n=sqrt(2*k+1);
+	for(int j=1;j<=n/2;j++){
+	if(	(2*k+1)%(2*j+1)==0){
+		q=0;
+	}
+	}
+a[2*k+1]=q;
+}
+int p;
+while(cin>>p){
+	int l=1,m=1;
+	while(a[p+l]==0){
+		l=l+1;
+	}
+	while(a[p-m]==0){
+		m=m+1;
+	}
+	cout<<p-m<<" "<<p+l<<endl;
+}
+
+	return 0;
+}

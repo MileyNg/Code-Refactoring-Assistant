@@ -1,0 +1,27 @@
+    #include <iostream>
+    #include <string>
+    using namespace std;
+     
+    int main() {
+    unsigned int aloc[200],ploc[200],idx=0,a,b;
+    string s;
+    getline(cin,s);
+    for(a=0;aloc[a]<=s.length();a++){
+    aloc[a]=s.find("apple",idx);
+    if(aloc[a]==string::npos){break;}
+    else{idx=aloc[a]+5;}
+    }idx=0;cout<<aloc[1]<<endl;
+    for(b=0;idx+5<=s.length();b++){
+    ploc[b]=s.find("peach",idx);
+    if(ploc[b]==string::npos){break;}
+    else{idx=ploc[b]+5;}
+    }
+    for(int i=0;i<a;i++){
+    s.replace(aloc[i],5,"peach");
+    }
+    for(int i=0;i<b;i++){
+    s.replace(ploc[i],5,"apple");
+    }
+    cout<<s<<endl;
+    return 0;
+    }

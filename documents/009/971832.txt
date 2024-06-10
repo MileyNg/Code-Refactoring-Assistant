@@ -1,0 +1,69 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<queue>
+#define INF 1000000000
+using namespace std;
+int bfs(int x,int y);
+int w,h;
+int i,j;
+int dy[4] = {1,0,-1,0}, dx[4] = {0,-1,0,1};
+string map[100];
+int dis[100][100];
+queue<pair<int,int> > q;
+int main(){
+  while(1){
+    cin >> w >> h;
+    if(w == 0 && h == 0) break;
+    w = 2*w -1;
+    h = 2*h -1;
+    cin.ignore();
+    for(i = 0;i < h;i++){
+      getline(cin,map[i]);
+    }
+    for(i = 0;i<100;i++){
+      for(j = 0;j<100;j++){
+	dis[i][j] = INF;
+      }
+    }
+    dis[0][0] = 0;
+    bfs(0,0);
+    if(100000000 >  dis[h-1][w-1] ){
+    cout << dis[h-1][w-1] +1<<endl;
+    }else{
+      cout << 0 <<endl;
+    }
+  }
+  return 0;
+}
+
+int bfs(int x,int y){
+  int i,j,k;
+  pair<int,int> g;
+  pair<int,int> tmp;
+  g.first = h -1;
+  g.second = w-1;
+  for(k = 0;k < 4;k++){
+    if(y +  dy[k] >-1 && y + dy[k] < h && x + dx[k] < w && x + dx[k] > -1){
+      if(map[y + dy[k]][x + dx[k]] == '0' && dis[y + 2*dy[k]][x + 2*dx[k]] == INF){
+	//cout << "x = " << x<<endl;
+	//cout << "y = " << y<<endl;
+	tmp.first = y + 2*dy[k];
+	tmp.second = x + 2*dx[k];
+	q.push(tmp);
+	dis[y + 2*dy[k]][x + 2*dx[k]] = dis[y][x] + 1;
+	//cout << "dis[y][x] = " << dis[y + 2*dy[k]][x + 2*dx[k]]<<endl;
+      }
+    }
+  }
+  while(q.size() != 0){
+    tmp = q.front();
+    q.pop();
+    if(tmp == g){
+      //cout<<"break"<<endl;
+      break;
+    }
+    bfs(tmp.second,tmp.first);
+  }
+  return 0;
+}

@@ -1,0 +1,88 @@
+### constant
+
+CS2CN = {
+  "Red" => 1, "Yellow" => 2, "Blue" => 3,
+  "Magenta" => 4, "Green" => 5, "Cyan" => 6
+}
+
+### subroutines
+
+def rot_x!(cb)
+  # 1:+y -> 2:+z -> 4:-y -> 3:-z -> 1:+y
+  tmp = cb[1]
+  cb[1] = cb[3]
+  cb[3] = cb[4]
+  cb[4] = cb[2]
+  cb[2] = tmp
+end
+
+def rot_y!(cb)
+  # 2:+z -> 0:+x -> 3:-z -> 5:-x -> 2:+z
+  tmp = cb[2]
+  cb[2] = cb[5]
+  cb[5] = cb[3]
+  cb[3] = cb[0]
+  cb[0] = tmp
+end
+
+def rot_z!(cb)
+  # 0:+x -> 1:+y -> 5:-x -> 4:-y -> 0:+x
+  tmp = cb[0]
+  cb[0] = cb[4]
+  cb[4] = cb[5]
+  cb[5] = cb[1]
+  cb[1] = tmp
+end
+
+def calc_cbi(cb)
+  cbi = 0
+  for cn in cb
+    cbi = cbi * 10 + cn
+  end
+  cbi
+end
+
+def normalized_cbi(cb)
+  cb0 = cb.clone
+  #puts "normalizing #{cb0}.."
+
+  while cb0[0] != 1
+    (cb0[1] != 1 && cb0[4] != 1) ? rot_y!(cb0) : rot_z!(cb0)
+  end
+
+  min_cbi = calc_cbi(cb0)
+
+  3.times.each do
+    rot_x!(cb0)
+    cbi = calc_cbi(cb0)
+    min_cbi = cbi if min_cbi > cbi
+  end
+
+  #puts "  #{cb0}->#{min_cbi}"
+  min_cbi
+end
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  cbis = {}
+  short = 0
+
+  n.times.each do
+    cb = gets.strip.split(' ').map{|s| CS2CN[s]}
+
+    cbi = normalized_cbi(cb)
+    #p [cb, cbi]
+
+    if ! cbis[cbi].nil?
+      short += 1
+    else
+      cbis[cbi] = 1
+    end
+  end
+
+  puts short
+end

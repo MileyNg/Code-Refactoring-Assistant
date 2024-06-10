@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+  int right;
+  int left;
+  int parent;
+  int id;
+};
+
+#define MAX 500000
+#define N 2000000001
+
+struct node T[MAX];
+
+int n;
+
+int parent(int i){
+  return i/2;
+}
+
+int left(int i){
+  return 2*i;
+}
+
+int right(int i){
+  return 2*i+1;
+}
+
+void insert(){
+  int i;
+  for(i = 1; i <= n/2; i++){
+    T[2*i].parent = parent(i);
+    T[2*i].left = left(i);
+    T[2*i].right = right(i);
+  }
+}
+
+void maxHeapify(int i){
+  int h, l, r, largest;
+  l = left(i);
+  r = right(i);
+  if(l <= n && T[l].id > T[i].id) largest = l;
+  else largest = i;
+  if(r <= n && T[r].id > T[largest].id) largest = r;
+  if(largest != i){
+    h = T[i].id;
+    T[i].id = T[largest].id;
+    T[largest].id = h;
+    maxHeapify(largest);
+  }
+}
+
+void buildMaxHeap(){
+  int i;
+  for(i=n/2; i>0; i--) maxHeapify(i);
+}
+
+void print(){
+  int i;
+  buildMaxHeap();
+  for(i=1; i<=n; i++) printf(" %d", T[i].id);
+}
+
+int main(){
+  int i;
+
+  scanf("%d", &n);
+  for( i = n/2+1; i <= n; i++ ) T[i].right = T[i].left = T[i].parent =  N;
+  for( i = 1; i <= n; i++ ) scanf("%d", &T[i].id);
+  insert();
+  print();
+  printf("\n");
+  return 0;
+}

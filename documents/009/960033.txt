@@ -1,0 +1,55 @@
+#include <iostream>
+#include <map>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 500
+
+int main(){
+  int n;
+  string str;
+
+  while(cin >> n, n){
+    map<char,char> bef, aft;
+
+    cin >> str;
+    for(int i = 0 ; i < (int)str.size() ; i++){
+      bef[str[i]] = i + 'a';
+      aft[i + 'a'] = str[i];
+    }
+
+    string s[MAX], t[MAX];
+    for(int i = 0 ; i < n-1 ; i++){
+      cin >> s[i];
+      string change;
+      for(int j = 0 ; j < (int)s[i].size() ; j++){
+	change += bef[s[i][j]];
+      }
+      t[i] = change;
+    }
+
+    bool flg = true;
+
+    sort(t,t+n-1);
+    for(int i = 0 ; i < n-1 ; i++){
+      string change;
+      for(int j = 0 ; j < (int)t[i].size() ; j++){
+	change += aft[t[i][j]];
+      }
+      if(change != s[i]){
+	flg = false;
+	break;
+      }
+    }
+
+    if(flg){
+      cout << "yes" << endl;
+    }else{
+      cout << "no" << endl;
+    }
+  }
+
+  return 0;
+}

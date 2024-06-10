@@ -1,0 +1,56 @@
+////   template  ///////////////////////////////////////////////////////
+#include <stdlib.h>
+#include <sys/time.h>
+#include <stdio.h>
+#include <sys/resource.h>
+#include <iostream>
+using namespace std;
+
+class timer{
+	enum KIND{ REAL, CPU }; // real_time or cpu_time
+	double t0; // start
+	double t1; // end
+	KIND kind_of_time; // default is real_time
+	double get_realtime(){struct timeval tv; gettimeofday(&tv, NULL);
+		return tv.tv_sec + (double)tv.tv_usec*1e-6;}
+	double get_cputime(){struct rusage RU; getrusage(RUSAGE_SELF, &RU); 
+		return RU.ru_utime.tv_sec + (double)RU.ru_utime.tv_usec*1e-6;}
+public:
+	timer(){kind_of_time = REAL;}
+	void set(KIND k){kind_of_time = k;}
+	void start(){t0 = get_realtime();}
+	void stop(){t1 = get_realtime();}
+	void print(){printf("TotalTime : %.3fsec\n", t1-t0);}
+};
+////////////////////////////////////////////////////////////////////////
+
+int gcd(int a, int b);
+int eulerPhiFunc(int n);
+
+int main()
+{
+	int n;
+	cin >> n;
+	cout << eulerPhiFunc(n) << endl;
+	
+    return 0;
+}
+
+int gcd(int a, int b)
+{
+	int r;
+	while(1){
+		r = a%b;
+		if( !r ){ return b; }
+		else{ a = b; b = r; }
+	} 
+}
+
+int eulerPhiFunc(int n)
+{
+	int count=0;
+	for(int i=1; i<n; i++)
+		if(gcd(i,n)==1) count++;
+
+	return count;
+}

@@ -1,0 +1,75 @@
+#include<iostream>
+
+using namespace std;
+
+int Y[12],X[12],S[12];
+int g[10][10];
+
+bool dfs(int y,int x,int s,int n){
+  if(n==0){
+    return true;
+  }else{
+    for(int i=s;i>=0;i--){
+      for(int j=y;j<10;j++){
+	for(int k=x;k<10;k++){
+	  static int dy[][4]={
+	    {-1,0,0,1},
+	    {-1,-1,1,1},
+	    {-2,0,0,-2}
+	  };
+	  static int dx[][4]={
+	    {0,-1,1,0},
+	    {-1,1,-1,1},
+	    {0,-2,2,0}
+	  };
+	  bool f=!g[j][k];
+	  for(int l=0;l<=i;l++){
+	    for(int m=0;m<4;m++){
+	      int ny=j+dy[l][m];
+	      int nx=k+dx[l][m];
+	      f|=ny<0||10<=ny||nx<0||10<=nx||g[ny][nx]==0;
+	    }
+	  }
+	  if(!f){
+	    g[j][k]--;
+	    S[n-1]=i;
+	    Y[n-1]=j;
+	    X[n-1]=k;
+	    for(int l=0;l<=i;l++){
+	      for(int m=0;m<4;m++){
+		int ny=j+dy[l][m];
+		int nx=k+dx[l][m];
+		g[ny][nx]--;
+	      }
+	    }
+	    if(dfs(j,k,i,n-1))return true;
+	    g[j][k]++;
+	    for(int l=0;l<=i;l++){
+	      for(int m=0;m<4;m++){
+		int ny=j+dy[l][m];
+		int nx=k+dx[l][m];
+		g[ny][nx]++;
+	      }
+	    }
+	  }
+	}
+	x=0;
+      }
+      y=0;
+    }
+  }
+}
+
+int main(){
+  int n;
+  cin>>n;
+  for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+      cin>>g[i][j];
+    }
+  }
+  dfs(0,0,2,n);
+  while(n--){
+    cout<<X[n]<<' '<<Y[n]<<' '<<S[n]+1<<endl;
+  }
+}

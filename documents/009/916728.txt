@@ -1,0 +1,23 @@
+// AOJ
+#include<stdio.h>
+
+int main(){
+	int a, b, r, t, aa, bb;
+	while(scanf("%d %d", &a, &b) != EOF){
+		aa = a;
+		bb = b;
+		while(1) {
+			if(a<b){
+				t = a;
+				a =	b;
+				b = t;
+			}
+			r = a%b;
+			if(r == 0)
+				break;
+			a = r;
+		}
+		printf("%d %d\n", b, aa*(bb/b));
+	}
+	return 0;
+}

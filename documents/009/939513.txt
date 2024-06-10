@@ -1,0 +1,30 @@
+import std.stdio;
+import std.string;
+import std.conv;
+import std.algorithm;
+
+int main()
+{
+    while (true) {
+        int n = readln().chomp().to!int();
+        if (n == 0) break;
+        //writeln(dfs(0,0,0,n));
+        int p = 9999999;
+        for (int i = 0; i <= 25 && i * 200 <= n; i++) {
+            for (int j = 0; j <= 17 && i * 200 + j * 300 <= n; j++) {
+                for (int k = 0; k <= 10 && i * 200 + j * 300 + k * 500 <= n; k++) {
+                    if (i * 200 + j * 300 + k * 500 == n) {
+                        int t = i * 380 + j * 550 + k * 850;
+                        t -= (i / 5) * 380;
+                        t -= (j / 4) * 330;
+                        t -= (k / 3) * 306;
+                        p = min(p, t);
+                    }
+                }
+            }
+        }
+        writeln(p);
+    }
+
+    return 0;
+}

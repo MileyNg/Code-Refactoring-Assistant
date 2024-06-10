@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+int main (){
+
+  int n,a[200000],b[200000],min[200000],c[200000],mp,d,e,max,f=0;
+
+  cin >>n;
+
+  for( int i=0 ; i < n ; i++ ){
+    cin >> a[i];
+  }
+
+  min[0]=a[0];
+
+  for( int i=1 ; i < n ; i++ ){
+    if( min[0] > a[i] ){
+      min[0]=a[i];
+      c[0]=i;
+    }
+  }
+
+  max=a[0];
+  
+  for( int i=1 ; i < n ; i++ ){
+    if( max < a[i] ){
+      max=a[i];
+    }
+  }
+  
+  for( int i=1 ; i < n ; i++ ){
+    min[i]=max;
+  }
+
+  for( int i=1 ; i < n ; i++ ){
+    for( int j=0 ; j < n ; j++){
+      
+      if( a[j] > min[i-1] && min[i] > a[j] ){
+	min[i]=a[j];
+	c[i]=j;
+      }
+    
+    }
+  }
+	
+  for( int i=0 ; i < n-1 ; i++ ){
+    
+    if( c[i] != n-1-i ){
+      d=c[i];
+      e=min[i];
+      f++;
+      break;
+    }
+
+  }
+
+  if( f == 1 ){
+  
+    for( int i=d+1 ; i < n ; i++ ){
+      b[i]=a[i]-e;
+    }
+    
+    mp=b[0];
+    for( int i=1 ; i < n ; i++ ){
+      if( mp < b[i] ){
+	mp=b[i];
+      }
+    }
+  }else{
+
+    mp=min[0]-min[1];
+
+  }
+  
+  cout <<mp<<endl;
+  
+  return 0;
+  
+}

@@ -1,0 +1,32 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+
+int main(){
+  int n, num;
+  long long p, len, j[1024];
+  while(scanf("%d", &n) && n){
+    len = 0, num = n;
+    rep(i, n){
+      scanf("%lld", &p);
+      len += p;
+    }
+    rep(i, n - 1) scanf("%lld", j + i);
+    sort(j, j + n-1);
+
+    for(int i = n - 2; i >= 0; i--){
+      if((num-1)*(len+j[i]) < num*len) break;
+      num--;
+      len+=j[i];
+    }
+    printf("%d\n", (int)(num*len));
+  }
+  return 0;
+}

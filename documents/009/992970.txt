@@ -1,0 +1,91 @@
+#include <iostream>
+#include <stack>
+
+typedef std::stack<int> Tray;
+
+bool moveNtoN(Tray tr[], int src, int dst){
+    if((tr[src]).empty() ||
+        !(tr[dst]).empty() && (tr[src]).top() < (tr[dst]).top()){
+        return false;
+    }
+    (tr[dst]).push((tr[src]).top());
+    (tr[src]).pop();
+    return true;
+}
+
+bool ifSorted(Tray tr[]){
+    return ((tr[1]).empty() && ((tr[0]).empty() || (tr[2].empty())));
+}
+
+int solve(Tray argTr[], int m){
+    if(ifSorted(argTr)){
+        return 0;
+    }
+    Tray tr[3];
+    int lastMove;          // 0 : A->B, 1 : B->A, 2 : B->C, 3 : C->B
+    for(int j = 0; j < 2; j++){
+        tr[0] = argTr[0];
+        tr[1] = argTr[1];
+        tr[2] = argTr[2];
+        lastMove = -1;
+        if(j == 0){
+            if(moveNtoN(tr, 0, 1)){ 
+                lastMove = 0;
+            }
+            else if(moveNtoN(tr, 1, 0)){
+                lastMove = 1;
+            }
+        }
+        else {
+            if(moveNtoN(tr, 1, 2)){
+                lastMove = 2;
+            }
+            else if(moveNtoN(tr, 2, 1)){
+                lastMove = 3;
+            }
+        }
+        for(int i = 1; i <= m; i++){
+            if(ifSorted(tr)){
+                return i;
+            }
+            if(lastMove != 1 && moveNtoN(tr, 0, 1)){
+                lastMove = 0;
+            }
+            else if(lastMove != 0  && moveNtoN(tr, 1, 0)){
+                lastMove = 1;
+            }
+            else if(lastMove != 3 && moveNtoN(tr, 1, 2)){
+                lastMove = 2;
+            }
+            else if(lastMove != 2 && moveNtoN(tr, 2, 1)){
+                lastMove = 3;
+            }
+        }
+        if(ifSorted(tr)){
+            return m;
+        }
+    }
+    return -1;
+}
+
+int main(){
+    int n, m;
+    while(1){
+        std::cin >> n >> m;
+        if(!(n || m)){
+            break;
+        }
+        Tray trays[3];
+        for(int col = 0; col < 3; col++){
+            int nCups;                     // #cups on the line
+            std::cin >> nCups;
+            while(nCups--){
+                int cup;
+                std::cin >> cup;
+                (trays[col]).push(cup);
+            }
+        }
+        std::cout << solve(trays, m) << std::endl;
+    }
+    return 0;
+}

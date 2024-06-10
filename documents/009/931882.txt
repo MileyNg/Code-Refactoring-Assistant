@@ -1,0 +1,73 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const string END = "6174";
+
+bool isNG(string s){
+  REP(i, s.length()) if(s[0] != s[i]) return false;
+  return true;
+}
+
+int make_L(string N){
+  SORT(N);
+  REVERSE(N);
+  int ret = 0;
+  REP(i, N.length()){
+    ret *= 10;
+    ret += (N[i] - '0');
+  }
+  return ret;
+}
+
+int make_S(string N){
+  SORT(N);
+  int ret = 0;
+  REP(i, N.length()){
+    ret *= 10;
+    ret += (N[i] - '0');
+  }
+  return ret;
+}
+
+int main() {
+  string N;
+  while(cin >>N && N != "0000"){
+    int cnt = 0;
+    if(isNG(N)){
+      cout <<"NA" <<endl;
+      continue;
+    }
+    while(N != END){
+      int L = make_L(N);
+      int S = make_S(N);
+      //cout <<L <<", " <<S <<endl;
+      stringstream ss; ss << (L - S);
+      N = ss.str();
+      ++cnt;
+    }
+    cout <<cnt <<endl;
+  }
+  return 0;
+}

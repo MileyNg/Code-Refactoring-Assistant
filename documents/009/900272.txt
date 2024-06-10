@@ -1,0 +1,26 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int INF = 1 << 30;
+
+int f( int x, int y){
+  return x * x * x + y * y * y;
+}
+
+int main(){
+  int z;
+  while(cin >> z, z){
+    int ret = INF;
+    int a, b, zzz = z * z * z;
+    for(int x = 1; x < z; x++){
+      a = 1, b = 1110;
+      while(a + 1 < b){
+        int mid = a + b >> 1;
+        if( f(x,mid) <= zzz ) a = mid;
+        else b = mid;
+      }
+      ret = min( ret, zzz - f( x, a));
+    }
+    cout << ret << endl;
+  }
+}

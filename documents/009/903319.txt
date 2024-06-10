@@ -1,0 +1,36 @@
+#pragma warning (disable:4996)
+#include <stdio.h>
+
+int input(int *m, int *f, int *r){
+	scanf("%d %d %d", m, f, r);
+	if (*m == -1 && *f == -1 && *r == -1)return 0;
+	else return 1;
+}
+
+char checkGrade(int *m, int *f, int *r){
+	int sum = *m + *f;
+	if (*m == -1 || *f == -1)return 'F';
+	else if (sum >= 80)return 'A';
+	else if (65 <= sum&& sum < 80)return 'B';
+	else if (50 <= sum&& sum < 65)return 'C';
+	else if (30 <= sum&& sum < 50){
+		if (*r >= 50)return'C';
+		return 'D';
+	}
+	else return 'F';
+}
+
+void output(int *m, int *f, int *r){
+	printf("%c\n", checkGrade(m, f, r));
+}
+
+int main(void){
+	int m, f, r;
+	while (1){
+		if (input(&m, &f, &r)){
+			output(&m, &f, &r);
+		}
+		else break;
+	}
+	return 0;
+}

@@ -1,0 +1,59 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+class Result {
+public:
+    int group, power;
+    Result(int g = -1, int p = -1) :group(g), power(p) {}
+    bool operator<(const Result r) const {
+        if(group != r.group) return group < r.group;
+        return power < r.power;
+    }
+};
+
+int h, w, s;
+int u[32][32];
+Result memo[32][32][32][32];
+int memo_sum[32][32][32][32];
+
+int sum(int x1, int y1, int x2, int y2) {
+    if(memo_sum[x1][y1][x2][y2] != -1) return memo_sum[x1][y1][x2][y2];
+    int sum = 0;
+    for(int y = y1; y <= y2; ++y) for(int x = x1; x <= x2; ++x) sum += u[x][y];
+    return memo_sum[x1][y1][x2][y2] = sum;
+}
+
+Result dfs(int x1, int y1, int x2, int y2) {
+    if(memo[x1][y1][x2][y2].group != -1) return memo[x1][y1][x2][y2];
+    Result result(1, s - (sum(0, 0, w - 1, h - 1) - sum(x1, y1, x2, y2)));
+
+    for(int j = x1; j < x2; ++j) {
+        if(sum(0, 0, w - 1, h - 1) - sum(x1, y1, j, y2) > s) continue;
+        if(sum(0, 0, w - 1, h - 1) - sum(j + 1, y1, x2, y2) > s) continue;
+        Result r1 = dfs(x1, y1, j, y2);
+        Result r2 = dfs(j + 1, y1, x2, y2);
+        result = max(result, Result(r1.group + r2.group, min(r1.power, r2.power)));
+    }
+
+    for(int i = y1; i < y2; ++i) {
+        if(sum(0, 0, w - 1, h - 1) - sum(x1, y1, x2, i) > s) continue;
+        if(sum(0, 0, w - 1, h - 1) - sum(x1, i + 1, x2, y2) > s) continue;
+        Result r1 = dfs(x1, y1, x2, i);
+        Result r2 = dfs(x1, i + 1, x2, y2);
+        result = max(result, Result(r1.group + r2.group, min(r1.power, r2.power)));
+    }
+
+    return memo[x1][y1][x2][y2] = result;
+}
+
+int main() {
+    while(cin >> h >> w >> s, h | w | s) {
+        for(int y1 = 0; y1 < h; ++y1) for(int x1 = 0; x1 < w; ++x1) for(int y2 = 0; y2 < h; ++y2) for(int x2 = 0; x2 < w; ++x2) memo[x1][y1][x2][y2].group = -1;
+        for(int y1 = 0; y1 < h; ++y1) for(int x1 = 0; x1 < w; ++x1) for(int y2 = 0; y2 < h; ++y2) for(int x2 = 0; x2 < w; ++x2) memo_sum[x1][y1][x2][y2] = -1;
+        for(int y = 0; y < h; ++y) for(int x = 0; x < w; ++x) cin >> u[x][y];
+
+        Result result = dfs(0, 0, w - 1, h - 1);
+        cout << result.group << " " << result.power << endl;
+    }
+}

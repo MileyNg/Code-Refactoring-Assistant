@@ -1,0 +1,116 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+using namespace std;
+
+struct Card {
+    char suit;
+    char value;
+};
+
+void bubble_sort(vector<Card>& cs) {
+    for (int i = 0; i < cs.size(); i++) {
+        for (int j = cs.size() - 1; j > i; j--) {
+            if (cs[j].value < cs[j - 1].value) {
+                swap(cs[j], cs[j - 1]);
+            }
+        }
+    }
+}
+
+void selection_sort(vector<Card>& cs) {
+    for (int i = 0; i < cs.size(); i++) {
+        int min_idx = i;
+        for (int j = i; j < cs.size(); j++) {
+            if (cs[j].value< cs[min_idx].value) {
+                min_idx = j;
+            }
+        }
+        swap(cs[i], cs[min_idx]);
+    }
+}
+
+void create_order_table(const vector<Card>& cs, vector<vector<char>>& table) {
+    table.resize(9, vector<char>(0));
+    for (auto c : cs) {
+        table[c.value - '1'].push_back(c.suit);
+    }
+}
+
+bool equal_order_table(const vector<vector<char>>& table1, const vector<vector<char>>& table2) {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < table1[i].size(); j++) {
+            if (table1.at(i).at(j) != table2.at(i).at(j)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void print_all(const vector<Card>& cs) {
+    for (int i = 0; i < cs.size(); i++) {
+        if (i > 0) {
+            cout << " ";
+        }
+        cout << cs[i].suit << cs[i].value;
+    }
+    cout << endl;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<Card> cs(n);
+    for (auto& c : cs) {
+        string str;
+        cin >> str;
+        c.suit = str.at(0);
+        c.value = str.at(1);
+    }
+
+    vector<vector<char>> input_orders;
+    create_order_table(cs, input_orders);
+
+    vector<Card> bubble_sorted_cs(cs);
+    bubble_sort(bubble_sorted_cs);
+    vector<vector<char>> bubble_sort_orders;
+    create_order_table(bubble_sorted_cs, bubble_sort_orders);
+    print_all(bubble_sorted_cs);
+    if (equal_order_table(input_orders, bubble_sort_orders)) {
+        cout << "Stable" << endl;
+    } else {
+        cout << "Not stable" << endl;
+    }
+
+    vector<Card> selection_sorted_cs(cs);
+    selection_sort(selection_sorted_cs);
+    vector<vector<char>> selection_sort_orders;
+    create_order_table(selection_sorted_cs, selection_sort_orders);
+    print_all(selection_sorted_cs);
+    if (equal_order_table(input_orders, selection_sort_orders)) {
+        cout << "Stable" << endl;
+    } else {
+        cout << "Not stable" << endl;
+    }
+}

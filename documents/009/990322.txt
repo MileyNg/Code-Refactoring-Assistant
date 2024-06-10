@@ -1,0 +1,182 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <deque>
+#include <vector>
+#include <numeric>
+#include <iterator>
+#include <array>
+#include <utility>
+
+using namespace std;
+typedef long long ll;
+
+
+#define FF first
+#define SS second
+#define ALL(c) begin((c)), end((c))
+#define REP(i,n) for(ll i=0;i<(ll)n;++i)
+inline int getInt() { int s; scanf("%d", &s); return s; }
+/*
+#define SIZE 500000
+vector<ll> table(SIZE);
+
+
+
+void sieve_of_eratosthenes() {
+	iota(ALL(table), 0);
+	for (int i = 2; i < SIZE; ++i)
+		table[i] = i;
+	for (int i = 2; i*i < SIZE; ++i)
+	if (table[i])
+	for (int j = i*i; j < SIZE; j += i)
+		table[j] = 0;
+}*/
+
+/*
+typedef array<array<int, 10>, 10> Table;
+
+int dx[] = {0, 1, 0, -1};
+int dy[] = {1, 0, -1, 0};
+
+void dd(Table &state, int from, int to) {
+	if (from==to) return;
+	vector<pair<int,int>> stack;
+	stack.emplace_back(1,1);
+	while (!stack.empty()) {
+		auto p = stack.back();
+		stack.pop_back();
+		int x = p.FF;
+		int y = p.SS;
+
+		REP(i, 4) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (state[ny][nx] == from) {
+				stack.emplace_back(nx,ny);
+				state[ny][nx] = to;
+			}
+		}
+	}
+}
+
+
+int g_c;
+
+int cc(Table & state) {
+	vector<pair<int, int>> stack;
+	stack.emplace_back(1, 1);
+	int cnt = 0;
+	while (!stack.empty()) {
+		auto p = stack.back();
+		stack.pop_back();
+		int x = p.FF;
+		int y = p.SS;
+
+		REP(i, 4) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (state[ny][nx] == g_c) {
+				stack.emplace_back(nx, ny);
+				cnt++;
+				state[ny][nx] = -1;
+			}
+		}
+	}
+	return cnt;
+}
+
+int walk(int depth, Table state) {
+	if (depth == 5) {
+		Table ntable = state;
+		ntable[1][1] = g_c;
+		dd(ntable, state[1][1], g_c);
+		return cc(ntable);
+	}
+	int cnt = 1;
+	REP(i, 6) {
+		Table ntable = state;
+		ntable[1][1] = i;
+		dd(ntable, state[1][1], i); //色変
+		cnt = max(walk(depth+1, ntable),cnt);
+	}
+	return cnt;
+}
+
+int main() {
+	freopen("Text.txt", "r", stdin);
+
+
+	while (true) {
+		ll h,w;
+		cin >> h >> w >> g_c;
+		if (h == 0) break;
+		g_c--;
+		Table table;
+		REP(y, 10) REP(x, 10) table[y][x] = -1;
+		REP(y, h) REP(x, w) {
+			cin >> table[y + 1][x + 1];
+			table[y + 1][x + 1]--;
+		}
+
+		cout << walk(1, table) << endl;
+	}
+}
+*/
+struct circle{
+	int id,x,y,r;
+};
+
+vector<circle> g_table[4];
+
+
+int main() {
+
+	while (true) {
+		ll n;
+		cin >> n;
+		if (n==0) break;
+		array<bool,4> active;
+		active.fill(true);
+
+		REP(c, 4) g_table[c].clear();
+		REP(i, n){
+			int x,y,r,c;
+			cin >> x >> y >> r >> c;
+			g_table[c - 1].push_back(circle{i,x,y,r});
+		}
+
+		vector<int> removableColor;
+		do{
+			while (!removableColor.empty()) {
+				active[removableColor.back()] = false;
+				removableColor.pop_back();
+			}
+
+			array<vector<circle>,4> tops;
+			REP(c1, 4) for (auto it1 = g_table[c1].begin(); it1 != g_table[c1].end(); ++it1) {
+				if(!active[c1]) continue;
+				bool top = true;
+				REP(c2, 4) for (auto it2 = g_table[c2].begin(); it2 != g_table[c2].end(); ++it2) {
+					if (!active[c2]) continue;
+					if (c1==c2 && it1 == it2) continue;
+					int xx = (it1->x - it2->x);
+					int yy = (it1->y - it2->y);
+					int rr = (it1->r + it2->r);
+					if (xx*xx + yy*yy < rr*rr && it1->id > it2->id) {
+						top = false;
+						break;
+					}
+				}
+				if (top) tops[c1].push_back(*it1);
+			}
+
+			REP(c,4) if ((!g_table[c].empty()) && tops[c].size() == g_table[c].size()) removableColor.push_back(c);
+		} while (!removableColor.empty());
+
+		int count = 0;
+		REP(c, 4) if (!active[c]) count += g_table[c].size();
+
+		cout << count << endl;
+	}
+}

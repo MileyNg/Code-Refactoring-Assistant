@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+	// your code goes here
+	long long int a,b;
+	long long int miner,maxer;
+	while(cin >> a >> b){
+		int a2=a,b2=b;
+		while(max(a2,b2)%min(a2,b2)!=0){
+			if(a2>b2)
+			a2=a2-b2;
+			else
+			b2=b2-a2;
+		}
+		miner =min(a2,b2);
+		cout << miner << endl;
+		cout << a*b/miner << endl;
+	}
+	return 0;
+}

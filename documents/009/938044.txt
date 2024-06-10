@@ -1,0 +1,31 @@
+#include <string>
+#include <iomanip>
+#include <iostream>
+
+using namespace std;
+
+/** Problem0040 : Affine Chipher **/
+int main()
+{
+	string tmp, str;
+	int n;
+	
+	cin >> n;
+	cin.ignore();
+	for (int i=0; i<n; i++) {
+		getline(cin, tmp);
+		string tt = tmp;
+		for (int alpha=0; alpha<1000; alpha++) {
+			for (int beta=0; beta<26; beta++) {
+				for (int j=0; j<tt.length(); j++)
+					if (tt[j]!=' ') tt[j] = 'a'+((tmp[j]-'a')*alpha+beta)%26;
+				if (tt.find("that")!=-1 || tt.find("this")!=-1) {
+					cout << tt << endl;
+					goto end;
+				}
+			}
+		}
+	end: ;
+	}
+	return 0;
+}

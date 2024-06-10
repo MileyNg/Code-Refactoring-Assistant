@@ -1,0 +1,39 @@
+#include<stdio.h>
+#define MAX 250
+
+int HEAP[MAX];
+int p(int heap){
+	return heap/2;
+}
+int l(int heap){
+	return heap*2;
+}
+int r(int heap){
+	return (heap*2+1);
+}
+
+main(){
+	int i,heapsize,left,right;
+	scanf("%d",&heapsize);
+	
+	for(i = 1;i <= heapsize;i++){
+		scanf("%d",&HEAP[i]);
+	}
+	
+for(i = 1;i <= heapsize; i++){
+	 left=l(i);
+	 right=r(i);
+		printf("node %d: key = %d, ",i,HEAP[i]);
+		if(i > 1){
+			printf("parent key = %d, ",HEAP[p(i)]);
+		}
+		if(heapsize >=left){
+			printf("left key = %d, ",HEAP[l(i)]);
+		}
+	if(heapsize >= right){
+		printf("right key = %d, ",HEAP[r(i)]);
+	}
+	printf("\n");
+}
+return 0;
+}

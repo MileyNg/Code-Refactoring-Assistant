@@ -1,0 +1,77 @@
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <vector>
+#include <array>
+#include <list>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <string>
+#include <algorithm>
+#include <numeric>
+#include <utility>
+#include <cstdlib>
+#include <ctime>
+#include <cstdint>
+#include <cmath>
+
+#define FOR(i,k,n)  for(int i = (k);i < (n);++i)
+#define REP(i,n)    FOR(i,0,n)
+#define EACH(i,x)   for(auto & i : x)
+#define ALL(x)      begin(x),end(x)
+
+using namespace std;
+
+typedef vector<int> vecint;
+const int INF=1000000;
+
+int main()
+{
+  while(true){
+    int n,m,l,k,a,h;cin>>n>>m>>l>>k>>a>>h;
+    if(!n)break;
+    vecint fz(l+2);
+    REP(i,l)cin>>fz[i+1];
+    fz[0]=a;
+    fz[l+1]=h;
+    vector<vecint> mat(n,vecint(n,INF));
+    REP(i,k){
+      int x,y,t;cin>>x>>y>>t;
+      mat[x][y]=t;
+      mat[y][x]=t;
+    }
+    REP(i,n)REP(j,n)REP(k,n)
+      mat[j][k]=min(mat[j][k],mat[j][i]+mat[i][k]);
+    vector<vecint> fmat(l+2,vecint(l+2,INF));
+    REP(i,l+2)REP(j,l+2){
+      fmat[i][j] = mat[fz[i]][fz[j]];
+    }
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> q;
+    vecint dist(l+2,INF);
+    dist[0]=0;
+    q.push(make_pair(0,0));
+    while(!q.empty()){
+      auto p=q.top();q.pop();
+      if(dist[p.second] < p.first)continue;
+      REP(i,l+2){
+        if(fmat[p.second][i] <= m){
+          if(dist[i] > dist[p.second] + fmat[p.second][i]){
+            dist[i]=dist[p.second]+fmat[p.second][i];
+            q.push(make_pair(dist[i],i));
+          }
+        }
+      }
+    }
+    if(dist[l+1] >= INF)
+      cout<<"Help!"<<endl;
+    else if(dist[l+1] > m)
+      cout<<(dist[l+1]*2-m)<<endl;
+    else
+      cout<<dist[l+1]<<endl;
+  }
+  return 0;
+}

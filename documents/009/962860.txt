@@ -1,0 +1,197 @@
+#pragma comment(linker, "/STACK:102400000,102400000")
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<vector>
+#include<queue>
+#define MOD 1000000007
+#define pi acos(-1.0)
+#define LL long long
+#define N 200050
+using namespace std;
+struct node
+{
+	int to, nx;
+} e[N * 2];
+struct node1
+{
+	int x, y;
+} s[N];
+bool cmp(node1 x, node1 y)
+{
+	return x.x < y.x || x.x == y.x && x.y < y.y;
+}
+int e_cnt;
+int head[N];
+int du[N];
+int q[N];
+int f[N][2];
+int ff[N][2];
+bool bo[N];
+int pre[N];
+int va[N];
+void addedge(int x, int y)
+{
+	e[e_cnt].to = y;
+	e[e_cnt].nx = head[x];
+	head[x] = e_cnt++;
+}
+int main()
+{
+	int i, j, k, n, m, tail;
+	int tt, ri = 0;
+	int ans;
+	scanf("%d", &tt);
+	while (tt--)
+	{
+		ans = 0;
+		ri++;
+		tail = 0;
+		e_cnt = 0;
+		scanf("%d", &n);
+		for (i = 1; i <= n; i++)
+			head[i] = -1, du[i] = 0, bo[i] = false, pre[i] = -1;
+		for (i = 1; i <= n; i++)
+		{
+			s[i].x = i;
+			scanf("%d", &s[i].y);
+			du[i]++;
+			du[s[i].y]++;
+			if (s[i].x > s[i].y)
+				swap(s[i].x, s[i].y);
+		}
+		for (i = 1; i <= n; i++)
+		{
+			scanf("%d", &f[i][1]);
+			va[i]=f[i][1];
+			f[i][0] = 0;
+		}
+		sort(s + 1, s + 1 + n, cmp);
+		for (i = 1; i <= n; i++)
+		{
+			if (i == n || s[i].x != s[i + 1].x || s[i].y != s[i + 1].y)
+			{
+				addedge(s[i].x, s[i].y);
+				addedge(s[i].y, s[i].x);
+			}
+		}
+		for (i = 1; i <= n; i++)
+			if (du[i] == 1)
+			{
+				q[tail++] = i;
+			}
+		//printf("ta:%d\n", tail);
+		for (i = 0; i < tail; i++)
+		{
+			int u = q[i];
+			for (int p = head[u]; p != -1; p = e[p].nx)
+			{
+				int v = e[p].to;
+			//	printf("u,v:%d %d\n", u, v);
+				du[v]--;
+				if (du[v] >= 1)
+				{
+					f[v][1] += f[u][0];
+					f[v][0] += f[u][1];
+				}
+				if (du[v] == 1)
+				{
+					q[tail++] = v;
+				}
+			}
+		}
+		for (i = 1; i <= n; i++)
+			ff[i][0] = f[i][0],ff[i][1]=f[i][1];
+//				for(i=1;i<=n;i++)
+//				{
+//					printf("f:%d %d %d %d\n",i,f[i][0],f[i][1],du[i]);
+//				}
+
+		//puts("ye");
+		for (i = 1; i <= n; i++)
+		{
+			if (du[i] > 1 && !bo[i])
+			{
+				int p = i, sum1, sum2;
+				int st, ed;
+				st = 1;
+				ed = 0;
+				sum1 = sum2 = 0;
+				int cnt = 0;
+				while (true)
+				{
+					cnt++;
+					bo[p] = true;
+					sum1=std::max(sum1,f[p][0]);
+					sum2=std::max(sum2,f[p][1]);
+					//printf("%d %d %d %d\n", i, p, sum1, sum2);
+					st = 1 - st;
+					ed = 1 - ed;
+					int flag = 0;
+					for (j = head[p]; j != -1; j = e[j].nx)
+					{
+						if (!bo[e[j].to] && du[e[j].to] > 1)
+						{
+							flag = 1;
+							pre[e[j].to] = p;
+
+							f[e[j].to][1] += f[p][0];
+							f[e[j].to][0] +=std::max( f[p][1],f[p][0]);
+							p = e[j].to;
+
+							break;
+						}
+					}
+					if (!flag)
+					{
+						pre[i] = p;
+						break;
+					}
+				}
+				if (cnt & 1)
+				{
+					int tmp = f[pre[i]][0];
+					p = i;
+					bool ok = true;
+
+					ff[i][1]=0;
+
+					while (p != i || ok)
+					{
+						ok = false;
+						int u = pre[p];
+						ff[u][0] +=std::max( ff[p][1],ff[p][0]);
+						ff[u][1] += ff[p][0];
+						//printf("%d %d %d %d %d\n", i, p,u, ff[u][0], ff[u][1]);
+						p = pre[p];
+						if(pre[p]==i)break;
+					}
+					p = pre[i];
+					//printf("%d\n",i);
+					ok=true;
+					int kk=1;
+					while (p != pre[i] || ok)
+					{
+						if(p==pre[i])
+							ok = false;
+						if (ff[p][0] + f[pre[p]][0]+va[i] > tmp)
+							tmp = ff[p][0] + f[pre[p]][0];
+						kk=1-kk;
+						//printf("%d %d %d %d\n",p,ff[p][0],pre[p],f[pre[p]][0]);
+						p = pre[p];
+						//if(p==i)break;
+					}
+				//	printf("%d %d %d\n",i,tmp,ans);
+					ans += tmp;
+				}
+				else
+					ans += std::max(sum1, sum2);
+				//printf("ans:%d\n",ans);
+			}
+		}
+		printf("Case #%d:\n", ri);
+		printf("%d\n", ans);
+	}
+}

@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int i, j, k;
+    int n;
+    int building, floor, room, people;
+    int cnt[4][3][10];
+    /*people[building][floor][room]*/
+
+    /*initialize*/
+    for (i = 0; i < 4; i++){
+        for (j = 0; j < 3; j++){
+            for (k = 0; k < 10; k++){
+                cnt[i][j][k] = 0;
+            }
+        }
+    }
+
+    /*count*/
+    scanf("%d", &n);
+    for (i = 1; i <= n; i++){
+        scanf("%d %d %d %d", &building, &floor, &room, &people);
+        cnt[building - 1][floor - 1][room - 1] += people;
+        /*building No.1, floor No.1, room No.1 is cnt[0][0][0]*/
+    }
+
+    for (i = 0; i < 4; i++){
+        if (i){
+            printf("####################\n");
+        }
+        for (j = 0; j < 3; j++){
+            for (k = 0; k < 10; k++){
+                printf(" %d", cnt[i][j][k]);
+            }
+            printf("\n");
+        }
+    }
+
+    return 0;
+}

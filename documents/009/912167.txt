@@ -1,0 +1,65 @@
+//include----------------------------------------------------------------------------------------------------------------------
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <cctype>
+#include <string>
+#include <vector>
+#include <stack>
+#include <list>
+#include <queue>
+#include <deque>
+#include <bitset>
+#include <map>
+#include <algorithm>
+#include <memory>
+
+
+//using namespace--------------------------------------------------------------------------------------------------------------
+using namespace std;
+
+//define,const-----------------------------------------------------------------------------------------------------------------
+#define rep(i, n) for(int i = 0; i < n; i++)
+const int INF = 1 << 25;
+#define MAX 1000
+
+//global-----------------------------------------------------------------------------------------------------------------------
+int start_x, start_y, n;
+vector<int> wator_x(100);
+vector<int> wator_y(100);
+int jump_x[13] = { -2, -2, -2, -1, 0, 1, 2, 2, 2, -1, 0, 1, 0 };
+int jump_y[13] = { -1, 0, 1, -2, -2, -2, -1, 0, 1, 2, 2, 2, 0 };
+int ok_zone_x[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+int ok_zone_y[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
+//function---------------------------------------------------------------------------------------------------------------------
+bool solve(int x, int y, int i){
+	if (x < 0 || y < 0 || x > 9 || y > 9)
+		return false;
+	if (i == n)
+		return true;
+	for (int j = 0; j < 13; j++){
+		for (int k = 0; k < 9; k++){
+			if (x + jump_x[j] == wator_x[i] + ok_zone_x[k] && y + jump_y[j] == wator_y[i] + ok_zone_y[k])
+				if (solve(x + jump_x[j], y + jump_y[j], i + 1))
+					return true;
+		}
+	}
+	return false;
+}
+
+int main(){
+	while (scanf("%d %d", &start_x, &start_y)){
+		if (start_x == 0 && start_y == 0)
+			return 0;
+		scanf("%d", &n);
+		rep(i, n)
+			scanf("%d %d", &wator_x[i], &wator_y[i]);
+		if (solve(start_x, start_y, 0))
+			printf("OK\n");
+		else
+			printf("NA\n");
+	}
+	return 0;
+}

@@ -1,0 +1,172 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+typedef struct dice{
+	int x;
+	int y;
+	int z;
+	int top;
+	int front;
+} dice;
+
+dice D[100];
+int tops[100][100][100];
+//memset( tops, 0, sizeof(tops));
+int z_top = -1;
+
+void roll( int i){
+	int x = D[i].x, y = D[i].y, z = D[i].z;
+	if( D[i].z == 0 || tops[x+1][y][z-1] || tops[x-1][y][z-1] || tops[x][y+1][z-1] || tops[x][y-1][z-1] ) return;
+	int bottom = 7 - D[i].top, back = 7 - D[i].front;
+	if( D[i].front < back ){
+		for( int j = 1; j <= 3; j++ ){
+			if( j != bottom && j != D[i].top && j != D[i].front && j != back ){
+				int left = j;
+				int right = 7 - left;
+			}
+		}
+	}
+	if( max(D[i].front, max(back, max(left, right))) == right ){
+		if( tops[x+1][y][z-1] == 0 ){
+			D[i].x = x + 1;
+			D[i].z = z - 1;
+			D[i].top = left;
+			tops[x+1][y][z-1] = 1;
+			roll( i );
+		}else if( back > 3 && tops[x][y+1][z-1] == 0 ){
+			D[i].y = y + 1;
+			D[i].z = z - 1;
+			D[i].top = D[i].front;
+			D[i].front = bottom;
+			tops[x][y+1][z-1] = 1;
+			roll( i );
+		}else if( left > 3 && tops[x-1][y][z-1] == 0 ){
+			D[i].x = x - 1;
+			D[i].y = z - 1;
+			D[i].top = right;
+			tops[x-1][y][z-1] = 1;
+			roll( i );
+		}else if( D[i].front > 3 && tops[x][y-1][z-1] == 0 ){
+			D[i].y = y - 1;
+			D[i].y = z - 1;
+			D[i].top = back;
+			D[i].front = D[i].top;
+			tops[x][y-1][z-1] = 1;
+			roll( i );
+		}
+	}else if( max(D[i].front, max(back, max(left, right))) == left ){
+		if( tops[x+1][y][z-1] == 0 ){
+			D[i].x = x + 1;
+			D[i].z = z - 1;
+			D[i].top = left;
+			tops[x+1][y][z-1] = 1;
+			roll( i );
+		}else if( back > 3 && tops[x][y+1][z-1] == 0 ){
+			D[i].y = y + 1;
+			D[i].z = z - 1;
+			D[i].top = D[i].front;
+			D[i].front = bottom;
+			tops[x][y+1][z-1] = D[i].top;
+			roll( i );
+		}else if( right > 3 && tops[x-1][y][z-1] == 0 ){
+			D[i].x = x - 1;
+			D[i].y = z - 1;
+			D[i].top = right;
+			tops[x-1][y][z-1] = D[i].top;
+			roll( i );
+		}else if( D[i].front > 3 && tops[x][y-1][z-1] == 0 ){
+			D[i].y = y - 1;
+			D[i].y = z - 1;
+			D[i].top = back;
+			D[i].front = D[i].top;
+			tops[x][y-1][z-1] = D[i].top;
+			roll( i );
+		}
+	}if( max(D[i].front, max(back, max(left, right))) == D[i].front ){
+		if( tops[x+1][y][z-1] == 0 ){
+			D[i].x = x + 1;
+			D[i].z = z - 1;
+			D[i].top = left;
+			tops[x+1][y][z-1] = D[i].top;
+			roll( i );
+		}else if( back > 3 && tops[x][y+1][z-1] == 0 ){
+			D[i].y = y + 1;
+			D[i].z = z - 1;
+			D[i].top = D[i].front;
+			D[i].front = bottom;
+			tops[x][y+1][z-1] = D[i].top;
+			roll( i );
+		}else if( left > 3 && tops[x-1][y][z-1] == 0 ){
+			D[i].x = x - 1;
+			D[i].y = z - 1;
+			D[i].top = right;
+			tops[x-1][y][z-1] = D[i].top;
+			roll( i );
+		}else if( right > 3 && tops[x][y-1][z-1] == 0 ){
+			D[i].y = y - 1;
+			D[i].y = z - 1;
+			D[i].top = back;
+			D[i].front = D[i].top;
+			tops[x][y-1][z-1] = D[i].top;
+			roll( i );
+		}
+	}if( max(D[i].front, max(back, max(left, right))) == back ){
+		if( tops[x+1][y][z-1] == 0 ){
+			D[i].x = x + 1;
+			D[i].z = z - 1;
+			D[i].top = left;
+			tops[x+1][y][z-1] = D[i].top;
+			roll( i );
+		}else if( right > 3 && tops[x][y+1][z-1] == 0 ){
+			D[i].y = y + 1;
+			D[i].z = z - 1;
+			D[i].top = D[i].front;
+			D[i].front = bottom;
+			tops[x][y+1][z-1] = D[i].top;
+			roll( i );
+		}else if( left > 3 && tops[x-1][y][z-1] == 0 ){
+			D[i].x = x - 1;
+			D[i].y = z - 1;
+			D[i].top = right;
+			tops[x-1][y][z-1] = D[i].top;
+			roll( i );
+		}else if( D[i].front > 3 && tops[x][y-1][z-1] == 0 ){
+			D[i].y = y - 1;
+			D[i].y = z - 1;
+			D[i].top = back;
+			D[i].front = D[i].top;
+			tops[x][y-1][z-1] = D[i].top;
+			roll( i );
+		}
+	}
+	if( D[i].z > z_top ) z_top = D[i].z;
+}
+
+int output[6];
+
+int main(){
+	int n;
+	while( 1 ){
+		cin >> n;
+		if( n == 0 ) break;
+		D[0].x = 50; D[0].y = 50; D[0].z = 0;
+		for( int i = 0; i < n; i++ ){
+			cin >> D[i].top >> D[i].front;
+			D[i].z = z_top + 1;
+			roll( i );
+		}
+		for( int i = 0; i < n; i++ ){
+			for( int j = 1; j <= 6; j++ ){
+				if( D[i].top == j ){
+					output[j-1]++;
+				}
+			}
+		}
+		for( int i = 0; i < 6; i++ ){
+			cout << output[i] << ' ';
+		}
+		cout << endl;
+	}
+}

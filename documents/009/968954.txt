@@ -1,0 +1,51 @@
+//Partition(Quick Sort)
+
+#include<stdio.h>
+#include<stdlib.h>
+
+void swap(int*,int*);
+
+int main(void){
+  int n,pivot;
+  int *A;
+  int i,j;
+
+  scanf("%d",&n);
+
+  A=(int*)malloc(n*sizeof(int));
+
+  for(i=0;i<n;i++) scanf("%d",&A[i]);
+
+  pivot=A[n-1];
+  
+  j=0;
+  for(i=0;i<n-1;i++){
+    if(A[i]<=pivot){
+      swap(&A[j],&A[i]);
+      j++;
+    }
+  }
+  swap(&A[j],&A[n-1]);
+
+  if(j==0) printf("[%d]",A[0]);
+  else printf("%d",A[0]);
+
+  for(i=1;i<n;i++){
+    if(i==j) printf(" [%d]",A[i]);
+    else printf(" %d",A[i]);
+  }
+  printf("\n");
+
+  free(A);
+
+  return 0;
+}
+
+
+void swap(int *a,int *b){
+  int work;
+
+  work=*a;
+  *a=*b;
+  *b=work;
+}

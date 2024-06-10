@@ -1,0 +1,22 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+double abs(double a){ return a>0 ? a : -a; }
+
+int main()
+{
+        double a, b, c, d, e, f;
+        double det;
+        double x, y;
+        
+        while( scanf("%lf %lf %lf %lf %lf %lf", &a, &b, &c, &d, &e, &f) != EOF ){
+                det = a*e - b*d;
+                x = (e*c-b*f)/det;
+                y = (a*f-c*d)/det;
+                if( abs(x) < 0.0001 ){ x = 0.0; }
+                if( abs(y) < 0.0001 ){ y = 0.0; }
+                printf("%.3lf %.3lf\n",x ,y);
+        }
+        return 0;
+}

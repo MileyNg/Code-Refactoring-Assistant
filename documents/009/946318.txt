@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+long long dis1[210][210];
+long long dis2[210][210];
+long long dp[2][210];
+
+int main() {
+  while (true) {
+    int n, m;
+    cin >> n >> m;
+    if (n == 0 && m == 0) break;
+    rep (i, n) rep (j, n) dis1[i][j] = 1e9;
+    rep (i, n) rep (j, n) dis2[i][j] = 1e9;
+    rep (i, n) dis1[i][i] = 0;
+    rep (i, n) dis2[i][i] = 0;
+    rep (i, m) {
+      long long x, y, t;
+      string sl;
+      cin >> x >> y >> t >> sl;
+      --x, --y;
+      if (sl == "L") dis1[x][y] = dis1[y][x] = min(dis1[y][x], t);
+      else dis2[x][y] = dis2[y][x] = min(dis2[y][x], t);
+    }
+    rep (i, n) rep (j, n) rep (k, n) dis1[i][j] = min(dis1[i][j], dis1[i][k] + dis1[k][j]);
+    rep (i, n) rep (j, n) rep (k, n) dis2[i][j] = min(dis2[i][j], dis2[i][k] + dis2[k][j]);
+    int r, p;
+    cin >> r >> p;
+    --p;
+    rep (i, 2) rep (j, n) dp[i][j] = 1e18;
+    dp[p][p] = 0;
+    rep (_, r - 1) {
+      int q;
+      cin >> q;
+      --q;
+      rep (i, n) rep (j, n) dp[1][j] = min(dp[1][j], dp[0][i] + dis1[p][i] + dis2[i][j] + dis1[j][q]);
+      rep (i, n) dp[0][i] = dp[1][i];
+      rep (i, n) dp[1][i] = 1e18;
+      p = q;
+    }
+    long long res = 1e18;
+    rep (i, n) res = min(res, dp[0][i]);
+    cout << res << endl;
+  }
+}

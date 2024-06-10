@@ -1,0 +1,26 @@
+loop do
+    n,s = gets.split.map(&:to_i)
+    if n==0 && s == 0
+        break
+    end
+    r = Array.new(n)
+    n.times do |i|
+        r[i] = gets.to_i
+    end
+    r.sort! { |a,b| b <=> a}
+    count = 0
+    for i in 0...n
+        if r[i] > s
+            count += n - 1 - i
+            next
+        end
+        for j in (i+1)...n
+            if r[i]+r[j] > s
+                count += 1
+            else
+                break
+            end
+        end
+    end
+    puts count
+end

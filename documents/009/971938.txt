@@ -1,0 +1,34 @@
+fjs = [4, 1, 4, 1, 2, 1, 2, 1]
+
+while (line = gets)
+  ps = line.chomp.split(" ").map{|s| s.to_i}
+  #p ps
+
+  min_sum = 16
+  min_i = 0
+  min_ci = 0
+
+  for i in (0..7)
+    sum = 0
+    cis = ""
+    for j in (0..7)
+      fj = fjs[(i + j) % 8]
+      cis += fj.to_s
+      sum += ps[j] - fj if ps[j] > fj
+    end
+
+    ci = cis.to_i
+
+    if min_sum > sum
+      min_sum = sum
+      min_i = i
+      min_ci = ci
+    elsif min_sum == sum && min_ci > ci
+      min_i = i
+      min_ci = ci
+    end
+  end
+  #p [min_sum, min_i, min_ci]
+
+  puts min_ci.to_s.split("").join(" ")
+end

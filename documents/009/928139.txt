@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <memory.h>
+
+void create_new_table(r, c) {
+	int i, j, tmp, csum;
+	int list[c+1];
+	memset((char*)list, 0x00, sizeof(list));
+	
+	for(i=0;i<r+1;i++) {
+		for(j=0,csum=0;j<c;j++) {
+			if(i==r) {
+				tmp = list[j];
+			} else if(j<c-1) {
+				scanf("%d ", &tmp);
+				list[j] += tmp;
+			} else {
+				scanf("%d\n", &tmp);
+				list[j] += tmp;
+			}
+			csum += tmp;
+			printf("%d ", tmp);
+		}
+		printf("%d\n", csum);
+	}
+}
+
+int main(void) {
+	int r, c;
+	scanf("%d %d\n", &r, &c);
+	create_new_table(r, c);
+	return 0;
+}

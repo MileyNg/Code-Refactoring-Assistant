@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void){
+	int n,count,sum;
+	while(scanf("%d", &n) != EOF){
+		int i, j;
+		count = 0;
+		for(i = 1; i <= n; i++){
+			sum = 0;
+			for(j = 1; j <= i; j++){
+				if((i % j) == 0){
+					sum += j;
+				}
+			}
+			if(sum == (i + 1)){
+				count++;
+			}
+		}
+		printf("%d\n", count);
+	}
+
+	return 0;
+}

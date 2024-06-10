@@ -1,0 +1,26 @@
+#include <iostream>
+#include <cmath>
+
+constexpr double pi = 3.141593;
+
+int main() {
+	double pos_x = 0;
+	double pos_y = 0;
+	int degree = 0;
+	
+	while (true) {
+		int norm, deg;
+		std::scanf("%d,%d", &norm, &deg);
+		if (norm == 0 && deg == 0) {
+			break;
+		}
+		
+		double theta = degree * pi / 180.0;
+		pos_y += norm * std::sin(theta);
+		pos_x += norm * std::cos(theta);
+		degree += deg;
+	}
+	
+	std::cout << static_cast<int>(pos_y) << std::endl;
+	std::cout << static_cast<int>(pos_x) << std::endl;
+}

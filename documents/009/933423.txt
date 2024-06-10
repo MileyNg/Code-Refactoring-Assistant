@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 1000001;
+int dp[MAXN];
+
+int rec(int n) {
+  int &res = dp[n];
+  if(res != -1) return res;
+  if(n == 1) return res = 0;
+  return res = rec(n%2 == 0 ? n/2 : n*3 + 1) + 1;
+}
+
+int main() {
+  int n;
+  fill(dp, dp+MAXN, -1);
+  while(cin >> n && n) {
+    cout << rec(n) << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	string s;
+	int n;
+	string p,q,rp,rq;
+
+	
+
+	cin>>n;
+	for(int i1=0;i1<n;i1++){
+		cin>>s;
+		set<string> ans;
+
+		for(int i2=1;i2<s.size();i2++){
+			p=s.substr(0,i2);
+			q=s.substr(i2,s.size()-i2);
+			rp=p;
+			rq=q;
+
+			reverse(rp.begin(), rp.end());
+			reverse(rq.begin(), rq.end());
+
+			ans.insert(p+q);
+			ans.insert(q+p);
+			ans.insert(p+rq);
+			ans.insert(rq+p);
+			ans.insert(rp+q);
+			ans.insert(q+rp);
+			ans.insert(rp+rq);
+			ans.insert(rq+rp);
+
+		}
+
+		cout<<ans.size()<<endl;
+	}
+
+	return 0;
+}

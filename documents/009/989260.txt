@@ -1,0 +1,179 @@
+#include<cstdio>
+#include<complex>
+#include<utility>
+#include<vector>
+#include<cmath>
+
+using namespace std;
+
+double eps=1e-9;
+
+typedef complex<double> Point;
+typedef complex<double> Vector;
+
+template<class T> bool eq(T a,T b){
+	return abs(a-b)<eps;
+}
+
+template<class T> int sgn(T r){
+	return eq(r,0.0)?0:(r>0?1:-1);
+}
+
+struct Circle{
+	Point center;
+	double r;
+	Circle(Point c,double r):center(c),r(r){}
+	Circle(){}
+};
+
+struct Line{
+	double a,b,c;//ax+by=c
+	Line(){}
+	Line(double a,double b,double c):a(a),b(b),c(c){}
+};
+
+void print(Point p){
+	if(isnan(p.real())||isnan(p.imag())){
+		printf("NaN Point\n");
+		return;
+	}
+	printf("(%f,%f)\n",p.real(),p.imag());
+}
+
+double pointsDistance(Point p1,Point p2){
+	double dx=p1.real()-p2.real();
+	double dy=p1.imag()-p2.imag();
+	return sqrt(dx*dx+dy*dy);
+}
+
+double linePointDistance(Line l,Point p){
+	double a=l.a,b=l.b,c=l.c;
+	double x=p.real(),y=p.imag();
+	double num=abs(a*x+b*y-c);
+	double den=sqrt(a*a+b*b);
+	return num/den;
+}
+
+Vector basisVector(Vector v){
+	if(eq(v.real(),0.0)&&eq(v.imag(),0.0)) return v;
+	return v/sqrt(norm(v));
+}
+
+Point linePointProjection(Line l,Point p){
+	double dx=l.a,dy=l.b;
+	double a=l.a,b=l.b,c=l.c;
+	double x=p.real(),y=p.imag();
+	Vector ba=basisVector(Vector(dx,dy));
+	double num=a*x+b*y-c;
+	double den=sqrt(a*a+b*b);
+	Vector v=ba*(-num/den);
+	return p+v;
+}
+
+vector<Point> circleLineIntersection(Circle c,Line l){
+	vector<Point> res;
+	Point p=linePointProjection(l,c.center);
+	double d=linePointDistance(l,c.center);
+	int s=sgn(d-c.r);
+	if(s==1){
+		return res;//empty
+	}else if(s==0){
+		res.push_back(p);
+		return res;
+	}else{
+		double r=c.r;
+		double t=sqrt(r*r-d*d);
+		Vector e=basisVector(Vector(l.b,-l.a));
+		res.push_back(p+t*e);
+		res.push_back(p-t*e);
+		return res;
+	}
+}
+
+vector<Point> circlesIntersection(Circle c1,Circle c2){/*一致するとき処理できない*/
+	double d=pointsDistance(c1.center,c2.center);
+	double r1=c1.r,r2=c2.r;
+	double dif=max(r1,r2)-min(r1,r2);
+	double sum=r1+r2;
+	if(sgn(d-sum)==1||sgn(dif-d)==1){//d>sum||dif>d
+		vector<Point> v;
+		return v;
+	}
+	double x1=c1.center.real(),y1=c1.center.imag();
+	double x2=c2.center.real(),y2=c2.center.imag();
+	Line l=Line(-x1*2+x2*2,-y1*2+y2*2,r1*r1-r2*r2-(x1*x1-x2*x2)-(y1*y1-y2*y2));
+	return circleLineIntersection(c1,l);
+}
+
+double det(double a,double b,double c,double d){
+	return a*d-b*c;
+}
+
+Point linesIntersection(Line l1,Line l2){
+	double a=l1.a,b=l1.b,c=l1.c;
+	double d=l2.a,e=l2.b,f=l2.c;
+	double den=det(a,b,d,e);
+	double numx=det(c,b,f,e);
+	double numy=det(a,c,d,f);
+	if(eq(den,0.0)){
+		return Point(NAN,NAN);
+	}
+	return Point(numx/den,numy/den);
+}
+
+double x[11],y[11],l[11];
+
+Circle circles[11];
+vector<Point> cands;
+
+bool inCircle(Circle c,Point p){//境界上でもtrue
+	double d=pointsDistance(c.center,p);
+	int s=sgn(d-c.r);
+	if(s<=0) return true;
+	return false;
+}
+
+int main(){
+	while(true){
+		int N;
+		scanf("%d",&N);
+		if(N==0) break;
+		for(int i=0;i<N;i++) scanf("%lf%lf%lf",x+i,y+i,l+i);
+		double lb=0;
+		double ub=1000;
+		for(int i=0;i<N;i++) ub=min(ub,l[i]);
+		for(int stage=0;stage<100;stage++){
+			double mid=(ub+lb)/2;
+			for(int i=0;i<N;i++){
+				circles[i]=Circle(Point(x[i],y[i]),sqrt(l[i]*l[i]-mid*mid));
+			}
+			cands.clear();
+			for(int i=0;i<N;i++){
+				for(int j=i+1;j<N;j++){
+					vector<Point> tmp;
+					tmp=circlesIntersection(circles[i],circles[j]);
+					for(int k=0;k<tmp.size();k++){
+						cands.push_back(tmp[k]);
+					}
+				}
+			}
+			if(cands.size()==0){
+				for(int i=0;i<N;i++){
+					cands.push_back(circles[i].center);
+				}
+			}
+			bool ok=false;
+			for(int i=0;i<cands.size();i++){
+				bool flg=true;
+				for(int j=0;j<N;j++){
+					if(inCircle(circles[j],cands[i])==false) flg=false;
+				}
+				if(flg) ok=true;
+			}
+			if(ok) lb=mid;
+			else ub=mid;
+		}
+		printf("%f\n",ub);
+	}
+	return 0;
+}

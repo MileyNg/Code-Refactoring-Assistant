@@ -1,0 +1,67 @@
+#include <cmath>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct points{
+    double x;
+    double y;
+};
+
+points p[300];
+
+double get_square(points a, points b){
+    return pow(a.x - b.x, 2.0) + pow(a.y - b.y, 2.0);
+}
+
+double get_dist(points a, points b){
+    return sqrt(get_square(a, b));
+}
+
+int find_max_cover(int n){
+    int count, max_cover = 1;
+    int sign[2] = {1, -1};
+    double d, e;
+    points m, q, v;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i+1; j < n; j++) {
+            d = get_dist(p[i], p[j]);
+            if (d > 2.0){
+                continue;
+            }
+            m.x = (p[i].x + p[j].x) / 2.0;
+            m.y = (p[i].y + p[j].y) / 2.0;
+            v.x = (p[i].x - p[j].x) / d;
+            v.y = (p[i].y - p[j].y) / d;
+            e = sqrt(1.0 - d * d / 4.0);
+            for (int s = 0; s < 2; s++) {
+                q.x = m.x + sign[s] * e * v.y;
+                q.y = m.y - sign[s] * e * v.x;
+                count = 0;
+                for (int k = 0; k < n; k++) {
+                    if (k == i || k == j || get_square(q, p[k]) <= 1.0) {
+                        count++;
+                    }
+                }
+                max_cover = max(max_cover, count);
+            }
+        }
+    }
+    return max_cover;
+}
+
+int main()
+{
+    int n;
+    while (true) {
+        cin >> n;
+        if (n == 0) {
+            break;
+        }
+        for (int i = 0; i < n; i++) {
+            cin >>p[i].x >> p[i].y;
+        }
+        cout << find_max_cover(n) << endl;
+    }
+    return 0;
+}

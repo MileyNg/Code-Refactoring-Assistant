@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <memory.h>
+
+int bit[200005];
+
+int sum(int i) {
+	int s = 0;
+	while(i > 0) {
+		s += bit[i];
+		i -= (i & -i);
+	}
+	return s;
+}
+
+void add(int i, int x, int n) {
+	while(i<=n) {
+		bit[i] += x;
+		i += (i & -i);
+	}
+}
+
+int main(void) {
+	int i, n, a, ans = 0;
+	scanf("%d\n", &n);
+	
+	memset(bit, 0x00, sizeof(bit));
+	for(i=0;i<n;i++) {
+		scanf("%d", &a);
+		ans += (i - sum(a));
+		add(a, 1, n);
+	}
+	
+	printf("%d\n", ans);
+
+	return 0;
+}

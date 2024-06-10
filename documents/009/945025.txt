@@ -1,0 +1,29 @@
+#include<iostream>
+using namespace std;
+int t[100000];
+int n,m,a,b,ans=0,L,R,M;
+int main(){
+  cin>>n;
+  for(int i=0;i<n;i++)cin>>t[i];
+  cin>>m;
+  for(int i=0;i<m;i++){
+    cin>>a;
+    L=0;
+    R=n;
+    while(L<R){
+      M=(L+R)/2;
+      if(t[M]==a){
+	break;
+      }else if(t[M]<a){
+	L=M+1;
+      }else{
+	R=M;
+      }
+    }
+    
+    if(L<R)ans++;
+    
+  }
+  cout<<ans<<endl;
+  return 0;
+}

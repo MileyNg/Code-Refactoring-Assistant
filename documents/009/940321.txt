@@ -1,0 +1,35 @@
+#include <stdio.h>
+#define MAX 101
+int s[MAX], t[MAX];
+int used[501];
+void input(int input[MAX], int max)
+{
+    int i;
+    for (i=0; i<max; i++) {
+        scanf("%d", &input[i]);
+    }
+}
+int check(int ns, int nt)
+{
+    int counter = 0;
+    int i, j;
+    for (i=0; i<nt; i++)
+    {
+        for (j=0; j<ns; j++)
+            if (t[i]==s[j] && !used[t[i]]) {
+                counter++;
+                used[t[i]] = 1;
+            }
+    }
+    return counter;
+}
+int main(void)
+{
+    int ns, nt;
+    scanf("%d", &ns);
+    input(s, ns);
+    scanf("%d", &nt);
+    input(t, nt);
+    printf("%d\n", check(ns, nt));
+    return 0;
+}

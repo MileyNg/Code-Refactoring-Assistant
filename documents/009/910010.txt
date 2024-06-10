@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int hantei(int);
+
+int main()
+{
+  int sei[10000], N, i, count = 0;
+  scanf("%d", &N);
+  for(i = 0; i < N; i++){
+    scanf("%d", &sei[i]);
+  }
+  for(i = 0; i < N; i++){
+    count += hantei(sei[i]);
+  }
+  printf("%d\n", count);
+  return 0;
+}
+
+int hantei(int n)
+{
+  int j;
+  if(n == 2) return 1;
+  for(j = 2; j < n; j++){
+    if(n % j == 0) return 0;
+    if(j == n - 1) return 1;
+  }
+}

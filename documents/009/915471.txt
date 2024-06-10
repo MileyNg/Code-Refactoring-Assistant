@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+
+#define NMAX 200000
+
+int main(){
+
+	int N;
+	int R[NMAX];
+	int max[NMAX];
+	int ans;
+
+	cin>>N;
+
+	for(int i=0;i<N;i++){
+		cin>>R[i];
+	}
+
+	max[N-1]=-1;
+	max[N-2]=R[N-1];
+	for(int i=N-3;i>=0;i--){
+		if(max[i+1]<R[i+1]) max[i]=R[i+1];
+		else max[i]=max[i+1];
+	}
+
+	ans=max[0]-R[0];
+	for(int i=1;i<N-1;i++){
+		if(ans<max[i]-R[i]) ans=max[i]-R[i];
+	}
+
+	cout<<ans<<endl;
+
+    return 0;
+}

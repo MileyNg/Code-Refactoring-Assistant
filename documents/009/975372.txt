@@ -1,0 +1,45 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+void go_plus(int& n, int& a, int& x){ x = (x+a>n ? n : x+a); }
+void go_minus(int& a, int& x){ x = (x-a<1 ? 1 : x-a); }
+
+int main(){
+  int n, m, a;
+  string str;
+  while(cin >> n >> m && n && m){
+    int x=1, y=1;
+    char c = 'N';
+    while(1){
+      cin >> str;
+      if(str == "STOP") break;
+      if(str == "FORWARD"){
+	cin >> a;
+	if(c=='N') go_plus(m, a, y);
+	else if(c=='S') go_minus(a, y);
+	else if(c=='E') go_plus(n, a, x);
+	else if(c=='W') go_minus(a, x);
+      }else if(str == "BACKWARD"){
+	cin >> a;
+	if(c=='N') go_minus(a, y);
+	else if(c=='S') go_plus(m, a, y);
+	else if(c=='E') go_minus(a, x);
+	else if(c=='W') go_plus(n, a, x);
+      }else if(str == "RIGHT"){
+	if(c=='N') c = 'E';
+	else if(c=='S') c = 'W';
+	else if(c=='E') c = 'S';
+	else if(c=='W') c = 'N';
+      }else if(str == "LEFT"){
+	if(c=='N') c = 'W';
+	else if(c=='S') c = 'E';
+	else if(c=='E') c = 'N';
+	else if(c=='W') c = 'S';
+      }
+    }
+    cout << x << " " << y << endl;
+  }
+  return 0;
+}

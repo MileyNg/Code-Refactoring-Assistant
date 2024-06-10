@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int main (void)
+{
+    int i,j,k,a[10];
+    for (i=0;i<10;i++)
+    {
+        printf("Height of mountain %d : ",i);
+        scanf("%d",&a[i]);
+    }
+    for (i=0;i<3;i++)
+    {
+        for(j=(i+1);j<10;j++)
+        {
+            if(a[i] < a[j])
+            {
+                k = a[j];
+                a[j] = a[i];
+                a[i] = k;
+            }
+            else
+                continue;
+        }
+        printf("Height of the %dst mountain : %d\n",i,a[i]);
+    }
+    return 0;
+}

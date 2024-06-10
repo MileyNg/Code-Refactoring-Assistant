@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Edge{
+	int src,dst;
+	double weight;
+	Edge(){}
+	Edge(int s,int d,double w):src(s),dst(d),weight(w){}
+};
+typedef vector<vector<Edge>> Graph;
+bool operator<(const Edge& a,const Edge& b){return a.weight<b.weight;}
+bool operator>(const Edge& a,const Edge& b){return a.weight>b.weight;}
+
+void Dijkstra(const Graph& g,int v,vd& dist,vi& prev)
+{
+	priority_queue<Edge,vector<Edge>,greater<Edge>> pq;
+	pq.emplace(-1,v,0);
+	while(pq.size()){
+		Edge cur=pq.top(); pq.pop();
+		if(dist[cur.dst]!=INF) continue;
+		dist[cur.dst]=cur.weight;
+		prev[cur.dst]=cur.src;
+		for(Edge e:g[cur.dst])
+			pq.emplace(e.src,e.dst,cur.weight+e.weight);
+	}
+}
+void BuildPath(const vi& prev,int v,vi& path)
+{
+	for(int u=v;u!=-1;u=prev[u])
+		path.push_back(u);
+	reverse(all(path));
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vi bs(n),xs(n),ys(n);
+		rep(i,n) cin>>bs[i]>>xs[i]>>ys[i];
+		
+		map<int,int> f;
+		rep(i,n) f[bs[i]]=i;
+		
+		Graph g(n);
+		rep(i,n) rep(j,n){
+			int dx=xs[j]-xs[i],dy=ys[j]-ys[i];
+			if(dx*dx+dy*dy<=50*50){
+				double d=sqrt(dx*dx+dy*dy);
+				g[i].emplace_back(i,j,d);
+			}
+		}
+		
+		vvd dists(n,vd(n,INF));
+		vvi prevs(n,vi(n,-1));
+		rep(i,n) Dijkstra(g,i,dists[i],prevs[i]);
+		
+		int m; cin>>m;
+		rep(i,m){
+			int u,v; cin>>u>>v; u=f[u],v=f[v];
+			vi path; BuildPath(prevs[u],v,path);
+			if(path.size()){
+				rep(i,path.size())
+					cout<<(i?" ":"")<<bs[path[i]];
+				cout<<endl;
+			}
+			else
+				cout<<"NA"<<endl;
+		}
+	}
+}

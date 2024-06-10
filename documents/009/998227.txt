@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define MP(a, b) make_pair(a, b)
+#define Y first
+#define X second
+#define L first
+#define R second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef pair<pi, pi> pipi;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int W, H;
+int dy[] = {0,-1,0,1}, dx[] = {-1,0,1,0};
+char len[64][64], rin[64][64];
+
+int main(){
+  while(scanf("%d%d", &W, &H) && W){
+    rep(i, H) scanf("%s%s", len[i], rin[i]);
+
+    int ly, lx, ry, rx;
+    rep(i, H) rep(j, W){
+      if(len[i][j] == 'L'){ ly = i, lx = j; len[i][j] = '.';}
+      if(rin[i][j] == 'R'){ ry = i, rx = j; rin[i][j] = '.';}
+    }
+
+    pipi p = MP(MP(ly, lx), MP(ry, rx));
+    queue<pipi>q;
+    map<pipi, int>m;
+    q.push(p);
+    m[p] = 1;
+
+    while(!q.empty()){
+      int qsize = (int)q.size();
+      rep(i, qsize){
+	pipi now = q.front(); q.pop();
+	rep(d, 4){
+	  int nly, nlx, nry, nrx;
+	  if(d%2){
+	    nly = now.L.Y + dy[d], nlx = now.L.X;
+	    if(nly < 0 || nly >= H || len[nly][nlx] == '#') nly = now.L.Y; 
+	    nry = now.R.Y + dy[d], nrx = now.R.X;
+	    if(nry < 0 || nry >= H || rin[nry][nrx] == '#') nry = now.R.Y; 
+	  }else{
+	    nly = now.L.Y, nlx = now.L.X + dx[d];
+	    if(nlx < 0 || nlx >= W || len[nly][nlx] == '#') nlx = now.L.X; 	    
+	    nry = now.R.Y, nrx = now.R.X + -1*dx[d];
+	    if(nrx < 0 || nrx >= W || rin[nry][nrx] == '#') nrx = now.R.X;
+	  }
+
+	  //	  pipi next = MP(MP(nly, nlx), MP(nry, nrx));
+	  if(len[nly][nlx] == '%' && rin[nry][nrx] == '%'){
+	    puts("Yes"); goto e;
+	  }else if(len[nly][nlx] == '%' || rin[nry][nrx] == '%'){
+	    continue;
+	  }
+
+	  if(m.count(MP(MP(nly, nlx), MP(nry, nrx))) != 0) continue;
+	     //	  printf("%d %d %d %d\n", next.L.Y, next.L.X, next.R.Y, next.R.X);
+	  m[MP(MP(nly, nlx), MP(nry, nrx))] = 1;
+	  q.push(MP(MP(nly, nlx), MP(nry, nrx)));
+	}
+      }
+    }
+    puts("No");
+  e:;
+    m.clear();
+  }
+  return 0;
+}

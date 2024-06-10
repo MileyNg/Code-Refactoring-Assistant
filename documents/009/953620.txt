@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <math.h>
+
+typedef struct Zahyou{
+  double x;
+  double y;
+}Zahyou;
+
+int Ans(Zahyou,Zahyou,int);
+main(){
+int n;
+  Zahyou p1,p2;
+
+  p1.x=0.0;
+  p1.y=0.0;
+  p2.x=100.0;
+  p2.y=0.0;
+  
+  scanf("%d",&n);
+  printf("%f %f\n",p1.x,p1.y);
+  Ans(p1,p2,n);
+  printf("%f %f\n",p2.x,p2.y);
+  return 0;
+}
+
+
+int Ans(Zahyou p1,Zahyou p2,int n){
+  Zahyou s,u,t;
+
+  if(n==0)return 0;
+
+  s.x=(p2.x-p1.x)/3.0+p1.x;
+  s.y=(p2.y-p1.y)/3.0+p1.y;
+  
+  t.x=2*((p2.x-p1.x)/3.0)+p1.x;
+  t.y=2*((p2.y-p1.y)/3.0)+p1.y;
+
+  u.x=(t.x-s.x)*(1.0/2.0)-(t.y-s.y)*(sqrt(3.0)/2.0)+s.x;
+  u.y=(t.x-s.x)*(sqrt(3.0)/2.0)+(t.y-s.y)*(1.0/2.0)+s.y;
+
+  Ans(p1,s,n-1);
+  printf("%f %f\n",s.x,s.y);
+  Ans(s,u,n-1); 
+  printf("%f %f\n",u.x,u.y);
+  Ans(u,t,n-1);
+  printf("%f %f\n",t.x,t.y);
+  Ans(t,p2,n-1);
+ 
+}

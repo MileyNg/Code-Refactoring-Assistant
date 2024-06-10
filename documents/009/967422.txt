@@ -1,0 +1,20 @@
+def gcd(a, b)
+  if (a < b)
+    tmp = a; a = b; b = tmp
+  end
+
+  while ((c = a % b) > 0)
+    a = b
+    b = c
+  end
+
+  return b
+end
+
+while (line = gets)
+  a, b = line.chop.split(" ").map { |s| s.to_i }
+  g = gcd(a, b)
+  l = a * b / g
+
+  printf("%d %d\n", g, l)
+end

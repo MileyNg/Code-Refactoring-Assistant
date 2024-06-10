@@ -1,0 +1,26 @@
+#include<iostream>
+#include<cstdio>
+#include<cctype>
+using namespace std;
+
+
+int main()
+{
+        char ch;
+        int alph[26];
+
+        for(int i=0; i<26; i++){alph[i]=0;}
+
+        while((ch=getchar())!=EOF){
+                if(isalpha(ch)){
+                        ch = tolower(ch);
+                        alph[ch-'a']++;
+                }
+        }
+
+        for(int i=0; i<26; i++){
+                printf("%c : %d\n", 'a'+i, alph[i]);
+        }
+
+        return 0;
+}

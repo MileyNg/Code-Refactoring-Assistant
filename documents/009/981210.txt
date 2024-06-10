@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <utility>
+#include <set>
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+typedef long long ll;
+
+void init() {
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+}
+
+int main() {
+    init();
+	int n;
+	cin >> n;
+	rep(i, n) {
+		set<string> st;
+		string in;
+		cin >> in;
+		for(int i=1; i<in.length(); i++) {
+			string a = in.substr( 0, i );
+			string b = in.substr( i, in.length()-i );
+			st.insert(a+b);
+			st.insert(b+a);
+			reverse( a.begin(), a.end() );
+			st.insert(a+b);
+			st.insert(b+a);
+			reverse( b.begin(), b.end() );
+			st.insert(a+b);
+			st.insert(b+a);
+			reverse( a.begin(), a.end() );
+			st.insert(a+b);
+			st.insert(b+a);
+		}
+		cout << st.size() << endl;
+	}
+	return 0;
+}

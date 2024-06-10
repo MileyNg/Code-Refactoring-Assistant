@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; ++i)
+#define repl(i, s, n) for(int i=s; i<=n; ++i)
+#define max(a,b) (a>b?a:b)
+#define N 103
+#define INF 1000000007
+
+int mat[N][N] = {{0}};
+int sum[N][N] = {{0}};
+
+int main() {
+	int n, ans=-INF;
+	cin >> n;
+	rep(i, n) {
+		int tmp = 0;
+		rep(j, n) {
+			cin >> mat[i][j];
+			tmp += mat[i][j];
+			sum[i+1][j+1] = tmp + sum[i][j+1];
+		}
+	}
+	
+	repl(x1, 1, n) repl(y1, 1, n) {
+		repl(x0, 0, x1) repl(y0, 0, y1) {
+			if(x1==x0 && y1==y0) continue;
+			int s = sum[y1][x1] - (x0!=x1 ? sum[y1][x0] : 0) - (y0!=y1 ? sum[y0][x1] : 0) + sum[y0][x0];
+			ans = max(ans, s);
+		}
+	}
+	cout << ans << endl;
+
+	return 0;
+}

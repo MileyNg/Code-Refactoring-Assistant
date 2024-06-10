@@ -1,0 +1,70 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<iostream>
+#include<algorithm>
+#include<fstream>
+#include<string>
+#include<map>
+#include<set>
+#include<utility>
+#include<queue>
+#include<stack>
+#include<ctime>
+#include<ctype.h>
+#include<iomanip>//霎灘?菫晉蕗邊セ蠎ヲ 
+#define INF 0x3f3f3f3f
+//#define INF (1<<28)
+#define EPS 1e-6
+#define PI acos(-1)
+#define lowbit(a) ((a) & (-(a)))
+#define min(a,b) ((a)<(b) ? (a):(b))
+#define max(a,b) ((a)>(b) ? (a):(b))
+#define abs(a) ((a)>0?(a):-(a))
+#define swp(a,b) {int tem=a; a=b; b=tem;}
+#define SET(a,b) memset(a,b,sizeof(a))
+using namespace std;
+ifstream fin("C-large-practice.in");
+//ofstream fout("C-small-practice.out");
+typedef unsigned long long ull;//2^64 
+typedef long long ll;//2^63 
+typedef pair<int, int> P;
+const int MAX_N=1001000;
+const int MAX_M=100100;
+const int MAX_V=2100;
+const int MAX_E=1000;
+const int M=1000000;
+
+int n,np;
+int prime[MAX_N];
+bool is_prime[MAX_N];
+
+void sieve()
+{
+    np=0;
+    fill(is_prime,is_prime+MAX_N,true);
+    is_prime[0]=is_prime[1]=false;
+    for(int i=2;i<MAX_N;i++)
+        if(is_prime[i])
+        {
+            prime[np++]=i;
+            for(int j=2*i;j<MAX_N;j+=i) is_prime[j]=false;
+        }
+}
+
+void solve()
+{
+    cout<<upper_bound(prime,prime+np,n)-prime<<endl;
+}
+
+int main()
+{
+    sieve();
+    while(scanf("%d",&n)!=EOF)
+    {
+        solve();
+    }
+    //system("pause");
+    return 0;
+} 

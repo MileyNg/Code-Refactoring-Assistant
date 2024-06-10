@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char string[128];
+	int number = 0;
+	int tmpNum = 0;
+	int i;
+	
+	while( scanf( "%s", string ) != EOF )
+	{
+		
+		for( i = 0; string[i] != '\0'; i++ )
+		{
+			if( string[i] >= '0' && string[i] <= '9' )
+			{
+				tmpNum = tmpNum * 10 + (string[i] - '0');
+			}
+			else
+			{
+				number += tmpNum;
+				tmpNum = 0;
+			}
+		}
+		number += tmpNum;
+		tmpNum = 0;
+	}
+	
+	printf("%d\n", number);
+	
+	return (0);
+}

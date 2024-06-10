@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+int main (){
+
+  int a=0,b=0;
+  string n,c;
+
+  cin >>n;
+
+  c=n.substr(0,1);
+    
+    if( c == "o"){
+    a++;
+  }else{
+    b++;
+  }
+  
+    for(int i=1; i < n.size(); i++){
+      
+      c=n.substr(i,1);
+      
+      if( c != n.substr(i-1,1)){
+	if( c == "o" ){
+	  a++;
+	}else{
+	  b++;
+	}
+      }
+    }
+    
+    if( a >= b ){
+      cout <<"o"<<endl;
+    }else{
+      cout <<"x"<<endl;
+    }
+    
+    return 0; 
+}

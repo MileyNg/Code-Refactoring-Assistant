@@ -1,0 +1,35 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  ns = []
+  n.times.each do
+    k = gets.strip.to_i
+    ns << k
+  end
+
+  s = gets.strip.to_i
+
+  i0 = 0
+  i1 = n - 1
+  count = 0
+
+  while i0 <= i1
+    #p [i0, i1]
+    i = (i0 + i1) / 2
+    cmp = ns[i] <=> s
+    count += 1
+
+    if cmp == 0
+      break
+    elsif cmp < 0
+      i0 = i + 1
+    else
+      i1 = i - 1
+    end
+  end
+
+  puts count
+end

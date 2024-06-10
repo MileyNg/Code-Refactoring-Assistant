@@ -1,0 +1,53 @@
+function swap(A, i, j) {
+	var tmp = A[i];
+	A[i] = A[j];
+	A[j] = tmp;
+}
+function parent(i) {
+	return Math.floor(i / 2);
+}
+function left(i) {
+	return i * 2;
+}
+function right(i) {
+	return i * 2 + 1;
+}
+function maxHeapify(A, i) {
+	var l = left(i);
+	var r = right(i);
+
+	var largest;
+	if (l <= heap.length && A[l] > A[i]) {
+		largest = l;
+	} else {
+		largest = i;
+	}
+	if (r <= heap.length && A[r] > A[largest]) {
+		largest = r;
+	}
+
+	if (largest != i) {
+		swap(A, i, largest);
+		maxHeapify(A, largest);
+	}
+}
+function buildMaxHeap(A) {
+	for (var i = Math.floor(heap.length / 2); i > 0; i--) {
+		maxHeapify(A, i);
+	}
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var size = +lines.shift()
+var vals = lines.shift().split(' ');
+var heap = ['NA'];
+for (var i = 0; i < size; i++) {
+	heap.push(+vals[i]);
+}
+
+buildMaxHeap(heap);
+
+heap.shift();
+console.log(' ' + heap.join(' '));

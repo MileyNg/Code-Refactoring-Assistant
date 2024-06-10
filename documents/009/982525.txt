@@ -1,0 +1,46 @@
+#include <stdio.h>
+
+#define MAX 40
+
+void solve(int*,int*,int);
+
+int n, post[MAX], idx;
+
+int main(){
+  int pre[MAX], in[MAX], i;
+
+  scanf("%d",&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d",pre+i);
+  }
+  for(i = 0 ; i < n ; i++){
+    scanf("%d",in+i); 
+  }
+
+  solve(pre, in, n);
+
+  for(i = 0 ; i < n ; i++){
+    printf("%d%c",post[i],(i != n-1 ? ' ':'\n'));
+  }
+
+  return 0;
+}
+
+void solve(int pre[], int in[], int N){
+  int i, par;
+
+  for(i = 0 ; i < N ; i++){
+    if(in[i] == pre[0]){
+      par = i;
+      break;
+    }
+  }
+
+  if(par != 0){
+    solve(pre+1, in, par);
+  }
+  if(par != N-1){
+    solve(pre+par+1, in+par+1, N-par-1);
+  }
+  post[idx++] = pre[0]; 
+}

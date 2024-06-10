@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+  int M;
+  
+  while(cin >> M && M) {
+    int sum = 0;
+    double S = 0.0;
+    for(int i=0; i<M-1; i++) {
+      int arg; cin >> arg;
+      S += sin(arg/(2*M_PI));
+      sum += arg;
+    }
+    
+    S += sin(sum/(2*M_PI));
+    cin >> M;
+    sum = 0;
+    double T = 0.0;
+    for(int i=0; i<M-1; i++) {
+      int arg; cin >> arg;
+      T += sin(arg/(2*M_PI));
+      sum += arg;
+    }
+    
+    T += sin(sum/(2*M_PI));
+    
+    if(abs(S-T) < 1e-5) cout << 0 << endl;
+    else if(S < T) cout << 2 << endl;
+    else cout << 1 << endl;
+  }
+  
+  return 0;
+}

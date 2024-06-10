@@ -1,0 +1,36 @@
+#include<stdio.h>
+main(){
+  int n,b,f,r,v=0;
+  int a,c,d,e=0;
+  int g,h,i=0;
+  int A[4][3][10]={0};
+  scanf("%d",&n);
+  for(c=0;c<n;c++){
+    scanf("%d %d %d %d",&b,&f,&r,&v);
+    a=b-1;
+    d=f-1;
+    e=r-1;
+    A[a][d][e]=v;
+    if(A[a][d][e]<0){
+      A[a][d][e]=0;
+    }
+  }
+  for(g=0;g<=3;g++){
+    for(h=0;h<=2;h++){
+      for(i=0;i<10;i++){
+	if(i==9&&h==2&&g==3){
+	  printf("%d",A[g][h][i]);
+	}
+	else if(i==9){
+	  printf("%d\n",A[g][h][i]);
+	}
+	else{
+	  printf("%d ",A[g][h][i]);
+	}
+      }
+    }
+    if(g!=3){
+      printf("####################\n");
+    }
+  }
+  return 0;

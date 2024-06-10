@@ -1,0 +1,200 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int H,W;
+char t[20][20];
+bool T[40][20][20];
+char u[40][20][20];
+int  h[40],w[40];
+bool used[10];
+int n,m,a,b;
+int v[10],flg;
+
+void input();
+void init();
+void rotate(int,int);
+void dfs(int,int,int);
+void check();
+bool on_check(int,int,int);
+
+void on_tab(int,int,int);
+void off_tab(int,int,int);
+
+
+int main(){
+  while(cin>>H>>W){
+    if(H==0&&W==0)break;
+
+    input();
+    init();
+
+    
+    cin>>m;
+    for(int i=0;i<m;i++){
+      cin>>a;
+      for(int j=0;j<a;j++){
+	cin>>v[j];
+	v[j]--;
+      }
+      
+      //for(int i=0;i<a;i++){cout<<v[i]<<' ';}cout<<endl;
+      flg=0;
+      dfs(0,0,0);
+      if(flg)cout<<"YES"<<endl;
+      else cout<<"NO"<<endl;
+    }
+    
+  }
+  return 0;
+}
+
+void dfs (int y, int x,int z){
+  //cout<<y<<' '<<x<<endl;
+
+  
+  /*
+  for(int ii=0;ii<H;ii++){
+    for(int jj=0;jj<W;jj++){
+      cout<<t[ii][jj];
+    }
+    cout<<endl;
+  }
+  */
+  if(y==H&&x==0&&z==a){flg=1;return;}
+  
+  int s;
+  for(int i=0;i<a;i++){
+    s=v[i];
+    
+    if(used[s]==true)continue;
+    
+    for(int j=s*4;j<s*4+4;j++){
+      if(T[j][y][x]==false)continue;
+
+      if(on_check(y,x,j)==false)continue;
+	
+      on_tab(y,x,j);
+      /*
+      cout<<j<<endl;
+      for(int ii=0;ii<h[j];ii++){
+	for(int jj=0;jj<w[j];jj++){
+	  cout<<u[j][ii][jj];
+	}
+	cout<<endl;
+      }
+      for(int ii=0;ii<H;ii++){
+	for(int jj=0;jj<W;jj++){
+	  cout<<t[ii][jj];
+	}
+	cout<<endl;
+	
+      }
+      */
+      
+      used[s]=true;
+   
+      dfs(y,x,z+1);
+  
+      used[s]=false;
+      off_tab(y,x,j);
+    
+    }
+
+  }
+  
+  
+  if(t[y][x]=='#')dfs((x+1==W?y+1:y),(x+1==W?0:x+1),z);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void rotate(int a,int b){
+  for(int i=0;i<h[a];i++){
+    for(int j=0;j<w[a];j++){
+      u[a][i][j]=u[b][j][h[a]-i-1];
+    }
+  }
+}
+
+
+void init(){
+  for(int i=0;i<10;i++)used[i]=false;
+  for(int k=0;k<n*4;k++){
+    for(int i=0;i<H;i++){
+      for(int j=0;j<W;j++){
+	
+	if(i+h[k]-1<H && j+w[k]-1<W)T[k][i][j]=on_check(i,j,k);
+	else T[k][i][j]=false;
+	
+      }
+    }
+  }
+}
+
+
+void input(){
+  string str;
+  for(int i=0;i<H;i++){
+    cin>>str;
+    for(int j=0;j<W;j++){
+      t[i][j]=str[j];
+    }
+  }
+  cin>>n;
+  for(int k=0;k<n;k++){
+    cin>>h[k*4]>>w[k*4];
+    for(int i=0;i<h[k*4];i++){
+      cin>>str;
+      for(int j=0;j<w[k*4];j++){
+	u[k*4][i][j]=str[j];
+      }
+    }
+    for(int i=1;i<4;i++){
+      h[k*4+i]=w[k*4+i-1];
+      w[k*4+i]=h[k*4+i-1];
+      rotate(k*4+i,k*4+i-1);
+    }
+  }
+}
+
+bool on_check(int y,int x,int A){
+  for(int i=y;i<y+h[A];i++){
+    for(int j=x;j<x+w[A];j++){
+      if(u[A][i-y][j-x]=='#'&&t[i][j]=='#')return false;
+    }
+  }
+  return true;
+}
+
+
+void on_tab(int y,int x,int A){
+  for(int i=y;i<y+h[A];i++){
+    for(int j=x;j<x+w[A];j++){
+      if(u[A][i-y][j-x]=='#')t[i][j]='#';
+    }
+  }
+}
+
+
+void off_tab(int y,int x,int A){
+  for(int i=y;i<y+h[A];i++){
+    for(int j=x;j<x+w[A];j++){
+      if(u[A][i-y][j-x]=='#')t[i][j]='.';
+    }
+  }
+}

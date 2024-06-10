@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define INF 10000001
+
+#define MAX_SIZE 101
+long long g_d[MAX_SIZE][MAX_SIZE];
+void warshall_floyd(int v) {
+	for (int k = 0; k < v; ++k) {
+		for (int i = 0; i < v; ++i) {
+			for (int j = 0; j < v; ++j) {
+				g_d[i][j] = min(g_d[i][j], g_d[i][k]+g_d[k][j]);
+			}
+		}
+	}
+}
+
+int main() {
+
+	while (true) {
+		int n,m,s,g1,g2;
+		cin >> n >> m >> s >> g1 >> g2;
+		--s; --g1; --g2;
+		if (n==0) break;
+
+		fill(g_d[0], g_d[0] + MAX_SIZE*MAX_SIZE, INF);
+		for (int i = 0; i<MAX_SIZE; ++i) {
+			g_d[i][i] = 0;
+		}
+
+		for (int i=0; i<m; ++i) {
+			int b1,b2;
+			cin >> b1 >> b2;
+			--b1; --b2;
+			cin >> g_d[b1][b2];
+		}
+
+		warshall_floyd(n);
+
+		long long cost = INF;
+		for (int i=0; i<n; ++i) {
+			cost = min(cost, g_d[s][i] + g_d[i][g1] + g_d[i][g2]);
+		}
+
+		cout << cost << endl;
+	}
+}

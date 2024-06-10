@@ -1,0 +1,187 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+int v[2]={1,-1};
+
+
+int main(){
+	int n;
+	//bool ff=false;
+	//cout<<v[1][0]<<" "<<v[1][1]<<" "<<v[1][2]<<" "<<v[1][3]<<endl;
+	while(cin>>n,n){
+		int m0;
+		cin>>m0;
+		//if(ff) cout<<"+++++"<<endl;
+		//ff=true;
+		vector<vint> vii(m0);
+		vector<vint> vii2(m0);
+		rep(i,m0){
+			int a,b;
+			cin>>a>>b;
+			vii[i].PB(a);
+			vii[i].PB(b);
+			vii2[i].PB(0);
+			vii2[i].PB(0);
+		}
+		rep(i,m0-1){
+			vii[i+1][0]-=vii[0][0];
+			vii[i+1][1]-=vii[0][1];
+		}
+		vii[0][0]=0; vii[0][1]=0;
+		rep(i,m0-1){
+			if(vii[i][0]==vii[i+1][0]){
+				vii2[i+1][1]=vii[i+1][1]-vii[i][1];
+			}
+			else{
+				vii2[i+1][0]=vii[i+1][0]-vii[i][0];
+			}
+		}
+		rep(i,m0-1){
+			vii[i+1][0]-=vii[0][0];
+			vii[i+1][1]-=vii[0][1];
+		}
+		vii[0][0]=0; vii[0][1]=0;
+		rep(i,m0-1){
+			if(vii[i][0]==vii[i+1][0]){
+				vii2[i+1][1]=vii[i+1][1]-vii[i][1];
+			}
+			else{
+				vii2[i+1][0]=vii[i+1][0]-vii[i][0];
+			}
+		}
+		/*
+		rep(i,m0){
+			cout<<"vii2 "<<vii2[i][0]<<" "<<vii2[i][1]<<endl;
+		}
+		cout<<endl;
+		*/
+		rep(i,n){
+			
+			int m;
+			cin>>m;
+			vector<vint> tv(m),tv2(m),tv3(m);
+			rep(j,m){
+				int a,b;
+				
+				cin>>a>>b;
+				tv[j].PB(a);
+				tv[j].PB(b);
+				tv2[j].PB(0);
+				tv2[j].PB(0);
+				tv3[j].PB(0);
+				tv3[j].PB(0);
+			}
+			if(m!=m0) continue;
+			rep(j,m-1){
+				tv[j+1][0]-=tv[0][0];
+				tv[j+1][1]-=tv[0][1];
+				//cout<<tv[j+1][0]<<" "<<tv[j+1][1]<<endl;
+			}
+			//cout<<endl;
+			
+			tv[0][0]=0; tv[0][1]=0;
+			rep(j,m-1){
+				if(tv[j][0]==tv[j+1][0]){
+					tv2[j+1][1]=tv[j+1][1]-tv[j][1];
+					tv3[j+1][0]=tv[j+1][1]-tv[j][1];
+				}
+				else{
+					tv2[j+1][0]=tv[j+1][0]-tv[j][0];
+					tv3[j+1][1]=-(tv[j+1][0]-tv[j][0]);
+				}
+			}
+			/*
+			rep(j,m){
+				cout<<"tv2 "<<tv2[j][0]<<" "<<tv2[j][1]<<endl;
+			}
+			cout<<endl;
+			
+			rep(j,m){
+				cout<<"tv3 "<<tv3[j][0]<<" "<<tv3[j][1]<<endl;
+			}
+			cout<<endl;
+			*/
+			rep(j,2){
+				bool f=true;
+				rep(k,vii2.size()){
+					if((vii2[k][0]!=tv2[k][0]*v[j]&&tv2[k][1]==0)||(vii2[k][1]!=tv2[k][1]*v[j]&&tv2[k][0]==0)){
+						f=false;
+						break;
+					}
+				}
+				if(f){
+					cout<<i+1<<endl;
+					break;
+				}
+				f=true;
+				rep(k,vii2.size()){
+					if((vii2[k][0]!=tv3[k][0]*v[j]&&tv3[k][1]==0)||(vii2[k][1]!=tv3[k][1]*v[j]&&tv3[k][0]==0)){
+						f=false;
+						break;
+					}
+				}
+				if(f){
+					cout<<i+1<<endl;
+					break;
+				}
+				f=true;
+				for(int k=vii2.size()-1;k>=1;k--){
+					int l=vii2.size()-k;
+					if((vii2[k][0]!=tv3[l][0]*v[j]&&tv3[l][1]==0)||(vii2[k][1]!=tv3[l][1]*v[j])&&tv3[l][0]==0){
+						f=false;
+						break;
+					}
+				}
+				if(f){
+					cout<<i+1<<endl;
+					break;
+				}
+				f=true;
+				for(int k=vii2.size()-1;k>=1;k--){
+					int l=vii2.size()-k;
+					if((vii2[k][0]!=tv2[l][0]*v[j]&&tv2[l][1]==0)||(vii2[k][1]!=tv2[l][1]*v[j]&&tv2[l][0]==0)){
+						f=false;
+						break;
+					}
+				}
+				if(f){
+					cout<<i+1<<endl;
+					break;
+				}
+			}
+			
+			
+		}
+		cout<<"+++++"<<endl;	
+	}
+	return 0;
+}
+			

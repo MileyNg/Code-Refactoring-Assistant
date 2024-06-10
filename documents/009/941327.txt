@@ -1,0 +1,16 @@
+#include <ctype.h>
+#include <stdio.h>
+
+int main(void) {
+	int count[26] = {0,};
+	int c = 0;
+	while ((c = getchar()) != EOF) {
+		if (isalpha(c)) {
+			count[tolower(c) - 'a']++;
+		}
+	}
+	for (int i = 0; i < 26; i++) {
+		printf("%c : %d\n", ('a' + i), count[i]);
+	}
+	return 0;
+}

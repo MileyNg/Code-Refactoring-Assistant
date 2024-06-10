@@ -1,0 +1,51 @@
+#include<cstdio>
+#include<iostream>
+
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+using namespace std;
+
+
+
+int main(){
+	int N = 0,M=0,K=0;
+	cin >> N;
+	while (N != 0){
+		int data[101][101] = { 0 };
+		int st[101];
+		rep(i, 0, N){
+			cin >> M;
+			rep(j, 0, M){
+				int temp;
+				cin >> temp;
+				data[i][temp - 1] = 1;
+			}
+		}
+		cin >> K;
+		rep(i, 0, K){
+			int temp;
+			cin >> temp;
+			st[i] = temp-1;
+		}
+		rep(k, 0, K)
+			rep(i,0,N)
+		if (data[i][0] >= 0){
+			if (!(data[i][st[k]] & 1))
+				data[i][0] = -1;
+		}
+		int count = 0;
+		int member = 0;
+		rep(i, 0, N)if (data[i][0] >= 0)count++, member = i;
+		if (count == 1)cout << member+1<<endl;
+		else cout << -1<<endl;
+
+
+		cin >> N;
+	}
+
+
+
+
+
+
+	return(0);
+}

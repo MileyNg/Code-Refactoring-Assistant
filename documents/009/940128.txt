@@ -1,0 +1,26 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var n = +lines.shift();
+
+var A = []
+for (var i = 0; i < n; i++) {
+	A.push([]);
+	for (var j = 0; j < n; j++) {
+		A[i][j] = 0;
+	}
+}
+
+for (var i = 0; i < n; i++) {
+	var u = lines.shift().split(' ');
+	var idx = u[0] - 1;
+	var k = +u[1];
+
+	for (var j = 0; j < k; j++) {
+		A[idx][+u[2 + j] - 1] = 1;
+	}
+}
+
+A.forEach(function(row) {
+	console.log(row.join(' '));
+});

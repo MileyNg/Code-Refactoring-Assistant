@@ -1,0 +1,65 @@
+#include<iostream>
+#include<set>
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+
+class Phrase {
+    public:
+    int s,l,p;
+    Phrase(int s,int l,int p) {
+
+        this->s = s;
+        this->l = l;
+        this->p = p;
+    }
+    Phrase() {
+        s=l=p=0;
+    }
+
+};
+
+int n;
+Phrase phra[400];
+int m;
+int w[400];
+int dp[400];
+
+int main() {
+
+    cin>>n;
+    rep(i,n) {
+        int s,l,p;
+        cin>>s>>l>>p;
+        phra[i] = Phrase(s,l,p);
+    }
+    cin>>m;
+    rep(i,m) cin>>w[i];
+
+    rep(i,n) {
+        for(int j=phra[i].s;j<=phra[i].l;j++) {
+            for(int k=0;k<400;k+=j) {
+                dp[k+j] = max(dp[k+j],dp[k]+phra[i].p);
+            }
+        }
+    }
+
+    multiset<int> ans;
+    
+    rep(i,m) ans.insert(dp[w[i]]);    
+    if(ans.find(0) != ans.end()) {
+        cout<<"-1"<<endl;
+        return 0;
+    }
+
+    multiset<int>::iterator it = ans.begin();
+    while(it != ans.end()) {
+        cout<<(*it)<<endl;
+        it++;
+    }
+
+
+
+
+    return 0;
+}

@@ -1,0 +1,18 @@
+function gcd(a, b) {
+	if (b > a) return gcd(b, a);
+	if (b == 0) return a;
+	return gcd(b, a % b);
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var line;
+while (line = lines.shift()) {
+	var nums = line.split(' ').map(function(n){return +n;});
+	var a = nums[0];
+	var b = nums[1];
+	var d = gcd(a, b);
+	var m = a * b / d;
+	console.log(d + ' ' + m);
+}

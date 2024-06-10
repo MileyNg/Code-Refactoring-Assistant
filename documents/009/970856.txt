@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+using namespace std;
+int leapyear(int year){
+  return (year%4!=0||(year%100==0&&year%400!=0) ?0:1);
+}
+int main(){
+int y1,m1,d1,y2,m2,d2;
+while(cin>>y1>>m1>>d1>>y2>>m2>>d2,y1>0&&y2>0&&m1>0&&m2>0&&d1>0&&d2>0){
+long long int sum=-d1;
+while(1){
+if(y1==y2&&m1==m2){sum+=d2;break;}
+if(y1<=y2){
+    switch(m1){
+    case  1:
+    case  3:
+    case  5:
+    case  7:
+    case  8:
+    case 10:
+    case 12:sum+=31;break;
+    case  4:
+    case  6:
+    case  9:
+    case 11:sum+=30;break;
+    case  2:sum+=28+leapyear(y1);break;
+    }
+	m1++;
+	if(m1>12){y1++;m1=1;}
+}
+}
+cout<<sum<<endl;
+}
+}

@@ -1,0 +1,33 @@
+class Array
+  def merge_sort
+    tmp = self.dup
+    return tmp if tmp.length <= 1
+    left, right = tmp.half.map { |e| e.merge_sort }
+    merge(left, right)
+  end
+
+  def half
+    mid = length/2
+    return slice(0...mid), slice(mid..-1)
+  end
+
+  def merge(a, b)
+    res = []
+    until a.empty? and b.empty?
+      res = case
+              when a.empty?
+                b.pop
+              when b.empty?
+                a.pop
+              when a.first > b.first
+                b.pop
+              else
+                a.pop
+            end
+    end
+    return res
+  end
+end
+
+n = gets.to_i
+put gets.chomp.split(' ').map(&:to_i).merge_sort.join(' ')

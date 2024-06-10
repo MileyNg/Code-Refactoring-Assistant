@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  long long int n, r;
+
+  while( true ) {
+
+    cin >> n >> r;
+
+    if ( n == 0 ) break;
+
+    vector< long long int > m;
+
+    for ( long long int i = 0; i < n; i++ ) {
+      m.push_back( i+1 );
+    }
+
+    long long int p, c;
+
+    for ( long long int i = 0; i < r; i++ ) {
+
+      cin >> p >> c;
+      for ( long long int j = 0; j < c; j++ ) {
+
+	m.push_back( m[ n - p - c + 1 ] );
+	vector<long long int>:: iterator it = m.begin() + n - p - c + 1;
+	it = m.erase( it );
+
+      }
+
+    }
+
+    cout << m[n-1] << endl;
+
+  }
+
+  return 0;
+
+}

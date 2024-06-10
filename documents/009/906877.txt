@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+
+struct vec{
+    double x;
+    double y;
+    double z;
+};
+
+vec u,e,b1,b2,b3,n,in;
+
+vec gaiseki(vec v1, vec v2){
+    vec g;
+    g.x = v1.y*v2.z-v1.z*v2.y;
+    g.y = v1.z*v2.x-v1.x*v2.z;
+    g.z = v1.x*v2.y-v1.y*v2.x;
+    
+    return g;
+}
+
+void housen(){
+    vec v1,v2;
+    v1.x=b2.x-b1.x;
+    v1.y=b2.y-b1.y;
+    v1.z=b2.z-b1.z;
+    
+    v2.x=b3.x-b1.x;
+    v2.y=b3.y-b1.y;
+    v2.z=b3.z-b1.z;
+    
+    n = gaiseki(v1, v2);
+    double l = sqrt(n.x*n.x+n.y*n.y+n.z*n.z);
+    n.x/=l;
+    n.y/=l;
+    n.z/=l;
+}
+
+double naiseki(vec v1, vec v2){
+    return v1.x*v2.x+v1.y*v2.x+v1.z*v2.z;
+}
+
+bool men_syoutotsu(){
+    vec v1,v2;
+    v1.x=u.x-b1.x;
+    v1.y=u.y-b1.y;
+    v1.z=u.z-b1.z;
+    
+    v2.x=e.x-b1.x;
+    v2.y=e.y-b1.y;
+    v2.z=e.z-b1.z;
+    
+    double a = naiseki(v1, n);
+    double b = naiseki(v2, n);
+    
+    
+    return a*b<=0;//後で考える
+}
+
+void men_kouten(){
+    double h1,h2;
+    vec v1,v2;
+    v1.x=u.x-b1.x;
+    v1.y=u.y-b1.y;
+    v1.z=u.z-b1.z;
+    
+    v2.x=e.x-b1.x;
+    v2.y=e.y-b1.y;
+    v2.z=e.z-b1.z;
+    
+    h1=fabs(naiseki(n, v1));
+    h2=fabs(naiseki(n, v2));
+    
+
+    in.x = (e.x * h2 + u.x * h1) / (h1 + h2);
+    in.y = (e.y * h2 + u.y * h1) / (h1 + h2);
+    in.z = (e.z * h2 + u.z * h1) / (h1 + h2);
+    
+}
+
+bool sankaku_inout(){
+    vec v1,v2,v3;
+    v1.x=b1.x-in.x;
+    v1.y=b1.y-in.y;
+    v1.z=b1.z-in.z;
+    
+    v2.x=b2.x-in.x;
+    v2.y=b2.y-in.y;
+    v2.z=b2.z-in.z;
+    
+    v3.x=b3.x-in.x;
+    v3.y=b3.y-in.y;
+    v3.z=b3.z-in.z;
+    
+    vec n1,n2,n3;
+    n1=gaiseki(v1, v2);
+    n2=gaiseki(v2, v3);
+    n3=gaiseki(v3, v1);
+    
+    double a1,a2,a3;
+    a1=naiseki(n, n1);
+    a2=naiseki(n, n2);
+    a3=naiseki(n, n3);
+    
+    if(a1<=0.0&&a2<=0.0&&a3<=0.0)return true;
+    if(a1>=0.0&&a2>=0.0&&a3>=0.0)return true;
+    return false;
+}
+
+
+void ten_output(vec v){
+    cout<<v.x<<" "<<v.y<<" "<<v.z<<endl;
+}
+
+int main(){
+    while(cin>>u.x>>u.y>>u.z){
+        cin>>e.x>>e.y>>e.z;
+        cin>>b1.x>>b1.y>>b1.z;
+        cin>>b2.x>>b2.y>>b2.z;
+        cin>>b3.x>>b3.y>>b3.z;
+        
+        
+        housen();
+        if(men_syoutotsu()){
+            men_kouten();
+            
+            
+            if(sankaku_inout()){
+                cout<<"MISS"<<endl;
+            }else{
+                cout<<"HIT"<<endl;
+            }
+        }else{
+            cout<<"MISS"<<endl;
+        }
+        
+    }
+}

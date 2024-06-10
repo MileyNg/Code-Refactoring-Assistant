@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long lli;
+const int MAXH = 21;
+const int MAXW = 21;
+const lli mod = 100000LL;
+const string C = "JOI";
+
+int H, W;
+char G[MAXH][MAXW];
+lli dp[2][1<<MAXW];
+
+int main() {
+  lli all = 1;
+  cin >> H >> W;
+  for(int i = 0; i < H; ++i) {
+    for(int j = 0; j < W; ++j) {
+      cin >> G[i][j];
+      if(G[i][j] == '?') {
+        all = (all * 3) % mod;
+      }
+    }
+  }
+  dp[0][0] = 1;
+  for(int i = 0; i < H; ++i) {
+    for(int j = 0; j < W; ++j) {
+      bool p = (i*W+j)%2;
+      fill(dp[!p], dp[!p] + (1<<MAXW), 0LL);
+      for(int b = 0; b < (1<<W); ++b) {
+        for(int k = 0; k < 3; ++k) {
+          if(G[i][j] == '?' || G[i][j] == C[k]) {
+            int nb = b & ~(1<<j);
+            if(C[k] == 'J') {
+              nb &= ~(1<<(j-1));
+              if(j+1 != W) nb |= (1<<j);
+              dp[!p][nb] = (dp[!p][nb] + dp[p][b]) % mod;
+            } else if(C[k] == 'O') {
+              dp[!p][nb] = (dp[!p][nb] + dp[p][b]) % mod;
+            } else if(C[k] == 'I') {
+              if(!(b & (1<<j))) {
+                nb &= ~(1<<(j-1));
+                dp[!p][nb] = (dp[!p][nb] + dp[p][b]) % mod;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  lli sum = 0;
+  for(int b = 0; b < (1<<W); ++b) {
+    sum = (sum + dp[H*W%2][b]) % mod;
+  }
+  cout << (all - sum + mod) % mod << endl;
+  return 0;
+}

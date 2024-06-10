@@ -1,0 +1,22 @@
+#include<stdio.h>
+int main(void){
+	int swap1,swap2,cup[3]={1,0,0},hoge;
+	char input1,input2;
+	while(scanf("%c,%c",&input1,&input2)!=EOF){
+        if(input1=='A')swap1=0;
+        else if(input1=='B')swap1=1;
+        else if(input1=='C')swap1=2;
+        if(input2=='A')swap2=0;
+        else if(input2=='B')swap2=1;
+        else if(input2=='C')swap2=2;
+        hoge=cup[swap1];
+        cup[swap1]=cup[swap2];
+        cup[swap2]=hoge;
+        printf("%d %d %d\n",cup[0],cup[1],cup[2]);
+        fflush(stdin);
+	}
+	if(cup[0]==1)printf("A\n");
+	else if(cup[1]==1)printf("B\n");
+	else if(cup[2]==1)printf("C\n");
+    return 0;
+}

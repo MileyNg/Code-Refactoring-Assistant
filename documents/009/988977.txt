@@ -1,0 +1,46 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/19 02:02:09 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <set>
+#include <climits>
+#define MP(a, b) make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+int main(int argc, char *argv[])
+{
+  std::set<int> a,b;
+  int n,q;
+  std::cin>>n;
+  int t;
+  rep(i,n){
+    std::cin >> t;
+    a.insert(t);
+  }
+  std::cin>>q;
+  rep(i,q){
+    std::cin>>t;
+    b.insert(t);
+  }
+  int total = 0;
+  for(auto it = a.begin(); it!=a.end(); ++it){
+    for(auto it2 = b.begin(); it2!=b.end(); ++it2){
+      if(*it == *it2){++total;break;}
+    }
+  }
+  std::cout<<total<<std::endl;
+
+  return 0;
+}

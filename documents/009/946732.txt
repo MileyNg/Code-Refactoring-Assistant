@@ -1,0 +1,13 @@
+n,m = map(int,raw_input().split())
+edge = [map(int,raw_input().split()) for i in range(m)]
+d = [1]*n
+d[0] = 0
+for i in range(m):
+	while 1:
+		update = False
+		a,b,c = edge[i]
+		if d[a] != 1 and d[b] > d[a] - c:
+			d[b] = d[a] - c
+			update = True
+		if not update: break
+print abs(d[n-1])

@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct State{
+  double L, a, b;
+  State(double L, double a, double b): L(L), a(a), b(b){}
+};
+
+double sq(double d){
+  return d*d;
+}
+
+int main(){
+  int N, M;
+  cin >> N >> M;  
+  vector<State> V;
+  
+  double L, a, b;
+  for(int i = 0 ; i < N ; i++){
+    cin >> L >> a >> b;
+    V.push_back(State(L, a, b));
+  }
+
+  double ans = 0;
+  for(int i = 0 ; i < (1<<N) ; i++){
+    if(__builtin_popcount(i) != M) continue;
+    
+    vector<int> v;
+    for(int j = 0 ; j < N ; j++){
+      if( i & 1 << j ) v.push_back(j);    
+    }
+    
+    double sum = 0;
+    for(int j = 0 ; j < M ; j++){
+      for(int k = j+1 ; k < M ; k++){
+	sum += sq(V[v[j]].L - V[v[k]].L) + sq(V[v[j]].a - V[v[k]].a) + sq(V[v[j]].b - V[v[k]].b);
+      }
+    }
+    
+    ans = max(ans, sum);    
+  }
+  
+  printf("%.10f\n", ans);
+  
+  return 0;
+}

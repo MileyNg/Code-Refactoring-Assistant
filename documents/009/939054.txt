@@ -1,0 +1,17 @@
+while 1:
+	try:
+		s,t = raw_input(),raw_input()
+		if len(s) < len(t): s,t = t,s
+		MAXL = sum(min(s.count(i),t.count(i)) for i in set(list(s))&set(list(t)))
+		ans = 0
+		L = (MAXL+1)/2
+		for sp in range(len(t)-L+1):
+			if t[sp:sp+L] in s:
+				ans = max(ans,L)
+				L += (L+1)/2
+				break
+		else:
+			L -= L/2
+		print ans
+	except:
+		break

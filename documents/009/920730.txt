@@ -1,0 +1,23 @@
+#include<stdio.h>
+
+int main(){
+	int i,j,n,Max=0;
+	int A[200001];
+	
+	scanf("%d",&n);
+	for(i=1;i<=n;i++){
+		scanf("%d",&A[i]);
+	}	
+	
+	Max=A[2]-A[1];
+		for(i=n;i>1;i--){
+			for(j=i-1;j>1;j--){
+			if(A[i]>A[j-1]){
+				if(Max<A[i]-A[j-1]){
+			Max=A[i]-A[j-1];}}
+			}
+		}	
+			printf("%d\n",Max);
+			return 0;
+		}
+		

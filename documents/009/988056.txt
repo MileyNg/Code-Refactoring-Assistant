@@ -1,0 +1,31 @@
+#include<stdio.h>
+int main(void)
+{
+	int n,ice;
+	int cnt[10001];
+	int i,j;
+	
+	scanf("%d",&n);
+	while(n!=0){
+		for(i=0;i<10;i++){
+			cnt[i]=0;
+		}
+		for(i=0;i<n;i++){
+			scanf("%d",&ice);
+			cnt[ice]++;
+		}
+		for(i=0;i<10;i++){
+			for(j=0;j<cnt[i];j++){
+				if (cnt[i]>0){
+					printf("*");
+				}
+				else if(cnt[i]==0){
+					printf("-");
+				}
+			}
+			printf("\n");
+		}
+		scanf("%d",&n);
+	}
+	return 0;
+}

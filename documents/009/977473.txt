@@ -1,0 +1,24 @@
+while (line = gets)
+  p0, q0 = line.chomp.split(" ").map{|s| s.to_i}
+
+  k = 0
+  quot = []
+  remhash = {p0 => 0}
+
+  while p0 > 0
+    k += 1
+    p0 *= 10
+    quot.push p0 / q0
+    p0 %= q0
+    break if ! remhash[p0].nil?
+    remhash[p0] = k
+  end
+
+  puts quot.join("")
+
+  if p0 > 0
+    k0 = remhash[p0]
+    puts " " * k0 + "^" * (k - k0)
+  end
+  #p [remhash, k, p0]
+end

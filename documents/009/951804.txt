@@ -1,0 +1,39 @@
+#include<stdio.h>
+void swap(double *a,double *b){
+    int hoge;
+    hoge=*a;
+    *a=*b;
+    *b=hoge;
+}
+int main(void){
+    int i;
+    double x[4],y[4],a,b,c,d,ansx,ansy,_x[4],_y[4],hoge;
+    while(1){
+        if(scanf("%lf",&x[0])!=EOF){
+            scanf(",%lf,%lf,%lf,%lf,%lf,%lf,%lf",&y[0],&x[1],&y[1],&x[2],&y[2],&x[3],&y[3]);
+        }
+        /*for(i=0;i<4;i++){
+            printf("  %d  %f %f\n",i,x[i],y[i]);
+        }*/
+        a=(y[0]-y[2])/(x[0]-x[2]);
+        b=y[0]-a*x[0];
+        c=(y[1]-y[3])/(x[1]-x[3]);
+        d=y[1]-c*x[1];
+        //printf("y = %fx + %f\ny = %fx + %f\n",a,b,c,d);
+        if(0.0000001>(c-a) && (c-a)>-0.0000001){
+            printf("YES\n");
+            continue;
+        }
+        ansx=(b-d)/(c-a);
+        //printf("\n%f,%f\n",ansx,ansy);
+        if(x[0]>x[2])swap(&x[0],&x[2]);
+        if(x[1]>x[3])swap(&x[1],&x[3]);
+        if(x[0]<=ansx && ansx<=x[2] && x[1]<=ansy && ansy<=x[3]){
+            printf("YES\n");
+        }
+        else{
+            printf("NO\n");
+        }
+    }
+    return 0;
+}

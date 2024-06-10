@@ -1,0 +1,79 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int hanako[220];
+int taro[220];
+
+int main(){
+    int n;
+    while(cin >> n, n){
+        fill(hanako, hanako+220, false);
+        fill(taro, taro+220, false);
+
+        for(int i=0; i < n; i++){
+            int m;
+            cin >> m;
+            taro[m] = true;
+        }
+        for(int i=1; i <= n*2; i++){
+            if(!taro[i]) hanako[i] = true;
+        }
+
+        bool player = true;
+        int card = 0;
+        while(true){
+            int hanako_num = 0;
+            int taro_num = 0;
+            for(int i=0; i <=n*2; i++) if(hanako[i]) hanako_num++;
+            for(int i=0; i <=n*2; i++) if(taro[i]) taro_num++;
+            if(hanako_num == 0 || taro_num == 0) break;
+
+            bool isExist = false;
+            int submit = 0;
+            if(player){
+                for(int i=card+1; i<=n*2; i++) if(taro[i]){isExist = true; submit = i; taro[i] = false;break;}
+            }else {
+                for(int i=card+1; i<=n*2; i++) if(hanako[i]){isExist = true; submit = i; hanako[i] = false;break;}
+            }
+
+            if(!isExist) card = 0;
+            else card = submit;
+
+            player = !player;
+        }
+        int count = 0;
+        for(int i=0; i <= n*2; i++) if(hanako[i]) count++;
+        cout << count << endl;
+        count = 0;
+        for(int i=0; i <= n*2; i++) if(taro[i]) count++;
+        cout << count << endl;
+    }
+}

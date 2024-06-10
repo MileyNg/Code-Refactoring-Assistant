@@ -1,0 +1,193 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<queue>
+#include<cmath>
+#include<complex>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#define X real()
+#define Y imag()
+
+typedef complex<double> P;
+struct L : public vector<P>{
+	L(P a, P b){
+		push_back(a); push_back(b);
+	}
+};
+const int N = 222;
+const int INF = 1000000000;
+const double EPS = 0.0000001;
+
+int w,n;
+vector<P> block[N];
+
+
+bool input(){
+	cin>>w>>n;
+	if(w==0)return false;
+	
+	rep(i,N)block[i].clear();
+	rep(i,n){
+		int m;
+		cin>>m;
+		rep(j,m){
+			int a,b;
+			cin>>a>>b;
+			block[i].push_back(P(a,b));
+		}
+	}
+	return true;
+}
+
+typedef pair<int,double> E;
+vector<E> edge[N];
+
+void mkedge_line(int num, double width){
+	
+	rep(i,n){
+		double mini = INF;
+		rep(j,block[i].size()){
+			mini = min(mini, abs(block[i][j]-P(width, block[i][j].Y)) );
+		}
+		edge[num].push_back(E(i,mini));
+		edge[i].push_back(E(num,mini));
+	}
+}
+
+double dot(P a, P b){return a.X*b.X + a.Y*b.Y;}
+double cross(P a, P b){return a.X*b.Y - a.Y*b.X;}
+double ccw(P a, P b, P c){return cross(b-a, c-a)>0;}
+
+P projection(L a, P b){
+	P v1 = b-a[0];
+	P v2 = a[1]-a[0];
+	
+	double t = dot(v1,v2)/abs(v2);
+	return a[0]+t*v2/abs(v2);
+}
+double distLP(L a, P b){
+	P pro = projection(a,b);
+	if(ccw(b,a[0],pro)==ccw(b,a[1],pro)){
+		return min(abs(b-a[0]),abs(b-a[1]));
+	}
+	return abs(b-pro);
+}
+double distLL(L a, L b){
+	double s = min(distLP(a,b[0]), distLP(a,b[1]));
+	double t = min(distLP(b,a[0]), distLP(b,a[1]));
+	return min(s,t);
+}
+
+void mkedge_block(){
+	
+	rep(i,n){
+		reps(j,i+1,n){
+			double mini = INF;
+			int m1 = block[i].size();
+			int m2 = block[j].size();
+			rep(k,m1){
+				rep(p,m2){
+					mini = min(mini, distLL(L(block[i][k], block[i][(k+1)%m1]), L(block[j][p], block[j][(p+1)%m2])));
+				}
+			}
+			edge[i].push_back(E(j,mini));
+			edge[j].push_back(E(i,mini));
+		}
+	}
+}
+
+void mkedge(){
+	rep(i,N)edge[i].clear();
+	
+	edge[n].push_back(E(n+1,w));
+	edge[n+1].push_back(E(n,w));
+	
+	
+	mkedge_line(n, 0);
+	mkedge_line(n+1, w);
+	
+	mkedge_block();
+}
+
+void printedge(){
+	rep(i,n+2){
+		printf("i=%d  ",i);
+		rep(j,edge[i].size())printf("(%d %lf)",edge[i][j].first, edge[i][j].second);puts("");
+	}
+}
+
+double dijk(){
+	
+	int visit[N]={0};
+	
+	typedef pair<double,int> R;
+	priority_queue<R> que;
+	que.push(R(0,n));
+	
+	while(!que.empty()){
+		
+		R u = que.top();
+		que.pop();
+		
+		if(visit[u.second]==1)continue;
+		visit[u.second]=1;
+		
+		if(u.second==n+1)return -u.first;
+		
+		rep(i,edge[u.second].size()){
+			E e = edge[u.second][i];
+			que.push(R(u.first-e.second, e.first));
+		}
+	}
+	
+	return 0.0;
+}
+
+double solve(){
+	
+	mkedge();
+	
+	return dijk();
+}
+
+int main(){
+	while(input()){
+		printf("%.9lf\n",solve());
+		
+		//printedge();
+	}
+}
+
+/*
+5 2
+4
+1 1
+1 2
+2 2
+2 1
+4
+3 3
+3 4
+4 4
+4 3
+6 2
+4
+1 1
+1 3
+2 3
+2 1
+3
+3 2
+5 1
+5 3
+0 0
+*/

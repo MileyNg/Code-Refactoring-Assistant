@@ -1,0 +1,99 @@
+#include<algorithm>
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#include<queue>
+#include<stack>
+#include<map>
+#include<set>
+#define ll long long
+#define clr(a, b) memset(a, b, sizeof(a))
+
+using namespace std;
+
+struct in{
+    char data[10],s[10];
+    int minu,num;
+    void input(){
+        int h,m;
+        scanf("%s%d:%d%s%d",data,&h,&m,s,&num);
+        minu=h*60+m;
+//        printf("%d\n",minu);
+    }
+}p[10001];
+
+int n;
+bool vis[20000];
+int ans[10020];
+int str[20000];
+
+int main(){
+    while(scanf("%d",&n)&&n){
+        for(int i=0;i<n;i++){
+            p[i].input();
+        }
+        memset(ans,0,sizeof(ans));
+        char s1[10];
+        strcpy(s1,p[0].data);
+        memset(vis,0,sizeof(vis));
+        bool now =false;
+
+        for(int i=0;i<n;i++){
+            if(strcmp(s1,p[i].data)==0){
+                if(p[i].s[0]=='I'){
+                    if(p[i].num==0){
+                        now =true;
+                        str[p[i].num]=p[i].minu;
+                    }else{
+                        vis[p[i].num]=true;
+                        str[p[i].num]=p[i].minu;
+                    }
+                }else{
+                    if(p[i].num==0){
+                        now =false;
+                        for(int j=1;j<=1000;j++){
+                            if(vis[j]==false)continue;
+                            ans[j]+=p[i].minu-max(str[0],str[j]);
+                        }
+                    }else{
+                        vis[p[i].num]=false;
+                        if(now == false)continue;
+                        ans[p[i].num]+=p[i].minu-max(str[0],str[p[i].num]);
+                    }
+                }
+            }else{
+                if(now ==1){
+                    for(int j=1;j<=1000;j++){
+                        if(vis[j]==false)continue;
+                        ans[j]+=24*60-max(str[0],str[j]);
+                    }
+                }
+                now =false;
+                memset(s1,0,sizeof s1);
+                memset(vis,0,sizeof vis);
+                strcpy(s1,p[i].data);
+                if(p[i].num==0){
+                    now =true;
+                    str[p[i].num]=p[i].minu;
+                }else{
+                    vis[p[i].num]=true;
+                    str[p[i].num]=p[i].minu;
+                }
+            }
+        }
+        if(now ==1){
+            for(int j=1;j<=1000;j++){
+                if(vis[j]==false)continue;
+                ans[j]+=24*60-max(str[0],str[j]);
+            }
+        }
+        int ans1 = 0;
+        for(int i=1;i<1000;i++){
+            ans1 =max(ans1,ans[i]);
+        }
+        printf("%d\n",ans1);
+    }
+    return 0;
+}

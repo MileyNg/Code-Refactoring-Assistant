@@ -1,0 +1,68 @@
+#include "math.h"
+#include "stdio.h"
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+
+/** Problem0042 : A Thief
+ Time Limit Exceeded **/
+
+#define MAX_N 1100
+#define MAX_W 1100
+
+int W, N, tre[1100][2]={0}, solW, solN;
+int dp[MAX_N][MAX_W];
+
+pair<int, int> solve(int i, int j)
+{
+	if (dp[i][j] >= 0)
+		return pair<int, int>(dp[i][j], j);
+	
+	pair<int, int> res;
+	if (i == N) {
+		res = pair<int, int>(0, W-j);
+	} else if (j < tre[i][1]) {
+		res = solve(i+1, j);
+	} else {
+		//res.first = max(solve(i+1, j).first, solve(i+1, j-tre[i][1]).first+tre[i][0]);
+		
+		if (solve(i+1, j).first > solve(i+1, j-tre[i][1]).first+tre[i][0]) {
+			res = solve(i+1, j);
+		} else if (solve(i+1, j).first < solve(i+1, j-tre[i][1]).first+tre[i][0]) {
+			res = pair<int, int>(solve(i+1, j-tre[i][1]).first+tre[i][0], solve(i+1, j-tre[i][1]).second);
+		} else {
+			res = pair<int, int>(solve(i+1, j).first, min(solve(i+1, j).second, solve(i+1, j-tre[i][1]).second));
+		}
+	}
+	return res;
+}
+
+int main()
+{
+	int set=0; char cam;
+	while (1) {
+		set++;
+		
+		cin >> W;
+		solW = 0; solN = 0;
+		if (W==0) break;
+		cin >> N;
+		
+		memset(dp, -1, sizeof(dp));
+		
+		for (int i=0; i<N; i++) {
+			cin >> tre[i][0] >> cam >> tre[i][1];
+		}
+		
+		pair<int, int> sol = solve(0, W);
+		
+		cout << "Case " << set << ":" << endl;
+		cout << sol.first << endl;
+		cout << sol.second << endl;
+	}
+	return 0;
+} 

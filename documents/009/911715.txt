@@ -1,0 +1,171 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<sstream>
+
+using namespace std;
+
+struct Code{
+  string name;
+  vector<string> sound;
+};
+
+const int KIND = 12;
+string sound[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+
+vector<string> make_vec(const string& s){
+  stringstream ss(s);
+  vector<string> res;
+  string str;
+  while(ss >> str) res.push_back(str);
+  return res;
+}
+
+int get_index(const string& s){
+  for(int i = 0; i < KIND; i++) if(sound[i] == s) return i;
+  return -1;
+}
+
+Code shift(Code c, int n){
+  c.name = sound[n] + c.name.substr(1);
+  
+  vector<string> tmp(c.sound.size());
+  for(int i = 0; i < (int)tmp.size(); i++){
+    int idx = get_index(c.sound[i]);
+    tmp[i] = sound[(idx+n)%KIND];
+  }
+  sort(tmp.begin(),tmp.end());
+  c.sound = tmp;
+  return c;
+}
+
+string to_str(int n){
+  ostringstream oss;
+  oss << n;
+  return oss.str();
+}
+
+vector<string> get_sound(int n){
+  if(n == 5) return make_vec("F# G G#");
+  if(n == 9) return make_vec("C# D D#");
+  if(n == 11) return make_vec("E F F#");
+  if(n == 13) return make_vec("G# A A#");
+  return make_vec("ERROR");
+}
+
+Code change_tension(Code c, int n, int type){
+  vector<string> v = get_sound(n);
+  int pos = -1;
+  for(int i = 0; i < (int)c.sound.size(); i++)
+    for(int j = 0; j < (int)v.size(); j++)
+      if(c.sound[i] == v[j]) pos = i;
+  
+  string op = "";
+  if(type == 0) op = "-";
+  if(type == 2) op = "+";
+
+  c.name += "(" + op + to_str(n) + ")";
+  
+  if(n == 5){
+    if(pos == -1) c.sound.push_back(v[type]);
+    else c.sound[pos] = v[type];
+
+  }else{
+    if(pos == -1 || c.sound[pos] != v[type]) c.sound.push_back(v[type]);
+  }
+  //  if(pos == -1 || c.sound[pos] != v[type]) c.sound.push_back(v[type]);
+
+  sort(c.sound.begin(), c.sound.end());
+  return c;
+}
+
+void print(const vector<Code>& v){
+  cout << "--------- begin -----------" << endl;
+  
+  for(int i = 0; i < (int)v.size(); i++){
+    cout << v[i].name << endl;
+    for(int j = 0; j < (int)v[i].sound.size(); j++) cout << v[i].sound[j] << " ";
+    cout << endl;
+  }
+  cout << "--------- end -----------" << endl;
+}
+
+vector<Code> make(){
+  vector<Code> res, tmp;
+  Code base[5];
+  base[0] = (Code){"C", make_vec("C E G")};
+  base[1] = (Code){"C7",make_vec("C E G A#")};
+  base[2] = (Code){"CM7", make_vec("C E G B")};
+  base[3] = (Code){"Cm", make_vec("C D# G")};
+  base[4] = (Code){"Cm7", make_vec("C D# G A#")};
+
+  for(int i = 0; i < 5; i++){
+    sort(base[i].sound.begin(), base[i].sound.end());
+    res.push_back(base[i]);
+    tmp.push_back(base[i]);
+  }
+  
+  int tens[] = {5,9,11,13};
+  for(int i = 0; i < 5; i++)
+    for(int j = 0; j < 4; j++)
+      for(int k = 0; k < 3; k++){
+	Code nex = change_tension(base[i], tens[j], k);
+	if(nex.sound != base[i].sound){
+	  res.push_back(nex);
+	  tmp.push_back(nex);
+	}
+      }
+  
+  for(int i = 0; i < (int)tmp.size(); i++)
+    for(int j = 1; j < 12; j++) res.push_back(shift(tmp[i], j));
+   
+  for(int i = 0; i < (int)res.size(); i++) sort(res[i].sound.begin(), res[i].sound.end());
+  return res;
+}
+
+vector<string> solve(const vector<Code>& cand, const vector<string>& v){
+
+  vector<string> res;
+  for(int i = 0; i < (int)cand.size(); i++)
+    if(cand[i].sound == v) res.push_back(cand[i].name);
+  return res;
+}
+
+void TEST(const vector<Code>& cand){
+
+  for(int i = 0; i < (int)cand.size(); i++)
+    if(cand[i].name == "Dm7(9)"){
+      cout << cand[i].name << endl;
+      for(int j = 0; j < (int)cand[i].sound.size(); j++)
+	cout << cand[i].sound[j] << " " ;
+      cout << endl;
+    }
+  exit(0);
+}
+
+int main(){
+
+  vector<Code> cand = make();
+  // TEST(cand);
+ 
+  int T;
+  cin >> T;
+  while(T--){
+    int n;
+    cin >> n;
+    vector<string> v(n);
+    for(int i = 0; i < n; i++) cin >> v[i];
+    sort(v.begin(), v.end());
+    vector<string> ans = solve(cand, v);
+    if(ans.size() == 0) cout << "UNKNOWN" << endl;
+    else{
+      for(int i = 0; i < (int)ans.size(); i++){
+	if(i) cout << " ";
+	cout << ans[i];
+      }
+      cout << endl;
+    }
+  }
+
+  return 0;
+}

@@ -1,0 +1,34 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+
+int dig(string s,int& i){
+  int tmp=0;
+  tmp+=s[i]-'0';
+  for(int j=i+1;isdigit(s[j]);j++,i++){
+    tmp*=10;
+    tmp+=s[j]-'0';
+  }
+  return tmp;
+}
+
+int main(){
+  string s;
+  int sum=0;
+  while(cin>>s){
+    rep(i,s.size()){
+      if(isdigit(s[i]))sum+=dig(s,i);
+    }
+  }
+  cout<<sum<<endl;
+}

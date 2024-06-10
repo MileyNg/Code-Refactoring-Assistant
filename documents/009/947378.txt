@@ -1,0 +1,81 @@
+
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <stack>
+#include <queue>
+#include <cctype>
+#include <complex>
+#include <vector>
+#include <set>
+#include <map>
+#include <algorithm>
+#include <functional>
+#include <cassert>
+#include <iomanip>
+
+using namespace std;
+
+#define pb push_back
+#define all(x) (x).begin(),(x).end()
+#define rall(x) (x).rbegin(),(x).rend()
+typedef long long ll;
+typedef complex<int> P;
+typedef pair<int,int> pii;
+const double EPS = 1e-10;
+const double PI  = acos(-1.0);
+template <class F, class T> void convert(const F &f, T &t){	stringstream ss; ss << f; ss >> t;}
+
+
+bool solve(){
+	int gx, gy;
+	cin>> gx>> gy;
+	int n;
+	cin>> n;
+	vector<pii> s(n), t(n);
+	for(int i=0;i<n;i++){
+		int a, b, c, d;
+		cin>> a>> b>> c>> d;
+		if(a > c || b > d){
+			swap(a,c);
+			swap(b,d);
+		}
+		s[i].first = a;
+		s[i].second = b;
+		t[i].first = c;
+		t[i].second = d;
+	}
+	
+	vector<vector<ll> > a(gy+2, vector<ll>(gx+2));
+	a[0][0] = 1;
+	for(int i=0;i<=gy;i++){
+		for(int j=0;j<=gx;j++){
+			bool x = true, y = true;
+			for(int k=0;k<n;k++){
+				if(s[k].first == j && s[k].second == i && t[k].first == j+1) x = false;
+				if(s[k].first == j && s[k].second == i && t[k].second == i+1) y = false;
+			}
+			if(x) a[i][j+1] += a[i][j];
+			if(y) a[i+1][j] += a[i][j];
+		}
+	}
+//	for(int i=0;i<=gy;i++){ for(int j=0;j<=gx;j++) cout<< " "<< a[i][j]; cout<< endl; }
+	
+	if(a[gy][gx] == 0) cout<< "Miserable Hokusai!" << endl;
+	else cout<< a[gy][gx]<< endl;
+	
+	return true;
+}
+
+int main(){
+	cout.setf(ios::fixed); cout.precision(10);
+	
+	int n;
+	cin>> n;
+	for(int i=0;i<n;i++) solve();
+	return 0;
+}
+
+ 

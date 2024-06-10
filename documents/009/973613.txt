@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+void solve(int depth, int len, int last_i, int sum, int goal, int* count) {
+	int i;
+	if(depth == len) {
+		if(sum == goal) {
+			(*count)++;
+		}
+		return;
+	}
+	
+	if(sum >= goal) return;
+	
+	for(i=last_i;i<=100;i++) {
+		solve(depth+1, len, i+1, sum+i, goal, count);
+	}
+}
+
+int main(void) {
+	int count;
+	int n, s;
+	
+	while(scanf("%d %d\n", &n, &s)==2) {
+		if(n==0 && s==0) break;
+		
+		count = 0;
+		solve(0, n, 0, 0, s, &count);
+		printf("%d\n", count);
+	}
+	
+	return 0;
+}

@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef complex<double> P;
+const double eps = 1e-8;
+const double inf = 1e10;
+
+bool equals(double a, double b) {
+  return abs(a-b) < eps;
+}
+
+namespace std {
+  bool operator < (const P &a, const P &b) {
+    if(a.real() != b.real()) return a.real() < b.real();
+    return a.imag() < b.imag();
+  }
+}
+
+double cross(P a, P b) {
+  return a.real()*b.imag() - a.imag()*b.real();
+}
+
+double dot(P a, P b) {
+  return a.real()*b.real() + a.imag()*b.imag();
+}
+
+P project(P s1, P s2, P p) {
+  P base = s2 - s1;
+  double t = dot(p - s1, base)/norm(base);
+  return s1 + base*t;
+}
+
+P reflect(P s1, P s2, P p) {
+  return p + (project(s1, s2, p) - p)*2.0;
+}
+
+int ccw(P p, P a, P b) {
+  a -= p;
+  b -= p;
+  if(cross(a,b) > eps) return 1;
+  if(cross(a,b) < -eps) return -1;
+  if(dot(a,b) < -eps) return 2;
+  if(norm(b)-norm(a) > eps) return -2;
+  return 0;
+}
+
+int main() {
+  int N;
+  P s;
+  vector<P> g;
+  while(cin >> N && N) {
+    g.resize(N);
+    cin >> s.real() >> s.imag();
+    for(int i = 0; i < N; ++i) {
+      cin >> g[i].real() >> g[i].imag();
+    }
+    reverse(g.begin(), g.end());
+
+    vector<pair<P,P> > seg;
+    for(int i = 0; i < N; ++i) {
+      seg.push_back(make_pair(g[i], g[(i+1)%N]));
+    }
+    sort(seg.begin(), seg.end());
+    int res = 0;
+    do {
+      try {
+        vector<pair<P,P> > t = seg;
+        for(int i = 0; i < N; ++i) {
+          for(int j = i+1; j < N; ++j) {
+            P a = reflect(t[i].first, t[i].second, t[j].first);
+            P b = reflect(t[i].first, t[i].second, t[j].second);
+            t[j] = make_pair(a, b);
+          }
+        }
+
+        P A, B;
+        for(int i = 0; i < N; ++i) {
+          P a = t[i].first;
+          P b = t[i].second;
+          if(abs(ccw(s,a,b)) != 1) throw 0;
+          if(ccw(s,a,b) == -1) swap(a, b);
+          if(i == 0) {
+            A = a;
+            B = b;
+          } else {
+            if(dot(A-s, a-s) < 0.0) throw 0;
+            if(dot(A-s, b-s) < 0.0) throw 0;
+            if(dot(B-s, a-s) < 0.0) throw 0;
+            if(dot(B-s, b-s) < 0.0) throw 0;
+            if(ccw(s,A,a) == 1) A = a;
+            if(ccw(s,B,b) == -1) B = b;
+          }
+        }
+        if(!equals(abs(cross(A,B)), 0.0)) ++res;
+      } catch(...) {}
+    } while(next_permutation(seg.begin(), seg.end()));
+    cout << res/2 << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<string.h>
+#define LEN 100005
+
+typedef struct pp{
+  char name[100];
+  int t;
+}P;
+
+int main(){
+  P Q[LEN];
+  int i,elaps,q,c,n;
+
+  scanf("%d %d", &n, &q);
+
+  for (i=0;i<n;i++){
+    scanf("%s",Q[i].name);
+    scanf("%d",&Q[i].t);
+  }
+
+  i=0;
+  elaps=0;
+  c=0;
+
+  while(1){
+    
+    if(Q[i].t>0){
+      if(Q[i].t-q<=0){
+	elaps=elaps+Q[i].t;
+	printf("%s %d\n",Q[i].name,elaps);
+	Q[i].t=0;
+      }
+      
+      else{
+	elaps=elaps+q;
+	Q[i].t=Q[i].t-q;
+      }
+    }
+    
+    if(Q[i].t==0)c++;
+    if(c==n-1)break;
+    i++;
+    if(i==n){
+      i=0;
+      c=0;
+    }
+  }
+  
+
+
+
+
+  return 0;
+}

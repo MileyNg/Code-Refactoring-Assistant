@@ -1,0 +1,47 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+void ini(int a[],int b,int c){
+	for(int i=0;i<c;i++){
+		a[b+i]=0;
+	}
+}
+
+bool check(int a[],int size){
+	for(int i=0;i<size;i++){
+		if(((i!=4&&i!=0)&&a[i]!=1)||((i==4||i==0)&&a[i]!=2)) return false;
+	}
+	return true;
+}
+
+int main(){
+
+	string D;
+	string data="AIDUNY";
+	string deco="AIZUNYAN";
+	int f[6];
+
+	cin>>D;
+
+	if(D.size()<8){
+		cout<<D<<endl;
+		return 0;
+	}
+	for(int i=0;i<=D.size()-8;i++){
+		ini(f,0,6);
+		for(int j=0;j<8;j++){
+			if(data.find(D[i+j])!=-1) f[data.find(D[i+j])]++;
+		}
+		if(check(f,6)){
+			for(int j=0;j<8;j++){
+				D[i+j]=deco[j];
+			}
+			i+=7;
+		}
+	}
+
+	cout<<D<<endl;
+
+}

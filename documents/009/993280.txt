@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int a[100], p;
+
+int dfs(int i, int n){
+  if(i == p){
+    if(n > 21) return 0;
+    return n;
+  }
+
+  if(a[i] == 1) return max(dfs(i+1, n+1), dfs(i+1, n+11));
+  if(a[i] > 10) return dfs(i+1, n+10);
+  return dfs(i+1, n+a[i]);
+}
+
+int main(){
+  char str[128];
+  while(fgets(str, sizeof(str), stdin) && str[0] != '0'){
+    str[strlen(str)] = 0;
+    char *tp;
+    p = 0;
+    tp = strtok(str, " ");
+    while(tp != NULL){
+      a[p++] = atoi(tp);
+      tp = strtok(NULL, " ");
+    }
+
+    //    rep(i, p) printf("%d ", a[i]); puts("");
+
+    printf("%d\n", dfs(0, 0));
+  }
+  return 0;
+}

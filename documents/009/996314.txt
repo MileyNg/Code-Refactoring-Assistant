@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int n;
+	
+	scanf("%d", &n);
+	scanf("%*c");
+	while (n-- > 0){
+		char str[1024] = {0};
+		int i;
+		
+		fgets(str, 1005, stdin);
+		for (i = strlen(str) - 2; i > 5; i--){
+			if (strncmp(str + i - 6, "Hoshino", 7) == 0){
+				str[i] = 'a';
+			}
+		}
+		printf(str);
+	}
+	
+	return 0;
+}

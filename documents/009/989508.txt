@@ -1,0 +1,67 @@
+#include<stdio.h>
+
+#define MAX 25
+#define NIL -1
+
+struct Node{ int p, l, r;};
+struct Node T[MAX];
+
+void Preorder(int z){
+  printf(" %d",z);
+  if(T[z].l!=NIL)Preorder(T[z].l);
+  if(T[z].r!=NIL)Preorder(T[z].r);
+}
+
+void Inorder(int z){
+  if(T[z].l!=NIL)Inorder(T[z].l);
+  printf(" %d",z);
+  if(T[z].r!=NIL)Inorder(T[z].r);
+}
+
+void Postorder(int z){
+  if(T[z].l!=NIL)Postorder(T[z].l);
+  if(T[z].r!=NIL)Postorder(T[z].r);
+  printf(" %d",z);
+}
+
+int search(int n){
+  int i,root;
+  for(i=0;i<n;i++){
+    if(T[i].p==NIL){
+      root=i;
+      break;
+    }
+  }
+  return root;
+}
+
+main(){
+  int n,i,j,z,l,r,root;
+
+  scanf("%d", &n);
+  for(i=0;i<n;i++) {
+    T[i].p=NIL;
+    T[i].l=NIL;
+    T[i].r=NIL;
+  }
+  for(i=0;i<n;i++){
+    scanf("%d %d %d",&z,&l,&r);
+    T[z].l=l;
+    T[z].r=r;
+    T[l].p=z;
+    T[r].p=z;
+  }
+  root=search(n);
+  printf("Preorder\n");
+  Preorder(root);
+  printf("\n");
+
+  printf("Inorder\n");
+  Inorder(root);
+  printf("\n");
+
+  printf("Postorder\n");
+  Postorder(root);
+  printf("\n");
+  return 0;
+}

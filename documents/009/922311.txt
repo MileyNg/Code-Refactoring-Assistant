@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int main(){
+  int a,b,i,j,cnt = 0;
+  int S[10000],T[500];
+
+  scanf("%d" ,&a);
+  for(i = 0 ; i < a ; i++){
+    scanf("%d" ,S+i);
+  }
+  scanf("%d" ,&b);
+  for(i = 0 ; i < b ; i++){
+    scanf("%d" ,T+i);
+  }
+
+  for(i = 0, j = 0 ; i < a || j < b; ){
+    if(S[i] < T[j]){
+      i++;
+    }else if(S[i] > T[j]){
+      j++;
+    }else{  
+      cnt++;
+    }
+  }
+  printf("%d\n" ,cnt);
+
+  return 0;
+}

@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+using namespace std;
+
+int main(void) {
+
+  int i , num , x;
+
+  int T[26] = {};
+
+  string S;
+
+  while (cin >> S) {
+
+    x = S.size();
+
+    for(i = 0; i < x; i++) {
+
+      if(isupper(S[i])) {
+
+	S[i] = tolower(S[i]);
+
+      }
+
+      num = S[i] - 'a';
+
+      T[num]++;
+
+    }
+
+  }
+
+    for(i = 0; i < 26; i++){ 
+
+      printf("%c : %d\n",i + 97,T[i]);
+
+    }
+
+}

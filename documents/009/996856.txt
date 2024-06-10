@@ -1,0 +1,37 @@
+#include <iostream>
+ 
+using namespace std;
+ 
+int main (){
+    int n,p,q;
+    int i,j;
+    char t;
+    int cards[4][13]={0};
+ 
+    cin>>n;
+    for (i=1;i<=n;i++){
+ 
+        cin>>t>>p;
+        if (t=='S')q=0;
+        else if (t=='H')q=1;
+        else if (t=='C')q=2;
+        else if (t=='D')q=3;
+        p=p-1;
+        cards[q][p]=1;
+ 
+    }
+     
+    for(i=0;i<4;i++){
+        for(j=0;j<13;j++){
+ 
+            if (cards[i][j]==0){
+                if (i==0)t='S';
+                else if (i==1)t='H';
+                else if (i==2)t='C';
+                else if (i==3)t='D';
+                cout<<t<<" "<<j+1<<endl;
+            }
+        }
+    }
+ 
+}

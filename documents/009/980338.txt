@@ -1,0 +1,44 @@
+#include <iostream>
+#include <algorithm>
+#define MAX 50000
+using namespace std;
+
+int p[MAX];
+
+int main()
+{
+	//素数
+	fill(p, p + MAX, 1);
+	for (int i = 2; i < MAX; i++){
+		int sqrti = (int)sqrt(i);
+		for (int j = 2; j <= sqrti; j++){
+			if (i % j == 0){
+				p[i] = 0;
+				break;
+			}
+		}
+	}
+
+	int a, b;
+	while (cin >> a >> b){
+		int gcm = 1;
+		bool flag = true;
+		while (flag){
+			for (int i = 2;; i++){
+				if (p[i] == 1 && a % i == 0 && b % i == 0){
+					gcm = gcm * i;
+					a = a / i;
+					b = b / i;
+					break;
+				}
+				if (i == min(a, b)){
+					flag = false;
+					break;
+				}
+			}
+		}
+		int lcm = gcm * a * b;
+		cout << gcm << " " << lcm << endl;
+	}
+	return 0;
+}

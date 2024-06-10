@@ -1,0 +1,60 @@
+//
+//  main.cpp
+//  tititi
+//
+//  Created by 大森 亮 on 2014/04/10.
+//  Copyright (c) 2014年 大森 亮. All rights reserved.
+//
+
+#include <iostream>
+#include <algorithm>
+#define rep(i,n) for(int i = 0;i < n;i++)
+
+using namespace std;
+
+bool is_same_number(int a,int b,int c){
+    if(a==b&&b==c)
+        return 1;
+    else return 0;
+}
+
+bool is_sequence(int a,int b,int c){
+    if((a+1==b)&&(b+1==c))
+        return 1;
+    else return 0;
+}
+
+bool is_good_set(int a,int b,int c){
+    return is_same_number(a,b,c) || is_sequence(a,b,c);
+}
+
+int T;
+int card[16];
+
+int main(int argc, const char * argv[])
+{
+    cin >> T;
+    rep(t,T){
+        rep(i,9){
+            card[i]=0;
+            cin >> card[i];
+        }
+        string color;
+        rep(i,9){
+            cin >> color;
+            if(color=="G")
+                card[i]+=100;
+            if(color=="B")
+                card[i]+=200;
+        }
+        sort(card,card+9);
+        int flag = 0;
+        do{
+            if(is_good_set(card[0],card[1],card[2])&&is_good_set(card[3],card[4],card[5])&&is_good_set(card[6],card[7],card[8])){
+                flag = 1;
+                break;
+            }
+        }while(next_permutation(card,card+9));
+        cout << flag << endl;
+    }
+}

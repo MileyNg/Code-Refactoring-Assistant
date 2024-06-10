@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+int main(){
+
+	long a[1000] = {}, i, g=0, n=0,k=0;
+	scanf("%d",&k);
+	for (i = 0; i < k; i++){ scanf("%d", &a[i]); }
+	for (n = 0; n < k-1; n++){
+		for (i = 0; i < k-1; i++){
+			if (a[i] > a[i + 1]){
+				g = a[i];
+				a[i] = a[i + 1];
+				a[i + 1] = g;
+			}
+		}
+	}
+	for (i = 0; i < k; i++){ printf("%d", a[i]);if (i < k - 1){ printf(" "); } }
+	printf("\n");
+}

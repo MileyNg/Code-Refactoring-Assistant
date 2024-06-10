@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+const int dy[] = {1, -1, 0, 0};
+const int dx[] = {0, 0, 1, -1};
+
+struct UnionFind {
+  vector<int> data;
+  UnionFind(int size) : data(size, -1) {}
+  bool merge(int x, int y){
+    x = root(x), y = root(y);
+    if (x != y){
+      if (data[x] > data[y]) swap(x, y);
+      data[x] += data[y];
+      data[y] = x;
+    }
+    return x != y;
+  }
+  bool isSame(int x, int y){
+    return root(x) != root(y);
+  }
+  int size(int x){
+    return -data[root(x)];
+  }
+  int root(int x){
+    return data[x] < 0 ? x : data[x] = root(data[x]);
+  }
+};
+
+int main()
+{
+  int w, h;
+  while (w = in(), h = in(), w){
+    UnionFind uf(w * h);
+    vector<string> field;
+    rep(i, h){
+      string s;
+      cin >> s;
+      field.push_back(s);
+    }
+    int sx, sy;
+    rep(y, h){
+      rep(x, w){
+        char cell = field[y][x];
+        if (cell == '#') continue;
+        if (cell == '@') {
+          sx = x;
+          sy = y;
+        }
+        rep(d, 4){
+          int nx = x + dx[d];
+          int ny = y + dy[d];
+          if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+          if (field[ny][nx] != '#') uf.merge(y * w + x, ny * w + nx);
+        }
+      }
+    }
+    printf("%d\n", uf.size(sy * w + sx));
+  }
+  return 0;
+}

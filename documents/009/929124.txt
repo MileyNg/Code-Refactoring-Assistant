@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void){
+	
+	char ch[20], top[20];
+    int i, j, num;
+	
+    scanf("%d", &num);
+    
+    scanf("%s", &ch);
+    strcpy(top, ch);
+    
+    for (i = 1; i < num; i++) {
+        
+        scanf("%s", &ch);
+        
+        j = 0;
+        while (ch[j] != '\n' && top[j] != '\n') {
+            printf("%c < %c\n", ch[j], top[j]);
+            
+            if (ch[j] > top[j]) {
+                break;
+            }
+            else if (ch[j] < top[j]) {
+                strcpy(top, ch);
+                break;
+            }
+            j++;
+        }
+        printf("top is %s\n", top);
+        
+    }
+
+    printf("%s\n", top);	
+	return 0;
+    
+}

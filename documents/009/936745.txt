@@ -1,0 +1,24 @@
+#include<stdio.h>
+#define MAX 100000
+int P[MAX],F[MAX]={0},i,j,N,x,p=0,r=0;
+
+
+int main()
+{
+	for(i=2;i<MAX;i++)
+		if(!F[i])
+		{
+			P[p++]=i;
+			for(j=i*2;j<MAX;j+=i)
+				F[j]=1;
+		}
+	for(scanf("%d",&N);N--;)
+	{
+		scanf("%d",&x);
+		for(i=0;i<p;i++)
+			if(x!=P[i]&&!(x%P[i]))break;
+		if(i==p)r++;
+	}
+	printf("%d\n",r);
+	return 0;
+}

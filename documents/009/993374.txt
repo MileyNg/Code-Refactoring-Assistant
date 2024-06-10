@@ -1,0 +1,62 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int n;
+string str[10];
+int t[10][10];
+string u[10][10];
+int v[10];
+int w[10];
+
+string ans,tmp;
+int ans_size,tmp_size;
+int count(string&,string&,int,int);
+int main(){
+  while(cin>>n&&n){
+    for(int i=0;i<n;i++){
+      cin>>str[i];
+      for(int j=0;j<i;j++){
+	t[i][j]=count(str[i],str[j],i,j);
+	t[j][i]=count(str[j],str[i],j,i);
+      }
+    }
+    ans_size=(1<<24);
+    for(int i=0;i<n;i++)w[i]=i;
+    do{
+      for(int i=0;i<n;i++)v[i]=w[i];
+      tmp_size=str[v[0]].size();
+      for(int i=1;i<n;i++){
+	tmp_size+=t[v[i-1]][v[i]];
+	if(t[v[i-1]][v[i]]==0)v[i]=v[i-1];
+      }
+      if(tmp_size<ans_size){
+	ans_size=tmp_size;
+	ans=str[v[0]];
+	for(int i=1;i<n;i++)ans+=u[v[i-1]][v[i]];
+      }else if(tmp_size==ans_size){
+	tmp=str[v[0]];
+	for(int i=1;i<n;i++)tmp+=u[v[i-1]][v[i]];
+	if(tmp<ans)ans=tmp;
+      }
+    }while(next_permutation(w,w+n));
+    cout<<ans<<endl;
+  }
+  return 0;
+}
+
+int count(string& a,string& b,int I,int J){
+  int i,j,c=a.size(),d=b.size();
+  bool flg;
+  for(i=0;i<c;i++){
+    flg=true;
+    for(j=0;(j<d&&i+j<c);j++)if(a[i+j]!=b[j])flg=false;
+    if(flg){
+      if(j<d)u[I][J]=b.substr(j);
+      else u[I][J]="";
+      return u[I][J].size();
+    }
+  }
+  u[I][J]=b;
+  return d;
+}

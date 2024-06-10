@@ -1,0 +1,15 @@
+import bisect
+n,m = map(int,raw_input().split())
+xy = sorted([map(int,raw_input().split()) + [i] for i in range(n)])
+yx = sorted(xy, key = lambda x:x[1])
+X = [i[0] for i in xy]
+Y = [i[1] for i in yx]
+xy = [str(i[0]) + "," + str(i[1]) + "_" + str(i[2]) for i in xy]
+yx = [str(i[0]) + "," + str(i[1]) + "_" + str(i[2]) for i in yx]
+for i in range(m):
+	x1,y1,x2,y2 = map(int,raw_input().split())
+	x1 = bisect.bisect_left(X,x1)
+	y1 = bisect.bisect_left(Y,y1)
+	x2 = bisect.bisect_right(X,x2)
+	y2 = bisect.bisect_right(Y,y2)
+	print len(set(xy[x1:x2])&set(yx[y1:y2]))

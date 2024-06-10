@@ -1,0 +1,180 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define INF (1<<24)
+using namespace std;
+
+struct State{
+  int cost;
+  int pos;
+  int S;
+  State (int cost=0,int pos=0,int S=0) : cost(cost),pos(pos),S(S){}
+};
+
+int n,m,k,flg;
+vector <int> t[15];
+vector <int> u[15];
+bool vd[15][(1<<15)];
+int  vc[15][(1<<15)];
+
+State  pi[15][(1<<15)];
+string ps[15][(1<<15)];
+queue < State > Q;
+
+int start;
+vector<string> ans;
+
+void input();
+void init();
+void print_bit(int);
+void dijkstra();
+string change(int x);
+
+int main(){
+  while(cin>>n>>m){
+    if(n==0&&m==0)break;
+    init();
+    input();
+    dijkstra();
+  }
+  return 0;
+}
+
+void init(){
+  for(int i=0;i<15;i++){
+    t[i].clear();
+    u[i].clear();
+    for(int j=0;j<(1<<15);j++){
+      vd[i][j]=false;
+      vc[i][j]=INF;
+      pi[i][j]=State(-1,-1,-1);
+      ps[i][j]="";
+    }
+  }
+  while(!Q.empty())Q.pop();
+  ans.clear();
+  start=0;
+  flg=0;
+}
+
+void input(){
+  int a,b;
+
+  for(int i=0;i<m;i++){
+    cin>>a>>b;
+    t[a-1].push_back(b-1);
+    t[b-1].push_back(a-1);
+  }
+
+  for(int i=0;i<n;i++){
+    cin>>a;
+    if(a==1)start+=(1<<i);
+  }
+  
+  for(int i=0;i<n;i++){
+    cin>>a;
+    for(int j=0;j<a;j++){
+      cin>>b;
+      u[i].push_back(b-1);
+    }
+  }
+}
+
+void dijkstra(){
+  State A,X;
+  int p;
+
+  A.pos=0;
+  A.S=start;
+  A.cost=0;
+  Q.push(A);
+  //vc[start][1]=0;
+  
+  while(!Q.empty()){
+
+    A=X=Q.front();Q.pop();
+
+
+    if(X.pos==n-1)flg=1;
+
+    if(vd[X.pos][X.S]==true)continue;
+    else vd[X.pos][X.S]=true;
+    /*
+    cout<<endl;
+    cout<<ps[X.pos][X.S]<<endl; 
+    cout<<pi[X.pos][X.S].pos<< ' '; print_bit(pi[X.pos][X.S].S);
+    cout<<X.pos<<' '; print_bit(X.S);
+    cout<<endl;
+    */
+    for(int i=(int)t[X.pos].size()-1;i>=0;i--){
+
+      p=t[X.pos][i];
+      if(((X.S>>p)&1)==0)continue;
+      if(vd[p][X.S]==true)continue;
+      Q.push( State( X.cost+1 , p , X.S ) );
+      pi[p][X.S]=A;
+      ps[p][X.S]="Move to room "+change(p)+".";
+
+    }
+
+    for(int i=(int)u[X.pos].size()-1;i>=0;i--){
+
+      p=u[X.pos][i];
+
+      if(vd[X.pos][X.S^(1<<p)]==true)continue;
+
+      Q.push( State( X.cost, X.pos, X.S ^ (1<<p) ) );
+
+      pi[X.pos][X.S^(1<<p)]=A;
+      if((X.S>>p)&1) ps[X.pos][X.S^(1<<p)]="Switch off room "+change(p)+".";
+      else           ps[X.pos][X.S^(1<<p)]="Switch on room "+change(p)+".";
+
+    }
+
+  }
+  
+  State I = pi[n-1][1<<(n-1)];
+  if(vd[n-1][1<<(n-1)]==true){
+    ans.push_back( ps[n-1][1<<(n-1)] );
+
+    
+    while(1){
+      ans.push_back( ps[I.pos][I.S] );
+      I=pi[I.pos][I.S];
+      if(I.cost==-1)break;
+    }
+    cout<<"You can go home in "<<ans.size()-1<<" steps."<<endl;
+    for(int i=(int)ans.size()-2;i>=0;i--)cout<<ans[i]<<endl;
+
+
+  }else if(flg){
+    cout<<"You can not switch off all lights."<<endl;
+  }else{
+    cout<<"Help me!"<<endl;
+  }
+  
+}
+
+
+vector <int> print_b;
+void print_bit(int x){
+  print_b.clear();
+  for(int i=0;i<15;i++){
+    print_b.push_back(x%2);
+    x/=2;
+  }
+  for(int i=14;i>=0;i--){
+    cout<<print_b[i];
+  }
+  cout<<endl;
+}
+
+string change(int x){
+  x++;
+  string res="";
+  if(x>=10)res.push_back('1');
+  res.push_back('0'+x%10);
+  
+  
+  return res;
+}

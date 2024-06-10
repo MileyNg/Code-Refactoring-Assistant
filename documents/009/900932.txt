@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+void swap(bool& x,bool&y){
+  y^=x;
+  x^=y;
+  y^=x;
+}
+
+int main(){
+  bool cups[3]={1,0,0};
+  char cup1,c,cup2;
+  while(cin>>cup1>>c>>cup2){
+    swap(cups[cup1-'A'],cups[cup2-'A']);
+  }
+  cout<<(char)(cups[1]+cups[2]*2+'A')<<endl;
+}

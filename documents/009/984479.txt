@@ -1,0 +1,79 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  grid = []
+  n.times.each do
+    hl = gets.strip.split('').map{|s| s == "1"}
+    grid << hl
+  end
+
+  max_c = 0
+
+  # horizontal
+  for y in (0...n)
+    c = 0
+    for x in (0...n)
+      if grid[y][x]
+        c += 1
+        max_c = c if max_c < c
+      else
+        c = 0
+      end
+    end
+  end
+
+  # vertical
+  for x in (0...n)
+    c = 0
+    for y in (0...n)
+      if grid[y][x]
+        c += 1
+        max_c = c if max_c < c
+      else
+        c = 0
+      end
+    end
+  end
+
+  # diagonal (top-right -> bottom-left)
+  nn = 2 * n - 2
+  for d in (0..nn)
+    c = 0
+    x = 0
+    y = d - x
+    while x < n && y >= 0
+      if y < n && grid[y][x]
+        c += 1
+        max_c = c if max_c < c
+      else
+        c = 0
+      end
+
+      x += 1
+      y -= 1
+    end
+  end
+
+  # diagonal (top-left -> bottom-right)
+  for d in (-(n - 1)..(n - 1))
+    c = 0
+    x = 0
+    y = x + d
+    while x < n && y < n
+      if y >= 0 && grid[y][x]
+        c +=1
+        max_c = c if max_c < c
+      else
+        c = 0
+      end
+
+      x += 1
+      y += 1
+    end
+  end
+
+  p max_c
+end

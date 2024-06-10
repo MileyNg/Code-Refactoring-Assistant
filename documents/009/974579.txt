@@ -1,0 +1,57 @@
+#include <algorithm>
+#include <cassert>
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+constexpr long long mod = 1000000007;
+
+long long expr(string::const_reverse_iterator &it);
+long long term(string::const_reverse_iterator &it);
+long long number(string::const_reverse_iterator &it);
+
+long long expr(string::const_reverse_iterator &it) {
+	long long res = term(it);
+	if(*it == '>') {
+		++it;
+		assert(*it == '>');
+		++it;
+		res = (expr(it) >> min(32ll, res));
+	}
+	return res;
+}
+
+long long term(string::const_reverse_iterator &it) {
+	if(isdigit(*it)) return number(it);
+
+	assert(*it == '>');
+	++it;
+	long long res = expr(it);
+	assert(*it == '<');
+	++it;
+	assert(*it == 'S');
+	++it;
+	return (res * res) % mod;
+}
+
+long long number(string::const_reverse_iterator &it) {
+	long long res = 0;
+	for(int d = 1; isdigit(*it); d *= 10, ++it) {
+		res += d * (*it - '0');
+	}
+	return res;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(string expression; getline(cin, expression) && expression != "#";) {
+		expression.erase(remove(expression.begin(), expression.end(), ' '), expression.end());
+		auto it = expression.crbegin();
+		cout << expr(it) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

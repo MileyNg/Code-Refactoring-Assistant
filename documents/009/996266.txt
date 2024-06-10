@@ -1,0 +1,116 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+namespace AOJ
+{
+    class AOJ202
+    {
+        bool[] sosu;//実はfalseが素数値
+
+        void create_sosu_table(int n)
+        {
+            sosu = new bool[n + 1];
+            for (int i=2; i <= n; i++)
+            {
+                if (sosu[i] == false)
+                {
+                    for (int j = 2; i * j <= n; j++)
+                    {
+                        sosu[i * j] = true;
+                    }
+
+                    if (i * i >= n)
+                    {
+                        //これ以上素数なし
+                        break;
+                    }
+                }
+            }
+        }
+
+        int[] vals;
+        int n, x;
+        int max_sosu;
+        public string solve(int p_n,int p_x)
+        {
+            n = p_n;
+            x = p_x;
+
+            create_sosu_table(x);
+
+            for (int i = x; i > 0; i--)
+            {
+                if (!sosu[i])
+                {
+                    max_sosu = i;
+                    break;
+                }
+            }
+
+                vals = new int[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                vals[i] = int.Parse(Console.ReadLine());
+            }
+
+            //最大値を取得
+            int r = maxVal(0, 0);
+            if (r > 0)
+            {
+                return r.ToString();
+            }
+            return "NA";
+        }
+        int max(int x, int y)
+        {
+            return (x > y) ? x : y;
+        }
+        int maxVal(int i,int sum)
+        {
+            if (i >= n)
+            {
+                if (!sosu[sum])
+                {
+                    return sum;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            int max_sum = 0;
+
+            for (int j = 0; j <=x ; j++)
+            {
+                int tmp = (vals[i] * j) + sum;
+                if (tmp > x) break;
+                max_sum = max(maxVal(i + 1, tmp), max_sum);
+                if (max_sum == max_sosu)
+                {
+                    break;
+                }
+            }
+            return max_sum;
+        }
+    }
+    class Program
+    {
+        
+        static void Main(string[] args)
+        {
+            AOJ202 obj = new AOJ202();
+            while (true)
+            {
+                char[] delimi = { ' ' };
+                string[] str = Console.ReadLine().Split(delimi);
+                int n = int.Parse(str[0]);
+                int x = int.Parse(str[1]);
+                if (n == 0 && x == 0) break;
+
+                Console.WriteLine(obj.solve(n,x));
+            }
+        }
+    }
+}

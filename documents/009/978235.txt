@@ -1,0 +1,19 @@
+import std.algorithm;
+import std.stdio;
+import std.string;
+
+void main() {
+  bool[string] cups = ["A": true, "B": false, "C": false];
+
+  foreach (string line; stdin.lines) {
+    string[] cup = line.chomp.split(",");
+    swap(cups[cup[0]],cups[cup[1]]);
+  }
+
+  foreach (k; cups.keys) {
+    if (cups[k] == true) {
+      k.writeln;
+      break;
+    }
+  }
+}

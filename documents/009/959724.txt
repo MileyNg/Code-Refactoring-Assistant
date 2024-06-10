@@ -1,0 +1,124 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 10000000;
+
+struct edge {
+    int to, cap, rev;
+    edge(int t, int c, int r) : to(t), cap(c), rev(r) {};
+};
+
+const int MAX_V = 500 + 500 + 2;
+vector<vector<edge> > G(MAX_V, vector<edge>());
+bool used[MAX_V];
+
+void add_edge(int from, int to, int cap)
+{
+    G[from].push_back(edge(to, cap, G[to].size()));
+    G[to].push_back(edge(from, 0, G[from].size() - 1));
+}
+
+int dfs(int v, int t, int f)
+{
+    if (v == t)
+        return f;
+
+    used[v] = true;
+
+    for (int i = 0; i < G[v].size(); ++i) {
+        edge &e = G[v][i];
+        if (!used[e.to] && e.cap > 0) {
+            int d = dfs(e.to, t, min(f, e.cap));
+            if (d > 0) {
+                e.cap -= d;
+                G[e.to][e.rev].cap += d;
+                return d;
+            }
+        }
+    }
+    return 0;
+}
+
+int max_flow(int s, int t)
+{
+    int f = 0;
+
+    for (;;) {
+        memset(used, 0, sizeof(used));
+        int d = dfs(s, t, INF);
+        if (d == 0)
+            break;
+        f += d;
+    }
+
+    return f;
+}
+
+int gcd(int a, int b)
+{
+    if (a < b)
+        swap(a, b);
+
+    while (b != 0) {
+        a = a % b;
+        swap(a, b);
+    }
+
+    return a;
+}
+
+int b[500], r[500];
+
+#define sv 0
+#define bv(i) (1 + (i))
+#define rv(i) (1 + m + (i))
+#define tv (1 + m + n)
+
+int main()
+{
+    for (;;) {
+        int m, n;
+        scanf("%d %d", &m, &n);
+        if (m ==0 && n == 0)
+            break;
+
+        for (int i = 0; i < MAX_V; ++i)
+            G[i].clear();
+
+        for (int i = 0; i < m; ++i) {
+            scanf("%d", &b[i]);
+            add_edge(sv, bv(i), 1);
+        }
+        for (int i = 0; i < n; ++i) {
+            scanf("%d", &r[i]);
+            add_edge(rv(i), tv, 1);
+        }
+
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (gcd(b[i], r[j]) != 1) {
+                    add_edge(bv(i), rv(j), 1);
+                }
+            }
+        }
+
+        /*
+        for (int i = 0; i <= tv; ++i) {
+            printf("%d to:\n", i);
+            for (int j = 0; j < G[i].size(); ++j) {
+                printf("%2d ", G[i][j].to);
+            }
+            printf("\n");
+        }
+        */
+
+        printf("%d\n", max_flow(sv, tv));
+    }
+
+    return 0;
+}

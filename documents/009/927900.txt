@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define DBG 0
+#define BUFSIZE 10
+
+static int input[30];
+static int input_size;
+static int input_max = 0;
+static char *prime;
+
+void get_input() {
+  char buf[BUFSIZE];
+  for (input_size = 0; input_size < 30; input_size++) {
+       if (NULL == fgets(buf, BUFSIZE, stdin)) {
+	 if (DBG) {
+	   fprintf (stderr, "EOF\n");
+	 }
+	 break;
+       }
+       buf[strlen(buf)-1] = 0;
+       if (buf[0] == 0) {
+	 break;
+       }
+       if (DBG) {
+	 fprintf(stderr, "input=%s\n", buf);
+       }
+       input[input_size] = atoi(buf);
+       if (input_max < input[input_size]) {
+	 input_max = input[input_size];
+       }
+  }
+  return;
+}
+
+int main (void) {
+  char str[100];
+  int p, i, j, c, n;
+  get_input();
+  if (DBG) {
+    fprintf(stderr, "input size=%d  max=%d\n", input_size, input_max);
+  }
+  if (NULL == (prime = calloc(input_max+1, sizeof(char)))) {
+    sprintf(str, "input_max=%d", input_max);
+    perror(str);
+    return 1;
+  }
+
+  prime[0] = 1;
+  prime[1] = 1;
+  for (p=2; p*p<=input_max; p++) {
+    if (prime[p] == 1) {
+      continue;
+    }
+    if (DBG) {
+      fprintf(stderr, "%d is prime.\n", p);
+    }
+    for (i=2*p; i<=input_max; i+=p) {
+      prime[i] = 1;
+    }
+  }
+
+  if (DBG) {
+    for (i=0; i<input_max+1; i++) {
+      if (prime[i] == 0) {
+	fprintf(stderr, "%d\n", i);
+      }
+    }
+  }
+
+  for (i=0; i<input_size; i++) {
+    c = input[i];
+    for (j=0, n=0; j<=c; j++) {
+      if (prime[j] == 0) {
+	n++;
+      }
+    }
+    printf("%d\n", n);
+  }
+  return 0;
+}

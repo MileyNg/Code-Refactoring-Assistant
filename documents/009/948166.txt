@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long double ld;
+
+const ld EPS = 1e-9;
+const ld INF = 1e10;
+const ld PI = M_PI;
+
+struct Point{
+  ld x, y;
+  Point(ld x, ld y):x(x), y(y){}
+  Point(){}
+};
+
+Point operator+(const Point &a, const Point &b){
+  return Point(a.x + b.x, a.y + b.y);
+}
+Point operator-(const Point &a, const Point &b){
+  return Point(a.x - b.x, a.y - b.y);
+}
+Point operator*(const Point &a, const ld b){
+  return Point(a.x * b, a.y * b);
+}
+Point operator*(const Point &a, const Point &b){
+  return Point(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);
+}
+Point operator/(const Point &a, const ld b){
+  return Point(a.x / b, a.y / b);
+}
+
+ld cross(const Point &a, const Point &b){
+  return a.x*b.y - a.y*b.x;
+}
+
+ld dot(const Point &a, const Point &b){
+  return a.x*b.x + a.y*b.y;
+}
+
+ld norm(const Point &a){
+  return dot(a, a);
+}
+
+struct Line:vector<Point>{
+  Line(Point a = Point(0, 0), Point b = Point(0, 0)){
+    this->push_back(a);
+    this->push_back(b);
+  }
+};
+
+bool is_orthogonal(const Line &l1, const Line &l2){
+  return dot(l1[0]-l1[1], l2[0]-l2[1]) == 0.0;
+}
+
+bool is_parallel(const Line &l1, const Line &l2){
+  return cross(l1[0]-l1[1], l2[0]-l2[1]) == 0.0;
+}
+
+int main(){  
+  int q;
+  cin >> q;
+  while(q--){
+    Point p0, p1;
+    Line l1, l2;
+    cin >> p0.x >> p0.y >> p1.x >> p1.y;
+    l1 = Line(p0, p1);
+    
+    cin >> p0.x >> p0.y >> p1.x >> p1.y;
+    l2 = Line(p0, p1);
+    
+    if(is_orthogonal(l1, l2)) cout << 1 << endl;
+    else if(is_parallel(l1, l2)) cout << 2 << endl;
+    else cout << 0 << endl;
+  }
+  
+  return 0;
+}

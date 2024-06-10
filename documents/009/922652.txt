@@ -1,0 +1,9 @@
+while 1:
+	r,l = map(int,raw_input().split())
+	if (r,l) == (0,0): break
+	rcar,lcar = [],[]
+	if r > 0: rcar = map(int,raw_input().split())
+	if l > 0: lcar = map(int,raw_input().split())
+	car = sorted(rcar + lcar)
+	if r+l>1: car = [car[i+1] - car[i] for i in range(r+l-1)]
+	print max(car)

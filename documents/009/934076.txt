@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <math.h>
+
+int int_sort(const void* a ,const void* b ) {
+	return *(int*)a - *(int*)b;
+}
+
+inline int get_value(int A[], int n, int flag) {
+	int i, s;
+	for(i=0,s=0;i<n;i++) {
+		if((flag&(1<<i)) != 0) {
+			s += A[i];
+		}
+	}
+	return s;
+}
+
+int main(void) {
+	int i, j, n, q, size, t, f;
+	int A[20];
+	int M[200];
+
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%d", &A[i]);
+	}
+	qsort((void*)A ,n ,sizeof(A[0]), int_sort);
+	
+	scanf("%d\n", &q);
+	for(i=0;i<q;i++) {
+		scanf("%d", &M[i]);
+	}
+	
+	size=pow(2, n);
+	for(i=0;i<q;i++) {
+		f = 0;
+		for(j=0;j<size;j++) {
+			t = get_value(A, n, j);
+			if(M[i] == t) {
+				printf("yes\n");
+				f = 1;
+				break;
+			}
+		}
+		if(f==0) {
+			printf("no\n");
+		}
+	}
+	
+	return 0;
+}

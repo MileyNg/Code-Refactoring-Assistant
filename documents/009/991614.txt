@@ -1,0 +1,35 @@
+#include <iostream>
+#include <set>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+#define ALL(T) T.begin(),T.end()
+
+int main(){
+	string S; cin >> S;
+	set<string> strs;
+	sort(ALL(S));
+	do {
+		strs.insert(S);
+	} while (next_permutation(ALL(S)));
+
+	int res = 0;
+
+	for (set<string>::iterator it = strs.begin(); it != strs.end(); ++it) {
+		string s = *it;
+		bool flag = 1;
+		for (int i = 0; i < (s.size()/2)+1; i++) {
+			if (s[i] != s[s.size()-i-1]) {
+				flag = 0;
+			}
+		}
+		if (flag) { res++; }
+	}
+
+	cout << res << endl;
+
+
+	return 0;
+}

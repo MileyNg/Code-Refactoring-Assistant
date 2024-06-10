@@ -1,0 +1,21 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define IINF (INT_MAX)
+
+using namespace std;
+
+int N,tmp,mincost,ans;
+
+int main(){
+  mincost = IINF, ans = -IINF;
+  cin >> N;
+  rep(_,N){
+    cin >> tmp;
+    if(mincost!=IINF)ans = max(ans,tmp-mincost);
+    mincost = min(tmp,mincost);
+  }
+  cout << ans << endl;
+  return 0;
+}

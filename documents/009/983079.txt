@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int n;
+    std::cin >> n;
+    if (n == 0) {
+      break;
+    }
+    int pt_a = 0, pt_b = 0;
+    for (int i = 0; i < n; ++i) {
+      int a, b;
+      std::cin >> a >> b;
+      if (a == b) {
+        pt_a += a;
+        pt_b += b;
+      } else if (a < b) {
+        pt_b += a + b;
+      } else {
+        pt_a += a + b;
+      }
+    }
+    std::cout << pt_a << " " << pt_b << std::endl;
+  }
+  return 0;
+}

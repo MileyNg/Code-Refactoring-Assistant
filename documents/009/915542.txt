@@ -1,0 +1,31 @@
+//============================================================================
+// Name        : aoj0096.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int main() {
+	long long n, dp[5][4001];
+	memset(dp,0,sizeof(dp));
+	dp[0][0] = 1;
+	while(cin >> n){
+		for(int i = 1;i <= 4;i++){
+			for(int j = 0;j <= n;j++){
+				if(j - 1001 >= 0){
+					dp[i][j] = dp[i][j - 1] + dp[i - 1][j] - dp[i - 1][j - 1001];
+				}else{
+					dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
+				}
+			}
+		}
+		cout << dp[4][n] << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,93 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+const int IINF = INT_MAX;
+
+struct Edge{
+  int to,cost;
+  Edge(int to=IINF,int cost=IINF):to(to),cost(cost){}
+};
+
+map<string,int> mp;
+int day1[1100],N,par[1100],mp_idx;
+vector<Edge> G[1100];
+bool used[1100];
+
+inline int getIndex(string s){
+  if( mp.find(s) == mp.end() ) return mp[s] = mp_idx++;
+  return mp[s];
+}
+
+inline void init(){
+  mp_idx = 0;
+  mp.clear();
+  rep(i,N) G[i].clear(), par[i] = i;
+}
+
+int find(int x){
+  if( par[x] == x ) return par[x];
+  return par[x] = find(par[x]);
+}
+
+inline void unit(int x,int y){
+  x = find(x), y = find(y);
+  if( x != y ) par[x] = par[y];
+}
+
+void dfs(int cur,int &cost){
+  if( used[cur] ) return;
+  used[cur] = true;
+  rep(i,(int)G[cur].size()){
+    int to = G[cur][i].to;
+    if( !used[to] && par[cur] == par[to] ){
+      cost += G[cur][i].cost;
+      dfs(to,cost);
+    }
+  }
+}
+
+inline void compute(){
+  set<int> S;
+  rep(i,N) S.insert(find(i));
+  int cnt = S.size();
+  int mincost[N];
+  rep(i,N) mincost[i] = IINF;
+  rep(i,N){
+    int idx = par[i];
+    int cost = day1[i];
+    rep(j,N) used[j] = false;
+    dfs(i,cost);
+
+    rep(j,N) if( !used[j] ) cost += day1[j];
+    mincost[idx] = min(mincost[idx],cost);
+  }
+  int ans = 0;
+  for( int i : S ) ans += mincost[i];
+  cout << ans << endl;
+}
+
+int main(){
+  while( cin >> N, N ){
+
+    init();
+    rep(i,N){
+      string a,b;
+      int c,d;
+      cin >> a >> c >> b >> d;
+      int ia = getIndex(a);
+      day1[ia] = c;
+      int ib = getIndex(b);
+      if( ia == ib ) continue;
+      G[ib].push_back(Edge(ia,d));
+      unit(ia,ib);
+    }
+
+    compute();
+
+  }
+  return 0;
+}

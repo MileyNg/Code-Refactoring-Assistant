@@ -1,0 +1,123 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+string s;
+int now;
+
+bool check(bool x, char op, bool y){
+  if(op == '*'){
+    if(x && y) return true;
+    else return false;
+  } else if(op == '+'){
+    if(!x && !y) return false;
+    else return true;
+  } else if(op == '>'){
+    if(x && !y) return false;
+    return true;
+  }
+  return false;
+}
+
+bool formula(){
+  //cout <<s <<", " <<s[now] <<endl;
+  if(s[now] == 'T'){
+    ++now;
+    return true;
+  } else if(s[now] == 'F'){
+    ++now;
+    return false;
+  } else if(s[now] == '-'){
+    ++now;
+    bool res = formula();
+    return !res;
+  } else if(s[now] == '('){
+    ++now;
+    bool x = formula();
+    char op = s[now];
+    ++now;
+    bool y = formula();
+    //cout <<x <<" " <<op <<" " <<y <<endl;
+    return check(x, op, y);
+  }
+  return false;
+}
+
+map<char, char> get_m(int bit){
+  map<char, char> ret;
+  for(int i = 0; i < 11; ++i){
+    if(bit & (1 << i)) ret['a' + i] = 'T';
+    else ret['a' + i] = 'F';
+  }
+  return ret;
+}
+
+bool calc(){
+  stringstream left_ss, right_ss;
+  bool left_end = false;
+  REP(i, s.length()){
+    if(s[i] == '=') left_end = true;
+    else{
+      if(left_end) right_ss << s[i];
+      else left_ss << s[i];
+    }
+  }
+  string left = left_ss.str(), right = right_ss.str();
+  REP(i, s.length())
+  REP(i, (1 << 11)){
+    string tmp_l = left, tmp_r = right;
+    map<char, char> m = get_m(i);
+    REP(i, left.length()) if(isalpha(left[i]) && left[i] != 'T' && left[i] != 'F') left[i] = m[left[i]];
+    REP(i, right.length()) if(isalpha(right[i]) && right[i] != 'T' && right[i] != 'F') right[i] = m[right[i]];
+    s = left; now = 0;
+    bool left_ans = formula();
+    s = right; now = 0;
+    bool right_ans = formula();
+    //debug
+    //cout <<left <<", " <<right <<" | " <<left_ans <<", " <<right_ans <<endl;
+    if(left_ans != right_ans){
+      return false;
+    }
+    left = tmp_l; right = tmp_r;
+  }
+  return true;
+}
+
+int main() {
+  while(cin >>s && s != "#"){
+    stringstream ss;
+    REP(i, s.length()){
+      if(i + 1 != s.length() && s[i] == '-' && s[i + 1] == '>'){
+        ss << '>';
+        ++i;
+      } else{
+        ss << s[i];
+      }
+    }
+    s = ss.str();
+    cout <<(calc() ? "YES" : "NO") <<endl;
+  }
+  return 0;
+}

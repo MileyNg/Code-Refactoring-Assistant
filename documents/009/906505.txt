@@ -1,0 +1,146 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+#include <string.h>
+#include <map>
+#include <cmath>
+#include <vector>
+#include <set>
+#include <queue>
+using namespace std;
+const int maxn=55;
+int h,w;
+char maze[maxn][maxn];
+int ans=0;
+struct Node{
+    int x,y;
+};
+struct Node2{
+    int x,y;
+    int cnt;
+    char s[51*51];
+    int first;
+    bool operator <(const Node2 tmp)const{
+        return cnt<tmp.cnt;
+    }
+};
+
+bool BFS(){
+    queue<Node> q;
+    Node node,tmp;
+    node.x=0;node.y=0;
+    q.push(node);
+    while(!q.empty()){
+        tmp=q.front();
+        q.pop();
+        if(tmp.x==h-1 && tmp.y==w-1)
+            return true;
+        if(tmp.x+1<h && maze[tmp.x+1][tmp.y]!='#'){
+            node.x=tmp.x+1;
+            node.y=tmp.y;
+            q.push(node);
+        }
+        if(tmp.y+1<w &&  maze[tmp.x][tmp.y+1]!='#'){
+            node.x=tmp.x;
+            node.y=tmp.y+1;
+            q.push(node);
+        }
+    }
+    return false;
+}
+
+
+void BFS2(){
+    //queue<Node2> q;
+    priority_queue<Node2>q;
+    Node2 node,tmp;
+    int a,b;
+    node.x=0;
+    node.y=0;
+    node.cnt=0;
+    node.first=-1;
+    q.push(node);
+
+    if(maze[node.x][node.y]>='a' && maze[node.x][node.y]<='z'){
+        node.s[++node.first]=maze[node.x][node.y];
+        q.push(node);
+    }
+    while(!q.empty()){
+        tmp=q.top();
+        q.pop();
+//printf("%d %d %d %s %d\n",tmp.x,tmp.y,tmp.first,tmp.s,tmp.cnt);
+        if(tmp.x==h-1 && tmp.y==w-1){
+            //if(tmp.first!=-1 && tmp.s[tmp.first]==maze[tmp.x][tmp.y]){
+            //   tmp.cnt++;
+            //}
+            if(tmp.cnt>ans){
+                ans=tmp.cnt;
+            }
+            continue;
+        }
+         //蠕?ク玖オー
+        if(tmp.x+1<h && maze[tmp.x+1][tmp.y]!='#'){
+            a=tmp.x+1;
+            b=tmp.y;
+            tmp.x++;
+            q.push(tmp);
+            if(maze[a][b]>='a' && maze[a][b]<='z'){
+                tmp.s[++tmp.first]=maze[a][b];
+                q.push(tmp);
+                tmp.first--;
+            }
+            else if(maze[a][b]>='A' && maze[a][b]<='Z'){
+                if(tmp.first!=-1 && tmp.s[tmp.first]==maze[a][b]+32){
+                    tmp.first--;
+                    tmp.cnt++;
+                    q.push(tmp);
+                    tmp.first++;
+                    tmp.cnt--;
+                }
+            }
+            tmp.x--;
+        }
+        //蠕?承襍ー
+        if(tmp.y+1<w &&  maze[tmp.x][tmp.y+1]!='#'){
+            a=tmp.x;
+            b=tmp.y+1;
+            tmp.y++;
+            q.push(tmp);
+            if(maze[a][b]>='a' && maze[a][b]<='z'){
+                tmp.s[++tmp.first]=maze[a][b];
+                q.push(tmp);
+                tmp.first--;
+            }
+            else if(maze[a][b]>='A' && maze[a][b]<='Z'){
+                if(tmp.first!=-1 && tmp.s[tmp.first]==maze[a][b]+32){
+                    tmp.first--;
+                    tmp.cnt++;
+                    q.push(tmp);
+                    tmp.first++;
+                    tmp.cnt--;
+                }
+            }
+            tmp.y--;
+        }
+    }
+}
+
+int main()
+{
+    while(scanf("%d%d",&h,&w)!=EOF){
+        if(h==0 && w==0)
+            break;
+        for(int i=0;i<h;i++){
+            scanf("%s",maze[i]);
+        }
+        if(BFS()){
+            ans=0;
+            BFS2();
+            printf("%d\n",ans);
+        }
+        else{
+            printf("-1\n");
+        }
+    }
+    return 0;
+}

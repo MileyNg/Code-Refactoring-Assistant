@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <climits>
+#include <cstring>
+
+using namespace std;
+
+int m[11][11];
+int n;
+int dist[11][11];
+
+
+void flood()
+{
+	int i, j, k;
+	
+	memcpy(dist, m, sizeof(m));
+	for (k=0; k<n; k++) {
+		for (i=0; i<n; i++) {
+			if (i==k || dist[i][k]==INT_MAX) continue;
+			for (j=i+1; j<n; j++) {
+				if (j==k || dist[k][j]==INT_MAX) continue;
+				if (dist[i][j] > dist[i][k]+dist[k][j]) {
+					dist[i][j] = dist[j][i] = dist[i][k]+dist[k][j];
+				}
+			}
+		}
+	}
+
+}
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	int road;
+	while (scanf("%d", &road)==1) {
+		if (road==0) break;
+		int i, j;
+		n = 0;
+		for (i=0; i<=10; i++) {
+			m[i][i] = 0;
+			for (j=i+1; j<=10; j++) {
+				m[i][j] = m[j][i] = INT_MAX;
+			}
+		}
+
+		for (i=0; i<road; i++) {
+			int a, b, c;
+			scanf("%d%d%d", &a, &b, &c);
+			if (m[a][b] > c)
+				m[a][b] = m[b][a] = c;
+			if (n<a+1) n=a+1;
+			if (n<b+1) n=b+1;
+		}
+
+		flood();
+
+		int min, min_k;
+		min = INT_MAX;
+		for (i=0; i<n; i++) {
+			int sum = 0;
+			for (j=0; j<n; j++) {
+				sum += dist[i][j];
+			}
+			if (sum<min) {
+				min = sum;
+				min_k = i;
+			}
+		}
+
+		printf("%d %d\n", min_k, min);
+
+	}
+
+	return 0;
+}

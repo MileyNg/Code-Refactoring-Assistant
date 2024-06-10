@@ -1,0 +1,39 @@
+#include<map>
+#include <cmath>
+#include <cstdio>
+#include<string>
+#include<iostream>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b);i++)
+#define rep(i,b) loop(i,0,b)
+
+double ax[1100];
+double ay[1100];
+
+double pi = acos(-1);
+
+int main(){
+
+    double x = 1;
+    double y = 1;    
+
+    loop(i,1,1100){
+        ax[i] = x;
+        ay[i] = y;
+        double t = atan(y/x);
+        if(x<0) t=-pi+t;
+        double dx = cos(t+pi/2);
+        double dy = sin(t+pi/2);
+        x+=dx;
+        y+=dy;
+    }
+
+    while(1){
+        int x; cin >> x;
+        if(x==-1) break;
+        x--;
+        printf("%.20lf\n%.20lf\n", ax[x], ay[x]);
+    }
+}

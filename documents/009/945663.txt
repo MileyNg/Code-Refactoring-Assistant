@@ -1,0 +1,78 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int n,m,s,g;
+
+const int N = 41;
+const int T = (N+5)*2*6;
+
+typedef pair<int,string> E;
+
+vector<E> edge[N];
+
+string dp[T][N];
+
+void init(){
+	rep(i,N)edge[i].clear();
+	rep(i,T)rep(j,N)dp[i][j]="~";
+}
+
+string solve(){
+	init();
+	
+	rep(i,m){
+		int a,b;
+		string c;
+		cin>>a>>b>>c;
+		edge[a].push_back(E(b,c));
+	}
+	
+	dp[0][s] = "";
+	
+	int maxlen = (n+3)*2*6;
+	rep(i,maxlen){
+		rep(j,n){
+			rep(k,edge[j].size()){
+				E e = edge[j][k];
+				string str = dp[i][j]+e.second;
+				if(dp[i+e.second.size()][e.first]>str){
+					dp[i+e.second.size()][e.first]=str;
+				}
+			}
+		}
+	}
+	
+	string answer = "~";
+	rep(i,maxlen){
+		answer = min(answer, dp[i][g]);
+	}
+	
+	rep(i,n){
+		rep(j,6+1){
+			if(answer>dp[maxlen-1-j][i])answer = "NO";
+		}
+	}
+	
+	if(answer=="~")answer = "NO";
+	if(answer.size()>(n-1)*2*6)answer = "NO";
+	return answer;
+}
+
+int main(){
+	
+	while(1){
+		cin>>n>>m>>s>>g;
+		if(n==0)break;
+		string str = solve();
+		cout<<str<<endl;
+		//break;
+	}
+}

@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+int n,m;
+int p[10004],d[10004];
+pair<int,int> pii[10004];
+
+void solve() {
+    rep(i,n) {
+        cin>>d[i]>>p[i];
+        pii[i] = make_pair(-p[i]*d[i],p[i]);
+    }
+    sort(pii,pii+n);
+    int ans=0;
+
+    rep(i,n) {
+        int dist = -pii[i].first/pii[i].second;
+        //cout<<(-pii[i].first)<<","<<dist<<","<<pii[i].second<<endl;
+        if(m-dist<0) {
+            ans += (dist-m)*pii[i].second;
+            m = 0;
+        }
+        else {
+            m-=dist;
+        }
+
+    }
+    cout<<ans<<endl;
+    rep(i,n) {
+        p[i]=d[i]=0;
+        pii[i] = make_pair(0,0);
+    }
+
+}
+
+int main() {
+    while(cin>>n>>m) {
+        if(n+m==0) return 0;
+        solve();
+
+    }
+
+    return 0;
+}

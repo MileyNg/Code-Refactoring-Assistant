@@ -1,0 +1,59 @@
+#include <algorithm>
+#include <numeric>
+#include <map>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+typedef long long ll;
+const ll MD = 1e9+7;
+
+#define REP(i,n) for(int i=0;i<n;i++)
+#define ALL(a) a.begin(),a.end()
+#define EACH(it,a) for(auto it=a.begin();it!=a.end();it++)
+
+
+int main() {
+	
+	while(true){
+		int n;cin >> n;if(n==0)break;
+		vector<pair<int,int>> segs;//right,c
+
+		segs.push_back(make_pair(0,-1));segs.push_back(make_pair(1e9+50,-1));
+		vector<int> ls;
+		ls.push_back(0);ls.push_back(1e9+50);
+
+		REP(i,n){
+			string s;cin >> s;
+			if(s=="W"){
+				int l,s;cin >> l >> s;
+				
+				for(int j=1;j<segs.size();j++)if(segs[j].second==-1){
+					if(s<segs[j].first-segs[j-1].first){//set
+						pair<int,int> p=make_pair(segs[j-1].first+s,l);
+						segs.push_back(p);
+						cout <<"l"<< l;
+						ls.push_back(p.first);
+						sort(ALL(segs));sort(ALL(ls));break;
+					}else{
+						s-=segs[j].first;
+						segs[j].second=l;
+					}
+				}
+			}else if(s=="D"){
+				int l;cin >> l;
+				for(int j=1;j<segs.size();j++)if(segs[j].second==l){
+					segs[j].second=-1;
+				}
+			}else{
+				int p;cin >> p;
+				for(int i=0;i<ls.size();i++)cout << ls[i]<<" ";
+				
+				int vi=upper_bound(ALL(ls),p)-ls.begin();
+				cout << segs[vi].second <<endl;
+			}
+		}
+		cout <<endl;
+	}
+
+}

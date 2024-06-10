@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+
+namespace Topcoderhenomiti
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                int n = int.Parse(Console.ReadLine());
+                if (n == 0) return;
+                AOJ201.solve(n);
+            }
+        }
+    }
+
+    class AOJ201
+    {
+        class item
+        {
+            public string name;
+            public int v;
+            public List<item> components;
+
+            private int min_val = 0;
+
+            public item()
+            {
+                components = new List<item>();
+            }
+            public int minVal()
+            {
+                if (min_val > 0)
+                {
+                    return min_val;
+                }
+
+                if (components.Count == 0)
+                {
+                    min_val = v;
+                }
+                else
+                {
+                    int sum = 0;
+                    foreach (item i in components)
+                    {
+                        sum += i.minVal();
+                    }
+                    min_val = sum < v ? sum : v;
+                }
+
+                return min_val;
+            }
+        }
+        public static void solve(int n)
+        {
+            char[] delimi = { ' ' };
+
+            //item情報取得
+            List<item> items = new List<item>(n);
+            for (int i = 0; i < n; i++)
+            {
+                item a = new item();
+                string[] str = Console.ReadLine().Split(delimi);
+                a.name = str[0];
+                a.v = int.Parse(str[1]);
+                items.Add(a);
+            }
+
+            //レシピ取得
+            int m = int.Parse(Console.ReadLine());
+            for (int i = 0; i < m; i++)
+            {
+                string[] str = Console.ReadLine().Split(delimi);
+                foreach (item it in items)
+                {
+                    if (it.name == str[0])
+                    {
+                        for (int j = 2; j < str.Length; j++)
+                        {
+                            foreach (item in_it in items)
+                            {
+                                if (in_it.name == str[j])
+                                {
+                                    it.components.Add(in_it);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            //解答
+            string hoge = Console.ReadLine();
+            foreach (item it in items)
+            {
+                if (it.name == hoge)
+                {
+                    Console.WriteLine(it.minVal());
+                }
+            }
+        }
+    }
+}

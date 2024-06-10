@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+int main(){
+  int n,h;
+  for(;cin>>n>>h,n;)
+    {
+      bool data[n][n][n];
+      memset(data,true,sizeof(data));
+      for(int i=0;i<h;i++)
+	{
+	  string c;
+	  int a,b;
+	  cin>>c>>a>>b;
+	  a--;
+	  b--;
+	  if(c=="xy")
+	      for(int i=0;i<n;i++)
+		data[a][b][i]=false;
+	  else if(c=="xz")
+	      for(int i=0;i<n;i++)
+		data[a][i][b]=false;
+	  else if(c=="yz")
+	      for(int i=0;i<n;i++)
+		data[i][a][b]=false;
+	}
+      int cnt=0;
+       for(int i=0;i<n;i++)
+	 for(int j=0;j<n;j++)
+	   for(int k=0;k<n;k++)
+	     {
+	       if(data[i][j][k])
+		 {
+		   //		   cout<<i<<" "<<j<<" "<<k<<endl;
+		   cnt++;
+		 }
+	     }
+       cout<<cnt<<endl;
+    }
+
+}

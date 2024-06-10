@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n,m,a[1010],b,num[1010];
+
+int main(){
+  cin >> n >> m;
+  for(int i=0;i<n;i++)cin >> a[i];
+  for(int j=0;j<m;j++){
+    cin >> b;
+    for(int i=0;i<n;i++){
+      if(a[i]<=b){
+	num[i]++; break;
+      }
+    }
+  }
+
+  int id = 0;
+  for(int i=0;i<n;i++){
+    if(num[i]>num[id])id = i;
+  }
+  cout << id+1 << endl;
+}

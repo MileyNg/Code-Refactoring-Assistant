@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+const double g=9.8;
+const double eps=1e-8;
+struct v{double x,y;}V[1005];
+double detx[1005];
+int cmp(v a,v b)
+{
+    return a.y*b.x>b.y*a.x;
+}
+int main()
+{
+    //freopen("h.txt","r",stdin);
+    int n,i;
+    while(scanf("%d",&n)!=EOF&&n){
+        for(i=0;i<n;i++)
+            scanf("%lf%lf",&V[i].x,&V[i].y);
+        double x,y;
+        scanf("%lf%lf",&x,&y);
+        sort(V,V+n,cmp);
+        double t=x/V[n-1].x;
+        double ymin=-g*t*t/2+V[n-1].y*t;
+        double ymax=0;
+        for(i=0;i<n-1;i++){
+            double x1=V[i].x,x2=V[i+1].x;
+            double y1=V[i].y,y2=V[i+1].y;
+            t=(x2*y1-x1*y2)/x2/g;
+            V[i+1].y*=(V[i].x+V[i+1].x)/V[i+1].x;
+            V[i+1].x+=V[i].x;
+            if(x-t*x1>0){
+                x-=t*x1;
+                ymax+=-g*t*t/2+y1*t;
+            }
+            else{
+                t*=x/x1;
+                x=0;
+                ymax+=-g*t*t/2+y1*t;
+                break;
+            }
+        }
+        //printf("%lf %lf\n",x,ymax);
+        if(x!=0){
+            t=x/V[n-1].x;
+            ymax+=-g*t*t/2+V[n-1].y*t;
+        }
+        //printf("%lf %lf\n",ymin,ymax);
+        if(ymin-eps<y&&ymax+eps>y)
+            printf("Yes\n");
+        else  printf("No\n");
+    }
+    return 0;
+}

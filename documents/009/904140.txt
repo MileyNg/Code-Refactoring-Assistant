@@ -1,0 +1,13 @@
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char m[21];
+    int i,n;
+    scanf("%s",m);
+    n=strlen(m)-1;
+    for(i=n;i>=0;i--){
+        printf("%c",m[i]);
+    }
+    printf("\n");
+    return 0;
+}

@@ -1,0 +1,65 @@
+#include <stdio.h>
+#define START "{"
+#define END "}"
+#define start "("
+#define end ")"
+#define br "\n"
+typedef struct START
+  int p,l,r; /* parent,left child,right sibling */
+END Node;
+Node T[100000];
+int depthstartintend;
+int PrintChildstartintend;
+void Printstartintend;
+int mainstartend
+START
+  int n,i,j,c,id,k,pre;
+  scanfstart"%d",&nend;
+  forstarti=0;i<n;i++end
+    START
+      T[i].p = T[i].l = T[i].r = -1;
+    END
+  forstarti=0;i<n;i++end
+    START
+      scanfstart"%d %d",&id,&kend;
+      forstartj=0;j<k;j++end
+    START
+      scanfstart"%d",&cend;
+      T[c].p=id;
+      ifstartj==0end T[id].l = c;
+      else T[pre].r = c;
+      pre = c;
+    END
+    END
+  forstarti=0;i<n;i++end
+    START
+      Printstartiend;
+    END
+  return 0;
+END
+void Printstartint idend
+START
+  int i;
+  printfstart"node %d: parent = %d, depth = %d, ",id,T[id].p,depthstartidendend;
+  ifstartT[id].p == -1end printfstart"root, ["end;
+  else ifstartT[id].l == -1end printfstart"leaf, ["end;
+  else printfstart"internal node, ["end;
+  PrintChildstartT[id].lend;
+  printfstart"]\n"end;
+END
+int PrintChildstartint idend
+START
+  ifstartid == -1end return 0;
+  ifstartT[id].r == -1endprintfstart"%d",idend;
+  else
+    START
+      printfstart"%d, ",idend;
+      PrintChildstartT[id].rend;
+    END
+  return 0;
+END
+int depthstartint idend
+START
+  ifstartT[id].p == -1end return 0;
+  return 1+depthstartT[id].pend;
+END

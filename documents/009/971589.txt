@@ -1,0 +1,59 @@
+pi2 = Math::PI * 2
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  pts = []
+  n.times do
+    pts.push gets.chomp.split(",").map{|s| s.to_f}
+  end
+  pts.sort!{|a, b| b[0] <=> a[0] || b[1] <=> a[1]}
+  #p pts
+
+  used = pts.map{false}
+
+  id0 = 0
+  id1 = 0
+  pt0 = [pts[id0][0], pts[id0][1] - 1]
+  pt1 = pts[id1]
+  used[id1] = true
+  #p [id1, pts[id1]]
+
+  while true
+    v0x = pt1[0] - pt0[0]
+    v0y = pt1[1] - pt0[1]
+    th0 = Math.atan2(v0y, v0x)
+    #p [v0x, v0y, th0]
+
+    npt = (0...pts.length).select{|i| i != id1}.map{|i|
+      vx = pts[i][0] - pt1[0]
+      vy = pts[i][1] - pt1[1]
+      th = Math.atan2(vy, vx) - th0
+
+      while th < 0
+        th += pi2
+      end
+      while th > pi2
+        th -= pi2
+      end
+
+      #p [i, vx, vy, th]
+      [i, th]
+    }.min{|a, b| a[1] <=> b[1]}
+
+    break if npt[0] == 0
+
+    pt0 = pt1
+    id0 = id1
+
+    id1 = npt[0]
+    pt1 = pts[id1]
+    used[id1] = true
+
+    #p [id1, pt1]
+  end
+  #p used
+
+  puts used.select{|t| ! t}.length
+end

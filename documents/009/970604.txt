@@ -1,0 +1,50 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+vector<vector<int> > check(int n,int cnt)
+{
+  //  cout<<"start "<<n<<" "<<cnt<<endl;
+  vector<vector<int> > ans;
+  if(cnt<=0|| n<=0)
+    return ans;
+  for(;n>0;n--)
+    {
+      // cout<<"n="<<n<<endl;
+      vector<int> tmp;
+      tmp.push_back(n);
+      if(n==cnt)
+	{
+	  ans.push_back(tmp);
+	  continue;
+	}
+      vector<vector<int> > buf=check(n,cnt-n);
+      for(int i=0;i<buf.size();i++)
+	{
+	  vector<int> tt=tmp;
+	  tt.insert(tt.end(),buf[i].begin(),buf[i].end());
+	  ans.push_back(tt);
+	}
+    }
+  return ans;
+}
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      vector<vector<int> > ans=check(n,n);
+      for(int i=0;i<ans.size();i++)
+	{
+	  for(int j=0;j<ans[i].size();j++)
+	    {
+	    cout<<ans[i][j];
+	    if(j != ans[i].size()-1)
+	      cout<<" ";
+	    }
+	  cout<<endl;
+	}
+    }
+
+}

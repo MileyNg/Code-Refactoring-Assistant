@@ -1,0 +1,40 @@
+#include<stdio.h>
+main(){
+  int cards[4][13]={0},n,i,j,k;
+  char s=0;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%c %d\n",&s,&j);
+    if(s=='S'){
+      cards[0][j]=1;
+    }
+   else if(s=='H'){
+      cards[1][j]=1;
+    }
+   else if(s=='C'){
+     cards[2][j]=1;
+   }
+   else if(s=='D'){
+     cards[3][j]=1;
+   }
+  }
+  for(k=0;k<4;k++){
+  for(i=1;i<14;i++){
+    if(cards[k][i]==0){
+      if(k==0){
+	printf("S %d\n",i);
+      }
+     else if(k==1){
+       printf("H %d\n",i);
+     }
+     else if(k==2){
+       printf("C %d\n",i);
+     }
+     else if(k==3){
+       printf("D %d\n",i);
+     }
+    }
+  }
+  }
+  return 0;
+}

@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main(void){
+    int middle, final, retest;
+    int sum;
+    char grade;
+
+    while (1){
+        scanf("%d %d %d", &middle, &final, &retest);
+        sum = middle + final;
+
+        if (middle == -1 && final == -1 && retest == -1){
+            break;
+        }else if (middle == -1 || final == -1){
+            grade = 'F';
+        }else if (sum >= 80){
+            grade = 'A';
+        }else if (sum < 80 && sum >= 65){
+            grade = 'B';
+        }else if (sum < 65 && sum >= 50){
+            grade = 'C';
+        }else if (sum < 50 && sum >= 30){
+            if (retest < 50){
+                grade = 'D';
+            }else{
+                grade = 'C';
+            }
+        }else{
+            grade = 'F';
+        }
+
+        printf("%c\n", grade);
+    }
+
+    return 0;
+}

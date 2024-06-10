@@ -1,0 +1,55 @@
+#include<iostream>
+#include<strstream>
+#include<stack>
+#include<utility>
+#include<cstdio>
+#include<algorithm>
+#include<vector>
+#include<cmath>
+#include<climits>
+#include<map>
+#include<string>
+#include<sstream>
+
+using namespace std;
+
+#define mp make_pair
+#define rep(i,n) for( int i = 0; i < n; i++ )
+typedef vector<int,int> v;
+typedef long long int ll;
+
+int main()
+{
+	string str;
+	while( getline( cin,str ) )
+	{
+		stack<char> stc;
+		if( str[0] == '.' ) break;
+		rep( i,str.size() )
+		{
+			if( str[i] == '(' || str[i] == '[' )
+				stc.push( str[i] );
+			if( str[i] == ')' || str[i] == ']' )
+			{
+                if ( stc.empty() ) {
+                    goto owari;
+                }
+                if( stc.top() == '(' && str[i] == ')' ){
+					stc.pop();}
+				else if( stc.top() == '[' && str[i] == ']' )
+					stc.pop();
+				else
+					goto owari;
+                
+			}
+		}
+		if( stc.empty() )
+			puts("yes");
+		else{
+        owari:
+			puts("no");
+		}
+	}
+    
+	return 0;
+}

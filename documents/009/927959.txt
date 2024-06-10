@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <queue>
+
+using namespace std;
+
+typedef struct State_Def {
+	int y;
+	int x;
+	State_Def(int _y, int _x) {y = _y; x = _x;}
+} S;
+
+const int INF = 1e+8;
+int h, w, n;
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+char **data;
+int **dist;
+int *cX;
+int *cY;
+
+int bfs(int fI, int fJ, int tI, int tJ) {
+	int i, j;
+	queue<S> q;
+
+	for (i=0; i<h; i++)
+		for (j=0; j<w; j++)
+			dist[i][j] = INF;
+	dist[fI][fJ] = 0;
+
+	S s = S(fI, fJ);
+	q.push(s);
+
+	while (!q.empty()) {
+		S t = q.front();
+		q.pop();
+
+		if (t.y == tI && t.x == tJ) break;
+
+		for (i=0; i<4; i++) {
+			int nx = t.x + dx[i];
+			int ny = t.y + dy[i];
+			if (0<=nx && nx<w && 0<=ny && ny<h && data[ny][nx] != 'X' && dist[ny][nx] == INF) {
+				dist[ny][nx] = dist[t.y][t.x] + 1;
+				q.push(S(ny, nx));
+			}
+		}	
+	}
+
+	return dist[tI][tJ];
+}
+
+int main() {
+	int i, j;
+	int res;
+
+	scanf("%d%d%d ", &h, &w, &n);
+	data = (char **)calloc(h, sizeof(char *));
+	dist = (int  **)calloc(h, sizeof(char *));
+	for (i=0; i<h; i++) {
+		data[i] = (char *)calloc(w, sizeof(char));
+		dist[i] = (int  *)calloc(w, sizeof(int));
+	}
+
+	cX = (int *)calloc(n+1, sizeof(int));
+	cY = (int *)calloc(n+1, sizeof(int));
+
+	for (i=0; i<h; i++)
+		for (j=0; j<w; j++)
+			scanf("%c ", &(data[i][j]));
+	
+	for (i=0; i<h; i++)
+		for (j=0; j<w; j++) {
+
+			int cn = data[i][j] - '0';
+
+			if (data[i][j] == 'S')  {
+				cX[0] = j;
+				cY[0] = i;
+			} else if (0<cn && cn<=n) {
+				cX[cn] = j;
+				cY[cn] = i;
+			}
+		}
+
+/*
+	printf("(h, w, h) = (%d, %d, %d)\n", h, w, n);
+	
+	puts("data");
+	for (i=0; i<h; i++) {
+		for (j=0; j<w; j++)
+			printf("%c", data[i][j]);
+		puts("");
+	}
+
+	puts("dist");
+	for (i=0; i<h; i++) {
+		for (j=0; j<w; j++)
+			printf("%d ", dist[i][j]);
+		puts("");
+	}
+
+	for (i=0; i<=n; i++) 
+		printf("(cX[%d], cY[%d]) = (%d, %d)\n", i, i, cX[i], cY[i]);
+*/
+
+	res = 0;
+	for (i=0; i<n; i++)
+		res += bfs(cY[i], cX[i], cY[i+1], cX[i+1]);
+	
+	printf("%d\n", res);
+	
+	for (i=0; i<h; i++) {
+		free(data[i]);
+		free(dist[i]);
+	}
+	free(data);
+	free(dist);
+	
+	free(cX);
+	free(cY);
+
+	return 0;
+}

@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+int main()
+{
+    int w, h;
+
+    while (w = in(), h = in(), h){
+        int field[h][w] = {};
+        int mask[h][w] = {};
+        int n = in();
+        rep(i, n){
+            int x, y;
+            x = in() - 1;
+            y = in() - 1;
+            mask[y][x] = 1;
+        }
+        field[0][0] = 1;
+        rep(i, h){
+            rep(j, w){
+                if (mask[i][j]) continue;
+                if (i > 0) field[i][j] += field[i - 1][j];
+                if (j > 0) field[i][j] += field[i][j - 1];
+            }
+        }
+        printf("%d\n", field[h - 1][w - 1]);
+    }
+    return (0);
+}

@@ -1,0 +1,20 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  gens = 7.times.map{0}
+
+  n.times.each do
+    age = gets.strip.to_i
+
+    if age >= 60
+      gens[6] += 1
+    else
+      gens[age / 10] += 1
+    end
+  end
+
+  gens.each{|gn| puts gn}
+end

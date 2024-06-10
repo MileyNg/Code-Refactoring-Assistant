@@ -1,0 +1,67 @@
+#include<iostream>
+#include<string>
+#include<sstream>
+#include<iomanip>
+using namespace std;
+class BigInt{
+  unsigned int i[11];
+public:
+  BigInt(string str){
+    if(str.size()>80){i[0]=1; return;}
+    i[0]=0;
+    for(int j=80;j>0;j-=8){
+      if((int)str.size()>j){
+	stringstream ss;
+	ss << str.substr(str.size()-j,8);
+	ss >> i[11-j/8];
+      }else if((int)str.size()+8>j){
+	stringstream ss;
+	ss << str.substr(0,str.size()+8-j);
+	ss >> i[11-j/8];
+      }else{
+	i[11-j/8]=0;
+      }
+    }
+  }
+  BigInt():i{0,0,0,0,0,0,0,0,0,0,0}
+  {}
+  void print(){
+    if(i[0]>0)
+      cout << "overflow\n";
+    else{
+      int j=1;
+      for(;j<11;j++)
+	if(i[j]>0 || j == 10)
+	  break;
+      cout << i[j++];
+      for(;j<11;j++)
+	cout << setfill('0') << setw(8) << right << i[j];
+      cout << "\n";
+    }
+  }
+  BigInt operator+(const BigInt& rhs){
+    BigInt result = rhs;
+    for(int j=10;j>0;j--){
+      result.i[j] += i[j];
+      if(result.i[j]>=100000000){
+	result.i[j]-=100000000;
+	result.i[j-1]++;
+      }
+    }
+    result.i[0]+=i[0];
+    return result;
+  }
+};
+
+int main(){
+  int n;
+  cin >> n;
+  for(int i=0;i<n;i++){
+    string tmp;
+    cin>>tmp;
+    BigInt b(tmp);
+    cin>>tmp;
+    BigInt a(tmp);
+    (a+b).print();
+  }
+}

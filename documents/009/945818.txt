@@ -1,0 +1,62 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 10010;
+const int INF = 1000000000;
+int n;
+int dp[2][N];
+
+void init(){
+	rep(i,2)rep(j,N)dp[i][j]=INF;
+}
+
+int solve(){
+	init();
+	
+	int p[N];
+	rep(i,n)cin>>p[i];
+	
+	int i2 = 0;
+	int i1 = 1;
+	
+	rep(i,n){
+		dp[i1][i]=p[0];
+		if(i>=p[0])dp[i1][i]=0;
+	}
+	reps(i,1,n){
+		rep(j,N)dp[i2][j]=INF;
+		rep(j,n+1){
+			dp[i2][j] = min(dp[i2][j],dp[i1][j] + p[i]);
+			if(j-1>=0)dp[i2][j] = min(dp[i2][j],dp[i2][j-1]);
+			
+			if(p[i]==j){
+				rep(k,j){
+					dp[i2][j] = min(dp[i2][j], dp[i1][k]);
+				}
+			}
+		}
+		swap(i2,i1);
+	}
+	
+	return dp[i1][n];
+}
+
+int main(){
+	while(1){
+		cin>>n;
+		if(n==0)break;
+		printf("%d\n",solve());
+		break;
+	}
+	
+	
+	
+}

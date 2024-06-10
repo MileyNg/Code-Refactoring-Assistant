@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+int get_gcd(int a, int b)
+{
+	int mod = a % b;
+	return mod == 0 ? b : get_gcd(b, mod);
+}
+
+int main() {
+	int a, b, gcd;
+	while (scanf("%d%d", &a, &b) != EOF)
+	{
+		gcd = get_gcd(a,b);
+		printf("%d %d\n", gcd, a / gcd * b);
+	}
+	return 0;
+}

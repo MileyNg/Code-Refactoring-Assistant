@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+#include <functional>
+
+#define N_HILLS 10
+#define N_TOP   3
+
+using namespace std;
+
+
+void input_hills(int *hills)
+{
+  for(int i = 0; i < N_HILLS; ++i){
+    cin >> hills[i];
+  }
+}
+
+
+void output_top_hills(int *hills)
+{
+  // descending order
+  sort(hills, hills+N_HILLS, greater<int>());
+
+  for(int i = 0; i < N_TOP; ++i){
+    cout << hills[i] << endl;
+  }
+}
+
+
+int main()
+{
+  int hills[N_HILLS];
+
+  input_hills(hills);
+  output_top_hills(hills);
+
+  return 0;
+}

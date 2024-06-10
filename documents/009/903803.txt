@@ -1,0 +1,27 @@
+#include <iostream>
+
+int main() {
+  long a,b;
+
+  while(std::cin >> a >> b) {
+    long gcd = 1;
+    long lcm = 1;
+
+    long min;
+    long cnt = 2;
+
+    do {
+      while((a % cnt == 0) && a % cnt == b % cnt) {
+        a /= cnt;
+        b /= cnt;
+        gcd *= cnt;
+      }
+      min = (a < b) ? a : b;
+      ++cnt;
+    }while(min > cnt);
+
+    lcm = gcd * a * b;
+    std::cout << gcd << " " << lcm <<std::endl;
+  }
+
+}

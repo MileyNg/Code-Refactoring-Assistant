@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      vector<int>card[2];
+      for(int i=1;i<=2*n;i++)
+	{
+	  card[1].push_back(i);
+	}
+      for(int i=0;i<n;i++)
+	{
+	  int tmp;
+	  cin>>tmp;
+	  card[1].erase(remove(card[1].begin(),card[1].end(),tmp),card[1].end());
+	  card[0].push_back(tmp);
+	}
+      sort(card[0].begin(),card[0].end());
+      int cnt=0;
+      int fi=0;
+      while(card[0].size()!=0&&card[1].size()!=0)
+	{
+	  int tmp_fi=0;
+	  for(int i=0;i<card[cnt].size();i++)
+	    {
+	      if(card[cnt][i]>fi)
+		{
+		  tmp_fi=card[cnt][i];
+		  card[cnt].erase(card[cnt].begin()+i);
+		  break;
+		}
+	    }
+	  fi=tmp_fi;	    
+	  if(cnt==0)
+	    cnt=1;
+	  else
+	    cnt=0;
+	}
+      cout<<card[1].size()<<endl;
+      cout<<card[0].size()<<endl;
+
+    }
+}

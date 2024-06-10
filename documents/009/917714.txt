@@ -1,0 +1,65 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+const int INF=100000000;
+
+
+int n;
+int hx,hy;
+int dx,dy;
+int cx[21],cy[21];
+
+
+double dist(int _x0,int _y0,int _x1,int _y1) {
+	double d = (_x0-_x1)*(_x0-_x1) + (_y0-_y1)*(_y0-_y1);
+	return sqrt(d);
+}
+
+int pow2(int a) {
+	return a*a;
+}
+
+//&#131;N&#131;&#138;&#131;X&#131;^&#131;&#139;&#130;&#204;&#136;&#202;&#146;u&#130;&#198;&#137;&#189;&#147;&#250;&#150;&#218;&#130;&#169;&#130;&#231;&#130;&#198;&#130;&#233;&#130;賊&#130;&#198;&#130;&#170;&#130;&#197;&#130;&#171;&#130;&#233;&#130;&#169;
+bool check(int x,int y,int d) {
+	return (pow2(dx-x)+pow2(dy-y)) > pow2(d);
+}
+
+//&#140;&#187;&#141;&#221;&#136;&#202;&#146;u,&#137;&#189;&#147;&#250;&#150;&#218;,&#143;W&#141;&#135;
+bool dfs(int x,int y,int d,int S) {
+    //printf("[debug] %d,%d,%d,%d\n",x,y,d,S);
+	if(S==(1<<n)-1) return true;
+	rep(i,n) {
+		if(!((S>>i)&1)) {
+			d += (int)dist(x,y,cx[i],cy[i]) + 1;
+			if(check(cx[i],cy[i],d)) {
+				return dfs(cx[i],cy[i],d,S|(1<<i));
+			}
+		}
+	}
+
+	return false;
+
+}
+
+
+void solve() {
+	rep(i,n) cin>>cx[i]>>cy[i];
+	if(dfs(hx,hy,0,0)) cout<<"YES"<<endl;
+	else cout<<"NO"<<endl;
+
+}
+
+int main() {
+	while (cin>>n>>hx>>hy>>dx>>dy)
+	{
+		if(n+hx+hy+dx+dy==0) return 0;
+		solve();
+	}
+
+	return 0;
+}

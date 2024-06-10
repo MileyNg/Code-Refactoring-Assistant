@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+string v[12];
+int dx[] = {1, -1, 0, 0};
+int dy[] = {0, 0, 1, -1};
+
+void visit(int x, int y) {
+	if (x<0 || 11<x || y<0 || 11<y || v[y][x]=='0') return ;
+	v[y][x] = '0';
+	for (int i=0; i<4; ++i) {
+		visit(x+dx[i], y+dy[i]);
+	}
+}
+
+int main() {
+	while (1) {
+		for (int i=0; i<12; ++i) {
+			if ( ! cin.eof()) {
+				cin >> v[i];
+			} else {
+				return 0;
+			}
+		}
+
+		int ans = 0;
+		for (int y=0; y<12; ++y) {
+			for (int x=0; x<12; ++x) {
+				if (v[y][x] != '0') {
+					visit(x, y);
+					++ ans;
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+}

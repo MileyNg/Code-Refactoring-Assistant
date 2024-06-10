@@ -1,0 +1,162 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		String s="";
+		while((s=Console.ReadLine())!=null){
+			if(s=="END")break;
+			Sol mySol =new Sol(s);
+			mySol.Solve();
+		}
+	}
+}
+
+class Sol{
+	public void Solve(){
+		
+		char[] cs=S.ToCharArray();
+		for(int i=0;i<cs.Length;i++){
+			if(cs[i]>='1' && cs[i]<='9'){
+				cs[i]=In[cs[i]-'0'];
+			}
+		}
+		
+		
+		ans=0;
+		dfs(cs);
+		Console.WriteLine(ans);
+	}
+	
+	int ans;
+	
+	
+	void dfs(char[] cs_){
+		char[] cs=new Char[cs_.Length];
+		int pibot=-1;
+		for(int i=0;i<cs.Length;i++){
+			cs[i]=cs_[i];
+			if(cs[i]==' ')pibot=i;
+		}
+	
+		if(pibot==-1){
+			String expr=new String(cs);
+			String sc=ParseAndCalc(expr);
+			if(sc=="F")ans++;
+			return;
+		}
+	
+		//dfs all operator
+		cs[pibot]='a';
+		dfs(cs);
+		cs[pibot]='o';
+		dfs(cs);
+		cs[pibot]='e';
+		dfs(cs);
+		cs[pibot]=' ';
+	}
+	
+	
+	String ParseAndCalc(String expr){
+		String ret=expr;
+		bool chk=true;
+		
+		while(chk){
+			chk=false;
+			int i;
+			//まずかっこを処理
+			for(i=0;i<ret.Length;i++){
+				if(ret[i]=='('){
+					chk=true;
+					break;
+				}
+			}
+			if(chk){
+				int depth=1;
+				int j=i;
+				while(depth!=0){
+					j++;
+					if(ret[j]=='(')depth++;
+					if(ret[j]==')')depth--;
+				}
+				var s=ret.Substring(i+1,j-i+1-2);
+				ret=ret.Substring(0,i)+ParseAndCalc(s)+ret.Substring(j+1);
+				continue;
+			}
+		
+			//演算子を処理
+			for(i=0;i<ret.Length;i++){
+				if(ret[i]=='a'||ret[i]=='o'||ret[i]=='e'){
+					chk=true;
+					break;
+				}
+			}
+			if(chk){
+				int l=H2I[ret[i-1]];
+				int r=H2I[ret[i+1]];
+	
+				int res=0;
+				if(ret[i]=='a')res=l&r;
+				if(ret[i]=='o')res=l|r;
+				if(ret[i]=='e')res=l^r;
+				
+				char c=I2H[res];
+				ret=c.ToString();
+			}
+		}
+		
+		return ret;
+	
+	}
+	
+	String S;
+	Dictionary<char,int> H2I;
+	char[] I2H;
+	
+	int N;
+	char[] In;
+	
+	public Sol(String s){
+		S=s;
+		
+		H2I=new Dictionary<char,int>();
+		for(char c='0';c<='9';c++){
+			H2I.Add(c,(int)(c-'0'));
+		}
+		for(char c='A';c<='F';c++){
+			H2I.Add(c,10+(int)(c-'A'));
+		}
+		
+		I2H=new char[16];
+		for(int i=0;i<16;i++){
+			if(i<10)I2H[i]=(char)('0'+i);
+			if(i>9)I2H[i]=(char)('A'+i-10);
+		}
+		
+		N=ri();
+		In=new char[N+1];
+		In[0]='x';
+		for(int i=1;i<=N;i++){
+			var d=ria();
+			int ii=0;
+			for(int j=0;j<4;j++){
+				ii=ii|(d[j]<<j);
+			}
+			In[i]=I2H[ii];
+		}
+		
+	}
+
+
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}

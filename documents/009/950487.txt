@@ -1,0 +1,106 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+struct T{
+	int a,b,c;
+};
+
+int main(){
+	int N,M;
+	while(cin>>N>>M,N||M){
+		int r;
+		vector<vector<T> > v(M);
+		cin>>r;
+		rep(i,r){
+			int t,n,m,s;
+			cin>>t>>n>>m>>s;
+			t-=540;
+			m--;
+			T tmp;
+			tmp.a=t;
+			tmp.b=n;
+			tmp.c=s;
+			v[m].PB(tmp);
+		}
+		int q;
+		cin>>q;
+		rep(i,q){
+			int ts,te,m;
+			cin>>ts>>te>>m;
+			//cout<<ts<<" "<<te<<" "<<m<<endl;
+			ts-=540;
+			te-=540;
+			m--;
+			int ans=0;
+			int tt1=0,tt2=0;
+			rep(j,v[m].size()){
+				if(v[m][j].a>te){
+					if(tt1) ans+=te-tt2;
+					break;
+				}
+				if(v[m][j].c==1){
+					if(tt1==0){
+						if(v[m][j].a<ts){
+							tt2=ts;
+						}
+						else tt2=v[m][j].a;
+						tt1++;
+					}
+					else{
+						tt1++;
+					}
+				}
+				else{
+					tt1--;
+					if(tt1==0){
+						if(v[m][j].a>=ts) ans+=v[m][j].a-tt2;
+						//cout<<" ans "<<ans<<endl;
+					}
+				}
+			}
+			cout<<ans<<endl;
+		}
+	}
+	return 0;
+}
+
+/* 
+775 1
+790 2
+800 2
+810 3
+820 1
+825 3
+860 1
+880 1
++50
+
+*/

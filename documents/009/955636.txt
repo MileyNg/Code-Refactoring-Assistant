@@ -1,0 +1,63 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int main(){
+    int n;
+    bool b[110];
+    while(cin >> n, n){
+        fill(b, b+110, false);
+        vi v;
+        for(int i=0; i < n; i++){
+            int p;
+            cin >> p;
+            v.pb(p);
+        }
+        int p;
+        cin >> p;
+
+        int count = 0;
+        int lb = 0, ub = n;
+        while(true){
+            count++;
+            int mid = (lb + ub) / 2;
+
+            if(v[mid] == p || b[mid]) break;
+            else if(v[mid] > p){
+                ub = mid;
+            }
+            else {
+                lb = mid;
+            }
+            b[mid] = true;
+        }
+        cout << count << endl;
+    }
+}

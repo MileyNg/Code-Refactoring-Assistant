@@ -1,0 +1,40 @@
+//============================================================================
+// Name        : aoj2515.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <stdio.h>
+#include <string.h>
+
+int translate(char *s){
+	int h, m;
+	h = (s[0] - '0') * 10 + s[1] - '0';
+	m = (s[3] - '0') * 10 + s[4] - '0';
+	return h * 60 + m;
+}
+
+
+int main() {
+	int i, n, t, cnt = 0;
+	char tm1[5], tm2[5], name[256], ans[500][1000];
+	scanf("%d %d",&n,&t);
+
+	scanf("%s",tm1);
+	for(i = 0;i < n - 1;i++){
+		scanf("%s",name);
+		scanf("%s",tm1);
+		scanf("%s",name);
+		scanf("%s",tm2);
+		int tmp = translate(tm2) - translate(tm1);
+		if(tmp >= t){
+			sprintf(ans[cnt++],"%s %d",name,tmp);
+		}
+	}
+	printf("%d\n",cnt);
+	for(i = 0;i < n;i++){
+		printf("%s\n",ans[i]);
+	}
+}

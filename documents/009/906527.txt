@@ -1,0 +1,113 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+// geometry library from hos
+
+const double PI = acos(-1);
+
+int sig(double r) { return (r < -EPS) ? -1 : (r > +EPS) ? +1 : 0; }
+
+struct Pt{
+	double x, y;
+	Pt() {}
+	Pt(double x, double y) : x(x), y(y) {}
+	Pt operator+(const Pt &a) const { return Pt(x + a.x, y + a.y); }
+	Pt operator-(const Pt &a) const { return Pt(x - a.x, y - a.y); }
+	Pt operator*(const Pt &a) const { return Pt(x * a.x - y * a.y, x * a.y + y * a.x); }
+	Pt operator-() const { return Pt(-x, -y); }
+	Pt operator*(const double &k) const { return Pt(x * k, y * k); }
+	Pt operator/(const double &k) const { return Pt(x / k, y / k); }
+	double abs() const { return sqrt(x * x + y * y); }
+	double abs2() const { return x * x + y * y; }
+	double arg() const { return atan2(y, x); }
+	double dot(const Pt &a) const { return x * a.x + y * a.y; }
+	double det(const Pt &a) const { return x * a.y - y * a.x; }
+	bool operator<(const Pt &a) const { return x < a.x || x == a.x && y < a.y; }
+	bool operator==(const Pt &a) const { return x == a.x && y == a.y; }
+	bool operator!=(const Pt &a) const { return x != a.x || y != a.y; }
+};
+
+ostream &operator<<(ostream &os, const Pt &a) { os << "(" << a.x << ", " << a.y << ")"; return os; }
+
+// end of library from hos
+
+Pt proj(Pt l0, Pt l1, Pt p){
+	double t = (p - l0).dot(l1 - l0) / (l1 - l0).abs2();
+	return l0 + (l1 - l0) * t;
+}
+
+Pt refl(Pt l0, Pt l1, Pt p){
+	return p + (proj(l0, l1, p) - p) * 2;
+}
+
+int N;
+Pt p[1010];
+set<pi> S;
+
+int check(int ai){
+	Pt a = p[ai];
+	rep(bi,N)if(bi!=ai){
+		Pt b = p[bi];
+		Pt l0 = (a+b)/2;
+		Pt l1 = l0 + (b-l0)*Pt(0,1);
+		int ok=1,c=0;
+		rep(i,N){
+			Pt Q = refl(l0,l1,p[i]);
+			int x = floor(Q.x+EPS), y = floor(Q.y+EPS);
+			if(sig(x-Q.x) || sig(y-Q.y) || !S.count(mp(x,y))){
+				ok=0;break;
+			}
+			if(sig((p[i]-Q).abs2())==0){
+				c++;
+				if(c>2){
+					ok=0;break;
+				}
+			}
+		}
+		if(ok)return 1;
+	}
+	return 0;
+}
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	cin>>N;
+	rep(i,N){
+		cin>>p[i].x>>p[i].y;
+		S.insert(mp(p[i].x,p[i].y));
+	}
+	int ok=0;
+	rep2(i,1,N){
+		if(sig((p[i]-p[0]).det(p[1]-p[0])))ok=1;
+	}
+	if(!ok)return cout<<"No"<<endl,0;
+	rep(i,3){
+		if(check(i))return cout<<"Yes"<<endl,0;
+	}
+	cout<<"No"<<endl;
+}

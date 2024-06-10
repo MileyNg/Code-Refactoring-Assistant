@@ -1,0 +1,85 @@
+//include
+//------------------------------------------
+#include <bits/stdc++.h>
+
+using namespace std;
+
+//typedef
+//------------------------------------------
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vbb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+//container util
+//------------------------------------------
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define iter(i,c) for(auto i=(c).begin(); i!=(c).end(); ++i)
+
+//repetition
+//------------------------------------------
+#define loop(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  loop(i,0,n)
+
+//constant
+//--------------------------------------------
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const double inf = (int)1e8;
+
+// output vector
+// ------------------------------------------
+namespace std {
+    template<typename T> ostream & operator<<(ostream& os, vector<T> const& v){
+        for(auto it=v.begin(); it!=v.end(); ++it){
+            os << *it << (it+1==v.end() ? "" : ",");
+        }
+        return os;
+    }
+}
+
+//clear memory
+#define clr(a) memset((a), 0 ,sizeof(a))
+
+int gcd(int a, int b){
+   int tmp;
+   while(a%b!=0){
+      tmp=a%b;
+      a=b;
+      b=tmp;
+   }
+}
+ 
+int lcm(int a,int b){
+   return a*b/gcd(a,b);
+}
+ 
+bool prime_number(int n){
+   if(n==0||n==1) return false;
+   vb a(n+1);
+   fill(all(a),true);
+   loop(i,2,n/2+1){
+      if(!a[i]) continue;
+      for(int j=2;i*j<=n;j++){
+         a[i*j]=false;
+      }
+   }
+   return a[n];
+}
+
+int main(){
+   double a[3];
+   char s;
+   
+   while(cin >> a[0]){
+      rep(i,2) cin>>s>>a[i+1];
+      if(a[1]/pow(a[2],2)>=25) cout << a[0] << endl;
+   }
+}

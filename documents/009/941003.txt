@@ -1,0 +1,17 @@
+p = 50
+while 1:
+	n = input()
+	if n == 0: break
+	xy = sorted([map(int,raw_input().split()) for i in range(n)])
+	x1,y1 = xy[0]
+	xy = sorted(xy, key = lambda XY:(XY[0]-x1)**2 + (XY[1]-y11)**2)
+	ans = 0
+	for j in range(n-3,0,-1):
+		x2,y2 = xy[j]
+		dx,dy = x2-x1,y2-y1
+		if [x1-dy,y1-dx] in xy[j+1:j+p] and [x2+dy,y2-dx] in xy[j+1:j+p]:
+			ans = dx**2+dy**2
+		if [x1-dy,y1+dx] in xy[j+1:j+p] and [x2-dy,y2+dx] in xy[j+1:j+p]:
+			ans = dx**2+dy**2
+		if ans: break
+	print ans

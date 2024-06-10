@@ -1,0 +1,70 @@
+#include<utility>    //pair
+#include<vector>
+#include<stdio.h>
+#include<string>
+#include<iostream>
+#include<algorithm> //find的&#22836;文件  string用find的&#26102;候会返回字符串的首地址
+#include<iterator>
+#include<string.h>
+#include<deque>   //双向添加数字的数&#32452;  可以&#21024;除或者添加第一个
+#include<queue>
+#include<set>      //&#24635;&#35273;得没有什&#20040;用&#22788;  无重&#22797;的
+#include<list>    //不支持随机&#35775;&#38382;  即缺少下&#26631;
+#include<map>       //数据&#31867;型很方便 但是会自己排好序  而且不会有重&#22797;的元素
+using namespace std;
+int cost[1005][1005];
+int mincost[1005];
+bool used[1005];
+const int INF=10000000;
+int d[1005],flag;
+int main()
+{
+    int V,m,a,b,c,t;
+    while(cin>>V>>m)
+    {
+        for(int i=0;i<1005;i++)
+            for(int j=0;j<1005;j++)
+                cost[i][j]=INF;
+
+        if(V==m&&m==0)
+            break;
+        flag=0;
+        for(int i=0;i<m;i++)
+        {
+
+            cin>>a>>b>>c;
+            cost[a][b]=c;
+            cost[b][a]=c;
+
+        }
+        for(int i=1;i<=V;i++)
+        {
+            mincost[i]=INF;
+            used[i]=false;
+        }
+        mincost[1]=0;
+        while(true)
+        {
+            int v=-1;
+            for(int u=1;u<=V;u++)
+            {
+                if(!used[u]&&(v==-1||mincost[u]<mincost[v]))
+                    v=u;
+            }
+            if(v==-1)
+                break;
+            used[v]=true;
+            d[flag]=mincost[v];flag++;
+            for(int u=1;u<=V;u++)
+            {
+                mincost[u]=min(mincost[u],cost[v][u]);
+            }
+
+        }
+        sort(d,d+flag);
+        cout<<d[V/2]<<endl;
+
+    }
+
+    return 0;
+}

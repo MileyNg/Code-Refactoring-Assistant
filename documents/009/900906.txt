@@ -1,0 +1,24 @@
+input = gets(nil)
+
+ns = input.split("\n").map(&:to_i)
+
+a = {}
+2.upto(ns.max) {|i| a[i] = true}
+
+p = []
+
+max = Math.sqrt(ns.max)
+while true
+  k, v = a.shift
+  next unless v
+
+  p.push(k)
+  (k*2).step(ns.max, k) {|i| a[i] = false}
+  break if k >= max
+end
+
+p = p + a.select{|k,v| v}.keys
+
+ns.each do |n|
+  puts p.select{|i| i<=n}.size
+end

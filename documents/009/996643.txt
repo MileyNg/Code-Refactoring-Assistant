@@ -1,0 +1,81 @@
+#include <stdio.h>
+ 
+struct heap{
+  int id, k;
+};
+ 
+struct heap A[500000];
+ 
+int size;
+void maxHeapify(int);
+ 
+void print(){
+  int i;
+   
+  for(i = 1; i <= size; i++){
+    printf(" %d", A[i].k);
+  }
+  printf("\n");
+ 
+}
+ 
+ 
+void buildMaxHeap(){
+  int i;
+   
+  for(i = size/2; i>0; i--){
+     maxHeapify(i);
+  }
+   
+}
+ 
+void maxHeapify(int i){
+  int a, l, r, largest = i;
+  struct heap B;
+ 
+  l = r = -1;
+ 
+  if( 2*i > 0 && 2*i <= size){
+    l = 2*i;
+  }
+   
+  if( 2*i +1 <= size){
+    r = 2*i +1;
+  }
+ 
+   if(l <= size && A[l].k > A[i].k && l != -1){
+    largest = l;
+  }
+
+  if(r <= size && A[r].k > A[largest].k && r != -1){
+    largest = r;
+    } 
+ 
+  if(largest != i){
+    B.k = A[i].k;
+    A[i].k = A[largest].k;
+    A[largest].k = B.k;
+
+    maxHeapify(largest);
+  
+  }
+}
+
+ 
+main(){
+  int i;
+ 
+  scanf("%d", &size);
+ 
+  for(i=1; i<=size; i++){
+    scanf("%d", &A[i].k);
+    A[i].id = i;
+  }
+ 
+  buildMaxHeap();
+ 
+  print();
+ 
+  return 0;
+ 
+}

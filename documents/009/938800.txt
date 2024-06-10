@@ -1,0 +1,20 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+while (true) {
+	var vals = lines.shift().split(' ');
+	var n = +vals[0];
+	var x = +vals[1];
+
+	if (n + x == 0) break;
+
+	var cnt = 0;
+	for (var i = 1; i <= n; i++) {
+		for (var j = i + 1; j <= n; j++) {
+			for (var k = j + 1; k <= n; k++) {
+				if (i + j + k == x) cnt++;
+			}
+		}
+	}
+	console.log(cnt);
+}

@@ -1,0 +1,22 @@
+#include <vector>
+#include <iostream>
+#include <string>
+using namespace std;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+string n;
+
+main(){
+	while(cin >> n, n!="0"){
+		int dp[2][11]={0};
+		dp[1][0] = 1;
+		int ans = 0, sum = 0;
+		REP(i, n.size()){
+			sum = (sum * 10 + n[i]-'0') % 11;
+			ans += dp[i&1][(110-10*sum)%11];
+			REP(j, 11) dp[i&1][(j*10)%11] = dp[1&i^1][j];
+			if(n[i] != '0') dp[i&1][sum] ++;
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

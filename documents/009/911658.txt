@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int mil = 1, n, y, m, d;
+  int manth[2] = {19,20}, year[3] = {200, 195, 195};
+  REP(i, 1, 1000) mil += year[i%3];
+  scanf("%d", &n);
+  while(n--){
+    scanf("%d%d%d", &y, &m, &d);
+    int res = d;
+    REP(i, 1, y) res += year[i%3];
+    if(y%3) REP(i, 1, m) res += manth[i%2];  
+    else res += (m-1) * 20;
+    printf("%d\n", mil - res);
+  } 
+  return 0;
+}

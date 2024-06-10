@@ -1,0 +1,37 @@
+MAX = 10000000
+def isP(n):
+	for i in prime:
+		if i >= n:
+			break
+		if n%i == 0:
+			return False
+	return True
+
+r = int((MAX+1)**0.5)
+s = int(r**0.5)
+p = [1]*r
+p[0] = p[1] = 0
+for i in range(2,s):
+	if p[i]:
+		p[2*i::i] = [0 for x in range(2*i,r,i)]
+prime = []
+for i in range(r):
+	if p[i]:
+		prime.append(i)
+
+while 1:
+	n = input()
+	if n == 0: break
+	i = n-(1-n%2)
+	while i > 12:
+		p6 = isP(i-6)
+		if not isP(i-8) or not isP(i-2):
+			if not p6:
+				i -= 10
+			else:
+				i -= 4
+			continue
+		if isP(i) and p6:
+			print i
+			break
+		i -= 2

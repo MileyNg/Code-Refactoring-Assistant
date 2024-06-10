@@ -1,0 +1,43 @@
+#include <bits/stdc++.h> // only for GCC
+using namespace std;
+
+int main(){
+    int n;
+    cin >> n;
+    int score[100];
+    for(int i=0; i < 100; i++) score[i] = 0;
+    for(int i=0; i <n*(n-1)/2; i++){
+        int a, b, c, d;
+        cin >> a >> b >> c >> d;
+        if(c < d){
+            score[a] += 0;
+            score[b] += 3;
+        }
+        else if(c > d){
+            score[a] += 3;
+            score[b] += 0;
+        }
+        else {
+            score[a] += 1;
+            score[b] += 1;
+        }
+    }
+    set<int> s;
+    for(int i=1; i <= n; i++){
+        s.insert(score[i]);
+    }
+
+    int result[100];
+    set<int>::reverse_iterator it = s.rbegin();
+    int count = 1;
+    while( it != s.rend() )
+    {
+        int term = 0;
+        for(int j=1; j <= n; j++){
+            if(*it == score[j]){ result[j] = count; term++;}
+        }
+        it++;
+        count+=term;
+    }
+    for(int i=1; i <= n; i++) cout << result[i] << endl;
+}

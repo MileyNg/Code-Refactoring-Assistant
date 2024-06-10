@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <cctype>
+#include <queue>
+#include <string>
+using namespace std;
+const int dx[4] = {0,1,-1,0};
+const int dy[4] = {-1,0,0,1};;
+int bfs(vector<vector<char> > &field,int sx,int sy,int gx,int gy){
+  int cost = 0;
+  queue<pair<int,int> > que;
+  que.push(pair<int,int>(sx,sy));
+  vector<vector<int> > keep(1001,vector<int>(1001,0));
+  while(!que.empty()){
+    pair<int,int> tmp = que.front();que.pop();
+    int cx = tmp.first;
+    int cy = tmp.second;
+    for(int i = 0;i < 4;i++){
+      int nx = cx +dx[i];
+      int ny = cy +dy[i];
+      if(nx >= 0 && nx < field[0].size() && ny >= 0 && ny < field.size() && field[ny][nx] != 'X' && keep[ny][nx] == 0){
+	if(nx == gx && ny == gy){
+	  return keep[cy][cx]+1;
+	}else{
+	  keep[ny][nx] = keep[cy][cx]+1;
+	  que.push(pair<int,int>(nx,ny));
+	}
+      }
+    }
+  }
+  return -1;
+}
+int main(){
+  int h,w,n;
+  cin >> h >> w >> n;
+  vector<vector<char> > field(h,vector<char>(w));
+  vector<pair<int,int> > che(n);
+  int sx,sy;
+  for(int i = 0;i < h;i++){
+    string str;
+    cin >> str;
+    for(int j = 0;j < w;j++){
+      field[i][j] = str[j];
+      if(isdigit(field[i][j])){
+	che[(field[i][j] - '0')-1] = pair<int,int>(i,j);//y,x
+      }else if(field[i][j] == 'S'){
+	sx = j;sy = i;
+      }
+    }
+  }
+  //  cout << "aaaaaa" << endl;
+  int ans =0;
+  for(int i = 0;i < n;i++){
+    if(i == 0){
+      ans += bfs(field,sx,sy,che[i].second,che[i].first);
+    }else{
+      ans += bfs(field,che[i-1].second,che[i-1].first,che[i].second,che[i].first);
+    }
+  }
+  cout << ans << endl;
+  
+  return 0;
+}

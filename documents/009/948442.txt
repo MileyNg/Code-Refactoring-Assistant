@@ -1,0 +1,74 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string.h>
+using namespace std;
+
+int V;
+vector<int> G[2000];
+int match[2000];
+bool used[2000];
+
+void add_edge(int u,int v){
+  G[u].push_back(v);
+  G[v].push_back(u);
+}
+
+bool dfs(int v){
+  used[v]=true;
+  for(int i=0;i<(int)G[v].size();i++){
+    int u=G[v][i],w=match[u];
+
+    if( w<0 || !used[w] && dfs(w) ){
+
+      match[v]=u;
+      match[u]=v;
+      return true;
+    }
+  }
+  return false;
+}
+
+int bipartite_matching(){
+  int res=0;
+  memset(match,-1,sizeof(match));
+  for(int v=0;v<V;v++){
+    if(match[v]<0){
+      memset(used,0,sizeof(used));
+      if(dfs(v)){
+	res++;
+      }
+    }
+  }
+  return res;
+}
+
+
+int m,n;
+int b[500],r[500];
+
+int main(){
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+  while(cin>>m>>n){
+    if(m==0&&n==0)break;
+
+    for(int i=0;i<m;i++)cin>>b[i];
+    for(int i=0;i<n;i++)cin>>r[i];
+
+    for(int i=0;i<2000;i++)G[i].clear();
+
+    //for(int i=0;i<m;i++)add_edge(n+m,i);
+    //for(int i=0;i<n;i++)add_edge(m+i,n+m+1);
+
+    for(int i=0;i<m;i++){
+      for(int j=0;j<n;j++){
+	if( __gcd(b[i],r[j])> 1 )add_edge(i,m+j);
+      }
+    }
+
+    V=m;
+    cout<<bipartite_matching()<<endl;
+  }
+  return 0;
+}

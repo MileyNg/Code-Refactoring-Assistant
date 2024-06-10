@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+  long long int n;
+  cin >> n;
+
+  long long int a[100][100];
+
+  for ( long long int i = 0; i < n; i++ ) {
+    for ( long long int j = 0; j < n; j++ ) {
+      cin >> a[j][i];
+    }
+  }
+
+  long long int cnt[100][100] = {0};
+  for ( long long int x0 = 0; x0 < n; x0++ ) {
+    long long int k = 0;
+    for ( long long int y0 = 0; y0 < n; y0++ ) {
+      k += a[x0][y0];
+      if ( x0 == 0 ) {
+	cnt[x0][y0] = k;
+      }else {
+	cnt[x0][y0] = k + cnt[x0-1][y0];
+      }
+    }
+  }
+
+  long long int ans = -10000000;
+  for ( long long int x0 = 0; x0 < n; x0++ ) {
+    for ( long long int y0 = 0; y0 < n; y0++ ) {
+      for ( long long int x1 = x0; x1 < n; x1++ ) {
+	for ( long long int y1 = y0; y1 < n; y1++ ) {
+	  long long int k = cnt[x1][y1];
+	  if ( x0 > 0 ) {
+	    k -= cnt[x0-1][y1];
+	  }
+	  if ( y0 > 0 ) {
+	    k -= cnt[x1][y0-1];
+	  }
+	  if ( x0 > 0 && y0 > 0 ) {
+	    k += cnt[x0-1][y0-1];
+	  }
+	  ans = max( ans, k );
+	}
+      }
+    }
+  }
+
+  cout << ans << endl;
+
+  return 0;
+
+}

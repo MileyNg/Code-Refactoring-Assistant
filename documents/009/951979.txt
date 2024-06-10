@@ -1,0 +1,55 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <array>
+using namespace std;
+
+int rnd(int &a, int &b){
+	static const int C = ~(1u << 31);
+	static const int M = (1 << 16) - 1;
+	a = 36969 * (a & M) + (a >> 16);
+	b = 18000 * (b & M) + (b >> 16);
+	return (C & ((a << 16) + b)) % 1000000;
+}
+
+int main(){
+	int m, n, a, b, x, y, z;
+	while(scanf("%d%d%d%d", &m, &n, &a, &b), m | n){
+		vector<array<int,3>> v(n + m);
+		for(int i = 0; i < m; ++i){
+			scanf("%d%d%d", &x, &y, &z);
+			v[i][0] = x;
+			v[i][1] = -y;
+			v[i][2] = -z;
+		}
+		for(int i = m; i < n + m; ++i){
+			v[i][0] = rnd(a, b);
+			v[i][1] = -rnd(a, b);
+			v[i][2] = -rnd(a, b);
+		}
+		sort(v.begin(), v.end());
+		int ans = 0;
+		vector<map<int,int>> mps(m + n + 3);
+		mps[0][100] = 100;
+		for(int i = 0; i < m + n; ++i){
+			y = v[i][1];
+			z = v[i][2];
+			int left = 1, right = ans + 1;
+			while(left < right){
+				int mid = (left + right + 1) >> 1;
+				const auto &mp = mps[mid - 1];
+				auto it = mp.upper_bound(y);
+				if(it != mp.end() && it->second > z){
+					left = mid;
+				}
+				else{
+					right = mid - 1;
+				}
+			}
+			mps[left][y] = z;
+			ans = max(ans, left);
+		}
+		printf("%d\n", ans);
+	}
+}

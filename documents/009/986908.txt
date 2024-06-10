@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <math.h>
+
+char prime[100000000];
+
+int main(void)
+{
+	int n;
+	
+	while (scanf("%d", &n) * n != 0){
+		int sum = 0;
+		int i;
+		int tmp = n;
+		
+		for (i = 2; tmp; i++){
+			if (prime[i] == 0){
+				int j;
+				for (j = i * 2; j < 100000000; j += i){
+					prime[j] = 1;
+				}
+				sum += i;
+				tmp--;
+			}
+		}
+		printf("%d\n", sum);
+	}
+	
+	return 0;
+}

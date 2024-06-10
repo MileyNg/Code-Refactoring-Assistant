@@ -1,0 +1,113 @@
+#include <climits>
+#include <cstdlib>
+#include <functional>
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+struct state {
+	int x, y, used_p, dir, dist;
+	state(int x_, int y_, int u, int d, int d_):x(x_), y(y_), used_p(u),dir(d), dist(d_) {}
+	bool operator>(const state &s) const {
+		return dist > s.dist;
+	}
+};
+
+constexpr int MAX_SIZE = 100;
+constexpr int MAX_A = 10;
+
+constexpr int dx[4] = {0, 1, -1, 0};
+constexpr int dy[4] = {1, 0, 0, -1};
+
+int h, w, a;
+string field[MAX_SIZE];
+int dist[MAX_SIZE][MAX_SIZE][MAX_A + 1][4];
+
+inline bool out(int x, int y) {
+	return x < 0 || y < 0 || x >= w || y >= h;
+}
+
+int dijkstra(int sx, int sy, int gx, int gy) {
+	priority_queue<state, vector<state>, greater<state>> que;
+	fill_n((int *)dist, sizeof(dist) / sizeof(int), INT_MAX);
+
+	if(!out(sx, sy + 1) && field[sy + 1][sx] != '#') {
+		que.push({sx, sy + 1, 0, 0, 0});
+		dist[sx][sy + 1][0][0] = 0;
+	}
+
+	while(!que.empty()) {
+		const state s = que.top();
+		que.pop();
+
+		if(dist[s.x][s.y][s.used_p][s.dir] < s.dist) continue;
+		if(s.x == sx && s.y == sy && s.dir == 3) continue;
+		if(s.x == gx && s.y == gy) return s.dist;
+
+		for(int d = 0; d < 4; ++d) {
+			int next_dist = s.dist;
+			int next_used_p = s.used_p;
+
+			if(s.x == sx && s.y == sy) {
+				if(d != s.dir) continue;
+			}
+
+			else {
+				if(d == s.dir) {
+					// do nothing
+				}
+				else if(d == (s.dir ^ 0x1)) { // type p mirror
+					if(s.used_p == a) continue;
+					++next_dist;
+					++next_used_p;
+				}
+				else if(d == (s.dir ^ 0x2)) { // type q mirror
+					if(s.dist - s.used_p == a) continue;
+					++next_dist;
+				}
+				else {
+					continue;
+				}
+			}
+
+			const int nx = s.x + dx[d];
+			const int ny = s.y + dy[d];
+			if(out(nx, ny) || field[ny][nx] == '#') continue;
+			if(dist[nx][ny][next_used_p][d] > next_dist) {
+				dist[nx][ny][next_used_p][d] = next_dist;
+				que.push({nx, ny, next_used_p, d, next_dist});
+			}
+		}
+	}
+	return -1;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	cin >> h >> w >> a;
+
+	for(int i = 0; i < h; ++i) {
+		cin >> field[i];
+	}
+
+	int sx, sy, gx, gy;
+	for(int y = 0; y < h; ++y) {
+		for(int x = 0; x < w; ++x) {
+			if(field[y][x] == 'S') {
+				sx = x;
+				sy = y;
+			}
+			else if(field[y][x] == 'G') {
+				gx = x;
+				gy = y;
+			}
+		}
+	}
+
+	cout << dijkstra(sx, sy, gx, gy) << endl;
+
+	return EXIT_SUCCESS;
+}

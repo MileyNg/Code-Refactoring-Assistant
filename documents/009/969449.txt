@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+
+
+int main() {
+	string str;
+	
+	while (getline(cin, str)) {
+		if ((int)str.size() == 1 && str[0] == '.') break;
+		int n = (int)str.size();
+		
+		stack<char> s;
+		
+		bool isok = true;
+		for (int i=0; i<n && isok; i++) {
+			if (str[i] == '(') {
+				s.push(str[i]);
+			} else if (str[i] == ')') {
+				if (s.empty()) {
+					isok = false;
+					break;
+				}
+				char popc = s.top(); s.pop();
+				if (popc != '(') isok = false;
+			} else if (str[i] == '[') {
+				s.push(str[i]);
+			} else if (str[i] == ']') {
+				if (s.empty()) {
+					isok = false;
+					break;
+				}
+				char popc = s.top(); s.pop();
+				if (popc != '[') isok = false;
+			}
+		}
+		
+		if (isok) cout << "yes" << endl;
+		else cout << "no" << endl;
+	}
+	
+	return 0;
+}

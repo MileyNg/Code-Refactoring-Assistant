@@ -1,0 +1,110 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <set>
+using namespace std;
+typedef pair<int,int> P;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<EPS)
+int n,m;
+vector<P> vec;
+vector<int> rad;
+P s,t;
+ll sq(ll x)
+{
+	return x*x;
+}
+bool in(int x,P a)
+{
+	return sq(a.fi-vec[x].fi)+sq(a.sec-vec[x].sec)<rad[x]*rad[x];
+}
+bool check()
+{
+	for(int i=0;i<n;i++)
+	{
+		bool in1,in2;
+		in1=in(i,s);in2=in(i,t);
+		if(in1!=in2)return false;
+		if(in1&&in2)continue;
+		ll a=s.fi,b=s.sec,c=t.fi,d=t.sec,p=vec[i].fi,q=vec[i].sec;
+		if(a>c)
+		{
+			swap(a,c);swap(c,d);
+		}
+		if(a==c)
+		{
+			if(min(b,d)<=vec[i].sec&&vec[i].sec<=max(b,d)&&abs(vec[i].fi-a)<=rad[i])
+			{
+				return false;
+			}
+			else continue;
+		}
+		ll A=sq(d-b)+sq(c-a);
+		ll B=(b*c-a*d)*(d-b)-p*sq(c-a)-(c-a)*(d-b)*q;
+		ll C=p*p*sq(c-a)+sq(b*c-a*d-q*c+q*a)-sq(rad[i])*sq(c-a);
+		//cout  << "At circle No." << i+1 << ' '<< A << ' ' << B << ' ' << C  << ' ' << B*B-A*C<< endl;
+		if(B*B-A*C<0)continue;
+		else if(B*B-A*C==0)
+		{
+			if(a<=(-B/A)&&(-B/A)<=c)return false;
+			else continue;
+		}
+		else
+		{
+			double ans1=(-B+sqrt(B*B-A*C))/A;
+			double ans2=(-B-sqrt(B*B-A*C))/A;
+			if(ans1>=a&&ans2<=c)return false;
+			else continue;
+		}
+	}
+	return true;
+}
+int main()
+{
+	while(1)
+	{
+		vec.clear();
+		rad.clear();
+		scanf("%d",&n);
+		if(n==0)break;
+		for(int i=0;i<n;i++)
+		{
+			P k;
+			int r;
+			scanf("%d %d %d",&k.fi,&k.sec,&r);
+			vec.pb(k);
+			rad.pb(r);
+		}
+		scanf("%d",&m);
+		for(int i=0;i<m;i++)
+		{
+			scanf("%d %d %d %d",&t.fi,&t.sec,&s.fi,&s.sec);
+			if(check())puts("Danger");
+			else puts("Safe");
+		}
+	}
+	return 0;
+}

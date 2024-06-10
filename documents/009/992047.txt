@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+#define M 500001
+
+struct node{
+  int p;
+  int l;
+  int r;
+};
+ 
+struct node A[M];
+
+int heap_size;
+
+int parent(int);
+int left(int);
+int right(int);
+void maxheap(int *,int);
+void bmaxheap(int *);
+ 
+int parent(int i){
+  return i/2;
+}
+int left(int i){
+  return 2*i;
+}
+int right(int i){
+  return 2*i+1;
+}
+ 
+void maxHeapify(int A[],int i){
+  int l,r,largest;
+  int temp;
+   
+  l = left(i);
+  r = right(i);
+   
+ 
+  if((l <= heap_size) && (A[l] > A[i])){
+    largest = l;
+  }
+  else {
+    largest = i;
+  }
+   
+  if((r <= heap_size) && (A[r] > A[largest])){
+    largest = r;
+  } 
+   
+  if(largest != i){
+    temp = A[i];
+    A[i] = A[largest];
+    A[largest] = temp;
+     
+    maxHeapify(A,largest);
+  } 
+}
+ 
+void buildMaxHeap(int A[]){
+  int i;
+ 
+  for(i = heap_size/2 ; i >= 1 ; i--){
+    maxHeapify(A,i);
+  }
+}
+ 
+int main(int argc, char *argv[]){
+  int i,key[M];
+   
+  scanf("%d",&heap_size);
+   
+  for(i = 1 ; i <= heap_size ; i++){
+    scanf("%d",&key[i]);  
+  }
+   
+  buildMaxHeap(key);
+   
+  for(i = 1 ; i <= heap_size ; i++){
+    printf(" %d",key[i]);
+  }
+  printf("\n");
+   
+  return 0;
+}
+
+int parent(int i){
+  return i/2;
+}
+int left(int i){
+  return 2*i;
+}
+int right(int i){
+  return 2*i+1;
+}
+ 
+void maxheap(int A[],int i){
+  int l,r,largest;
+  int temp;
+   
+  l = left(i);
+  r = right(i);
+   
+ 
+  if((l <= heap_size) && (A[l] > A[i])){
+    largest = l;
+  }
+  else {
+    largest = i;
+  }
+   
+  if((r <= heap_size) && (A[r] > A[largest])){
+    largest = r;
+  } 
+   
+  if(largest != i){
+    temp = A[i];
+    A[i] = A[largest];
+    A[largest] = temp;
+     
+    maxheap(A,largest);
+  } 
+}
+ 
+void bmaxheap(int A[]){
+  int i;
+ 
+  for(i = heap_size/2 ; i >= 1 ; i--){
+    maxheap(A,i);
+  }
+}
+ 

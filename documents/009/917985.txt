@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+/** Problem0049 : Blood Groups **/
+int main()
+{
+	int num[4] = {0, 0, 0, 0};
+	int stId[10000], idx=0, inId;
+	char camma; string inBlood;
+	bool flg;
+	
+	while (cin >> inId >> camma >> inBlood) {
+		flg = true;
+		for (int i=0; i<idx; i++) {
+			if (stId[i] == inId)
+				flg = false;
+		}
+		
+		if (flg) {
+			stId[idx++] = inId;
+			if (inBlood == "A")
+				num[0]++;
+			else if (inBlood == "B")
+				num[1]++;
+			else if (inBlood == "AB")
+				num[2]++;
+			else if (inBlood == "O")
+				num[3]++;
+		}
+	}
+	cout << num[0] << "\n" << num[1] << "\n" << num[2] << "\n" << num[3] << endl;
+	return 0;
+}

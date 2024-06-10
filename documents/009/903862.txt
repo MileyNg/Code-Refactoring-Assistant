@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void solve()
+{
+	int e;
+	while(cin >> e, e)
+	{
+		int min_val = 999999999;
+		for(int i = 0; i * i * i <= e; ++i)
+		{
+			if(i >= min_val)
+			{
+				break;
+			}
+			for(int j = 0; j * j <= e; ++j)
+			{
+				if(i * i * i + j * j > e || i + j >= min_val)
+				{
+					break;
+				}
+				for(int k = 0; k <= e; ++k)
+				{
+					unsigned long long int temp = i * i * i + j * j + k;
+					int val = i + j + k;
+					if(temp > e || val >= min_val)
+					{
+						break;
+					}
+					else if(temp == e)
+					{
+						if(min_val > i + j + k)
+						{
+							min_val = i + j + k;
+						}
+					}
+				}
+			}
+		}
+		cout << min_val << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

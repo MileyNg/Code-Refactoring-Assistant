@@ -1,0 +1,64 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int n,t[1005],ent[1005],ans;
+bool isin[1500];
+char md[10],hm[10],io[10],id[10];
+char mdd[10];
+int gettime()
+{
+    int hh=(hm[0]-'0')*10+(hm[1]-'0');
+    int mi=(hm[3]-'0')*10+(hm[4]-'0');
+    return hh*60+mi;
+}
+int main()
+{
+    ///freopen("in.txt","r",stdin);
+    while(scanf("%d",&n)&&n!=0)
+    {
+        memset(t,0,sizeof t);
+        mdd[0]='s';
+        ans=0;
+        while(n--)
+        {
+            scanf("%s%s%s%s",md,hm,io,id);
+            if(strcmp(md,mdd)!=0)
+            {
+                memset(isin,false,sizeof isin);
+                memcpy(mdd,md,sizeof md);
+            }
+            int ID=(id[0]-'0')*100+(id[1]-'0')*10+(id[2]-'0');
+            if(io[0]=='I')
+            ent[ID]=gettime();
+            else
+            {
+                int endtime=gettime();
+                if(ID==0)
+                {
+                    for(int i=ent[ID];i<endtime;i++)
+                    isin[i]=true;
+                    ent[ID]=0;///陦ィ遉コ蟾イ扈丞源驟?                }
+                else
+                {
+                    ///蜈域峩譁ー螂ウ逾樒噪迥カ諤?                    if(ent[0]!=0)
+                    {
+                        for(int i=ent[0];i<endtime;i++)
+                        {
+                            isin[i]=true;
+                        }
+                    }
+                    for(int i=ent[ID];i<endtime;i++)
+                    {
+                        if(isin[i])
+                        t[ID]++;
+                    }
+                }
+                ans=max(t[ID],ans);
+            }
+        }
+        printf("%d\n",ans);
+    }
+    return 0;
+}

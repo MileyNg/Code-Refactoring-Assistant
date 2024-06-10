@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<stdbool.h>
+#include<math.h>
+#define MIN(a,b) (((a)<(b)) ? (a) : (b))
+#define MAX(a,b) (((a)>(b)) ? (a) : (b))
+#define R 1
+
+struct xy{
+  double x;
+  double y;
+};
+
+typedef struct xy XY;
+
+double distance(XY v, XY w)
+{
+  return sqrt(pow((v.x-w.x),2)+pow((v.y-w.y),2));
+}
+
+int main()
+{
+  while(1){
+    int i,n,max = 1;
+    XY point[100];
+    scanf("%d",&n);
+    if(n==0) break;
+    for(i=0;i<n;i++) scanf("%lf,%lf",&point[i].x,&point[i].y);
+    int j,k,l;
+    for(j=0;j<n-1;j++){
+      for(k=j+1;k<n;k++){
+	if(distance(point[j],point[k])<=R*2){
+	  int count=2;
+	  XY p,q,v,w;
+	  p.x=(point[j].x-point[k].x)/2;
+	  p.y=(point[j].y-point[k].y)/2;
+	  double p_len = sqrt(pow(p.x,2)+pow(p.y,2));
+	  double q_len = sqrt(pow(R,2)-pow(p_len,2));
+	  q.x=(-p.y/p_len)*q_len;
+	  q.y=(p.x/p_len)*q_len;
+	  v.x=point[k].x+p.x+q.x;
+	  v.y=point[k].y+p.y+q.y;
+	  w.x=point[k].x+p.x-q.x;
+	  w.y=point[k].y+p.y-q.y;
+	  for(l=0;l<n;l++){
+	    if(l!=j&&l!=k){
+	      if(MIN(distance(v,point[l]),distance(w,point[l]))<=R) count++;
+	    }
+	  }
+	  max = MAX(max,count);
+	}
+      }
+    }
+    printf("%d\n",max);
+  }
+  return 0;
+}

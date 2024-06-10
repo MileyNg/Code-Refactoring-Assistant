@@ -1,0 +1,38 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<map>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+typedef pair<int,int> pii;
+
+int n,s;
+int l[555],r[555],w[555][555],t[555];;
+pii p[555];
+
+int main(){
+  scanf("%d%d",&n,&s); s--;
+  rep(i,n){
+    scanf("%d%d",l+i,r+i);
+    p[i] = pii(r[i],i);
+  }
+  rep(i,n)rep(j,n)scanf("%d",&w[i][j]);
+  rep(k,n)rep(i,n)rep(j,n)w[i][j] = min(w[i][j],w[i][k]+w[k][j]);
+
+  sort(p,p+n);
+  rep(i,n)t[i] = min(r[i]-l[i], r[i]-w[s][i]);
+
+  rep(i,n){
+    int v = p[i].second;
+    if(t[v]<0)continue;
+
+    for(int j=i+1;j<n;j++){
+      int u = p[j].second;
+      if(r[v]+w[v][u] <= r[u]){
+	t[u] = max(t[u], t[v] + min(r[u]-w[v][u]-r[v], r[u]-l[u]) );
+      }
+    }
+  }
+
+  printf("%d\n",*max_element(t,t+n));
+}  

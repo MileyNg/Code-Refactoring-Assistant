@@ -1,0 +1,47 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int H,W,ans=0;
+
+int t[100];
+
+
+
+int calc(){
+  int L[100],R[100];
+  int res=0;
+  L[0]=t[0];
+  R[W-1]=t[W-1];
+
+  for(int i=1;i<W;i++){
+    L[i]=L[i-1]+(1-t[i]);
+  }
+  for(int i=W-2;i>=0;i--){
+    R[i]=R[i+1]+(1-t[i]);
+  }
+  res=max(R[0],L[W-1]);
+
+  for(int i=1;i<W-1;i++){
+    if(t[i]==1){
+      res=max(res,L[i-1]+R[i+1]+1);
+    }else{
+      res=max(res,L[i-1]+R[i+1]);
+    }
+  }
+  return res;
+}
+
+int main(){
+  cin>>H>>W;
+  ans=0;
+  for(int i=0;i<H;i++){
+    for(int j=0;j<W;j++){
+      cin>>t[j];
+      if(i>0)t[j]=1-t[j];
+    }
+    ans+=calc();
+  }
+  cout<<ans<<endl;
+
+  return 0;
+}

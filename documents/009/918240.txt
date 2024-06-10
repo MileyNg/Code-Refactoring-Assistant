@@ -1,0 +1,22 @@
+
+#include<stdio.h>
+int main()
+{
+float a,b,c,d,e,f,g,h,k,l,m,n,o,p; //(a,b),(c,d),(e,f),(g,h) are coordinates. Others are variables.
+while(scanf("%f%f%f%f%f%f%f%f",&a,&b,&c,&d,&e,&f,&g,&h)==8){; //Take input.
+
+k = e*(b-d) + f*(c-a) + a*d - b*c;
+l = g*(b-d) + h*(c-a) + a*d - b*c;
+
+m = a*(f-d) + b*(c-e) + e*d - f*c;
+n = g*(f-d) + h*(c-e) + e*d - f*c;
+
+o = c*(b-f) + d*(e-a) + a*f - b*e;
+p = g*(b-f) + h*(e-a) + a*f - b*e;
+
+if (l==0 || n==0 || p==0) printf("YES\n"); // If the point lies on side of triangle. I think this needs some modification.
+else if ((k/l>=0) && (m/n>=0) && (o/p>=0)) printf("YES\n");
+else printf("NO\n");
+}
+return 0;
+}

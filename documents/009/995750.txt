@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <set>
+using namespace std;
+int main(){
+  int n;
+  while(cin >> n &&n){
+	vector<vector<int> > field(n,vector<int>(n));
+	for(int i = 0;i < n;i++){
+	  for(int j = 0;j < n;j++){
+		cin >> field[i][j];
+	  }
+	}
+	
+	vector<int> min_row(n,1<<28);
+	vector<int> max_col(n,0);
+	for(int i = 0;i < n;i++){
+	  for(int j = 0;j < n;j++){
+		min_row[i] = min(min_row[i],field[i][j]);
+		max_col[j] = max(max_col[j],field[i][j]);
+	  }
+	}
+	
+	for(int i = 0;i < n;i++){
+	  for(int j =0;j < n;j++){
+		if(min_row[i] == max_col[j])cout << min_row[i] << endl;
+	  }
+	}
+	
+  }
+  return 0;
+}

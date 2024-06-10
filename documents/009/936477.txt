@@ -1,0 +1,325 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <utility>
+#include <exception>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <cstdlib>
+using namespace std;
+
+struct coordinate {
+	int x, y;
+
+	coordinate() { x = 0; y = 0; }
+	coordinate(int X, int Y) {
+		x = X; y = Y;
+	}
+
+	coordinate operator+(const int & a) const { // {{{
+		coordinate ret(x,y);
+
+		if(a < 0 || 6 < a)
+			throw exception();
+		
+		switch(a) {
+			case 0:
+				break;
+			case 1:
+				ret.y--; break;
+			case 2:
+				ret.y--; ret.x++; break;
+			case 3:
+				ret.x++; break;
+			case 4:
+				ret.y++; break;
+			case 5:
+				ret.x--; ret.y++; break;
+			case 6:
+				ret.x--;
+		}
+
+		return ret; // }}}
+	}
+
+	int direction(coordinate a) { // {{{
+		int diff_x, diff_y;
+		diff_x = a.x - x;
+		diff_y = a.y - y;
+
+		if(diff_x < -1 || diff_x > 1 || diff_y < -1 || diff_x > 1)
+			throw exception();
+
+		if(diff_x == 0 && diff_y == 0)
+			return 0;
+		else if(diff_x == 0 && diff_y == -1)
+			return 1;
+		else if(diff_x == 1 && diff_y == -1)
+			return 2;
+		else if(diff_x == 1 && diff_y == 0)
+			return 3;
+		else if(diff_x == 0 && diff_y == 1)
+			return 4;
+		else if(diff_x == -1 && diff_y == 1)
+			return 5;
+		else if(diff_x == -1 && diff_y == 0)
+			return 6;
+		else
+			throw exception(); // }}}
+	}
+
+	bool operator==(const coordinate a) const {
+		return (x == a.x) && (y == a.y);
+	}
+
+	bool operator<(const coordinate a) const {
+		if(x != a.x)
+			return x < a.x;
+		return y < a.y;
+	}
+};
+
+bool adjoin(coordinate a, coordinate b) {
+	int x, y;
+	x = a.x - b.x;
+	y = a.y - b.y;
+
+	if(x < -1 || 1 < x || y < -1 || 1 < y)
+		return false;
+	if((x == 1 && y == 1) || (x == -1 && y == -1))
+		return false;
+	return true;
+}
+
+struct snake {
+	coordinate head; // head;
+	int geometry;
+	snake() {};
+	snake(coordinate h, int geo) {
+		head = h; geometry = geo;
+	}
+};
+
+int encode_snake_geometory(vector<coordinate> v) {
+	int ret = 0;
+	for(int i = 0; i < v.size() - 1; i++) {
+		ret |= v[i].direction(v[i + 1]) << (3 * i);
+	}
+	return ret;
+}
+
+vector<coordinate> decode_snake_geometory(int n, coordinate c) {
+	vector<coordinate> ret;
+	ret.push_back(c);
+	for(int i = 0; (n >> (3 * i)) & 7; i++) {
+		ret.push_back(ret[i] + ((n >> (3 * i)) & 7));
+	}
+	return ret;
+}
+
+map<int, vector<pair<int,int> > > snake_transform; // first:geometory, second:(first:geometory, second:head move)
+
+bool save(vector<coordinate> geometory) {
+	for(int i = 0; i < geometory.size(); i++) {
+		for(int j = i + 2; j < geometory.size(); j++) {
+			/*
+			try {
+				geometory[i].direction(geometory[j]);
+				return false;
+			}
+			catch(exception e) {
+			}
+			*/
+			if(adjoin(geometory[i], geometory[j]))
+				return false;
+		}
+	}
+	return true;
+}
+
+vector<vector<coordinate> > next_geometory_result;
+vector<coordinate> next_geometory_search_table;
+int next_geometory_head_move;
+int next_geometory_from;
+void next_geometory(vector<coordinate> geometory, int indx, bool prev_move) {
+	if(indx >= geometory.size()) {
+		if(save(next_geometory_search_table)) {
+			next_geometory_result.push_back(next_geometory_search_table);
+			snake_transform[next_geometory_from].push_back(pair<int,int>(encode_snake_geometory(next_geometory_search_table), next_geometory_head_move));
+		}
+		return;
+	}
+
+	if(!prev_move) {
+		for(int i = 1; i <= 6; i++) {
+			coordinate c = geometory[indx];
+			c = c + i;
+			if(indx == 0)
+				next_geometory_head_move = i;
+			/*
+			try {
+				if(indx > 0)
+					c.direction(geometory[indx - 1]);
+				if(indx < geometory.size() - 1)
+					c.direction(geometory[indx + 1]);
+
+				next_geometory_search_table.push_back(c);
+				next_geometory(geometory, indx + 1, true);
+				next_geometory_search_table.pop_back();
+			}
+			catch (exception e){
+			}
+			*/
+
+			bool flag0, flag1;
+			flag0 = flag1 = true;
+			if(indx > 0) {
+				flag0 = adjoin(c, geometory[indx - 1]);
+			}
+			if(indx < geometory.size() - 1) {
+				flag1 = adjoin(c, geometory[indx + 1]);
+			}
+
+			if(flag0 && flag1) {
+				next_geometory_search_table.push_back(c);
+				next_geometory(geometory, indx + 1, true);
+				next_geometory_search_table.pop_back();
+			}
+		}
+	}
+	if(indx == 0)
+		next_geometory_head_move = 0;
+	next_geometory_search_table.push_back(geometory[indx]);
+	next_geometory(geometory, indx + 1, false);
+	next_geometory_search_table.pop_back();
+}
+
+void make_table(int n) {
+	vector<coordinate> geometory;
+	for(int i = 0; i < n; i++) {
+		geometory.push_back(coordinate(0, i));
+	}
+
+	queue<int> q;
+	q.push(encode_snake_geometory(geometory));
+
+	while(!q.empty()) {
+		int g;
+		g = q.front(); q.pop();
+		if(snake_transform.find(g) == snake_transform.end()) {
+			/* debug 
+			vector<coordinate> tmp;
+			tmp = decode_snake_geometory(g, coordinate(0,0));
+			for(int i = 0; i < tmp.size(); i++)
+				cout << "(" << tmp[i].x << ", " << tmp[i].y << ") ";
+			cout << endl;
+			debug */
+			next_geometory_from = g;
+			next_geometory_result.clear();
+			next_geometory_search_table.clear();
+			next_geometory(decode_snake_geometory(g, coordinate(0,0)), 0, false);
+			for(int i = 0; i < next_geometory_result.size(); i++) {
+				q.push(encode_snake_geometory(next_geometory_result[i]));
+			}
+		}
+	}
+}
+
+/* input value */
+int snake_nodes;
+vector<coordinate> snake;
+int rock_num;
+vector<coordinate> rock;
+coordinate scientist;
+
+/* input process */
+bool input() {
+	cin >> snake_nodes;
+	if(!snake_nodes)
+		return false;
+	for(int i = 0; i < snake_nodes; i++) {
+		int x, y;
+		cin >> x >> y;
+		snake.push_back(coordinate(x,y));
+	}
+	cin >> rock_num;
+	for(int i = 0; i < rock_num; i++) {
+		int x, y;
+		cin >> x >> y;
+		rock.push_back(coordinate(x,y));
+	}
+	int x, y;
+	cin >> x >> y;
+	scientist = coordinate(x,y);
+
+	return true;
+}
+
+void init() {
+	snake.clear();
+	rock.clear();
+	snake_transform.clear();
+	next_geometory_result.clear();
+	next_geometory_search_table.clear();
+}
+
+int solve() {
+	set<pair<int,coordinate> > moved;
+	queue<pair<int,coordinate> > q;
+	q.push(pair<int,coordinate>(encode_snake_geometory(snake), snake[0]));
+	int count = 0;
+	// debug
+	int prev;
+	while(true) {
+		queue<pair<int,coordinate> > next_q;
+		prev = 0;
+		while(!q.empty()) {
+			prev++;
+			pair<int,coordinate> tmp;
+			int g;
+			vector<pair<int,int> > next;
+			tmp = q.front(); q.pop();
+
+			if(tmp.second == scientist)
+				return count;
+			if(moved.find(tmp) != moved.end()) {
+				continue;
+			}
+			if(abs(tmp.second.x - scientist.x) + abs(tmp.second.y - scientist.y) > 20 - count) {
+				continue;
+			}
+			moved.insert(tmp);
+
+			next = snake_transform[tmp.first];
+			for(int i = 0; i < next.size(); i++) {
+				vector<coordinate> s;
+				s = decode_snake_geometory(next[i].first, tmp.second + next[i].second);
+				for(int j = 0; j < s.size(); j++) {
+					for(int k = 0; k < rock.size(); k++) {
+						if(s[j] == rock[k]) {
+							goto fail0;
+						}
+					}
+				}
+				next_q.push(pair<int,coordinate>(encode_snake_geometory(s), s[0]));
+				fail0:;
+			}
+		}
+		if(prev == 0)
+			exit(1);
+		q = next_q;
+		count++;
+	}
+
+	return -1;
+}
+
+int main() {
+	init();
+	while(input()) {
+		make_table(snake_nodes);
+		cout << solve() << endl;
+		init();
+	}
+}

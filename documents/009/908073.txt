@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+typedef long long LL;
+
+inline bool tri(LL a, LL b, LL c){
+    return a < b + c;
+}
+
+int main(){
+    int n;
+    cin >> n;
+    vector<LL> a(n);
+    REP(i, n) cin >> a[i];
+    sort(a.begin(), a.end(), greater<LL>());
+
+    LL ans = 0;
+
+    vector<LL> length;
+    REP(i, n - 2) {
+        if(tri(a[i], a[i + 1], a[i + 2])){
+            length.push_back(a[i] + a[i + 1] + a[i + 2]);
+            i += 2;
+        }
+        if(length.size() == 2) {
+            ans = max(ans, accumulate(length.begin(), length.end(), 0LL));
+            break;
+        }
+    }
+
+    LL b[2][3] = {};
+    int idx[2] = {};
+    for(int comb = (1 << 3) - 1; comb < (1 << 6);){
+        for(int i = 0; i + 6 <= n; i++){
+            memset(idx, 0, sizeof(idx));
+            for(int j = 0; j < 6; j++) {
+                b[ comb >> j & 1 ][ idx[comb >> j & 1]++ ] = a[i + j];
+            }
+            if(tri(b[0][0], b[0][1], b[0][2]) && tri(b[1][0], b[1][1], b[1][2])){
+                ans = max(ans, accumulate(b[0], b[0] + 3, 0LL) + accumulate(b[1], b[1] + 3, 0LL));
+            }
+        }
+
+        int x = comb & -comb, y = comb + x;
+        comb = ((comb & ~y) / x >> 1) | y;
+    }
+
+    cout << ans << endl;
+    return 0;
+}

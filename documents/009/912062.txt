@@ -1,0 +1,28 @@
+def solve(x1,y1,x2,y2,xq,yq)
+  r = nil
+  #直線が水平の場合
+  if y1 == y2
+    r = [xq, y1 * 2 - yq]
+  #直線が垂直の場合
+  elsif x1 == x2
+    r = [x1 * 2 - xq, yq]
+  #その他
+  else
+    xDiff = (x1 < x2)? x2 - x1 : x1 - x2
+    yDiff = (x1 < x2)? y2 - y1 : y1 - y2
+    m = yDiff / xDiff
+    d = y1 - m * x1
+    a = (m - 1.0) / (m + 1.0)
+    b = (yq + d) / (m + 1.0)
+    xr = -1 * xq * a + 2 * b
+    yr = x1 + yq - xr
+    r = [xr,yr]
+  end
+  r
+end
+
+while input = $stdin.gets do
+  v = input.chomp.split(",").map(&:to_f)
+  r = solve(v[0],v[1],v[2],v[3],v[4],v[5])
+  printf "%.4f %.4f\n", r[0], r[1]
+end

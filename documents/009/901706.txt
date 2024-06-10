@@ -1,0 +1,51 @@
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+
+typedef struct{
+	int a,b;
+}Line;
+
+void Change(int*n, Line*l){
+	if(*n==l->a){
+		*n = l->b;
+	}else if(*n==l->b){
+		*n = l->a;
+	}
+}
+
+int main(){
+	
+	int w,n;
+	Line *l;
+	int *bottom;
+	int cur;
+	
+	
+	cin>>w;cin>>n;
+	
+	l=new Line[n];
+	bottom=new int[w];
+	
+	for(int i=0;i<n;++i){
+		scanf("%d,%d",&(l[i].a),&(l[i].b));
+	}
+	
+	for(int i=0;i<w;++i){
+		cur = i+1;
+		
+		for(int j=0;j<n;++j){
+			Change(&cur,&(l[j]));
+		}
+		
+		bottom[cur-1] = i+1;
+	}
+	
+	for(int i=0;i<w;++i)
+		cout<<bottom[i]<<endl;
+
+	return 0;
+
+}

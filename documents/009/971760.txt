@@ -1,0 +1,49 @@
+n = gets.chomp.to_i
+
+for k in (1..n)
+  gets
+
+  pl = []
+  8.times do
+    pl.push gets.chomp.split("").map{|s| s.to_i}
+  end
+
+  x0 = gets.chomp.to_i - 1
+  y0 = gets.chomp.to_i - 1
+  #p [pl, x0, y0]
+
+  pl[y0][x0] = 0
+  queue = [[x0, y0]]
+
+  while queue.length > 0
+    x, y = queue.shift
+
+    for x1 in ([x - 3, 0].max..(x - 1))
+      if pl[y][x1] == 1
+        pl[y][x1] = 0
+        queue.push [x1, y]
+      end
+    end
+    for x1 in ((x + 1)..[x + 3, 7].min)
+      if pl[y][x1] == 1
+        pl[y][x1] = 0
+        queue.push [x1, y]
+      end
+    end
+    for y1 in ([y - 3, 0].max..(y - 1))
+      if pl[y1][x] == 1
+        pl[y1][x] = 0
+        queue.push [x, y1]
+      end
+    end
+    for y1 in ((y + 1)..[y + 3, 7].min)
+      if pl[y1][x] == 1
+        pl[y1][x] = 0
+        queue.push [x, y1]
+      end
+    end
+  end
+
+  puts "Data #{k}:"
+  pl.each{|hl| puts hl.join("")}
+end

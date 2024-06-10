@@ -1,0 +1,67 @@
+#include <stdio.h>
+int memo[11][400];
+void dfs(int route[],int sum);
+
+int main(){
+	int i,j;
+	for(i=0;i<=10;i++){
+		for(j=0;j<400;j++)memo[i][j]=0;
+	}
+
+	int route[10];
+	int sum;
+
+	for(i=0;i<10;i++)route[i]=-1;
+	for(i=0;i<=9;i++){
+		sum=0;
+		route[0]=i;
+		dfs(route,sum);
+		route[0]=-1;
+	}
+
+	int N;
+	int S;
+	while(scanf("%d %d",&N,&S)!=EOF){
+		if(S>=400 || N>10){
+			printf("0");
+		}else{
+			printf("%d\n",memo[N][S]);
+		}
+	}
+
+
+
+	return 0;
+}
+
+
+void dfs(int route_[],int sum){
+	int route[10];
+	int used[10];
+	int i;
+	for(i=0;i<10;i++)used[i]=0;
+	int now=-1;
+	for(i=0;i<10;i++){
+		route[i]=route_[i];
+		if(route[i]!=-1){
+			now=i;
+			used[route[i]]=1;
+		}
+	}
+	sum+=(now+1)*route[now];
+	memo[now+1][sum]+=1;
+	if(now==10-1){
+		//if(S==sum)Ans++;
+		return;
+	}
+
+	for(i=0;i<=9;i++){
+		if(used[i]==0){
+			route[now+1]=i;
+			dfs(route,sum);
+			route[now+1]=-1;
+		}
+	}
+	sum-=(now+1)*route[now];
+	return;
+}

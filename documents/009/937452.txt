@@ -1,0 +1,64 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+int main(void){
+    char sen1[1000],sen2[1000][32];
+    int i,j,k,l,MAX1=0,MAX2=0,output1[1000]={0},output2[1000]={0},a=0,b=0;
+    gets(sen1);
+    for(i=0,j=0,k=0;sen1[i]!='\0';i++){
+        //printf("%c\n",sen1[i]);
+        if(isspace(sen1[i])!=0){
+            for(l=0;l<k;l++){
+                if(strcmp(sen2[k],sen2[l])==0){
+                    output1[l]++;
+                    //printf("test\n");
+                    break;
+                }
+
+            }
+            if(output2[k]<strlen(sen2[k])){
+                output2[k]=strlen(sen2[k]);
+            }
+            sen2[k][j]='\0';
+            //printf("%d %d\n",k,j);
+            k++;
+            j=0;
+        }
+        else{
+            sen2[k][j]=sen1[i];
+            j++;
+        }
+    }
+    for(l=0;l<k;l++){
+        if(strcmp(sen2[k],sen2[l])==0){
+            output1[l]++;
+            //printf("test\n");
+            break;
+        }
+
+    }
+    if(output2[k]<strlen(sen2[k])){
+        output2[k]=strlen(sen2[k]);
+    }
+
+    /*for(i=0;i<=k;i++){
+        printf("%d %d\n",output1[i],output2[i]);
+    }*/
+    /*for(i=0;i<=k;i++){
+        for(j=0;j<32;j++)printf("%c",sen2[i][j]);
+    puts("");
+    }*/
+
+    for(j=0;j<=i;j++){
+        if(output1[j]>MAX1){
+            a=j;
+        }
+    }
+    for(k=0;k<=i;k++){
+        if(output2[k]>MAX2){
+            b=k;
+        }
+    }
+    printf("%s %s\n",sen2[a],sen2[b]);
+    return 0;
+}

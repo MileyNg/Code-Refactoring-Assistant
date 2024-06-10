@@ -1,0 +1,73 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int a, b, d;
+
+int main(){
+  while(scanf("%d%d%d", &a, &b, &d) && a+b+d){
+    int resx = INF/2, resy = INF/2, r, l, y;
+    rep(x, 1000000){
+      r = a*x + d;
+      //      printf("%d\n", r);
+      if(!(r%b)){
+	y = r/b;
+	if(x+y < resx+resy){
+	  resx = x;
+	  resy = y;
+	}else if(x+y == resx+resy && a*x+b*y < a*resx+b*resy){
+	  resx = x;
+	  resy = y;
+	}
+      }
+      l = a*x - d;
+      if(l < 0) l *= -1;
+      if(l > 0 && !(l%b)){
+	y = l/b;
+	if(x+y < resx+resy){
+	  resx = x;
+	  resy = y;
+	}else if(x+y == resx+resy && a*x+b*y < a*resx+b*resy){
+	  resx = x;
+	  resy = y;
+	}
+      }else if(l == 0){
+	y = 0;
+	if(x+y < resx+resy){
+	  resx = x;
+	  resy = y;
+	}else if(x+y == resx+resy && a*x+b*y < a*resx+b*resy){
+	  resx = x;
+	  resy = y;
+	}
+      }
+    }
+
+    printf("%d %d\n", resx, resy);
+  }
+  return 0;
+}

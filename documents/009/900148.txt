@@ -1,0 +1,14 @@
+n,q = map(int, raw_input().split())
+S = [set([i]) for i in range(n)]
+ref = [0]*n
+for i in range(q):
+	com,x,y = map(int, raw_input().split())
+	if x > y: x,y = y,x
+	if com == 0: # unite
+		x += ref[x]; y += ref[y]
+		S[x] = S[x]|S[y]
+		S.pop(y)
+		for j in range(y,n):
+			ref[j] -= 1
+	else: # same
+		print 1 if y in S[x+ref[x]] else 0

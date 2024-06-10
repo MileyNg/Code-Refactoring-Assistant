@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    const int sweet = 0;
+
+    int M, N;
+    cin >> M >> N;
+
+    vector<vector<int>> a(M, vector<int>(N));
+    for (int i=0; i<M; ++i) {
+        for (int j=0; j<N; ++j) {
+            cin >> a[i][j];
+        }
+    }
+
+    int count = 0;
+    for (int i=0; i<M; ++i) {
+        int j = 0;
+        int k = N - 1;
+        while (j <= k) {
+            if (a[i][j] == sweet) {
+                count ++;
+                if (j + 1 < N) a[i][j + 1] = 1 - a[i][j + 1];
+                if (i + 1 < M) a[i + 1][j] = 1 - a[i + 1][j];
+                j ++;
+            } else {
+                count += 1 - a[i][k];
+                if (0 <= k - 1) a[i][k - 1] = 1 - a[i][k - 1];
+                if (i + 1 < M) a[i + 1][k] = 1 - a[i + 1][k];
+                k --;
+            }
+        }
+    }
+    cout << count << endl;
+
+    return 0;
+}

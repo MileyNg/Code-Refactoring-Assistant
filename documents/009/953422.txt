@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdio.h>
+#ifndef min
+#define min(a,b) (a) < (b) ? (a) : (b)
+#endif
+#define INF 9999999
+int e,*d;
+
+int all(){
+	int x,y,p,q,minm=INF;
+	for(y=(int)sqrt(e);y>=0;y--){
+		p=y*y;
+		for(x=(int)pow(e,5.0/12.0);x>=0;x--){
+			q=x*x*x+p;
+			if(q>e)continue;
+			minm=min(minm,x+y+(e-q));
+			//printf("x=%d,y=%d,x+y+(e-q)=%d\n",x,y,x+y+(e-q));
+		}
+	}
+	return minm;
+}
+/*void init(){
+	int x,y,z,p;
+	for(x=0;x<=100;x++)for(y=0;y<=1000;y++){
+		p=x*x*x+y*y;
+		if(p<=1000000){
+			if(d[p])d[p]=min(d[p],x+y);
+			else d[p]=x+y;
+		}
+	}
+	for(x=2;x<1000000;x++)if(!d[x])for(y=x-1,z=1;;y--,z++)if(d[y]){
+					d[x]=d[y]+z;
+					break;
+	}
+}*/
+int main(){
+	int i,j;
+	d=(int *)malloc(sizeof(int)*1000000);
+	for(i=0;i<=1000000;i++)d[i]=0;
+	//init();
+	while((scanf("%d",&e))!=-1){
+		if(e==0)break;
+		printf("%d\n",all());
+	}
+	return 0;
+}

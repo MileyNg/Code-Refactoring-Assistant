@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct point {
+	double x, y;
+	point(double x_ = 0, double y_ = 0):x(x_), y(y_) {}
+
+	point operator+(const point &p) const {
+		return point(x + p.x, y + p.y);
+	}
+
+	point operator*(const double d) const {
+		return point(x * d, y * d);
+	}
+};
+
+inline point rotate(const point &p, double theta) {
+	const double s = sin(theta);
+	const double c = cos(theta);
+	return point(c * p.x - s * p.y, s * p.x + c * p.y);
+}
+
+inline double degree_to_radian(double degree) {
+	return degree / 180.0 * M_PI;
+}
+
+int main() {
+	point current(0, 0);
+	point direction(0, 1);
+
+	for(int d, t; scanf("%d,%d", &d, &t) == 2 && (d | t);) {
+		current = current + direction * d;
+		direction = rotate(direction, -degree_to_radian(t));
+	}
+
+	cout << (int)current.x << endl;
+	cout << (int)current.y << endl;
+
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,129 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+
+
+int R;
+int W1, W2, H1, H2;
+int X1, X2, Y1, Y2;
+int map1[550][550], map2[550][550];
+
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+
+struct Hole {
+	int level;
+	int x, y;
+	
+	Hole(int _l, int _x, int _y) : level(_l), x(_x), y(_y) {}
+};
+
+bool operator < (const Hole& h1, const Hole& h2) { return h1.level < h2.level; }
+bool operator > (const Hole& h1, const Hole& h2) { return h1.level > h2.level; }
+bool operator == (const Hole& h1, const Hole& h2) { return h1.level == h2.level; }
+bool operator <= (const Hole& h1, const Hole& h2) { return h1.level <= h2.level; }
+bool operator >= (const Hole& h1, const Hole& h2) { return h1.level >= h2.level; }
+
+struct Data {
+	int need, rooms;
+	Data(int _n, int _r) : need(_n), rooms(_r) {}
+};
+
+bool operator < (const Data& d1, const Data& d2) { return d1.need < d2.need; }
+bool operator > (const Data& d1, const Data& d2) { return d1.need > d2.need; }
+bool operator == (const Data& d1, const Data& d2) { return d1.need == d2.need; }
+bool operator <= (const Data& d1, const Data& d2) { return d1.need <= d2.need; }
+bool operator >= (const Data& d1, const Data& d2) { return d1.need >= d2.need; }
+
+int solver() {
+	priority_queue<Hole, vector<Hole>, greater<Hole> > q1, q2;
+	q1.push(Hole(1, X1-1, Y1-1)); q2.push(Hole(1, X2-1, Y2-1));
+	map1[Y1-1][X1-1] = -1; map2[Y2-1][X2-1] = -1;
+	
+	vector<Data> v1, v2;
+	
+	int lev = 0;
+	int cnt = 0;
+	do {
+		Hole h = q1.top(); q1.pop();
+		if (h.level <= lev) {
+			cnt++;
+		} else {
+			v1.push_back(Data(lev, cnt));
+			lev = h.level;
+			cnt++;
+		}
+		
+		for (int d=0; d<4; d++) {
+			int x = h.x + dx[d], y = h.y + dy[d];
+			if (!(0<=x && x<W1 && 0<=y && y<H1)) continue;
+			if (map1[y][x]==-1) continue;
+			q1.push(Hole(map1[y][x], x, y));
+			map1[y][x] = -1;
+		}
+		
+	} while(!q1.empty());
+	v1.push_back(Data(lev, cnt));
+	
+	lev = 0;
+	cnt = 0;
+	do {
+		Hole h = q2.top(); q2.pop();
+		if (h.level <= lev) {
+			cnt++;
+		} else {
+			v2.push_back(Data(lev, cnt));
+			lev = h.level;
+			cnt++;
+		}
+		
+		for (int d=0; d<4; d++) {
+			int x = h.x + dx[d], y = h.y + dy[d];
+			if (!(0<=x && x<W2 && 0<=y && y<H2)) continue;
+			if (map2[y][x]==-1) continue;
+			q2.push(Hole(map2[y][x], x, y));
+			map2[y][x] = -1;
+		}
+		
+	} while(!q2.empty());
+	v2.push_back(Data(lev, cnt));
+	
+	int ret = 1e8;
+	int i = 0, j = (int)v2.size()-1;
+	while (i<(int)v1.size() && j >= 0) {
+		Data d1 = v1[i], d2 = v2[j];
+		if (d1.rooms + d2.rooms >= R) {
+			ret = min(ret, d1.need + d2.need);
+			j--;
+		} else {
+			i++;
+		}
+	}
+	
+	return ret;
+}
+
+int main() {
+	while (1) {
+		cin >> R; if (R==0) break;
+		cin >> W1 >> H1 >> X1 >> Y1;
+		for (int i=0; i<H1; i++) {
+			for (int j=0; j<W1; j++) {
+				cin >> map1[i][j];
+			}
+		}
+		
+		cin >> W2 >> H2 >> X2 >> Y2;
+		for (int i=0; i<H2; i++) {
+			for (int j=0; j<W2; j++) {
+				cin >> map2[i][j];
+			}
+		}
+		
+		cout << solver() << endl;
+	}
+	
+	return 0;
+}

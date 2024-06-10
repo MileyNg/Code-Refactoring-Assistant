@@ -1,0 +1,53 @@
+#include<iostream>
+using namespace std;
+int  q1,b,q2,ans;
+int c1,c2;
+int L,R,M;
+
+int  calcB(int A){
+  int money = b-A*c1;
+  if(money>=0)return money/c2;
+  else return -1000;
+}
+
+  
+bool check(int x){
+  int A,B;
+  A=x;
+  B=calcB(A);
+  if(B>=0&&A>0&&A+B>=q1)return true;
+  else return false;
+}
+
+int main(){
+  while(cin>>q1){
+    ans=-1;
+    if(q1==0)break;
+    cin>>b>>c1>>c2>>q2;
+
+    L=1;
+    R=q2;
+    M=(L+R)/2;
+
+    while(L<=R){
+      if(check(M)&&!check(M+1)){
+	break;
+      }else if(check(M)){
+	L=M+1;
+	M=(L+R)/2;
+      }else{
+	R=M-1;
+	M=(L+R)/2;
+      }
+	
+    }
+
+
+    if(check(M)&&check(M+1)==false  || (M==q2&&check(M))){
+      
+      cout<<M<<' '<<calcB(M)<<endl;
+    } else cout<<"NA"<<endl;
+    
+  }
+  return 0;
+}

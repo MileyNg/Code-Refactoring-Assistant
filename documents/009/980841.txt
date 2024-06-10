@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+int v[110][110];
+int main(){
+	ios::sync_with_stdio(false);
+
+	int n, m, s, g1, g2;
+	while (cin >> n >> m >> s >> g1 >> g2, n){
+		--s, --g1, --g2;
+		MEMSET(v, 0x7f);
+		rep(i, n) v[i][i] = 0;
+		rep(i, m){
+			int a, b, c;
+			cin >> a >> b >> c;
+			v[a - 1][b - 1] = c;
+		}
+
+		rep(i, n) rep(j, n) rep(k, n) v[j][k] = min((ll)v[j][k], (ll)v[j][i] + v[i][k]);
+
+		ll ans = 1e8;
+		rep(i, n){
+			ans = min(ans, (ll)v[s][i] + v[i][g1] + v[i][g2]);
+		}
+		cout << ans << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+#define NUM 10
+
+bool rec( queue< int >, int, int );
+
+int main() {
+	int n;
+	cin >> n;
+	while( n-- ) {
+		int in[ NUM ];
+		queue< int > que;
+		for( int i = 0; i < NUM; ++i ) { cin >> in[ i ]; }
+		for( int i = 0; i < NUM; ++i ) { que.push( in[ i ] ); }
+
+		if( rec( que, 0, 0 ) ) { cout << "Yes" << endl; }
+		else { cout << "No" << endl; }
+	}
+	return 0;
+}
+
+bool rec( queue< int > que, int topL, int topR ) {
+	if( que.empty() ) { return true; }
+	int n = que.front();  que.pop();
+	if( ( n > topL && rec( que, n, topR ) ) || ( n > topR && rec( que, topL, n ) ) ) { return true; }
+	return false;
+}

@@ -1,0 +1,43 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+#define PI acos(-1)
+using namespace std;
+int tile[100][200]={0};
+int co=100;
+void ride(int i,int j,int tile[100][200],int& count){
+  int tmp=tile[i][2*j];
+  tile[i][2*j]=co;
+  if(tile[tile[i][2*j+1]][2*tmp]==co){count++;return;}
+  else if(tile[tile[i][2*j+1]][2*tmp]>100&&tile[tile[i][2*j+1]][2*tmp]<co)return;
+  else ride(tile[i][2*j+1],tmp,tile,count);
+
+}
+int main(){
+  int n;
+  while(cin>>n,n){
+    int count=0;
+    rep(i,n){
+      rep(j,2*n){
+	cin>>tile[i][j];
+      }
+    }
+    rep(i,n){
+      rep(j,n){
+	co++;
+	if(tile[i][2*j]>100)continue;
+	ride(i,j,tile,count);
+      }
+    } 
+    cout<<count<<endl;
+  }
+
+}

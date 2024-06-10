@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX 350
+typedef long long ll;
+
+int N, M;
+string name[MAX];
+int cost[MAX];
+int rank[MAX];
+
+void solve(){
+  ll dp[MAX][MAX];
+  memset(dp, 0, sizeof(dp));
+
+  for(int i = 0 ; i < N ; i++){
+    for(int j = 0 ; j <= M ; j++){
+      for(int k = 0 ; k*cost[i] <= j ; k++){
+        dp[i+1][j] = max(dp[i+1][j], dp[i][j-k*cost[i]]+k*rank[i]);
+      }
+    }
+  }
+  cout << dp[N][M] << endl;
+}
+
+int main(){
+  int V,D,L;
+  string str;
+  while(cin >> N >> M){
+    memset(cost, 0, sizeof(cost));
+    memset(rank, 0, sizeof(rank));
+
+    for(int i = 0 ; i < N ; i++){
+      cin.ignore(); 
+      getline(cin,name[i]);
+      cin >> cost[i] >> V >> D >> L;
+      rank[i] = max(V, max(D, L));
+    }
+    solve();
+  }
+
+  return 0;
+}

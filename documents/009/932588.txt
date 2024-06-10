@@ -1,0 +1,49 @@
+#include <cstdio>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+int N;
+string C;
+
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    cin >> C;
+    return true;
+}
+
+int main() {
+    while (input()) {
+        vector<int> p(N);
+        int f = 0;
+        for (int i = 0; i < 100; i++) {
+            int x = i % N;
+            if (C[i] == 'M') {
+                p[x]++;
+            } else if (C[i] == 'S') {
+                f += p[x] + 1;
+                p[x] = 0;
+            } else { assert(C[i] == 'L');
+                p[x] += f + 1;
+                f = 0;
+            }
+        }
+        sort(p.begin(), p.end());
+        cout << p[0];
+        for (int i = 1; i < N; i++) {
+            cout << " " << p[i];
+        }
+        cout << " " << f;
+        cout << endl;
+    }
+    return 0;
+}

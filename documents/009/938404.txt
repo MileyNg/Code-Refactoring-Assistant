@@ -1,0 +1,79 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cmath>
+#include <string.h>
+
+using namespace std;
+
+const int MAXN = 200000 + 100;
+int n, m;
+struct Node
+{
+    int u, v, w;
+}edge[MAXN];
+int pre[MAXN];
+
+int finds(int x)
+{
+    return x == pre[x] ? x : (pre[x] = finds(pre[x]));
+}
+
+bool cmp(Node a, Node b)
+{
+    return a.w < b.w;
+}
+
+void solve()
+{
+    int ans = 0;
+
+    sort(edge, edge + m, cmp);
+
+    for (int i = 0; i <= n; i++)
+    {
+        pre[i] = i;
+    }
+
+    int num = 0;
+
+    for (int i = 0; i < m; i++)
+    {
+        int fa = finds(edge[i].u), fb = finds(edge[i].v);
+
+        if (fa != fb)
+        {
+            pre[fa] = fb;
+            num++;
+            if (num == n / 2) ans = edge[i].w;
+            if (num == n - 1) break;
+        }
+    }
+
+    printf("%d\n", ans);
+}
+
+void input()
+{
+    int u, v, w;
+
+    while (scanf("%d %d", &n, &m) != EOF)
+    {
+        if (n == 0 && m == 0)
+        {
+            break;
+        }
+        for (int i = 0; i < m; i++)
+        {
+            scanf("%d %d %d", &edge[i].u, &edge[i].v, &edge[i].w);
+        }
+
+        solve();
+    }
+}
+
+int main()
+{
+    input();
+    return 0;
+}

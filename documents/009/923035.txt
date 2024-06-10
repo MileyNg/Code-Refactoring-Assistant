@@ -1,0 +1,24 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+	int n, r, p, c;
+	int *before, *after;
+	while(cin >> n >> r && n){
+		before = new int[n];
+		after = new int[n];
+		for(int i=0; i<n; i++) before[i]=n-i, after[i]=n-i;
+		for(int i=0; i<r; i++){
+			cin >> p >> c;
+			for(int i=0; i<c; i++) after[i] = before[p-1+i];
+			for(int i=0; i<p-1; i++) after[c+i] = before[i];
+			for(int i=0; i<n; i++) before[i]=after[i];
+		}
+		cout << after[0] << endl;
+		delete[] after;
+		delete[] before;
+	}
+	return 0;
+}

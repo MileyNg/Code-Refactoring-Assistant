@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+#define exist(c, x) find(all(c), x) != (c).end()
+#define mp(a, b) make_pair(a, b)
+const int inf = 1 << 28;
+const int dx[][9] = {{-2, -1, -1, 0, 0, 0, 1, 1, 2}, {-2, -1, -1,  0,  0,  0,  1,  1,  2}},
+          dy[][9] = {{ 1,  1,  2, 1, 2, 3, 1, 2, 1}, {-1, -1, -2, -1, -2, -3, -1, -2, -1}};
+
+int w, h;
+vector<vector<int> > cost;
+
+inline bool inrect(int x, int y){
+    return 0 <= x && x < h && 0 <= y && y < w;
+}
+
+int solve(){
+    vector<vector<vector<int> > > mem(h, vector<vector<int> >(w, vector<int>(2, inf)));
+    auto comp = [&](const pair<int, int> &a, const pair<int, int> &b){
+        int ax = a.first / 100, ay = a.first % 100, bx = b.first / 100, by = b.first % 100;
+        return mem[bx][by][b.second] < mem[ax][ay][a.second];
+    };
+    priority_queue<pair<int, int>, vector<pair<int, int> >, decltype(comp)> q(comp);
+    vector<int> T;
+    rep(j, w){
+        if(cost[0][j] == 0)T.push_back(j);
+        if(cost[h-1][j] == -1){
+            rep(foot, 2){
+                mem[h-1][j][foot] = 0;
+                q.push(mp((h-1) * 100 + j, foot));
+            }
+        }
+    }
+    while(!q.empty()){
+        pair<int, int> p = q.top(); q.pop();
+        if(exist(T, p.first))continue;
+        int x = p.first / 100, y = p.first % 100;
+        rep(k, 9){
+            int nx = x + dx[p.second][k], ny = y + dy[p.second][k];
+            if(inrect(nx, ny) && 0 <= cost[nx][ny] && mem[nx][ny][p.second^1] == inf){
+                mem[nx][ny][p.second^1] = mem[x][y][p.second] + cost[nx][ny];
+                q.push(mp(nx * 100 + ny, p.second ^ 1));
+            }
+        }
+    }
+    int res = inf;
+    for(auto t: T)rep(k, 2)res = min(res, mem[0][t][k]);
+    return res == inf? -1: res;
+}
+
+int main(){
+    while(cin >> w >> h, w|h){
+        cin.ignore();
+        cost.assign(h, vector<int>(w, 0));
+        rep(i, h){
+            string in;
+            getline(cin, in);
+            in.erase(remove_if(all(in), [](char c){return c == ' ';}), in.end());
+            rep(j, w)cost[i][j] = in[j] == 'X'? -2: in[j] == 'S'? -1: in[j] == 'T'? 0: in[j] - '0';
+        }
+        cout << solve() << '\n';
+    }
+    return 0;
+}

@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include<string.h>
+#define LENGTH 201
+#define compile 0
+
+void func_change(char f_str[], char f_temp[], int num)
+{
+	static int counter = 0;
+	int f_i = 0;
+	int f_counter = 0;
+	
+	char f_temp2[LENGTH];
+	
+	for(f_i = num; f_str[f_i] != '\0'; f_i++)
+	{
+		f_temp[f_counter] = f_str[f_i];
+		
+		#if compile == 1
+		puts("done line 11 for-roop");
+		printf("temp[%d] = %c str[%d] = %c\n", f_counter, f_temp[f_counter], f_i, f_str[f_i]);
+		puts("");
+		#endif
+		
+		f_counter++;
+	}
+	
+	for(f_i = 0; f_i < num; f_i++)
+	{
+		f_temp[f_counter] = f_str[f_i];
+		
+		#if compile == 1
+		puts("done line 26 for-roop");
+		printf("temp[%d] = %c str[%d] = %c\n", f_counter, f_temp[f_counter], f_i, f_str[f_i]);
+		puts("");
+		#endif
+		
+		f_counter++;
+	}
+	
+	f_temp[f_counter] = '\0';
+	strcpy(f_str, f_temp);
+}
+
+main()
+{
+	char str[LENGTH];
+	char temp[LENGTH];
+	int h = 0;
+	int m = 0;
+	int i = 0;
+	
+	while(1)
+	{
+		scanf("%s", str);
+		if(str[0] == '-')
+		{
+			break;
+		}
+		
+		#if compile == 2
+		printf("str = %sa\n", str);
+		#endif
+		
+		scanf("%d", &m);
+		
+		#if compile == 2
+		printf("str = %s\n", str);
+		printf("m = %d\n", m);
+		#endif
+		
+		for(i = 0; i < m; i++)
+		{
+			fflush(stdin);
+			scanf("%d", &h);
+			
+			#if compile == 1
+			printf("h%d = %d\n", i, h);
+			printf("done func_change %d\n", i);
+			#endif
+			
+			func_change(str, temp, h);
+			
+		}
+		
+		#if compile == 1
+		printf("str = %s\ntemp = ", str);
+		#endif
+		
+		printf("%s\n", temp);
+		#if compile == 1
+		printf("str = %s\n", str);
+		#endif
+	}
+	#if compile == 1
+	puts("end while-roop");
+	#endif
+	
+	return 0;
+}

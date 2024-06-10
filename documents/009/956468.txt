@@ -1,0 +1,33 @@
+import bisect
+r = 1000001
+p = [1]*r
+p[0] = p[1] = 0
+for i in range(int(r**0.5)):
+	if p[i]:
+		p[2*i::i] = [0]*len(p[2*i::i])
+
+while 1:
+	n,x = map(int,raw_input().split())
+	if n == 0: break
+	menu = [int(raw_input()) for i in range(n)]
+	cheapest = min(menu)
+	dp = [0]*(x+1)
+	check = set()
+	yet = set([i for i in range(cheapest,x+1)])
+	for cost in menu:
+		if cost <= x:
+			dp[cost] = 1
+			check.add(cost)
+	for cost in menu:
+		if cost + cheapest > x: continue
+		ls = sorted(list(yet-check))
+		for i in ls[bisect.bisect(ls,cost+cheapest):]:
+			if dp[i-cost]:
+				dp[i] = 1
+				check.add(i)
+	for i in range(x,0,-1):
+		if p[i]*dp[i]:
+			print i
+			break
+	else:
+		print "NA"

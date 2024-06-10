@@ -1,0 +1,101 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<algorithm>
+#define INIT 100
+using namespace std;
+struct circle
+{
+    int x, y, r;
+    int c;
+}cc[24];
+char dp[(1<<24)];
+int n;
+bool intersect(int i, int j)
+{
+    int x1, y1, x2, y2;
+    int r1, r2;
+    x1 = cc[i].x, y1 = cc[i].y, r1 = cc[i].r;
+    x2 = cc[j].x, y2 = cc[j].y, r2 = cc[j].r;
+
+    if( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) >=  (r1+r2)*(r1+r2))
+    {
+        return false;
+
+    }//騾」蠢?キ夐聞>=蜊雁セ大柱?夂┌逶ク莠、
+    else
+        return true;
+
+}
+bool check(int a, int b, int state)
+{
+    if( ((1<<a-1)&state) == 0 || ((1<<b-1)&state) == 0 )
+    {
+        return false; //蟾イ邯楢「ォ諡ソ襍ー
+    }
+
+    if(cc[a].c != cc[b].c) return false; //鬘剰牡荳榊酔
+
+
+    int p[2];
+    p[0]=a, p[1]=b;
+
+    for(int k=0; k<2; k++)
+    {
+        int x =  (1<<p[k]-1)-1;  // n-p[k]+1蛟?  p[k]-1蛟?
+        if( (x&state) > 0)//state逧а[k]菴榊承驍頑怏1 ((p[k]蜿ッ閭ス陲ォ蜈カ莉也乢蟄占搭菴?        {
+            for(int i=1; i<=p[k]-1; i++)
+            {
+                int test = 1 << i-1;
+                if( (test&state) && intersect(p[k], i) )
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+int DP(int state)
+{
+    if(state==0) return 0;
+    if(dp[state]!=INIT) return dp[state];
+
+    for(int i=1; i<n; i++)
+    {
+        for(int j=i+1; j<=n; j++)
+        {
+            if( check(i,j, state) )
+            {
+                int mask = (1<<i-1) | (1<<j-1);
+
+                dp[state^mask] = DP(state^mask);
+                if(dp[state^mask]+2 > dp[state] || dp[state]==INIT)
+                    dp[state] = dp[state^mask]+2;
+            }
+        }
+    }
+    return dp[state]==INIT? 0:dp[state];
+}
+
+int main()
+{
+
+    while(scanf("%d",&n) && n)
+    {
+        for(int i=1; i<=n; i++)
+            scanf("%d%d%d%d",&cc[i].x, &cc[i].y, &cc[i].r, &cc[i].c);
+
+        int state = (1<<n)-1;
+        for(int i=0; i<=state; i++)
+            dp[i] = INIT;
+
+        dp[state] = DP(state);
+
+        printf("%d\n",dp[state]);
+
+
+    }
+
+    return 0;
+}

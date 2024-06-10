@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+
+
+using namespace std;
+
+typedef struct{
+    int weight;
+    int value;
+} treasure;
+
+typedef struct{
+    int value;
+    bool flag[1001];
+} thief;
+
+int main(void){
+    int w,n,cs=0;
+    thief h[1001];
+    treasure tr[1001];
+
+
+    while(true){
+        cin>>w;
+        if(w==0) break;
+        cs++;
+        cin>>n;
+
+        for(int i=0;i<1001;i++){
+            h[i].value=0;
+            for(int j=0;j<1001;j++){
+                h[i].flag[j]=false;
+            }
+        }
+
+        for(int i=0;i<n;i++){
+            int w,v;
+            scanf("%d,%d",&v,&w);
+            tr[i].weight=w;
+            tr[i].value=v;
+        }
+
+        for(int i=1;i<=w;i++){
+            for(int j=0;j<n;j++){
+                if(i>=tr[j].weight && !h[i-tr[j].weight].flag[j] && h[i-tr[j].weight].value+tr[j].value){
+                    h[i].value=h[i-tr[j].weight].value+tr[j].value;
+                    h[i].flag[j]=true;
+                }
+            }
+        }
+
+        int max_w;
+
+        for(max_w=w;max_w>1 && h[max_w].value==h[max_w-1].value;max_w--);
+
+        cout<<"Case "<<cs<<":"<<endl;
+        cout<<h[w].value<<"\n"<<max_w<<endl;
+    }
+
+    return 0;
+}

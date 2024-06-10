@@ -1,0 +1,85 @@
+#include <iostream>
+
+using namespace std;
+
+const bool O = true, X = false;
+
+const bool A[4] = {
+    O, O,
+    O, O
+};
+
+const bool B[4] = {
+    O,
+    O,
+    O,
+    O
+};
+
+const bool C[4] = {
+    O, O, O, O
+};
+
+const bool D[6] = {
+    X, O,
+    O, O,
+    O, X
+};
+
+const bool E[6] = {
+    O, O, X,
+    X, O, O
+};
+
+const bool F[6] = {
+    O, X,
+    O, O,
+    X, O
+};
+
+const bool G[6] = {
+    X, O, O,
+    O, O, X
+};
+
+bool matched(const bool map[8][8], const bool* pattern, const int h, const int w) {
+    for (int i = 0; i < 8 - h; i++) {
+        for (int j = 0; j < 8 - w; j++) {
+            bool unmatched = false;
+            for (int a = 0; a < h; a++) {
+                for (int b = 0; b < w; b++) {
+                    if (map[i + a][j + b] != pattern[a * w + b]) {
+                        unmatched = true;
+                        break;
+                    }
+                }
+            }
+            if (!unmatched) return true;
+        }
+    }
+    return false;
+}
+
+int main(void) {
+    bool map[8][8];
+    char c;
+    while (true) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                cin >> c;
+                map[i][j] = (c == '1');
+            }
+        }
+        if (cin.eof()) break;
+        cin.ignore();
+        char p;
+        if      (matched(map, A, 2, 2)) cout << "A" << endl;
+        else if (matched(map, B, 4, 1)) cout << "B" << endl;
+        else if (matched(map, C, 1, 4)) cout << "C" << endl;
+        else if (matched(map, D, 3, 2)) cout << "D" << endl;
+        else if (matched(map, E, 2, 3)) cout << "E" << endl;
+        else if (matched(map, F, 3, 2)) cout << "F" << endl;
+        else if (matched(map, G, 2, 3)) cout << "G" << endl;
+    }
+    return 0;
+}

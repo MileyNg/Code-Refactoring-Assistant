@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cstring>
+#include <stack>
+
+using namespace std;
+
+int main() {
+
+  string str;
+  while(getline(cin,str) && !(str.length()==1 && str[0]=='.')) {
+    //cout<<str<<endl;
+    stack<char> checker;
+    bool flag = true;
+
+    for(int i=0; i<str.length() && flag==true; i++) {
+      if(str[i] == '(' || str[i] == '[') {
+	checker.push(str[i]);
+      }
+      else if(str[i] == ')') {
+	if(checker.empty()) {
+	  flag = false;
+	}
+	else if(checker.top() != '(') {
+	  flag = false;
+	}
+	else {
+	  checker.pop();
+	}
+      }
+      else if(str[i] == ']') {
+	if(checker.empty()) {
+	  flag = false;
+	}
+	else if(checker.top() != '[') {
+	  flag = false;
+	}
+	else {
+	  checker.pop();
+	}
+      }
+    }
+
+    if(flag==true && checker.empty()) {
+      cout<<"yes"<<endl;
+    }
+    else {
+      cout<<"no"<<endl;
+    }
+  }
+
+}

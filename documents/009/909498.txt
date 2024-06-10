@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	int count;
+	int i, j;
+	
+	while (scanf("%d", &n) != EOF){
+		count = 0;
+		if (n % 2 == 0){
+			n--;
+		}
+		for (i = n; i > 2; i -= 2){
+			for (j = 3; j < i; j += 2){
+				if (i % j == 0){
+					break;
+				}
+			}
+			if (j >= i){
+				count++;
+			}
+		}
+		if (i >= 2){
+			count++;
+		}
+		printf("%d\n", count);
+	}
+	
+	return 0;
+}

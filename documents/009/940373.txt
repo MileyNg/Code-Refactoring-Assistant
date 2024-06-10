@@ -1,0 +1,48 @@
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+
+using namespace std;
+
+/** Problem0144 : Packet Transportation **/
+int G[101][101];
+int V;
+
+int main()
+{
+	int r, k, t;
+	
+	rep(i, 101) rep(j, 101) G[i][j]=INF;
+	
+	
+	cin >> V;
+	rep(i, V) {
+		cin >> r >> k;
+		rep(j, k) {
+			cin >> t;
+			G[r-1][t-1]=1;
+		}
+	}
+	
+	// Warshall-Floyd法
+	rep(k, V)
+		rep(i, V)
+			rep(j, V)
+				G[i][j] = min(G[i][j], G[i][k]+G[k][j]);
+			
+	
+	int p, s, d, v;
+	cin >> p;
+	
+	rep(i, p) {
+		cin >> s >> d >> v;
+		if (G[s-1][d-1] < v)
+			cout << G[s-1][d-1]+1 << endl;
+		else
+			cout << "NA" << endl;
+	}
+	return 0;
+}

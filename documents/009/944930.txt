@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+int main(){
+
+    int n,r;
+    while(cin>>n>>r,n){
+        int a[2][60];
+        int now = 1;
+        for(int i = 0;i < n;i++)a[0][i] = i;
+        while(r--){
+            int p,c;
+            cin>>p>>c;
+            p--;
+            for(int i = p;i < p+c;i++){
+                a[now][i-p] = a[1-now][i];
+            }
+            for(int i = 0,t = 0;i < n;i++){
+                if(p<=i&&i<p+c)continue;
+                a[now][t+c] = a[1-now][i];
+                t++;
+            }
+            //for(int i = 0;i < n;i++)cout<<a[now][i]<<" ";
+            //cout<<endl;
+            now = 1-now;
+        }
+        cout<<n-1-a[1-now][0]+1<<endl;
+    }
+
+    return 0;
+}

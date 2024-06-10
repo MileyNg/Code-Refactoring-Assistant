@@ -1,0 +1,55 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  ids = {}
+  prices = []
+
+  for id in (0...n)
+    i, pr = gets.strip.split(' ')
+    ids[i] = id
+    prices << pr.to_i
+  end
+
+  m = gets.strip.to_i
+
+  unresolved = []
+  deps = n.times.map{[]}
+
+  m.times.each do
+    i, k, *rs = gets.strip.split(' ')
+    id = ids[i]
+
+    unresolved[id] = k.to_i
+
+    for id0 in rs.map{|ri| ids[ri]}
+      deps[id0] << id
+    end
+  end
+
+  target = ids[gets.strip]
+
+  sums = n.times.map{0}
+  mcs = []
+  q = (0...n).map{|id| id}.select{|id| unresolved[id].nil?}
+  q.each{|id| sums[id] = prices[id]}
+
+  while ! q.empty?
+    id = q.shift
+
+    mc = mcs[id] = (prices[id] < sums[id]) ? prices[id] : sums[id]
+    break if id == target
+
+    for id0 in deps[id]
+      sums[id0] += mc
+      unresolved[id0] -= 1
+      if unresolved[id0] == 0
+        q << id0
+      end
+    end
+  end
+
+  puts mcs[target]
+end

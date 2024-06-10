@@ -1,0 +1,8 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+stdin().every(function(line) {
+	return !+line ? false : !console.log(line.split('').reduce(function(sum, num) { return sum + +num; }, 0));
+});

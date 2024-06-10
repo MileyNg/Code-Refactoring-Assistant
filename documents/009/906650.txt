@@ -1,0 +1,34 @@
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+
+int calc(unsigned l, const vector<int> &a, const vector<int> &b) {
+	unsigned i = l;
+	for(const auto &e : a) {
+		if(e == b[i]) {
+			if(++i == b.size()) break;
+		}
+	}
+	return i - l;
+}
+
+int main() {
+	int n, m;
+	cin >> n >> m;
+
+	vector<int> a(n), b(m);
+	for(auto &e : a) cin >> e;
+	for(auto &e : b) cin >> e;
+
+	int ans = 0;
+	for(unsigned l = 0; l < b.size(); ++l) {
+		chmax(ans, calc(l, a, b));
+	}
+
+	cout << ans << endl;
+
+	return EXIT_SUCCESS;
+}

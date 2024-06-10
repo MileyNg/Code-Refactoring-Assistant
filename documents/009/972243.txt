@@ -1,0 +1,118 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <array>
+#include <algorithm>
+#include <utility>
+
+#define X first
+#define Y second
+
+using namespace std;
+
+array<array<bool, 50>, 50> g_room[2]; // [Y][X]
+array<array<bool, 50>, 50> g_standed[2][2]; // ずれている時用
+pair<int, int> g_goal[2];
+pair<int, int> g_startpos[2];
+
+bool g_state;
+
+int dx1[4] = { 0, 1, 0, -1 };
+int dy1[4] = { 1, 0, -1, 0 };
+
+int dx2[4] = { 0, -1, 0, 1 };
+int dy2[4] = { 1, 0, -1, 0 };
+
+
+bool solution(pair<int, int> u1, pair<int, int> u2) {
+	if (g_goal[0] == u1 && g_goal[1] == u2) return true;
+	if (g_goal[0] == u1 || g_goal[1] == u2) return false;
+	
+	for (int i = 0; i < 4; ++i) {
+		auto nu2 = make_pair(u2.X + dx2[i], u2.Y + dy2[i]);
+		auto nu1 = make_pair(u1.X + dx1[i], u1.Y + dy1[i]);
+
+		if (g_room[0][nu1.Y][nu1.X] && g_room[1][nu2.Y][nu2.X]) {
+			continue;
+		} else if (g_room[0][nu1.Y][nu1.X]) {
+			if (g_standed[!g_state][1][nu2.Y][nu2.X]) continue;
+			g_state = !g_state;
+			g_standed[g_state][1][nu2.Y][nu2.X] = true;
+			if (solution(u1, nu2)) return true;
+			g_standed[g_state][1][nu2.Y][nu2.X] = false;
+		} else if (g_room[1][nu2.Y][nu2.X]) {
+			if (g_standed[!g_state][0][nu1.Y][nu1.X]) continue;
+			g_state = !g_state;
+			g_standed[g_state][0][nu1.Y][nu1.X] = true;
+			if (solution(nu1, u2)) return true;
+			g_standed[g_state][0][nu1.Y][nu1.X] = false;
+		} else {
+			if (g_standed[g_state][0][nu1.Y][nu1.X]) continue;
+			g_standed[g_state][0][nu1.Y][nu1.X] = true;
+			g_standed[g_state][1][nu2.Y][nu2.X] = true;
+			if (solution(nu1, nu2)) return true;
+			g_standed[g_state][0][nu1.Y][nu1.X] = false;
+			g_standed[g_state][1][nu2.Y][nu2.X] = false;
+		}
+	}
+	return false;
+}
+
+int main() {
+	while (true) {
+		int w, h;
+		cin >> w >> h;
+		if (w == 0) break;
+
+		for (int i = 0; i < 2; ++i) {
+			for_each(g_room[i].begin(), g_room[i].end(), [](array<bool, 50> & line) {
+				line.fill(false);
+			});
+		}
+		for (int i = 0; i < 2; ++i) {
+			for (int j = 0; j < 2; ++j) {
+				for_each(g_standed[i][j].begin(), g_standed[i][j].end(), [](array<bool, 50> & line) {
+					line.fill(false);
+				});
+			}
+		}
+
+		for (int i = 0; i < h + 1; ++i) {
+			g_room[0][i][0] = true;
+			g_room[0][i][w + 1] = true;
+			g_room[1][i][0] = true;
+			g_room[1][i][w + 1] = true;
+		}
+
+		for (int j = 0; j < w + 1; ++j) {
+			g_room[0][0][j] = true;
+			g_room[0][h + 1][j] = true;
+			g_room[1][0][j] = true;
+			g_room[1][h + 1][j] = true;
+		}
+
+		for (int i = 1; i < h + 1; ++i) {
+			for (int user = 0; user < 2; ++user) {
+				for (int j = 1; j < w+1; ++j) {
+					char c;
+					cin >> c;
+					if (c == '#') {
+						g_room[user][i][j] = true;
+					} else if (c == '%') {
+						g_goal[user].X = j;
+						g_goal[user].Y = i;
+					} else if (c == 'L' || c == 'R') {
+						g_startpos[user].X = j;
+						g_startpos[user].Y = i;
+					}
+				}
+			}
+		}
+
+		if (solution(g_startpos[0], g_startpos[1])) {
+			cout << "Yes" << endl;
+		} else {
+			cout << "No" << endl;
+		}
+	}
+}

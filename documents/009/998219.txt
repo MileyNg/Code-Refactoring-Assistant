@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 251
+
+int Parent(int i){
+  return i/2;
+}
+
+int Left(int i){
+  return 2*i;
+}
+
+int Right(int i){
+  return (2*i)+1;
+}
+
+main(){
+  int heap[MAX],id,size,left,right;
+  
+  scanf("%d",&size);
+  for(id=1 ; id<=size ; id++){
+    scanf("%d",&heap[id]);
+  }
+
+  for(id=1 ; id<=size ; id++){
+    printf("node %d: key = %d, ",id,heap[id]);
+    if(id>=2) printf("parent key = %d, ",heap[Parent(id)]);
+
+    left = Left(id);
+    right = Right(id);
+    if(left<=size) printf("left key = %d, ",heap[left]);
+    if(right<=size) printf("right key = %d, ",heap[right]);
+
+    printf("\n");
+  }
+  return 0;
+}

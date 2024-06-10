@@ -1,0 +1,41 @@
+#include<stdio.h>
+#define compile 0
+int func_euclides(int num1, int num2);
+
+main()
+{
+	int input1 = 0, input2 = 0, gcd = 0, lcm = 0; //gcd:最大公約数 lcm:最小公倍数
+	while(scanf("%d %d", &input1, &input2) != EOF)
+	{
+		//func_prime(input1, input2);
+		gcd = func_euclides(input1, input2);
+		lcm = (input1 * input2) / gcd;
+		func_output(gcd, lcm);
+	}
+	return 0;
+}
+int func_euclides(int num1, int num2)
+{
+	int quot = 0, sur = 0; //quot:商 sur:余り
+	
+	quot = num1 / num2;
+	sur = num1 % num2;
+	if(sur == 0)
+	{
+#if compile == 1
+		printf("GCD = %d\n", quot);
+#endif
+		return num2;
+	}
+	else if(sur != 0)
+	{
+#if compile == 1
+		printf("num1 = %d num2 = %d\n", num2, sur);
+#endif
+		func_euclides(num2, sur);
+	}
+}
+func_output(int num1, int num2)
+{
+	printf("%d %d\n", num1, num2);
+}

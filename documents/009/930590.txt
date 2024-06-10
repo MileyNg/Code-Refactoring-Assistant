@@ -1,0 +1,75 @@
+#include <iostream>
+#include <cstdlib>
+#include <queue>
+
+using namespace std;
+const static int SIDE_LEN_MAX = 1000;
+int field[ SIDE_LEN_MAX + 2 ][ SIDE_LEN_MAX + 2 ];
+int visit_data[ SIDE_LEN_MAX + 2 ][ SIDE_LEN_MAX + 2 ]; // zero-initialized.
+struct position {
+  int r, c;
+  int step_n;
+};
+
+bool enqueue( queue<position> &posq, int r, int c, int step_n, int level ) {
+  position newpos;
+  if( visit_data[ r ][ c ] != level && field[ r ][ c ] != 'X' ) {
+    newpos.r = r;
+    newpos.c = c;
+    newpos.step_n = step_n;
+    visit_data[ r ][ c ] = level;
+    posq.push( newpos );
+    return true;
+  }
+  return false;
+}
+
+int main() {
+  int h, w, n;
+  position pos;
+  queue<position> posq;
+  int level = 1;
+
+  cin >> h >> w >> n;
+  for( int c = 0; c <= SIDE_LEN_MAX + 1; c++ ) {
+    field[ 0 ][ c ] = 'X';
+    field[ h + 1 ][ c ] = 'X';
+  }
+
+  for( int r = 1; r <= h; r++ ) {
+    string line;
+    cin >> line;
+    field[ r ][ 0 ] = 'X';
+    for( int c = 1; c <= w; c++ ) {
+      field[ r ][ c ] = line[ c - 1 ];
+      if( field[ r ][ c ] == 'S' ) {
+        enqueue( posq, r, c, 0, level );
+      }
+    }
+    field[ r ][ w + 1 ] = 'X';
+  }
+
+  while( 1 ) {
+    pos = posq.front();
+    posq.pop();
+    if(
+        '1' <= field[ pos.r ][ pos.c ] &&
+        field[ pos.r ][ pos.c ] <= '9' &&
+        level == field[ pos.r ][ pos.c ] - '0'
+    ) {
+      while( posq.size() > 0 ){ posq.pop(); }
+      posq.push( pos );
+      if( ++level == n + 1 ) {
+        cout << pos.step_n << endl;
+        break;
+      }
+    }
+    enqueue( posq, pos.r - 1, pos.c    , pos.step_n + 1, level );
+    enqueue( posq, pos.r    , pos.c - 1, pos.step_n + 1, level );
+    enqueue( posq, pos.r + 1, pos.c    , pos.step_n + 1, level );
+    enqueue( posq, pos.r    , pos.c + 1, pos.step_n + 1, level );
+  }
+  
+
+  return EXIT_SUCCESS;
+}

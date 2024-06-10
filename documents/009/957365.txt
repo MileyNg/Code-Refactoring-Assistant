@@ -1,0 +1,18 @@
+#include <iostream>
+#include <algorithm>
+
+int getGCD(int a, int b){
+    if(b==0)
+        return a;
+    return getGCD(b, a%b);
+}
+
+int main(){
+    int a, b, GCD;
+    while(std::cin >> a >> b){
+        if(a < b)
+            std::swap(a, b);
+        GCD = getGCD(a, b);
+        std::cout << GCD << " " << (a/GCD) * b <<std::endl;
+    }
+}

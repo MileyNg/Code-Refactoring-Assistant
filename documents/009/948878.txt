@@ -1,0 +1,86 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int a, n;
+
+int gcd(int x, int y){
+    /* ユークリッド互除法*/
+    int z;
+    if( (x <= 0) || (y <= 0) ){
+        return -1;
+    }
+    z = x % y;
+    while (z != 0){
+        x = y;
+        y = z;
+        z = x % y;
+    }
+    return y;
+};
+
+int solve(int nowa, int nown, int p, int q, int b){
+    // cout << nowa << " " << nown << " " << p << " " << q << " " << b << "\n";
+    nowa = nowa * b;
+    nown = nown + 1;
+    // 終了条件
+    if(nowa > a) return 0;
+    if(nown >= n) return 0;
+    
+    // 引き算する。
+    int bunbo = q * b;
+    int bunshi = p * b - q;
+    if(bunshi <= 0){
+        return 0;
+    }
+    
+    // 約分
+    int koyakusu = gcd(bunbo, bunshi);
+    bunbo = bunbo / koyakusu;
+    bunshi = bunshi / koyakusu;
+    
+    // cout << p << "/" << q << " - 1/" << b << " = ";
+    // cout << bunshi << "/" << bunbo << "\n";
+    
+    // 引き算した結果の分母が1なら正解である。
+    int result = 0;
+    if(bunshi == 1 && nowa * bunbo <= a && b <= bunbo){
+        result += 1;
+        // cout << "正解\n";
+    }
+    
+    int blimit = a / (nowa * b);
+    if(blimit <= 1) return result;
+    // cout << "blimit " << blimit << "\n";
+    for(int i = b; i <= blimit; i++){
+        result += solve(nowa, nown, bunshi, bunbo, i);
+    }
+
+    return result;
+};
+
+int main(int argc, const char * argv[])
+{
+    int p, q;
+    while(cin >> p >> q >> a >> n){
+        if(p == 0 || q == 0 || a == 0 || n == 0) return 0;
+        // 入力を約分する
+        int koyakusu = gcd(p, q);
+        p = p / koyakusu;
+        q = q / koyakusu;
+        int result = 0;
+        if(n == 1){
+            if(p == 1) result = 1;
+        }else{
+            if(p == 1) result = 1;
+            for(int i = 1; i <= a; i++){
+                // cout << "i = " << i << "\n";
+                result += solve(1, 0, p, q, i);
+            }
+        }
+        cout << result << "\n";
+    }
+    return 0;
+}

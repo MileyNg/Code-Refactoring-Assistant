@@ -1,0 +1,96 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+
+struct Z {
+    long x, y;
+    char t;
+    int opCmp(ref const Z z) const {
+        if (x == z.x) {
+            if (t == 'I') return -1;
+            if (z.t == 'I') return 1;
+            return 0;
+        }
+        return cast(int)((x - z.x) / (x - z.x).abs);
+    }
+}
+
+struct E {
+    int to;
+    long cost;
+}
+
+long[] dijkstra(ref const E[][] G, int s) {
+    int n = cast(int)G.length;
+    long[] d = new long[n];
+    d[] = long.max;
+    struct P { int v; long dist; }
+    BinaryHeap!(Array!P, "a.dist > b.dist") PQ;
+    PQ.insert(P(s, 0));
+    d[s] = 0;
+    bool[] used = new bool[n];
+    used[s] = true;
+    while (!PQ.empty) {
+        P cur = PQ.front; PQ.removeFront;
+        foreach (e; G[cur.v]) {
+            if (used[e.to]) continue;
+            long d1 = cur.dist + e.cost;
+            if (d[e.to] > d1) {
+                d[e.to] = d1;
+                PQ.insert(P(e.to, d1));
+                used[e.to] = true;
+            }
+        }
+    }
+    return d;
+}
+ 
+void main() {
+    int n, m; readf("%d %d\n", &n, &m);
+    E[][] G = new E[][n];
+    foreach (i; 0 .. m) {
+        int a, b, c; readf("%d %d %d\n", &a, &b, &c);
+        G[a] ~= E(b, c);
+        G[b] ~= E(a, c);
+    }
+    long[] ds = dijkstra(G, 0);
+    long[] dg = dijkstra(G, n - 1);
+
+    Z[] ev;
+    foreach (i; 0 .. n) {
+        ev ~= Z(ds[i], dg[i], 'I');
+    }
+
+    int q; readf("%d\n", &q);
+    foreach (i; 0 .. q) {
+        string s = readln.chomp;
+        long fs = parse!long(s);
+        s.munch(" ");
+        long fg = parse!long(s);
+        ev ~= Z(fs, fg, 'Q');
+    }
+
+    ev.sort!"a.x < b.x";
+    //ev.writeln;
+
+    auto t = new RedBlackTree!(long, "a < b", true);
+    foreach (e; ev) {
+        if (e.t == 'I') {
+            t.insert(e.y);
+        } else { assert(e.t == 'Q');
+            writeln(t.upperBound(e.y - 1).array.length);
+        }
+        //writeln("tree: ", t[]);
+    }
+}

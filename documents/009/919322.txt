@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+	int i, n, m, *input, answer = 0;
+
+	scanf("%d", &n);
+	input = (int *) malloc(sizeof(int) * (n + 1));
+
+	for (i = 1; i <= n; i++) {
+		scanf("%d", &input[i]);
+	}
+
+	m = input[1];
+
+	for (i = 2; i <= n; i++) {
+
+		if (answer < (input[i] - m)) {
+			answer = input[i] - m;
+		}
+
+		if (input[i] > m) {
+			m = input[i];
+		}
+
+	}
+
+	printf("%d", answer);
+
+	return 0;
+}

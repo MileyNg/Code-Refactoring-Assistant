@@ -1,0 +1,31 @@
+### constant
+
+R = 6378.1
+
+### main
+
+while true
+  a, b, c, d = gets.strip.split(' ').map{|s| s.to_f}
+  break if a < 0 && b < 0 && c < 0 && d < 0
+
+  th0 = a * Math::PI / 180
+  ph0 = b * Math::PI / 180
+  th1 = c * Math::PI / 180
+  ph1 = d * Math::PI / 180
+
+  x0 = Math.cos(ph0) * Math.cos(th0)
+  y0 = Math.sin(ph0) * Math.cos(th0)
+  z0 = Math.sin(th0)
+
+  x1 = Math.cos(ph1) * Math.cos(th1)
+  y1 = Math.sin(ph1) * Math.cos(th1)
+  z1 = Math.sin(th1)
+
+  dd = (x0 - x1) ** 2 + (y0 - y1) ** 2 + (z0 - z1) ** 2
+
+  th = Math.acos(1 - dd / 2)
+
+  r = (R * th).round
+
+  puts r
+end

@@ -1,0 +1,21 @@
+lines = []
+
+c1 = /\[[^\[\]\(\)]*\]/
+c2 = /\([^\[\]\(\)]*\)/
+
+while str = gets
+  break if str == "." || str == ".\n"
+
+  while true
+    str = str
+      .gsub(c1, "")
+      .gsub(c2, "")
+    if str.match(c1) || str.match(c2)
+      next
+    else
+      break
+    end
+  end
+
+  puts str.match(/[\[\(\)\]]/) ? "no" : "yes"
+end

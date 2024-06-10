@@ -1,0 +1,26 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+int main() {
+	constexpr int MAX_N = 10;
+	vector<int> height(3, 0);
+
+	for(int i = 0; i < MAX_N; ++i) {
+		int h;
+		cin >> h;
+
+		for(int j = 0; j < 3; ++j) {
+			if(height[j] < h) {
+				swap(height[j], h);
+			}
+		}
+	}
+
+	for(const auto &e : height) {
+		cout << e << "\n";
+	}
+
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,32 @@
+include <stdio.h>
+
+
+
+int check(int);
+
+
+int main(){
+  int N,i,a;
+  int count=0;
+  scanf("%d",&N);
+  
+  for(i=0;i<N;i++){
+    scanf("%d",&a);
+    if(check(a))count++;
+  }
+  
+  printf("%d\n",count);
+  
+  return 0;
+}
+
+int check (int x){
+  int i;
+  
+  if(x<=1)return 0;
+  
+  for(i=2;i<x;i++){
+    if(x%i==0)return 0;
+  }
+  return 1;
+}

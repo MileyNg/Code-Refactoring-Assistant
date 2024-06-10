@@ -1,0 +1,18 @@
+#include<stdio.h>
+#define N 10000
+
+int main(){
+  int i=0,A[N],count=0,count2=0,n,k;
+  
+  scanf("%d",&n);
+  for(i=0;i<n;i++) scanf("%d",&A[i]);
+  for(i=0;i<n;i++){  
+    for(k=2,count2=0;k<A[i];k++){     
+      if(A[i]%k==0){
+	count2++;
+	break;}}
+    if(count2==0) count++;
+  }
+  printf("%d\n",count);
+  return 0;
+}

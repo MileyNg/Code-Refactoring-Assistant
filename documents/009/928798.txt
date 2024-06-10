@@ -1,0 +1,110 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+typedef int Weight;
+
+struct Edge {
+	int from, to;
+	Weight weight;
+	Edge(int f, int t, int w) : from(f), to(t), weight(w) { }
+};
+
+bool operator < (const Edge& e, const Edge& f) {
+	return e.weight != f.weight ? e.weight > f.weight : 
+			e.from != f.from ? e.from < f.from : e.to < f.to;
+}
+
+typedef vector<Edge> Edges;
+typedef vector<Edges> Graph;
+
+typedef vector<Weight> Array;	// vector<int>
+typedef vector<Array> Matrix;	//vector< vector<int> >
+
+// prim
+pair<Weight, Edges> prim(const Graph&g, int r = 0) {
+	int n = g.size();
+	Edges T;
+	Weight total = 0;
+	
+	vector<bool> visited(n, false);
+	priority_queue<Edge> q;
+	q.push(Edge(-1, r, 0));
+	
+	while (!q.empty()) {
+		Edge e = q.top(); q.pop();
+		if (visited[e.to])continue;
+		T.push_back(e);
+		total += e.weight;
+		visited[e.to] = true;
+		FOR(f, g[e.to]) if (!visited[f->to]) q.push(*f);
+	}
+	
+	return pair<Weight, Edges>(total, T);
+}
+
+int main() {
+	int n, m;
+	
+	while (1) {
+		cin >> n; if (n==0) break;
+		cin >> m;
+		
+		Graph g(n);
+		
+		int a, b, w;
+		for_(i, 0, m) {
+			scanf("%d,%d,%d", &a, &b, &w);
+			g[a].pb(Edge(a,b,w/100-1));
+			g[b].pb(Edge(b,a,w/100-1));
+		}
+		
+		pair<Weight, Edges> ret = prim(g, 0);
+		cout << ret.first << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+#include <vector> 
+
+using namespace std;
+
+#define MAX 100
+
+int n, next[MAX], prev[MAX], ans;
+bool used[MAX];
+
+void solve(int p){
+  if(next[p] == n-1){
+    return;
+  }
+  if(used[next[p]]){
+    next[p] = -1;
+    ans++;
+    return;
+  }
+  used[p] = true;
+
+  if(next[p] == -1){
+    solve(p+1);
+  }else{
+    solve(next[p]);
+  }
+}
+
+int main(){
+  vector<string> vec;
+  
+  cin >> n; 
+  cin.ignore();
+  vec.resize(n); 
+
+  for(int i = 0 ; i < n ; i++){
+    getline(cin,vec[i]);
+    vec[i].resize(vec[i].size()-1);
+    used[i] = false;
+    next[i] = -1;
+  }
+
+  for(int i = 0 ; i < n ; i++){
+    if(vec[i].find("goto") != string::npos){
+      string key = vec[i].substr(5);
+      for(int j = 0 ; j < n ; j++){
+	if(key == vec[j]){
+	  next[i] = j;
+	  break;
+	}
+      }
+    }
+  }
+
+  ans = 0;
+  solve(0);
+  cout << ans << endl;
+
+  return 0;
+}

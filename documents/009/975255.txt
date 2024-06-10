@@ -1,0 +1,33 @@
+#include<iostream>
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+using namespace std;
+int main(){
+  int in[10];
+  int p;
+  while(cin>>p){
+    in[0]=p*100;
+    int a,b;
+    int suma=0,sumb;
+    char d;
+    cin>>d;
+    int sum=in[0];
+    loop(i,1,10){
+      int tmp;
+      cin>>tmp;
+      in[i]=tmp*100;
+      sum+=in[i];
+      cin>>d;
+    }
+    cin>>a>>d>>b;
+    sumb=sum;
+    int i;
+    //cout<<suma<<" "<<sumb<<endl;
+    for(i=0;sumb>suma;i++){
+      suma+=in[i];
+      sumb-=(((double)in[i]/a)*b);
+      //cout<<suma<<" "<<sumb<<endl;
+    }
+    cout<<i<<endl;
+  }
+}

@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int N, MAX, sum;
+int cost[20][20];
+int f[20];
+
+int dfs(int n){
+  int dis = 0;
+  int ret = 0;
+  int c = 0;
+
+  rep(i, N) if(cost[n][i] && f[i]) dis = cost[n][i];
+  sum += dis;
+  rep(i, N) if(cost[n][i] && !f[i]) c++;
+  if(!c){ sum -= dis; return ret;}
+
+  //  printf("%d\n", dis);
+  rep(i, N){
+    if(!cost[n][i] || f[i]) continue;
+    f[i] = 1;
+    ret = max(ret, dfs(i));
+  }
+  //  printf("%d\n", ret);
+  return ret+dis;
+}
+
+int main(){
+  int a, b, t;
+  while(scanf("%d", &N) && N){
+    MAX = 0, sum = 0;
+    memset(cost, 0, sizeof(cost));
+    memset(f, 0, sizeof(f));
+    rep(i, N-1){
+      scanf("%d%d%d", &a, &b, &t);--a;--b;
+      cost[a][b] = cost[b][a] = t;
+    }
+    f[0] = 1;
+    int res = dfs(0);
+    printf("%d\n", 2*sum- res);
+  }
+  return 0;
+}

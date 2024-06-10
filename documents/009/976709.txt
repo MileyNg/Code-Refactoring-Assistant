@@ -1,0 +1,28 @@
+def sieve_of_erastosthenes(num):
+    input_list = [False if i % 2 == 0 or i % 3 == 0 or i % 5 == 0 else True for i in range(num)]
+    input_list[0] = input_list[1] = False
+    input_list[2] = input_list[3] = input_list[5] = True
+
+    for serial in range(3, int(num ** 0.5) + 1, 2):
+        
+        if input_list[serial] is True:
+            
+            for s in range(serial ** 2, num, serial): 
+                input_list[s] = False
+
+    # print([i for i, b in enumerate(input_list) if b == True])
+    return sum(input_list)
+
+
+if __name__ == '__main__':
+    while True:
+        try:
+            n = int(input())
+        except:
+            break
+
+        if 5 >= n:
+            print(1)
+        
+        else:
+            print(sieve_of_erastosthenes(n))

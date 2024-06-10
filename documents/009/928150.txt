@@ -1,0 +1,138 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#define N 33
+#define INF 1000000000
+
+class Rule{
+	public:
+	vector<int> x;
+	int y;
+	int size(){return x.size();}
+};
+
+void CYK(int memo[N][N], vector<Rule>& rule, vector<int>& num){
+	rep(i,N)rep(j,N)memo[i][j]=0;
+	
+	int mod = num.size();
+	
+	rep(j,num.size()){
+		rep(i,num.size()){
+			if(j==0){
+				memo[i][i] = (1<<num[i]);
+				continue;
+			}
+			
+			rep(k,rule.size()){
+				if(j+1<rule[k].size())continue;
+				
+				int dp[N][N]={0};
+				rep(p,rule[k].size()){
+					
+					rep(c,j+1){
+						if(p==0){
+							dp[0][c] = ( memo[i][(i+c)%mod]&(1<<rule[k].x[0]) ) > 0;
+							continue;
+						}
+						reps(t,1,c+1){
+							dp[p][c] = max(dp[p][c], dp[p-1][c-t]*( ( memo[(i+c-t+1)%mod][(i+c)%mod]&(1<<rule[k].x[p]) ) > 0 ));
+						}
+					}
+				}	
+				if(dp[rule[k].size()-1][j]>=1){
+					memo[i][(i+j)%mod] |= (1<<rule[k].y);
+				}
+			}
+		}
+	}
+	
+	/*
+	rep(i,num.size()){
+		rep(j,num.size()){
+			reps(k,1,7){
+				printf("%d",(memo[i][j]&(1<<k))>0);
+			}printf(" ");
+		}puts("");
+	}puts("");
+	*/
+}
+
+int main(){
+	
+	A:;
+	
+	int memo1[N][N]={0};
+	int memo2[N][N]={0};
+	
+	int n,m,r;
+	cin>>n>>m>>r;
+	
+	if(n==0 && m==0 && r==0)return 0;
+	
+	vector<int> num1(n),num2(m);
+	
+	rep(i,n)cin>>num1[i];
+	rep(i,m)cin>>num2[i];
+	
+	vector<Rule> rule(r);
+	rep(i,r){
+		int sz;
+		cin>>sz;
+		rep(j,sz){
+			int a;
+			cin>>a;
+			rule[i].x.push_back(a);
+		}
+		cin>>rule[i].y;
+	}
+	
+	CYK(memo1, rule, num1);
+	CYK(memo2, rule, num2);
+	
+	int ans = 0;
+	
+	rep(i,n){
+		rep(j,m){
+			//printf("|%d %d|\n",i,j);
+			int dp[N][N];
+			rep(k,N)rep(p,N)dp[k][p] = 0;
+			rep(k,n){
+				rep(p,m){
+					if(k==0 || p==0){
+						dp[(k+i)%n][(p+j)%m] = (memo1[(0+i)%n][(k+i)%n]&memo2[(0+j)%m][(p+j)%m])>0;
+					}
+					reps(t,1,k+1){
+						reps(c,1,p+1){
+							if((memo1[(k-t+i+1)%n][(k+i)%n]&memo2[(p-c+j+1)%m][(p+j)%m])>0 && dp[(k-t+i)%n][(p-c+j)%m]!=0){
+								//printf("(%d,%d) %d-%d と %d-%d\n",k,p,(k-t+i+1)%n,(k+i)%n,(p-c+j+1)%m,(p+j)%m);
+								dp[(k+i)%n][(p+j)%m] = max(dp[(k+i)%n][(p+j)%m], dp[(k-t+i)%n][(p-c+j)%m]+1);
+							}
+						}
+					}
+				}
+			}
+			
+			ans = max(ans, dp[(n-1+i)%n][(m-1+j)%m]);
+			/*
+			if(dp[(n-1+i)%n][(m-1+j)%m]!=0){
+				rep(k,n){
+					rep(p,m){
+						printf("%d ",dp[(k+i)%n][(p+j)%m]);
+					}puts("");
+				}puts("");
+			}*/
+		}
+	}
+	if(ans==0)printf("-1\n");
+	else printf("%d\n",ans);
+	
+	goto A;
+}

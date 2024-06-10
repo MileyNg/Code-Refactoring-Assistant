@@ -1,0 +1,64 @@
+#include <cstdio>
+#include <cstring>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+#define whole(xs) xs.begin(), xs.end()
+
+int N;
+vector<int> r, w;
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    r.resize(N); w.resize(N);
+    for (int i = 0; i < N; i++) {
+        cin >> r[i] >> w[i];
+    }
+    return true;
+}
+
+int sum(const vector<int>& v) {
+    int ret = 0;
+    for (int i = 0; i < v.size(); i++) ret += v[i];
+    return ret;
+}
+
+int dfs(int y, int p) {
+    bool dp[y + 1]; memset(dp, 0, sizeof(dp));
+    dp[0] = true;
+    for (int i = 0; i <= y; i++) {
+        if (!dp[i]) continue;
+        for (int j = 0; j < w.size(); j++) {
+            if (j == p) continue;
+            if (i + w[j] > y) continue;
+            dp[i + w[j]] = true;
+        }
+    }
+    int ret = 0;
+    for (int i = 1; i <= y; i++) {
+        if (dp[i]) ret = max(ret, i);
+    }
+    return ret;
+}
+
+int main() {
+    while (input()) {
+        int mr = *max_element(whole(r));
+        int index = max_element(whole(r)) - r.begin();
+        int x = sum(r) - mr;
+        if (mr >= x) {
+            int y = mr - x;
+            cout << sum(r) + sum(w) + (y - dfs(y, index)) << endl;
+        } else {
+            cout << sum(r) + sum(w) << endl;
+        }
+    }
+    return 0;
+}

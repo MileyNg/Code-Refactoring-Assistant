@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int main()
+{
+	for(int h,w,m;cin>>h>>w>>m;){
+		vector<string> grid(h);
+		rep(i,h) cin>>grid[i];
+		
+		static int vis[100][100][4][11][11];
+		memset(vis,0,sizeof(vis));
+		
+		queue<tuple<int,int,int,int,int>> q; // (i,j,dir,used p,used q)
+		rep(i,h) rep(j,w) if(grid[i][j]=='S')
+			rep(k,4) q.emplace(i,j,k,0,0);
+		
+		while(q.size()){
+			int ci,cj,cd,cp,cq; tie(ci,cj,cd,cp,cq)=q.front(); q.pop();
+			if(ci<0 || h<=ci || cj<0 || w<=cj ||
+			   grid[ci][cj]=='#' || cp>m || cq>m || vis[ci][cj][cd][cp][cq])
+				continue;
+			vis[ci][cj][cd][cp][cq]=1;
+			
+			const int di[]={-1,1,0,0},dj[]={0,0,-1,1};
+			q.emplace(ci+di[cd],cj+dj[cd],cd,cp,cq);
+			q.emplace(ci,cj,3-cd,cp+1,cq);
+			q.emplace(ci,cj,(cd+2)%4,cp,cq+1);
+		}
+		
+		int res=INF;
+		rep(i,h) rep(j,w) if(grid[i][j]=='G')
+			rep(d,4) rep(p,m+1) rep(q,m+1) if(vis[i][j][d][p][q])
+				res=min(res,p+q);
+		cout<<(res<INF?res:-1)<<endl;
+	}
+}

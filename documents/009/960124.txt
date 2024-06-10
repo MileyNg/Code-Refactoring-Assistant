@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+int n,cost,limit;
+map<vector<int>,int> memo;
+vector<vector<int> > LOOP;
+
+int dfs(int cur,int cnt,vector<int> &remain){
+
+  if( cur >= limit ) {
+    return cnt;
+  }
+
+  if( memo.find(remain) != memo.end() ) return memo[remain];
+
+  vector<int> tmp = remain;
+  bool update = true;
+  int ret = cnt;
+  while( update ){
+    ret = max(ret,dfs(cur+1,cnt,remain));
+    cnt++;
+    REP(i,1,10) {
+      remain[i] -= LOOP[cur][i];
+      if( remain[i] < 0 ) {
+        update = false;
+        break;
+      }
+    }
+  }
+  remain = tmp;
+  return memo[remain] = ret;
+}
+
+void precalc(int value,int sum,vector<int> &vec) {
+  if( value >= 10 ) {
+    if( sum == 10 ) LOOP.push_back(vec);
+    return;
+  }
+  rep(i,11){
+    if( sum + i * value > 10 ) break;
+    vec[value] = i;
+    precalc(value+1,sum+i*value,vec);
+    vec[value] = 0;
+  }
+  return;
+}
+
+int main() {
+
+  vector<int> buf(10,0);
+  precalc(1,0,buf);
+  sort(LOOP.begin(),LOOP.end());
+
+  while( scanf("%d",&n), n ) { 
+    memo.clear();
+    vector<int> remain;
+    remain.resize(10);
+    cost = limit = 0;
+    int coef = 0,input;
+    rep(i,n) {
+      scanf("%d",&input);
+      if( input == 10 ) coef++;
+      if( input >= 10 ) continue;
+      remain[input]++;
+    }
+
+    REP(i,1,5) {
+      int tmp = min(remain[i],remain[10-i]);
+      coef += tmp;
+      remain[i] -= tmp, remain[10-i] -= tmp;
+    }
+    int tmp = remain[5] / 2;
+    coef += tmp, remain[5] -= 2*tmp;
+    limit = LOOP.size();
+
+    printf("%d\n",coef + dfs(0,0,remain));
+
+  }
+  return 0;
+}

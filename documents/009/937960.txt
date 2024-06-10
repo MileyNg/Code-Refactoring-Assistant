@@ -1,0 +1,66 @@
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+class node{
+public:
+  node()
+    :parent(-1)
+    ,depth(-1)
+    ,c(0)
+  {};
+  int parent;
+  int depth;
+  vector<int> c;
+};
+
+node nodes[100000];
+void setDepth(int index, int depth){
+  nodes[index].depth = depth;
+  for(int i : nodes[index].c){
+    setDepth(i, depth+1);
+  }
+}
+
+int main(){
+  int n;
+  scanf("%d", &n);
+  for(int i = 0; i < n; i++){
+    int id;
+    scanf("%d", &id);
+    int k;
+    scanf("%d", &k);
+    for(int j = 0; j < k; j++){
+      int tmp;
+      scanf("%d", &tmp);
+      nodes[id].c.push_back(tmp);
+      nodes[tmp].parent = id;
+    }
+  }
+  int rootIndex = -1;
+  for(int i = 0; i < n; i++){
+    if(nodes[i].parent == -1){
+      rootIndex = i;
+      break;
+    }
+  }
+  setDepth(rootIndex, 0);
+  for(int i = 0; i < n; i++){
+    printf("node %d: parent = %d, depth = %d, ", i, nodes[i].parent, nodes[i].depth);
+    if(nodes[i].parent == -1){
+      printf("root");
+    } else if((int)nodes[i].c.size() == 0){
+      printf("leaf");
+    } else {
+      printf("internal node");
+    }
+    printf(", [");
+    for(int j = 0; j < (int)nodes[i].c.size(); j++){
+      printf("%d", nodes[i].c[j]);
+      if(j+1 < (int)nodes[i].c.size()){
+	printf(", ");
+      }
+    }
+    printf("]\n");
+  }
+}

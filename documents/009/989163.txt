@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <tuple>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+
+const int inf = 1 << 28;
+
+struct Edge{
+    int to, cost, weight;
+    Edge(){}
+    Edge(int to_, int cost_, int weight_):to(to_), cost(cost_), weight(weight_){}
+};
+
+int N, M, L;
+vector<vector<Edge> > G;
+vector<vector<int> > mem;
+
+int solve(int s){
+    mem.assign(N+1, vector<int>(L+1, -inf));
+    mem[s][L] = 0;
+    typedef tuple<int, int, int> State;
+    priority_queue<State> q;
+    for(q.emplace(0, L, s); !q.empty();){
+        int w, c, v; tie(w, c, v) = q.top(); q.pop();
+        if(v == N)return -w;
+        for(auto e: G[v]){
+            if(e.cost <= c && mem[e.to][c-e.cost] < w){
+                mem[e.to][c-e.cost] = w;
+                q.emplace(w, c - e.cost, e.to);
+            }
+            if(mem[e.to][c] < w - e.weight){
+                mem[e.to][c] = w - e.weight;
+                q.emplace(w - e.weight, c, e.to);
+            }
+        }
+    }
+    return inf;
+}
+
+int main(){
+    while(cin >> N >> M >> L, N|M|L){
+        G.assign(N+1, vector<Edge>(0));
+        rep(i, M){
+            int A, B, D, E;
+            cin >> A >> B >> D >> E;
+            G[A].emplace_back(B, D, E);
+            G[B].emplace_back(A, D, E);
+        }
+        cout << solve(1) << '\n';
+    }
+    return 0;
+}

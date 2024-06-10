@@ -1,0 +1,24 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int n;
+  cin>>n;
+  while(n--){
+    int p,q;
+    cin>>p>>q;
+    bool f=false;
+    for(long long i=0;i<=20000;i++){
+      for(long long j=0;i*i+j*j<p*p+q*q;j++){
+	if(i==0&&j==0||min(i,j)==0&&max(i,j)==1)continue;
+	for(int k=-1;k<=1;k+=2){
+	  long long n=j*k;
+	  f|=((i*p+n*q)%(i*i+n*n)==0)&&((i*q-n*p)%(i*i+n*n)==0);
+	}
+      }
+    }
+    cout<<"PC"[f]<<endl;
+  }
+}

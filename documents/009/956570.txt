@@ -1,0 +1,75 @@
+n = gets.chomp.to_i()
+
+n.times{|cnt|
+	line =gets.chomp()
+	num = 1
+	m = 0
+	c = 0
+	x = 0
+	i = 0
+	
+	line.each_char{|char|
+		case char
+		when "m"
+			m += num
+			num = 1
+		when "c"
+			c += num
+			num = 1
+		when "x"
+			x += num
+			num = 1
+		when "i"
+			i += num
+			num = 1
+		else
+			num = char.to_i()
+			if num == 0 then
+				num = 1
+			end
+		end
+	}
+	
+	if i >= 10 then
+		i -= 10
+		x += 1
+	end
+	if x >= 10 then
+		x -= 10
+		c += 1
+	end
+	if c >= 10 then
+		c -= 10
+		m += 1
+	end
+	
+	if m > 1 then
+		print m
+		print "m"
+	elsif m ==1 then
+		print "m"
+	end
+	
+	if c > 1 then
+		print c
+		print "c"
+	elsif c ==1 then
+		print "c"
+	end
+	
+	if x > 1 then
+		print x
+		print "x"
+	elsif x ==1 then
+		print "x"
+	end
+	
+	if i > 1 then
+		print i
+		print "i"
+	elsif i ==1 then
+		print "i"
+	end
+	print "\n"
+	 
+}

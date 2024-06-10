@@ -1,0 +1,90 @@
+#include <iostream>
+#include <queue>
+#include <map>
+#ifdef DEBUG
+#include <cassert>
+#define debug(a) a
+#else
+#define debug(a)
+#endif
+using namespace std;
+typedef long long ll;
+typedef size_t index;
+#define repeat(i,n) for (index i = 0; i < n; ++i)
+#define repeat1(i,n) for (index i = 1; i < n; ++i)
+#define repeat_from(i,m,n) for (index i = m; i < n; ++i)
+
+#define MAX_N 200
+#define MAX_M 10000
+#define MAX_R 1000
+#define MAX_T 1000
+index N, M, R;
+#define S 0
+#define L 1
+#define SL 2
+int edge[MAX_N][MAX_N][SL];
+index walk[MAX_R];
+
+struct state {
+    index query; // [0,R)
+    index pos; // [0,N)
+    index ship; // [0,N)
+};
+bool operator<(const state & a, const state & b) { return a.query != b.query ? a.query > b.query : a.pos != b.pos ? a.pos > b.pos : a.ship > b.ship; }
+typedef pair<state,ll> psttl;
+bool operator<(const psttl & a, const psttl & b) { return a.second != b.second ? a.second > b.second : a.first.query > b.first.query; }
+typedef map<state,ll> mapsttl;
+typedef priority_queue<psttl> pquelstt;
+
+
+int main() {
+    while (true) {
+        cin >> N >> M;
+        if (not N or not M) break;
+        repeat (i,N) repeat (j,N) repeat (k,2) edge[i][j][k] = i == j ? 0 : -1;
+        repeat (i,M) {
+            int x, y, t; char sl;
+            cin >> x >> y >> t; cin.ignore(); cin >> sl;
+            debug(assert(sl == 'S' or sl == 'L'));
+            -- x; -- y;
+            sl = sl == 'S' ? S : L;
+            if (not (x < y)) swap(x, y);
+            edge[y][x][sl] = (edge[x][y][sl] = edge[x][y][sl] == -1 ? t : min(edge[x][y][sl], t));
+        }
+        repeat (sl,SL) repeat (k,N) repeat (i,N) repeat (j,N) {
+            if (edge[i][k][sl] != -1 and edge[k][j][sl] != -1) {
+                edge[j][i][sl] = edge[i][j][sl] = min(edge[i][j][sl], edge[i][k][sl] + edge[k][j][sl]);
+            }
+        }
+        cin >> R;
+        repeat (i,R) { cin >> walk[i]; -- walk[i]; }
+        pquelstt que = pquelstt(); {
+            int r = 0; while (walk[r] == 0) { ++ r; }
+            que.push(psttl((state){r, 0, 0}, 0));
+        }
+        mapsttl memo = mapsttl();
+        while (true) {
+            debug(assert(not que.empty()));
+            psttl a = que.top(); que.pop();
+            if (a.first.query == R and a.first.pos == walk[R-1]) {
+                cout << a.second << endl;
+                break;
+            }
+            memo.insert(a);
+            repeat (i,N) {
+                repeat (sl,SL) {
+                    if (sl == S and a.first.ship != a.first.pos) continue;
+                    if (0 < edge[a.first.pos][i][sl]) {
+                        state s;
+                        s.query = a.first.query + (i == walk[a.first.query] ? 1 : 0);
+                        s.pos = i;
+                        s.ship = sl == S ? i : a.first.ship;
+                        psttl b = psttl(s, a.second + edge[a.first.pos][i][sl]);
+                        if (not memo.count(s)) que.push(b);
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}

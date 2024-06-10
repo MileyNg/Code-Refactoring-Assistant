@@ -1,0 +1,55 @@
+class Point
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_f)
+  end
+  def -(p)
+    Point.new(x - p.x, y - p.y, z - p.z)
+  end
+  def dot(p)
+    x * p.x + y * p.y + z * p.z
+  end
+  def cross(p)
+    Point.new(y * p.z - z * p.y, z * p.x - x * p.z, x * p.y - y * p.x)
+  end
+  def abs
+    Math::sqrt(x * x + y * y + z * z)
+  end
+  def normalize
+    Point.new(x / abs, y / abs, z / abs)
+  end
+end
+
+def solve
+  me = Point.new(*gets.split)
+  enemy = Point.new(*gets.split)
+  barrier = 3.times.map{Point.new(*gets.split)}
+
+  # バリアが作る平面がビームと交わらないときはtrue
+  beam = enemy - me
+  n_plane = (barrier[1] - barrier[0]).cross(barrier[2] - barrier[0]).normalize
+  distance_me_plane = (me - barrier[0]).dot(n_plane).abs
+  distance_enemy_plane = (enemy - barrier[0]).dot(n_plane).abs
+  distance_me_enemy = (enemy - me).abs
+  return true if beam.abs < distance_me_plane + distance_enemy_plane
+
+  # バリアとビームが接するときはfalse
+  return false if barrier.any?{|b| beam.abs == (b - me).abs + (b - enemy).abs}
+
+  # バリアの各辺eについて、{e, ビーム, e cross ビーム}がすべて右手系（すべて左手系）ならfalse
+  ok = true
+  sign = nil
+  edge = [*0...3, 0].each_cons(2).map{|i, j| barrier[j] - barrier[i]}
+  [*edge, edge.first].each_cons(2) do |e1, e2|
+    v = beam.dot((e1 - me).cross(e2 - me)) > 0.0 ? 1 : -1
+#p beam.dot((e1 - me).cross(e2 - me))
+    sign = v unless sign
+    ok = false if sign != v
+  end
+  return ok
+
+  puts "end of solve"
+  true
+end
+
+puts (solve ? "HIT" : "MISS")

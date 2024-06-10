@@ -1,0 +1,48 @@
+#include<cstdio>
+#include<iostream>
+
+int main(void)
+{
+	int person[50]; //候補者の手持ち石の数
+	int n,p,maxp; //n=候補者の数 p,maxp=石の数の合計
+	int i,j;
+	
+	for(;;)
+	{
+		scanf("%d %d",&n,&p);
+		maxp=p;
+		if(n==0 && p==0) break;
+		j=0;
+		
+		for(i=0; i<n; i++)
+		{
+			person[i]=0; //初期枚数
+		}
+		
+		for(;;)
+		{
+			if(p!=0)
+			{
+				p--;
+				person[j]++;
+			}
+			else if(person[j]==0)
+			{
+			}
+			else
+			{
+				p+=person[j];
+				person[j]=0;
+			}
+			
+			if(p==0 && person[j]==maxp)
+			{
+				break;
+			}
+			j++;
+			if(j==n) j=0;
+
+		}
+		printf("%d\n",j);
+	}
+}

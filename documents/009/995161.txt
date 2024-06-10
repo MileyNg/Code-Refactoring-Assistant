@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <queue>
+
+#define  X  first
+#define  Y  second
+
+using namespace std;
+
+typedef pair<int, int>  P;
+
+const int MAX_N = 1050;
+const int MAX_PRIME = 1000010;
+
+bool is_prime[MAX_PRIME + 1];
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, -1, 0, 1};
+
+void SieveOfEratosthenes();
+void Solve(int m, int n);
+void SearchPrimeCaves(const vector<vector<int>> &board, P p);
+
+int main()
+{
+    int m, n;
+
+    SieveOfEratosthenes();
+
+    while (cin >> m >> n, m || n)
+        Solve(m, n);
+
+    return 0;
+}
+
+void Solve(int m, int n)
+{
+    P p;
+    vector<vector<int>> board(MAX_N, vector<int>(MAX_N, 0));
+
+    // make board
+    pair<int, int> now(MAX_N / 2, MAX_N / 2);
+    int d = 3, cnt = 1, nd, nx, ny;
+
+    while (cnt <= m) {
+        if (cnt == n) {
+            p.X = now.X;
+            p.Y = now.Y;
+        }
+
+        board[now.Y][now.X] = cnt;
+
+        nd = (d + 1) % 4;
+        nx = now.X + dx[nd];
+        ny = now.Y + dy[nd];
+
+        ++cnt;
+        if (board[ny][nx] == 0) {
+            d = nd;
+            now.X = nx;
+            now.Y = ny;
+        }
+        else {
+            now.X += dx[d];
+            now.Y += dy[d];
+        }
+    }
+
+    SearchPrimeCaves(board, p);
+}
+
+void SearchPrimeCaves(const vector<vector<int>> &board, P p)
+{
+    vector<vector<P>> dp(MAX_N, vector<P>(MAX_N, P(0, 0)));
+    vector<vector<bool>> visit(MAX_N, vector<bool>(MAX_N, false));
+
+    visit[p.Y][p.X] = true;
+    if (is_prime[board[p.Y][p.X]]) {
+        dp[p.Y][p.X].first = 1;
+        dp[p.Y][p.X].second = board[p.Y][p.X];
+    }
+
+    P res = dp[p.Y][p.X];
+
+    for (int i = 1; i < MAX_N - 1; ++i) {
+        for (int j = 1; j < MAX_N - 1; ++j) {
+            if (board[i][j] == 0 || !visit[i][j])
+                continue;
+
+            for (int k = -1; k <= 1; ++k) {
+                if (board[i + 1][j + k] == 0)
+                    continue;
+                visit[i + 1][j + k] = true;
+                P tmp = dp[i][j];
+
+                if (is_prime[board[i + 1][j + k]]) {
+                    ++tmp.first;
+                    tmp.second = board[i + 1][j + k];
+                }
+
+                dp[i + 1][j + k] = max(dp[i + 1][j + k], tmp);
+                res = max(res, dp[i + 1][j + k]);
+            }
+        }
+    }
+
+    cout << res.first << ' ' << res.second << '\n';
+}
+
+// 素数表を作る
+void SieveOfEratosthenes()
+{
+    for (int i = 0; i < MAX_PRIME; ++i)
+        is_prime[i] = true;
+    is_prime[0] = is_prime[1] = false;
+
+    for (int i = 2; i <= MAX_PRIME; ++i)
+        if (is_prime[i]) {
+            for (int j = 2 * i; j < MAX_PRIME; j += i)
+                is_prime[j] = false;
+        }
+}

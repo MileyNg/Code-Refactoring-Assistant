@@ -1,0 +1,37 @@
+$wpat = [
+  1 | 2 | 4, 8 | 16 | 32, 64 | 128 | 256,
+  1 | 8 | 64, 2 | 16 | 128, 4 | 32 | 256,
+  1 | 16 | 256, 4 | 16 | 64
+]
+
+### subroutines
+
+def win?(bds, ch)
+  bits = 0
+  b = 1
+
+  for i in (0..8)
+    bits |= b if bds[i] == ch
+    b <<= 1
+  end
+  #printf("%09b\n", bits)
+
+  for p in $wpat
+    return true if (bits & p) == p
+  end
+  return false
+end
+
+### main
+
+while (line = gets)
+  bds = line.chomp.split("")
+
+  if win?(bds, "o")
+    puts "o"
+  elsif win?(bds, "x")
+    puts "x"
+  else
+    puts "d"
+  end
+end

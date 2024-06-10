@@ -1,0 +1,24 @@
+#include<cstdio>
+
+int main(){
+  int data[10],order[10];
+
+  //入力＆初期化
+  for(int i=0;i<10;i++){
+    scanf("%d",&data[i]);
+    order[i]=1;
+  }
+
+  //順位付け
+  for(int i=1;i<10;i++)
+    for(int j=0;j<i;j++)
+      data[j]<data[i] ? order[j]++ : order[i]++;
+
+  //表示
+  for(int i=1;i<=3;i++)
+    for(int j=0;j<10;j++)
+      if(order[j]==i)
+	printf("%d\n",data[j]);
+   
+  return 0;
+}

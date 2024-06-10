@@ -1,0 +1,60 @@
+#include <iostream>
+
+using namespace std;
+
+#define MAX_P 999983
+#define MAX 1000000
+int Prime[MAX+1];
+bool prime[MAX+1];
+
+void make(){
+  fill(prime,prime+MAX,true);
+  prime[0] = prime[1] = false;
+
+  for(int i = 2 ; i*i <= MAX ; i++){
+    if(prime[i]){
+      for(int j = i*i ; j <= MAX ; j += i){
+	prime[j] = false;
+      }
+    }
+  }
+
+  int sum = 0;
+  for(int i = 0 ; i <= MAX ; i++){
+    if(prime[i]){
+      sum++;
+    }
+    Prime[i] = sum;
+  }
+}
+
+int main(){
+  int n;
+
+  make();
+
+  while(cin >> n ,n){
+    int p,m,ans = 0;
+    for(int i = 0 ; i < n ; i++){
+      cin >> p >> m;
+
+      int large = p + m;
+      int small = p - m;
+
+      if(large > MAX_P){
+	large = MAX_P;
+      }     
+      if(!prime[large] && !prime[small] &&
+	 Prime[large] == Prime[small]) continue;
+
+      if(small < 0){
+	small = 0;
+      }
+      ans += Prime[large] - Prime[small];
+      if(Prime[large] || Prime[small]) ans--;
+    }
+    cout << ans << endl;
+  }
+
+  return 0;
+}

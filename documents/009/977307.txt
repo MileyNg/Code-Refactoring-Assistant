@@ -1,0 +1,29 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<cassert>
+#include<string>
+
+using namespace std;
+
+long long N, X[4], Y[4];
+
+string parallel_judge(){
+	if ((X[1] * 100000 - X[0] * 100000)*(Y[3] * 100000 - Y[2] * 100000) == (Y[1] * 100000 - Y[0] * 100000)*(X[3] * 100000 - X[2] * 100000)){
+		return "YES";
+	}
+	else{
+		return "NO";
+	}
+}
+
+int main()
+{
+	cin >> N;
+	for (int i = 0; i < N; i++){
+		for (int j = 0; j < 4; j++){
+			cin >> X[j] >> Y[j];
+		}
+		cout << parallel_judge() << endl;
+	}
+}

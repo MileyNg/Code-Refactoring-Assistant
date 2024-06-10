@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INITIAL_VALUE ((1 << 31) - 1)
+#define BUF_SIZE 200000
+
+void find(int a[], int s, int t) {
+    int min = INITIAL_VALUE;
+    for (; s <= t; s++) {
+        if (min > a[s]) {
+            min = a[s];
+        }
+    }
+    printf("%d\n", min);
+}
+
+void update(int a[], int i, int x) {
+    a[i] = x;
+}
+
+
+int main() {
+    int n, q, com, x, y, i;
+    int *a;
+    void (*f[2])(int*, int, int);
+    char *buf;
+
+    f[0] = update;
+    f[1] = find;
+
+    buf = (char*)malloc(sizeof(char) * BUF_SIZE);
+    setvbuf(stdout, buf, _IOFBF, BUF_SIZE);
+
+    scanf("%d %d", &n, &q);
+    a = (int*)malloc(sizeof(int) * n);
+    for (i = 0; i < n; i++) {
+        a[i] = INITIAL_VALUE;
+    }
+
+    for (; q--;) {
+        scanf("%d %d %d", &com, &x, &y);
+        f[com](a, x, y);
+    }
+
+    free(a);
+
+    return 0;
+}

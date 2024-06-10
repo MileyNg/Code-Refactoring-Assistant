@@ -1,0 +1,142 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#define MAX 1002001
+#define EDGE 1001
+using namespace std;
+
+int h[EDGE + 2][EDGE + 2], visit[EDGE + 2][EDGE + 2], lastcave[EDGE + 2][EDGE + 2];
+long int  p[MAX];
+
+int max(int a, int b, int c){
+	return max(max(a, b), max(b, c));
+}
+
+
+
+int main()
+{
+	//洞窟の作成
+	int nowx, nowy, d, size, sizecounter;
+	nowx = (EDGE - 1) / 2;
+	nowy = (EDGE + 1) / 2;
+	d = 0;
+	size = 1;
+	sizecounter = 0;
+	for (int i = 0; i <= MAX; i++){
+		h[nowy][nowx] = i;
+		if (d == 0){
+			nowx++;
+		}
+		else if (d == 1){
+			nowy--;
+		}
+		else if (d == 2){
+			nowx--;
+		}
+		else if (d == 3){
+			nowy++;
+		}
+		if (sizecounter == size){
+			sizecounter = 0;
+			d = (d + 1) % 4;
+			if (d == 0 || d == 2){
+				size++;
+			}
+		}
+		sizecounter++;
+	}
+
+	//素数の判定用配列を作成
+	p[1] = 0;
+	fill(p, p + MAX, 1);
+	for (long int i = 2; i <= MAX; i++){
+		int sqrti = (int)sqrt(i);
+		for (int j = 2; j <= sqrti; j++){
+			if (i % j == 0){
+				p[i] = 0;
+				break;
+			}
+		}
+	}
+
+	//入力
+	int m, n;
+	while (cin >> m >> n, m || n){
+
+		//初期化
+		int goalcave = 0;
+		int cavecounter = 0;
+		for (int i = 0; i < EDGE + 2; i++){
+			for (int j = 0; j < EDGE + 2; j++){
+				visit[i][j] = 0;
+				lastcave[i][j] = 0;
+			}
+		}
+
+
+		//脱出する直前の洞窟のyを求める．
+		bool flag = false;
+		for (int i = EDGE + 1; i > 0; i--){
+			for (int j = 0; j < EDGE + 2; j++){
+				if (0 < h[i][j] && h[i][j] <= m){
+					goalcave = i;
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+				break;
+		}
+
+		//下から順に計算
+		for (int i = goalcave; i > 0; i--){
+			for (int j = 0; j < EDGE + 2; j++){
+				if (h[i][j] <= m){
+
+					//visitを求める
+					if (p[h[i][j]]){
+						visit[i][j] = max(visit[i + 1][j - 1], visit[i + 1][j], visit[i + 1][j + 1]) + 1;
+					}
+					else{
+						visit[i][j] = max(visit[i + 1][j - 1], visit[i + 1][j], visit[i + 1][j + 1]);
+					}
+
+					//lastcaveを求める
+					if (visit[i + 1][j - 1] > visit[i + 1][j] && visit[i + 1][j - 1] > visit[i + 1][j + 1]){
+						lastcave[i][j] = lastcave[i + 1][j - 1];
+					}
+					else if (visit[i + 1][j] > visit[i + 1][j - 1] && visit[i + 1][j] > visit[i + 1][j + 1]){
+						lastcave[i][j] = lastcave[i + 1][j];
+					}
+					else if (visit[i + 1][j + 1] > visit[i + 1][j - 1] && visit[i + 1][j + 1] > visit[i + 1][j]){
+						lastcave[i][j] = lastcave[i + 1][j + 1];
+					}
+					else if (visit[i + 1][j - 1] == visit[i + 1][j] && visit[i + 1][j - 1] > visit[i + 1][j + 1]){
+						lastcave[i][j] = max(lastcave[i + 1][j - 1], lastcave[i + 1][j]);
+					}
+					else if (visit[i + 1][j] == visit[i + 1][j + 1] && visit[i + 1][j] > visit[i + 1][j - 1]){
+						lastcave[i][j] = max(lastcave[i + 1][j], lastcave[i + 1][j + 1]);
+					}
+					else if (visit[i + 1][j + 1] == visit[i + 1][j - 1] && visit[i + 1][j + 1] > visit[i + 1][j]){
+						lastcave[i][j] = max(lastcave[i + 1][j + 1], lastcave[i + 1][j - 1]);
+					}
+					else{
+						lastcave[i][j] = max(lastcave[i + 1][j + 1], lastcave[i + 1][j], lastcave[i + 1][j - 1]);
+					}
+					if (p[h[i][j]] && lastcave[i][j] == 0){
+						lastcave[i][j] = h[i][j];
+					}
+
+				}
+
+				//出力
+				if (h[i][j] == n){
+					cout << visit[i][j] << " " << lastcave[i][j] << endl;
+					break;
+				}
+			}
+		}
+	}
+	return 0;
+}

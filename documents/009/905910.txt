@@ -1,0 +1,14 @@
+n = int(raw_input())
+ans = []
+while n > 0:
+  a = []
+  for i in range(n):
+    a.append(int(raw_input()))
+  len_a = len(a)
+  max_sum = -100000*len_a
+  for i in range(len_a + 1):
+    for j in range(i+1, len_a + 1):
+      part_sum = sum(a[i:j])
+      if part_sum > max_sum: max_sum = part_sum
+  print max_sum
+  n = int(raw_input())

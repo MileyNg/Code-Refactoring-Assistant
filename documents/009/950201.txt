@@ -1,0 +1,31 @@
+//ヘッダファイル
+#include<stdio.h>
+#include<math.h>
+
+//マクロ定義
+#define FIRST 1
+#define BORDER_LINE 600
+
+#define compile 0
+main()
+{
+	int i = 0, d = 0, area = 0;
+	int n = FIRST;
+	while(scanf("%d", &d) != EOF)
+	{
+		for(i = d; i < BORDER_LINE; i += d)
+		{
+			area += d * pow(n * d, 2);
+			
+#if compile == 1
+			printf("i = %d\t", i);
+			printf("area_sum = %d\n", area);
+#endif
+			n++;
+		}
+		printf("%d\n", area);
+		area = 0;
+		n = FIRST;
+	}
+	return 0;
+}

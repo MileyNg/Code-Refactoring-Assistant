@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+struct Parser{
+    typedef long long LL;
+    static const LL MOD = 1000000007;
+    struct Result{
+        int idx;
+        LL val;
+        Result(int i, LL v) : idx(i), val(v) {}
+    };
+    string s;
+    Parser(string s_) {
+        stringstream ss(s_);
+        string t;
+        while(ss >> t){
+            s += t;
+        }
+    }
+    inline void inc(int& k, char c) const {
+        if(s[k] != c){
+            printf("assert s[%d] = %c but %c\n", k, c, s[k]);
+            exit(1);
+        }
+        k++;
+    }
+    inline bool is_term(char c) const {
+        if(isdigit(c)) return true;
+        return c == 'S';
+    }
+    int parse() const {
+        return expr(0).val;
+    }
+    Result expr(int k) const {
+        // printf("into expr(%d)\n", k);
+        Result r = term(k);
+        while(s[r.idx] == '>' && r.idx + 2 < s.size() && is_term(s[r.idx + 2])){
+            inc(r.idx, '>');
+            inc(r.idx, '>');
+            // printf("expr(%d) call term(%d)\n", k, r.idx);
+            Result t = term(r.idx);
+            // printf("back expr(%d)\n", k);
+            r.val = r.val >> min(60LL, t.val);
+            r.idx = t.idx;
+        }
+        return r;
+    }
+    Result term(int k) const {
+        // int fk = k;
+        // printf("into term(%d)\n", k);
+        if(s[k] == 'S'){
+            inc(k, 'S');
+            inc(k, '<');
+            // printf("term(%d) call expr(%d)\n", fk, k);
+            Result r = expr(k);
+            // printf("back term(%d) (%d, %d)\n", fk);
+            r.val = r.val * r.val % MOD;
+            inc(r.idx, '>');
+            return r;
+        }else{
+            LL num = 0;
+            while(isdigit(s[k])){
+                num = num * 10 + s[k++] - '0';
+            }
+            return Result(k, num);
+        }
+    }
+};
+
+int main(){
+    string s;
+    while(getline(cin, s) && s != "#"){
+        cout << Parser(s).parse() << endl;
+    }
+    return 0;
+}

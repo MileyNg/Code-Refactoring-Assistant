@@ -1,0 +1,53 @@
+#include<stdio.h>
+
+void swap(int* a,int* b){
+  int tmp=*a;
+  *a=*b;
+  *b=tmp;
+}
+
+int n;
+int A[1000];
+int B[1000];
+
+int search(int x){
+  int i;
+  for(i=0;i<n;i++){
+    if(A[i]==x)return i;
+  }
+}
+
+int main(){
+  int i,j,ans,x,y;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&A[i]);
+    B[i]=A[i];
+  }
+  
+  for(i=n-1;i>0;i--){
+    for(j=0;j<i;j++){
+      if(B[j]>B[j+1])swap(&B[j],&B[j+1]);
+    }
+  }
+ 
+  ans=0;
+  
+  while(1){
+    x=10001;
+    for(i=0;i<n;i++){
+      if(A[i]==B[i])continue;
+      if(x>A[i])x=A[i];
+    }
+    if(x==10001)break;
+
+    x=search(x);
+    y=search(B[x]);
+
+    swap(&A[x],&A[y]);
+    ans+=(A[x]+A[y]);
+  }
+  printf("%d\n",ans);
+
+  return 0;
+}

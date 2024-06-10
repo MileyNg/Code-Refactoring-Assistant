@@ -1,0 +1,49 @@
+#include <iostream>
+using namespace std;
+
+
+int main()
+{
+  
+  int r = 0 , c = 0 , list[101][101] , tate[101] , yoko[101] , s = 0;
+  
+  cin >> r >> c;
+  
+  for( int i = 0; i < 101; i++ )
+    {
+      tate[i] = 0;
+      yoko[i] = 0;
+      for( int j = 0; j < 101; j++ )
+	{
+	  list[i][j] = 0;
+	}
+    }
+  
+      for( int i = 0; i < r; i++ )
+	{
+	  for( int j = 0; j < c; j++ )
+	    {
+	      cin >> list[i][j];
+	      yoko[i] += list[i][j];
+	      tate[j] += list[i][j];
+	    }
+	}   
+      
+      for( int i = 0; i < r; i++ )
+	{
+	  for( int j = 0; j < c; j++ )
+	    {
+	      cout << list[i][j] << " ";
+	    }
+	  cout << yoko[i] << "\n";
+	}
+      
+      for( int j = 0; j < c; j++ )
+	{
+	  s += tate[j];
+	  cout << tate[j] << " ";
+	}
+   
+      cout << s << "\n";   
+      return 0;
+}   

@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+int cand[52];
+int n, p;
+
+bool is_game_over (void ){
+	rep (i, n ){
+		if (cand[i] == p ) return true;
+	} // end rep
+
+	return false;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	while (cin >> n >> p, n ){
+		memset (cand, 0, sizeof (cand ) );
+		int res = -1;
+		int i = 0, j = p;
+		while (true ){
+			if (j > 0 ){
+				cand[i%n]++;
+				j--;
+				if (j == 0 && is_game_over () ){
+					res = i%n;
+					break;
+				} // end if
+				i++;
+			}else{
+				j = cand[i%n];
+				cand[i%n] = 0;
+				i++;
+			} // end if
+		} // end while
+		cout << res << endl;
+	} // end while		
+		
+	return 0;
+}

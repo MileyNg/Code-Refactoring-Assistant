@@ -1,0 +1,20 @@
+while 1:
+	n = input()
+	if n == 0: break
+	plant = map(int,raw_input().split())
+	ini = plant[0]
+	plant = [plant[i] - ini for i in range(n+1)]
+	unit = plant[1]
+	p = []
+	d = 0
+	for i in range(2,n+1):
+		if plant[i] != unit*(i-d):
+			p.append(i)
+			d += 1
+	l = len(p)
+	if l == n-1:
+		print ini
+	elif l == 1:
+		print plant[p[0]] + ini
+	else:
+		print plant[1] + ini

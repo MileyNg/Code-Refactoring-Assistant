@@ -1,0 +1,34 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+
+int main(){
+  int n, k, in;
+
+  while(scanf("%d%d", &n, &k) && (n || k)){
+    vector<int>s;
+    vector<int>b(100);
+    rep(i, k) scanf("%d", &in), s.push_back(in);
+    rep(i, n) rep(j, k){
+      scanf("%d", &in);
+      b[j] += in;
+    }
+    bool flag = false;
+    rep(i, k) if(s[i] < b[i]) flag = true;
+    if(flag) puts("No");
+    else puts("Yes");
+  } 
+  return 0;
+}

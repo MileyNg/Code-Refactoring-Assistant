@@ -1,0 +1,11 @@
+def divisor(num)
+  divisor = []
+  f = 1.0
+  while 1 < num / f
+    divisor << num / f.to_i if num % f == 0
+    f += 1
+  end
+  divisor + [1]
+end
+
+puts gets.split.map {|num| divisor(num.to_i)}.inject {|m, n| m & n}.max

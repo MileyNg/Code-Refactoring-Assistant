@@ -1,0 +1,99 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<complex>
+#include<set>
+#include<map>
+#include<queue>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int H = 33;
+
+class P{
+	public:
+	int x,y,dir,val;
+	P(int x,int y,int dir,int val):x(x),y(y),dir(dir),val(val){}
+	bool operator<(const P& a)const{
+		return val>a.val;
+	}
+};
+
+int w,h;
+int masu[H][H];
+int cost[4];
+
+int dx[]={1,0,-1,0};
+int dy[]={0,1,0,-1};
+
+void initQue(priority_queue<P>& que){
+	que.push(P(0,0,0,0));
+}
+
+void addQue(priority_queue<P>& que, P& u){
+	
+	int ndx = dx[u.dir];
+	int ndy = dy[u.dir];
+	
+	for(int i=0;i<4;i++){
+		
+		int c = cost[i];
+		if(i==masu[u.y][u.x])c = 0;
+		
+		que.push(P(u.x+ndx, u.y+ndy, (u.dir+i)%4, u.val+c));
+		
+		int temp = ndx;
+		ndx = -ndy;
+		ndy = temp;
+	}
+}
+
+bool isGoal(P& u){
+	return u.x==w-1 && u.y==h-1;
+}
+
+int visit[H][H][4];
+int solve(){
+	rep(i,h)rep(j,w)cin>>masu[i][j];
+	
+	priority_queue<P> que;
+	initQue(que);
+	
+	rep(i,4)cin>>cost[i];
+	
+	rep(i,H)rep(j,H)rep(k,4)visit[i][j][k]=0;
+	while(1){
+		if(que.empty())break;
+		
+		P u = que.top();
+		que.pop();
+		
+		if(u.x<0 || u.y<0 || u.x>=w || u.y>=h)continue;
+		
+		if(visit[u.x][u.y][u.dir]==1)continue;
+		visit[u.x][u.y][u.dir]=1;
+		
+		//printf("%d %d %d %d\n",u.x,u.y,u.dir,u.val);
+		
+		if(isGoal(u)){
+			return u.val;
+		}
+		
+		addQue(que,u);
+	}
+	return -1;
+}
+
+int main(){
+	while(1){
+		cin>>w>>h;
+		if(w==0 && h==0)break;
+		printf("%d\n",solve());
+		//break;
+	}
+}

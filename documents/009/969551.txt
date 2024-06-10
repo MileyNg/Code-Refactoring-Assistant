@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstring>
+#include <queue>
+
+using namespace std;
+
+
+
+int _W, _H;
+int W, H;
+
+int map[500][500];
+
+struct state {
+	int x, y, d;
+	state(int _x, int _y, int _d) : x(_x), y(_y), d(_d) {}
+};
+
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = { 0,-1, 0, 1};
+
+int solver() {
+	int ans = (int)1e9;
+	
+	int gx = W-1, gy = H-1;
+	
+	queue<state> q;
+	q.push(state(0, 0, 1));
+	
+	while (!q.empty()) {
+		state s = q.front(); q.pop();
+		
+		if (s.d >= ans) continue;
+		
+		if (s.x == gx && s.y == gy) {
+			ans = min(ans, s.d);
+			continue;
+		}
+		
+		for (int i=0; i<4; i++) {
+			if (!(0 <= s.y + dy[i] && s.y + dy[i] < H && 0 <= s.x + dx[i] && s.x + dx[i] < W)) continue;
+		
+			if (map[s.y + dy[i]][s.x + dx[i]] == 0) {
+				map[s.y + dy[i]][s.x + dx[i]] = -1;
+				map[s.y + 2 * dy[i]][s.x + 2*dx[i]] = -1;
+				q.push(state(s.x + 2*dx[i], s.y + 2*dy[i], s.d + 1));
+			}
+		}
+	}
+	
+	if (ans == (int)1e9) ans = 0;
+	return ans;
+}
+
+int main() {
+	
+	while (1) {
+		cin >> _W >> _H; if (_W == 0 && _H == 0) break;
+		W = 2*_W - 1; H = 2*_H - 1;
+		
+		memset(map, 0, sizeof(map));
+		cin.ignore();
+		
+		string str;
+		for (int i=0; i<H; i++) {
+			getline(cin, str);
+			
+			int n = (int)str.size();
+			for (int j=0; j<n; j++) {
+				if (str[j] == '1') {
+					map[i][j] = 1;
+				}
+			}
+		}
+		
+		cout << solver() << endl;
+	}
+	
+	return 0;
+}

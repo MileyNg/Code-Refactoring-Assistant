@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Programminng
+{
+    class AOJ_Volume0007
+    {
+        public static void Main(string[] args)
+        {
+            int debt = 100000;
+            var input = Console.ReadLine();
+            int i = int.Parse(input);
+
+            for (int j = 0; j < i; j++)
+            {
+                debt = f_debt(debt);
+            }
+            Console.WriteLine(debt);
+        }
+
+        private static int f_debt(int n)
+        {
+            n = (int)(n * 1.05);
+            if (n % 1000 != 0)
+            {
+                n = n - (n % 1000) + 1000;
+            }
+            return n;
+        }
+    }
+}

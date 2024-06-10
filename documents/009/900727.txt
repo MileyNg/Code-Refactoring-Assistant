@@ -1,0 +1,45 @@
+def isOver(a,b):
+    return True if (a[0]-b[0])**2 + (a[1]-b[1])**2 <= 4.0 else False
+ 
+def largestGroup(mtrx,num):
+    mx = 1
+    ls = [num]
+    for i in mtrx[num]:
+        if i == num:
+        	continue
+       	m = youKnow(mtrx,ls,i)
+        mx = max(mx,m)
+    return mx
+ 
+def youKnow(mtrx,ls,num):
+	mx = len(ls)
+	if set(ls) <= set(mtrx[num]):
+		if num not in ls:
+			ls.append(num)
+			for i in list(set(mtrx[num])-set(ls)):
+				m = youKnow(mtrx,ls,i)
+				mx = max(mx,m)
+	return mx
+ 
+while True:
+    max_over = 0
+    n = int(raw_input())
+    if n == 0: break
+    seals = [map(float, raw_input().split(",")) for i in range(n)]
+ 
+    overs = []
+    for i in range(n):
+        over = []
+        for j in range(n):
+            if isOver(seals[i],seals[j]):
+                over.append(j)
+        overs.append(over)
+         
+    ref = [i for i in range(n)]
+    for i in ref:
+       num_over = largestGroup(overs,i)
+       for j in overs[i]:
+           if j in ref: ref.remove(j)
+       if num_over > max_over:
+           max_over = num_over
+    print max_over

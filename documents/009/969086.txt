@@ -1,0 +1,61 @@
+figs = [
+  [[1, 0], [0, 1], [1, 1]],	# A
+  [[0, 1], [0, 2], [0, 3]],	# B
+  [[1, 0], [2, 0], [3, 0]],	# C
+  [[0, 1], [-1, 1], [-1, 2]],	# D
+  [[1, 0], [1, 1], [2, 1]],	# E
+  [[0, 1], [1, 1], [1, 2]],	# F
+  [[1, 0], [0, 1], [-1, 1]]	# G
+]
+
+names = %w(A B C D E F G)
+
+### main
+
+cont = true
+
+while cont
+  pl = []
+  ln = 0
+
+  while ! (line = gets).nil? && line != "\n"
+    pl.push line.chop.split("").map{|s| s.to_i}
+  end
+  #p pl
+
+  cont &&= ! line.nil?
+
+  x = y = 0
+  while pl[y][x] == 0
+    x += 1
+    if x > 7
+      x = 0
+      y += 1
+    end
+  end
+
+  ans = nil
+
+  for i in (0...figs.length)
+    f = figs[i]
+
+    for v in f
+      x0 = x + v[0]
+      y0 = y + v[1]
+      found = true
+
+      if (x0 < 0 || x0 > 7 || y0 < 0 || y0 > 7 ||
+          pl[y0][x0] == 0)
+        found = false
+        break
+      end
+    end
+
+    if found
+      ans = i
+      break
+    end
+  end
+
+  puts names[ans]
+end

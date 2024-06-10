@@ -1,0 +1,93 @@
+#include<iostream>
+#include<vector>
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+
+#define MAX_V 41
+struct node{
+  int id,parent,left,right,sibling;
+  node():id(0),parent(-1),left(-1),right(-1),sibling(-1){}
+};
+node nodes[MAX_V]{};
+
+void set_node(int id, int left,int right){
+  nodes[id].id=id;
+  nodes[id].left=left;
+  nodes[id].right=right;
+  if(left>=0){
+    nodes[left].id=left;
+    nodes[left].parent=id;
+    nodes[left].sibling=right;
+  }
+  if(right>=0){
+    nodes[right].id=right;
+    nodes[right].parent=id;
+    nodes[right].sibling=left;
+  }
+}
+void printPostorder(node n,bool last=false){
+  if(n.left>=0) printPostorder(nodes[n.left]);
+  if(n.right>=0) printPostorder(nodes[n.right]);
+  cout<<n.id<<(last?"\n":" ");
+}
+
+int main(){
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+
+  vector<int> pre;
+  vector<int> in;
+  int n; cin>>n;
+  REP(i,n) {int tmp; cin>>tmp; pre.push_back(tmp);}
+  REP(i,n) {int tmp; cin>>tmp; in.push_back(tmp);}
+
+  while(true){
+    bool found=false;
+    for(int i=pre.size()-2;i>=0;i--){
+      for(int j=in.size()-2;j>=0;j--){
+	if(i<(int)pre.size()-2&&j<(int)in.size()-2){
+	  if(pre[i]==in[j+1]&&pre[i+1]==in[j]&&pre[i+2]==in[j+2]){
+	    set_node(pre[i],pre[i+1],pre[i+2]);
+	    auto iter=pre.begin();
+	    REP(k,i+1) iter++;
+	    pre.erase(iter); pre.erase(iter);
+	    iter=in.begin();
+	    REP(k,j) iter++;
+	    in.erase(iter);iter++;in.erase(iter);
+	    found=true; break;
+	  }
+	}
+	if(pre[i]==in[j]&&pre[i+1]==in[j+1]){
+	  set_node(pre[i],-1,pre[i+1]);
+	  auto iter=pre.begin();
+	  REP(k,i+1) iter++;
+	  pre.erase(iter);
+	  iter=in.begin();
+	  REP(k,j+1) iter++;
+	  in.erase(iter);
+	  found=true; break;
+	}
+	if(pre[i]==in[j+1]&&pre[i+1]==in[j]){
+	  set_node(pre[i],pre[i+1],-1);
+	  auto iter=pre.begin();
+	  REP(k,i+1) iter++;
+	  pre.erase(iter);
+	  iter=in.begin();
+	  REP(k,j+1) iter++;
+	  in.erase(iter);
+	  found=true; break;
+	}
+      }
+      if(found){break;}
+    }
+    for(int a:pre) cout <<a;
+    cout<<endl;
+    for(int a:in) cout <<a;
+    cout<<endl;
+    if((int)pre.size()==1){break;}
+  }
+  int root=1;
+  while(nodes[root].parent!=-1)
+    root=nodes[root].parent;
+  printPostorder(nodes[root],true);
+}

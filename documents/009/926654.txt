@@ -1,0 +1,49 @@
+loop{
+	an,bn,r = gets.split.map(&:to_i)
+	if an==0 and bn == 0 then
+		break
+	end
+	rr = 16 * r * r
+	len = (0..4*r).map{|y| Math.sqrt(rr - y*y).to_i}
+	#p len
+	bord = [] #Array.new(10000).map{Array.new(10000,0)}
+	1.step(an){
+		ax,ay = gets.split.map(&:to_i)
+		
+		[ay-4*r,0].max.step(ay+4*r){|tmpy|
+			y = (tmpy - ay).abs
+			if bord[tmpy].nil? then
+				bord[tmpy] = []
+			end
+			[0,ay - len[y]].max.step(ay + len[y]){|x|
+				if bord[tmpy][x].nil? then
+					bord[tmpy][x] = 1
+				else
+					bord[tmpy][x] += 1
+				end
+			}
+		}
+=begin
+		print ax
+		print ", "
+		print ay
+		print "\n"
+		print bord
+		print "\n"
+=end		
+	}
+	#p bord
+	#as = an.times.map{gets.split.map(&:to_i)}
+	pow = 0
+	1.step(bn){
+		bx,by = gets.split.map(&:to_i)
+		tmp = bord[by][bx]
+		if tmp.nil? then
+			next
+		else
+			pow += tmp
+		end
+	}
+	print pow
+	print "\n"
+}

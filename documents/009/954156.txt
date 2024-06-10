@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <math.h>
+
+#define _PI 60.*M_PI/180.
+
+typedef struct{
+  double x, y;
+} Point;
+
+Point add(Point,Point);
+Point sub(Point,Point);
+Point mul(Point,double);
+Point div(Point,double);
+void solve(Point,Point,int);
+
+int main(){
+  int n;
+  Point p1, p2;
+
+  p1.x = p1.y = p2.y = 0;
+  p2.x = 100;
+
+  scanf("%d" ,&n);
+  solve(p1,p2,n);
+  printf("%.8f %.8f\n" ,p2.x ,p2.y);
+
+  return 0;
+}
+
+Point add(Point a,Point b){
+  Point c;
+
+  c.x = a.x + b.x;
+  c.y = a.y + b.y;
+
+  return c;
+}
+
+Point sub(Point a,Point b){
+  Point c;
+
+  c.x = a.x - b.x;
+  c.y = a.y - b.y;
+
+  return c;
+}
+
+Point mul(Point a,double k){
+  Point c;
+
+  c.x = a.x * k;
+  c.y = a.y * k;
+
+  return c;
+}
+
+Point div(Point a,double k){
+  Point c;
+
+  c.x = a.x / k;
+  c.y = a.y / k;
+
+  return c;
+}
+
+void solve(Point a,Point b,int rem){
+  Point c = div(sub(b,a),3.), d = mul(c,2.);
+  Point s = add(a,c), t = add(a,d), u;
+
+  if(rem == 0){
+    printf("%.8f %.8f\n" ,a.x ,a.y);
+    return;
+  }
+
+  u.x = s.x + (t.x - s.x) * cos(_PI)
+    - (t.y - s.y) * sin(_PI);
+
+  u.y = s.y + (t.x - s.x) * sin(_PI)
+    + (t.y - s.y) * cos(_PI);
+
+  solve(a,s,rem-1);
+  solve(s,u,rem-1);
+  solve(u,t,rem-1);
+  solve(t,b,rem-1);
+}

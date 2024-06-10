@@ -1,0 +1,50 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <array>
+#include <utility>
+#include <deque>
+#include <queue>
+#include <functional>
+#include <numeric>
+using namespace std;
+
+// bad knowhow
+#define REP(i,n) for(long long i=0;i<(long long)n;++i)
+#define ALL(x) (x).begin(), (x).end()
+
+vector<int> g_taro;
+vector<int> g_hana;
+
+long long g_min_taro;
+long long g_min_hana;
+
+inline int getInt() { int s; scanf("%d", &s); return s; }
+
+
+int main() {
+	while (true) {
+		g_taro.clear();
+		g_hana.clear();
+		g_min_hana = 100000;
+		g_min_taro = 100000;
+
+		int n,m;
+		cin >> n >> m;
+		if (n == 0) break;
+		REP(i, n) g_taro.push_back(getInt());
+		REP(i, m) g_hana.push_back(getInt());
+
+		long long taro_sum = accumulate(ALL(g_taro), 0);
+		long long hana_sum = accumulate(ALL(g_hana), 0);
+
+		REP(i, n) REP(j, m) if (taro_sum - g_taro[i] + g_hana[j] == hana_sum - g_hana[j] + g_taro[i] && g_min_taro + g_min_hana > g_taro[i] + g_hana[j]) {
+			g_min_taro = g_taro[i];
+			g_min_hana = g_hana[j];
+		}
+
+		if (g_min_taro==100000) cout << -1 << endl;
+		else cout << g_min_taro << " " << g_min_hana << endl;
+	}
+}

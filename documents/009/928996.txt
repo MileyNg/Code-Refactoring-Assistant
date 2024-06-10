@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n, a, b;
+  char str[128];
+  while(scanf("%d", &n) && n){
+    stack<int>st;
+    scanf("%s", str);
+    rep(i, n){
+      scanf("%d%d", &a, &b);
+      st.push(a); st.push(b);
+    }
+    rep(i, n){
+      b = st.top(); st.pop();a = st.top(); st.pop();
+      a--;b--;
+      //      fprintf(stderr, "%d %d\n", a, b);
+      char tmp = str[a];
+      str[a] = str[b];
+      str[b] = tmp;
+      //      puts(str);
+      if(str[a] + b - a > 'z') str[a] -=26;
+      if(str[b] + b - a> 'z') str[b] -=26;
+      str[a] += b - a;
+      str[b] += b - a;
+      //      puts(str);
+    }
+    puts(str);
+  }
+  return 0;
+}

@@ -1,0 +1,151 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+bool check( long long int y ) {
+
+  if ( ( y % 4 ) != 0 ) return false;
+  if ( ( y % 100 ) == 0 && ( y % 400 ) != 0 ) return false;
+  return true;
+
+}
+
+int main () {
+
+  string input;
+
+  int st = 2012;
+
+  while( true ) {
+
+    cin >> input;
+
+    if ( input == "#" ) break;
+
+    int cnt = 0;
+
+    int m[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+    long long int d[5] = {0};
+
+    for ( int i = 0; i < input.size(); i++ ) {
+
+      if ( input[i] == '.' ) {
+	cnt++;
+      }else {
+	d[cnt] *= 10;
+	d[cnt] += input[i] - '0';
+      }
+
+    }
+
+    long long int num = 0;
+
+    if ( cnt == 2 ) {
+
+      if ( d[0] == st ) {
+	num = d[2] - 21;
+      }else {
+	num = 10;
+	d[0]--;
+	num += ( d[0] - st ) * 365 + d[0] / 4 - d[0] / 100 + d[0] / 400;
+	num -= st / 4 - st / 100 + st / 400;
+	d[0]++;
+	for ( int i = 0; i < d[1] - 1; i++ ) {
+	  num += m[i];
+	  if ( i == 1 ) {
+	    if ( check( d[0] ) == true ) num++;
+	  }
+	}
+	num += d[2];
+      }
+
+      d[4] = num % 20;
+      num /= 20;
+      d[3] = num % 18;
+      num /= 18;
+      d[2] = num % 20;
+      num /= 20;
+      d[1] = num % 20;
+      num /= 20;
+      d[0] = num % 13;
+
+      for ( int i = 0; i < 5; i++ ) {
+
+	if ( i != 0 ) cout << ".";
+	cout << d[i];
+
+      }
+
+      cout << endl;
+
+    }else if ( cnt == 4 ) {
+
+      num += d[0] * 20 * 20 * 18 * 20;
+      num += d[1] * 20 * 18 * 20;
+      num += d[2] * 18 * 20;
+      num += d[3] * 20;
+      num += d[4];
+
+      if ( num <= 10 ) {
+
+	d[0] = st;
+	d[1] = 12;
+	d[2] = 21 + num;
+
+      }else {
+
+	num -= 10;
+
+	d[0] = st+1;
+	d[1] = 1;
+	d[2] = 1;
+
+	int k;
+
+	while( true ) {
+
+	  if ( check( d[0] ) == false ) {
+	    k = 365;
+	  }else {
+	    k = 366;
+	  }
+
+	  if ( num <= k ) break;
+	  num -= k;
+	  d[0]++;
+
+	}
+
+	for( int i = 0; i < 12; i++ ) {
+
+	  k = m[i];
+	  if ( check( d[0] ) == true && i == 1 ) k++;
+	  if ( num <= k ) {
+	    d[2] = num;
+	    break;
+	  }else {
+	    d[1]++;
+	    num -= k;
+	  }
+
+	}
+
+      }
+
+      for ( int i = 0; i < 3; i++ ) {
+
+	if ( i != 0 ) cout << ".";
+	cout << d[i];
+
+      }
+
+      cout << endl;
+
+    }
+
+  }
+
+  return 0;
+
+}

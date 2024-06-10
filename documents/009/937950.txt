@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+	char buff[200];
+	int i, n, count, ismatch;
+	count = 0;
+	while(scanf("%s\n", buff)==1) {
+		n = strlen(buff);
+		ismatch = 1;
+		for(i=0;i<n/2;i++){
+			if(buff[i] != buff[n-i-1]){
+				ismatch = 0;
+				break;
+			}
+		}
+		
+		if(ismatch) {
+			count ++;
+		}
+	}
+	
+	printf("%d\n", count);
+
+	return 0;
+}

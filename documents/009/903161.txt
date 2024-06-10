@@ -1,0 +1,32 @@
+#include<stdio.h>
+
+main(){
+  int in_num;
+  int i, put, j;
+  int count = 0;
+  int res;
+
+  while(1){
+  res = scanf("%d", &in_num);
+
+  if(res == EOF) break;
+
+  for(i = 1 ; i <= in_num ; i++){
+    for(j = 2 ; j <= i ; j++){
+      put = i % j;
+
+      /*自分以外で割切れたらすぐbreak */
+      if(put == 0 && i != j) break;
+
+      if(put == 0){
+        count++;
+        break;
+      }
+    }
+  }
+
+  printf("%d\n", count);
+  count = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,25 @@
+#include<stdio.h>
+
+int main(){
+  int n,i;
+  int tarou,hanako;
+  char word_t[101],word_h[101];
+  scanf("%d",&n);
+  tarou=hanako=0;
+  for(i=0;i<n;i++){
+    int res;
+    scanf("%s",word_t);
+    scanf("%s",word_h);
+    res=strcmp(word_t,word_h);
+    if(res<0){
+      hanako+=3;
+    }else if(res>0){
+      tarou+=3;
+    }else{
+      tarou++;
+      hanako++;
+    }
+  }
+  printf("%d %d\n",tarou,hanako);
+  return 0;
+}

@@ -1,0 +1,70 @@
+#include<cstdio>
+#include<cstring>
+#include<vector>
+#include<utility>
+#include<queue>
+#include<algorithm>
+using namespace std;
+typedef struct P{
+	int p,c,f[105];
+	//int operator <(const P a){return p<a.p;};
+}P;
+
+struct Order
+{
+	bool operator ()(P const& a, P const& b) const
+	{
+		return a.c>b.c;
+	}
+};
+
+
+int N,M,S,G1,G2,C[105][105];
+int main()
+{
+	for(;scanf("%d%d%d%d%d",&N,&M,&S,&G1,&G2),N;)
+	{
+		S--;G1--;G2--;
+		memset(C,0,sizeof(C));
+		for(int i=0;i<M;i++)
+		{
+			int f,t,c;
+			scanf("%d%d%d",&f,&t,&c);
+			f--;t--;
+			C[f][t]=C[t][f]=c;
+		}
+		priority_queue<P,vector<P>,Order> Q;
+		P tmp;tmp.p=S;tmp.c=0;
+		memset(tmp.f,0,sizeof(tmp.f));tmp.f[S]=1;
+		Q.push(tmp);
+		for(;!Q.empty();)
+		{
+			tmp=Q.top();Q.pop();
+			if(tmp.f[G1]&&tmp.f[G2])
+			{
+				printf("%d\n",tmp.c);
+				break;
+			}
+			for(int i=0;i<N;i++)
+				if(C[tmp.p][i])
+				{
+					if(tmp.f[i]==1&&i!=G1&&i!=G2)//alrady passed
+					{
+						P ins=tmp;
+						ins.f[i]++;
+						ins.p=i;
+						Q.push(ins);
+					}
+					else if(tmp.f[i]==0)//new node
+					{
+						P ins=tmp;
+						ins.f[i]++;
+						ins.c+=C[tmp.p][i];
+						ins.p=i;
+						Q.push(ins);
+					}
+				}
+		}
+	}
+	return 0;
+}

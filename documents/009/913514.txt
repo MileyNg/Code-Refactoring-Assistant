@@ -1,0 +1,117 @@
+#include<functional>
+#include<algorithm>
+#include<iostream>
+#include<string>
+
+template<class T>
+struct Vector{
+	int sz,cap;
+	T *p;
+	Vector():sz(0),cap(0),p(0){}
+	~Vector(){
+		clear();
+	}
+	void swap(Vector &v){
+		std::swap(sz,v.sz);
+		std::swap(cap,v.cap);
+		std::swap(p,v.p);
+	}
+	int size()const{return sz;}
+	bool empty()const{return !sz;}
+	T& back()const{
+		return p[sz-1];
+	}
+	void push_back(T v){
+		if(sz==cap)reserve(sz?sz*2:1);
+		new(p+sz++) T(v);
+	}
+	void pop_back(){
+		p[--sz].~T();
+		if(sz&&sz*4<cap){
+			reserve(cap/2);
+		}
+	}
+	void resize(int n){
+		clear();
+		if(n==0)return;
+		cap=1;
+		while(cap<n)cap*=2;
+		reserve(cap);
+		for(int i=0;i<n;i++)new(p+i) T();
+		sz=n;
+	}
+	void reserve(int n){
+		T *p=(T*)operator new(n*sizeof(T));
+		for(int i=0;i<sz;i++){
+			new(p+i) T(this->p[i]);
+			p[i].~T();
+		}
+		if(this->p)operator delete(this->p);
+		this->p=p;
+		cap=n;
+	}
+	void clear(){
+		for(int i=0;i<sz;i++){
+			p[i].~T();
+		}
+		if(p)operator delete(p);
+		sz=cap=0;
+		p=0;
+	}
+	T& operator[](int i)const{
+		return p[i];
+	}
+};
+
+
+template<class T,class C=std::less<T> >
+class BinaryHeap:private Vector<T>{
+	C cmp;
+public:
+	void push(T v){
+		push_back(v);
+		int i=size()-1;
+		while(p && cmp(p[i],p[(i-1)/2])){
+			std::swap(p[(i-1)/2],p[i]);
+			i=(i-1)/2;
+		}
+	}
+	T top()const{
+		return p[0];
+	}
+	void pop(){
+		std::swap(p[0],p[size()-1]);
+		pop_back();
+		int i=0;
+		while(i*2+1<size()){
+			int j=2*i+1;
+			if(j+1<size() && cmp(p[j+1],p[j]))j++;
+			if(cmp(p[j],p[i])){
+				std::swap(p[i],p[j]);
+				i=j;
+			}else break;
+		}
+	}
+	bool empty()const{return Vector<T>::empty();}
+};
+
+
+using namespace std;
+
+int main(){
+	BinaryHeap<int,greater<int> > heap;
+	string s;
+	while(1){
+		cin>>s;
+		if(s=="end")break;
+		if(s=="insert"){
+			int n;
+			cin>>n;
+			heap.push(n);
+		}else if(s=="extract"){
+			cout<<heap.top()<<endl;
+			heap.pop();
+		}
+	}
+	return 0;
+}

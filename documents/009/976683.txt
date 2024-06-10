@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+using namespace std;
+const string TERMINATE(5, '+');
+struct Point{
+  int x;
+  int y;
+  Point(int a,int b){
+	x = a;
+	y = b;
+  }
+  Point operator-(const Point &p) const {
+	return Point(x-p.x,y-p.y);
+  }
+  bool operator!=(const Point &p) const{
+	return x != p.x || y != p.y;
+  }
+};
+vector<Point> input_ore(){
+  int m;
+  cin >> m;
+  vector<Point> res;
+  for(int i =0 ;i < m;i++){
+	int x,y;
+	cin >> x >> y;
+	res.emplace_back(x,y);
+  }
+  return res;
+}
+Point rotate_90(const Point &p){
+  return Point(-p.y,p.x);
+}
+
+bool check(const vector<Point> &a,const vector<Point> &b){
+  for(int i = 1;i < a.size();i++){
+	if(a[i] - a[i-1] != b[i] - b[i-1])return false;
+  }
+  return true;
+}
+void role(vector<Point> &vec){
+  for(Point &p:vec){
+	p = rotate_90(p);
+  }
+}
+
+bool match(vector<Point> a,vector<Point> b){
+  if(a.size() != b.size())return false;
+  for(int j = 0;j < 4;j++){
+	if(check(a,b))return true;
+	reverse(b.begin(),b.end());
+	if(check(a,b))return true;
+	role(b);
+  }
+  return false;
+  
+}
+int main(){
+  int n;
+  while(cin >> n && n != 0){
+	vector<Point> first = input_ore();
+	for(int i = 1;i <= n;i++){
+	  vector<Point> comp = input_ore();
+	  if(match(first,comp))cout << i << endl;
+	  
+	}
+	cout << TERMINATE << endl;
+  }
+   
+  return 0;
+}

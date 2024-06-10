@@ -1,0 +1,108 @@
+### subroutines
+
+def oprod(x1, y1, x2, y2)
+  x1 * y2 - x2 * y1
+end
+
+def p_in_tr?(x1, y1, x2, y2, x3, y3, xp, yp)
+  op12 = oprod(x2 - x1, y2 - y1, xp - x1, yp - y1)
+  op23 = oprod(x3 - x2, y3 - y2, xp - x2, yp - y2)
+  op31 = oprod(x1 - x3, y1 - y3, xp - x3, yp - y3)
+
+  (op12 >= 0 && op23 >= 0 && op31 >= 0) ||
+    (op12 <= 0 && op23 <= 0 && op31 <= 0)
+end
+
+def dd_c_l(x1, y1, x2, y2, xc, yc)
+  vx = x2 - x1
+  vy = y2 - y1
+
+  # ([t*vx+x1,t*vy+y1]-[xp,yp]) * [vx,vp] = 0
+  # [t*vx+x1-xp,t*vy+y1-yp] * [vx,vp] = 0
+  # vx*(t*vx+x1-xp)+vy(t*vy+y1-yp) = 0
+  # t*vx^2+vx(x1-xp)+t*vy^2+vy(y1-yp) = 0
+  # t*(vx^2+vy^2) = vx*(xp-x1)+vy*(yp-y1)
+  # t = (vx*(xp-x1)+vy*(yp-y1)) / (vx^2+vy^2)
+
+  t = (vx * (xc - x1) + vy * (yc - y1)).to_f / (vx ** 2 + vy ** 2)
+  x = t * vx + x1
+  y = t * vy + y1
+  dd = (x - xc) ** 2 + (y - yc) ** 2
+
+  #p ["cross_c_l", x1, y1, x2, y2, xc, yc, rr, t, x, y, dd]
+  dd
+end
+
+### main
+
+while true
+  x1, y1 = gets.strip.split(' ').map{|s| s.to_i}
+  break if x1 == 0 && y1 == 0
+
+  x2, y2 = gets.strip.split(' ').map{|s| s.to_i}
+  x3, y3 = gets.strip.split(' ').map{|s| s.to_i}
+
+  xc, yc = gets.strip.split(' ').map{|s| s.to_i}
+  r = gets.strip.to_i
+  #p [[x1, y1], [x2, y2], [x3, y3], [xc, yc], r]
+
+  rr = r ** 2
+  dd1 = (x1 - xc) ** 2 + (y1 - yc) ** 2
+  dd2 = (x2 - xc) ** 2 + (y2 - yc) ** 2
+  dd3 = (x3 - xc) ** 2 + (y3 - yc) ** 2
+  #p "dd1=#{dd1}, dd2=#{dd2}, dd3=#{dd3}, rr=#{rr}"
+
+  rel = ''
+
+  if dd1 <= rr && dd2 <= rr && dd3 <= rr
+    #rel = 'b: tr in cir'
+    rel = 'b'
+  elsif dd1 > rr && dd2 > rr && dd3 > rr
+    op12_c = oprod(x2 - x1, y2 - y1, xc - x1, yc - y1)
+    op12_3 = oprod(x2 - x1, y2 - y1, x3 - x1, y3 - y1)
+    same_12 = (op12_c * op12_3 >= 0)
+    op23_c = oprod(x3 - x2, y3 - y2, xc - x2, yc - y2)
+    op23_1 = oprod(x3 - x2, y3 - y2, x1 - x2, y1 - y2)
+    same_23 = (op23_c * op23_1 >= 0)
+    op31_c = oprod(x1 - x3, y1 - y3, xc - x3, yc - y3)
+    op31_2 = oprod(x1 - x3, y1 - y3, x2 - x3, y2 - y3)
+    same_31 = (op31_c * op31_2 >= 0)
+
+    dd12_c = dd_c_l(x1, y1, x2, y2, xc, yc)
+    dd23_c = dd_c_l(x2, y2, x3, y3, xc, yc)
+    dd31_c = dd_c_l(x3, y3, x1, y1, xc, yc)
+
+    if same_12 && same_23 && same_31
+      if dd12_c >= rr && dd23_c >= rr && dd31_c >= rr
+        rel = 'a'
+      else
+        rel = 'c'
+      end
+    elsif ! same_12 && same_23 && same_31
+      if dd12_c > rr
+        rel = 'd'
+      else
+        rel = 'c'
+      end
+    elsif same_12 && ! same_23 && same_31
+      if dd23_c > rr
+        rel = 'd'
+      else
+        rel = 'c'
+      end
+    elsif same_12 && same_23 && ! same_31
+      if dd31_c > rr
+        rel = 'd'
+      else
+        rel = 'c'
+      end
+    else
+      rel = 'd'
+    end
+  else
+    #rel = 'c: intersection'
+    rel = 'c'
+  end
+
+  puts rel
+end

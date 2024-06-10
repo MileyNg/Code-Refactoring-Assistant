@@ -1,0 +1,109 @@
+
+#include <cstdio>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+struct Node {
+	int id;
+	int d;
+	int c;
+};
+
+vector<Node> G[10001];
+int N, M;
+
+typedef bool (*compare_node_type)(const Node &n1, const Node &n2);
+
+bool compare_node_big(const Node &n1, const Node &n2)
+{
+	if (n1.d != n2.d)
+		return n1.d > n2.d;
+	if (n1.c != n2.c)
+		return n1.c > n2.c;
+	return n1.id > n2.id;
+
+}
+
+void dijistra(int src, vector<Node> &dist_v)
+{
+	priority_queue<Node, vector<Node>, compare_node_type> queue(compare_node_big);
+
+	dist_v.resize(N+1);
+	int i, j;
+	Node node;
+
+	for (i=1; i<=N; i++) {
+		dist_v[i].d = INT_MAX;
+	}
+	dist_v[src].d = 0;
+	dist_v[src].c = 0;
+	node.id = src; node.d = 0; node.c = 0;
+	queue.push(node);
+
+	while (!queue.empty()) {
+		node = queue.top(); queue.pop();
+		if (node.d > dist_v[node.id].d ||
+			node.c > dist_v[node.id].c)
+			continue;
+
+		int id = node.id;
+		int d = node.d;
+
+		for (i=0; i<G[id].size(); i++) {
+			int nid = G[id][i].id;
+			if (dist_v[nid].d > d+G[id][i].d ||
+				dist_v[nid].d == d+G[id][i].d && dist_v[nid].c > G[id][i].c) {
+				dist_v[nid].d = d+G[id][i].d;
+				dist_v[nid].c = G[id][i].c;
+				dist_v[nid].id = nid;
+
+				queue.push(dist_v[nid]);
+			}
+
+		}
+
+
+	}
+
+
+}
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	while (scanf("%d%d", &N, &M)==2) {
+		if (N==0 && M==0) break;
+		int i, j;
+		Node node;
+
+		for (i=1; i<=N; i++)
+			G[i].clear();
+
+		for (i=0; i<M; i++) {
+			int u, v, d, c;
+			scanf("%d%d%d%d", &u, &v, &d, &c);
+			node.id = v; node.d = d; node.c = c;
+			G[u].push_back(node);
+			node.id = u;
+			G[v].push_back(node);
+
+		}
+
+		vector<Node> dist_v;
+
+		dijistra(1, dist_v);
+
+		int cost = 0;
+		for (i=1; i<=N; i++)
+			cost += dist_v[i].c;
+		printf("%d\n", cost);
+
+
+
+	}
+
+	return 0;
+}

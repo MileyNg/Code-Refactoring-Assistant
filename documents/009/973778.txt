@@ -1,0 +1,32 @@
+def get_k_diff(ws, p)
+  k = 1
+  cost = 0
+  diff_min = 10000
+
+  ws.each do |w|
+    cost += w
+    if cost > p
+      k += 1
+      diff_min = [diff_min, cost - p].min
+      cost = w
+    end
+  end
+  [k, diff_min]
+end
+
+n, k = gets.split.map(&:to_i)
+ws = []
+n.times do
+  ws << gets.to_i
+end
+
+sum = ws.inject(:+)
+p = [sum / k, ws.max].max
+
+while res = get_k_diff(ws, p)
+  _k, _diff = res
+  break if _k <= k
+  p += _diff
+end
+
+puts p

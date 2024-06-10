@@ -1,0 +1,66 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int n,m;
+static const int dx[4]={0,1,0,-1};
+static const int dy[4]={1,0,-1,0};   
+
+struct Robot{
+  int x,y;
+  int dire;
+  void init(){
+    x=1;
+    y=1;
+    dire=0;
+  };
+  void forward(int num){
+    x+=dx[dire]*num;
+    y+=dy[dire]*num;
+    x=max(1,x); y=max(1,y);
+    x=min(n,x); y=min(m,y);
+  };
+  void backward(int num){
+    x-=dx[dire]*num;
+    y-=dy[dire]*num;
+    x=max(1,x); y=max(1,y);
+    x=min(n,x); y=min(m,y);
+  };
+  void right(){
+    dire++;
+    if(dire==4) dire=0;
+  };
+  void left(){
+    dire--;
+    if(dire==-1) dire=3;
+  };
+};
+
+int main(){
+  string str;
+  int kazu;
+  Robot rb;
+  while(1){
+    cin>>n>>m;
+    rb.init();
+    if(n==0 && m==0) break;
+    while(1){
+      cin>>str;
+      if(str=="FORWARD"){
+	cin>>kazu;
+	rb.forward(kazu);
+      }else if(str=="BACKWARD"){
+	cin>>kazu;
+	rb.backward(kazu);
+      }else if(str=="RIGHT"){
+	rb.right();
+      }else if(str=="LEFT"){
+	rb.left();
+      }else if(str=="STOP"){
+	cout<<rb.x<<" "<<rb.y<<endl;
+	break;
+      }
+    } 
+  }
+  return 0;
+}

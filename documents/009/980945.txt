@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int N = 10;
+int field[N][N];
+int ansx[20], ansy[20], anssz[20];
+int dx[] = { 0, 1, 0 };
+int dy[] = { 1, 1, 2 };
+
+bool drop(int val, int x, int y, int size){
+	for (int s = 0; s < 3; ++s){
+		if (s != size) continue;
+		if (x - dy[s] < 0 || x + dy[s] >= N || y - dy[s] < 0 || y + dy[s] >= N) return false;
+
+		for (int k = 0; k < 2; ++k)
+		for (int i = y - dy[s]; i <= y + dy[s]; ++i){
+			for (int j = x - dy[s]; j <= x + dy[s]; ++j){
+				if (size == 1 || abs(x - j) + abs(y - i) <= dy[s]){
+					if (k) field[i][j] += val;
+					else if (field[i][j] + val < 0) return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool dfs(int x, int y, int n){
+	if (x == N) return dfs(0, y+1, n);
+	if (y == N) return n == 0;
+
+	if (!field[y][x]) return dfs(x+1, y, n);
+	for (int i = 2; i >= 0; --i){
+		bool b = drop(-1, x+dx[i], y+dy[i], i);
+		if (b && dfs(x, y, n-1)){
+			ansx[n] = x+dx[i];
+			ansy[n] = y+dy[i];
+			anssz[n] = i+1;
+			return true;
+		}
+		if(b) drop(1, x+dx[i], y+dy[i], i);
+	}
+	return false;
+}
+
+int main(){
+	int n;
+	cin >> n;
+	for (int i = 0; i < N; ++i)
+	for (int j = 0; j < N; ++j)
+		cin >> field[i][j];
+
+	dfs(0, 0, n);
+	for (int i = 1; i <= n; ++i){
+		cout << ansx[i] << ' ' << ansy[i] << ' ' << anssz[i] << '\n';
+	}
+
+	return 0;
+}

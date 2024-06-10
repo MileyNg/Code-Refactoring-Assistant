@@ -1,0 +1,61 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int main(){
+    int n;
+    cin >> n;
+    for(int i=0; i < n; i++){
+        string input;
+        cin >> input;
+        string check = input.substr(0, 2) + input.substr(input.size()-2, 2);
+
+        bool isCorrect = true;
+        if(check == ">'=~"){
+            if(input.size() == 4) isCorrect = false;
+
+            int count = 0;
+            for(int j=2; input.substr(j,1) == "="; j++) count++;
+            if(input.substr(count+2, 1) != "#") isCorrect = false;
+            for(int j=2+count+1; j < 2+count*2+1; j++) if(input.substr(j, 1) != "=") isCorrect = false;
+            if(input.size() != count*2+2+1*2) isCorrect = false;
+
+            if(isCorrect) cout << "A" << endl;
+        }else if(check == ">^~~"){
+            if(input.size() == 4) isCorrect = false;
+            for(int j=2; j < input.size()-2; j+=2) if(input.substr(j, 2) != "Q=") isCorrect = false;
+
+            if(isCorrect) cout << "B" << endl;
+        }else {
+            cout << "NA" << endl;
+        }
+        if(!isCorrect) cout << "NA" << endl;
+    }
+}

@@ -1,0 +1,46 @@
+$dx = [0,1,0,-1]
+$dy = [1,0,-1,0]
+def bfs(f, sy, sx, steps, q, r, c)
+    for i in 0..3
+        cy = sy + $dy[i]
+        cx = sx + $dx[i]
+        if cy.between?(0,r-1) && cx.between?(0,c-1) && steps[cy][cx]==100000 && f[cy][cx]!="#"
+            q.push([cy,cx])
+            steps[cy][cx] = steps[sy][sx] + 1
+        end
+    end
+    while q.size > 0
+        cy, cx = q.shift
+        steps = bfs(f,cy,cx,steps,q,r,c)
+    end
+    return steps
+end
+
+loop do
+    h, w = gets.split.map(&:to_i)
+    if h==0&&w==0
+        exit
+    end
+    f = Array.new()
+    a = Array.new()
+    b = Array.new()
+    h.times do |i|
+        f[i] = gets.chomp
+        if f[i].include?("A")
+            a[0] = i
+            a[1] = f[i].index("A")
+        end
+        if f[i].include?("B")
+            b[0] = i
+            b[1] = f[i].index("B")
+        end
+    end
+    steps = Array.new(h).map{Array.new(w,100000)}
+    steps[a[0]][a[1]] = 0
+    q = Array.new()
+    steps = bfs(f,a[0],a[1],steps,q,h,w)
+    pat = gets.chomp
+    cs = 0
+    cby = b[0]
+    cbx = b[1]
+    min = Array.new(3,100000)

@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int
+main ()
+{
+  string str;
+  string table[2] =
+    { "abcdefghijklmnopqrstuvwxyz","ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+  getline (cin, str);
+for (auto & e:str)
+    {
+      int buf =
+	find (table[0].begin (), table[0].end (), e) - table[0].begin ();
+      if (buf != table[0].size ())
+	e = table[1][buf];
+    }
+  cout << str << endl;
+}

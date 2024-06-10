@@ -1,0 +1,12 @@
+<?php
+	while(fscanf(STDIN, "%d %d", $a, $b)) {
+		$gcd = _gcd($a, $b);
+		$lcm = $a / $gcd * $b;
+		print $gcd . " " . $lcm . "\n";
+	}
+
+	function _gcd($a, $b) {
+		if($b == 0) return $a;
+		return _gcd($b, $a % $b);
+	}
+?>

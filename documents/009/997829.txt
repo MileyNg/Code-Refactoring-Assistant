@@ -1,0 +1,39 @@
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <string>
+using namespace std;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+
+int solve(int n){
+    set<int> s;
+    int c = 0;
+    while (1){
+        if (n < 10) return c;
+        auto it=s.insert(n);
+        if (!it.second) return -1;
+        string s = to_string(n);
+        vector<int> v;
+        rep(i, s.size() - 1){
+            string a = s.substr(0, i + 1);
+            string b = s.substr(i + 1);
+            v.push_back(stoi(a)*stoi(b));
+        }
+        sort(all(v));
+        n = v.back();
+        c++;
+    }
+}
+
+int main(){
+    int q; cin >> q;
+    rep(i, q){
+        int n; cin >> n;
+        cout << solve(n) << endl;
+    }
+}

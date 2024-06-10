@@ -1,0 +1,124 @@
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <cstdio>
+#include <algorithm>
+#include <cstdlib>
+#include <queue>
+#define N 110
+using namespace std;
+struct num
+{
+    int x,y,op;
+}a[1000000];
+int b[N][N],Top = 0;
+bool ch[N][N][5];
+int chv[N][N][5];
+char s1[N];
+int pt[500];
+int X[]={-1,0,1,0};
+int Y[]={0,1,0,-1};
+int main()
+{
+    int n,m;
+    long long int k;
+    while(scanf("%d %d %lld",&n,&m,&k)!=EOF)
+    {
+        if(n==0&&m==0&&k==0)
+        {
+            break;
+        }
+        int x,y;
+        int op;
+        memset(b,0,sizeof(b));
+        pt['N'] = 0;
+        pt['E'] = 1;
+        pt['S'] = 2;
+        pt['W'] = 3;
+        for(int i=0;i<=n-1;i++)
+        {
+            scanf("%s",s1);
+            int l = strlen(s1);
+            for(int j=0;j<=l-1;j++)
+            {
+                if(s1[j]!='#')
+                {
+                    b[i][j] = 1;
+                }
+                if(s1[j]=='N'||s1[j]=='E'||s1[j]=='S'||s1[j]=='W')
+                {
+                    x = i;
+                    y = j;
+                    op = pt[s1[j]];
+                }
+            }
+        }
+        Top = 0;
+        memset(ch,false,sizeof(ch));
+        int uv = 0;
+        while(!ch[x][y][op])
+        {
+            if(uv)
+            {
+                chv[x][y][op] = Top;
+                a[Top].x = x;
+                a[Top].y = y;
+                a[Top++].op = op;
+                ch[x][y][op] = true;
+            }
+            int op2=op;
+            for(int i=0;i<=3;i++)
+            {
+                int x1 = x+X[op2];
+                int y1 = y+Y[op2];
+                if(x1>=0&&x1<=n-1&&y1>=0&&y1<=m-1&&b[x1][y1]!=0)
+                {
+                    x = x1;
+                    y = y1;
+                    op = op2;
+                    break;
+                }else
+                {
+                    op2 =(op2+1)%4;
+                }
+            }
+            uv = 1;
+        }
+        int pos=chv[x][y][op];
+        int sum = Top-pos;
+        int sum2=Top-sum;
+        if((long long int)sum2>=k)
+        {
+            pos = k-1;
+        }else
+        {
+            k = k-(long long int)sum2;
+            pos = k%(long long int)sum;
+            if(pos==0)
+            {
+                pos = Top-1;
+            }else
+            {
+                pos =  sum2-1+pos;
+            }
+        }
+        printf("%d %d ",a[pos].x+1,a[pos].y+1);
+        op = a[pos].op;
+        char c;
+        if(op==0)
+        {
+            c = 'N';
+        }else if(op==1)
+        {
+            c = 'E';
+        }else if(op==2)
+        {
+            c = 'S';
+        }else
+        {
+            c = 'W';
+        }
+        printf("%c\n",c);
+    }
+    return 0;
+}

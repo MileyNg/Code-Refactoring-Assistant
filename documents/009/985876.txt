@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+  int d[11][101] = {0};
+
+  for ( long long int i = 0; i < ( 1 << 10 ); i++ ) {
+    long long int k = i;
+    long long int cnt = 0;
+    long long int sum = 0;
+    long long int j = 0;
+    while( k > 0 ) {
+      if ( k % 2 ) {
+	sum += j;
+	cnt++;
+      }
+      j++;
+      k /= 2;
+    }
+    d[cnt][sum]++;
+  }
+
+  long long int n, s;
+
+  while( cin >> n >> s, n ) {
+    cout << d[n][s] << endl;
+  }
+
+  return 0;
+
+}

@@ -1,0 +1,76 @@
+//include
+//------------------------------------------
+#include <bits/stdc++.h> // only for GCC
+
+using namespace std;
+
+//typedef
+//------------------------------------------
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+//container util
+//------------------------------------------
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+
+//repetition
+//------------------------------------------
+#define loop(i,a,b) for(ull i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+#define iter(i,c) for(auto i=(c).begin(); i!=(c).end(); ++i)
+#define riter(i,c) for(auto i=(c).rbegin(); i!=(c).rend(); ++i)
+
+//constant
+//--------------------------------------------
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const double inf = (int)1e8;
+
+// output vector
+// ------------------------------------------
+namespace std {
+    template<typename T>ostream&operator<<(ostream&os, vector<T>const&v){
+        iter(it,v) os<<*it<<(it+1==v.end()?"":",");
+        return os;
+    }
+    template<typename T, typename U>ostream&operator<<(ostream&os,const pair<T,U>&p){
+        return os << "[" << p.dirst << "," << p.second << "]";
+    }
+}
+
+//clear memory
+// ------------------------------------------
+#define clr(a,i) memset((a), (i) ,sizeof(a))
+
+char m[12][12];
+void island(int x,int y){
+   m[x][y]='0';
+   if(x!=0)if(m[x-1][y]=='1') island(x-1,y);
+   if(x!=11)if(m[x+1][y]=='1') island(x+1,y);
+   if(y!=0)if(m[x][y-1]=='1') island(x,y-1);
+   if(y!=11)if(m[x][y+1]=='1') island(x,y+1);
+}
+int main(){
+   while(cin >> m[0][0]){
+      int ans=0;
+      rep(j,12)rep(i,12){
+         if(i==0&&j==0) continue;
+         cin>>m[i][j];
+      }
+      rep(j,12)rep(i,12){
+         if(m[i][j]=='1'){
+            island(i,j); ans++;
+         }
+      }
+      cout << ans << endl;
+   }
+}

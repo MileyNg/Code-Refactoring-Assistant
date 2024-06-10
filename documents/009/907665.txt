@@ -1,0 +1,60 @@
+class MergeSort
+  def initialize
+    @cnt = 0
+    @sentinel = 2000000000
+  end
+
+  def solve
+    n = gets.chomp.to_i
+    s = gets.scan(/\d+/).map(&:to_i)
+
+    merge_sort(s, 0, n)
+    return [s.join(" "), @cnt]
+  end
+
+  def merge_sort(a, left, right)
+    if left + 1 < right
+      mid = (left + right) / 2
+      merge_sort(a, left, mid)
+      merge_sort(a, mid, right)
+      merge(a, left, mid, right)
+    end
+  end
+
+  def merge(a, left, mid, right)
+    n1 = mid - left
+    n2 = right - mid
+
+    l = Array.new(n1+1)
+    r = Array.new(n2+1)
+
+    (0...n1).each do |i|
+      l[i] = a[left + i]
+    end
+
+    (0...n2).each do |i|
+      r[i] = a[mid + i]
+    end
+
+    l[n1] = @sentinel
+    r[n2] = @sentinel
+
+    i = 0
+    j = 0
+
+    (left...right).each do |k|
+      if l[i] <= r[j]
+        a[k] = l[i]
+        i += 1
+      else
+        a[k] = r[j]
+        j += 1
+      end
+      @cnt += 1
+    end
+  end
+end
+
+if $0 == __FILE__
+  puts MergeSort.new.solve
+end

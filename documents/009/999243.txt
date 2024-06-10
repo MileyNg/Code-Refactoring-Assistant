@@ -1,0 +1,79 @@
+#include<stdio.h>
+
+int parent(int);
+int left(int);
+int right(int);
+
+struct node{
+  int k;
+  int pk;
+  int lk;
+  int rk;
+};
+
+main(){
+  int i,heap_size;
+  struct node A[251];
+  scanf("%d",&heap_size);
+
+  for(i=1 ; i <= heap_size ; i++){
+    scanf("%d",&A[i].k);
+  }
+
+  for(i=1 ; i <= heap_size ; i++){
+    if(i > 1){
+    A[i].pk = A[parent(i)].k;
+    }
+
+    if(i <= heap_size/2){
+      A[i].lk = A[left(i)].k;
+    }
+
+    if(i <= heap_size/2 && right(i) <= heap_size){
+    A[i].rk = A[right(i)].k;
+    }
+}
+  
+  for(i=1 ; i <= heap_size ; i++){
+    
+    if(i == 1){
+      printf("node %d: key = %d, left key = %d, right key = %d,\n ",i,A[i].k,A[i].lk,A[i].rk);
+    }
+    
+    if(i <= heap_size/2 && i >= 2 && right(i) <= heap_size){
+      printf("node %d: key = %d, parent key = %d, left key = %d, right key = %d,\n ",i,A[i].k,A[i].pk,A[i].lk,A[i].rk);   
+    }
+
+ if(i <= heap_size/2 && i >= 2 && right(i) > heap_size){
+      printf("node %d: key = %d, parent key = %d, left key = %d,\n ",i,A[i].k,A[i].pk,A[i].lk);   
+ }
+ 
+ 
+ 
+ if(i > heap_size/2){
+   
+   if(i == heap_size){
+     printf("node %d: key = %d, parent key = %d, ",i,A[i].k,A[i].pk);
+     break;      
+   }
+   printf("node %d: key = %d, parent key = %d,\n ",i,A[i].k,A[i].pk);
+   
+ }
+  }
+  return 0;
+}
+
+int parent(int i)
+{
+  return i/2;
+}
+
+int left(int i)
+{
+  return 2*i;
+}
+
+int right(int i)
+{
+  return 2*i+1;
+}

@@ -1,0 +1,26 @@
+cids = {}
+counts = (0..1000).map{0}
+months = (0..1000).map{0}
+
+while true
+  str = gets.chomp
+  break if str == ""
+
+  id, d = str.split(" ").map{|s| s.to_i}
+
+  cids[id] = true
+  counts[id] += 1
+  months[id] |= 1
+end
+
+while (line = gets)
+  id ,d = line.chomp.split(" ").map{|s| s.to_i}
+
+  cids[id] = true
+  counts[id] += 1
+  months[id] |= 2
+end
+
+cids.keys.sort.select{|id| months[id] == 3}.each do |id|
+  puts [id, counts[id]].join(" ")
+end

@@ -1,0 +1,29 @@
+#include<stdio.h>
+
+main(){
+  
+  int flag = 0,data,c,nu,i,count = 0;
+  
+  scanf("%d",&nu);
+  
+  for(c = 0;c < nu;c++){
+    
+    scanf("%d",&data);
+    
+    for(i=2; i<data; i++){
+      if((data % i)== 0){
+	flag = 1;      
+	continue;
+      }      
+      
+    }
+    if(flag == 0)
+      count++;
+    
+    flag = 0;
+  }
+  
+  printf("\n%d\n",count);
+  
+  return 0;
+}

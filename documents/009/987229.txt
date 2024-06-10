@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+
+
+int main(){
+    int m,n;
+    while(cin>>m>>n){
+        
+        bool order[21][21]={0};
+        
+        for(int i=0; i<n; i++){
+            int x,y;
+            cin>>x>>y;
+            order[x][y]=1;
+        }
+        /*
+        for(int i=1; i<=m; i++){
+            for(int j=1; j<=n; j++){
+                cout<<order[i][j];
+            }cout<<endl;
+        }
+         */
+        
+        int i=0;
+        int count = 0;
+        bool rest[21]={0};
+        stringstream ss;
+        while(1){
+            i++;
+            if(i>m)i=1;
+            bool flag=true;
+            for(int j=1; j<=m; j++){
+                if(order[i][j]){
+                    flag=false;
+                    break;
+                }
+            }
+            
+            if(flag&&!rest[i]){
+                rest[i]=1;
+                count++;
+                //cout<<i<<endl;
+                ss<<i;
+                for(int j=1; j<=m; j++){
+                    order[j][i]=0;
+                }
+            }
+            
+            if(count==m)break;
+        }
+        
+        string s;
+        ss>>s;
+        for(int i=0; i<s.size(); i++){
+            cout<<s[i]<<endl;
+        }
+        
+    }
+    
+    
+
+}

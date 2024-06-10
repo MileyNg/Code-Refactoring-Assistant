@@ -1,0 +1,34 @@
+#include<stdio.h>
+#include<math.h>
+#define P M_PI/180
+typedef struct xy{
+  double x;
+  double y;
+}XY;
+XY A[1000];
+void kof(double x1,double y1,double x2,double y2,int dim){
+  double x3,y3,x4,y4,x5,y5;
+  if(dim>0){
+    x3=(2*x1+x2)/3;
+    y3=(2*y1+y2)/3;
+    x5=(x1+2*x2)/3;
+    y5=(y1+2*y2)/3;
+    x4=x3+(x5-x3)*cos(60*P)-(y5-y3)*sin(60*P);
+    y4=y3+(x5-x3)*sin(60*P)+(y5-y3)*cos(60*P);
+    kof(x1,y1,x3,y3,dim-1);
+    printf("%.8f %.8f\n",x3,y3);
+    kof(x3,y3,x4,y4,dim-1);
+    printf("%.8f %.8f\n",x4,y4);
+    kof(x4,y4,x5,y5,dim-1);
+    printf("%.8f %.8f\n",x5,y5);
+    kof(x5,y5,x2,y2,dim-1);
+  }  
+}
+main(){
+  int n,j,k,temp;
+  scanf("%d",&n);
+  printf("0.00000000 0.00000000\n");
+  kof(0,0,100,0,n); 
+  printf("100.00000000 0.00000000\n");
+  return 0;
+}

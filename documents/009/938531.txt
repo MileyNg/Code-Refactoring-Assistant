@@ -1,0 +1,65 @@
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
+#include <queue>
+#include <list>
+using namespace std;
+
+string str;
+string t;
+char mapp[30][30];
+int n;
+int c[50];
+
+bool dfs(int u){
+    c[u]=-1;
+    for(int v=0;v<26;++v) if(mapp[u][v]==1){
+        if(c[v]<0) return false;
+            else if(!c[v] && !dfs(v)) return false;
+    }
+    c[u]=1;
+    return true;
+}
+
+bool toposort(){
+    memset(c,0,sizeof(c));
+    for(int u=0;u<26;++u) if(!c[u])
+        if(!dfs(u)) return false;
+    return true;
+}
+
+int main(){
+
+    while(scanf("%d",&n)!=EOF){
+        if(n==0) break;
+        cin>>t;
+
+        char flag=0;
+        memset(mapp,0,sizeof(mapp));
+
+        if(n==1) { printf("yes\n"); continue; }
+        for(int i=2;i<=n;++i){
+            cin>>str;   int L1=t.size(),L2=str.size();
+            for(int j=0;j<min(L1,L2);++j){
+                if(flag) break;
+                if(t[j]!=str[j]){
+                    //cout<<t[j]<<" "<<str[j]<<endl;
+                    if(mapp[str[j]-'a'][t[j]-'a']==1) {flag=1; break;}
+                        else { mapp[t[j]-'a'][str[j]-'a']=1; break; }
+                }
+                if(j+1==L2 && L1>L2) {flag=1; break;}
+            }
+            t=str;
+        }
+
+        //for(int i=0;i<=26;++i)
+          //  for(int j=0;j<=26;++j) if(mapp[i][j]==1) cout<<i+'a'-1<<" "<<j+'a'-1<<endl;
+
+        if(flag) printf("no\n");
+            else{
+                if(toposort()) printf("yes\n"); else printf("no\n");
+            }
+    }
+}

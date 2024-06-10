@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef long long ll;
+typedef unsigned uint;
+typedef unsigned long ul;
+typedef unsigned long long ull;
+
+#define all(c) (c).begin(), (c).end()
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+bool check(int n, string s){
+    rep(i, s.size()){
+        if (s[i] == 'X') s[i] = n + '0';
+    }
+    auto iplus = s.find('+');
+    auto ieq = s.find('=');
+    vs ss(3);
+    ss[0] = s.substr(0, iplus);
+    ss[1] = s.substr(iplus + 1, ieq - iplus - 1);
+    ss[2] = s.substr(ieq + 1);
+    rep(i, 3){
+        if (ss[i].size() != 1 && ss[i][0] == '0') return false;
+    }
+
+    rep(i, 3){
+        reverse(all(ss[i]));
+        ss[i].resize(ss[2].size(),'0');
+    }
+    int carry = 0;
+    rep(i, ss[2].size()){
+        if ((ss[0][i] + ss[1][i] - 2 * '0' + carry)%10 == ss[2][i] - '0'){
+            carry = ss[0][i] + ss[1][i] - 2 * '0' + carry >= 10;
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main(){
+    string s;
+    while (cin >> s){
+        int ans = -1;
+        rep(i, 10){
+            if (check(i, s)){
+                ans = i;
+                break;
+            }
+        }
+        if (ans == -1) cout << "NA";
+        else cout << ans;
+        cout << endl;
+    }
+}

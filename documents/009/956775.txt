@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <utility>
+#include <algorithm>
+
+using namespace std;
+
+typedef pair<int,int> pii;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int main(){
+    int n, m;
+    while(cin>>m, m){
+        vector<pii> p(m);
+        for(int i=0; i<m; i++) cin >> p[i].first >> p[i].second;
+
+        cin >> n;
+        vector<pii> q(n);
+        for(int i=0; i<n; i++) cin >> q[i].first >> q[i].second;
+
+        sort(q.begin(), q.end());
+
+        int ax=-1, ay=-1;
+        rep(i,n){
+            int dx = q[i].first - p[0].first;
+            int dy = q[i].second - p[0].second;
+            bool ok = true;
+            rep(j,m){
+                pii t(p[j].first + dx, p[j].second + dy);
+                if(!binary_search(q.begin(), q.end(), t)){
+                    ok = false;
+                    break;
+                }
+            }
+            if(ok){
+                ax = dx;
+                ay = dy;
+            }
+        }
+
+        cout << ax << " " << ay << endl;
+    }
+}

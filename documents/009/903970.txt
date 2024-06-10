@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <bitset>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <tuple>
+#include <set>
+#include <functional> 
+#include <string.h>
+
+#define X first
+#define Y second
+#define MP make_pair
+#define MT make_tuple
+#define FOR(i, n) for(int (i) = 0; (i) < (n); (i)++)
+#define REP(i, a, n) for(int (i) = (a); (i) < (n); (i)++)
+typedef long long ll;
+typedef std::pair<int, int> pii;
+typedef std::pair<ll, ll > pll;
+using namespace std;
+const int MAX = 101;
+const double PI = 3.1415926535897932384;
+
+template<class T, class U>
+void convert(T &t, U &u){
+	stringstream ss;
+	ss << t;
+	ss >> u;
+}
+
+int main(){
+	string s; cin >> s;
+	vector<vector< vector<char> > > w(s.size() / 3, vector<vector<char> >(3, vector<char>(3, 0)));
+
+	FOR(i, s.size()){
+		w[i / 3][0][i % 3] = s[i];
+	}
+
+	int c = 1;
+	while (cin >> s){
+		if (cin.eof()) break;
+		FOR(i, s.size()){
+			w[i / 3][c][i % 3] = s[i];
+		}
+		c++;
+	}
+
+	FOR(i, w.size()){
+		char ans = 0;
+		bool d1 = true, d2 = true;
+		FOR(j, 3){
+			if (j){
+				if (w[i][j - 1][j - 1] != w[i][j][j]) d1 = false;
+				if (w[i][2 - (j - 1)][j - 1] != w[i][2 - j][j]) d2 = false;
+			}
+			
+			bool t = true, y = true;
+			REP(k, 1, 3){
+				if (w[i][j][k - 1] != w[i][j][k]) y = false;
+				if (w[i][k - 1][j] != w[i][k][j]) t = false;
+			}
+			if (t || y){
+				ans = w[i][j][0]; break;
+			}
+		}
+
+		if (d1 || d2){
+			ans = w[i][1][1];
+		}
+
+		if (ans == 0){
+			cout << 'd' << endl;
+		}
+		else{
+			cout << ans << endl;
+		}
+	}
+
+	return 0;
+}

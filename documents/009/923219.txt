@@ -1,0 +1,38 @@
+import math
+def get_primes(goal):
+	n_list = range(3,goal+1,2)
+	primes = [2]
+	sieve = map(lambda n:[n,1],n_list)#Sieve of Eratosthenes
+	while sieve[0][0] < math.sqrt(goal+1):
+		target = sieve[0][0]
+		primes = primes + [target]
+		i = 0
+		while i < len(sieve):
+			sieve[i][1] = 0
+			i += target
+		while  sieve[0][1] == 0:
+			sieve = sieve[1:]
+	primes = primes + map(lambda x:x[0],filter(lambda n:n[1] ,sieve))
+	return primes
+
+def bin_search_count(list,cond):
+	if cond(list[0]) and cond(list[-1]):
+		return len(list)
+	if cond(list[0]) == False and cond(list[-1]) == False:
+		return 0
+	
+	Imin = 0
+	Imax = len(list) - 1
+	Imid = int(Imin * 0.5 + Imax * 0.5)
+	return bin_search_count(list[:Imid + 1],cond) + bin_search_count(list[Imid + 1:],cond)
+
+primes = get_primes(1000000)
+while 2>1:
+	
+	try:
+		n = int(raw_input())
+		print bin_search_count(primes,lambda x:x <= n)
+	except EOFError:
+		break
+	except ValueError:
+		break

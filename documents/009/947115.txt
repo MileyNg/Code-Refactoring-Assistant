@@ -1,0 +1,69 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+
+std::string calc(std::string str, std::string str2){
+
+	std::string res;
+
+	std::reverse(str.begin(), str.end());
+	std::reverse(str2.begin(), str2.end());
+
+	bool up = 0;
+	const int max = std::max(str.size(), str2.size());
+	for (int i = 0; i < max || up; i++){
+		int a = 0, b = 0;
+		if (str.size() > i)a = str[i] - '0';
+		if (str2.size() > i)b = str2[i] - '0';
+
+		if (a + b + up >= 10){
+			res += (a + b + up - 10 + '0');
+			up = 1;
+		}
+		else{
+			res += (a + b + up + '0');
+			up = 0;
+		}
+	}
+	std::reverse(res.begin(), res.end());
+
+	return res;
+}
+
+int main(){
+
+	std::string str;
+
+	while (std::cin >> str){
+
+		std::vector<std::string>shiki;
+
+		for (int i = 0, j = 0; i <= str.size(); i++){
+			if (i == str.size() || str[i] == '+' || str[i] == '='){
+				shiki.push_back(str.substr(j, i - j));
+				j = i + 1;
+			}
+		}
+
+		for (int i = 0; i <= 9; i++){
+			std::vector<std::string>shiki_copy(shiki);
+
+			for (int j = 0; j < 3; j++){
+				for (int k = 0; k < shiki[j].size(); k++){
+					if (shiki[j][k] == 'X'){
+						if (i == 0 && k == 0)goto end;
+						shiki_copy[j][k] = (i + '0');
+					}
+				}
+			}
+			if (calc(shiki_copy[0], shiki_copy[1]) == shiki_copy[2]){
+				std::cout << i << std::endl;
+				break;
+			}
+		end:
+			if (i == 9)std::cout << "NA" << std::endl;
+		}
+	}
+	return 0;
+}

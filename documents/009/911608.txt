@@ -1,0 +1,21 @@
+#include <cstdio>
+#include <iostream>
+int main(){
+	double x0,y0,x1,y1,x2,y2,xq,yq,x,y,m,a;
+	char c;
+	while(std::cin>>x1>>c>>y1>>c>>x2>>c>>y2>>c>>xq>>c>>yq){
+		if (x1==x2){
+			y=yq;
+			x=x1;
+		}
+		else{
+			m=(y2-y1)/(x2-x1);
+			a=m*m+1;
+			x0=m*x1-y1;
+			y0=xq+m*yq;
+			x=(m*x0+y0)/a;
+			y=(-x0+m*y0)/a;
+		}
+		printf("%.5f %.5f\n",2*x-xq,2*y-yq);
+	}
+}

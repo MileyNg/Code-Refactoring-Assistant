@@ -1,0 +1,61 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  int m,n;
+  for(;cin>>n>>m,m;)
+    {
+      int x=1,y=1;
+      int dx[]={1,0,-1,0};
+      int dy[]={0,1,0,-1};
+      int lr=0;
+      string move;
+      for(;cin>>move,move!="STOP";)
+	{
+	  if(move=="FORWARD")
+	    {
+	      int tmp;
+	      cin>>tmp;
+	      for(;tmp--;)
+		{
+		  if(x+dx[lr]>0 && x+dx[lr]<=m &&
+		     y+dy[lr]>0 && y+dy[lr]<=n )
+		    {
+		      x+=dx[lr];
+		      y+=dy[lr];
+		    }
+		}
+	    }
+
+	  if(move=="BACKWARD")
+	    {
+	      int tmp;
+	      cin>>tmp;
+	      for(;tmp--;)
+		{
+		  if(x-dx[lr]>0 && x-dx[lr]<=m &&
+		     y-dy[lr]>0 && y-dy[lr]<=n )
+		    {
+		      x-=dx[lr];
+		      y-=dy[lr];
+		    }
+		}
+	    }
+	  if(move=="RIGHT")
+	    {
+	      lr++;
+	      if(lr>3)
+		lr=0;
+	    }
+	  if(move=="LEFT")
+	    {
+	      lr--;
+	      if(lr<0)
+		lr=3;
+	    } 
+	}
+      cout<<y<<" "<<x<<endl;
+    }
+
+}

@@ -1,0 +1,27 @@
+#include <cstdio>
+#include <vector>
+using namespace std;
+
+#define MAX_S 100
+#define MAX_N 10
+
+int N, S;
+
+int dfs(int n, int s, int count);
+
+int main(){
+	while(1){
+		scanf("%d%d", &N, &S);
+		if(N == 0 && S == 0) return 0;
+		
+		printf("%d\n", dfs(0, 0, 0));
+	}
+}
+
+int dfs(int n, int s, int count){//今nまで足すか否かを決定し、その和がs
+	if(count == N) return (s == S)? 1 : 0;
+	
+	if(n == 10 || s > S) return 0;
+	
+	return dfs(n + 1, s, count) + dfs(n + 1, s + n, count + 1);
+}

@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+
+int main(){
+    int H,W;
+    char input;
+    //入力開始
+    while(cin>>H>>W){
+        if(H==0&&W==0)break;
+        int data[600][600]={0};
+        for(int i=0; i<H; i++){
+            for(int j=0; j<W; j++){
+                cin>>input;
+                if(input=='.')data[i+1][j+1]=1;
+            }
+        }
+        //入力終了
+        //処理開始
+        
+        int max_rectangle=0;
+        for(int i=1; i<=H; i++){
+            for(int j=1; j<=W; j++){
+                if(data[i][j]==1){
+                    int width = 1;
+                    int height = 1;
+                    
+                    //data[i][j]を右下に持つ最大の正方形を探す.
+                    while(1){
+                        bool flag = false;
+                        //縦を調べる j-widthの列を　i-heightからiまで.
+                        for(int k=i-height; k<=i; k++){
+                            if(data[k][j-width]==0){
+                                flag = true;
+                                break;
+                            }
+                        }
+                        
+                        if(flag) break;
+                        
+                        //横を調べる i-heightの行を　j-widthからjまで.
+                        
+                        for(int k=j-width; k<=j; k++){
+                            if(data[i-height][k]==0){
+                                flag = true;
+                                break;
+                            }
+                        }
+                        
+                        if(flag) break;
+                        
+                        width++;
+                        height++;
+                        
+                    }
+                    int square_length=height;
+                    //縦に延ばす
+                    while(1){
+                        bool flag = false;
+                        
+                        for(int k=j-square_length+1; k<=j; k++){
+                            if(data[i-height][k]==0){
+                                flag = true;
+                                break;
+                            }
+                        }
+                        
+                        if(flag) break;
+                        height++;
+                    }
+                    //横に延ばす
+                    while(1){
+                        bool flag = false;
+                        
+                        for(int k=i-square_length+1; k<=i; k++){
+                            if(data[k][j-width]==0){
+                                flag = true;
+                                break;
+                            }
+                        }
+                        
+                        if(flag) break;
+                        width++;
+                    }
+                    int rectangle = square_length * max(height,width);
+                    max_rectangle=max(rectangle, max_rectangle);
+                    
+                }
+                
+            }
+        }
+        cout<<max_rectangle<<endl;
+    }
+    
+    
+}

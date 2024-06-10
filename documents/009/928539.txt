@@ -1,0 +1,77 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+int memo[15][1000];	// memo[n][s]
+
+void dfs(vci& now, vector<bool>& use) {
+	int n = (int)now.sz;
+	
+	int s = 0;
+	for_(i, 0, n) s += (i+1)*now[i];
+	
+	memo[n][s]++;
+	
+	for_(i, 0, 10) {
+		if (use[i]) continue;
+		use[i] = 1;
+		now.pb(i);
+		dfs(now, use);
+		now.pop_back();
+		use[i] = 0;
+	}
+}
+
+int main() {
+	vci nul;
+	vector<bool> use(10, 0);
+	minit(memo, 0);
+	
+	dfs(nul, use);
+	
+	int n, s;
+	while (cin>>n>>s) { cout<<memo[n][s]<<endl; }
+	
+	return 0;
+}

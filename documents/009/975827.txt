@@ -1,0 +1,78 @@
+#include <stdio.h>
+
+char cards[4][13];
+
+void init()
+{
+  int i , j;
+  for (i = 0; i < 4; i++) {
+    for (j = 0; j < 13; j++) {
+      cards[i][j] = 0;
+    }
+  }
+}
+
+void input() {
+  int n, i;
+  char c;
+  int r;
+  int type;
+  char skip;
+
+  scanf("%d", &n);
+  scanf("%c", &skip);
+  for (i = 0; i < n; i++) {
+    scanf("%c %d", &c, &r);
+    scanf("%c", &skip);
+    switch (c) {
+      case 'S':
+        type = 0;
+        break;
+      case 'H':
+        type = 1;
+        break;
+      case 'C':
+        type = 2;
+        break;
+      case 'D':
+        type = 3;
+        break;
+    }
+    cards[type][r - 1] = 1;
+  }
+}
+
+void solve()
+{
+  int i, j;
+  char type;
+  for (i = 0; i < 4; i++) {
+    for (j = 0; j < 13; j++) {
+      if (cards[i][j] == 0) {
+        switch (i) {
+          case 0:
+            type = 'S';
+            break;
+          case 1:
+            type = 'H';
+            break;
+          case 2:
+            type = 'C';
+            break;
+          case 3:
+            type = 'D';
+            break;
+        }
+        printf("%c %d\n", type, (j + 1));
+      }
+    }
+  }
+}
+
+int main()
+{
+  init();
+  input();
+  solve();
+  return 0;
+}

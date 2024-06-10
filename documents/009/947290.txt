@@ -1,0 +1,28 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, r, p, c;
+vector<int> cards(50);
+
+void shuffle(int p, int c) {
+	reverse(cards.begin(), cards.begin() + p);
+	reverse(cards.begin() + p, cards.begin() + p + c);
+	reverse(cards.begin(), cards.begin() + p + c);
+}
+
+int main() {
+	while (1) {
+		cin >> n >> r;
+		if ( ! n && ! r) break;
+
+		iota(cards.rend() - n, cards.rend(), 1);
+		for (int i=0; i<r; ++i) {
+			cin >> p >> c;
+			shuffle(p - 1, c);
+		}
+		cout << cards[0] << endl;
+	}
+	return 0;
+}

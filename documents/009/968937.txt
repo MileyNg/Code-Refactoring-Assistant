@@ -1,0 +1,52 @@
+#include<stdio.h>
+#define N 2000000
+
+int *CountingSort(int *,int *,int);
+int k=10;
+
+int main(){
+
+  int k,n;
+  int A[N],B[N];
+  int i=0,j;
+
+  //input 
+  scanf("%d",&n);
+
+  for(i=0 ; i<n ; i++){
+    scanf("%d",&A[i]);
+  }
+
+  //sort 
+  CountingSort(&A[0],&B[0],n);
+
+  //output
+  for(i=0 ; i<n ; i++){
+    printf("%d ",A[i]);
+  }
+
+  return 0;
+}
+
+int *CountingSort(int *A,,int *B,int n){
+  int C[N];
+
+  for(i=0 ; i<n ; i++){
+    C[i] = 0;
+  }
+
+  for(j=0 ; j<n ; j++){
+    C[*A[j]]++;
+  }
+
+  for(i=1 ; i<k ; i++){
+    C[i] = C[i] + C[i-1};
+  }
+
+  for(j=n ; j>0 ; j--){
+    B[C[A[j]]] = A[j];
+    C[A[j]]--;
+  }
+
+  return B;
+}

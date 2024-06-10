@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <map>
+#include <cctype>
+using namespace std;
+const int MAX_M = 7;
+const int INF = 1<<29;
+struct min_max{
+  int x_min,x_max,y_min,y_max;
+public:
+  min_max(){
+    x_min = INF,x_max = -1,y_min = INF,y_max = -1;
+  }
+  void cal(int x,int y){
+    x_min = min(x,x_min);
+    y_min = min(y,y_min);
+    x_max = max(x,x_max);
+    y_max = max(y,y_max);
+    //    cout << "x " << x_min << " y " << y_min << endl;
+  }
+  bool check(){
+    if(x_min == INF)return false;
+    return true;
+  }
+};
+void dfs(const vector<vector<int> > relate,vector<pair<int,int> > &used,int c,int &cnt){
+  if(used[c].second == 1)return;
+  used[c].second = 1;
+  for(int i = 0;i < relate[c].size();i++){
+    if(used[relate[c][i]].second == 0){
+      dfs(relate,used,relate[c][i],cnt);
+    }
+  }
+  cnt++;
+  used[c].first = cnt;
+}
+int main(){
+  int n;
+  cin >> n;
+  for(int cnt = 0;cnt < n;cnt++){
+    int h,w;
+    cin >> h >> w;
+    map<char,int> che;
+    vector<vector<int> > image(h,vector<int>(w,0));
+    vector<min_max> keep(MAX_M,min_max());
+    for(int i = 0;i < h;i++){
+      for(int j = 0;j < w;j++){
+	char tmp;
+	cin >> tmp;
+	if(isupper(tmp)){
+	  if(che.count(tmp) == 0){
+	    che.insert(make_pair(tmp,che.size()));
+	  }
+	  keep[che[tmp]].cal(j,i);
+	  //cout << keep[che[tmp]].x_min << "ddd" << endl;
+	  image[i][j] = che[tmp];
+	}else{
+	  image[i][j] = -1;
+	}
+      }
+    }
+    /*    for(int i = 0;i < keep.size();i++){
+      cout << keep[i].x_min << " " << keep[i].x_max << " " << keep[i].y_min << " " << keep[i].y_max << endl;
+      }
+    */
+    
+    int flag = 0;
+    int size = che.size();
+    vector<vector<int> > relate(size);
+    map<char,int>::iterator it = che.begin();
+    while(it != che.end()){
+      int i = (*it).second;
+      for(int x = keep[i].x_min;x <= keep[i].x_max;x++){
+	for(int y = keep[i].y_min;y <= keep[i].y_max;y++){
+	  if(image[y][x] != i && image[y][x] >= 0 && image[y][x] < size ){
+	    relate[i].push_back(image[y][x]);
+	  }else{
+	    if(image[y][x] == -1)flag = 1;
+	  }
+	}
+      }
+      it++;
+    }
+    if(flag){cout << "SUSPICIOUS" << endl;continue;}
+    vector<pair<int,int> > used(size,pair<int,int>(0,0));
+    int a = 0;
+    for(int i = 0;i < used.size();i++){
+      dfs(relate,used,i,a);
+    }/*
+    for(int i = 0;i < size;i++){
+      cout << used[i].first <<"kkkk"<< endl;
+      }*/
+    for(int i = 0;i < relate.size();i++){
+      for(int j = 0;j < relate[i].size();j++){
+	//cout << relate[i][j] << "ddddddd " <<i<<" fff"<<cnt<< endl;
+	if(used[i].first < used[relate[i][j]].first){
+	  flag = 1;
+	}
+      }
+    }
+    if(flag)cout << "SUSPICIOUS" << endl;
+    else cout << "SAFE" << endl;
+  }
+  return 0;
+}
+    

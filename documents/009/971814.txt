@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(x,b) (0<=(x)&&(x)<(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+vi p(8);
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+
+bool ck(vi ca){
+  rep(i, 8) if(ca[i] != i) return false;
+  return true;
+}
+
+int main(){
+  while(~scanf("%d", &p[0])){
+    REP(i, 1, 8) scanf("%d", &p[i]);
+
+    if(ck(p)){
+      puts("0");
+      continue;
+    }
+    queue<vi>q;
+    map<vi, bool>m;
+    q.push(p);
+    m[p] = 1;
+    int res = 1;
+    while(true){
+    //    while(res < 29){
+      int qsize = (int)q.size();
+      //      printf("%d\n", qsize);
+      rep(i, qsize){
+	vi now = q.front(); q.pop();
+	//	if(res == 13){ rep(i, 8) printf("%d ", now[i]); puts("");}
+	rep(j, 8){
+	  if(now[j] != 0) continue;
+	  int ny = j/4, nx = j%4;
+	  //	  puts("");
+	  //	  printf("%d %d\n", ny, nx);
+	  rep(d, 4){
+	    int nexty = ny + dy[d], nextx = nx + dx[d];
+	    //	    printf("%d %d\n", nexty, nextx);
+	    if(nexty < 0 || nexty >= 2 || nextx < 0 || nextx >= 4) continue;
+	    vi next = now;
+	    int t = next[nexty*4+nextx];
+	    next[nexty*4+nextx] = next[j];
+	    next[j] = t;
+	    
+	    //    rep(i, 8) printf("%d ", next[i]); puts("");
+	    if(ck(next)){
+	      //	      rep(i, 8) printf("%d ", next[i]); puts("");
+	      printf("%d\n", res);
+	      goto end;
+	    }	    
+
+	    if(m.count(next) == 0){
+	      q.push(next);
+	      m[next] = 1;
+	    }
+	  }
+	}
+      }
+      res++;
+    }
+  end:;
+  }
+  return 0;
+}

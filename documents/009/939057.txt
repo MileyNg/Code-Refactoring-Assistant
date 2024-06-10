@@ -1,0 +1,19 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var line;
+while (line = lines.shift()) {
+	var vals = line.split(' ').map(function(n){return +n;});
+	var a = vals[0];
+	var b = vals[1];
+	var c = vals[2];
+	var d = vals[3];
+	var e = vals[4];
+	var f = vals[5];
+
+	var D = a * e - b * d;
+	var x = (e * c - b * f) / D;
+	var y = (a * f - d * c) / D;
+
+	console.log(x.toFixed(3) + ' ' + y.toFixed(3));
+}

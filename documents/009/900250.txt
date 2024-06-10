@@ -1,0 +1,18 @@
+if __FILE__ == $0
+  while true
+    line = gets
+    n, s = line.split.map{|i| i.to_i}
+
+    if n == 0 && s == 0
+      break
+    end
+
+    count = 0
+    (0..9).to_a.combination(n) {|arr|
+      if arr.inject(:+) == s
+        count += 1
+      end
+    }
+    puts count
+  end
+end

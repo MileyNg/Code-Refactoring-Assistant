@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+void q_sort(int nums[], int f_num, int e_num){
+    
+    int i, j, pbt, tmp;
+    
+    i = f_num;
+    j = e_num;
+    
+    pbt = nums[(f_num+e_num) / 2];
+    
+    while (1) {
+        
+        while (nums[i] < pbt) {
+            i++;
+        }
+        while (nums[j] > pbt) {
+            j--;
+        }
+        if (i >= j) {
+            break;
+        }
+        
+        tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+        i++;
+        j--;
+    }
+    
+    if (f_num < i - 1) {
+        q_sort(nums, f_num, i-1);
+    }
+    if (e_num > j + 1) {
+        q_sort(nums, j+1, e_num);
+    }
+    
+    
+}
+
+int search(int* num, int f_num, int e_num, int n){
+    
+    int i;
+	
+	if(f_num > e_num){
+		return 0;
+	}
+	
+	i = (f_num+e_num)/2 ;
+	
+	
+	if (num[i] == n) {
+		return 1;
+    }
+	
+    if(num[i] > n){
+        return  search(num, f_num, i-1, n);
+    }
+    else if(num[i] < n) {
+        return search(num, i+1, e_num, n);
+    }
+    
+    
+}
+
+
+
+int main(void){
+	
+    int i,j, c;
+    
+    int n, s[100001];
+    int q, t;
+    
+    c = 0;
+    
+    scanf("%d", &n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &s[i]);
+    }
+    q_sort(s, 0, n-1);
+    
+    scanf("%d", &q);
+    
+    for (i = 0; i < q; i++) {
+        scanf("%d", &t);
+		c += search(s, 0, n-1, t);
+	}
+    
+    
+    printf("%d\n", c);
+    
+	
+	return 0;
+    
+}

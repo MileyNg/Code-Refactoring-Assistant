@@ -1,0 +1,60 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+
+using namespace std;
+typedef long long ll;
+/** Problem0114 : Electro-Fly **/
+ll gcd(ll a, ll b)
+{
+	if (b > a) swap(a, b);
+    while (b)
+	{
+		ll tmp = a % b;
+		a = b;
+		b = tmp;
+	}
+	
+    return a;
+}
+ll lcm(ll a, ll b)
+{
+    return a*b / gcd(a, b);
+}
+
+int main()
+{
+	long long a1, m1, a2, m2, a3, m3, x, y, z, i;
+	while (1) {
+		cin >> a1 >> m1 >> a2 >> m2 >> a3 >> m3;
+		if (a1 == 0 && m1 == 0 && a2 == 0 && m2==0 && a3==0 && m3==0)
+			break;
+		
+		x = a1%m1;
+		y = a2%m2;
+		z = a3%m3;
+		
+		long long  nx, ny, nz;
+		for (nx=1; x!=1; nx++)
+			x=(a1*x)%m1;
+		
+		for (ny=1; y!=1; ny++)
+			y=(a2*y)%m2;
+		
+		for (nz=1; z!=1; nz++)
+			z=(a3*z)%m3;
+		
+		cout <<  lcm(lcm(nx, ny), nz) << endl;
+	}
+	return 0;
+}

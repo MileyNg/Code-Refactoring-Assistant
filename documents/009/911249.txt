@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int g[100];
+	int a,b;
+	while(1){
+		for(int i=0;i<100;i++) g[i]=0;
+		while(1){
+			if(scanf("%d %d",&a,&b)==EOF) return 0;
+			if(a==0&&b==0) break;
+			g[a]++;
+			g[b]++;
+		}
+		int odd=0;
+		bool flag=true;
+		for(int i=0;i<100;i++){
+			if(i>2&&g[i]%2==1){
+				flag=false;
+				break;
+			}
+		}
+		if(flag==true) printf("OK\n");
+		else printf("NG\n");
+	}
+	return 0;
+}

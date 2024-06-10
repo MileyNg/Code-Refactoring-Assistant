@@ -1,0 +1,124 @@
+
+//自分の梅は任意の地点でかおるとする。→間違い。
+//EPSはつけない。
+//扇形と家は接しないので、距離はsqrtで求めた。
+
+#include<iostream>
+#include<cmath>
+#include<vector>
+#define rep(i,n) for(i = 0;i < n;i++)
+#define PI 3.14159265358979
+using namespace std;
+
+typedef pair<double,double> P;
+
+int H,R;				//家数,日数
+int hx[100],hy[100];	//家の座標
+int U,M,S;				//梅、桃、桜の数
+int du,dm,ds;			//梅、桃、桜の扇形の中心角
+int ux[100],uy[100];	//梅の座標
+int mx[100],my[100];	//桃の座標
+int sx[100],sy[100];	//桜の座標
+int w[100],a[100];		//扇形の方向(角度),風の強さ
+
+//半径,角度の順で格納し、返す
+//rotateは角度補正( 補正 = rotate*360 )
+P POLAR( int treex,int treey,int housex,int housey,int rotate )
+{
+	P ans;
+	ans.first = (housex-treex)*(housex-treex) + (housey-treey)*(housey-treey);
+	ans.first = sqrt( ans.first );
+	if( housex == treex && housey > treey )
+		ans.second = 90;
+	else if( housex == treex && housey < treey )
+		ans.second = -90;
+	else
+		ans.second = atan2( (double)housey - treey, (double)housex - treex ) * 180 / PI;
+	ans.second += 360*rotate;
+	return ans;
+}
+
+int main()
+{
+	int i,j,k,l;
+	while( cin >> H >> R )
+	{
+		int day[100] = {0};		//i番目の家において、他の木の香りが届かなかった日数
+
+		if( H == 0 && R == 0 )
+			break;
+		rep(i,H)
+			cin >> hx[i] >> hy[i];
+		cin >> U >> M >> S >> du >> dm >> ds;
+		rep(i,U)
+			cin >> ux[i] >> uy[i];
+		rep(i,M)
+			cin >> mx[i] >> my[i];
+		rep(i,S)
+			cin >> sx[i] >> sy[i];
+		rep(i,R)
+			cin >> w[i] >> a[i];
+		//ここから探索
+		rep(i,R){
+			rep(j,H){
+				rep(k,U){
+					rep(l,3){
+						P t = POLAR( ux[k],uy[k],hx[j],hy[j],l-1 );
+						//判定
+						if( t.first <= a[i] && fabs( (double)w[i] - t.second ) <= du/2.0 )
+							break;
+					}
+					if(l < 3)
+						break;
+				}
+				if(k < U)
+					continue;
+				rep(k,M){
+					rep(l,3){
+						P t = POLAR( mx[k],my[k],hx[j],hy[j],l-1 );
+						//判定
+						if( t.first <= a[i] && fabs( (double)w[i] - t.second ) <= dm/2.0 )
+							break;
+					}
+					if(l < 3)
+						break;
+				}
+				if(k < M)
+					continue;
+				rep(k,S){
+					rep(l,3){
+						P t = POLAR( sx[k],sy[k],hx[j],hy[j],l-1 );
+						//判定
+						if( t.first <= a[i] && fabs( (double)w[i] - t.second ) <= ds/2.0 )
+							break;
+					}
+					if(l < 3)
+						break;
+				}
+				if(k < S)
+					continue;
+
+				if( hx[j]*hx[j] + hy[j]*hy[j] <= a[i]*a[i] )
+					day[j]++;
+			}
+		}
+		int maxday = 0;
+		rep(i,H){
+			maxday = max( maxday,day[i] );
+		}
+		if( maxday == 0 ){
+			cout << "NA" << endl;
+			continue;
+		}
+		rep(i,H){
+			if( day[i] == maxday ){
+				cout << i+1;
+				if( i < H-1 )
+					cout << ' ';
+				else
+					cout << endl;
+			}
+		}
+	}
+	return 0;
+}

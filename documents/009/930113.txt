@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main() {
+  int n;
+  int a, b, c;
+  int minv;
+  cin >> n;
+  cin >> a >> b;
+  minv = min( a, b );
+  if( n == 3 ) {
+    cin >> c;
+    minv = min( minv, c );
+  }
+
+  for( int i = 1; i <= minv; i++ ) {
+    if( !( a % i ) && !( b % i ) ) {
+      if( ( n == 3 && !( c % i ) ) || n == 2 ) {
+        cout << i << endl;
+      }
+    }
+  }
+
+  return EXIT_SUCCESS;
+}

@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+template<class T> inline void chmin(T &a, const T &b) { if(a > b) a = b; }
+
+constexpr int UNKNOWN = INT_MAX;
+
+inline bool valid(const function<bool(int, int)> &compare, int a, int b) {
+	return b == UNKNOWN || compare(a, b);
+}
+
+string solve(const vector<int> &a) {
+	const int n = a.size();
+
+	const function<bool(int, int)> comparators[] = {less<int>(), greater<int>()};
+
+	int low = INT_MIN;
+	int high = INT_MAX;
+	for(int i = 0; i < n; ++i) {
+		if(a[i] == UNKNOWN) {
+			if(i > 0) {
+				if(i & 1) chmax(low, a[i - 1] + 1);
+				else chmin(high, a[i - 1] - 1);
+			}
+			if(i < n - 1) {
+				if(a[i + 1] == UNKNOWN) return "none";
+				if(i & 1) chmax(low, a[i + 1] + 1);
+				else chmin(high, a[i + 1] - 1);
+			}
+		}
+		else {
+			const auto &c = comparators[i & 1];
+			if((i > 0 && !valid(c, a[i], a[i - 1])) || (i < n - 1 && !valid(c, a[i], a[i + 1]))) {
+				return "none";
+			}
+		}
+	}
+
+	if(low > high) return "none";
+	if(low < high) return "ambiguous";
+	return to_string(low); // low == high
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		vector<int> a(n);
+		for(auto &e : a) {
+			string in;
+			cin >> in;
+
+			if(in[0] == 'x') {
+				e = UNKNOWN;
+			}
+			else {
+				e = stoi(in);
+			}
+		}
+
+		cout << solve(a) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

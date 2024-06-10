@@ -1,0 +1,48 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define INF 1 << 30
+#define S second
+#define F first
+using namespace std;
+
+int main(){
+  int n;
+  char str1[16], str2[16];
+  while(scanf("%d", &n) && n){
+    vector<pair<int, int> >time(n);
+    rep(i, n){
+      int a = 0, b = 0;
+      scanf("%s%s", str1, str2);
+      a += ((str1[0]-'0')*10+(str1[1]-'0')) *60*60;
+      b += ((str2[0]-'0')*10+(str2[1]-'0')) *60*60;
+      a += ((str1[3]-'0')*10+(str1[4]-'0')) *60;
+      b += ((str2[3]-'0')*10+(str2[4]-'0')) *60;
+      a += ((str1[6]-'0')*10+(str1[7]-'0'));
+      b += ((str2[6]-'0')*10+(str2[7]-'0'));
+      time[i] = make_pair(a, b);
+    }
+    int res = 0;
+    rep(i, n){
+      int c = 0;
+      rep(j, n) if((time[i].F < time[j].F && time[j].F < time[i].S) ||
+		   (time[j].F < time[i].F && time[i].F < time[j].S) ||
+		   (time[i].F == time[j].F && time[i].S == time[j].S)) c++;
+      res = max(res, c);
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

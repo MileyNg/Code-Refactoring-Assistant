@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  for(int n; cin >> n && n;) {
+    vector<pair<pair<int,int>,pair<int,char> > > v;
+    for(int i = 0; i < n; ++i) {
+      char t;
+      cin >> t;
+      int a = 0, b = 0;
+      for(int j = 0; j < n-1; ++j) {
+        int r;
+        cin >> r;
+        if(r == 0) ++a;
+        else if(r == 1) ++b;
+      }
+      v.push_back(make_pair(make_pair(-a, b), make_pair(i, t)));
+    }
+    sort(v.begin(), v.end());
+    for(int i = 0; i < v.size(); ++i) {
+      cout << v[i].second.second << endl;
+    }
+  }
+  return 0;
+}

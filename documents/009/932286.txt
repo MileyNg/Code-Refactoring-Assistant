@@ -1,0 +1,122 @@
+#include <cstdio>
+#include <queue>
+#define MAX 1010
+using namespace std;
+typedef pair<int,int> Site;
+
+char G[MAX][MAX];
+int Sx[15];
+int Sy[15];
+int Vec[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
+int H(0),W(0),N(0);
+int res=0;
+
+void BFS()
+{
+	int i=0;
+	int size;
+	int step;
+	while (Sx[i+1])
+	{
+		queue<Site> Qs;
+		Qs.push (Site(Sx[i],Sy[i]));
+		size=1;
+		step=1;
+		while (Qs.size ())
+		{
+			Site p=Qs.front ();
+			Qs.pop();
+			for (int j=0;j<4;++j)
+			{
+				if (p.first+Vec[j][0]==Sx[i+1]&&p.second+Vec[j][1]==Sy[i+1])
+				{
+					res+=step;
+					goto KK;
+				}
+				if (G[p.first+Vec[j][0]][p.second+Vec[j][1]]=='.'||G[p.first+Vec[j][0]][p.second+Vec[j][1]]<i+'0')
+				{
+					G[p.first+Vec[j][0]][p.second+Vec[j][1]]=i+'0';
+					Qs.push (Site(p.first+Vec[j][0],p.second+Vec[j][1]));
+				}
+			}
+			--size;
+			if (size==0)
+			{
+				size=Qs.size ();
+				++step;
+			}
+		}
+KK:
+		++i;
+	}
+
+}
+
+void debug()
+{  	
+	freopen("AOJ-0558-in.txt", "r",stdin);
+	freopen("AOJ-0558-out.txt", "w",stdout);
+
+}
+
+
+int main()
+{
+
+// 	debug ();
+	
+	while (scanf("%d%d%d",&H,&W,&N),H)
+	{
+		for (int tt=0;tt<15;++tt)
+		{
+			Sx[tt]=Sy[tt]=0;
+		}
+		for (int ni=0;ni<H+2;++ni)
+		{
+			G[ni][0]=G[ni][W+1]='X';
+		}
+		for (int mi=0;mi<W+2;++mi)
+		{
+			G[0][mi]=G[H+1][mi]='X';
+		}
+
+		for (int iH=0;iH<H;++iH)
+		{
+			for (int iW=0;iW<W;++iW)
+			{
+				scanf ("%c",&G[iH+1][iW+1]);
+				while (G[iH+1][iW+1]=='\n'||G[iH+1][iW+1]==' ')
+				{
+					scanf ("%c",&G[iH+1][iW+1]);
+				}
+				char t=G[iH+1][iW+1];
+				if (t>='1'&&t<='9')
+				{
+					Sx[t-'0']=iH+1;
+					Sy[t-'0']=iW+1;
+					G[iH+1][iW+1]='.';
+				}
+				else if (t=='S')
+				{
+					Sx[0]=iH+1;
+					Sy[0]=iW+1;
+					G[iH+1][iW+1]='.';
+				}
+			}
+		}
+// 		for (int x=0;x<H+2;++x)
+// 		{
+// 			for(int y=0;y<W+2;++y)
+// 			{
+// 				printf ("%c",G[x][y]);
+// 			}
+// 			printf ("\n");
+// 		}
+		BFS();
+		printf ("%d\n",res);
+		res=0;
+		H=0;
+	}
+	return 0;
+
+}

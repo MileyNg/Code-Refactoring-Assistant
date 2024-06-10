@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+vector<int> split(const string& S, char delimiter)
+{
+  istringstream stream(S);
+  string field;
+  vector<int> result;
+  while (getline(stream, field, delimiter)){
+    result.push_back(atoi(field.c_str()));
+  }
+  return result;
+}
+
+int main()
+{
+  vector<vector<int> > tri;
+  string line;
+  while (getline(cin, line)){
+    tri.push_back(split(line, ','));
+  }
+  int n = (tri.size() + 1) / 2;
+  int dp[128][128] = {};
+  dp[0][0] = tri[0][0];
+  rep(i, n){
+    rep(j, tri[i].size()){
+      reps(k, j, j + 2){
+        dp[i + 1][k] = max(dp[i + 1][k], dp[i][j] + tri[i + 1][k]);
+      }
+    }
+  }
+  reps(i, n + 1, tri.size()){
+    rep(j, tri[i].size()){
+      reps(k, j, j + 2){
+        dp[i][j] = max(dp[i][j], dp[i - 1][k] + tri[i][j]);
+      }
+    }
+  }
+  printf("%d\n", dp[tri.size() - 1][0]);
+  return 0;
+}

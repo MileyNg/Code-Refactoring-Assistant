@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int MaxN = 1001;
+const int MaxM = 10001;
+
+int N, M;
+
+int main() {
+  int count[MaxM];
+
+  while(cin>>N>>M && !(N==0 && M==0)) {
+    vector < vector< pair<int,int> > > logg(MaxM);
+    int r;
+    cin>>r;
+    int t,n,m,s;
+    for(int i=0; i<MaxM; i++) { // init
+      count[i] = 0;
+    }
+    for(int i=0; i<r; i++) {
+      cin>>t>>n>>m>>s;
+      if(s == 1) { // login
+	count[m]++;
+	if(count[m] == 1) {
+	  logg[m].push_back(make_pair(t,t));
+	}
+      }
+      else { // logout
+	count[m]--;
+	if(count[m] == 0) {
+	  logg[m].back().second = t;
+	}
+      }
+    }
+    int q;
+    cin>>q;
+    for(int i=0; i<q; i++) {
+      int ts, te, m, ans = 0;
+      cin>>ts>>te>>m;
+      int ans1, ans2; // 4debug ans1は誤りらしい; エラーデータを弾けないから?
+      for(int j=0; j<logg[m].size(); j++) {
+	
+	if(logg[m][j].first == logg[m][j].second) {
+	  logg[m][j].second = te;
+	}
+	
+	if(logg[m][j].first < te) {
+	  ans1 = min(te, logg[m][j].second)-max(ts, logg[m][j].first);
+	}
+	else {
+	  ans1 = 0;
+	}
+	ans2 = max(0, min(te,logg[m][j].second)-max(ts,logg[m][j].first));
+	
+	/*
+        if(ans1!=ans2) {
+	  cout<<"Q: "<<ts<<" "<<te<<endl;
+	  cout<<"why: "<<min(te, logg[m][j].second)-max(ts, logg[m][j].first)<<endl;
+	  cout<<"val: "<<logg[m][j].first<<" "<<logg[m][j].second<<endl;
+	  cout<<"ans: "<<ans1<<" "<<ans2<<endl;
+	}
+	*/
+	
+        ans += ans1;
+      }
+      cout<<ans<<endl;
+    }
+  }
+}

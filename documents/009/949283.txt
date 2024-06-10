@@ -1,0 +1,44 @@
+#include <iostream>
+#include <utility>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+  for(;;){
+    int n;
+    cin >> n;
+  
+    if(n==0)return 0;
+    vector<pair<int,int> > v(n);
+
+    for(int i=0;i<n;++i){
+      int a,b;
+      cin >> a >> b;
+      v[i] = make_pair(a,b);
+    }
+
+    sort(v.begin(),v.end());
+
+    int omosa=0;
+    for(int i=0;i<n;++i){
+      if(omosa>=v[i].second){
+	cout << "No" << endl;
+	break;
+      }
+      else{
+	omosa += v[i].first;
+	if(omosa>=v[i].second){
+	  cout << "No" << endl;
+	  break;
+	}
+      }
+      if(i==n-1)
+	cout << "Yes" << endl;
+    }
+    
+  }
+  return 0;
+}

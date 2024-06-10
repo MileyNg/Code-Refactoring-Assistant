@@ -1,0 +1,59 @@
+#include <iostream>
+#include <array>
+#include <algorithm> //using for For_each only!!!
+
+#define LEN 100005
+
+using namespace std;
+
+
+int main(){
+     int n;
+     long long int qtime;
+     cin>>n>>qtime;
+     array<int,LEN>     dat;
+     array<string,LEN>  name;
+     vector<pair<string,int> > res;
+     long long int time=0;
+     for(int i=0;i<n;i++){
+         string strTmp;
+         int intTmp;
+         cin>>strTmp>>intTmp;
+         dat[i]=intTmp;
+         name[i]=strTmp;
+     }
+
+     int fp=0;     
+     int ep=n;
+
+     for(int i=0;ep!=0;i++){
+
+         auto push=[&](pair<string,int> v){
+            dat[(fp+ep)%LEN]=v.second;
+            name[(fp+ep)%LEN]=v.first;
+            ep++;
+         };
+         auto pop=[&]{
+            dat[fp]=0;
+            name[fp]="";
+            fp=(fp+1)%LEN;
+            ep--;
+         };
+
+         if(dat[fp]>qtime){
+             dat[fp]-=qtime;
+             time+=qtime;
+             auto tmp=pair<string,int>(name[fp],dat[fp]);
+             pop();
+             push(tmp);
+         }else{
+             time+=dat[fp];
+             res.push_back(pair<string,int>(name[fp],time));
+	     pop();
+         } 
+     }
+     for_each(res.begin(),res.end(),[](pair<string,int> i){
+             cout<<i.first<<" "<<i.second<<endl;
+     });
+     return 0;
+}

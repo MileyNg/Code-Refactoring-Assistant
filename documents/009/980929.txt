@@ -1,0 +1,52 @@
+#include<iostream>
+#include<cstdlib>
+#include<string>
+
+using namespace std;
+
+int main(){
+
+	int n,T;
+	int a;
+	int b;
+	long long inum;
+	string fn;
+	string snum;
+
+	cin>>n>>T;
+	cin>>fn;
+
+	inum=0;
+	for(int i=0;i<fn.size();i++){
+		if(fn[i]!='n'&&fn[i]!='^'&&fn[i]!='+'){
+			snum="";
+			while(i!=fn.size()&&fn[i]!='n'&&fn[i]!='^'&&fn[i]!='+'){
+				snum+=fn[i];
+				i++;
+			}
+			a=atoi(snum.c_str());
+			b=n;
+			if(a==0) b=1;
+			a--;
+			while(a --> 0){
+				if(inum+b>=1000000000){
+					cout<<"TLE"<<endl;
+					return 0;
+				}
+				b=b*n;
+			}
+			inum+=b;
+			if(inum+b>=1000000000){
+				cout<<"TLE"<<endl;
+				return 0;
+			}
+		}
+	}
+
+	inum*=T;
+
+	if(inum<1000000000) cout<<inum<<endl;
+	else cout<<"TLE"<<endl;
+
+	return 0;
+}

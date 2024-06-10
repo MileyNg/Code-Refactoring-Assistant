@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+#include <map>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int const mod = 1000000;
+
+int n, m;
+
+map < pair<char, int>, int> dp;
+
+int solve(char x, char y, char y0, char y1, char y2){
+    int h = y | y0 << 8 | y1 << 16 | y2 << 24;
+    auto p = make_pair(x, h);
+    auto it = dp.find(p);
+    if (it != dp.end()) return it->second;
+    if (x == 2 && y == n){
+        return 1;
+    }
+    long long ans = 0;
+    // printf("%d %d %d %d %d %d\n", x, y, y0, y1, y2, ans);
+    if (x == 0){
+        if (y > y1)
+            ans = ans + solve(1, y, y, y1, y2) % mod; // >
+        if (y != n)
+            ans = ans + solve(0, y + 1, y, y1, y2) % mod; // v
+    }
+    else if (x == 1){
+        if (y > y0)
+            ans = ans + solve(0, y, y0, y, y2) * (y - max(y0, y1)) % mod; // <
+        if (y > y2)
+            ans = ans + solve(2, y, y0, y, y2) * (y - max(y1, y2)) % mod; // >
+        if (y != n)
+            ans = ans + solve(1, y + 1, y0, y, y2) % mod; // v
+    }
+    else if (x == 2){
+        if (y > y1)
+            ans = ans + solve(1, y, y0, y1, y) % mod; // <
+        if (y != n)
+            ans = ans + solve(2, y + 1, y0, y1, y) % mod; // v
+    }
+    return dp[p] = ans%mod;
+}
+
+//
+//int solve(char x, char y, char y0, char y1, char y2){
+//    vector<char> v{ x, y, y0, y1, y2 };
+//    if (dp.find(v) != dp.end()) return dp[v];
+//    if (x == 2 && y == n){
+//        return 1;
+//    }
+//    long long ans = 0;
+//    // printf("%d %d %d %d %d %d\n", x, y, y0, y1, y2, ans);
+//    if (x == 0){
+//        if (y > y1)
+//            ans = ans + solve(1, y, y, y1, y2) % mod; // >
+//        if (y != n)
+//            ans = ans + solve(0, y + 1, y, y1, y2) % mod; // v
+//    }
+//    else if (x == 1){
+//        if (y > y0)
+//            ans = ans + solve(0, y, y0, y, y2) * (y - max(y0, y1)) % mod; // <
+//        if (y > y2)
+//            ans = ans + solve(2, y, y0, y, y2) * (y - max(y1, y2)) % mod; // >
+//        if (y != n)
+//            ans = ans + solve(1, y + 1, y0, y, y2) % mod; // v
+//    }
+//    else if (x == 2){
+//        if (y > y1)
+//            ans = ans + solve(1, y, y0, y1, y) % mod; // <
+//        if (y != n)
+//            ans = ans + solve(2, y + 1, y0, y1, y) % mod; // v
+//    }
+//    return dp[v] = ans%mod;
+//}
+
+int main(){
+    while (cin >> n >> m){
+        int ans;
+        if (m == 1){
+            ans = 1;
+            rep(i, n) ans = ans * 2 % mod;
+        }
+        else {
+            ans = solve(0, 0, 0, -1, -1);
+        }
+        cout << ans << endl;
+    }
+}

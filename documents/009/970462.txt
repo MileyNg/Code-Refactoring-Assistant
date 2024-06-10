@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+
+int main(){
+	int a, b;
+	while(std::cin >> a >> b){
+		//a及びbが0ならば終了
+		if(a == 0 && b == 0){
+			return 0;
+		}
+		//範囲外の参照によるエラーを回避するため，1だけ容量を多く確保し，(1,1)を開始地点にする
+		std::vector<std::vector<int>> path(a+1);
+		for(int i = 0; i < a+1; ++i){
+			path[i].resize(b+1, 1);
+		}
+		
+		int n;
+		std::cin >> n;
+		for(int i = 0; i < n; ++i){
+			int x, y;
+			std::cin >> x >> y;
+			//工事中の交差点は0で表現
+			path[x][y] = 0;
+		}
+		
+		//範囲外の交差点は0で表現
+		for(int i = 0; i <= a; ++i) path[i][0] = 0;
+		for(int i = 0; i <= b; ++i) path[0][i] = 0;
+		
+		for(int x = 1; x <= a; ++x){
+			for(int y = 1; y <= b; ++y){
+				//工事中か開始地点は経路数を変更しない
+				if( path[x][y] != 0 && (x != 1 || y != 1) ){
+					path[x][y] = path[x-1][y] + path[x][y-1];
+				}
+			}
+		}
+		
+		std::cout << path[a][b] << std::endl;
+		
+	}
+	return 0;
+}

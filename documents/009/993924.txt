@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+#include<cstdlib>
+#include<sstream>
+
+using namespace std;
+
+string itos(int x){
+  if(x==0)return "";
+  stringstream ss;
+  ss<<x;
+  return ss.str();
+}
+
+int main(){
+  string s;
+  cin>>s;
+  int ans=0;
+  for(int i=0;i<=s.size();i++){
+    string sa=s.substr(0,i);
+    string sb=s.substr(i);
+    int a=atoi(sa.c_str());
+    int b=atoi(sb.c_str());
+    int x=a+b,y=b-a;
+    int xx=x/2,yy=y/2;
+    ans+=x>=0&&y>=0&&x%2==0&&y%2==0&&s==itos(xx-yy)+itos(xx+yy);
+  }
+  cout<<ans<<endl;
+}
+
+    

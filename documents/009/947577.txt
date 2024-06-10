@@ -1,0 +1,86 @@
+#include<iostream>
+#include<vector>
+
+void erase(bool(&field)[5000][5], int line){
+
+	for (int i = line; i < 4999; i++){
+		for (int j = 0; j < 5; j++){
+			field[i][j] = field[i + 1][j];
+		}
+	}
+}
+
+int main(){
+
+	int n;
+	while (std::cin >> n, n){
+
+		bool field[5000][5];
+
+		for (int i = 0; i < 5000; i++){
+			for (int j = 0; j < 5; j++){
+				field[i][j] = 0;
+			}
+		}
+
+		for (int i = 0; i < n; i++){
+			int d, p, q;
+			std::cin >> d >> p >> q;
+
+			q--;
+
+			int height = 0;
+
+			for (int j = 4999; j >= 0; j--){
+				if (d == 1){
+					bool flg = true;
+					for (int k = 0; k < p; k++){
+						if (field[j][q + k]) flg = false;
+					}
+					if (!flg){
+						height = j + 1;
+						break;
+					}
+				}
+				else{
+					if (field[j][q]){
+						height = j + 1;
+						break;
+					}
+				}
+			}
+
+
+			for (int j = 0; j < p; j++){
+				if (d == 1)field[height][q + j] = true;
+				else field[height + j][q] = true;
+			}
+
+			for (int i = 0; i < 5000; i++){
+				bool flg = true;
+				for (int j = 0; j < 5; j++){
+					if (!field[i][j]){
+						flg = false;
+						break;
+					}
+				}
+				if (flg){
+					erase(field, i);
+					i--;
+				}
+
+			}
+		}
+
+		int cnt = 0;
+		for (int i = 0; i < 5000; i++){
+			for (int j = 0; j < 5; j++){
+				if (field[i][j] == 1)cnt++;
+			}
+		}
+
+		std::cout << cnt << std::endl;
+	}
+
+	return 0;
+}

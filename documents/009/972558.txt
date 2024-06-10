@@ -1,0 +1,51 @@
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <cstdio>
+#include <sstream>
+#include <cmath>
+#include <algorithm>
+#include <queue>
+#include <stack>
+#include <limits>
+#include <map>
+#include <string>
+#include <cstring>
+#include <set>
+#include <deque>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int,int> P;
+
+int dp[12][801][(1<<10)];
+
+int main(){
+  int n,target_sum;
+  while(~scanf("%d %d",&n,&target_sum)){
+
+    memset(dp,0,sizeof(dp));
+    dp[0][0][0] = 1;
+    dp[1][0][0] = 1;
+    for(int multiply=1;multiply<=n;multiply++){
+      for(int used = 0; used <= (1<<10) ; used++){
+        for(int base = 400;base >= 0; base--){
+          if(dp[multiply][base][used] == 0) continue;
+
+          for(int to=9; to>=0; to--){
+            if(used & (1 << to)) continue;
+            dp[multiply + 1][to * multiply + base][used | (1<<to)] += dp[multiply][base][used];
+          }
+        }
+      }
+    }
+
+    int res = 0;
+    for(int S=0;S<(1<<10);S++){
+      if(__builtin_popcount(S) == n){
+        res += dp[n+1][target_sum][S];
+      }
+    }
+    printf("%d\n",res);
+  }
+}

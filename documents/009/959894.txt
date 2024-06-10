@@ -1,0 +1,50 @@
+#include <cstdio>
+#include <vector>
+#include <cstring>
+#include <iostream>
+#define bit(k) (1<<(k))
+using namespace std;
+
+const int oo = -1;
+vector<int> all;
+int dep[505];
+int dp[1005][505];
+int a[1005], b[1005];
+int main(){
+	//freopen("1.txt","r",stdin);
+
+	int i, j, n, s, u, now, p;
+	while(~scanf("%d",&n)&&n){
+		for(i=1;i<=n;++i) scanf("%d",&a[i]);
+		int ans = 1;
+		for(u=1;u<=500;++u){
+			now = u;
+			memset(dep,-1,sizeof(dep));
+			for(p=0;now<=500;++p){
+				dep[now] = p;
+				now *= 2;
+			}
+
+			int cnt = 0;
+			for(i=1;i<=n;++i){
+				if(dep[a[i]]==-1) continue;
+				b[++cnt] = a[i];
+			}
+			for(i=0;i<=500;++i)
+			dp[0][i] = -1;
+			dp[0][0] = 0;
+			for(i=1;i<=cnt;++i){
+				for(j=0;j<=500;++j) dp[i][j] = dp[i-1][j];
+				if(dep[b[i]] == -1) continue;
+				int uc = bit(dep[b[i]]);
+				for(j=0;j+uc<=500;j+=uc) if(dp[i-1][j]!=oo){
+					dp[i][j+uc] = max(dp[i][j+uc], dp[i-1][j]+1);
+				}
+			}
+			for(i=1;i<=500;i*=2)
+				if(dp[cnt][i]>ans) ans = dp[cnt][i];
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,48 @@
+#include<iostream>
+#include<iomanip>
+#include<cmath>
+#define PI 3.14159265359
+using namespace std;
+
+int main(){
+
+	int n;
+	double x1, y1, x2, y2, x3, y3;
+	double la, lb, lc;
+	double a, b, c;
+	
+	double r;
+	double px, py;
+
+	cin >> n;
+
+	for(int i=0;i<n;i++){
+		cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+
+		//lc = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+		la = (x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3);
+		//lb = (x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1);
+
+		a = fabs((atan2( y2 - y1, x2 - x1 ) - atan2( y3 - y1, x3 - x1 )));
+		b = fabs((atan2( y1 - y2, x1 - x2 ) - atan2( y3 - y2, x3 - x2 )));
+		c = fabs((atan2( y1 - y3, x1 - x3 ) - atan2( y2 - y3, x2 - x3 )));
+
+
+		if( a >= PI ) a=2*PI-a;
+		if( b >= PI ) b=2*PI-b;
+		if( c >= PI ) c=2*PI-c;
+
+
+		r = sqrt(la) / (sin(a)*2);
+		px = ( sin(2*a) * x1 + sin(2*b) * x2 + sin(2*c) * x3 ) / (sin(2*a)+sin(2*b)+sin(2*c));
+		py = ( sin(2*a) * y1 + sin(2*b) * y2 + sin(2*c) * y3 ) / (sin(2*a)+sin(2*b)+sin(2*c));
+
+		r = floor(r*1000+0.5)/1000;
+		px = floor(px*1000+0.5)/1000;
+		py = floor(py*1000+0.5)/1000;
+
+		cout << setprecision(3) << fixed  << px << " " << py << " " << r << endl;
+
+	}
+	return 0;
+}

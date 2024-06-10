@@ -1,0 +1,19 @@
+<?php
+	fscanf(STDIN, "%d", $w);
+	fscanf(STDIN, "%d", $n);
+
+	for($i = 1; $i <= $w; $i++) {
+		$arr[$i] = $i;
+	}
+
+	for($i = 0; $i < $n; $i++) {
+		fscanf(STDIN, "%d,%d", $a, $b);
+		$arr[$a] ^= $arr[$b];
+		$arr[$b] ^= $arr[$a];
+		$arr[$a] ^= $arr[$b];
+	}
+
+	for($i = 1; $i <= $w; $i++) {
+		print $arr[$i] . "\n";
+	}
+?>

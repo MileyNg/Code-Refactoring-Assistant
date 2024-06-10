@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	char s[1000];
+	int n=0;
+	cin.getline(s,1000);
+	string tok[1000];
+	char *sep=" ,.";
+	char *word;
+	word = strtok(s,sep);
+	while(word != NULL)
+	{
+		tok[n] = word;
+		n++;
+		word=strtok(NULL,sep);
+	}
+	int f=1,fmax=1;
+	string max, freq;
+	max=tok[0]; freq=tok[0];
+	for(int i=0;i<n;i++)
+	{
+		if(tok[i].length()>max.length())
+			max=tok[i];
+		f=1;
+		for(int j=i+1;j<n;j++){
+			if(tok[i]==tok[j])
+				f++;
+		}
+		if(f>fmax)
+		{
+			fmax=f; freq=tok[i];
+		}
+	}
+	cout << freq <<" " <<max<<endl;
+}

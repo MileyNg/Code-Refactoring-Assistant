@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+struct point
+{
+	double x;
+	double y;
+};
+
+int main(void)
+{
+	struct point a, b, c, d;
+	double ab, cd;
+	int n;
+	
+	scanf("%d", &n);
+	while (n-- > 0){
+		scanf("%lf %lf", &a.x, &a.y);
+		scanf("%lf %lf", &b.x, &b.y);
+		scanf("%lf %lf", &c.x, &c.y);
+		scanf("%lf %lf", &d.x, &d.y);
+		
+		ab = (a.y - b.y) / (a.x - b.x) + 0.000001;
+		cd = (c.y - d.y) / (c.x - d.x) + 0.000001;
+		if (ab == cd){
+			puts("YES");
+		}
+		else {
+			puts("NO");
+		}
+	}
+	
+	return 0;
+}

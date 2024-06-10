@@ -1,0 +1,46 @@
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  m = gets.chomp.to_i
+
+  edges = []
+  m.times do
+    e = gets.chomp.split(",").map{|s| s.to_i}
+    e[2] = e[2] / 100 - 1
+    edges.push e
+  end
+  #p [n, m, edges]
+
+  edges.sort!{|a, b| a[2] <=> b[2]}
+
+  nodes = n.times.map{false}
+
+  connected = [0]
+  nodes[0] = true
+
+  sumw = 0
+
+  while connected.length < n
+    for i in (0...edges.length)
+      n0, n1, w = edges[i]
+
+      if nodes[n0] || nodes[n1]
+        if ! nodes[n0]
+          nodes[n0] = true
+          connected.push n0
+          sumw += w
+        elsif ! nodes[n1]
+          nodes[n1] = true
+          connected.push n1
+          sumw += w
+        end
+
+        edges.delete_at(i)
+        break
+      end
+    end
+  end
+
+  puts sumw
+end

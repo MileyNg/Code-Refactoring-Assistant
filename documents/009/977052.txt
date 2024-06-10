@@ -1,0 +1,200 @@
+#include<stdio.h>
+#include<algorithm>
+#include<vector>
+#include<string.h>
+using namespace std;
+struct mat{
+	int v[110][110];
+	int R;
+	int C;
+	mat(){
+		R=C=0;
+		for(int i=0;i<110;i++)
+			for(int j=0;j<110;j++)
+				v[i][j]=0;
+	}
+};
+mat var[26];
+int mod=32768;
+char str[128];
+int debug=0;
+pair<mat,int> expr(int a);
+pair<mat,int> term(int a);
+pair<mat,int> fact(int a);
+pair<mat,int> prim(int a);
+pair<mat,int> matr(int a);
+pair<mat,int> row(int a);
+pair<mat,int> expr(int a){
+	if(debug)printf("DEBUG EXPR IN %d\n",a);fflush(stdout);
+	pair<mat,int> ret=term(a);
+	while(str[ret.second+1]=='+'||str[ret.second+1]=='-'){
+		pair<mat,int> tmp=term(ret.second+2);
+		if(str[ret.second+1]=='+'){
+			for(int i=0;i<ret.first.R;i++){
+				for(int j=0;j<ret.first.C;j++)
+					ret.first.v[i][j]=(ret.first.v[i][j]+tmp.first.v[i][j])%mod;
+			}
+		}else{
+			for(int i=0;i<ret.first.R;i++){
+				for(int j=0;j<ret.first.C;j++)
+					ret.first.v[i][j]=(ret.first.v[i][j]-tmp.first.v[i][j]+mod)%mod;
+			}
+		}
+		ret.second=tmp.second;
+	}
+	if(debug)printf("DEBUG EXPR OUT %d\n",ret.second);fflush(stdout);
+	return ret;
+}
+pair<mat,int> term(int a){
+	if(debug)printf("DEBUG TERM IN %d\n",a);fflush(stdout);
+	pair<mat,int> ret=fact(a);
+	while(str[ret.second+1]=='*'){
+		pair<mat,int> tmp=fact(ret.second+2);
+		if((tmp.first.R==1&&tmp.first.C==1)||(ret.first.R==1&&ret.first.C==1)){
+			if(tmp.first.R*tmp.first.C==1){
+				for(int i=0;i<ret.first.R;i++)	
+					for(int j=0;j<ret.first.C;j++)
+						ret.first.v[i][j]=(ret.first.v[i][j]*tmp.first.v[0][0])%mod;
+			}else{
+				int k=ret.first.v[0][0];
+				for(int i=0;i<tmp.first.R;i++)
+					for(int j=0;j<tmp.first.C;j++)
+						ret.first.v[i][j]=(tmp.first.v[i][j]*k)%mod;
+				ret.first.R=tmp.first.R;
+				ret.first.C=tmp.first.C;
+			}
+			ret.second=tmp.second;
+		}else{
+			mat ans;
+			ans.R=ret.first.R;
+			ans.C=tmp.first.C;
+			for(int i=0;i<ans.R;i++){
+				for(int j=0;j<ans.C;j++){
+					for(int k=0;k<ret.first.C;k++){
+						ans.v[i][j]=(ans.v[i][j]+ret.first.v[i][k]*tmp.first.v[k][j]%mod)%mod;
+					}
+				}
+			}
+			ret.first=ans;
+			ret.second=tmp.second;
+		}
+	}
+	if(debug)printf("DEBUG TERM OUT %d\n",ret.second);fflush(stdout);
+	return ret;
+}
+pair<mat,int> fact(int a){
+	if(debug)printf("DEBUG FACT IN %d\n",a);fflush(stdout);
+	if(str[a]=='-'){
+		pair<mat,int> ret=fact(a+1);
+		for(int i=0;i<ret.first.R;i++)
+			for(int j=0;j<ret.first.C;j++)
+				ret.first.v[i][j]=mod-ret.first.v[i][j];
+		return ret;
+	}else{
+		return prim(a);
+	}
+}
+pair<mat,int> prim(int a){
+	if(debug)printf("DEBUG PRIM IN %d\n",a);fflush(stdout);
+	pair<mat,int> ret;
+	if(str[a]>='0'&&str[a]<='9'){
+		int at=a;
+		int num=0;
+		while(str[at]>='0'&&str[at]<='9'){
+			num*=10;
+			num+=str[at]-'0';
+			num%=mod;
+			at++;
+		}
+		mat ans;
+		ans.R=ans.C=1;
+		ans.v[0][0]=num;
+		ret.first=ans;
+		ret.second=at-1;
+	}else if(str[a]>='A'&&str[a]<='Z'){
+		ret=make_pair(var[str[a]-'A'],a);
+		ret.second=a;
+	}else if(str[a]=='('){
+		ret=expr(a+1);
+		ret.second++;
+	}else{
+		ret=matr(a+1);
+		ret.second++;
+	}
+	while(str[ret.second+1]=='('||str[ret.second+1]=='\''){
+		if(str[ret.second+1]=='('){
+			pair<mat,int> tmp1=expr(ret.second+2);
+			pair<mat,int> tmp2=expr(tmp1.second+2);
+			mat tmp;
+			tmp.R=tmp1.first.C;
+			tmp.C=tmp2.first.C;
+			for(int i=0;i<tmp.R;i++){
+				for(int j=0;j<tmp.C;j++){
+				tmp.v[i][j]=ret.first.v[tmp1.first.v[0][i]-1][tmp2.first.v[0][j]-1];
+				}
+			}
+			ret.first=tmp;
+			ret.second=tmp2.second+1;
+		}else{
+			mat tmp;
+			tmp.R=ret.first.C;
+			tmp.C=ret.first.R;
+			for(int i=0;i<tmp.R;i++)
+				for(int j=0;j<tmp.C;j++)
+					tmp.v[i][j]=ret.first.v[j][i];
+			ret.first=tmp;
+			ret.second++;
+		}
+	}
+	if(debug)printf("DEBUG PRIM OUT %d\n",ret.second);fflush(stdout);
+	return ret;
+}
+pair<mat,int> matr(int a){
+	pair<mat,int> ret=row(a);
+	while(str[ret.second+1]==';'){
+		pair<mat,int> tmp=row(ret.second+2);
+		for(int i=0;i<tmp.first.R;i++){
+			for(int j=0;j<tmp.first.C;j++){
+				ret.first.v[ret.first.R+i][j]=tmp.first.v[i][j];
+			}
+		}
+		ret.first.R+=tmp.first.R;
+		ret.second=tmp.second;
+	}
+	return ret;
+}
+pair<mat,int> row(int a){
+	pair<mat,int> ret=expr(a);
+	while(str[ret.second+1]==' '){
+		pair<mat,int> tmp=expr(ret.second+2);
+		for(int i=0;i<tmp.first.R;i++){
+			for(int j=0;j<tmp.first.C;j++){
+				ret.first.v[i][ret.first.C+j]=tmp.first.v[i][j];
+			}
+		}
+		ret.first.C+=tmp.first.C;
+		ret.second=tmp.second;
+	}
+	return ret;
+}
+int main(){
+	int n;
+	while(scanf("%d",&n),n){
+		for(int i=0;i<26;i++)var[i]=mat();
+		gets(str);
+		while(n--){
+			gets(str);
+			int to=str[0]-'A';
+			pair<mat,int> ret=expr(2);
+			var[to]=ret.first;
+			for(int i=0;i<var[to].R;i++){
+				for(int j=0;j<var[to].C;j++){
+					if(j)printf(" ");
+					printf("%d",var[to].v[i][j]);
+				}
+				printf("\n");
+			}
+		}
+		printf("-----\n");
+	}
+}

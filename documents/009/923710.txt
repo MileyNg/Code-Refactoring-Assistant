@@ -1,0 +1,7 @@
+while count = gets.to_i
+  break if count == 0
+  points = gets.split(" ").map(&:to_i)
+  avg = points.inject(0){|sum, point| sum + point} / count
+  dis = points.inject(0){|sum, point| sum + (point - avg)**2 } / count
+  puts dis ** (1.0/2.0)
+end

@@ -1,0 +1,29 @@
+EPS = 1e-9
+
+class Point
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_f)
+  end
+  def -(p)
+    Point.new(@x - p.x, @y - p.y, @z - p.z)
+  end
+  def dot(p)
+    @x * p.x + @y * p.y + @z * p.z
+  end
+  def cross(p)
+    Point.new(@y * p.z - @z * p.y, @z * p.x - @x * p.z, @x * p.y - @y * p.x)
+  end
+end
+
+def solve2
+  d, e, a, b, c = 5.times.map{Point.new(*gets.split)}
+  abde = (e - d).dot((b - a).cross(d - a)).abs
+  bcde = (e - d).dot((c - b).cross(d - b)).abs
+  cade = (e - d).dot((a - c).cross(d - c)).abs
+  abcd = (d - c).dot((b - a).cross(c - a)).abs
+  abce = (e - c).dot((b - a).cross(c - a)).abs
+  return (abde + bcde + cade - abcd - abce).abs < EPS
+end
+
+puts (solve2 ? "MISS" : "HIT")

@@ -1,0 +1,34 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+int main()
+{
+    string[] s1 = readln.chomp.split;
+    int n = s1[0].to!int;
+    int m = s1[1].to!int;
+    int a = s1[2].to!int;
+    int max = -1;
+
+    int[1001][1001] N = 0;
+    for (int i = 0; i <= m; i++) {
+        string[] s2 = readln.chomp.split;
+        int h = s2[0].to!int;
+        int p = s2[1].to!int;
+        int q = s2[2].to!int;
+
+        N[p][h] = q;
+        N[q][h] = p;
+
+        if (max < h) max = h;
+    }
+
+    while (max > -1) {
+        if (N[a][max] != 0) a = N[a][max];
+        --max;
+    }
+    writeln(a);
+    
+
+    return 0;
+}

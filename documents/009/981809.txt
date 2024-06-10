@@ -1,0 +1,25 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int w, last = 4280;
+
+  while(cin >> w, w != -1) {
+    int ans = 1150;
+    while(w) {
+      if(w > 30) {
+	ans += 160 * (w-30);
+	w = 30;
+      }
+      else if(20 < w) {
+	ans += 140 * (w-20);
+	w = 20;
+      }
+      else if(10 < w) {
+	ans += 125 * (w-10);
+	w = 0;
+      }
+    }
+    cout << last - ans << endl;
+  }
+}

@@ -1,0 +1,67 @@
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+constexpr double EPS = 1e-8;
+constexpr int MAX_T = 86400;
+
+bool ok(const vector<int> &s, const vector<int> &t, const vector<int> &u, int limit, double power) {
+	const int n = s.size();
+
+	bool use = false;
+	int idx = 0;
+	double tank = limit;
+
+	for(int T = 0; T <= MAX_T; ++T) {
+		if(use && T == t[idx]) {
+			if(++idx == n) {
+				tank = min<double>(tank + (MAX_T - T) * power, limit);
+				break;
+			}
+		}
+
+		if(!use && T == s[idx]) {
+			use = true;
+		}
+
+		if(use) {
+			tank = min<double>(tank + power - u[idx], limit);
+			if(tank < -EPS) return false;
+		}
+		else {
+			tank = min<double>(tank + power, limit);
+		}
+	}
+
+	return s[0] * power + tank + EPS > limit;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+	cout.precision(10);
+	cout.setf(ios::fixed);
+
+	for(int n, l; cin >> n >> l && n;) {
+		vector<int> s(n), t(n), u(n);
+		for(int i = 0; i < n; ++i) {
+			cin >> s[i] >> t[i] >> u[i];
+		}
+
+		double low = 0.0, high = 1e6;
+		for(int i = 0; i < 50; ++i) {
+			const double middle = (low + high) / 2.0;
+			if(ok(s, t, u, l, middle)) {
+				high = middle;
+			}
+			else {
+				low = middle;
+			}
+		}
+
+		cout << low << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

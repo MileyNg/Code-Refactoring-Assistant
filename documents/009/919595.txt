@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct State{
+  int x1, y1, x2, y2;
+  State(int x1, int y1, int x2, int y2): x1(x1), y1(y1), x2(x2), y2(y2){}
+};
+
+const int MAX = 55;
+
+const int dx1[] = {1, 0, -1, 0};
+const int dy1[] = {0, 1, 0, -1};
+const int dx2[] = {-1, 0, 1, 0};
+const int dy2[] = {0, 1, 0, -1};
+
+int H, W;
+char grid[2][MAX][MAX];
+bool used[MAX][MAX][MAX][MAX];
+int sx1, sy1, sx2, sy2;
+int gx1, gy1, gx2, gy2;
+
+bool isValid(int x, int y){
+  return 0 <= x && x < W && 0 <= y && y < H;
+}
+
+bool solve(){
+  queue<State> que;
+  que.push(State(sx1, sy1, sx2, sy2));
+  
+  while(!que.empty()){
+    State q = que.front(); que.pop();
+
+    if(used[q.y1][q.x1][q.y2][q.x2]) continue;
+    used[q.y1][q.x1][q.y2][q.x2] = true;
+    
+    for(int i = 0 ; i < 4 ; i++){
+      int nx1 = q.x1 + dx1[i], ny1 = q.y1 + dy1[i];
+      int nx2 = q.x2 + dx2[i], ny2 = q.y2 + dy2[i];      
+      
+      if(!isValid(nx1, ny1) || !isValid(nx2, ny2)) continue;
+      if(grid[0][ny1][nx1] == '#' && grid[1][ny2][nx2] == '#') continue;      
+      
+      if(grid[0][ny1][nx1] == '#') nx1 = q.x1, ny1 = q.y1;
+      if(grid[1][ny2][nx2] == '#') nx2 = q.x2, ny2 = q.y2;
+      
+      que.push(State(nx1, ny1, nx2, ny2));
+    }
+  }
+  return used[gy1][gx1][gy2][gx2];
+}
+
+void init(){
+  memset(used, false, sizeof(used));
+  memset(grid, '.', sizeof(grid));
+}
+
+int main(){
+  while(cin >> W >> H, H|W){  
+    init();
+    
+    for(int i = 0 ; i < H ; i++)
+      for(int j = 0 ; j < 2 ; j++) cin >> grid[j][i];
+
+    for(int i = 0 ; i < H ; i++){
+      for(int j = 0 ; j < W ; j++){
+	if(grid[0][i][j] == 'L') sx1 = j, sy1 = i;
+	if(grid[0][i][j] == '%') gx1 = j, gy1 = i;
+      }
+    }
+    
+    for(int i = 0 ; i < H ; i++){
+      for(int j = 0 ; j < W ; j++){
+	if(grid[1][i][j] == 'R') sx2 = j, sy2 = i;
+	if(grid[1][i][j] == '%') gx2 = j, gy2 = i;
+      }
+    }    
+    cout << (solve() ? "Yes" : "No") << endl;
+  }
+  return 0;
+}

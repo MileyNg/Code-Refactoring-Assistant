@@ -1,0 +1,72 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int calc(int a[21]) {
+  bool spare[21] = {false};
+  bool strike[21] = {false};
+  int s = 0, p = 0;
+  for (int i=0; i<10; i++) {
+    s += a[p];
+    if (p>0 && (spare[p-1] || strike[p-1])) {
+      s += a[p];
+    }
+    if (p>1 && strike[p-2]) {
+      s += a[p];
+    }
+    if (a[p] == 10) {
+      strike[p] = true;
+      p++;
+      continue;
+    }
+    s += a[p+1];
+    if (p>0 && strike[p-1]) {
+      s += a[p+1];
+    }
+    if (a[p] + a[p+1] == 10) {
+      spare[p+1] = true;
+    }
+    p += 2;
+  }
+  if (spare[p-1]) {
+    s += a[p];
+  }
+  if (strike[p-1]) {
+    s += a[p];
+    if (strike[p-2]) {
+      s += a[p];
+    }
+    s += a[p+1];
+  }
+  return s;
+}
+
+
+int main() {
+  int a[21];
+  pair<int,int> s[40];
+  int n, m, p, c;
+  char buf[100];
+  while (1) {
+    scanf("%d\n", &n);
+    if (!n) break;
+    for (int i=0; i<n; i++) {
+      fgets(buf, sizeof(buf), stdin);
+      p = 0;
+      sscanf(buf, "%d%n", &s[i].second, &c);
+      p += c;
+      m = 0;
+      while (1) {
+        if (sscanf(buf+p, "%d%n", &a[m], &c) != 1) break;
+        ++m;
+        p += c;
+      }
+      s[i].first = calc(a);
+    }
+    sort(s, s+n);
+    for (int i=n-1; i>=0; i--) {
+      printf("%d %d\n", s[i].second, s[i].first);
+    }
+  }
+  return 0;
+}

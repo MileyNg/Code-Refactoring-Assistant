@@ -1,0 +1,57 @@
+#include<stdio.h>
+int n,cnt;
+
+void bubbleSort(long a[]){
+	long i,key;
+	int top=0,bot=n-1;
+	
+	while(1){
+		long last;
+		last=top;
+	for(i=top;i<bot;i++){
+			if(a[i]>a[i+1]){
+			key=a[i+1];
+				a[i+1]=a[i];
+				a[i]=key;
+				last=i;
+				cnt++;
+			}}
+		
+		bot=last;
+		if(top==bot) break;
+		
+		last=bot;
+		
+		for(i=bot;i>top;i--){
+			if(a[i]<a[i-1]){
+				key=a[i];
+				a[i]=a[i-1];
+				a[i-1]=key;
+				cnt++;
+				last=i;
+			}
+		}
+		
+		top=last;
+		if(top==bot) break;
+	}
+
+	
+	
+	
+	
+	return;
+		}
+
+		
+int main(){
+	long a[200000];
+	long i,count;
+	
+	scanf("%d",&n);
+	for(i=0;i<n;i++) scanf("%ld",&a[i]);
+	bubbleSort(a);
+	printf("%ld\n",cnt);
+
+return 0;
+}

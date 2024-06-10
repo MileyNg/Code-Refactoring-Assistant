@@ -1,0 +1,32 @@
+include Math
+line = gets.chomp.to_i
+j = 0
+a1 = Array.new(line - 1)
+a2 = Array.new(line - 1)
+r = Array.new(line - 1)
+
+while j < line
+array0 = gets.chomp
+array1 = array0.split
+array2 = Array.new(6)
+
+i = 0
+array1.each{|number|
+  array2[i] = array1[i].to_i
+  i += 1
+}
+
+x = (array2[0] + array2[2] + array2[4])/3
+y = (array2[1] + array2[3] + array2[5])/3
+
+a1[j] = x - array2[0] #xの距離
+a2[j] = y - array2[1] #yの距離
+r[j] = sqrt(a1[j]*a1[j] + a2[j]*a2[j])
+j += 1
+end
+
+j = 0
+while j < line
+  puts sprintf("%0.3f %0.3f %0.3f",a1[j],a2[j],r[j])
+  j += 1
+end

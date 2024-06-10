@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+
+double dp[101][101]; // dp[i][j] := i回肥料を与えて、直前の肥料がjのときの最大身長
+
+double max(double a, double b) {
+	return a > b ? a : b;
+}
+
+int main() {
+	
+	while(1) {
+		double bairitu[101][101] = {0.0};
+		int N, M, i, j, k;
+		scanf("%d %d", &N, &M);
+		if (N == 0) break;
+		for(i = 0; i < N; i++) {
+			for(j = 0; j < N; j++) {
+				scanf("%lf", &bairitu[i][j]);
+			}
+		}
+		
+		memset((void *)dp, 0, sizeof(dp) / sizeof(dp[0][0]));
+		
+		for(i = 1; i < M; i++) {
+			for(j = 0; j < N; j++) {
+				if (i == 1) dp[i][j] = 1.0; else dp[i][j] = 0.0;				
+			}
+		}
+
+		for(i = 1; i < M; i++) {
+			for(j = 0; j < N; j++) {
+				for(k = 0; k < N; k++) {
+					dp[i + 1][k] = max(dp[i + 1][k], dp[i][j] * bairitu[j][k]);
+				}
+			}
+		}
+
+		double ans = 0.0;
+		for(j = 0; j < N; j++) {
+			ans = max(ans, dp[M][j]);
+		}
+		printf("%3.2f\n", ans);
+	}
+	return 0;
+}

@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <math.h>
+
+//double x[0][0]=0.0;
+//double y=100.0;
+
+int Koch(double x1,double y1,double x3,double y3,int n){
+    double x2=0,y2=0;
+    double px=0,py=0,tx=0,ty=0;
+    
+    
+    if(n==0){
+        return 0;
+    }else{
+        
+        px=((x3-x1)/3)+x1;
+        py=((y3-y1)/3)+y1;
+       // x2=px+(x3-x1)/6;
+       // y2=sqrt(-(x2-px)*(x2-px)+px*px);
+        x2 = (x1+x3)/2 -sqrt(3.0)*(y3-y1)/6;
+        y2 = (y1+y3)/2 +sqrt(3.0)*(x3-x1)/6;
+        tx=((x1-x3)/3)+x3;
+        ty=((y1-y3)/3)+y3;
+        
+        Koch(x1,y1,px,py,n-1);
+        Koch(px,py,x2,y2,n-1);
+        Koch(x2,y2,tx,ty,n-1);
+        Koch(tx,ty,x3,y3,n-1);
+        //Koch(size/3+size/3,n-1);
+        
+        
+        
+       // printf("%f %f\n",x1,y1);
+        printf("%f %f\n",px,py);
+        printf("%f %f\n",x2,y2);
+        printf("%f %f\n",tx,ty);
+        
+        
+        
+    }
+    return 0;
+}
+
+
+
+int main(int argc , char *argv[]){
+    
+    int n;
+    double x1=0,x3=100;
+    double y1=0,y3=0;
+    
+    scanf("%d",&n);
+    printf("%f %f\n",0.0,0.0);
+    Koch(x1,y1,x3,y3,n);
+    printf("%f %f\n",100.0,0.0);
+    return 0;
+ }

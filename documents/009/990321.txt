@@ -1,0 +1,77 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <deque>
+#include <vector>
+#include <numeric>
+#include <iterator>
+#include <array>
+#include <utility>
+
+using namespace std;
+typedef long long ll;
+
+
+#define FF first
+#define SS second
+#define ALL(c) begin((c)), end((c))
+#define REP(i,n) for(ll i=0;i<(ll)n;++i)
+inline int getInt() { int s; scanf("%d", &s); return s; }
+
+struct circle{
+	int id,x,y,r;
+};
+
+vector<circle> g_table[4];
+
+
+int main() {
+
+	while (true) {
+		ll n;
+		cin >> n;
+		if (n==0) break;
+		array<bool,4> active;
+		active.fill(true);
+
+		REP(c, 4) g_table[c].clear();
+		REP(i, n){
+			int x,y,r,c;
+			cin >> x >> y >> r >> c;
+			g_table[c - 1].push_back(circle{i,x,y,r});
+		}
+
+		vector<int> removableColor;
+		do{
+			while (!removableColor.empty()) {
+				active[removableColor.back()] = false;
+				removableColor.pop_back();
+			}
+
+			array<vector<circle>,4> tops;
+			REP(c1, 4) for (auto it1 = g_table[c1].begin(); it1 != g_table[c1].end(); ++it1) {
+				if(!active[c1]) continue;
+				bool top = true;
+				REP(c2, 4) for (auto it2 = g_table[c2].begin(); it2 != g_table[c2].end(); ++it2) {
+					if (!active[c2]) continue;
+					if (c1==c2 && it1 == it2) continue;
+					int xx = (it1->x - it2->x);
+					int yy = (it1->y - it2->y);
+					int rr = (it1->r + it2->r);
+					if (xx*xx + yy*yy < rr*rr && it1->id > it2->id) {
+						top = false;
+						break;
+					}
+				}
+				if (top) tops[c1].push_back(*it1);
+			}
+
+			REP(c,4) if ((!g_table[c].empty()) && tops[c].size() == g_table[c].size()) removableColor.push_back(c);
+		} while (!removableColor.empty());
+
+		int count = 0;
+		REP(c, 4) if (!active[c]) count += g_table[c].size();
+
+		cout << count << endl;
+	}
+}

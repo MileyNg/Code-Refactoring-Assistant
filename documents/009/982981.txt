@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+int max2(int a, int b);
+
+int main(void)
+{
+	int area[10][10];
+	int x, y, size;
+	int a, b, c;
+	int white, max;
+	
+	for (a = 0; a <= 9; a++) {
+		for (b = 0; b <= 9; b++) {
+			area[a][b] = 0;
+		}
+	}
+	
+	while (scanf("%d,%d,%d", &x, &y, &size) != EOF){
+		if (size == 1) {
+			for (a = -1; a < 2; a++) {
+				for (b = -1; b < 2; b++) {
+					if (b == 0 || a == 0) {
+						area[y + a][x + b]++;
+					}
+				}
+			}
+		}
+		else if (size == 2) {
+			for (a = -1; a < 2; a++) {
+				for (b = -1; b < 2; b++) {
+					area[y + a][x + b]++;
+				}
+			}
+		}
+		else {
+			for (a = -1; a < 2; a++) {
+				for (b = -1; b < 2; b++) {
+					area[y + a][x + b]++;
+				}
+			}
+			area[y - 2][x]++;
+			area[y][x - 2]++;
+			area[y + 2][x]++;
+			area[y][x + 2]++;
+		}
+	}
+	white = 0;
+	max = area[0][0];
+	for (a = 0; a <= 9; a++) {
+		for (b = 0; b <= 9; b++) {
+			if (area[a][b] == 0) {
+				white++;
+			}
+			max = max2(max, area[a][b]);
+		}
+	}
+	
+	printf("%d\n%d\n", white, max);
+	
+	return (0);
+}
+int max2(int a, int b)
+{
+	if (a > b) {
+		return (a);
+	}
+	else {
+		return (b);
+	}
+}	

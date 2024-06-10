@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+void dfs(vector<string>& m,int i,int j,int w,int h,bool isb){
+  int di[]={1,0,-1,0};
+  int dj[]={0,1,0,-1};
+  for(int k=0;k<4;++k){
+    int ni=i+di[k];
+    int nj=j+dj[k];
+    if(ni<0||ni>=h||nj<0||nj>=w)continue;
+    if(m[ni][nj] == '.'){
+      if(isb){
+        m[ni][nj] = 'b';
+      }else{
+        m[ni][nj] = 'w';
+      }
+      dfs(m,ni,nj,w,h,isb);
+    }else if(isb && m[ni][nj] == 'w'){
+      m[ni][nj] = '*';
+      dfs(m,ni,nj,w,h,isb);
+    }else if(!isb && m[ni][nj] == 'b'){
+      m[ni][nj] = '*';
+      dfs(m,ni,nj,w,h,isb);
+    }
+  }
+}
+
+int main() {
+  while(1){
+    int w,h;
+    cin>>w>>h;
+    if(w==0)break;
+    vector<string> m(h);
+    for(int i=0;i<h;++i)
+      cin>>m[i];
+    for(int i=0;i<h;++i)
+      for(int j=0;j<w;++j)
+        if(m[i][j]=='W' || m[i][j]=='B')
+          dfs(m,i,j,w,h,m[i][j]=='B');
+    int bn=0,wn=0;
+    for(int i=0;i<h;++i)
+      for(int j=0;j<w;++j){
+        if(m[i][j]=='b')
+          ++bn;
+        else if(m[i][j]=='w')
+          ++wn;
+      }
+    cout<<bn<<' '<<wn<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 1001;
+double dp[MAXN][MAXN];
+
+double rec(int r, int m) {
+  double &res = dp[r][m];
+  if(res != -1.0) return res;
+  res = 0.0;
+  double p = (double)m/(r*2.0 - m);
+  double q = (double)1/(r*2.0 - m - 1.0);
+  double s = (double)m/(r*2.0 - m - 1.0);
+  if(m) res += p * rec(r-1,m-1);
+  if(r-m) res += (1-p) * q * (rec(r-1,m));
+  if(m && r-m) res += (1-p) * s * (rec(r-1,m) + 1.0);
+  if(r-m >= 2) res += (1-p) * (1-(q+s)) * (rec(r,m+2) + 1.0);
+  return res;
+}
+
+int main() {
+  fill(dp[0], dp[MAXN], -1.0);
+  int N;
+  while(cin >> N && N) {
+    printf("%.10f\n", rec(N/2, 0));
+  }
+  return 0;
+}

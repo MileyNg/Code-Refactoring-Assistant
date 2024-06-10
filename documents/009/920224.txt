@@ -1,0 +1,83 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct Point{
+	int x,y;
+};
+
+const Point DIR[4] = {{1,0},{0,1},{-1,0},{0,-1}};
+
+class Searcher{
+private:
+	int w,h;
+	char map[20][20];
+	Point init;
+	
+	int cnt;
+	bool visited[20][20];
+	
+public:
+	//面倒なので、中で実装する
+	Searcher(int w,int h, char map[20][20],Point init){
+		this->w = w;
+		this->h = h;
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				this->map[i][j] = map[i][j];
+				visited[i][j] = false;
+			}
+		}
+		this->init = init;
+		cnt = 0;
+	}
+	
+	int solve(){
+		dfs(init);
+		return cnt;
+	}
+	
+private:
+	bool inField(Point pos){
+		return 0<= pos.x && pos.x < w && 0<= pos.y && pos.y < h;
+	}
+
+	void dfs(Point pos){
+		cnt++;
+		visited[pos.y][pos.x] = true;
+		for(int i=0;i<4;i++){
+			Point next = {pos.x + DIR[i].x, pos.y + DIR[i].y};
+			if(inField(next)==true){
+				if(visited[next.y][next.x] == false && map[next.y][next.x] == '.'){
+					dfs(next);
+				}
+			}
+		}
+	}
+};
+
+int main(){
+	while(true){
+		int w,h;
+		cin >> w >> h;
+		if(w==0){
+			break;
+		}
+		char map[20][20];
+		Point init;
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				cin >> map[i][j];
+				if(map[i][j]=='@'){
+					init = (Point){j,i};
+					map[i][j] = '.';
+				}
+			}
+		}
+		Searcher searcher(w,h,map,init);
+		int result = searcher.solve();
+		cout << result << endl;
+	}
+	return 0;
+}

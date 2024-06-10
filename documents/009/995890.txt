@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> II;
+
+/** Problem0082 : Flying Jenny **/
+bool cmp(const II &a, const II &b)
+{
+	if (a.first == b.first) return a.second < b.second;
+	else return a.first < b.first;
+}
+
+int main()
+{
+	int p[8];
+	const int num[8] = {4, 1, 4, 1, 2, 1, 2, 1};
+	while (cin>>p[0]>>p[1]>>p[2]>>p[3]>>p[4]>>p[5]>>p[6]>>p[7]) {
+
+		//int ans=INF
+		int tmp=INF, idx=0;
+		vector<II> ans;
+		
+		rep(i, 8) {
+			int tt=0;
+			int nnum[8];
+			rep(j, 8)
+				nnum[j] = num[(i+j)%8];
+			
+			rep(j, 8) {
+				tt+=max(0, p[j] - nnum[j]);
+			}
+			
+			int tans=0;
+			rep(j, 8) {
+				tans*=10;
+				tans+=nnum[j];
+			}
+			ans.push_back(II(tt, tans));
+		}
+		
+		sort(ans.begin(), ans.end(), cmp);
+		
+		
+		char sans[10];
+		sprintf(sans, "%d", ans[0].second);
+		
+		cout << sans[0];
+		REP(i, 1, 8) {
+			cout << " " << sans[i];
+		}
+		cout << endl;
+	}
+}

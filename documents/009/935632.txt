@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h> 
+
+int stack[100],i = 0;
+
+int main()
+{
+  int x,k;
+  char s[100];
+  
+  while(scanf("%s", s) != EOF)
+    {
+      if (s[0] == '+' )
+	{
+	  x = stack[--i] ;
+	  k = stack[--i] + x;
+	  slid(k);
+	} 
+      else if (s[0] == '-' )
+	{
+	  x = stack[--i];
+	  k = stack[--i] - x;
+	  slid(k);
+	} 
+      else if (s[0] == '*' )
+	{
+	  x = stack[--i];
+	  k = stack[--i] * x;
+	  slid(stack[--i] * x);
+	} 
+      else 
+	{
+	  x = atoi(s);
+	  slid(x);
+	}
+    }
+  
+  printf("%d\n", slid());
+  
+  return 0;
+}
+
+void slid(int a) 
+{
+  stack[i++] = a;
+}

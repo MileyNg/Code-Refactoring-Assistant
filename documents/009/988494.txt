@@ -1,0 +1,13 @@
+from sys import stdin
+
+while True:
+    (h, w) = [int(i) for i in stdin.readline().split(' ')]
+    if h == 0 and w == 0:
+        break;
+
+    for i in range(h):
+        for j in range(w):
+            print('#', end='')
+        print()
+
+    print()

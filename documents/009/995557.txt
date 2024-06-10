@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define MP(a, b) make_pair(a, b)
+#define Y first
+#define X second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int board[4][4];
+int dy[4], dx[4];
+
+int dfs(int n){
+  if(n >= 8) return 1;
+
+  int res = 0;
+  int y, x;
+  rep(y, 4){
+    rep(x, 4) if(!board[y][x]) break;
+    if(x != 4) break;
+  }
+
+  int d;
+  rep(d, 4){
+    int ny = y+dy[d], nx = x+dx[d];
+    if(ny < 0 || nx < 0 || ny >= 4 || nx >= 4 || board[ny][nx] != 0) continue;
+    board[y][x] = board[ny][nx] = 1;
+    res += dfs(n+1);
+    board[y][x] = board[ny][nx] = 0;
+  }
+
+  return res;
+}
+
+int main(){
+  int i;
+  while(1){
+    rep(i, 4) if(scanf("%d%d", &dx[i], &dy[i])  && dx[0] >= 4) return 0;
+    memset(board, 0, sizeof(board));
+
+    printf("%d\n", dfs(0));
+  }
+  return 0;
+}

@@ -1,0 +1,43 @@
+#include<iostream>
+using namespace std;
+
+#define MAX_H 100
+#define MAX_W 100
+
+char map[MAX_H][MAX_W];
+int H, W;
+
+int dx[4] = { 1, 0, -1, 0 }, dy[4] = { 0, 1, 0, -1 };
+
+void dfs(char kind, int x, int y)
+{
+	map[x][y] = '.'; // 探索済みの場所は"."に置き換える
+	
+	for(int i=0; i<4; i++){
+		int nx = x + dx[i], ny = y + dy[i];
+		if( 0<=nx && nx<H && 0<=ny && ny<W && map[nx][ny]==kind ) dfs(kind, nx, ny);
+	}
+}
+
+
+int main()
+{
+	while(1){
+	cin>>H>>W;
+	if(!H&&!W)break;
+
+	for(int i=0; i<H; i++)
+		for(int j=0; j<W; j++)
+			cin>>map[i][j];
+	int count=0;
+	for(int i=0; i<H; i++)
+		for(int j=0; j<W; j++)
+			switch(map[i][j]){
+			case '#':{ dfs('#', i, j);count++;break;}
+			case '@':{ dfs('@', i, j);count++;break;}
+			case '*':{ dfs('*', i, j);count++;break;}
+			}
+	cout << count << endl;
+	}
+	return 0;
+}

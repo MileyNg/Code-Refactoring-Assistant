@@ -1,0 +1,52 @@
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+class Line{
+	public:
+		int h;	//高さ
+		int p;	//接点1
+		int q;	//接点2
+		
+};
+
+
+int comp(const void* a, const void* b){
+	Line * aa = (Line*)a;
+	Line * bb = (Line*)b;
+	return ((bb->h) - (aa->h));
+}
+
+int main(){
+	int n;	//縦線本数
+	int m;	//横線本数
+	int a;	//調べる縦線
+
+	while (1){
+		cin >> n >> m >> a;
+
+		if (n == 0 && m == 0 && a == 0){
+			break;
+		}
+
+		Line* lines = new Line[m];
+		for (int i = 0; i < m; i++){
+			cin >> lines[i].h >> lines[i].p >> lines[i].q;
+		}
+
+		qsort(lines, m, sizeof(Line), comp);
+
+		for (int i = 0; i < m; i++){
+			if (a == lines[i].p){
+				a = lines[i].q;
+			}
+			else if (a == lines[i].q){
+				a = lines[i].p;
+			}
+		}
+
+		cout << a << endl;
+	}
+
+	return 0;
+}

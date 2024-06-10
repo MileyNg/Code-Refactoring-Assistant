@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<vector>
+#include<algorithm>
+using namespace std;
+double ax[110];
+double ay[110];
+double bx[110];
+double by[110];
+double ev[500];
+double x[500];
+double y[500];
+double z[500];
+double EPS=1e-9;
+int main(){
+	int a,b;
+	while(scanf("%d%d",&a,&b),a){
+		int sz=0;
+		for(int i=0;i<a;i++){
+			scanf("%lf%lf",ax+i,ay+i);
+			ev[sz++]=ax[i]+EPS;
+			ev[sz++]=ax[i]-EPS;
+		}
+		ax[a]=ax[0];
+		ay[a]=ay[0];
+		for(int i=0;i<b;i++){
+			scanf("%lf%lf",bx+i,by+i);
+			ev[sz++]=bx[i]-EPS;
+			ev[sz++]=bx[i]+EPS;
+		}
+		bx[b]=bx[0];
+		by[b]=by[0];
+		std::sort(ev,ev+sz);
+		for(int i=0;i<sz;i++){
+			x[i]=ev[i];
+			double L=-999999999;
+			double R=999999999;
+			vector<double> ps;
+			for(int j=0;j<a;j++){
+				if(min(ax[j],ax[j+1])-EPS<x[i]&&x[i]<EPS+max(ax[j],ax[j+1])){
+					if(min(ax[j],ax[j+1])+EPS>max(ax[j],ax[j+1])){
+						ps.push_back(ay[j]);
+						ps.push_back(ay[j+1]);
+						continue;
+					}
+					double M=ay[j]+(ay[j+1]-ay[j])*(x[i]-ax[j])/(ax[j+1]-ax[j]);
+					ps.push_back(M);
+				}
+			}
+			std::sort(ps.begin(),ps.end());
+			if(ps.size()==0)ps.push_back(0);
+			y[i]=ps[ps.size()-1]-ps[0];
+			L=-999999999;
+			R=999999999;
+			ps.clear();
+			for(int j=0;j<b;j++){
+				if(min(bx[j],bx[j+1])-EPS<x[i]&&x[i]<EPS+max(bx[j],bx[j+1])){
+					if(min(bx[j],bx[j+1])+EPS>max(bx[j],bx[j+1])){
+						ps.push_back(by[j]);
+						ps.push_back(by[j+1]);
+						continue;
+					}
+					double M=by[j]+(by[j+1]-by[j])*(x[i]-bx[j])/(bx[j+1]-bx[j]);
+		//			printf("%d: %f\n",j,M);
+					ps.push_back(M);
+				}
+			}
+			std::sort(ps.begin(),ps.end());
+			
+			if(ps.size()==0)ps.push_back(0);
+			z[i]=ps[ps.size()-1]-ps[0];
+			
+		}
+		double V=0;
+		for(int i=1;i<sz;i++){
+			if(x[i]<x[i-1]+EPS)continue;
+			V+=(x[i]-x[i-1])*(y[i]*z[i]+y[i-1]*z[i-1]+(y[i]+y[i-1])*(z[i]+z[i-1]))/6;
+	//		printf("%f %f %f %f\n",x[i],y[i],z[i],(x[i]-x[i-1])*(y[i]*z[i]+y[i-1]*z[i-1]+(y[i]+y[i-1])*(z[i]+z[i-1]))/6);
+		}
+		printf("%.12f\n",V);
+	}
+}

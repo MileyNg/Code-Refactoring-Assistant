@@ -1,0 +1,86 @@
+#include<iostream>
+#include<algorithm>
+#define N 30
+
+using namespace std;
+
+int sim[N][N], hgt[N][N];
+
+struct DICE{
+  int x, y;
+  int t, b, n, s, e, w;
+
+  DICE(int t_, int n_){
+    x=N/2, y=N/2;
+    t=1, b=6, n=2, s=5, e=4, w=3;
+    if(t_==2) south();
+    if(t_==3) east();
+    if(t_==4) west();
+    if(t_==5) north();
+    if(t_==6) north(), north();
+    while(n != n_) spin();
+  }
+  void north(){ swap(t,s), swap(s,b), swap(b,n); }
+  void south(){ swap(t,n), swap(n,b), swap(b,s); }
+  void east(){ swap(t,w), swap(w,b), swap(b,e); }
+  void west(){ swap(t,e), swap(e,b), swap(b,w); }
+  void spin(){ swap(n,e), swap(e,s), swap(s,w); }
+
+  bool drop(){
+    int k=0;
+    char c='\0';
+    if(n>3 && hgt[x][y]>hgt[x-1][y] && k<n) k=n, c='n';
+    if(s>3 && hgt[x][y]>hgt[x+1][y] && k<s) k=s, c='s';
+    if(e>3 && hgt[x][y]>hgt[x][y+1] && k<e) k=e, c='e';
+    if(w>3 && hgt[x][y]>hgt[x][y-1] && k<w) k=w, c='w';
+    if(!k) return false;
+    if(c=='n') --x, north();
+    if(c=='s') ++x, south();
+    if(c=='e') ++y, east();
+    if(c=='w') --y, west();
+    return true;
+  }
+  void solve(){
+    while(1){
+      if(!drop()) break;
+    }
+    sim[x][y]=t;
+    ++hgt[x][y];
+  }
+};
+
+void init(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      sim[i][j] = 0;
+      hgt[i][j] = 0;
+    }
+  }
+}
+
+void print(){
+  int ans[] = {0,0,0,0,0,0};
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      if(sim[i][j]) ++ans[sim[i][j]-1];
+    }
+  }
+  for(int i=0; i<6; ++i){
+    cout << ans[i] << (i==5 ? '\n' : ' ');
+  }
+}
+
+int main(){
+  int n, a, b;
+  while(1){
+    cin >> n;
+    if(!n) break;
+    init();
+    for(int i=0; i<n; ++i){
+      cin >> a >> b;
+      DICE(a,b).solve();
+    }
+    print();
+  }
+  return 0;
+}

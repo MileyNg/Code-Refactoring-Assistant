@@ -1,0 +1,50 @@
+#include<iostream>
+#include<queue>
+#include<iomanip>
+#include<cstring>
+
+using namespace std;
+
+int main()
+{
+  int n,m;
+  for(;cin>>n>>m,n;)
+    {
+      double data[n][n];
+      for(int i=0;i<n;i++)
+	for(int j=0;j<n;j++)
+	  cin>>data[i][j];
+
+      queue<pair<pair<int,int>,double> >qu;
+      for(int i=0;i<n;i++)
+	  qu.push(make_pair(make_pair(1,i),1.0));
+
+      double ans=0;
+      double dp[m+2][n];
+      memset(dp,0,sizeof(dp));
+      while(!qu.empty())
+	{
+	  int cnt=qu.front().first.first;
+	  int num=qu.front().first.second;
+	  double score=qu.front().second;
+	  qu.pop();
+	  if(dp[cnt][num]>=score)
+	    continue;
+	  dp[cnt][num]=score;
+	  if(cnt>=m)
+	    {
+	      ans=max(ans,score);
+	      continue;
+	    }
+	  for(int i=0;i<n;i++)
+	    {
+	      qu.push(make_pair(make_pair(cnt+1,i),score*data[num][i]));
+	    }
+	}
+      //      cout<<fixed<<setprecision(2)<<(1.231)<<endl;
+      //      cout<<fixed<<setprecision(2)<<(1.235)<<endl;
+
+      cout<<fixed<<setprecision(2)<<(ans)<<endl;
+    }
+
+}

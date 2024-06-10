@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <string.h>
+
+char stacks[100][1000];
+int stacks_cnt[100];
+
+void init()
+{
+  int i;
+  for (i = 0; i < 100; i++) {
+    stacks_cnt[i] = 0;
+  }
+}
+
+void push(int p, char c)
+{
+  stacks[p][stacks_cnt[p]++] = c;
+}
+
+char pop(int p)
+{
+  char ch;
+  if (stacks_cnt[p] > 0) {
+    ch = stacks[p][--stacks_cnt[p]];
+  } else {
+    ch = '\0';
+  }
+  return ch;
+}
+
+void move(int p1, int p2) {
+  char ch;
+  ch = pop(p1);
+  if (ch != '\0') {
+    push(p2, ch);
+  }
+}
+
+int main(void)
+{
+  int n;
+  char order[107 + 1];
+  //char o[5], p[5], c[5];
+  char *o, *p, *c;
+  char ch;
+
+  init();
+
+  scanf("%d", &n);
+  while (1) {
+    fgets(order, sizeof(order), stdin);
+    order[strlen(order) - 1] = '\0';
+
+    if (!strcmp(order, "quit")) {
+      break;
+    } else if (!strncmp(order, "push", 4)) {
+      o = strtok(order, " ");
+      p = strtok(NULL, " ");
+      c = strtok(NULL, " ");
+      push(atoi(p), *c);
+    } else if (!strncmp(order, "pop", 3)) {
+      o = strtok(order, " ");
+      p = strtok(NULL, " ");
+      ch = pop(atoi(p));
+      printf("%c\n", ch);
+    } else if (!strncmp(order, "move", 4)) {
+      o = strtok(order, " ");
+      p = strtok(NULL, " ");
+      c = strtok(NULL, " ");
+      move(atoi(p), atoi(c));
+    }
+  }
+
+  return 0;
+}

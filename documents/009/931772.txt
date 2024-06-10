@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int W,n,w[1001],v[1001];
+int dp[1001];
+
+int main(){
+  int a = 0;
+  while(cin >> W,W){
+    cin >> n;
+    for(int i=0;i<n;i++) scanf("%d,%d",&v[i],&w[i]);
+    
+    memset(dp,-1,sizeof(dp)); dp[0] = 0;
+    for(int i = 0;i < n;i++){
+      for(int j = W;j > 0;j--){
+	if(j < w[i]) dp[j] = dp[j];
+	else dp[j] = max(dp[j],dp[j - w[i]] + v[i]);
+      }
+    }
+    
+    int *maxi = max_element(dp,dp+W+1);
+    cout << "Case " << ++a << ":" << endl;
+    cout << *maxi << endl << maxi - dp << endl;
+  }
+}

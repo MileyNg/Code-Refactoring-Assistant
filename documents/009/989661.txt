@@ -1,0 +1,47 @@
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int N,M;
+  cin>>N>>M;
+  int s[100000],t[100000];
+  for(int i=0;i<N;i++){
+    cin>>s[i]>>t[i];
+  }
+  int P[100000];
+  vector<pair<int,int> > ev;
+  for(int i=0;i<M;i++){
+    cin>>P[i];
+    ev.emplace_back(P[i],-1);
+  }
+  sort(begin(P),begin(P)+M);
+  auto bp=begin(P);
+  auto ep=begin(P)+M;
+  for(int i=0;i<N;i++){
+    if(s[i]<t[i]){
+      ev.emplace_back(s[i],3);
+      ev.emplace_back(t[i],((upper_bound(bp,ep,t[i])-upper_bound(bp,ep,s[i]))%2==0)*2);
+    }else{
+      ev.emplace_back(t[i],((upper_bound(bp,ep,s[i])-upper_bound(bp,ep,t[i]))%2==0)*2+1);
+      ev.emplace_back(s[i],2);
+    }
+  }
+  sort(begin(ev),end(ev));
+  int l=0;
+  long long len=0;
+  int ns[2]={};
+  for(auto e:ev){
+    len+=(e.first-l)*1LL*ns[1];
+    l=e.first;
+    if(e.second==-1){
+      swap(ns[0],ns[1]);
+    }else{
+      ns[e.second>>1]+=(e.second%2)?1:-1;
+    }
+  }
+  cout<<len<<endl;
+}

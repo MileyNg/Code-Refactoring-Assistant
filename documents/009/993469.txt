@@ -1,0 +1,281 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+
+
+namespace MaximamFlows{
+    using Flow=int;
+    const int INF = 1 << 28;
+    struct Edge{
+        int to;Flow cap;int rev;
+        Edge(int to,Flow cap,int rev) : to(to),cap(cap),rev(rev) {};
+    };
+    using Graph= vector<vector<Edge> >;
+
+    //dinic O(V^2*E)
+    class MaximamFlow{
+    private:
+            //iter　次に調べる時の開始位置 距離
+        vector<int> iter,dist;
+            //sからのbfs距離の計算
+        void bfs_dist(int s){
+            fill(ALL(dist),-1);dist[s]=0;
+            queue<int> que;que.push(s);
+            while(!que.empty()){
+                int v=que.front();que.pop();
+                EACH(e,G[v]){
+                    if(e->cap>0 && dist[e->to] == -1){
+                        dist[e->to]=dist[v]+1;
+                        que.push(e->to);
+                    }
+                }
+            }
+        }
+            //増加パス
+        Flow dfs_best_path(int v,int t,Flow f){
+            if(v==t)return f;
+            for(int &i =iter[v];i<(int)G[v].size();i++){
+                Edge& e=G[v][i];
+                if(e.cap>0 && dist[v]<dist[e.to]){
+                    Flow d=dfs_best_path(e.to,t,min(f,e.cap));
+                    if(d>0){
+                        e.cap-=d;G[e.to][e.rev].cap+=d;
+                        return d;
+                    }
+                }
+            }
+            return 0;
+        }
+    public:
+        int V;Graph G;
+        MaximamFlow(int V):V(V){
+            G=Graph(V);
+            dist=vector<int>(V);iter=vector<int>(V);
+        }
+
+        void add_edge(int from,int to,int cap){
+            int fromrev=G[to].size(),torev=G[from].size();
+            G[from].push_back(Edge(to,cap,fromrev));G[to].push_back(Edge(from,0,torev));
+        }
+        int max_flow(int s,int t){
+            Flow flow=0;
+            while(true){
+                bfs_dist(s);
+                if(dist[t]<0)return flow;
+                fill(ALL(iter),0);
+                Flow f;
+                while((f=dfs_best_path(s,t,INF))>0)flow+=f;
+            }return -1;
+        }
+    };
+}
+using namespace MaximamFlows;
+
+
+class Main{
+	public:
+
+	void run(){
+		// ifstream cin("D2");
+	    //		ofstream cout( "D2.out" );
+		while(true){
+			int H,W;cin >> H >> W;if(H==0 && W==0)break;
+			vector<string> board(H);
+			REP(y,H)cin >> board[y];
+
+			vector<vector<bool>> cboard(H-1,vector<bool>(W-1));
+			vector<pair<int,int>> cs;
+			REP(y,H-1)REP(x,W-1){
+				int sz=0;
+				if(board[y][x]=='#')sz++;
+				if(board[y+1][x]=='#')sz++;
+				if(board[y][x+1]=='#')sz++;
+				if(board[y+1][x+1]=='#')sz++;
+				if(sz==3){
+					cboard[y][x]=true;
+					cs.push_back(make_pair(y,x));
+				}
+			}
+			int C=cs.size();
+			//２つの隅を通る辺の列挙
+			vector<pair<pair<int,int>,pair<int,int>>> es;
+			REP(i,C)REP(j,C)if(i<j){
+			  if(cs[i].first==cs[j].first){//y eq
+			  	int y=cs[i].first;
+			  	bool ok=true;
+			  	for(int x=min(cs[i].second,cs[j].second)+1;x<=max(cs[i].second,cs[j].second);x++){
+			  		if(board[y][x]!='#' ||board[y+1][x]!='#'){
+			  			ok=false;
+			  		}
+			  	}
+			  	if(ok)es.push_back(make_pair(cs[i],cs[j]));
+			  }
+			  if(cs[i].second==cs[j].second){//x eq
+			  	int x=cs[i].second;
+			  	bool ok=true;
+			  	for(int y=min(cs[i].first,cs[j].first)+1;y<=max(cs[i].first,cs[j].first);y++){
+			  		if(board[y][x]!='#' ||board[y][x+1]!='#'){
+			  	//	 	DUMP(i);DUMP(j);DUMP(BR);
+			  			ok=false;
+			  		}
+			  	}
+			  	if(ok)es.push_back(make_pair(cs[i],cs[j]));
+			  }
+			}
+			
+			int N=es.size();
+			Graph g(N);
+			//辺がぶつかる場合に枝をはる．
+			REP(i,N)REP(j,N)if(i<j){
+				int y1=es[i].first.first,x1=es[i].first.second;
+				int y2=es[i].second.first,x2=es[i].second.second;
+				int y3=es[j].first.first,x3=es[j].first.second;
+				int y4=es[j].second.first,x4=es[j].second.second;
+
+				bool hit=false;
+				if(y1==y2 && x3==x4){
+					if(min(x1,x2)<=x3 && x3<=max(x1,x2) && min(y3,y4)<=y1 && y1<=max(y3,y4))
+						hit=true;
+				}else if(x1==x2 && y3==y4){
+					if(min(x3,x4)<=x1 && x1<=max(x3,x4) && min(y1,y2)<=y3 && y3<=max(y1,y2))
+						hit=true;
+				}
+				if(hit){
+					g[i].push_back(Edge(j,-1,-1));g[j].push_back(Edge(i,-1,-1));
+				}
+			}
+
+			//2部グラフカラーリング
+			colors=vector<int>(N,-1);
+			REP(i,N)dfs(g,i,0);
+
+			//2部グラフマッチング
+			MaximamFlow mf(N+2);
+			REP(i,N)EACH(e,g[i])if(i<e->to){
+				if(colors[i]==0) mf.add_edge(i,e->to,1);
+				if(colors[i]==1) mf.add_edge(e->to,i,1);
+			}
+			REP(i,N){
+				if(colors[i]==0)mf.add_edge(N,i,1);
+				if(colors[i]==1)mf.add_edge(i,N+1,1);
+			}
+
+			//最大独立集合
+			int D=N-mf.max_flow(N,N+1);
+			
+			cout << (C-D+1)<<endl;
+		}
+	}
+
+	vector<int> colors;
+	void dfs(Graph& g,int v,int c){
+		if(colors[v]!=-1)return;
+		colors[v]=c;
+		EACH(e,g[v]){
+			dfs(g,e->to,1-c);
+		}
+	}
+};
+int main(){
+	cout <<fixed<<setprecision(15);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

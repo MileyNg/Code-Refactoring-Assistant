@@ -1,0 +1,75 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <cmath>
+#include <complex>
+#include <algorithm>
+#include <tuple>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+typedef tuple<int, int, int> T;
+
+P tiz[100];
+char g[1100][1100];
+int w, h, k;
+int d[4][2] = {
+    {1, 0},
+    {-1, 0},
+    {0, 1},
+    {0, -1}
+};
+int used[1100][1100];
+int solve(P s, P e) {
+    fill_n(used[0], 1100*1100, false);
+    queue<T> q;
+    q.push(T(s.first, s.second, 0));
+    while (!q.empty()) {
+        T p = q.front(); q.pop();
+        int x, y, t;
+        tie(x, y, t) = p;
+        if (P(x, y) == e) return t;
+        if (x < 0 || w <= x || y < 0 || h <= y) continue;
+        if (g[x][y] == 'X') continue;
+        if (used[x][y]) continue;
+        used[x][y] = true;
+        for (int i = 0; i < 4; i++) {
+            q.push(T(x+d[i][0], y+d[i][1], t+1));
+        }
+    }
+    return -1;
+}
+
+int main() {
+    cin >> w >> h >> k;
+    for (int i = 0; i < w; i++) {
+        for (int j = 0; j < h; j++) {
+            char c;
+            cin >> c;
+            g[i][j] = c;
+            if (c == 'S') {
+                tiz[0] = P(i, j);
+            }
+            if (isdigit(c)) {
+                tiz[c-'0'] = P(i, j);
+            }
+        }
+    }
+    int r = 0;
+    for (int i = 0; i < k; i++) {
+        r += solve(tiz[i], tiz[i+1]);
+    }
+    cout << r << endl;
+    return 0;
+}

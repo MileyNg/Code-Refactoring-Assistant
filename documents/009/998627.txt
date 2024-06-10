@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+
+#define MAX 500001
+#define N 2000000001
+
+int T[MAX];
+
+int n=0;
+
+int parent(int i){
+  return i/2;
+}
+
+int left(int i){
+  return 2*i;
+}
+
+int right(int i){
+  return 2*i+1;
+}
+
+void heapIncreaseKey(i, key){
+  int x;
+  if(key < T[i]) printf("new kry is smaller than current key");
+  T[i] = key;
+  while( i > 1 && T[parent(i)] < T[i]){
+    x = T[i];
+    T[i] = T[parent(i)];
+    T[parent(i)] = x;
+    i = parent(i);
+  }
+}
+
+void maxHeapInsert(key){
+  n++;
+  T[n] = INT_MIN;
+  heapIncreaseKey(n, key);
+}
+
+void maxHeapify(int i){
+  int h, l, r, largest;
+  l = left(i);
+  r = right(i);
+  if(l <= n && T[l] > T[i]) largest = l;
+  else largest = i;
+  if(r <= n && T[r] > T[largest]) largest = r;
+  if(largest != i){
+    h = T[i];
+    T[i] = T[largest];
+    T[largest] = h;
+    maxHeapify(largest);
+  }
+}
+
+int heapExtractMax(void){
+  int max;
+  if(n < 1) printf("heap underflow");;
+  max = T[1];
+  T[1] = T[n];
+  n--;
+  maxHeapify(1);
+  return max;
+}
+
+void buildMaxHeap(){
+  int i;
+  for(i=n/2; i>0; i--) maxHeapify(i);
+}
+
+int main(){
+  int i=1, k=0, j;
+  char com[10];
+  int p[MAX];
+
+  while(1){
+    scanf("%s", com);
+    if(com[2] == 's'){
+      scanf("%d", &T[i]);
+      maxHeapInsert(T[i]);
+      i++;
+    }
+    else if(com[2] == 't'){
+      p[k] = heapExtractMax();
+      k++;
+    }
+    else if(com[2] == 'd'){
+      if(k==0) printf("0\n");
+      else{
+	for(i=0; i<k; i++) printf("%d\n",p[i]);
+      }
+      break;
+    }
+  }
+  return 0;
+}

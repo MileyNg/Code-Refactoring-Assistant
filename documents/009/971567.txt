@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(void) {
+    const int N = 100000;
+    bool p[N];
+    fill(p, p + N, true);
+    for (int i = 2; i < N; i++) {
+        if (!p[i]) continue;
+        for (int j = i * 2; j < N; j += i) {
+            p[j] = false;
+        }
+    }
+    int n, a, b;
+    while (true) {
+        cin >> n;
+        if (cin.eof()) break;
+        for (a = n - 1; !p[a]; a--);
+        for (b = n + 1; !p[b]; b++);
+        cout << a << " " << b << endl;
+    }
+    return 0;
+}

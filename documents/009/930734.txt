@@ -1,0 +1,30 @@
+#include<stdio.h>
+int main()
+{
+    int n,tmp;
+    int i,j;
+    int x[10000001];
+     
+    scanf("%d",&n);
+     
+    for(i=0;i<n;i++)
+        scanf("%d",&x[i]);
+     
+    for(i=0;i<n;i++){
+        for(j=i;j<n;j++){
+            if(x[i] > x[j]){
+                tmp = x[i];
+                x[i] = x[j];
+                x[j] = tmp;
+            }
+        }
+    }
+    for(i=0;i<n;i++){
+        printf("%d",x[i]);
+        if(i != n-1)
+            printf(" ");
+    }
+    printf("\n");
+     
+    return 0;
+}

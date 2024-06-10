@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int i, j;
+    int n;
+    int cards[4][14];
+    /*cards[suit][rank]
+        suit 0: Spade, 1: Heart, 2: Club, 3: Diamond
+        rank = 1, 2, ..., 13*/
+    char suit[2];
+    int rank;
+
+    /*initialize; cards[i][j] = 1 -> exist, 0 -> missing*/
+    for (i = 0; i < 4; i++){
+        cards[i][0] = 1;
+        for (j = 1; j < 14; j++){
+            cards[i][j] = 0;
+        }
+    }
+
+    /*input*/
+    scanf("%d", &n);
+    for (i = 1; i <= n; i++){
+        scanf("%s %d", suit, &rank);
+        switch (suit[0]){
+            case 'S':
+                cards[0][rank] = 1;
+                break;
+            case 'H':
+                cards[1][rank] = 1;
+                break;
+            case 'C':
+                cards[2][rank] = 1;
+                break;
+            case 'D':
+                cards[3][rank] = 1;
+                break;
+            default:
+                printf("ERROR!\n");
+                break;
+        }
+    }
+
+    /*output*/
+    for (j = 1; j < 14; j++){
+        if (cards[0][j] == 0){
+            printf("S %d\n", j);
+        }
+    }
+
+    for (j = 1; j < 14; j++){
+        if (cards[1][j] == 0){
+            printf("H %d\n", j);
+        }
+    }
+
+    for (j = 1; j < 14; j++){
+        if (cards[2][j] == 0){
+            printf("C %d\n", j);
+        }
+    }
+
+    for (j = 1; j < 14; j++){
+        if (cards[3][j] == 0){
+            printf("D %d\n", j);
+        }
+    }
+
+    return 0;
+}

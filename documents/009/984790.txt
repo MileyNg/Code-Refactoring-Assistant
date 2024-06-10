@@ -1,0 +1,78 @@
+#include<stdio.h>
+#define N 10000
+typedef struct treeee
+{
+  int p;
+  int l;
+  int r;
+}tree;
+tree T[N];
+int n;
+
+int depth(int i){
+  int count=0,iNoOya;
+  iNoOya=i;
+  while(1){
+    if(T[iNoOya].p==-1) break;
+    iNoOya=T[iNoOya].p;
+    count++;
+    
+  }
+  return count;
+}
+
+void hantei(int i){
+  if(T[i].l==-1) printf("leaf,");
+  else if(T[i].l != -1 && T[i].p == -1)printf("root,");
+  else if(T[i].l !=-1) printf("internal node,");
+}
+
+void printChild(int i){
+  int ani;
+  printf(" [");
+  if(T[i].l !=-1){
+    printf("%d",T[i].l);
+    ani= T[i].l;
+    while(1){
+      if(T[ani].r==-1)break;
+      printf(", %d",T[ani].r);
+      ani=T[ani].r;
+    }
+  }
+  printf("]");
+}
+
+
+
+int main(){
+    int i,j,node,zisu,child,left;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    T[i].p=-1;
+    T[i].l=-1;
+    T[i].r=-1;
+  }
+  for(i=0;i<n;i++){
+    scanf("%d%d",&node,&zisu);
+    for(j=0;j<zisu;j++){
+      scanf("%d",&child);
+      if(j==0){
+	T[node].l=child;
+	T[child].p = node;
+      }   
+      else{
+	T[left].r=child;
+	T[child].p=node;
+      }
+      left = child;
+    }
+  }
+
+  for(i=0;i<n;i++){
+    printf("node %d; parent = %d, depth = %d, ",i,T[i].p,depth(i));
+    hantei(i);
+    printChild(i);
+   
+  }
+  return 0;
+}

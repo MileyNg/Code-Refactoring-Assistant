@@ -1,0 +1,22 @@
+def prime(n):
+	return True if pow(2,n-1,n)==1 else False
+
+while 1:
+	try:
+		n,x=map(int,raw_input().split())
+		if n==0:break
+		p=[input() for i in [1]*n]
+		s=[0 for i in [1]*(x+1)]
+		for i in p:s[i]=1
+		for i in range(1,x+1):
+			if s[i]==1:
+				for j in p:
+					try:s[i+j]=1
+					except:pass
+		for i in range(x,0,-1):
+			if s[i]==1 and prime(i):
+				print i
+				break
+		else:print "NA"
+	except SyntaxError:
+		pass

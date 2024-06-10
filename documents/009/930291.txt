@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <stack>
+#include <string>
+using namespace std;
+
+double s2d(string a){
+	stringstream ss;
+	double d;
+	ss << a;
+	ss >> d;
+	return d;
+}
+
+int main(){
+	string s;
+	while(getline(cin,s)){
+		stack<double>X;
+		stringstream ss(s);
+		while(ss>>s){
+			double a, b, x;
+			char c=s[0];
+			if (c < '0'){
+				b = X.top(); X.pop();
+				a = X.top(); X.pop();
+				if (c == '+') x = a + b;
+				if (c == '-') x = a - b;
+				if (c == '*') x = a * b;
+				if (c == '/') x = a / b;
+				X.push(x);
+			}
+			else{
+				X.push(s2d(s));
+			}
+		}
+		printf("%.6f\n", X.top());
+		X.pop();
+	}
+}

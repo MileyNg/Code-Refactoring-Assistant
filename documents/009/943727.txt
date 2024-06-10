@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <stdlib.h>
+using namespace std;
+const int INF = 1<<28;
+struct Vec{
+  double x;
+  double y;
+};
+vector<string> split(const string &str, char delim){
+  vector<string> res;
+  size_t current = 0, found;
+  while((found = str.find_first_of(delim, current)) != string::npos){
+    res.push_back(string(str, current, found - current));
+    current = found + 1;
+  }
+  res.push_back(string(str, current, str.size() - current));
+  return res;
+}
+
+double cross(Vec &a,Vec &b){
+  return a.x*b.y - a.y*b.x;
+}
+bool cal(int p,vector<double> &val){
+  int np = p;
+  int cnt = 0;
+  vector<double> ans(3);
+  while(cnt < 3){
+    np++;
+    np %=4;
+    int nnp = (np+1)%4;
+    if(cnt==2)nnp = (nnp+1)%4;
+    Vec a;
+    a.x = val[nnp*2] - val[np*2];
+    a.y = val[nnp*2+1] - val[np*2+1];
+    Vec b;
+    b.x = val[p*2] - val[np*2];
+    b.y = val[p*2+1] - val[np*2+1];
+    ans[cnt] = cross(a,b);
+    cnt++;
+  }
+
+  if(ans[0] < 0 && ans[1] < 0 && ans[2] < 0)return true;
+  else if(ans[0] > 0 && ans[1] > 0 && ans[2] > 0)return true;
+  return false;
+}
+int main(){
+  string str;
+  while(cin >> str){
+    vector<string> s_v = split(str,',');
+    vector<double> val(8);
+    for(int i = 0;i < 8;i++){
+      val[i] = stod(s_v[i]);
+    } 
+    int flag = 0;
+    for(int i = 0;i < 4;i++){
+      if(cal(i,val))flag = 1;
+    }
+    if(flag)cout << "NO" << endl;
+    else cout << "YES" << endl;
+  }
+  return 0;
+}

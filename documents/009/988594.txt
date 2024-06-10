@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int a[10];
+bool used[11];
+
+int judge(){
+
+  int mod = a[9];
+  int sum = (a[0]+a[1]+a[2])%mod;
+  if((a[3]+a[4]+a[5])%mod != sum || (a[6]+a[7]+a[8])%mod != sum) return 0;
+  return 1;
+}
+
+int dfs(int n, bool *used){
+  if(n == 10) return judge();
+  if(a[n]) return dfs(n+1, used);
+  int res = 0;
+  REP(i, 1, 11){
+    if(used[i]) continue;
+    a[n] = i;
+    used[i] = 1;
+    res += dfs(n+1, used);
+    a[n] = 0;
+    used[i] = 0;
+  }
+  return res;
+}
+
+int main(){
+  while(1){
+    bool used[11];
+    memset(used, 0, sizeof(used));
+    rep(i, 10){
+      scanf("%d", a+i);
+      if(a[i]) used[a[i]] = 1;
+    }
+    if(a[0] == -1) break;
+
+    printf("%d\n", dfs(0, used));
+  }
+  return 0;
+}

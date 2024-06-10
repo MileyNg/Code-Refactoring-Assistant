@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int train[100];
+	int ans[100];
+	int a, b, c;
+	a = 0;
+	c = 0;
+	while (scanf("%d", &train[a]) != EOF){
+		b = a;
+		if (train[a] == 0) {
+			train[a] = -1;
+			while (b != 0) {
+				b--;
+				if (train[b] != -1) {
+					ans[c] = train[b];
+					train[b] = -1;
+					c++;
+					b = 0;
+				}
+			}
+		}
+		a++;
+	}
+	for (b = 0; b < c; b++) {
+		printf("%d\n", ans[b]);
+	}
+	
+	return (0);
+}	
+					

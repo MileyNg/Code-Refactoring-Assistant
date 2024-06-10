@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+struct Sieve {
+  vector<bool> data;
+  const int size;
+  Sieve(int size) : size(size), data(size + 1, true) {}
+  void build(){
+    for (int i = 2; i * i <= size; ++i){
+      for (int j = i * i; j <= size; j += i){
+        data[j] = false;
+      }
+    }
+    data[0] = data[1] = false;
+  }
+  bool isPrime(int x){
+    return data[x];
+  }
+};
+
+int main()
+{
+  Sieve p(500000);
+  p.build();
+
+  int n;
+  while (n = in()){
+    int count = 0;
+    reps(i, n + 1, 2 * n + 1){
+      if (p.isPrime(i)) count++;
+    }
+    printf("%d\n", count);
+  }
+  return 0;
+}

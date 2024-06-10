@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef long long ll;
+
+struct Data {
+  ll h,a,d,s,t;
+  bool operator < ( const Data &data ) const { return d * data.t > data.d * t; }
+};
+
+int n;
+
+int main() {
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+  cin >> n;
+  Data fri;
+  cin >> fri.h >> fri.a >> fri.d >> fri.s;
+  vector<Data> buf(n);
+  bool out = false;
+  rep(i,n) {
+    cin >> buf[i].h >> buf[i].a >> buf[i].d >> buf[i].s;
+    ll fattack = max(0LL,fri.a-buf[i].d);
+    ll eattack = max(0LL,buf[i].a-fri.d);
+    if( fattack == 0LL ) {
+      out = true;
+      continue;
+    }
+    buf[i].t = (ll)( buf[i].h / fattack ) + (ll)( (buf[i].h%fattack) != 0 );
+    buf[i].d = eattack;
+  }
+
+  if( out ) {
+    puts("-1");
+    return 0;
+  }
+
+  sort(buf.begin(),buf.end());
+
+  ll ans = 0LL, total_turn = 0;
+  rep(i,buf.size()) {
+    int coef = 0;
+    if( buf[i].s < fri.s ) coef = 1;
+    total_turn += buf[i].t;
+    ans += buf[i].d * ( total_turn - coef );
+
+  }
+
+  cout << ((ans<fri.h)?ans:-1) << endl;
+
+  return 0;
+}

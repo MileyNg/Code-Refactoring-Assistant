@@ -1,0 +1,32 @@
+using System;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+
+
+class Program
+{
+    public const int INF = 1 << 25;
+
+    static void Main()
+    {
+		int n = int.Parse(Console.ReadLine());
+		for (int i = 0; i < n; i++) {
+			string[] input = Console.ReadLine().Split(' ');
+			int[] a = new int[3];
+			for (int j = 0; j < 3; j++) {
+				a[j] = int.Parse(input[j]);
+			}
+			Array.Sort(a);
+			if (a[0] * a[0] + a[1] * a[1] == a[2] * a[2]) {
+				Console.WriteLine("YES");
+			}
+			else {
+				Console.WriteLine("NO");
+			}
+		}
+	}
+}

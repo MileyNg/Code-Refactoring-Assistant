@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+void solve(int m);       //データの処理
+void clear(void);            //segment[0]の初期化
+
+int n,m;                 //数字の個数,数字
+int segment[11][7]=      //各セグメントに対応するbitの状態
+  /*{g,f,e,d,c,b,a}*/
+  {
+    {0,0,0,0,0,0,0},     //変化させる配列
+    {0,1,1,1,1,1,1},     //0
+    {0,0,0,0,1,1,0},     //1
+    {1,0,1,1,0,1,1},     //2
+    {1,0,0,1,1,1,1},     //3
+    {1,1,0,0,1,1,0},     //4
+    {1,1,0,1,1,0,1},     //5
+    {1,1,1,1,1,0,1},     //6
+    {0,1,0,0,1,1,1},     //7
+    {1,1,1,1,1,1,1},     //8
+    {1,1,0,1,1,1,1}      //9
+  };		    
+
+int main(){
+
+  int i,j;
+
+  while(1){
+
+  /*数字の個数nの入力*/
+  scanf("%d",&n);
+
+  if(n==-1)break;
+
+  /*n個の数字を入力*/
+  for(i=0;i<n;i++){
+    scanf("%d",&m);
+
+    /*データの処理*/
+    solve(m);
+
+  }
+
+  /*segment[0]を0で初期化*/
+  clear();
+  
+  }
+
+  return 0;
+}
+/*データ処理*/
+void solve(int m){
+
+  int i,j;
+
+  /*segment[m+1]からsegment[0]を引いたときそのbitが0以外なら1にする*/
+  for(i=0;i<7;i++){
+    segment[0][i]=segment[m+1][i]-segment[0][i];
+    if(segment[0][i]==-1){
+      segment[0][i]=1;
+    }
+  }
+
+  /*結果の出力*/
+  for(i=0;i<7;i++){
+    printf("%d",segment[0][i]);
+  }
+
+  printf("\n");
+
+  /*segment[0]をsegment[m+1]に初期化する*/
+  for(i=0;i<7;i++){
+    segment[0][i]=segment[m+1][i];
+  }
+
+}
+/*segment[0]を0で初期化*/
+void clear(){
+
+  int i;
+
+  for(i=0;i<7;i++){
+    segment[0][i]=0;
+  }
+
+}

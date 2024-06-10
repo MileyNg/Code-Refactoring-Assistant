@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define fi first
+#define se second
+#define MAX 20
+typedef pair<double,double> P;
+typedef pair<double,P> Q;
+
+int N;
+P h, d, crystal[MAX];
+
+double dist(P a, P b){
+  return sqrt(pow(a.fi-b.fi,2) + pow(a.se-b.se,2));
+}
+
+bool solve(){
+  vector<Q> dd;
+  P p[MAX];
+
+  for(int i = 0 ; i < N ; i++){
+    dd.push_back(Q(dist(h, crystal[i]), crystal[i]));
+  }
+  sort(dd.begin(), dd.end());
+  for(int i = 0 ; i < N ; i++){
+    p[i] = dd[i].se; 
+  }
+
+  double total_dist = 0;
+  for(int i = 0 ; i < N ; i++){
+    total_dist += dist(h,p[i]);
+    if(total_dist >= dist(d, p[i])){
+      return false;
+    }
+    h = p[i];
+  }
+  return true;
+}
+
+int main(){
+  while(cin >> N >> h.fi >> h.se >> d.fi >> d.se, (N + h.fi + h.se + d.fi + d.se)){
+    for(int i = 0 ; i < N ; i++){
+      cin >> crystal[i].fi >> crystal[i].se;
+    }
+    cout << (solve() ? "YES" : "NO") << endl;
+  }
+ 
+  return 0;
+}

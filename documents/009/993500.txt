@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <array>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  while( true ) {
+	double n;
+	cin >> n;
+	if ( n == -1.0 ) break;
+
+	int m = (int)( n * 16 );
+	if ( n * 16 - m > 0 ) {
+	  cout << "NA" << endl;
+	} else {
+	  for ( int i = 7; i >= 0; i-- ) {
+		if ( ( 1 << ( i + 4 ) ) & m ) {
+		  cout << 1;
+		} else {
+		  cout << 0;
+		}
+	  }
+	  cout << ".";
+	  for ( int i = 3; i >= 0; i-- ) {
+		if ( ( 1 << i ) & m ) {
+		  cout << 1;
+		} else {
+		  cout << 0;
+		}
+	  }
+	  cout << endl;
+	}	
+  }
+}

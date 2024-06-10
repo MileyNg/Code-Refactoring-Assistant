@@ -1,0 +1,26 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+typedef vector<int> vi;
+vi x;
+int main(){
+	string s;
+	int i,n;
+	while(getline(std::cin, s)){
+		for(i=0;i<s.size();i++)if (s[i]==',')s[i]=' ';
+		stringstream ss(s);
+		vi A;
+		while(ss>>i)A.push_back(i);
+		n=A.size();
+		if(x.size()<n){
+			x.insert(x.begin(),1,0);
+			x.push_back(0);
+		}
+		vi B(n);
+		for(i=0;i<n;i++)B[i]=(x[i]>x[i+1]?x[i]:x[i+1])+A[i];
+		x=B;
+	}
+	cout<<x[0]<<endl;
+}

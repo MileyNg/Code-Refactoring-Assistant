@@ -1,0 +1,41 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#define MAX 11
+#define NIL -1
+
+/*
+p: parent
+l: left-child
+r: right sibling
+k: vertex
+*/
+struct Node{ int p, l, r, v; };
+struct Node T[MAX]; // Tree
+
+main(){
+	int i, d, v, c, n, l;
+	int PRE[MAX] = { NIL };
+	int IN[MAX] = { NIL };
+
+	scanf("%d", &n);
+
+	for (i = 0; i <= n; i++) {
+		T[i].p = T[i].l = T[i].r = NIL;
+	}
+
+	for (i = 0; i <= n; i++){
+		scanf("%d",&v);
+		T[i].l = i + 1;
+		if (i == 0){ 
+			T[i].v = v;
+		}
+		else{
+			T[i].v = v;
+			T[i].p = i-1;
+		}
+		l = v;
+	}
+
+	//for (i = 1; i <= n; i++) print(i);
+	return 0;
+}

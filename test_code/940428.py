@@ -1,0 +1,23 @@
+for r in range(input()):
+	if r > 0: print
+	n = input()
+	if n < 3:
+		for i in range(n): print "#"*(n-i) + " "*i
+		continue
+	S = [[" "]*n for i in range(n)]
+	x,y,dx,dy = 0,n-1,0,-1
+	while 1:
+		S[y][x] = "#"
+		y += dy; x += dx
+		try:
+			if S[y+dy][x+dx] == "#":
+				if y+dy != -1:
+					y -= dy; x -= dx
+				raise
+		except:
+			S[y][x] = "#"
+			dx,dy = -dy,dx
+			y += dy; x += dx
+		if S[y+dy][x+dx] == "#" or S[y+dx][x-dy] == "#": break
+	for i in range(n):
+		print "".join(S[i])

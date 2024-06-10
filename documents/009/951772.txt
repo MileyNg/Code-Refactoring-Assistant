@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+int main(){
+	int abc[3], N;
+	cin >> N;
+	for(int i = 0; i < N; i++){
+		cin >> abc[0] >> abc[1] >> abc[2];
+		while(!(((abc[0] >= 1)&&(abc[0] <= 1000))&&
+				((abc[1] >= 1)&&(abc[1] <= 1000))&&
+				((abc[2] >= 1)&&(abc[2] <= 1000)))){
+			cout << "wrong value\n";
+			cin >> abc[0] >> abc[1] >> abc[2];
+		}
+		sort(abc, abc+3);
+		if((pow(abc[0], 2) + pow(abc[1], 2)) == pow(abc[2], 2)){
+			cout << "YES\n";
+		}else{
+			cout << "NO\n";
+		}
+	}
+    return 0;
+}

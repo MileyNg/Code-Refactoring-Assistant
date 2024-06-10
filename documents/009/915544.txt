@@ -1,0 +1,22 @@
+#include <stdio.h>
+#define N 200000
+int main()
+{
+  int i,j;
+  int n;
+  int ans=0, tmp=0;
+  int data[N+1];
+  scanf("%d",&n);
+  for( i=0; i<n; i++ ){
+      scanf("%d",&data[i]);
+    }
+  for( i=0; i<n; i++ ){
+    for( j=0; j<i; j++){
+      if( (tmp = data[i]-data[j])>0){
+      if( tmp > ans) ans = tmp;
+      }
+    }
+  }
+      printf("%d\n",ans);
+  return 0;
+}

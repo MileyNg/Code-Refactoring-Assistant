@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define IINF (INT_MAX)
+#define LEN (1<<8)
+
+using namespace std;
+
+int G[5][5],dp[18][LEN];
+int tmp_G[5][5];
+
+inline int getCost(int x){ return ((x==3)?80:((x==2)?70:((x==1)?60:0))); }
+
+inline void push(int x,int y,int cnt){
+  ( tmp_G[y  ][x  ]+=cnt ) %= 4;
+  ( tmp_G[y  ][x+1]+=cnt ) %= 4;
+  ( tmp_G[y+1][x  ]+=cnt ) %= 4;
+  ( tmp_G[y+1][x+1]+=cnt ) %= 4;
+}
+
+int main(){
+  //cin.tie(0);
+  //std::ios::sync_with_stdio(0);
+  int T;
+  cin >> T;
+  while(T--){
+    rep(i,5)rep(j,5){
+      cin >> G[i][j];
+      G[i][j]--;
+    }
+    int answer = 0;
+    rep(i,18)rep(k,LEN)dp[i][k] = -1;
+    rep(state,LEN){
+      rep(i,5)rep(j,5) tmp_G[i][j] = G[i][j];
+      int cost = 0,tmp_state = state,cur = 0;
+      while(cur < 5){
+	int cnt = tmp_state & ((1<<2)-1);
+	tmp_state>>=2;
+	push(cur,0,cnt);
+	cur++;
+      }
+
+      rep(i,5)if(G[0][i] != -1)cost += getCost(tmp_G[0][i]);
+      dp[0][state] = cost;
+      answer = max(answer,dp[0][state]);
+    }	
+
+    REP(i,0,4)rep(pre,LEN)if(dp[i][pre]!=-1)rep(cur,LEN){
+	rep(k,5)rep(j,5) tmp_G[k][j] = G[k][j];
+	int tmp_pre = pre, tmp_cur = cur,X = 0;
+	while(X < 5){
+	  int cnt = tmp_pre & ((1<<2)-1);
+	  tmp_pre >>= 2;
+	  push(X,i,cnt);
+	  X++;
+	}
+	X = 0;
+	while(X<5){
+	  int cnt = tmp_cur & ((1<<2)-1);
+	  tmp_cur >>= 2;
+	  push(X,i+1,cnt);
+	  X++;
+	}
+
+	int cost = 0;
+	rep(j,5)if(G[i+1][j]!=-1)cost += getCost(tmp_G[i+1][j]);
+	dp[i+1][cur] = max(dp[i+1][cur],dp[i][pre]+cost);
+	answer = max(answer,dp[i+1][cur]);
+      }
+
+    cout << answer << endl;
+
+  }
+  return 0;
+}

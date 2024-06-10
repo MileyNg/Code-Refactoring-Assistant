@@ -1,0 +1,31 @@
+#include <iostream>
+#include <map>
+using namespace std;
+string str;
+int main(){
+    cin>>str;
+    int n = str.length();
+    map<char,int> d;
+    for(int i = 0;i < n - 7;){
+	bool flag = true;
+	d.clear();
+
+	for(int j = i;j < i + 8;j++){ 
+
+	    if(str[j] != 'A'&& str[j] !='I' && str[j] != 'D'
+	       &&str[j] !='U' && str[j] != 'Y' && str[j] != 'N'){
+		flag =false;
+		break;
+	    }
+	    d[str[j]]++;
+	}
+	
+	if(flag&&d['A'] == 2 && d['I'] == 1 && d['D'] == 1 && d['U'] == 1 &&d['N'] == 2 && d['Y'] == 1){
+	    str.replace(str.begin() + i ,str.begin() + i + 8, "AIZUNYAN");
+	    i += 8;
+	}else{
+	    i++;
+	}
+    }
+    cout <<str<<endl;
+}

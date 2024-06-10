@@ -1,0 +1,51 @@
+#include <cctype>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+
+map<char, int> val;
+string in;
+int p;
+
+int formula(){
+    int res = -1;
+    if(isdigit(in[p]))res = in[p++] - '0';
+    else if(isalpha(in[p]))res = val[in[p++]];
+    else if(in[p] == '-'){
+        p++;
+        res = 2 - formula();
+    }
+    else if(in[p] == '('){
+        p++;
+        int x = formula();
+        bool plus = in[p++] == '+';
+        int y = formula();
+        p++;
+        res = plus? max(x, y): min(x, y);
+    }
+    return res;
+}
+
+int main(){
+    while(cin >> in, in != "."){
+        int ans = 0;
+        rep(i, 3){
+            val['P'] = i;
+            rep(j, 3){
+                val['Q'] = j;
+                rep(k, 3){
+                    val['R'] = k;
+                    p = 0;
+                    ans += 2 == formula();
+                }
+            }
+        }
+        cout << ans << '\n';
+    }
+    return 0;
+}

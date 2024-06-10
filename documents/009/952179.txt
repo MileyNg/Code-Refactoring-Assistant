@@ -1,0 +1,87 @@
+/* C++11とは言いますが
+ * C++と余り区別つきません。ザコです。ザコ
+ * ワッショイ！ワッショイ！
+ * 1982行めで違う値が出るぜワッショイワッショイ
+*/
+#include <iostream>
+#include <bitset>
+#include <memory>
+#include <string>
+#include <vector>
+
+#define MAX 1000000
+
+using namespace std;
+
+class Hash{
+
+    string dat[MAX];
+    int n;
+  public:
+    Hash(int n){
+        this->n=n;
+        for(int i=0;i<n;i++){
+            dat[i]="";
+        }
+    }
+
+    int getH1(string str){
+         int res=0;
+//       cout<<"str:"<<str<<endl;
+         for(int i=0;i<str.size();i++){
+//           cout<<" i="<<i<<" str:"<<str[i]<<endl;
+             res+=str[i];
+         }
+         res=res<<str.size();
+//       cout<<"H1"<<res%n<<endl;
+         return res%n;
+    }
+    
+    int getH2(string str){
+         int res=0;
+         for(int i=0;i<str.size();i++){
+              res+=str[i];
+         }
+         res=res<<str.size();
+ //      cout<<"H2"<<1+res%(n-1)<<endl;
+         return 1+res%(n-1);
+    }
+    void insert(string data){
+        for(int i=0;i<n;i++){
+//         cout<<"ins "<<data<<" i="<<i<<" ptr="<<(getH1(data)+getH2(data)*i)%n<<" ";
+//         cout<<dat[(getH1(data)+getH2(data)*i)%n]<<" dat"<<data<<endl;
+             if(dat[(getH1(data)+getH2(data)*i)%n]==""){
+                 dat[(getH1(data)+getH2(data)*i)%n]=data;
+                 return; 
+             }
+        }
+    }
+
+    void find(string key){
+        for(int i=0;dat[(getH1(key)+getH2(key)*i)%n]!="";i++){
+//        cout<<"fnd "<<key<<" i="<<i<<" ptr="<<(getH1(key)+getH2(key)*i)%n<<" ";
+//        cout<<dat[(getH1(key)+getH2(key)*i)%n]<<endl;
+//          cout<<"sdat="<<dat[(getH1(key)+getH2(key)*i)%n]<<" key="<<key<<endl;
+            if(dat[(getH1(key)+getH2(key)*i)%n]==key){
+                 cout<<"yes"<<endl;
+                 return;
+            }
+        }
+        cout<<"no"<<endl;
+    }
+};
+
+int main(){
+   int n;
+   string cmd, str;
+   cin>>n;
+   unique_ptr<Hash> hash(new Hash(n));
+   for(int i=0;i<n;i++){
+       cin>>cmd>>str;
+       if(cmd=="insert"){
+           hash->insert(str);
+       }else{
+           hash->find(str);
+       }
+   }
+}

@@ -1,0 +1,43 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define MAX 10000
+
+bool isprime[MAX + 1];
+vector< int > prime;
+
+int setprime(){
+  for(int i = 2; i < MAX + 1; i++){
+    if(!isprime[i]){
+      for(int j = 2; i * j < MAX + 1; j++){
+        isprime[i * j] = true;
+      }
+      prime.push_back(i);
+    }
+  }
+}
+
+int solve(int odd){ //累積和でやった方がいい気がするけどやらない
+  int ret = 0;
+  for(int i = 0; i < prime.size() ; i++){
+    if(odd < prime[i]) break;
+    int sum = 0;
+    for(int j = i ; j <= prime.size() ; j++){
+      sum += prime[j];
+      if(sum >= odd){
+        if(sum == odd) ret++;
+        break;
+      }
+    }
+  }
+  return ret;
+}
+
+int main(){
+  setprime();
+  int n;
+  while(cin >> n, n){
+    cout << solve( n) << endl;
+  }
+}

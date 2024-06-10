@@ -1,0 +1,31 @@
+#include<stdio.h>
+
+int main(){
+  int i,j;
+  int n,r,p,c;
+  int tmp;
+  int A[51],B[51],R[51];
+  while(1){
+
+    scanf("%d %d",&n,&r);
+    if(n==0 && r==0) break;
+    for(i=n;i>0;i--){
+      A[n-i]=i; 
+      B[n-i]=i;
+    }
+    //for(i=0;i<n;i++)printf("%d %d %d\n",A[i],B[i],i);
+    //for(i=0;i<n;i++) R[i]==0;
+
+    for(i=0;i<r;i++){
+      scanf("%d %d",&p,&c);
+      //if(p==0 && c==0) break;
+      
+      for(j=0;j<p-1;j++) B[j+c]=A[j];
+      for(j=p-1;j<p-1+c;j++) B[j-(p-1)]=A[j];
+      //for(j=0;j<n;j++)    printf("%d\n",B[j]);
+      for(j=0;j<n;j++)A[j]=B[j];
+    }
+    printf("%d\n",B[0]);
+  }
+  return 0;
+}

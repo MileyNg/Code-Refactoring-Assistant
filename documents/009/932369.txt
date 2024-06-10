@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+int main() {
+	string str,code="";
+	string tens="[<++++++++++>-]<",mtens="[<---------->-]<";
+	int i,j,s,k,a,b;
+	
+	cin>>str;
+	
+	
+	if(str[0]/10){
+		a=str[0]/10;
+		code+=">";
+		for(k=0;k<a;++k){
+			code+="+";
+		}
+		code+=tens;
+		str[0]-=a*10;
+	}
+	
+	for(i=0;i<str[0];++i)code+="+";
+	code+=".";
+	str[0]+=a*10;
+	
+	
+	
+	
+	for(i=1;i<str.length();++i){
+		s = str[i] - str[i-1];
+		
+		if(s>=0){
+			
+			if(s/10){
+				a=s/10;
+				code+=">";
+				for(k=0;k<a;++k){
+					code+="+";
+				}
+				code+=tens;
+				s-=(a*10);
+			}
+			
+			for(j=0;j<s;++j){
+				code+="+";
+			}
+			code+=".";
+		}else{
+			s=-s;
+			
+			if(s/10){
+				a=s/10;
+				code+=">";
+				for(k=0;k<a;++k){
+					code+="-";
+				}
+				code+=tens;
+				s-=(a*10);
+			}
+			
+			
+			for(j=0;j<s;++j){
+				code+="-";
+			}
+			code+=".";
+		}
+	}
+	cout<<code<<endl;
+	
+	return 0;
+}

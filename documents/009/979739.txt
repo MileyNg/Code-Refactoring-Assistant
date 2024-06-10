@@ -1,0 +1,61 @@
+#include<iostream>
+#include<algorithm>
+#define N 100
+
+using namespace std;
+
+int w, h, s, t;
+bool data[N][N];
+
+void init(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      data[i][j]=false;
+    }
+  }
+}
+int get(int k){
+  int x=0;
+  for(int i=0; i<s; ++i){
+    for(int j=0; j<t; ++j){
+      x += data[k+i][j];
+    }
+  }
+  return x;
+}
+int move(int x, int k, int l){
+  for(int i=0; i<s; ++i){
+    x -= data[i+k][l];
+    x += data[i+k][l+t];
+  }
+  return x;
+}
+int solve(){
+  int ans=0, tmp=0;
+  for(int i=0; i<=h-s; ++i){
+    tmp=get(i);
+    ans=max(ans, tmp);
+    for(int j=0; j<w-t; ++j){
+      tmp=move(tmp, i, j);
+      ans=max(ans, tmp);
+    }
+  }
+  return ans;
+}
+
+int main(){
+  int n, x, y;
+  while(1){
+    cin >> n;
+    if(!n) break;
+    init();
+    cin >> h >> w;
+    for(int i=0; i<n; ++i){
+      cin >> x >> y;
+      data[x-1][y-1]=true;
+    }
+    cin >> s >> t;
+    cout << solve() << endl;
+  }
+  return 0;
+}

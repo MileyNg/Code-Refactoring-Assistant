@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+int A[2000],M[2000];
+int solve(int,int);
+int n;
+
+main(){
+  
+  int q;
+  int i,ans;
+  
+
+  scanf("%d",&n);
+  
+  for(i = 0 ; i < n  ; i++){
+    
+    scanf("%d",&A[i]);
+
+  }
+  
+  scanf("%d",&q);
+  
+  for(i = 0 ; i < q ; i++){
+    
+    scanf("%d",&M[i]);
+
+}
+
+
+
+  for(i = 0 ; i < q; i++){
+    ans = solve(0,M[i]);
+    if(ans == 1) printf("yes\n");
+    else printf("no\n");
+  }
+
+  return 0;
+
+}
+
+
+
+int solve(int p,int t){
+  int a,b;
+  if(t == 0) return 1;
+  else if(p == n) return 0;
+
+  a = solve(p + 1,t - A[p]);
+  b = solve(p + 1,t);
+
+  if(a !=0 || b != 0) return 1;
+  else return 0;
+}

@@ -1,0 +1,51 @@
+#include<iostream>
+#include<cstring>
+#include<map>
+using namespace std;
+
+int main(){
+  int n,h;
+  for(;cin>>n>>h,n;)
+    {
+      long long int sum=n*n*n;
+      long long int cnt=0;
+      map<pair<pair<int,int>, int> ,bool> hash;
+      for(int i=0;i<h;i++)
+	{
+	  string c;
+	  int a,b;
+	  cin>>c>>a>>b;
+	  a--;
+	  b--;
+	  if(c=="xy")
+	      for(int i=0;i<n;i++)
+		{
+		  if(!hash[make_pair(make_pair(a,b),i)])
+		    {
+		      hash[make_pair(make_pair(a,b),i)]=true;
+		      cnt++;
+		    }
+		}
+	  else if(c=="xz")
+	      for(int i=0;i<n;i++)
+		{
+		  if(!hash[make_pair(make_pair(a,i),b)])
+		    {
+		      hash[make_pair(make_pair(a,i),b)]=true;
+		      cnt++;
+		    }
+		}
+	  else if(c=="yz")
+	      for(int i=0;i<n;i++)
+		{
+		  if(!hash[make_pair(make_pair(i,a),b)])
+		    {
+		      hash[make_pair(make_pair(i,a),b)]=true;
+		      cnt++;
+		    }
+		}
+	}
+       cout<<sum-cnt<<endl;
+    }
+
+}

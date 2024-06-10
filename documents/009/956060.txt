@@ -1,0 +1,54 @@
+
+#include<iostream>
+using namespace std;
+
+double pwd( int tei,int n ){
+	int i;
+	double ans = 1;
+	if( n >= 0 ){	
+		for( i = 0;i < n;i++ ){
+			ans *= tei;
+		}
+	}
+	else{
+		for(i = 0;i < -n;i++ ){
+			ans /= tei;
+		}
+	}
+	return ans;
+}
+
+int main(){
+	double n;
+	int ans[12];
+
+	while( cin >> n ){
+		if( n < 0 )
+			break;
+		for(int i = 7; i >= -4; i--)
+		{
+			if( n >= pwd( 2,i ) ){
+				ans[i+4] = 1;
+				n -= pwd( 2,i );
+			}
+			else{
+				ans[i+4] = 0;
+			}
+		}
+		if( n != 0 ){
+			cout << "NA" << endl;
+			continue;
+		}
+		for( int i = 11;i >= 0;i-- ){
+			cout << ans[i];
+			if( i == 4 ){
+				cout << ".";
+			}
+			if( i == 0){
+				cout << endl;
+			}
+		}
+			
+	}
+	return 0;
+}

@@ -1,0 +1,49 @@
+#include <stdio.h>
+int main(void) {
+    int first,second,third,fourth,i,j,num;
+    double one,two,three=100001,four=100002,time;
+    for (i=0; i<3; i++) {
+    	one=100000,two=100000;
+        for (j=0; j<8; j++) {
+            scanf("%d %lf",&num,&time);
+            if (time<one) {
+                if (two<three) {
+                    four=three;
+                    fourth=third;
+                    three=two;
+                    third=second;
+                } else if (four<two) {
+                    four=two;
+                    fourth=second;
+                }
+                two=one;
+                second=first;
+                one=time;
+                first=num;
+            } else if (time<two) {
+                if (two<three) {
+                    four=three;
+                    fourth=third;
+                    three=two;
+                    third=second;
+                } else if (four<two) {
+                    four=two;
+                    fourth=second;
+                }
+                two=time;
+                second=num;
+            } else if (time<three) {
+                four=three;
+                fourth=third;
+                three=time;
+                third=num;
+            } else if (time<two) {
+                four=time;
+                fourth=num;
+            }
+        }
+        printf("%d %.2lf\n%d %.2lf\n",first,one,second,two);
+    }
+    printf("%d %.2lf\n%d %.2lf\n",third,three,fourth,four);
+    return 0;
+}

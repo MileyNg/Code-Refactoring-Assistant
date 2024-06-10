@@ -1,0 +1,41 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n=100000;
+	map<int,int> m;
+	map<int,int>::iterator it;
+	map<int,int>::reverse_iterator rit;
+	int sum;
+
+	while(1){
+		
+		cin>>n;
+		if(n==0) break;
+		if(!m.empty()) cout<<endl;
+
+		cin>>m[10]>>m[50]>>m[100]>>m[500];
+
+		sum=0;
+		for(it=m.begin();it!=m.end();it++){
+			sum+=((*it).first*(*it).second);
+		}
+		sum=sum-n;
+
+		for(rit=m.rbegin();rit!=m.rend();rit++){
+			(*rit).second-=sum/(*rit).first;
+			sum=sum%(*rit).first;
+		}
+
+		for(it=m.begin();it!=m.end();it++){
+			if((*it).second>0) cout<<(*it).first<<" "<<(*it).second<<endl;
+		}
+
+		
+
+	}
+	return 0;
+}

@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+
+long long int dp[10][101][1001];
+int n,s;
+int maxs;
+using namespace std;
+
+long long int check(int i,int cnt,int sum)
+{
+  if(sum==s && cnt==n)
+    {
+      //    cout<<i<<" "<<cnt<<" "<<sum<<endl;
+      return 1;
+    }
+  if(sum>=s || cnt>=n || i>=100)
+    return 0;
+  if(dp[cnt][i][sum]!=-1)
+    return dp[cnt][i][sum];
+  long long int ans=0;
+  for(int j=i+1;j<=maxs;j++)
+    ans+=check(j,cnt+1,sum+j);
+  
+  dp[cnt][i][sum]=ans;
+  return ans;
+}
+int main()
+{
+
+  for(;cin>>n>>s,n;)
+    { 
+      memset(dp,-1,sizeof(dp));
+      long long int ans=0;
+      maxs=min(s,100);
+      for(int i=0;i<=maxs;i++)
+	ans+=check(i,1,i);
+      
+      cout<<ans<<endl;
+    }
+
+}

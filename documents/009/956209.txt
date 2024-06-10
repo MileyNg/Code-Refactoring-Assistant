@@ -1,0 +1,170 @@
+#include <iostream>
+#include <valarray>
+using namespace std;
+
+int Size = 100;
+
+int N=1;
+int M;
+long long Z;
+int s;
+int d;
+
+struct Matrix {
+  valarray<int> a;
+  Matrix() : a(Size*Size) { a=0; } // N*N行列を1行ベクトルで実装。初期化は全部成分0。
+};
+
+struct Vector {
+  valarray<int> v;
+  Vector() : v(Size) { v=0; }
+};
+
+void show(const Matrix& A, int n) {
+  cout << "[" << endl;
+  for(int i=0;i<n;i++) {
+    for(int j=0;j<n;j++) {
+      cout << A.a[i*Size+j] << " ";
+    }
+    cout << endl;
+  }
+  cout << "]" << endl;
+}
+
+void show(const Vector& A, int n) {
+  cout << "[" << endl;
+  for(int i=0;i<n;i++) {
+    cout << A.v[i] << endl;
+  }
+  cout << "]" << endl;
+}
+
+Matrix St; // 駅がつながっているかどうか。成分にはPsの有効区間番号を入れる。
+Matrix Ps; // 有向区間がつながっているかどうか。
+valarray<int> Hj(Size); // StからPsをつくるための補助。
+Vector Ini; // 初期状態で駅1から行ける区間。
+Matrix Res; // Psの(Z-1)乗。
+
+// 0以外の成分はすべて1にする。
+Matrix multiply(const Matrix& A, const Matrix& B) {
+  Matrix C;
+  for (int i=0;i<Size;++i) {
+    for (int j=0;j<Size;++j) {
+      C.a[i*Size+j] = (A.a[slice(i*Size,Size,1)]*B.a[slice(j,Size,Size)]).sum();
+      // a[数字]は数字
+      // a[数字,数字,数字]は、部分配列が出る
+      // slice(何番目から,何個,何番飛ばし)
+      // A.a[slice(i*N,N,1)]は横ベクトルに対応
+      // B.a[slice(j,N,N)]は縦ベクトルに対応
+      // これをかけると成分ごとに掛け合わせる(長さが同じベクトルをかけると)
+      // そのsumが内積。だから(i,j)成分。
+      // これはすごい。
+      if (C.a[i*Size+j] > 0) {
+	C.a[i*Size+j] = 1;
+      }
+    }
+  }
+  return C;
+}
+
+Vector multiply(const Matrix& A, const Vector& V) {
+  Vector W;
+  for (int i=0;i<Size;i++) {
+    W.v[i] = (A.a[slice(i*Size,Size,1)] * V.v).sum();
+    if (W.v[i] > 0) {
+      W.v[i] = 1;
+    }
+  }
+  return W;
+}
+
+Matrix expt(const Matrix& A, long long p) {
+  if (p == 1) {
+    return A;
+  } else if (p % 2) {
+    Matrix T = expt(A,p-1);
+    return multiply(A,T);
+  } else {
+    Matrix T = expt(A,p/2);
+    return multiply(T,T);
+  }
+}
+
+// 問題分の指定から N \approx M \approx 100 と考える。
+// 行列のZ乗からO(N^2 * \log Z)までは仕方ない。
+// 残りの部分を工夫しO(N^2 \cdot \log Z)とするためにがんばってみる。
+
+int main() {
+  while (N>0) {
+      cin >> N >> M >> Z;
+      if (N==0) {
+	break;
+      }
+      St.a = -1; // 区間がなければ-1
+      Hj = 0; // 補助
+      Ini.v = 0; // 初期状態
+      Ps.a = 0; // 有向区間が繋がっていれば1、そうでなければ0
+
+      // 区間(i -> j)があるとき、i行j列に有効区間番号を昇順で入れる。
+      for (int i=0;i<M;i++) {
+	cin >> s >> d;
+	St.a[(s-1) * Size + (d-1)] = 0;
+	St.a[(d-1) * Size + (s-1)] = 0;
+      }
+      int c = 0;
+      for (int i=0;i<N;i++) {
+	Hj[i] = c; // i行目には有向区間番号Hj[i]から(Hj[i+1]-1)が入っている。
+	for (int j=0;j<N;j++) {
+	  if (St.a[i * Size + j] == 0) {
+	    St.a[i * Size + j] = c;
+	    c++;
+	  }
+	}
+      }
+      Hj[N] = c;
+
+      // 有効区間が遷移可能なら1を入れる。
+      for (int i=0;i<N;i++) {
+	for (int j=0;j<N;j++) {
+	  int pass = St.a[i * Size + j];
+	  if (pass == -1) {
+	    continue;
+	  } else { // i -> j へ区間がある場合
+	    for (int nextpass=Hj[j];nextpass<Hj[j+1];nextpass++) { // (j -> どこか)に振られた番号。
+	      Ps.a[nextpass * Size + pass] = 1;
+	    }
+	    int deadpass = St.a[j * Size + i];
+	    Ps.a[deadpass * Size + pass] = 0; // 折り返してはならない。
+	  }
+	}
+      }
+
+      for(int pass=Hj[0];pass<Hj[1];pass++) {
+	Ini.v[pass] = 1;
+      }
+      
+      Vector Fin;
+      if (Z == 1) {
+	Fin = Ini;
+      } else {
+	Res = expt(Ps,Z-1); // (Z-1)回遷移
+	Fin = multiply(Res,Ini);
+      }
+      try {
+	for (int i=0;i<N;i++) {
+	  int pass = St.a[i * Size + (N-1)];
+	  if (pass >= 0 && Fin.v[pass] == 1) {
+	    throw(-1);
+	  } 
+	}
+	cout << "no" << endl;
+      } catch(int) {
+	cout << "yes" << endl;
+      }
+      //show(St,N);
+      //show(Ps,2*M);
+      //show(Res,2*M);
+      //show(Ini,2*M);
+      //show(Fin,2*M);
+  }
+}

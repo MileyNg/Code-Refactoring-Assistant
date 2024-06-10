@@ -1,0 +1,130 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+const int MAX_L = 101;
+const double EPS = 1e-8;
+
+typedef vector<double> Vector;
+typedef vector<Vector> Matrix;
+
+Vector gaussian(Matrix M, Vector b) {
+    int H = M.size();
+    int W = M[0].size();
+
+    for(int y = 0; y < M.size(); y++) {
+        M[y].push_back(b[y]);
+    }
+
+    for(int cy = 0, cx = 0; cy < H && cx < W; cy++, cx++) {
+        for(int y = cy; y < H; y++) {
+            if(abs(M[cy][cx]) < abs(M[y][cx])) {
+                swap(M[cy], M[y]);
+            }
+        }
+
+        if(abs(M[cy][cx]) < EPS) {
+            assert(false);
+        }
+
+        for(int y = 0; y < H; y++) if(y != cy) {
+            double ratio = M[y][cx] / M[cy][cx];
+            for(int x = cx; x <= W; x++) {
+                M[y][x] -= ratio * M[cy][x];
+            }
+        }
+    }
+
+    Vector res(H);
+    for(int y = 0; y < H; y++) {
+        res[y] = M[y][W] / M[y][y];
+    }
+    return res;
+}
+Matrix mul(const Matrix& A, const Matrix& B) {
+    const int N = A.size();
+    Matrix C(N, Vector(N));
+    REP(i, N) REP(k, N) REP(j, N) {
+        C[i][j] += A[i][k] * B[k][j];
+    }
+    return C;
+}
+Matrix pow(const Matrix& M, int b) {
+    int N = M.size();
+    if(b == 1) {
+        return M;
+    } else {
+        Matrix A = pow(M, b / 2);
+        A = mul(A, A);
+        if(b % 2 == 1) {
+            A = mul(A, M);
+        }
+        return A;
+    }
+}
+int main(){
+    int S, N, K;
+    while(cin >> S >> N >> K) {
+        S = abs(S);
+        if(N == 1) {
+            if(S % K == 0) {
+                cout << S / K << endl;
+            } else {
+                cout << -1 << endl;
+            }
+            continue;
+        }
+
+        vector<double> prob(MAX_L, 0.0);
+        prob[0] = 1.0;
+        for(int iter = 0; iter < K; iter++) {
+            vector<double> next(MAX_L, 0.0);
+            for(int c = 0; c < MAX_L; c++) {
+                if(prob[c] == 0) continue;
+                for(int x = 1; x <= N; x++) {
+                    next[c + x] += prob[c] / N;
+                }
+            }
+            prob.swap(next);
+        }
+
+        Matrix mat(MAX_L, Vector(MAX_L));
+        Vector vec(MAX_L, 1.0);
+        mat[0][0] = 1.0;
+        vec[0] = 0.0;
+        for(int y = 1; y < MAX_L; y++) {
+            mat[y][y] = 1.0;
+            for(int c = 0; c < MAX_L; c++) {
+                if(prob[c] == 0) continue;
+                int x = abs(y - c);
+                mat[y][x] -= prob[c];
+            }
+        }
+
+        Vector init = gaussian(mat, vec);
+        if(S < MAX_L) {
+            printf("%.12f\n", init[S]);
+        } else {
+            init.insert(init.begin(), 1);
+            Matrix A(MAX_L + 1, Vector(MAX_L + 1));
+
+            for(int c = 1; c < MAX_L; c++) {
+                A[0][c - 1] = prob[c];
+            }
+            A[0][MAX_L] = 1.0;
+            for(int i = 1; i < MAX_L; i++) {
+                A[i][i - 1] = 1.0;
+            }
+            A[MAX_L][MAX_L] = 1.0;
+
+            A = pow(A, S - (MAX_L - 1));
+            double res = 0;
+            for(int x = 0; x <= MAX_L; x++) {
+                res += A[0][x] * init[MAX_L - x];
+            }
+            printf("%.12f\n", res);
+        }
+    }
+    return 0;
+}

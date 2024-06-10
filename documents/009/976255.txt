@@ -1,0 +1,133 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+#include <cassert>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+const double EPS = 1e-8;
+
+struct Point{
+    double cross(const Point& rp) const{
+        return this->x*rp.y - this->y*rp.x;
+    }
+    double dot(const Point& rp) const{
+        return this->x*rp.x + this->y*rp.y;
+    }
+    double norm() const{
+        double x = this->x, y = this->y;
+        return x*x + y*y;
+    }
+    double abs() const{
+        return std::sqrt(norm());
+    }
+
+    double x, y;
+};
+
+Point operator-(const Point& lhs, const Point& rhs){
+    return {lhs.x-rhs.x, lhs.y-rhs.y};
+}
+Point operator+(const Point& lhs, const Point& rhs){
+    return {lhs.x+rhs.x, lhs.y+rhs.y};
+}
+Point operator*(const Point& lhs, const double& val){
+    return {val*lhs.x, val*lhs.y};
+}
+Point operator*(const double& val, const Point& rhs){
+    return {val*rhs.x, val*rhs.y};
+}
+
+struct Segment{
+    bool doesIntersect(const Segment& rl) const{
+        Point ab = this->distination - this->source,
+            ac = rl.source - this->source,
+            ad = rl.distination - this->source,
+            cd = rl.distination - rl.source,
+            ca = this->source - rl.source,
+            cb = this->distination - rl.source;
+        return ab.cross(ac) * ab.cross(ad) < EPS &&
+               cd.cross(ca) * cd.cross(cb) < EPS;
+    }
+    Point intersectPoint(const Segment& rl) const{
+        if(!doesIntersect(rl)){} // ない
+        
+        Point ab = this->distination - this->source,
+            ac = rl.source - this->source,
+            bd = rl.distination - this->distination;
+        double dc = std::abs(ab.cross(ac)),
+            dd = std::abs(ab.cross(bd));
+        
+        
+        return rl.source + (dc / (dc+dd)) * (rl.distination - rl.source);
+    }
+    Point source, distination;
+};
+
+typedef long long ll;
+typedef unsigned long long ull;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+Segment ss[3];
+
+double triangleArea(Point p1, Point p2, Point p3){
+    Point v1 = p2-p1, v2 = p3-p1;
+    return 0.5 * std::abs(v1.cross(v2));
+}
+
+std::string solve(){
+    const std::string resultText[] = {"dai-kichi", "chu-kichi", "kichi", "syo-kichi", "kyo"};
+    
+    if(!ss[0].doesIntersect(ss[1]) ||
+       !ss[1].doesIntersect(ss[2]) ||
+       !ss[2].doesIntersect(ss[0])){
+        return resultText[4];
+    }
+
+    Point p1 = ss[0].intersectPoint(ss[1]),
+        p2 = ss[1].intersectPoint(ss[2]),
+        p3 = ss[2].intersectPoint(ss[0]);
+
+    double area = triangleArea(p1, p2, p3);
+    // printf("%.10f\n", area);
+    if(area + EPS > 1900000.0){
+        return resultText[0];
+    }else if(area + EPS > 1000000.0){
+        return resultText[1];
+    }else if(area + EPS > 100000.0){
+        return resultText[2];
+    }else if(area > 0.0){
+        return resultText[3];
+    }
+    return resultText[4];
+}
+
+int main(){
+    while(true){
+        std::cin >> ss[0].source.x >> ss[0].source.y >> ss[0].distination.x >> ss[0].distination.y;
+        if(std::abs(ss[0].source.x) < EPS &&
+           std::abs(ss[0].source.y) < EPS &&
+           std::abs(ss[0].distination.x) < EPS &&
+           std::abs(ss[0].distination.y) < EPS){
+            break;
+        }
+
+        FOR(i, 1, 3){
+            std::cin >> ss[i].source.x >> ss[i].source.y >> ss[i].distination.x >> ss[i].distination.y;
+        }
+        
+        std::cout << solve() << std::endl;
+    }
+}

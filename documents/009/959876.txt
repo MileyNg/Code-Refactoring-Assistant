@@ -1,0 +1,61 @@
+#include <map>
+#include <set>
+#include <queue>
+#include <ctime>
+#include <cmath>
+#include <string>
+#include <cstdio>
+#include <vector>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct NODE {
+	int x, v;
+	void rd()
+	{
+		char str[5];
+		scanf("%s", str);
+		str[0] == 'R' ? v = 1 : v = -1 ;
+		scanf("%d", &x);
+	}
+	void work() { x += v ; }
+}	ant[33];
+
+int main()
+{
+	//freopen("1.txt","r",stdin);
+	int n, m;
+	while (cin >> n >> m, n || m)
+	{
+		for (int i = 1; i <= n ; i++) ant[i].rd();
+
+		int cnt = 0, ti = 0;
+		int ans1, ans2;
+
+		while (cnt < n)
+		{
+			ti ++;
+			for (int i = 1; i <= n; i++) ant[i].work();
+			for (int i = 1; i <= n; i++)
+				for (int j = i + 1; j <= n; j++)
+					if (ant[i].x == ant[j].x)
+						swap (ant[i].v, ant[j].v);
+			for (int i = 1; i <= n; i++)
+				if (ant[i].x == m)
+				{
+					ans1 = i, ans2 = ti, cnt ++;
+				}
+			for (int i = 1; i <= n; i++)
+				if (ant[i].x == 0)
+				{
+					ans1 = i, ans2 = ti, cnt ++;
+				}
+		}
+
+		cout << ans2 << ' ' << ans1 << endl;
+	}
+    return 0;
+}

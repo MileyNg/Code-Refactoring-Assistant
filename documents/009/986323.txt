@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+double Dis(double x1, double y1, double x2, double y2);
+int main(void){
+	while(1){
+		int n;
+		int ans = 1;
+		vector< pair<double, double> > p;
+
+		cin >> n;
+		if(n == 0) break;
+
+		for(int i=0; i<n; i++){
+			pair<double, double> t;
+			cin >> t.first >> t.second;
+			p.push_back(t);
+		}
+
+		for(int i=0; i<n; i++){
+			for(int j=0; j<n; j++){
+				//中点
+				double mpx = (p[i].first + p[j].first) / 2.0;
+				double mpy = (p[i].second + p[j].second) / 2.0;
+				//2点間の距離
+				double d1 = Dis(p[i].first, p[i].second, p[j].first, p[j].second);
+				//p[i]からp[j]へ向かうベクトル
+				double v1x = (p[i].first - p[j].first) / d1;
+				double v1y = (p[i].second - p[j].second) / d1;
+				//中点から円の中心へ向かう単位ベクトル
+				double v2x = -v1y;
+				double v2y = v1x;
+				//中心から円の中心へ向かうベクトルの長さ
+				double d2 = sqrt(1.0 - (d1*d1/4.0)));
+
+				//円の中心の座標
+				double cx = mpx + v2x * d2;
+				double cy = mpy + v2y * d2;
+
+				int cnt = 0;
+				for(int k=0; k<n; k++){
+					if(k == i || k == j || Dis(cx, cy, p[k].first, p[k].second) <= 1.0)	cnt++;
+				}
+				if(cnt > ans){
+					ans = cnt;
+				}
+
+				cx = mpx - v2x * d2;
+				cy = mpy - v2y * d2;
+
+				cnt = 0;
+				for(int k=0; k<n; k++){
+					if(Dis(cx, cy, p[k].first, p[k].second) <= 1.0)	cnt++;
+				}
+				if(cnt > ans){
+					ans = cnt;
+				}
+			}
+		}
+
+		cout << ans << endl;
+
+
+	}
+	
+	return 0;
+}
+
+double Dis(double x1, double y1, double x2, double y2){
+	return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+}

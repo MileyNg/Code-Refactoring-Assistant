@@ -1,0 +1,33 @@
+#include<stdio.h>
+int main()
+{
+	double x1,y1,x2,y2,x3,y3,xp,yp;
+	double abc,pab,pac,pbc;
+
+	while(scanf("%lf %lf",&x1,&y1)!=EOF){
+		scanf("%lf %lf",&x2,&y2);
+		scanf("%lf %lf",&x3,&y3);
+		scanf("%lf %lf",&xp,&yp);
+
+
+		abc=(x2-x1)*(y3-y1)-(x3-x1)*(y2-y1);
+		if(abc<0) abc*=(-1.0);
+
+		pab=(x1-xp)*(y2-yp)-(x2-xp)*(y1-yp);
+		if(pab<0) pab*=(-1.0);
+
+		pac=(x1-xp)*(y3-yp)-(x3-xp)*(y1-yp);
+		if(pac<0) pac*=(-1.0);
+
+		pbc=(x2-xp)*(y3-yp)-(x3-xp)*(y2-yp);
+		if(pbc<0) pbc*=(-1.0);
+
+		if(abc==(pab+pac+pbc)){
+			printf("YES\n");
+		}
+		else{
+			printf("NO\n");
+		}
+	}
+	return 0;
+}

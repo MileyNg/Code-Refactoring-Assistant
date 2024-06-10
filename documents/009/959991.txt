@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+
+int Baseball()
+{
+    int num_of_runner = 0, num_of_out = 0, point = 0;
+    std::string event;
+    while(num_of_out != 3){
+        std::cin >> event;
+        if(event == "HIT"){
+            if(num_of_runner == 3)
+                ++point;
+            else
+                ++num_of_runner;
+        }
+        else if(event == "HOMERUN"){
+            point += 1 + num_of_runner;
+            num_of_runner = 0;
+        }
+        else
+            ++num_of_out;
+    }
+    
+    return point;
+}
+
+int main()
+{
+    u_int num_of_inning;
+    std::cin >> num_of_inning;
+    
+    for(u_int i = 0; i < num_of_inning; ++i){
+        std::cout << Baseball() << std::endl;
+    }
+    
+    return 0;
+}

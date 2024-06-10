@@ -1,0 +1,85 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+int N,E,T,W[333],G[1010],C[1010],S[1010][11];
+int d[333],rest[333];
+vi to[333];
+int used[333];
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	cin>>N>>E>>T,T--;
+	rep(i,N)cin>>W[i];
+	rep(i,E){
+		cin>>G[i]>>C[i],G[i]--;
+		rep(j,C[i]){
+			cin>>S[i][j],S[i][j]--;
+			to[S[i][j]].pb(i);
+		}
+	}
+
+	rep(i,N){
+		if(W[i] == 1) d[i] = 1;
+		else d[i] = INF;
+	}
+	rep(i,E){
+		rest[i] = C[i];
+	}
+	rep(_,N){
+		int cur = -1, best = INF;
+		rep(i,N)if(!used[i] && d[i] < best){
+			cur = i;
+			best = d[i];
+		}
+		if(cur == T){
+			return cout<<d[cur]<<endl,0;
+		}
+		if(cur == -1){
+			return cout<<-1<<endl,0;
+		}
+		//cout<<cur<<" "<<best<<endl;
+
+		used[cur] = 1;
+		rep(i,sz(to[cur])){
+			int T = to[cur][i];
+			rest[T]--;
+			if(rest[T] == 0){
+				vi cost;
+				rep(j,C[T]){
+					cost.pb(d[S[T][j]]);
+				}
+				sort(cost.begin(),cost.end(),greater<int>());
+				int c = 0;
+				rep(j,sz(cost)){
+					c = max(c, (int)cost[j] + j);
+				}
+				d[G[T]] = min(d[G[T]],c);
+			}
+		}
+	}
+}

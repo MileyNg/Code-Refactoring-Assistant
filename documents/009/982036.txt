@@ -1,0 +1,21 @@
+
+n = gets.strip.to_i
+
+hist = 6.times.map{0}
+
+n.times.each do
+  h = gets.strip.to_f
+
+  k = ((h - 160) / 5).floor
+  if k < 0
+    k = 0
+  elsif k > 5
+    k = 5
+  end
+
+  hist[k] += 1
+end
+
+for i in (0..5)
+  puts "#{i + 1}:" + "*" * hist[i]
+end

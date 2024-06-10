@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct num {
+  int s;
+  struct num *next;
+};
+
+struct num *first = NULL;
+
+void free_num(struct num *current)
+{
+  if (current == NULL) {
+    return;
+  } else {
+    free_num(current->next);
+    free(current->next);
+  }
+}
+
+int contains(struct num *current, int q)
+{
+  if (current == NULL) {
+    return 0;
+  } else if (current->s == q) {
+    return 1;
+  } else {
+    contains(current->next, q);
+  }
+}
+
+int main(void)
+{
+  int n, q;
+  int i, s, t;
+  int c;
+  struct num *current;
+
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%d", &s);
+
+    if (first == NULL) {
+      first = (struct num *)malloc(sizeof(struct num));
+      first->s = s;
+      first->next = NULL;
+    } else {
+      current = first;
+      while (1) {
+        if (current->next == NULL) {
+          current->next = (struct num *)malloc(sizeof(struct num));
+          current->next->s = s;
+          current->next->next = NULL;
+          break;
+        } else {
+          current = current->next;
+        }
+      }
+    }
+  }
+
+  scanf("%d", &q);
+  c = 0;
+  for (i = 0; i < q; i++) {
+    scanf("%d", &t);
+    if (contains(first, t)) {
+      c++;
+    }
+  }
+
+  printf("%d\n", c);
+
+  return 0;
+}

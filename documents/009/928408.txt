@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+void push(int );
+int pop();
+int st[100],sp=0;
+
+
+int main(){
+  int x;
+  char s[100];
+  int num1,num2;
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      num1 = pop();
+      num2 = pop();
+      push(num2+num1);
+
+    } else if ( s[0] == '-' ){
+      num1 = pop();
+      num2 = pop();
+      push(num2-num1);
+
+    } else if ( s[0] == '*' ){
+      num1 = pop();
+      num2 = pop();
+      push(num2*num1);
+
+    } else {
+      x = atoi(s);
+      push(x);
+    }
+  }
+  printf("%d\n",pop());
+  return 0;
+}
+
+
+
+void push(int a){
+  st[sp++]=a;
+}
+
+int pop(){
+  return st[--sp];
+}

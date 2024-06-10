@@ -1,0 +1,45 @@
+#include <iostream>
+
+using namespace std;
+
+class MaximumProfit
+{
+ public:
+  int solve( int n, int *r );
+};
+
+int MaximumProfit::solve( int n, int *r )
+{
+  int maxp = 0;
+  for(int i=0; i<n-1; i++)
+    for(int j=i+1; j<n; j++)
+      {
+        if((r[j] - r[i]) > maxp)
+          maxp = r[j] - r[i];
+      }
+  
+  return maxp;
+}
+
+int main( void )
+{
+
+  MaximumProfit *mp = new MaximumProfit();
+
+  
+  int n;
+  
+  cin >> n;
+
+  int *r = new int[n];
+  
+  for(int i=0; i<n; i++)
+    cin >> r[i];
+
+  cout << mp -> solve( n, r ) << endl;
+
+  delete mp;
+  delete[] r;
+
+  return 0;
+}

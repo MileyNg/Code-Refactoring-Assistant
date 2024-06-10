@@ -1,0 +1,35 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int m,n;
+int d[251];
+
+bool dfs(int x,bool *p){
+  x=max(0,x);
+  if(x>n)return true;
+  if(p[x]++)return false;
+  bool f=false;
+  for(int i=1;i<=m;i++){
+    int nx=x+i;
+    f|=nx>n||dfs(nx+d[nx],p);
+  }
+  return f;
+}
+
+int main(){
+  while(cin>>m>>n,m){
+    bool r[251]={};
+    for(int i=1;i<=n;i++){
+      cin>>d[i];
+    }
+    dfs(0,r);
+    bool f=false;
+    for(int i=0;i<=n;i++){
+      bool p[251]={};
+      f|=r[i]&&!dfs(i,p);
+    }
+    cout<<(!f?"OK":"NG")<<endl;
+  }
+}

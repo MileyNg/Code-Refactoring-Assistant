@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<string>
+#include<iostream>
+#include<algorithm>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int main(){
+	int n;
+	cin>>n;
+	
+	
+	rep(i,n){
+		string str;
+		cin>>str;
+		map<string,int> hoge;
+		
+		reps(j,1,str.size()){
+			string s1 = str.substr(0,j);
+			string s2 = str.substr(j,str.size()-j);
+			string s3 = s1;
+			string s4 = s2;
+			reverse(s3.begin(),s3.end());
+			reverse(s4.begin(),s4.end());
+			
+			hoge[s1+s4]=1;
+			hoge[s4+s1]=1;
+			
+			hoge[s2+s3]=1;
+			hoge[s3+s2]=1;
+			
+			hoge[s1+s2]=1;
+			hoge[s2+s1]=1;
+			
+			hoge[s3+s4]=1;
+			hoge[s4+s3]=1;
+			/*
+			cout<<" "<<s1<<s4<<endl;
+			cout<<" "<<s4<<s1<<endl;
+			cout<<" "<<s2<<s3<<endl;
+			cout<<" "<<s3<<s2<<endl;
+			cout<<" "<<s1<<s3<<endl;
+			cout<<" "<<s3<<s1<<endl;
+			cout<<" "<<s2<<s4<<endl;
+			cout<<" "<<s4<<s2<<endl;*/
+		}
+		
+		printf("%d\n",hoge.size());
+	}
+}

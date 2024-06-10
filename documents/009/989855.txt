@@ -1,0 +1,43 @@
+// iostream のscanf, printf では間に合わなかった
+#include <algorithm>
+#include <cstdio>
+#include <iostream>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+#define INF (1<<29)
+#define mp make_pair
+#define pb push_back
+
+typedef pair<int,int> pii;
+
+int main(){
+	int n, m;
+	cin >> n >> m;
+	vector<pii> treasure;
+	for( int i = 0; i < n; i++ ){
+		int x, y;
+		//cin >> x >> y;
+		scanf("%d %d", &x, &y);
+		treasure.pb( mp(x,y) );
+	}
+	sort(treasure.begin(), treasure.end());
+	for( int i = 0; i < m; i++ ){
+		int x1, y1, x2, y2;
+		//cin >> x1 >> y1 >> x2 >> y2;
+		scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
+		// search
+		int ans = 0;
+		vector<pii>::iterator it = lower_bound(treasure.begin(),treasure.end(),mp(x1,y1));
+		vector<pii>::iterator ite = upper_bound(treasure.begin(),treasure.end(),mp(x2,y2));
+		while( 1 ){
+			if( it == ite ) break;
+			if( x1 <= (*it).first && (*it).first <= x2 && y1 <= (*it).second && (*it).second <= y2 ) ans++;
+			it++;
+		}
+		//cout << ans << endl;
+		printf("%d\n", ans);
+	}
+}

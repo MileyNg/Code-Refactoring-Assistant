@@ -1,0 +1,42 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+void removeNotAlpha(string* s);
+void toLower(string* s);
+
+int main()
+{
+        string s, search_string;
+        int total=0;
+        cin >> search_string;
+        while(cin >> s){
+                if(s == "END_OF_TEXT") break;
+
+                // アルファベット以外を取り除く処理
+                removeNotAlpha(&s);
+                // 大文字を小文字に変換する処理
+                toLower(&s);
+
+                if(s==search_string) total++;
+        }
+ 
+       cout << total << endl;
+
+        return 0;
+}
+
+void removeNotAlpha(string* s)
+{
+        for(unsigned int i=0; i<s->size(); i++){
+                if(!isalpha(s->at(i))) s->erase(i, 1);
+        }
+}
+
+void toLower(string* s)
+{
+        for(unsigned int i=0; i<s->size(); i++){
+                s->at(i) = tolower(s->at(i));
+        }
+}

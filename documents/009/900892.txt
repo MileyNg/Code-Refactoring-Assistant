@@ -1,0 +1,39 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <cstring>
+
+using namespace std;
+
+int Coins[20];
+int Dest,hmCoins;
+
+const int INF = 999999;
+
+int dfs(int DestMoney,int LeftCoins){
+	if(DestMoney == 0){
+		return 0;
+	}else if(LeftCoins < 0 || DestMoney < 0){
+		return INF;
+	}else{
+		int MinAns = INF;
+		for(int i = 0;i <= DestMoney / Coins[LeftCoins];i++){
+			MinAns = min(dfs(DestMoney - Coins[LeftCoins] * i,LeftCoins - 1) + i,MinAns);
+		}
+		return MinAns;
+	}
+}
+
+int main()
+{
+	cin >> Dest >> hmCoins;
+
+	for(int i = 0;i < hmCoins;i++){
+		cin >> Coins[i];
+	}
+
+	cout << dfs(Dest,hmCoins - 1) << endl;
+
+	return 0;
+}

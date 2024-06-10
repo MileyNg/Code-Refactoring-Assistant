@@ -1,0 +1,85 @@
+INF = 5000
+$h = 0
+$w = 0
+
+def bfs(bord,a)
+	walks = [[1,0],[-1,0],[0,1],[0,-1]]
+	step = bord[a[0]][a[1]]
+	newpos = []
+	walks.each{|ws|
+		newpos[0] = a[0] + ws[0]
+		newpos[1] = a[1] + ws[1]
+		if newpos[0].between?(0,$h-1) and newpos[1].between?(0,$w-1) then
+			if bord[newpos[0]][newpos[1]] > (step+1) then
+				bord[newpos[0]][newpos[1]] = step + 1
+				bfs(bord,newpos)
+			end
+		end
+	}
+end
+
+loop{
+	str = gets.split.map(&:to_i)
+    if str.size != 2
+        next
+    end
+    $h,$w = str[0],str[1]
+
+	if ($h == 0 and $w == 0) then
+		exit
+	end
+	a = [0,0]
+	b = [0,0]
+	bord = Array.new($h).map{Array.new($w,0)}
+
+	$h.times{|y|	
+		bord[y] = gets.chomp.split(//).map.with_index{|c,i|
+			case c
+			when "A" then
+				a[0] = y
+				a[1] = i
+				0
+			when "B" then
+				b[0] = y
+				b[1] = i
+				INF
+			when "." then
+				INF
+			else
+				-1
+			end
+		}
+	}
+	bfs(bord,a)
+	pat = gets.chomp
+	bstep = 0
+	flag = 0
+	loop{
+		pat.each_char{|ch|
+			bstep += 1
+			case ch
+			when "2" then
+				b[0] += b[0] < $h-1 ? 1:0
+			when "4" then
+				b[1] -= b[1] > 0 ? 1:0
+			when "6" then
+				b[1] += b[1] < $w-1 ? 1:0
+			when "8" then
+				b[0] -= b[0] > 0 ? 1:0
+			when "5" then
+			end
+			if bord[b[0]][b[1]] != -1 and bstep >= bord[b[0]][b[1]] then
+				print("#{bstep} #{b[0].to_s} #{b[1]}\n")
+				flag = 1
+				break
+			end
+		}
+		if flag == 1 then
+			break;
+		end
+		if bstep >= ([$h,$w].max + 5) * pat.length then
+			print "impossible\n"
+			break
+		end
+	}
+}

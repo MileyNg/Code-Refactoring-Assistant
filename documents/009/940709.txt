@@ -1,0 +1,47 @@
+#include<stdio.h>
+ 
+int main(){
+    int S[10001],T[501],U[501];
+    int i,j,lengh1,lengh2,count=1,count2,count3,key;
+     
+    scanf("%d",&lengh1);
+    for(i=1;i<=lengh1;i++){
+        scanf("%d",&S[i]);}
+     
+    scanf("%d",&lengh2);
+    for(i=1;i<=lengh2;i++){
+        scanf("%d",&T[i]);}
+     
+    for(i=1;i<=lengh1;i++){
+        for(j=1;j<=lengh2;j++){
+        	if(S[i]==T[j]){
+        		U[count]=S[i];
+        		count++;}
+             
+        }
+    }  
+	count3=count;
+	for(i=1;i<=lengh1;i++){
+		
+		for(j=1,count2=1;j<=count3;j++){
+			if(U[j]==S[i] && count2<2) count2++;
+			else if(U[j]==S[i]&& count2>=2){
+				count--;
+				count2++;}
+		}}
+		
+	/*for(i=1;i<=lengh1;i++){
+		key=S[i];
+		for(j=i+1;j<=lengh1;j++){
+			if(key==S[j]&& j!=i) {count--;}
+		}}
+	*/
+	
+	
+	
+	
+    printf("%d\n",count);
+     
+     
+    return 0;
+}

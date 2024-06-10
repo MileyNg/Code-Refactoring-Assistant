@@ -1,0 +1,81 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <set>
+using namespace std;
+typedef pair<int,int> P;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<EPS)
+char s[1050];
+int main()
+{
+	int n;
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)
+	{
+		scanf("%s",s);
+		int now=0;
+		int cnt=0;
+		int l=0,r=0;
+		deque<char> ans;
+		int sz=strlen(s);
+		bool fir=true;
+		while(cnt<sz)
+		{
+			if(fir)
+			{
+				fir=false;
+				ans.push_front(s[0]);
+				if(s[1]=='-')now++;
+				else now--;
+				cnt+=3;
+				continue;
+			}
+			if(now>r)
+			{
+				ans.push_back(s[cnt]);
+				//cout << "push back " << s[cnt] << endl;
+				r=now;
+			}
+			if(now<l)
+			{
+				ans.push_front(s[cnt]);
+				//cout << "push front " << s[cnt] << endl;
+				l=now;
+			}
+			if(cnt+1==sz)break;
+			if(s[cnt+1]=='-')now++;
+			else now--;
+			cnt+=3;
+		}
+		for(deque<char>::iterator it=ans.begin();it!=ans.end();it++)
+		{
+			cout << *it;
+		}
+		cout << endl;
+	}
+	return 0;
+}

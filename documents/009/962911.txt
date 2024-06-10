@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+// Ans
+// 有向グラフの先の出次数が0のところから取り除いて、出力する
+
+#define N 21
+
+#define rep(i, n) for(int i=0; i<n; ++i)
+
+int main() {
+	int m, n, x, y, deg[N];
+	bool e[N][N];
+	memset(deg, 0, sizeof(deg));
+	memset(e, 0, sizeof(e));
+	cin >> m >> n;
+	rep(i, n) {
+		cin >> x >> y; --x; --y;
+		e[x][y] = true;
+		++deg[y];
+	}
+	rep(i, m) {
+		rep(j, m) {
+			if(deg[j]==0) {
+				deg[j] = -1;
+				cout << j+1 << endl;
+				rep(k, m) {
+					if(e[j][k]) --deg[k];
+				}
+			}
+		}
+	}
+	return 0;
+}

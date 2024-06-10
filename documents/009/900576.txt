@@ -1,0 +1,26 @@
+def primes_up_to(max = 10)
+  nums = (2..max).to_a
+
+  i = 0
+  prime = nums[i]
+  while prime**2 <= max
+    target = prime
+    j = 2
+    while target*j <= max
+      nums.delete target*j
+      j += 1
+    end
+    i += 1
+    prime = nums[i]
+  end
+  return nums
+end
+
+if __FILE__ == $0
+  primes = primes_up_to(10000)
+  while line = gets
+    n = line.to_i
+    break if n == 0
+    puts primes[0..(n - 1)].inject(:+)
+  end
+end

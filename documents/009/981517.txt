@@ -1,0 +1,117 @@
+//suhan lee,saitama university
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <complex>
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define rep(i,a,b) for(int i=(a);i<(b);++i)
+#define repn(i,n) for(int i=0;i<n;i++)
+#define EACH(t,i,c) for(t::iterator i=(c).begin(); i!=(c).end(); ++i)
+#define pb push_back 
+#define pf push_front
+int alphaset;
+bool equation(string inp,int& i);
+bool formula(string inp,int& i);
+bool alphabet(string inp,int& i);
+bool equation(string inp,int& i){
+  bool right,left;
+  left=formula(inp,i);
+  i++;
+  // cout<<"i:"<<i<<endl;
+  right=formula(inp,i);
+  //  cout<<alphaset<<endl<<left<<'='<<right<<endl;
+  return right==left;
+}
+bool formula(string inp,int& i){
+  bool left=alphabet(inp,i);
+  bool right;
+  while(true){
+    if(inp[i]=='+'){
+      right=formula(inp,++i);
+      left=right||left;
+    }
+    else    if(inp[i]=='*'){
+      right=formula(inp,++i);
+      left=right&&left;
+    }
+    else    if(inp[i]=='-'){
+      if(inp[++i]=='>'){
+	right=formula(inp,++i);
+	left=(!left)||right;
+      }
+    }
+    else return left;
+  }
+}
+bool alphabet(string inp,int& i){
+  if(inp[i]=='(')
+    {
+      int out=formula(inp,++i);
+      i++;return out;
+    }
+  else if(inp[i]=='-')
+    return !alphabet(inp,++i);
+  else if(inp[i]=='T'){i++;
+    return true;}
+  else if(inp[i]=='F'){i++;
+    return false;}
+
+  else{
+    //   cout<<inp[i]<<i<<"  "<<alphaset<<"  "<<
+    //    (alphaset & (1<<(inp[i]-'a'))>0)<<endl;
+    return alphaset & (1<<(inp[i++]-'a'));
+  }
+
+}
+
+
+int main(){
+  while(true){
+    string inp;
+    int i=0;
+    //  cout<<int('a')<<endl<<int('b');
+    cin>>inp;
+    if(inp=="#") break;
+    for(alphaset=0;alphaset<(1<<11);alphaset++){
+      i=0;
+      if(equation(inp,i)==false){
+	cout<<"NO"<<endl;
+	break;
+      }
+    }
+    if(alphaset==(1<<11)){
+      cout<<"YES"<<endl;
+    }
+  }
+  return 0;
+}

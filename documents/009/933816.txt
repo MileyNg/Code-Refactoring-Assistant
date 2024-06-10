@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+typedef struct Node {
+struct Node *prev;
+int key;
+struct Node *next;
+} NodePointer;
+NodePointer head;
+void insert(int );
+void delate(NodePointer *);
+int main()
+{
+int i,num,z;
+NodePointer *p;
+char process[15];
+int key;
+head = malloc(sizeof(NodePointer));
+head->next = &head;
+head->prev = &head;
+scanf("%d",&num);
+
+for(i=0;i<num;i++)
+{
+z=scanf("%s",process);
+if(z==EOF) break;
+if(strcmp(process ,"insert")==0) 
+{
+scanf("%d",&key);
+insert(key);
+}
+else if(strcmp(process,"delete")==0)
+{
+scanf("%d",&key);
+for(p=head->next;p->key!=key;p=p->next)
+{
+}
+delate(p);
+}
+
+else if (strcmp(process,"deleteFirst")==0) delate(head->next);
+else delete(head->prev);
+}
+
+for(p=head->next; p!=head->prev; p=p->next)
+{
+printf("%d ",*p->key);
+}
+return 0;
+}
+
+void insert (int key)
+{
+NodePointer x;
+x=malloc(sizeof(NodePointer));
+x->key = key;
+x->next = head->next;
+head->next->prev = &x;
+head->next = &x;
+x->prev = &head;
+}
+
+void delete(NodePointer *x)
+{
+x->prev->next = x->next;
+x->next->prev = x->prev;
+free(x);
+}

@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<map>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<iostream>
+using namespace std;
+int main(void)
+{
+	map<string,vector<int>> index;
+	vector<string> name;
+	string key;
+	int page;
+	while((cin>>key>>page))
+	{
+		int flg=0;
+		for(int f1=0;f1<name.size();f1++)
+		{
+			if(name[f1]==key)flg=1;
+		}
+		if(!flg)name.push_back(key);
+		index[key].push_back(page);
+	}
+	sort(name.begin(),name.end());
+	for(int f1=0;f1<name.size();f1++)
+	{
+		sort(index[name[f1]].begin(),index[name[f1]].end());
+		cout<<name[f1]<<endl;
+		for(int f2=0;f2<index[name[f1]].size();f2++)
+		{
+			cout<<index[name[f1]][f2]<<" ";
+		}
+		cout<<endl;
+	}
+	/*
+	fflush(stdin);
+	getchar();
+	*/
+	return 0;
+}

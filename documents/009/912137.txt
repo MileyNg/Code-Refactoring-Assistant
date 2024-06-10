@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+    vector<pair<int, long long int> > data;
+
+    int n;
+
+    while(cin >> n, n){
+        for(int i=0; i < n; i++){
+            int num, cost, goodsNum;
+            cin >> num >> cost >> goodsNum;
+
+            bool exist = false;
+            for(int j=0; j < data.size(); j++){
+                if(data[j].first == num){
+                    data[j].second += cost * goodsNum;
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist){
+                data.push_back(pair<int, long long int>(num, cost*goodsNum));
+            }
+        }
+        bool exist = false;
+        for(int i=0; i < data.size(); i++){
+            if(1000000 <= data[i].second){
+                cout << data[i].first << endl;
+                exist = true;
+            }
+        }
+        if(!exist)cout << "NA" << endl;
+        data.clear();
+    }
+}

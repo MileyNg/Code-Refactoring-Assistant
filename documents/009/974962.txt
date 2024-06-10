@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX 20000
+
+struct edge{
+  int to, cost;
+
+  edge(int to = -1, int cost = -1) : to(to), cost(cost) {}
+};
+
+int ans, N;
+edge e[MAX];
+
+void solve(int p, int c){
+  if(e[p].to != -1 && e[p].cost > c){
+    ans++;
+    solve(e[p].to, c+1);
+  }
+}
+
+int main(){
+  int M, t, s, d;
+
+  while(cin >> N >> M , N){
+    for(int i = 0 ; i < N ; i++){
+      e[i] = edge();
+    }
+
+    for(int i = 0 ; i < M ; i++){
+      cin >> t >> s >> d;
+      e[s-1] = edge(d-1, t);
+    }
+
+    ans = 1;
+    solve(0,0);
+    cout << ans << endl;
+  }
+
+  return 0;
+}

@@ -1,0 +1,49 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+  int n,k;
+  for(;cin>>n>>k,n;)
+    {
+      int has[n+2];
+      int lists[n+2];
+      memset(has,false,sizeof(has));
+      lists[n+1]=0;
+      bool zero=false;
+      for(int i=0;i<k;i++)
+	{
+	  int tmp;
+	  cin>>tmp;
+	  if(tmp!=0)
+	    has[tmp]=true;
+	  else
+	    zero=true;
+	}
+      for(int i=n;i>0;i--)
+	{
+	  int tmp=0;
+	  if(has[i])
+	    tmp=lists[i+1]+1;  
+	  lists[i]=tmp;
+	}
+      int ans=0;
+      for(int i=1;i<=n;i++)
+	{
+	  int tmp=lists[i];
+	  if(zero && i+tmp+1<=n)
+	    {
+	      //	      cout<<"i:"<<i<<" "<<lists[i]<<endl;
+	      //      cout<<"i+tmp+1:"<<i+tmp+1<<" "<<lists[i+tmp+1]<<endl;
+	      tmp+=1+lists[i+tmp+1];
+	    }
+	  ans=max(ans,tmp);
+	  //	  i+=tmp+1;
+	  //	  cout<<"@i:"<<i<<endl;
+	}
+      cout<<ans<<endl;
+    }
+
+}

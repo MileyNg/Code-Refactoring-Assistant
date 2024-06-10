@@ -1,0 +1,49 @@
+<?php
+  /*
+    AOJ 0100
+    @kankichi573
+   */
+while(fscanf(STDIN,"%d",$n) && ($n > 0))
+  {
+    $prev=-1;
+    $goukei=array();
+    $next=array();
+    
+    for($i=0;$i<$n;$i++)
+      {
+	
+	fscanf(STDIN,"%d %d %d",$sno,$kosuu,$tanka);
+	if(empty($goukei[$sno]))
+	  {
+	    $goukei[$sno] = $kosuu*$tanka;
+	    if($prev>0)
+	      {
+		$next[$prev]=$sno;
+		$next[$sno]=0;
+	      }
+	    else
+	      $start=$sno;
+	    $prev=$sno;
+	  }
+	else
+	  $goukei[$sno] += $kosuu*$tanka;
+      }
+    
+    $p=$start;
+    $count=0;
+
+    while(1)
+	    {
+	      if($goukei[$p]>=1000000)
+		{
+		  fprintf(STDOUT,"%d\n",$p);
+		  $count++;
+		}
+	      if($next[$p]==0)
+		 break;
+	      $p=$next[$p];
+	    }
+	if($count==0)
+	  fprintf(STDOUT,"NA\n");
+  }
+?>

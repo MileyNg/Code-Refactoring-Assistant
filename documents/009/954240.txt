@@ -1,0 +1,59 @@
+#include "stdio.h"
+#include "math.h"
+
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<double, double> P;
+
+/** Problem1132 : Circle and Point **/
+int main()
+{
+	int N, ans;
+	double X, Y;
+	vector<P> points;
+	
+	while (cin>>N, N) {
+		ans=0;
+		
+		points.clear();
+		rep(i, N) {
+			cin >> X >> Y;
+			points.push_back(P(X, Y));
+		}
+
+		for (double x=0.0; x<=10.0; x+=0.01) {
+			for (double y=0.0; y<=10.0; y+=0.01) {
+				int num=0;
+				vector<P>::iterator it = points.begin();
+				for (; it!=points.end(); it++) {
+					double d = (it->first-x)*(it->first-x) + (it->second-y)*(it->second-y);
+					if (d<1.001) {
+						num++;
+					}
+				}
+				if (ans<num)
+					ans = num;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

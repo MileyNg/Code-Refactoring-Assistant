@@ -1,0 +1,44 @@
+#include<stdio.h>
+#define N 100
+
+void swap(int *,int *);
+int c=0;
+
+int main(){
+  int i,j,n;
+  int mini,A[N];
+  
+  //input
+  scanf("%d",&n);
+  
+  for(i=0 ; i<n ; i++){
+    scanf("%d",&A[i]);
+  }
+  
+  
+  //SelectionSort  
+  for(i=0 ; i<n-1 ; i++){
+    mini = i;
+    for(j=i+1 ; j<n ; j++){  
+      if(A[j] < A[mini]){
+	mini = j;
+      }
+    }
+    swap(&A[i],&A[mini]);
+  }
+  //output
+  for(i=0 ; i<n ; i++){
+    printf("%d",A[i]);
+  }
+  printf("\n");
+  printf("%d\n",c);
+  return 0;
+}
+
+void swap(int *x,int *y){
+  int n;
+  c++;
+  n = *x;
+  *x = *y;
+  *y = n;
+}

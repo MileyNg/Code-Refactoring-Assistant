@@ -1,0 +1,176 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+struct node{
+  struct node *par;
+  struct node *left;
+  struct node *right;
+  int key;
+};
+typedef struct node* NodePointer;
+ 
+void init(void);
+NodePointer makenode(int);
+void insert(int,NodePointer);
+void preorder(NodePointer);
+void inorder(NodePointer);
+NodePointer find(int,NodePointer);
+void delete_node(NodePointer); 
+NodePointer tree_successor(NodePointer);
+NodePointer tree_minimum(NodePointer);
+
+NodePointer head, tail;
+ 
+int main(){
+  char str[7];
+  int n,k;
+  NodePointer x;
+ 
+  init();
+  scanf("%d" ,&n);
+  while(n--){
+    scanf("%s" ,str);
+ 
+    if(str[0] == 'i'){
+      scanf("%d" ,&k);
+      insert(k, head);
+    }else if(str[0] == 'p'){
+      inorder(head->right);
+      puts("");
+      preorder(head->right);
+      puts("");
+    }else if(str[0] == 'f'){
+      scanf("%d" ,&k);
+      if(find(k,head->right) != NULL){
+        printf("yes\n");
+      }else{
+        printf("no\n");
+      }
+    }else{
+      scanf("%d" ,&k);
+      x = find(k,head->right);
+      delete_node(x);
+    }
+  }
+ 
+  return 0;
+}
+ 
+void init(){
+  head = makenode(-1);
+  tail = makenode(-1);
+  head->par = head;;
+  head->right = tail;
+  head->left = tail;
+}
+ 
+NodePointer makenode(int k){
+  NodePointer x;
+ 
+  x = malloc(sizeof(struct node));
+  x->key = k;
+  x->left = x->right = tail;
+ 
+  return x;
+}
+ 
+void insert(int k, NodePointer p){
+  if(k < p->key){
+    if(p->left == tail){
+      p->left = makenode(k);
+      p->left->par = p;
+    }else{
+      insert(k,p->left);
+    }
+  }else{
+    if(p->right == tail){
+      p->right = makenode(k);
+      p->right->par = p;
+    }else{
+      insert(k,p->right);
+    }
+  }
+}
+ 
+void preorder(NodePointer node){
+  if(node != tail){
+    printf(" %d", node->key);
+    preorder(node->left);
+    preorder(node->right);
+  }
+}
+ 
+void inorder(NodePointer node){
+  if(node != tail){
+    inorder(node->left);
+    printf(" %d", node->key);
+    inorder(node->right);
+  }
+}
+ 
+NodePointer find(int k,NodePointer node){
+  if(node == tail){
+    return NULL;
+  }
+ 
+  if(node->key == k){
+    return node;
+  }else if(node->key < k){
+    return find(k,node->right);
+  }else{
+    return find(k,node->left);
+  }
+}
+
+void delete_node(NodePointer node){
+  NodePointer x,y;
+  if(node->left == tail || node->right == tail){
+    y = node;
+  }else{
+    y = tree_successor(node);
+  }
+
+  if(node->left != tail){
+    x = y->left;
+  }else{
+    x = y->right;
+  }
+
+  if(x != tail){
+    x->par = y->par;
+  }
+  if(y->par == tail){
+    node->par = x;
+  }else if(y == y->par->left){
+    y->par->left = x;
+  }else{
+    y->par->right = x;
+  }
+
+  if(y != node){
+    node->key = y->key;
+  }
+}
+
+NodePointer tree_successor(NodePointer x){
+  NodePointer y;
+
+  if(x->right != tail){
+    return tree_minimum(x->right);
+  }
+
+  y = x->par;
+  while(y != tail && x == y->right){
+    x = y;
+    y = y->par;
+  }
+
+  return y;
+}
+
+NodePointer tree_minimum(NodePointer x){
+  while(x->left != tail){
+    x = x->left;
+  }
+  return x;
+}

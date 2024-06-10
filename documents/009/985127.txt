@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+
+namespace contest12
+{
+    struct Vec2D
+    {
+        public double x;
+        public double y;
+
+        public Vec2D(double in_x, double in_y)
+        {
+            x = in_x;
+            y = in_y;
+        }
+    }
+
+    class Program
+    {
+        static public double Dot(Vec2D a, Vec2D b)
+        {
+            return a.x * b.y - a.y * b.x;
+        }
+
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                var read_line_origin = Console.ReadLine();
+                if (read_line_origin == null)
+                {
+                    break;
+                }
+
+                string[] read_line = read_line_origin.Split();
+
+                double x1 = double.Parse(read_line[0]);
+                double y1 = double.Parse(read_line[1]);
+                double x2 = double.Parse(read_line[2]);
+                double y2 = double.Parse(read_line[3]);
+                double x3 = double.Parse(read_line[4]);
+                double y3 = double.Parse(read_line[5]);
+
+                double inx = double.Parse(read_line[6]);
+                double iny = double.Parse(read_line[7]);
+
+                //3つの外積をとる符号が同じなら内側
+                //CAxAP
+                Vec2D vec_CA = new Vec2D();
+                Vec2D vec_AP = new Vec2D();
+                vec_CA.x = x3 - x1;
+                vec_CA.y = y3 - y1;
+                vec_AP.x = x1 - inx;
+                vec_AP.y = y1 - iny;
+                //外積
+                double ans_1 = Dot(vec_CA, vec_AP);
+
+                //ABxBP
+                Vec2D vec_BC, vec_CP;
+                vec_BC.x = x2 - x3;
+                vec_BC.y = y2 - y3;
+                vec_CP.x = x3 - inx;
+                vec_CP.y = x3 - iny;
+                //外積
+                double ans_3 = Dot(vec_BC, vec_CP);
+
+                //ABxBP
+                Vec2D vec_AB, vec_BP;
+                vec_AB.x = x1 - x2;
+                vec_AB.y = y1 - y2;
+                vec_BP.x = x2 - inx;
+                vec_BP.y = y2 - iny;
+                //外積
+                double ans_2 = Dot(vec_AB, vec_BP);
+
+                if (ans_1 > 0 && ans_2 > 0 && ans_3 > 0)
+                {
+                    Console.WriteLine("YES");
+                }
+                else if (ans_1 < 0 && ans_2 < 0 && ans_3 < 0)
+                {
+                    Console.WriteLine("YES");
+                }
+                else
+                {
+                    Console.WriteLine("NO");
+                }
+            }
+        }
+    }
+}

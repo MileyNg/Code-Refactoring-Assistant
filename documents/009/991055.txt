@@ -1,0 +1,52 @@
+def judge_x( str = "" )
+  part_nums = []
+  parts = str.split( "=" )
+
+  left_base = part_bundle( parts[0] )
+  right_base = part_bundle( parts[1] )
+
+  #移行処理　右辺にXを、左辺に値を移行する
+  left  = left_base["value"] - right_base["value"]
+  right = right_base["X"]    - left_base["X"]
+
+  if left % right == 0
+    p left / right
+  else
+    puts "NA"
+  end 
+end
+
+def part_bundle( part )
+  xvalue, value = 0, 0
+  nums = part.split( "+" )
+  nums.each{ |num|
+    xvalue += x_value( num )
+    value += reject_x_value( num )
+  }
+  { "value" => value, "X" => xvalue }
+end
+
+#Xの場所を探す
+def x_index( num )
+  x_index = []
+  num.chars.each_with_index{ |char, i|
+    if char == "X" 
+      x_index << i
+    end 
+  }
+  x_index
+end
+
+def x_value( num )
+  length = num.length
+  x_value = 0 
+  x_index( num ).each{ |index|
+    x_value += 10 ** ( length - index - 1 ) 
+  }
+  x_value
+end
+
+def reject_x_value( num_str )
+  num_str.gsub( "X", "0" ).to_i
+end
+judge_x( gets )

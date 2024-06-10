@@ -1,0 +1,90 @@
+
+#include<iostream>
+#include<vector>
+#include<queue>
+#define rep(i,n) for(i=0;i<n;i++)
+using namespace std;
+typedef pair<int,int> P;
+
+int N,M;
+int ans[5000];
+
+struct Node{
+	bool ef;
+	vector<int> et;
+	int size;
+}node[5000];
+
+struct Team{
+	int num;
+	int score;
+}team[5000];
+
+int compare( const void *s1,const void *s2 ){
+	int t1 = ((Team*)s1)->score;
+	int t2 = ((Team*)s2)->score;
+	return t1-t2;
+}
+
+void BFS( int st,int *cost ){
+	queue<P> que;
+	P now;
+	int i;
+	que.push( P(1,st) );
+	while( !que.empty() )
+	{
+		now = que.front();
+		que.pop();
+		Node *no = &node[ now.second ];
+		rep(i,no->size){
+			if( cost[ no->et[i] ] < now.first+1 ){
+				cost[no->et[i]] = now.first+1;
+				que.push( P( now.first+1,no->et[i] ) ); 
+			}			
+		}
+	}
+}
+
+
+int main(){
+	int i,a,b;
+	cin >> N >> M;
+	rep(i,N){
+		node[i].ef = false;
+	}
+	rep(i,M){
+		cin >> a >> b;
+		a--;b--;
+		node[a].et.push_back( b );
+		node[a].size++;
+		node[b].ef = true;
+	}
+	rep(i,N){
+		if(node[i].ef == false)
+		{
+			BFS( i,ans );
+			continue;
+		}
+	}
+	rep(i,N){
+		team[i].num = i+1;
+		team[i].score = ans[i];
+	}
+	qsort( team,N,sizeof(Team),compare );
+
+	int flag = 0,j;
+	rep(i,N){
+		cout << team[i].num << endl;
+		//if( team[i].score == 0 )
+		//	flag++;
+		rep(j,N){
+			if( j <= i )
+				continue;
+			if( team[i].score == team[j].score )
+				flag++;
+		}
+	}
+	flag = (flag)?1:0;
+	cout << flag << endl;
+	return 0;
+}

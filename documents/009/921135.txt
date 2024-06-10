@@ -1,0 +1,38 @@
+#include <cstdio>
+
+int n;
+int A[200];
+
+int aaa(int target, int sum, int index){
+  if(index == n){
+    return target == sum;
+  }
+  if(aaa(target, sum + A[index], index + 1)){
+    return 1;
+  }
+  if(aaa(target, sum, index + 1)){
+    return 1;
+  }
+  return 0;
+}
+
+int aaa(int target){
+  return aaa(target, 0, 0);
+}
+
+int main(){
+  int q;
+  int M[2000];
+  scanf("%d", &n);
+  for(int i = 0; i < n; i++){
+    scanf("%d", &A[i]);
+  }
+  scanf("%d", &q);
+  for(int i = 0; i < q; i++){
+    scanf("%d", &M[i]);
+  }
+  for(int i = 0; i < q; i++){
+    if(aaa(M[i])){puts("yes");}
+    else{puts("no");}
+  }
+}

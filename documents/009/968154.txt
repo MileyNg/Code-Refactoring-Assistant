@@ -1,0 +1,87 @@
+#include <iostream>
+#include <string.h>
+
+#define NM 10
+
+using namespace std;
+
+//1:black 2:white
+//black first
+
+int dx[13]={-1, 0, 1, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1};
+int dy[13]={ 0, 0, 0, 0,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+int dz[13]={ 1, 1, 1, 0, 1, 1, 1, 0, 0, 0,-1,-1,-1};
+
+int f[NM][NM][NM];
+
+
+int main(int argc, char const *argv[])
+{
+	int n,m;
+	int p;
+	int x,y,z;
+	int bow;
+	int cnt;
+
+	while(1){
+		memset(f,0,sizeof(f));
+
+		cin>>n>>m>>p;
+		if(n+m+p==0) break;
+
+		cnt = 1;
+
+		for(int i1=0;i1<p;i1++){
+			cin>>x>>y;
+		
+			if(cnt<m) {
+				if(i1%2==0) bow=1;
+				else bow=2;
+
+				for(z=1;z<=n;z++){
+					if(f[z][y][x]==0) break;
+				}
+				
+				f[z][y][x]=bow;
+
+				for(int i3=0;i3<13;i3++){
+					cnt=1;
+					int tempx=x+dx[i3];
+					int tempy=y+dy[i3];
+					int tempz=z+dz[i3];
+					while(f[tempz][tempy][tempx]==bow){
+						tempx+=dx[i3];
+						tempy+=dy[i3];
+						tempz+=dz[i3];
+						cnt++;
+					}
+					tempx=x-dx[i3];
+					tempy=y-dy[i3];
+					tempz=z-dz[i3];
+					while(f[tempz][tempy][tempx]==bow){
+						tempx-=dx[i3];
+						tempy-=dy[i3];
+						tempz-=dz[i3];
+						cnt++;
+					}
+
+					if(cnt>=m) {
+
+
+						if(bow==1) {
+							cout<<"Black "<<i1+1<<endl;
+						}
+						else {
+							cout<<"White "<<i1+1<<endl;
+						}
+
+						break;
+					}
+				}
+			}
+		}
+		if(cnt<m) cout<<"Draw"<<endl;
+
+	}
+	return 0;
+}

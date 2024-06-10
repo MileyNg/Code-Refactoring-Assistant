@@ -1,0 +1,66 @@
+tbl1strs = ('A'..'Z').map{|s| s} + [" ", ".", ",", "-", "'", "?"]
+
+tbl2 = {
+  "101" => " ",
+  "000000" => "'",
+  "000011" => ",",
+  "10010001" => "-",
+  "010001" => ".",
+  "000001" => "?",
+  "100101" => "A",
+  "10011010" => "B",
+  "0101" => "C",
+  "0001" => "D",
+  "110" => "E",
+  "01001" => "F",
+  "10011011" => "G",
+  "010000" => "H",
+  "0111" => "I",
+  "10011000" => "J",
+  "0110" => "K",
+  "00100" => "L",
+  "10011001" => "M",
+  "10011110" => "N",
+  "00101" => "O",
+  "111" => "P",
+  "10011111" => "Q",
+  "1000" => "R",
+  "00110" => "S",
+  "00111" => "T",
+  "10011100" => "U",
+  "10011101" => "V",
+  "000010" => "W",
+  "10010010" => "X",
+  "10010011" => "Y",
+  "10010000" => "Z"
+}
+
+tbl1 = {}
+(0...tbl1strs.length).each{|i| tbl1[tbl1strs[i]] = sprintf("%05b", i)}
+
+keys2 = tbl2.keys.sort{|a, b| a.length <=> b.length}
+
+while (line = gets)
+  str = line.chomp
+
+  enc1 = str.split("").map{|s| tbl1[s]}.join("")
+
+  enc2 = ''
+  while enc1.length > 0
+    failed = true
+    for key in keys2
+      klen = key.length
+      if enc1[0, klen] == key
+        enc2 << tbl2[key]
+        enc1[0, klen] = ''
+        failed = false
+      end
+    end
+
+    if failed
+      enc1 = ''
+    end
+  end
+
+  puts enc2
+end

@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+
+int w, h;
+int xs, ys, xg, yg;
+int cs;
+
+int calc(std::vector<std::vector<int> >&v, int x, int y){
+
+	int res = 0;
+
+	v[x][y] = 0;
+
+	if (y == xg&&x == yg)return 1;
+
+	if (x < h - 2 && v[x + 1][y] == cs)res += calc(v, x + 1, y);
+	if (x > 0 && v[x - 1][y] == cs)res += calc(v, x - 1, y);
+	if (y < w - 2 && v[x][y + 1] == cs)res += calc(v, x, y + 1);
+	if (y > 0 && v[x][y - 1] == cs)res += calc(v, x, y - 1);
+
+	return res;
+}
+
+int main(){
+
+	while (std::cin >> w >> h){
+
+		if (w == 0 && h == 0)break;
+
+		std::cin >> xs >> ys >> xg >> yg;
+
+		xs--, ys--, xg--, yg--;
+
+		int n;
+		std::cin >> n;
+
+		std::vector<std::vector<int> >v(h, std::vector<int>(w, 0));
+
+		for (int i = 0; i < n; i++){
+			int c, d, x, y;
+			std::cin >> c >> d >> x >> y;
+
+			x--, y--;
+
+			if (d == 0){
+				for (int j = y; j < y + 2; j++){
+					for (int k = x; k < x + 4; k++){
+						v[j][k] = c;
+					}
+				}
+			}
+			if (d == 1){
+				for (int j = y; j < y + 4; j++){
+					for (int k = x; k < x + 2; k++){
+						v[j][k] = c;
+					}
+				}
+			}
+		}
+
+		cs = v[ys][xs];
+
+		if (cs == v[yg][xg] && cs != 0){
+			if (calc(v, ys, xs))std::cout << "OK" << std::endl;
+			else std::cout << "NG" << std::endl;
+		}
+		else std::cout << "NG" << std::endl;
+	}
+	return 0;
+}

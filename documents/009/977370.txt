@@ -1,0 +1,27 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+
+void main() {
+  int taro, hanako;
+
+  readln;
+
+  foreach (string line; stdin.lines) {
+    auto words = line.chomp.split;
+
+    if (words[0] > words[1]) {
+      taro += 3;
+    } else if (words[0] < words[1]) {
+      hanako += 3;
+    } else {
+      taro++;
+      hanako++;
+    }
+  }
+
+  writeln(taro, " ", hanako);
+}

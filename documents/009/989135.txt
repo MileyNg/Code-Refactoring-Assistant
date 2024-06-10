@@ -1,0 +1,94 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <set>
+#include <numeric>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <complex>
+#include <cassert>
+#include <iomanip>
+#include <tuple>
+using namespace std;
+typedef long long LL;
+typedef tuple<double,int,int> T;
+void exec()
+{
+	double dist[1<<8][30]={0};
+	double ts[8];
+	double table[30][30]={0};
+	int n,m,p,a,b;
+	cin >> n >> m >> p >> a >> b;
+	a--;b--;
+	if(n==0)exit(0);
+	for(int i=0;i<n;i++){
+		cin >> ts[i];
+	}
+	for(int i=0;i<p;i++){
+		int x,y,z;
+		cin >> x >> y >> z;
+		x--;y--;
+		table[x][y]=z;
+		table[y][x]=z;
+	}
+	double M=1e10;
+	fill(dist[0],dist[0]+(1<<8)*30,M);
+	priority_queue<T, vector<T>, greater<T> > pq;
+	pq.push(T(0,0,a));
+	dist[0][a]=0;
+	double ret=M;
+	int c=0;
+	while(pq.size())
+	{
+		c++;
+		T t=pq.top();
+		double d=get<0>(t);
+		int u=get<1>(t);
+		int p=get<2>(t);
+		pq.pop();
+		if(dist[u][p]<d)
+		{
+			continue;
+		}
+		for(int i=0;i<n;i++){
+			int v=u|(1<<i);
+			if(u==v)continue;
+			for(int q=0;q<m;q++){
+				if(table[p][q]==0)continue;
+				double d2=d+table[p][q]/ts[i];
+				if(d2<dist[v][q])
+				{
+					pq.push(T(d2,v,q));
+					dist[v][q]=d2;
+					if(q==b){
+						ret=min(ret,d2);
+					}
+				}
+			}
+		}
+	}
+	//cout << c;
+	if(ret==M){
+		cout << "Impossible" << endl;
+	}
+	else
+	{
+		cout << ret << endl;
+	}
+}
+int main() {
+	cout << setprecision(20);
+	while(1)exec();
+}

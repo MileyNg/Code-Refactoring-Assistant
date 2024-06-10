@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+using ll = long long int;
+ll M, rd, rr, cd, cr;
+
+ll exc(ll rate, ll c) {
+    ll x = c;
+    while (1) {
+        if (x > M) return -1;
+        ll y = rate * x / 100;
+        if (y >= c) return x;
+        x++;
+    }
+}
+
+int main() {
+    cin >> M >> rd >> rr >> cd >> cr;
+    ll a = exc(rd, cd);
+    if (a == -1) {
+        cout << -1 << endl;
+        return 0;
+    }
+    M -= a;
+    ll b = exc(rr, cr);
+    if (b == -1) {
+        cout << -1 << endl;
+        return 0;
+    }
+    cout << M - b << endl;
+    return 0;
+}

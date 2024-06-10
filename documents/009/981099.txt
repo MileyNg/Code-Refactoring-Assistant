@@ -1,0 +1,173 @@
+### class definition
+
+class Grid
+  attr_accessor :w, :h, :vals, :size
+
+  def initialize(h, w, strs = [])
+    @h = h
+    @w = w
+    @size = 0
+
+    if strs.empty?
+      @vals = h.times.map{0}
+    else
+      @vals = []
+      strs.each do |str|
+        bits = str.strip.split("").map{|s| s == '#' ? "1" : "0"}.reverse
+        @vals.push bits.join("").to_i(2)
+        bits.each{|b| @size += 1 if b == '1'}
+      end
+    end
+  end
+
+  def ==(g0)
+    g0.is_a?(Grid) ? (@h == g0.h && @w == g0.w && @vals == g0.vals) : false
+  end
+
+  def to_s
+    "(#{@h} x #{@w})[#{@size}]\n" +
+      @vals.map{|bits| sprintf("%0*b", @w, bits).reverse + "\n"}.join('')
+  end
+
+  def val(x, y)
+    ((@val[y] >> x) & 1) != 0
+  end
+end
+
+class Frame < Grid
+  def dcopy
+    f0 = Frame.new(@h, @w)
+    f0.size = @size
+    for y in (0...@h)
+      f0.vals[y] = @vals[y]
+    end
+    f0
+  end
+
+  def fit?(x0, y0, pc)
+    for y in (0...pc.h)
+      pcb = (pc.vals[y] << x0)
+      frb = @vals[y0 + y]
+      return false if ((frb ^ pcb) & frb) != frb
+    end
+    true
+  end
+
+  def set(x0, y0, pc, bit)
+    for y in (0...pc.h)
+      pcb = (pc.vals[y] << x0)
+      if bit
+        @vals[y0 + y] |= pcb
+      else
+        @vals[y0 + y] &= ~pcb
+      end
+    end
+    true
+  end
+end
+
+### subroutines
+
+class Piece < Grid
+  def rotate
+    p0 = Piece.new(@w, @h)
+    p0.size = @size
+    for y in (0...@h)
+      for x in (0...@w)
+        if (@vals[y] & (1 << x)) != 0
+          p0.vals[@w - 1 - x] |= (1 << y)
+        end
+      end
+    end
+    p0
+  end
+end
+
+def find_locs(pc, fr)
+  max_h = fr.h - pc.h
+  max_w = fr.w - pc.w
+
+  locs = []
+  for y in (0..max_h)
+    for x in (0..max_w)
+      if fr.fit?(x, y, pc)
+        locs.push [x, y]
+      end
+    end
+  end
+
+  locs
+end
+
+def check_pieces(k, pcset, fr)
+  #p "check_pieces(#{k})"
+  return true if k >= pcset.length
+
+  for pcl in pcset[k]
+    pc, locs = pcl
+
+    max_h = fr.h - pc.h
+    max_w = fr.w - pc.w
+
+    for xy in locs
+      fr.set(xy[0], xy[1], pc, false)
+      return true if check_pieces(k + 1, pcset, fr)
+      fr.set(xy[0], xy[1], pc, true)
+    end
+  end
+
+  return false
+end
+
+### main
+
+while true
+  h, w = gets.strip.split(" ").map{|s| s.to_i}
+  break if h == 0 && w == 0
+
+  frame = Frame.new(h, w, h.times.map{gets})
+  framesize = h * w - frame.size
+  #p frame
+
+  n = gets.strip.to_i
+
+  pcs = []
+  n.times.each do
+    ph, pw = gets.strip.split(" ").map{|s| s.to_i}
+
+    pc0 = Piece.new(ph, pw, ph.times.map{gets})
+    locs0 = find_locs(pc0, frame)
+    pcls = [[pc0, locs0]]
+
+    for i in (1..3)
+      pc1 = pc0.rotate
+      if ! pcls.map{|pcl| pcl[0]}.include?(pc1)
+        locs1 = find_locs(pc1, frame)
+        pcls.push [pc1, locs1] if ! locs1.empty?
+      end
+      pc0 = pc1
+    end
+    pcs.push pcls
+    #p pcls
+  end
+
+  pi = gets.strip.to_i
+
+  pi.times.each do
+    choice = gets.strip.split(" ").map{|s| s.to_i - 1}
+    np = choice.shift + 1
+
+    ssize = choice.inject(0){|sum, i| sum + pcs[i][0][0].size}
+
+    if ssize != framesize
+      puts "NO"
+      next
+    end
+
+    frame0 = frame.dcopy
+    pcset = choice.map{|i| pcs[i]}.sort{|a, b| b[0][0].size <=> a[0][0].size}
+
+    tf = check_pieces(0, pcset, frame0)
+    puts tf ? "YES" : "NO"
+  end
+end

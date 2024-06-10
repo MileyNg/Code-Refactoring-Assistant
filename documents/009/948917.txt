@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAX_V 110
+const int INF = 1e9;
+
+int cost[MAX_V][MAX_V];
+int mincost[MAX_V];
+bool used[MAX_V];
+int V;
+
+int prim(){
+  for(int i = 0 ; i < V ; i++){
+    mincost[i] = INF;
+    used[i] = false;
+  }
+  mincost[0] = 0;
+  int res = 0;
+  
+  while(true){
+    int v = -1;
+    for(int u = 0 ; u < V ; u++){
+      if(!used[u] && (v == -1 || mincost[u] < mincost[v])) v = u;
+    }
+    if(v == -1) break;
+    
+    used[v] = true;
+    res += mincost[v];
+    for(int u = 0 ; u < V ; u++){
+      mincost[u] = min(mincost[u], cost[v][u]);
+    }
+  }
+  return res;
+}
+
+void init(){
+  for(int i = 0 ; i < MAX_V ; i++){
+    mincost[i] = used[i] = 0;
+    for(int j = 0 ; j < MAX_V ; j++){
+      cost[i][j] = INF;
+    }
+  }  
+}
+
+int main(){
+  int n, m;
+  while(cin >> n, n){
+    init();
+    cin >> m;
+    V = n;
+    int from, to, C;
+    for(int i = 0 ; i < m ; i++){
+      scanf("%d,%d,%d", &from, &to, &C);
+      cost[from][to] = C - 100;
+      cost[to][from] = C - 100;
+    }
+    
+    int ans = prim();
+    cout << ans / 100 << endl;    
+  }
+  
+  return 0;
+}

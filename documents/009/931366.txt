@@ -1,0 +1,32 @@
+def prime(a)
+    if a==1
+        return false
+    end
+    limit = Math::sqrt(a).to_i
+    for i in 2..limit
+        if a%i==0
+            return false
+        end
+    end
+    return true
+end
+
+while true
+    line = gets
+    a, d, n = line.split.map(&:to_i)
+    if a==0 && d==0 && n==0
+        break
+    end
+    count = 0
+
+    while true
+        if prime a
+            count += 1
+        end
+        if count>=n
+            puts a
+            break
+        end
+        a += d
+    end
+end

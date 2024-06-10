@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+void ch(int *x, int *y){
+	int temp = *x;
+	*x = *y;
+	*y =temp;
+}
+
+int main(void) {
+	int a, b, c;
+	scanf("%d %d %d", &a, &b, &c);
+	
+	if(c<b) ch(&b,&c);
+	if(c<a) ch(&a,&c);
+	if(b<a) ch(&a,&b);
+	
+	printf("%d %d %d\n", a, b, c);
+		
+	return 0;
+}

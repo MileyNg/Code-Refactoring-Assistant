@@ -1,0 +1,10 @@
+def solve(s)
+  i = s.index("@")
+  return s unless i
+  s[i,3] = s[i+2] * s[i+1].to_i
+  solve(s)
+end
+
+gets(nil).chomp.split("\n").each do |s|
+  puts solve(s)
+end

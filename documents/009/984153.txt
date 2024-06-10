@@ -1,0 +1,115 @@
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <vector>
+#include <queue>
+#include <string>
+#include <complex>
+#include <stack>
+#include <set>
+#include <map>
+
+#define REP(i,n) for (int i = 0; i < (n); i++)
+#define RREP(i,n) for (int i = (n)-1; i >= 0; i--)
+#define FOR(i,s,n) for (int i = (s); i < (n); i++)
+#define allof(c) c.begin(), c.end()
+#define partof(c,i,n) c.begin() + (i), c.begin() + (i) + (n)
+#define EPS 1e-9
+#define INF 1000000000
+using namespace std;
+
+typedef complex<int> POINT;
+template <class T>
+class vevector : public vector<vector<T>>
+{
+public:
+	using vector<vector<T>>::operator []; 
+	T& operator [](const POINT &index) { return (*this)[index.real()][index.imag()]; }
+};
+
+template <class T> T read() { T t; cin >> t; return t; }
+template <> POINT read<POINT>() { int x, y; cin >> x >> y; return POINT(x, y); }
+template <class T> vector<T> read(int n) { vector<T> v; REP(i,n) { v.push_back(read<T>()); } return v; }
+template <class T> vevector<T> read(int n, int m) { vevector<T> v; REP(i,n) v.push_back(read<T>(m)); return v; }
+template <class T> vevector<T> readjag(int n) { vevector<T> v; REP(i,n) { READ(int,m); v.push_back(read<T>(m)); } return v; }
+template <class T> void write(const T &t) { cout << t << endl; }
+template <class T> void write(const T &t, const T &t2) { cout << t << ' ' << t2 << endl; }
+
+template <class T> void write(const vector<T> &v)
+{
+	ostringstream ss; 
+	for (auto x : v) ss << x << ' ';
+	auto s = ss.str();
+	cout << s.substr(0, s.length() - 1) << endl;
+}
+
+template <class T> string toString(const T &t) { stringstream ss; ss << t; return ss.str(); }
+
+struct _Reader { template <class T> _Reader operator ,(T &rhs) { cin >> rhs; return *this; } };
+#define READ(t,...) t __VA_ARGS__; _Reader(), __VA_ARGS__
+#define countof(a) (sizeof(a)/sizeof(a[0]))
+#define COMPARISON(t,a,b) [](const t & a, const t & b) -> bool
+
+// primes //
+vector<unsigned char> isPrime;
+vector<int> primes;
+void initPrimes(int n)
+{
+	isPrime = vector<unsigned char>(n + 1, true);
+	isPrime[0] = isPrime[1] = false;
+	FOR(i, 2, n)
+	{
+		if (!isPrime[i]) continue;
+		primes.push_back(i);
+		for (int j = i * 2; j <= n; j += i)
+			isPrime[j] = false;
+	}
+}
+
+// iota iterator //
+struct iotait
+{
+	int n;
+	iotait(int n = 0) : n(n) { }
+	iotait &operator ++() { ++n; return *this; }
+	int operator *() { return n; }
+};
+
+// start up //
+void solve();
+int main() { solve(); return 0; }
+
+
+/// template end ///
+
+void solve()
+{
+	REP (testcase, INF)
+	{
+		READ(int, N);
+		if (!(N)) { break; }
+		
+		vevector<int> v = readjag<int>(N + 1);
+		vector<int> k = v.back(); v.erase(v.end() - 1);
+		
+		vector<int> innocent(N);
+		for (auto l : k)
+		{
+			REP(i, N) { innocent[i] |= count(allof(v[i]), l) == 0; }
+		}
+
+		if (count(allof(innocent), 0) == 1)
+		{
+			write(find(allof(innocent), 0) - innocent.begin() + 1);
+		}
+		else
+		{
+			write(-1);
+		}
+	}
+}

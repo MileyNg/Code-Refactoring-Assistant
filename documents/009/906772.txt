@@ -1,0 +1,14 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n,p,q,x,y,res;
+int main(){
+  cin>>x>>y>>n>>p>>q;
+  while(--n){
+    cin>>x>>y;
+    x-=p; y-=q;
+    if(x*y<0)res+=abs(x)+abs(y);
+    else res+=max(abs(x),abs(y));
+    p+=x; q+=y;
+  }
+  cout<<res<<endl;
+}

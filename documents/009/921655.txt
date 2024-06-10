@@ -1,0 +1,106 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+const int IINF = INT_MAX;
+
+enum Symbol { EXPS,EXPE,TERMS,TERME,FACTOR };
+
+int exp(string &s,int &cur){
+
+  stack<Symbol> sstack;
+  stack<int> vstack;
+  stack<char> ostack;
+  sstack.push(EXPS);
+  ostack.push('@'); // dammy;
+  while( !sstack.empty() ){
+    Symbol syb = sstack.top();
+    char opr;
+    int v1,v2,value;
+    switch(syb){
+    case EXPS:
+      sstack.pop();
+      sstack.push(EXPE);
+      sstack.push(TERMS);
+      break;
+
+    case EXPE:
+      opr = ostack.top();
+      if( opr == '+' || opr == '-' ) {
+        ostack.pop();
+        v1 = vstack.top(); vstack.pop();
+        v2 = vstack.top(); vstack.pop();
+        vstack.push(((opr=='+')?(v2+v1):(v2-v1)));
+      }
+      if( s[cur] == '+' || s[cur] == '-' ){
+        sstack.push(TERMS);
+        ostack.push(s[cur++]);
+      } else {
+        sstack.pop();
+      }
+      break;
+
+    case TERMS:
+      sstack.pop();
+      sstack.push(TERME);
+      sstack.push(FACTOR);
+      break;
+
+    case TERME:
+      opr = ostack.top();
+      if( opr == '*' || opr == '/' ){
+        ostack.pop();
+        v1 = vstack.top(); vstack.pop();
+        v2 = vstack.top(); vstack.pop();
+        vstack.push(((opr=='*')?(v2*v1):(v2/v1)));
+      }
+
+      if( s[cur] == '*' || s[cur] == '/' ){
+        sstack.push(FACTOR);
+        ostack.push(s[cur++]);
+      } else {
+        sstack.pop();
+      }
+      break;
+
+    case FACTOR:
+      if( s[cur] == '(' ){
+        ++cur;
+        sstack.push(EXPS);
+        ostack.push('(');
+      } else if( s[cur] == ')' ){
+        ++cur;
+        sstack.pop();
+        ostack.pop();
+      } else if( '0' <= s[cur] && s[cur] <= '9' ) {
+        value = 0;
+        while( '0' <= s[cur] && s[cur] <= '9' )( value *= 10 ) += s[cur++] - '0';
+        vstack.push(value);
+        sstack.pop();
+      } else assert(false); // invalid form
+      break;
+
+    default:
+      break;
+    }
+
+  }
+  assert(vstack.size() == 1);
+  return vstack.top();
+}
+
+int main(){
+  int T;
+  cin >> T;
+  cin.ignore();
+  while(T--){
+    string s;
+    int cur = 0;
+    getline(cin,s);
+    cout << exp(s,cur) << endl;
+  }
+  return 0;
+}

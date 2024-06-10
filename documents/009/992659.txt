@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<stack>
+#include<queue>
+#include<cmath>
+#include<algorithm>
+#include<functional>
+//--
+#include<list>
+#include<deque>
+#include<bitset>
+#include<set>
+#include<map>
+#include<cstdio>
+#include<cstring>
+#include<sstream>
+#include<complex>
+#define X first
+#define Y second
+#define pb push_back
+#define rep(X,Y) for (int (X) = 0;(X) < (Y);++(X))
+#define rrep(X,Y) for (int (X) = Y-1;(X) >=0;--(X))
+#define all(X) (X).begin(),(X).end()
+#define rall(X) (X).rbegin(),(X).rend()
+
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef complex<double> pt;
+
+pt proj(pt a,pt to){
+  return (conj(a)*to).real()/norm(to)*to;
+}
+
+int main(){
+  int i,j,k,n;
+  pt o,p,q;
+  cin>>o.real()>>o.imag()>>p.real()>>p.imag();
+  cin>>n;
+  rep(i,n){
+    cin>>q.real()>>q.imag();
+    q=proj(q-o,p-o)+o;
+    printf("%.9f %.9f\n",q.real(),q.imag());
+  }
+  return 0;
+}

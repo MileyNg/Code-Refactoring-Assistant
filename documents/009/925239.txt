@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int i, f, buf, height[10], rank[3];
+	
+	for (i = 0; i < 10; i++){
+		scanf("%d", &height[i]);
+	}
+	
+	for (i = 0; i < 3; i++){
+		rank[i] = 0;
+	}
+	
+	for (i = 0; i < 3; i++){
+		for (f = 0; f < 10; f++){
+			if (height[f] > rank[i]){
+				buf = rank[i];
+				rank[i] = height[f];
+				height[f] = buf;
+			}
+		}
+	}
+	
+	for (i = 0; i < 3; i++){
+		printf("%d\n", rank[i]);
+	}
+	
+	return (0);
+}

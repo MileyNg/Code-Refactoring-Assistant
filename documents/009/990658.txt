@@ -1,0 +1,98 @@
+#include <iostream>
+#include <string>
+#include <queue>
+using namespace std;
+
+typedef pair<int, int> P;
+
+int base[11];
+
+int enc(int n, const int *c) {
+  int r = 0;
+  for (int i=0; i<n; i++) {
+    r += c[i] * base[i];
+  }
+  return r;
+}
+
+void dec(int n, int p, int *c) {
+  int t = p;
+  for (int i=0; i<n; i++) {
+    c[i] = t % 3; 
+    t /= 3;
+  }
+}
+
+int main() {
+  string line;
+  int n, c0, rr, gg, bb, c, m, t1, t2, t3;
+  int color[10];
+  bool used[60000];
+  bool found;
+  queue<P> q;
+
+  base[0] = 1;
+  for (int i=1; i<=10; i++) {
+    base[i] = base[i-1]*3;
+  }
+
+  while (1) {
+    getline(cin, line);
+    if (line == "0") break;
+    n = line.length();
+    for (int i=0; i<n; i++) {
+      if (line[i] == 'r') {
+        color[i] = 0;
+      } else if (line[i] == 'g') {
+        color[i] = 1;
+      } else {
+        color[i] = 2;
+      }
+    }
+    for (int i=0; i<base[n]; i++) {
+      used[i] = false;
+    }
+
+    while (!q.empty()) q.pop();
+    c0 = enc(n, color);
+    for (int i=0; i<n; i++) color[i] = 0;
+    rr = enc(n, color);
+    for (int i=0; i<n; i++) color[i] = 1;
+    gg = enc(n, color);
+    for (int i=0; i<n; i++) color[i] = 2;
+    bb = enc(n, color);
+    found = false;
+    q.push(make_pair(c0, 0));
+    used[c0] = true;
+    while (!q.empty()) {
+      c = q.front().first;
+      m = q.front().second;
+      q.pop();
+      if (c == rr || c == gg || c == bb) {
+        found = true;
+        break;
+      }
+      dec(n, c, color);
+      for (int i=0; i<n-1; i++) {
+        if (color[i] != color[i+1]) {
+          t1 = color[i];
+          t2 = color[i+1];
+          t3 = 3 - t1 - t2;
+          color[i] = color[i+1] = t3;
+          c = enc(n, color);
+          color[i] = t1;
+          color[i+1] = t2;
+          if (used[c]) continue;
+          q.push(make_pair(c, m+1));
+          used[c] = true;
+        }
+      }
+    }
+    if (!found) {
+      cout << "NA" << endl;
+    } else {
+      cout << m << endl;
+    }
+  }
+  return 0;
+}

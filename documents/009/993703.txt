@@ -1,0 +1,37 @@
+#include<cmath>
+#include<cstring>
+#include<string>
+#include<cstdio>
+#include<algorithm>
+#include<map>
+#include<queue>
+#include<iostream>
+using namespace std;
+int N,M;
+int main(){
+  while(cin >> N && N ){
+    int a1=0,a2=0;
+    int an,suman=0;
+
+    for(int i=0;i<N-1;i++){
+      int an;
+      cin >> an;
+      suman += an;
+      a1 += 90-abs(90-an);
+    }
+    a1 += 90-abs(90-(360-suman));
+    suman = 0;
+    cin >> M;
+    for(int i=0;i<M-1;i++){
+      int an;
+      cin >> an;
+      suman += an;
+      a2 += 90-abs(90-an);
+    }
+    a2 += 90-abs(90-(360-suman));
+    // printf("%d %d\n",a1,a2);
+    if( a1==a2 ) cout << 0 << endl;
+    else if( a1 > a2 ) cout << 1 << endl;
+    else cout << 2 <<endl;
+  }
+}

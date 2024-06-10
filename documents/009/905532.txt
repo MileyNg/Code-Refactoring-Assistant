@@ -1,0 +1,42 @@
+#include <algorithm>
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+void merge_max ( map<int, int>& dest, map<int, int> src )
+{
+	map<int, int>::iterator it;
+	for ( it = src.begin(); it != src.end(); ++it ) {
+		int key = it->first;
+		dest[key] = max( dest[key], src[key] );
+	}
+}
+
+int main ( void )
+{
+	int front, side;
+
+	while ( cin >> front >> side, front | side ) {
+		int in;
+		map<int, int> mf, ms;
+
+		for ( int i = 0; i < front; ++i ) {
+			cin >> in;
+			++mf[in];
+		}
+		for ( int i = 0; i < side; ++i ) {
+			cin >> in;
+			++ms[in];
+		}
+
+		merge_max( mf, ms );
+
+		int ans = 0;
+		for ( map<int, int>::iterator it = mf.begin(); it != mf.end(); ++it ) {
+			ans += it->first * it->second;
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

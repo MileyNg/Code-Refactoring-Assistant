@@ -1,0 +1,240 @@
+#include <algorithm>
+#include <array>
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <utility>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+constexpr int MAX_SIZE = 10;
+constexpr int MAX_N = 10;
+
+int h, w;
+array<string, MAX_SIZE> puzzle;
+
+int n;
+array<char, MAX_N> in;
+
+array<char, 128> letters;
+array<bool, MAX_N> is_operator;
+array<bool, MAX_N> not_operator;
+array<bool, MAX_N> not_zero;
+array<unordered_set<int>, MAX_N> left_idx, right_idx;
+
+int parse(const string &s, int l, int r) {
+	for(int i = r - 1; i >= l; --i) {
+		if(s[i] == '+') return parse(s, l, i) + parse(s, i + 1, r);
+		if(s[i] == '-') return parse(s, l, i) - parse(s, i + 1, r);
+	}
+
+	for(int i = r - 1; i >= l; --i) {
+		if(s[i] == '*') return parse(s, l, i) * parse(s, i + 1, r);
+		if(s[i] == '/') {
+			const int left = parse(s, l, i);
+			const int right = parse(s, i + 1, r);
+
+			if(right == 0) throw "division by zero";
+			if(left % right) throw "division leaving a remainder";
+
+			return left / right;
+		}
+	}
+
+	if(r <= l || !isdigit(s[l]) || (s[l] == '0' && r - l > 1)) throw "parse error";
+	return stoi(s.substr(l, r - l));
+}
+
+bool valid(const vector<int> &expression) {
+	const int n = expression.size();
+	string left = "", right = "";
+	int i;
+
+	for(i = 0; i < n; ++i) {
+		if(expression[i] == '=') break;
+		left += letters[expression[i]];
+	}
+
+	for(++i; i < n; ++i) {
+		right += letters[expression[i]];
+	}
+
+	try {
+		if(parse(left, 0, left.size()) != parse(right, 0, right.size())) {
+			return false;
+		}
+	}
+	catch(const char *c) {
+		return false;
+	}
+	return true;
+}
+
+bool calc(int &x, int &y, int dx, int dy) {
+	while(0 <= x && x < w && 0 <= y && y < h) {
+		if(puzzle[y][x] == '=') return false;
+		if(puzzle[y][x] == '#') {
+			x -= dx;
+			y -= dy;
+			return true;
+		}
+		x += dx;
+		y += dy;
+	}
+	x -= dx;
+	y -= dy;
+	return true;
+}
+
+void update(const vector<int> &expression) {
+	for(unsigned i = 0; i < expression.size(); ++i) {
+		if(isdigit(expression[i])) {
+			if(i && expression[i - 1] < MAX_SIZE) {
+				not_zero[expression[i - 1]] = true;
+			}
+		}
+		else if(expression[i] < MAX_SIZE) { // space
+			if(i && expression[i - 1] < MAX_SIZE) {
+				left_idx[expression[i]].insert(expression[i - 1]);
+				right_idx[expression[i - 1]].insert(expression[i]);
+			}
+		}
+		else { // operator
+			if(i && expression[i - 1] < MAX_SIZE) {
+				not_operator[expression[i - 1]] = true;
+			}
+			if(i + 1 < expression.size() && expression[i + 1] < MAX_SIZE) {
+				not_operator[expression[i + 1]] = true;
+			}
+		}
+	}
+}
+
+vector<pair<int, vector<int>>> construct() {
+	vector<vector<int>> idx(h, vector<int>(w));
+	int next = 0;
+	for(int i = 0; i < h; ++i) {
+		for(int j = 0; j < w; ++j) {
+			if(puzzle[i][j] == '.') idx[i][j] = next++;
+		}
+	}
+
+	vector<pair<int, vector<int>>> expressions;
+	expressions.reserve(40);
+	for(int i = 0; i < h; ++i) {
+		for(int j = 0; j < w; ++j) {
+			if(puzzle[i][j] == '=') {
+				// vertical
+				int s = i - 1, g = i + 1;
+				if(calc(j, s, 0, -1) && calc(j, g, 0, 1) && s != i && g != i) {
+					vector<int> expression;
+					expression.reserve(g - s + 1);
+					int max_index = -1;
+					for(int k = s; k <= g; ++k) {
+						if(puzzle[k][j] == '.') {
+							expression.emplace_back(idx[k][j]);
+							max_index = max(max_index, idx[k][j]);
+						}
+						else {
+							expression.emplace_back(puzzle[k][j]);
+						}
+					}
+
+					if(max_index == -1) continue;
+					update(expression);
+					expressions.emplace_back(max_index, expression);
+				}
+
+				// horizontal
+				s = j - 1; g = j + 1;
+				if(calc(s, i, -1, 0) && calc(g, i, 1, 0) && s != j && g != j) {
+					vector<int> expression;
+					expression.reserve(g - s + 1);
+					int max_index = -1;
+					for(int k = s; k <= g; ++k) {
+						if(puzzle[i][k] == '.') {
+							expression.emplace_back(idx[i][k]);
+							max_index = max(max_index, idx[i][k]);
+						}
+						else {
+							expression.emplace_back(puzzle[i][k]);
+						}
+					}
+
+					if(max_index == -1) continue;
+					update(expression);
+					expressions.emplace_back(max_index, expression);
+				}
+			}
+		}
+	}
+
+	sort(expressions.begin(), expressions.end());
+	return expressions;
+}
+
+bool dfs(const vector<pair<int, vector<int>>> &expressions, int next, int idx, int used) {
+	while(next < expressions.size() && expressions[next].first < idx) {
+		if(!valid(expressions[next].second)) return false;
+		++next;
+	}
+	if(next == expressions.size()) return true;
+
+	for(int i = 0; i < n; ++i) {
+		if(used & (1 << i)) continue;
+		if(is_operator[i] && not_operator[idx]) continue;
+		if(in[i] == '0' && not_zero[idx]) continue;
+
+		letters[idx] = in[i];
+		const auto t_no = not_operator;
+		const auto t_nz = not_zero;
+
+		if(is_operator[i]) {
+			for(const auto &e : left_idx[idx]) not_operator[e] = true;
+			for(const auto &e : right_idx[idx]) not_operator[e] = true;
+		}
+		else {
+			for(const auto &e : left_idx[idx]) not_zero[e] = true;
+		}
+
+		if(dfs(expressions, next, idx + 1, used | (1 << i))) return true;
+		not_operator = t_no;
+		not_zero = t_nz;
+	}
+	return false;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	iota(begin(letters), end(letters), 0);
+
+	while(cin >> h >> w && h) {
+		is_operator.fill(false);
+		not_operator.fill(false);
+		not_zero.fill(false);
+		for(int i = 0; i < n; ++i) {
+			left_idx[i].clear();
+			right_idx[i].clear();
+		}
+
+		for(int i = 0; i < h; ++i) {
+			cin >> puzzle[i];
+		}
+
+		cin >> n;
+		for(int i = 0; i < n; ++i) {
+			cin >> in[i];
+			if(in[i] == '+' || in[i] == '-' || in[i] == '*' || in[i] == '/') {
+				is_operator[i] = true;
+			}
+		}
+
+		const auto expressions = construct();
+		cout << (dfs(expressions, 0, 0, 0) ? "Yes" : "No") << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

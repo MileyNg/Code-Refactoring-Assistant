@@ -1,0 +1,82 @@
+/*
+    2014.06.26
+    C language Lecture week 3
+*/
+
+#include <stdio.h>
+
+int main (void) {
+    
+    int mid;    // 中間
+    int lst;    // 期末
+    int add;    // 追試
+    
+    int ttl;    // 中間期末の合計
+    int grade;  // 評価　（ 0=A, 1=B, 2=C, 3=D, 4=E, 5=F ）
+    
+    while(1){
+        
+        scanf ( "%d %d %d", &mid, &lst, &add );
+        
+        if ( mid == -1 && lst == -1 && add == -1 ){
+            break;
+        }
+        
+        ttl = mid + lst;
+        if ( mid == -1 ) { ttl ++; }
+        if ( lst == -1 ) { ttl ++; }
+        
+        if ( mid > 50 || mid < -1 ){
+            printf ( "Input error : mid" );
+        }
+        if ( lst > 50 || lst < -1 ){
+            printf ( "Input error : lst" );
+        }
+        if ( add > 100 || add < -1 ){
+            printf ( "Input error : add" );
+        }
+        
+        if ( mid == -1 || lst == -1 ) {
+            grade = 5;
+        } else {
+            if ( ttl >= 80 ) {
+                grade = 0;
+            } else if ( ttl >= 65 ) {
+                grade = 1;
+            } else if ( ttl >= 50 ) {
+                grade = 2;
+            } else if ( ttl >= 30 ) {
+                grade = 3;
+            } else if ( add >= 50 ){
+                grade = 3;
+            } else {
+                grade = 5;
+            }
+        }
+        
+        switch ( grade ) {
+        case 0 : 
+            printf ( "A\n" );
+            break;
+        case 1 : 
+            printf ( "B\n" );
+            break;
+        case 2 : 
+            printf ( "C\n" );
+            break;
+        case 3 : 
+            printf ( "D\n" );
+            break;
+        case 5 : 
+            printf ( "F\n" );
+            break;
+        default : 
+            printf ( "Undefined value : grade\n" );
+            break;
+        }
+        
+    }
+    
+    return 0;
+    
+}

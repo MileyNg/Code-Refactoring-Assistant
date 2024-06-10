@@ -1,0 +1,96 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+#define rep(i,n) for (int i=0; i < (n); i++)
+
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef VI  Vec;
+typedef VVI Mat;
+
+void debug(const Mat M) {
+  int n = M.size();
+  rep (i, n) {
+    rep (j, n) {
+      cout << M[i][j] << " ";
+    }
+    cout << endl;
+  }
+  cout << "---" << endl;
+}
+
+Mat mul(const Mat& A, const Mat& B) {
+  int n = A.size();
+  Mat res = Mat(n, Vec(n, 0));
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      for (int k = 0; k < n; k++) {
+        res[i][j] += A[i][k] * B[k][j];
+        if (res[i][j] > 1) res[i][j] = 1;
+      }
+    }
+  }
+  return res;
+}
+
+// x^k mod m を計算
+Mat pow(Mat A, int k) {
+  int n = A.size();
+  Mat res = Mat(n, Vec(n, 0));
+  rep(i, n) res[i][i] = 1;
+  while(k > 0) {
+    if (k & 1) {
+      res = mul(res, A);
+      // debug(res);
+    }
+    A = mul(A, A);
+    k >>= 1;
+  }
+  return res;
+}
+
+struct Edge {
+  int from, to;
+  Edge(int from, int to) : from(from), to(to) {}
+};
+
+bool solve(int n, int m, int z) {
+  vector<Edge> es;
+  es.push_back(Edge(-1, 0));  // 初期値用のダミーのエッジ
+  rep(i, m) {
+    int s, d;
+    cin >> s >> d;
+    s--;
+    d--;
+    es.push_back(Edge(s, d));
+    es.push_back(Edge(d, s));
+  }
+  // 各エッジをもとにグラフを構築
+  int gn = es.size();
+  Mat g(gn, Vec(gn, 0));
+  rep(i, gn) {
+    Edge& e1 = es[i];
+    rep(j, gn) {
+      Edge& e2 = es[j];
+      if (e1.to == e2.from && e1.from != e2.to) {
+        // 直前に戻る辺でなく辿れるので辺を張る
+        g[i][j] = 1;
+      }
+    }
+  }
+  // debug(g);
+  
+  Mat trasimitted = pow(g, z);
+  rep(i, gn) {
+    if (trasimitted[0][i] > 0 && es[i].to == n - 1) return true;
+  }
+  return false;
+}
+
+int main() {
+  int n, m, z;
+  while (cin >> n >> m >> z, n||m||z) cout << (solve(n, m, z) ? "yes" : "no") << endl;
+  
+  return 0;
+}

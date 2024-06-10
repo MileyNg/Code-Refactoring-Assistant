@@ -1,0 +1,29 @@
+int main() {
+    char input[1001];
+    char box[1001];
+    int num=0;
+    char color[1001];
+    int i;
+    int k=0;
+    
+    while(1){
+        scanf("%s",&input);
+        
+        if(strcmp(input,"quit") == 0){
+            break;
+        }else if(strcmp(input,"push") == 0){ //色がｃであるブロックを山に積む
+            scanf("%s",&box[num]);
+            num++;
+        }else if(strcmp(input,"pop") == 0){
+            color[k] = box[num-1];
+            box[num] = 0;
+            num--;
+            k++;
+        }
+        
+    }
+    for(i=0; i<k; i++){
+        printf("%c\n",color[i]);
+    }
+    return 0;
+}

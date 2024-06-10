@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <cstdio>
+#include <set>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int uf[1001];
+void inituf() {
+  for (int i = 0; i < 1001; ++i) {
+    uf[i] = -1;
+  }
+}
+
+int root(int i) {
+  if(uf[i] < 0) {
+    return i;
+  } else {
+    return uf[i] = root(uf[i]);
+  }
+}
+
+void join(int i, int j) {
+  int ri = root(i);
+  int rj = root(j);
+  if (uf[ri] > uf[rj]) {
+    uf[ri] = rj;
+  } else {
+    if (uf[ri] == uf[rj])
+      --uf[ri];
+    uf[rj] = ri;
+  }
+}
+
+int main() {
+  int v,d;
+  while(scanf("%d%d",&v,&d) != EOF) {
+    vector<int> a;
+    int fibo[v+3];
+    fibo[0] = 1;
+    fibo[1] = 2;
+    a.push_back(2);
+    for (int i = 2;i <= v; ++i) {
+      fibo[i] = fibo[i-1] + fibo[i-2];
+      fibo[i] %= 1001;
+      a.push_back(fibo[i]);
+    }
+    sort(begin(a),end(a));
+    auto itr = unique(begin(a),end(a));
+    a.resize(itr - begin(a));
+    inituf();
+    for (int i = 1; i < a.size(); ++i) {
+      if (a[i] - a[i-1] < d) {
+        join(i,i-1);
+      }
+    }
+    set<int> rts;
+    for (int i = 0; i < a.size(); ++i) {
+      rts.insert(root(i));
+    }
+    cout << rts.size() << endl;
+  }
+  return 0;
+}

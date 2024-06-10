@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define Y first
+#define X second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int p, s;
+char row[10];
+int a[128][128], b[128][128];
+
+int main(){
+  bool outf = 0;
+  while(scanf("%d", &p) && p){
+    scanf("%d", &s);
+    rep(i, 128) rep(j, 128) a[i][j] = INF;
+    memset(b, 0, sizeof(b));
+    rep(i, p+1) rep(j, s+1){
+      scanf("%s", row);
+      if(row[0] == '?'){
+	b[i][j] = -1;
+	continue;
+      }
+      a[i][j] = atoi(row);
+    }
+
+   int c, sum, point;
+    bool f = true;
+    while(f){
+      f = false;
+      rep(i, p){
+	c = 0;
+	rep(j, s) if(a[i][j] == INF){ c++; point = j;}
+	if(c != 1) continue;
+	f = 1;
+	sum = 0;
+	rep(j, s) if(a[i][j] != INF) sum += a[i][j];
+	a[i][point] = a[i][s] - sum;
+	//	printf("%d %d\n", i, point);
+      }
+      rep(j, s){
+	c = 0;
+	rep(i, p) if(a[i][j] == INF){ c++; point = i;}
+	if(c != 1) continue;
+	f = 1;
+	sum = 0;
+	rep(i, p) if(a[i][j] != INF) sum += a[i][j];
+	a[point][j] = a[p][j] - sum;
+	//	printf("%d %d\n",  point, j);
+      }
+    }
+    //    fprintf(stderr, "end\n");
+    if(outf){
+      puts("");
+    }
+    outf = 1;
+    rep(i, p) rep(j, s) if(a[i][j] == INF) f = 1;
+    if(f){
+      puts("NO");
+    }else{
+      rep(i, p) rep(j, s) if(b[i][j] == -1) printf("%d\n", a[i][j]);
+    }
+
+  }
+  return 0;
+}

@@ -1,0 +1,179 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+const int N = 0;
+
+inline int dist(int x1, int y1, int x2, int y2){
+	return abs(x1 - x2) + abs(y1 - y2);
+}
+
+inline bool valid(int x, int y){
+	return abs(x - 2) + abs(y - 2) <= 2;
+}
+
+void decode(ll x);
+
+ll mov(ll state, int zero, int to){
+	ll mask = 15ll << to*4;
+	mask &= state;
+	state ^= mask;
+	int d = to - zero;
+	if (d < 0) state |= mask << -d*4;
+	else state |= mask >> d*4;
+	return state;
+}
+
+void decode(ll x){
+	vector<string> vs;
+	rep(i, 5){
+		string s;
+		rep(j, 5){
+			if (valid(j, i)){
+				int tmp = x & 15;
+				s += " ";
+				s += '0' + tmp % 10;
+				s += '0' + tmp / 10;
+				x >>= 4;
+			}
+			else{
+				s += " ..";
+			}
+		}
+		vs.push_back(string(REV(s)));
+	}
+	reverse(ALL(vs));
+	for (auto &s : vs){
+		cout << s << endl;
+	}
+}
+
+int mat[5][5];
+
+struct state{
+	ll enc;
+	int d;
+	int pos[2];
+	state(ll e, int p0, int p1, int d) :enc(e), d(d){ pos[0] = p0, pos[1] = p1; };
+};
+
+int main(){
+
+	int pos = 0;
+	vector<vector<int>> adj;
+	{
+		int tmp = 0;
+		rep(i, 5) rep(j, 5) if (valid(j, i)) mat[i][j] = tmp++;
+	}
+	rep(i, 5) rep(j, 5){
+		vector<int> v;
+		if (!valid(j, i)) continue;
+		rep(k, 5) rep(l, 5){
+			if (!valid(l, k)) continue;
+			if (dist(j, i, l, k) != 1) continue;
+			v.push_back(mat[k][l]);
+		}
+		adj.push_back(v);
+	}
+
+	ll init = 0;
+	int tmp = 0;
+	rep(i, 5) rep(j, 5){
+		if (!valid(j, i)) continue;
+		init <<= 4;
+		init |= (tmp++) % 12;
+	}
+
+	map<ll, int> m;
+	m[init] = 0;
+	queue<state> q;
+	q.push({ init, 0, 12, 0 });
+	while (!q.empty()){
+		state s = q.front();
+		q.pop();
+
+		rep(i, 2){
+			for (auto to : adj[s.pos[i]]){
+				ll nxt = mov(s.enc, s.pos[i], to);
+				if (m.count(nxt)) continue;
+				m[nxt] = s.d + 1;
+				if (s.d + 1 < 10) q.push({ nxt, s.pos[!i], to, s.d + 1 });
+			}
+		}
+	}
+
+	ll x;
+	while (cin >> x, ~x){
+		vector<int> zero;
+		int in;
+		rep(i, 12){
+			cin >> in;
+			x = (x << 4) + in;
+			if (!in) zero.push_back(i + 1);
+		}
+		if (zero.size() <= 1) zero.push_back(0);
+		//decode(x);
+
+		set<ll> vis;
+		queue<state> q;
+		q.push({ x, zero[0], zero[1], 0 });
+		int ans = -1;
+		if (m.count(x)){
+			ans = m[x];
+		}
+		else
+		while (!q.empty()){
+			state s = q.front();
+			q.pop();
+
+			rep(i, 2){
+				for (auto to : adj[s.pos[i]]){
+					ll nxt = mov(s.enc, s.pos[i], to);
+					if (vis.count(nxt)) continue;
+					vis.insert(nxt);
+					if (m.count(nxt)){
+						ans = s.d + m[nxt] + 1;
+						goto end;
+					}
+					if (s.d + 1 < 12) q.push({ nxt, s.pos[!i], to, s.d + 1 });
+				}
+			}
+		}
+	end:
+		if (0 <= ans && ans <= 20) cout << ans << endl;
+		else cout << "NA" << endl;
+	}
+
+
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<string.h>
+char S[1005],R[1005],L[1005],ST[1500],tmp[1005],V[128];
+int sp,rp,np,LP,i;
+char pop(){return ST[--sp];}
+void push(char c){ST[sp++]=c;}
+void NotPOP(){for(;ST[sp-1]=='-';tmp[rp++]=ST[--sp]);}
+void p(char *s)
+{
+	memset(tmp,0,sizeof(tmp));
+	for(np=sp=rp=0;s[np];np++)
+	{
+		char t=s[np];
+		if(t=='-'&&s[np+1]=='>'){push('>');np++;}
+		else if(t=='*'||t=='+'||t=='-'||t=='(')push(t);
+		else if((t=='T'||t=='F')||('a'<=t&&t<='k')){tmp[rp++]=s[np];NotPOP();}
+		else{tmp[rp++]=pop();sp--;NotPOP();}
+	}
+	strcpy(s,tmp);
+}
+
+char c(char *s)
+{
+	for(np=sp=rp=0;s[np];np++)
+	{
+		char t=s[np];
+		if(t=='T')push(1);
+		if(t=='F')push(0);
+		if('a'<=t&&t<='k')push(LP&(1<<V[t]));
+		if(t=='*')push(pop()&&pop());
+		if(t=='+')push(pop()||pop());
+		if(t=='-')push(!pop());
+		if(t=='>')
+		{
+			char a=pop(),b=pop();
+			push((a&&b)||!a);
+		}
+	}
+	return ST[0];
+}
+
+int main()
+{
+	for(i=0;i<=11;i++)V[i+'a']=i;
+	for(;gets(S),S[0]!='#';)
+	{
+		sscanf(S,"%[^=]=%s",R,L);
+		p(R);p(L);
+		for(i=0;i<1<<12;i++)
+			if(c(R)!=c(L))
+				break;
+		puts(i==1<<12?"YES":"NO");
+	}
+	return 0;
+}

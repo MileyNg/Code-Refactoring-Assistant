@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+#include <time.h>
+using namespace std;
+
+int main(){
+  int index ,flag=0 ,temp= 'z' - '`';
+  string s ,key[3]={ "the" ,"this" ,"that" };
+
+  while( true ){
+    flag = 0;
+    getline( cin ,s );
+    if( cin.eof() ){
+      break;
+    }
+
+    while( true ){
+      for( int i=0 ; i<s.length() ; i++ ){ // シーザー暗号を戻す
+	if( s[i] != '.' && s[i] != ' ' && s[i] != '\n' ){ //　記号はスルー
+	  s[i]--;
+	  if( s[i] < 'a' ){ // aからzに飛ばす
+	    s[i] += temp; 
+	  }
+	}
+      }
+      
+      for( int i=0 ; i<3 ; i++ ){
+	index = s.find( key[i] ,0 ); // the ,this ,that を探す
+	if( index != string::npos ){ // あった場合
+	  cout << s << endl;
+	  flag = 1;
+	  cin.ignore();
+	  break;
+	}
+      }
+      if( flag == 1 ){
+	break;
+      }
+    }
+  }
+}

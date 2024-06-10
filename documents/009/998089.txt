@@ -1,0 +1,16 @@
+### main
+
+while true
+  s1, s2 = gets.strip.split(' ').map{|s| s.to_i}
+  break if s1 == 0 && s2 == 0
+
+  shops = [[s1 + s2, 'A']]
+
+  for sn in ('B'..'E')
+    s1, s2 = gets.strip.split(' ').map{|s| s.to_i}
+    shops << [s1 + s2, sn]
+  end
+
+  shm = shops.max{|a, b| a[0] <=> b[0]}
+  puts "#{shm[1]} #{shm[0]}"
+end

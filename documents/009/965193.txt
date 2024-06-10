@@ -1,0 +1,1 @@
+print raw_input().replace('peach', 'HOGEHOGE').replace('apple', 'peach').replace('HOGEHOGE', 'apple')

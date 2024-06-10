@@ -1,0 +1,102 @@
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+
+using namespace std;
+
+/** Problem0110 : Alphametic **/
+string sum(string a, string b)
+{
+	string  s;
+	int n, tmp, la, lb;
+	bool up=false;
+	
+		s=""; up=0;
+		
+		reverse(a.begin(), a.end());
+		reverse(b.begin(), b.end());
+		la=(int)a.length();
+		lb=(int)b.length();
+		
+		if (la < lb) {
+			swap(la, lb);
+			swap(a, b);
+		}
+		
+		for (int i = 0; i<la-lb; i++) b+='0';
+		
+		for (int i=0; i<la; i++) {
+			tmp = (a[i]-'0') + (b[i] - '0') + (up?1:0);
+			if (tmp>=10) {
+				s += '0'+tmp%10;
+				up = true;
+			} else {
+				s += '0'+tmp;
+				up = false;
+			}
+		}
+		
+		if (up)
+			s+='1';
+		reverse(s.begin(), s.end());
+		
+		return s;
+}
+
+int main()
+{
+	string s;
+	while (1) {
+		getline(cin, s);
+		if (cin.eof()) break;
+		
+		rep(j, 9) {
+			string a, b, ans;
+			
+			int i=0;
+			for(; i<s.length(); i++) {
+				if (s[i]=='X')
+					a+=j+'0';
+				else if (s[i]!='+')
+					a+=s[i];
+				else
+					break;
+			}
+			
+			for(i++; i<s.length(); i++) {
+				if (s[i]=='X')
+					b+=j+'0';
+				else if (s[i]!='=')
+					b+=s[i];
+				else
+					break;
+			}
+			
+			for(i++; i<s.length(); i++) {
+				if (s[i]=='X')
+					ans+=j+'0';
+				else
+					ans+=s[i];
+			}
+			
+			if (a.length()>=2 && a[0]=='0') continue;
+			if (b.length()>=2 && b[0]=='0') continue;
+			if (ans.length()>=2 && ans[0]=='0') continue;
+
+			if (sum(a, b) == ans) {
+				cout << j << endl;
+				goto end;
+			}
+		}
+		cout << "NA" << endl;
+	end:;
+	}
+	
+	return 0;
+}

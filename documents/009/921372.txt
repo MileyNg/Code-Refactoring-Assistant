@@ -1,0 +1,81 @@
+#include <iostream>
+#include <climits>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
+int to_i(const string &s) {
+    istringstream is(s);
+    int n; is >> n;
+    return n;
+}
+
+string to_s(int n) {
+    ostringstream os;
+    os << n;
+    return os.str();
+}
+
+int N;
+vector<int> as;
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    as.clear(); as.resize(N);
+    for (int i = 0; i < N; i++) {
+        string s; cin >> s;
+        as[i] = s == "x" ? INT_MIN : to_i(s);
+    }
+    return true;
+}
+
+bool odd(int n) {
+    return n % 2 == 1;
+}
+#define even(x) (!odd(x))
+
+bool check(int x) {
+    for (int i = 0; i < as.size(); i++) {
+        vector<int> ns;
+        if (i - 1 >= 0) ns.push_back(i - 1);
+        if (i + 1 < N)  ns.push_back(i + 1);
+        for (int j = 0; j < ns.size(); j++) {
+            int a = as[i] == INT_MIN ? x : as[i];
+            int n = as[ ns[j] ] == INT_MIN ? x : as[ ns[j] ];
+            if (odd(i + 1)  && a >= n) return false;
+            if (even(i + 1) && a <= n)  return false;
+        }
+    }
+    return true;
+}
+
+bool range_check(int x) {
+    int start = -1e9, end = 1e9;
+    return (start <= x && x <= end);
+}
+
+void solve() {
+    int ans = INT_MIN;
+    for (int i = 0; i < N; i++) {
+        if (as[i] == INT_MIN) continue;
+        for (int d = -3; d <= 3; d += 2) {
+            if (as[i] + d == ans) continue;
+            if (check(as[i] + d)) {
+                if (ans > INT_MIN) {
+                    cout << "ambiguous" << endl;
+                    return;
+                }
+                ans = as[i] + d;
+            }
+        }
+    }
+    cout << (ans == INT_MIN ? "none" : to_s(ans)) << endl;
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

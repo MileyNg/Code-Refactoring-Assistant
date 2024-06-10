@@ -1,0 +1,41 @@
+#include<stdio.h>
+int a[20];
+int m[200];
+void recursion(int,int);
+int p;
+int h = 0;
+main(){
+  int i;
+  int q;
+  scanf("%d", &p);
+  for(i=0;i<p;i++)
+    {
+    scanf("%d", &a[i]);
+    }
+  scanf("%d", &q);
+  for(i=0;i<q;i++)
+    {
+    scanf("%d", &m[i]);
+    }
+  for(i=0;i<q;i++)
+    {
+      h = 0;
+      recursion(0,m[i]);
+      if(h == 0) 
+        printf("no\n");
+      else
+        printf("yes\n");
+    } 
+ return 0;
+}
+  
+void recursion(int j, int k)
+  {
+    if(k == 0)
+      h = 1;
+    else if(p > j)
+    {
+     recursion(j + 1, k - a[j]);
+     recursion(j + 1, k);
+    }
+  }

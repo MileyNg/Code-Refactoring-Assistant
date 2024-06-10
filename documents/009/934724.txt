@@ -1,0 +1,28 @@
+while (ln = gets.chomp) != '0 0' do
+  n, x = ln.split.map(&:to_i)
+  a1 = 1
+  a2 = 2
+  a3 = 3
+  cnt = 0
+  while true do
+    cnt += 1 if a1 + a2 + a3 == x
+    # puts "#{a1} + #{a2} + #{a3} = " + (a1+a2+a3).to_s
+    if a3 >= n
+      if a2 + 1 == a3
+        if a1 + 1 == a2
+          break
+        else
+          a1 += 1
+          a2 = a1 + 1
+          a3 = a1 + 2
+        end
+      else
+        a2 += 1
+        a3 = a2 + 1
+      end
+    else
+      a3 += 1
+    end
+  end
+  puts cnt
+end

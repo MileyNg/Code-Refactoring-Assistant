@@ -1,0 +1,119 @@
+
+//=====================================================
+// 
+// (setq backup-inhibited t)
+// (setq auto-save-default nil)
+// 
+// (column-number-mode t)
+// (setq-default tab-width 2 indent-tabs-mode nil)
+// 
+// (global-set-key "\C-h" 'delete-backward-char)
+// 
+// (setq indent-line-function 'indent-relative-maybe)
+// (global-set-key "\C-m" 'newline-and-indent)
+// 
+//=====================================================
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <map>
+#include <set>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+struct Cost {
+  Cost(int time_,int trans_) : time(time_), trans(trans_) {}
+  int time;
+  int trans;
+};
+
+bool operator<(const Cost& lhs, const Cost& rhs) {
+  if(lhs.time!=rhs.time)return lhs.time<rhs.time;
+  return lhs.trans<rhs.trans;
+}
+
+bool operator>(const Cost& lhs, const Cost& rhs) {
+  return rhs < lhs;
+}
+
+Cost operator+(const Cost& lhs, const Cost& rhs) {
+  return Cost(lhs.time+rhs.time,lhs.trans+rhs.trans);
+}
+
+Cost dijkstra(const vector<vector<pair<int,Cost>>>& g, int s, int t) {
+  int n = g.size();
+  vector<Cost> cost(n,Cost(1000000000,1000000000));
+  priority_queue<pair<Cost,int>,vector<pair<Cost,int>>,greater<pair<Cost,int>>> q;
+  q.emplace(Cost(0,0),s);
+  while(!q.empty()){
+    auto p=q.top();
+    q.pop();
+    Cost nc = p.first;
+    int i = p.second;
+    if(nc>cost[i])continue;
+    for(auto e:g[i]){
+      if(cost[e.first] > nc+e.second){
+        cost[e.first] = nc+e.second;
+        q.emplace(cost[e.first],e.first);
+      }
+    }
+  }
+  return cost[t];
+}
+
+
+int main() {
+  int n,t;
+  cin>>n>>t;
+  string a,b;
+  cin>>a>>b;
+  set<string> cities_s;
+  int cnt=0;
+  vector<vector<string>> stops(n);
+  vector<vector<pair<int,Cost>>> g;
+  vector<int> len(n);
+  REP(i,n){
+    cin>>len[i];
+    REP(j,len[i]){
+      string s;
+      cin>>s;
+      stops[i].push_back(s);
+      cities_s.insert(s);
+      g.emplace_back();
+    }
+    REP(j,len[i]-1){
+      int d;
+      cin>>d;
+      g[cnt+j].emplace_back(cnt+j+1,Cost(d,0));
+      g[cnt+j+1].emplace_back(cnt+j,Cost(d,0));
+    }
+    cnt+=len[i];
+  }
+  vector<string> cities;
+  for(string s:cities_s){
+    cities.push_back(s);
+    g.emplace_back();
+  }
+  int cnt2=0;
+  REP(i,n){
+    REP(j,len[i]){
+      int o = lower_bound(begin(cities),end(cities),stops[i][j]) - begin(cities);
+      g[cnt+o].emplace_back(cnt2+j,Cost(0,0));
+      g[cnt2+j].emplace_back(cnt+o,Cost(t,1));
+    }
+    cnt2+=len[i];
+  }
+  int s_i = lower_bound(begin(cities),end(cities),a) - begin(cities);
+  int t_i = lower_bound(begin(cities),end(cities),b) - begin(cities);
+  auto res = dijkstra(g,s_i+cnt,t_i+cnt);
+  if (res.time >= 1000000000)
+    cout << -1 << endl;
+  else
+    cout << (res.time - t) << ' ' << (res.trans - 1) << endl;
+  return 0;
+}

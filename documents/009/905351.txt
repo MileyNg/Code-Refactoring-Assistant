@@ -1,0 +1,81 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+#define WH 52
+
+int dx[4]={0,0,1,-1};
+int dy[4]={1,-1,0,0};
+char f[WH][WH];
+
+set<char> s;
+
+void dfs1(int ,int);
+void dfs2(int ,int ,char);
+
+int main(int argc, char const *argv[])
+{
+	int w,h;
+	int bb,ww;
+
+	while(1){
+		cin>>w>>h;
+		if(w+h==0) break;
+
+		for(int i1=0;i1<WH;i1++){
+			for(int i2=0;i2<WH;i2++){
+				f[i1][i2]='#';
+			}
+		}
+
+		for(int i1=1;i1<=h;i1++){
+			for(int i2=1;i2<=w;i2++){
+				cin>>f[i1][i2];
+			}
+		}
+
+		for(int i1=1;i1<=h;i1++){
+			for(int i2=1;i2<=w;i2++){
+				if(f[i1][i2]=='.') {
+					s.clear();
+					dfs1(i2,i1);
+					if(s.size()==2){}
+					else dfs2(i2,i1,(*s.begin()));
+				}
+			}
+		}
+
+		bb=0;
+		ww=0;
+		for(int i1=1;i1<=h;i1++){
+			for(int i2=1;i2<=w;i2++){
+				if(f[i1][i2]=='b') bb++;
+				else if(f[i1][i2]=='w') ww++;
+			}
+		}
+
+		cout<<bb<<" "<<ww<<endl;
+	}
+	return 0;
+}
+
+void dfs1(int x,int y){
+
+	f[y][x]='@';
+	for(int i1=0;i1<4;i1++){
+		if(f[y+dy[i1]][x+dx[i1]]=='B') s.insert('b');
+		else if(f[y+dy[i1]][x+dx[i1]]=='W') s.insert('w');
+		else if(f[y+dy[i1]][x+dx[i1]]=='.') dfs1(x+dx[i1],y+dy[i1]);
+		else {}
+	}
+
+}
+
+void dfs2(int x,int y, char c){
+
+	f[y][x]=c;
+	for(int i1=0;i1<4;i1++){
+		if(f[y+dy[i1]][x+dx[i1]]=='@') dfs2(x+dx[i1],y+dy[i1],c);
+	}
+}

@@ -1,0 +1,57 @@
+#include<stdio.h>
+   
+#define N 100000
+#define Q 50000
+   
+int main()
+{
+  int i, j, count=0, a=0, b, mid, left, right;
+  int S[N], T[Q];
+     
+  scanf("%d", &S[0]);
+  for(i=1; i<S[0]+1; i++)
+    {
+      scanf("%d", &S[i]);
+    }
+  
+  scanf("%d", &T[0]);
+  for(j=1; j<T[0]+1; j++)
+    {
+      scanf("%d",&T[j]);
+      /*  for(i=1; i<S[0]; i++)
+	{
+	  if(S[i]==T[j])
+	    {
+	      count++;
+	      break;
+	    }
+	    }*/
+    }
+
+  for(b=0; b<T[0]; b++)
+    {
+      left=0;
+      right=S[0];
+ 
+      while(left<right)
+	{
+	  mid=(left+right)/2;
+	  if(S[mid]==T[b])
+	    {
+	      a++;
+	      break;
+	    }
+	  else if(T[b]<S[mid])
+	    {
+	      right=mid;
+	    } 
+	  else if(T[b]>S[mid])
+	    {
+	      left=mid+1;
+	    }
+	}
+      
+      printf("%d\n",a+2);
+      return 0;
+    }
+}

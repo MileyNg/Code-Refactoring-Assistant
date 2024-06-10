@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int main() {
+	cout.precision(10);
+	cout.setf(ios::fixed);
+
+	for(string line; getline(cin, line);) {
+		istringstream is(line);
+		stack<double> sta;
+
+		string token;
+		while(is >> token) {
+			if(isdigit(token[0]) || (token[0] == '-' && token.size() >= 2)) {
+				sta.push(stod(token));
+			}
+			else { // binary operator
+				assert(token.size() == 1);
+
+				const double b = sta.top(); sta.pop();
+				const double a = sta.top(); sta.pop();
+
+				switch(token[0]) {
+				case '+': sta.push(a + b); break;
+				case '-': sta.push(a - b); break;
+				case '*': sta.push(a * b); break;
+				case '/': sta.push(a / b); break;
+				default:
+					assert(false);
+				}
+			}
+		}
+
+		assert(sta.size() == 1);
+		cout << sta.top() << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

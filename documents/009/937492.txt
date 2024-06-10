@@ -1,0 +1,43 @@
+#include<stdio.h>
+
+#define MAX 100
+#define INFTY (1 << 21)
+
+int R[MAX + 2];
+int C[MAX+1][MAX+1]; // cost table
+int B[MAX+1][MAX+1]; // best table
+
+int matrix_cost(n){
+    int i,j,k,cost;
+    int SIZE = n;
+    for(i=1;i<=n;i++) {
+        for(j=1;j<=n;j++) {
+            C[i][j] = INFTY;
+        }
+        C[i][i] = 0;
+    }
+
+    for(j=1;j<=SIZE-1;j++){
+        for(i=1;i<=SIZE-j;i++){
+            for(k=i+1;k<=i+j;k++){
+                cost = C[i][k-1] + C[k][i+j] + R[i]*R[k]*R[i+j+1];
+                if(cost<C[i][i+j]){
+                    C[i][i+j] = cost;
+                    B[i][i+j] = k;
+                }
+            }
+        }
+    }
+    
+    return C[1][SIZE];
+}
+
+int main(void) {
+    int i, n;
+    scanf("%d\n", &n);
+    for(i=1;i<=n;i++) {
+        scanf("%d %d\n", &R[i], &R[i+1]);
+    }
+	
+    printf("%d\n", matrix_cost(n));
+}

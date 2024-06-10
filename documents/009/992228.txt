@@ -1,0 +1,100 @@
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+int N;
+#define MN 101
+vector<double> X, Y, R;
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    X.resize(N); Y.resize(N); R.resize(N);
+    for (int i = 0; i < N; i++) {
+        cin >> X[i] >> Y[i] >> R[i];
+    }
+    return true;
+}
+
+template<typename A, typename B>
+ostream& operator<<(ostream& os, map<A, B> m) {
+    for (typename map<A, B>::iterator it = m.begin(); it != m.end(); it++) {
+        os << "(" << it->first << ", " << it->second << "), ";
+    }
+    return os;
+}
+
+map<double, int> Compress(vector<double>& vs) {
+    sort(whole(vs));
+    vs.erase(unique(whole(vs)), vs.end());
+    map<double, int> Ret;
+    for (int i = 0; i < vs.size(); i++) {
+        Ret[ vs[i] ] = i + 1;
+    }
+    return Ret;
+}
+
+void solve() {
+    static int T = 1;
+    vector<double> dX, dY;
+    for (int i = 0; i < N; i++) {
+        dX.push_back(X[i] - R[i]);
+        dX.push_back(X[i] + R[i]);
+        dY.push_back(Y[i] - R[i]);
+        dY.push_back(Y[i] + R[i]);
+    }
+    map<double, int> mX = Compress(dX),
+                     mY = Compress(dY);
+    //cout << "mX: " << mX << endl;
+    int nX = dX.size() + 1, nY = dY.size() + 1;
+    bool F[nY][nX]; memset(F, 0, sizeof(F));
+    for (int i = 0; i < N; i++) {
+        int sx = mX[ X[i] - R[i] ],
+            sy = mY[ Y[i] - R[i] ],
+            gx = mX[ X[i] + R[i] ],
+            gy = mY[ Y[i] + R[i] ];
+        //cout << sx << " " << gx << " " << sy << " " << gy << endl;
+        for (int y = sy; y < gy; y++) {
+            for (int x = sx; x < gx; x++) {
+                F[y][x] = true;
+            }
+        }
+    }
+    /*
+    for (int i = 0; i < nY; i++) {
+        for (int j = 0; j < nX; j++) {
+            cout << setw(2) << F[i][j];
+        }
+        cout << endl;
+    }
+    */
+    double Area = 0;
+    for (int y = 0; y < nY - 1; y++) {
+        for (int x = 0; x < nX - 1; x++) {
+            if (F[y][x]) {
+                Area += (dY[y] - dY[y - 1]) * (dX[x] - dX[x - 1]);
+            }
+        }
+    }
+    printf("%d %.2f\n", T, Area);
+    T++;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

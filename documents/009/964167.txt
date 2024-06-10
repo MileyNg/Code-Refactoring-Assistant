@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <queue>
+ 
+class Baseball{
+	int score, out_count;
+	std::queue<bool> runners;
+public:
+	Baseball() : score(), out_count(){}
+	void hit();
+	void homerun();
+	void out();
+	int get_score() {return score;}
+	int get_out() {return out_count;}
+};
+
+void Baseball::hit(){
+	runners.push(true);
+	if(runners.size() == 4){
+		++score;
+		runners.pop();
+	}
+}
+
+void Baseball::homerun(){
+	score += runners.size() + 1;
+	while(!runners.empty()){
+		runners.pop();
+	}
+}
+
+void Baseball::out(){
+	++out_count;
+}
+
+int main(){
+	int inning;
+	std::cin >> inning;
+	//inningの回数だけループ
+	for(int i = 0; i < inning; ++i){
+		Baseball game;
+		while(game.get_out() != 3){
+			std::string event;
+			std::cin >> event;
+			if(event == "HIT"){
+				game.hit();
+			}
+			else if(event == "HOMERUN"){
+				game.homerun();
+			}
+			else if(event == "OUT"){
+				game.out();
+			}
+		}
+		std::cout << game.get_score() << std::endl;
+	}
+}

@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+#include <vector>
+#include <cctype>
+#include <map>
+#include <algorithm>
+#define fr first
+#define sc second
+#define INF (2 << 28)
+using namespace std;
+
+bool ju;
+int sx,sy,gx,gy;
+int dp[5][5][1001];
+typedef pair<int,int> iP;
+vector<vector<iP> > d(5);
+
+int dis(int sum,int now,int idx,int next, int i){
+  if(sum == 1) return abs(sx - d[next][i].fr) + abs(sy - d[next][i].sc);
+  else return abs(d[now][idx].fr - d[next][i].fr) + abs(d[now][idx].sc - d[next][i].sc);
+}
+		 
+int rec(int sum,int now,int idx){
+  if(sum == 5) return abs(d[now][idx].fr - gx) + abs(d[now][idx].sc - gy);
+  if(dp[sum][now][idx]) return dp[sum][now][idx];
+  int ret = INF;
+  for(int i = 0 ; i < d[(now + 1) % 5].size() ; i++){
+    ret = min(rec(sum+1,(now+1)%5,i) + dis(sum,now,idx,(now+1)%5,i) , ret);
+  }
+
+  return dp[sum][now][idx] = ret;
+}
+
+
+int main(){
+  int x,y;
+  char mas[1001][1001];
+  while(cin >> x >> y,x||y){
+    for(int i = 0 ; i < y ; i++){
+      for(int j = 0 ; j < x ; j++){
+	cin >> mas[i][j];
+	if(mas[i][j] == 'S') sy = i,sx = j;
+	if(mas[i][j] == 'G') gy = i,gx = j;
+	if(isdigit(mas[i][j])) d[mas[i][j] - '1'].push_back(iP(j,i));
+      }
+    }
+    
+    int mini = INF,ans;
+    for(int i = 0 ; i < 5 ; i++){
+      memset(dp,0,sizeof(dp));
+      int d = rec(1,i,0);
+      if(d < mini) mini = d,ans = i+1;
+    }
+    if(mini == INF) cout << "NA" << endl;
+    else cout << ans << " " << mini << endl;
+    d.resize(0); d.resize(5);
+  }
+}

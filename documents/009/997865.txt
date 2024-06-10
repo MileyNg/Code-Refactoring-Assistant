@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            double Pos_x = 0.0;
+            double Pos_y = 0.0;
+
+            int rotate = 0;
+
+            while (true)
+            {
+                var read_line_origin = Console.ReadLine();
+
+                string[] read_line = read_line_origin.Split(',');
+
+                int r = int.Parse(read_line[0]);
+                int kakudo = int.Parse(read_line[1]);
+
+                //データ入力終わりの合図
+                if (r == 0 && kakudo == 0)
+                {
+                    break; 
+                }
+
+                //最初は北を向いている
+                //ｒ進んでからkakudo回転する
+
+                Pos_x += r * Math.Sin(rotate * Math.PI / 180);
+                Pos_y += r * Math.Cos(rotate * Math.PI / 180);
+
+                rotate += kakudo;
+            }
+
+            Console.WriteLine("{0}", (int)Pos_x);
+            Console.WriteLine("{0}", (int)Pos_y);
+//            Console.ReadKey();
+        }
+    }
+}

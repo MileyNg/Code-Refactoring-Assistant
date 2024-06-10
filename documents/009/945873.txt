@@ -1,0 +1,31 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cstring>
+#include <cmath>
+
+using namespace std;
+
+#define rep(i,b) for(int i=0; i<b; i++)
+
+int t[200];
+int c[200], l[200], h[200];
+
+int dp[210][210];
+
+int main(){
+    int d,n; cin>>d>>n;
+    rep(i,d) cin>>t[i];
+    rep(i,n) cin>>l[i]>>h[i]>>c[i];
+
+    rep(i,d){
+        rep(j,n)if(l[j]<=t[i+1] && t[i+1]<=h[j]){
+            rep(k,n)if(l[k]<=t[i] && t[i]<=h[k]){
+                dp[i+1][j] = max(dp[i][k]+abs(c[j]-c[k]), dp[i+1][j]);
+            }
+        }
+    }
+
+    int ans = *max_element(dp[d-1], dp[d-1]+n);
+    cout << ans << endl;
+}

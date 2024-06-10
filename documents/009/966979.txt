@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  int N; cin >> N;
+  while(N--) {
+    int y, m, d;
+    cin >> y >> m >> d;
+    int ans = 0;
+    while(true) {
+      if(y == 1000 && m == 1 && d == 1) break;
+      if(y % 3 == 0) {
+        if(d == 20) {
+          m += 1;
+          d = 1;
+        }
+        else {
+          d += 1;
+        }
+      }
+      else {
+        if(m % 2 == 1) {
+          if(d == 20) {
+            m += 1;
+            d = 1;
+          }
+          else {
+            d += 1;
+          }
+        }
+        else {
+          if(d == 19) {
+            m += 1;
+            d = 1;
+          }
+          else {
+            d += 1;
+          }
+        }
+      }
+      if(m == 11) {
+        m = 1;
+        y += 1;
+      }
+      ans++;
+    }
+    cout << ans << endl;
+  }
+}

@@ -1,0 +1,66 @@
+#include <stdio.h>
+
+#define MAX 1000
+
+int solve(int*, int);
+int check(int*,int);
+
+int main(){
+  int n, i, arr[MAX];
+
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d" ,arr + i);
+    arr[i]--;
+  }
+  printf("%d\n" ,solve(arr, n));
+
+  return 0;
+}
+
+int check(int arr[], int n){
+  int i;
+
+  for(i = 0 ; i < n ; i++){
+    if(arr[i] != i){
+      return 0;
+    }
+  }
+  return 1;
+}
+
+int solve(int arr[], int n){
+  int i, j, res = 0, tmp;
+
+  for(i = 0 ; i < n-1 ; i++){
+    if(arr[i] != i){
+      for(j = i+1 ; j < n ; j++){
+        if(arr[j] != j && arr[i] == j && arr[j] == i){
+          res += arr[i] + arr[j] + 2;     
+          tmp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = tmp;
+        }
+      }
+    }
+  }
+
+  for(i = 0 ; i < n-1 ; i++){
+    if(arr[i] != i){
+      for(j = i+1 ; j < n ; j++){
+        if(arr[i] == j){
+          res += arr[i] + arr[j] + 2;     
+          tmp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = tmp;
+        }
+      }
+    }
+  }
+
+  if(check(arr, n)){
+    return res;
+  }else{
+    return res += solve(arr, n);
+  }
+}

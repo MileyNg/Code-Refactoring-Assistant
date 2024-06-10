@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  int m,n;
+  cin >> m >> n;
+  int k;
+  cin >> k;
+  vector<string> t(m);
+  for (int i = 0; i < m; ++i) {
+    cin >> t[i];
+  }
+  vector<vector<int>> J(m+1, vector<int>(n+1));
+  vector<vector<int>> O(m+1, vector<int>(n+1));
+  vector<vector<int>> I(m+1, vector<int>(n+1));
+  for (int i = 0; i < m; ++i) {
+    int sum[3] = {0,0,0};
+    for (int j = 0; j < n; ++j) {
+      char joi[] = {'J','O','I'};
+      for (int l = 0; l < 3; ++l) {
+        if (t[i][j] == joi[l]) {
+          ++sum[l];
+        }
+      }
+      J[i+1][j+1] = J[i][j+1] + sum[0];
+      O[i+1][j+1] = O[i][j+1] + sum[1];
+      I[i+1][j+1] = I[i][j+1] + sum[2];
+    }
+  }
+  for (int i = 0; i < k; ++i) {
+    int a,b,c,d;
+    cin >> a >> b >> c >> d;
+    int s[3] = {0,0,0};
+    s[0] =  J[c][d] - J[c][b-1] - J[a-1][d] + J[a-1][b-1];
+    s[1] =  O[c][d] - O[c][b-1] - O[a-1][d] + O[a-1][b-1];
+    s[2] =  I[c][d] - I[c][b-1] - I[a-1][d] + I[a-1][b-1];
+    cout << s[0] << ' ' << s[1] << ' ' << s[2] << endl;
+  }
+  return 0;
+}

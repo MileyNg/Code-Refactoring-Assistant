@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<(b)?(a=b,1):0)
+#define chmin(a,b) (a>(b)?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef pair<int,int> pii;
+typedef long long ll;
+
+bool g[100][100];
+int lower[100][100];
+int upper[100][100];
+
+int main() {
+  int m,n;
+  while(cin >> m >> n) {
+    REP(i,m)REP(j,n){
+      lower[i][j] = -1;
+      upper[i][j] = 101;
+    }
+    REP(i,m) {
+      int k;
+      cin >> k;
+      REP(j,k) {
+        int s,t;
+        string cond;
+        cin >> s >> cond >> t;
+        s--;
+        if (cond == ">=") {
+          chmax(lower[i][s], t);
+        } else {
+          chmin(upper[i][s], t);
+        }
+      }
+    }
+    memset(g,0,sizeof(g));
+    bool ng = 0;
+    REP(i,n) {
+      REP(j,m) {
+        if (lower[j][i] > upper[j][i]) ng = 1;
+        REP(k,m) {
+          if (j==k) continue;
+          if (upper[j][i] < lower[k][i]) {
+            g[j][k] = 1;
+          }
+        }
+      }
+    }
+    REP(k,n)REP(i,n)REP(j,n)g[i][j]|=g[i][k]&g[k][j];
+    REP(i,n)ng|=g[i][i];
+    puts(ng?"No":"Yes");
+  }
+}

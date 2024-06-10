@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define PB push_back
+#define LIM 1200000
+typedef long long ll;
+typedef vector<ll> vint;
+bool prime[LIM]; 
+vint v;
+int main(){
+	rep(i,LIM) prime[i]=true;
+	prime[0]=prime[1]=false;
+	rep(i,(int)sqrt(LIM)){
+		if(prime[i]){
+			for(int j=i*i;j<LIM;j+=i){
+				prime[j]=false;
+			}
+		}
+	}
+	rep(i,LIM){
+		if(prime[i]){
+			v.PB((ll)i);
+		}
+	}
+	ll N,P;
+	while(cin>>N>>P,N!=-1||P!=-1){
+		vint ans;
+		int c=0;
+		rep(i,LIM){
+			if(v[i]>N){
+				c=i;
+				break;
+			}
+		}
+		for(int i=c;i<c+P;i++){
+			for(int j=i;j<i+P;j++){
+				ans.PB(v[i]+v[j]);
+			}
+		}
+		// cout<<ans.size()<<endl;
+		sort(ans.begin(),ans.end());
+		cout<<ans[P-1]<<endl;
+	}
+	return 0;
+}

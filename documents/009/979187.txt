@@ -1,0 +1,49 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+
+string s;
+
+bool input(){
+	cin>>s;
+}
+
+bool req(int st, int en){
+	int count = 0;
+	
+	if(st>en)return true;
+	if(s[st]!='m' || s[en]!='w')return false;
+	
+	bool ans = false;
+	reps(i,st,en+1){
+		if(s[i]=='m')count++;
+		if(s[i]=='w')count--;
+		
+		if(count==1 && s[i]=='e'){
+			ans = req(st+1, i-1) & req(i+1, en-1);
+			break;
+		}
+	}
+	
+	return ans;
+}
+
+string solve(){
+	bool ans = req(0, s.size()-1);
+	
+	if(ans)return "Cat";
+	return "Rabbit";
+}
+
+int main(){
+	input();
+	cout<<solve()<<endl;
+}

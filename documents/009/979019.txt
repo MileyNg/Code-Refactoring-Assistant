@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int map[5003][5003] = {0};
+
+int main() {
+
+  long long int n, m, input_x, input_y;
+
+  cin >> n >> m;
+
+  vector< long long int > x, y, x_s, y_s;
+  x_s.push_back( -10000000000 );
+  x_s.push_back(  10000000000 );
+  y_s.push_back( -10000000000 );
+  y_s.push_back(  10000000000 );
+
+  for ( long long int i = 0; i < n; i++ ) {
+    cin >> input_x >> input_y;
+    x.push_back( input_x );
+    y.push_back( input_y );
+    x_s.push_back( input_x );
+    y_s.push_back( input_y );
+  }
+  sort( x_s.begin(), x_s.end() );
+  x_s.erase( unique( x_s.begin(), x_s.end() ), x_s.end() );
+  sort( y_s.begin(), y_s.end() );
+  y_s.erase( unique( y_s.begin(), y_s.end() ), y_s.end() );
+  vector< long long int >:: iterator it;
+  for ( long long int i = 0; i < n; i++ ) {
+    it = lower_bound( x_s.begin(), x_s.end(), x[i] );
+    x[i] = distance( x_s.begin(), it );
+    it = lower_bound( y_s.begin(), y_s.end(), y[i] );
+    y[i] = distance( y_s.begin(), it );
+    map[ x[i] ][ y[i] ]++;
+  }
+  for ( long long int i = 0; i < n+2; i++ ) {
+    long long int k = 0;
+    for ( long long int j = 0; j < n+2; j++ ) {
+      map[j][i] += k;
+      k = map[j][i];
+      if ( i > 0 ) {
+	map[j][i] += map[j][i-1];
+      }
+    }
+  }
+
+  /*
+  for ( long long int i = 0; i < n+2; i++ ) {
+    for ( long long int j = 0; j < n+2; j++ ) {
+      cout << map[j][i] << " ";
+    }
+    cout << endl;
+  }
+  */
+  long long int x1, x2, y1, y2;
+  for ( long long int i = 0; i < m; i++ ) {
+    cin >> x1 >> y1 >> x2 >> y2;
+    it = lower_bound( x_s.begin(), x_s.end(), x1 );
+    x1 = distance( x_s.begin(), it ) - 1;
+    it = lower_bound( y_s.begin(), y_s.end(), y1 );
+    y1 = distance( y_s.begin(), it ) - 1;
+    it = upper_bound( x_s.begin(), x_s.end(), x2 );
+    x2 = distance( x_s.begin(), it ) - 1;
+    it = upper_bound( y_s.begin(), y_s.end(), y2 );
+    y2 = distance( y_s.begin(), it ) - 1;
+    long long int ans = map[x2][y2];
+    if ( x1 >= 0 ) ans -= map[x1][y2];
+    if ( y1 >= 0 ) ans -= map[x2][y1];
+    if ( x1 >= 0 && y1 >= 0 ) ans += map[x1][y1];
+    //    cout << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
+    cout << ans << endl;
+  }
+
+  return 0;
+
+}

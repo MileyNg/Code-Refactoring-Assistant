@@ -1,0 +1,30 @@
+#include <iostream>
+
+void Swap(int *a, int *b);
+
+using namespace std;
+
+int main(void)
+{
+    int ary[3];
+    
+    cin >> ary[0] >> ary[1] >> ary[2];
+    if(ary[0] > ary[1])
+        Swap(&ary[0], &ary[1]);
+    if(ary[1] > ary[2]){
+        Swap(&ary[1], &ary[2]);
+        if(ary[0] > ary[1])
+            Swap(&ary[0], &ary[1]);
+    }
+    cout << ary[0] << " " << ary[1] << " " << ary[2] << endl;
+    
+    return 0;
+}
+
+void Swap(int *a, int *b)
+{
+    int tmp;
+    tmp = *a;
+    *a = *b;
+    *b = tmp;
+}

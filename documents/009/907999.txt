@@ -1,0 +1,33 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main(){
+  int n,m;
+  while(cin>>n>>m){
+    if(n==0&&m==0) return 0;
+    int data[n+1],total,ans = 0;
+    for(int i=0;i<n;i++) cin >> data[i];
+    data[n] = 0;
+    sort(data,data+n,greater<int>());
+    for(int j=0;j<=n;j++){
+      if(data[j]>m) continue;
+      total = data[j];
+      for(int k=0;k<=n;k++){
+	if(total+data[k]>m) continue;
+	total += data[k];
+	for(int i=0;i<=n;i++){
+	  if(total+data[i]>m) continue;
+	  total += data[i];
+	  for(int o=0;o<=n;o++){
+	    if(total+data[o]>m) continue;
+	    if(total+data[o]>ans) ans = total+data[o];
+	  }
+	  total -= data[i];
+	}
+	total -= data[k];
+      }
+      total -= data[j];
+    }
+    cout << ans << endl;
+  }
+}

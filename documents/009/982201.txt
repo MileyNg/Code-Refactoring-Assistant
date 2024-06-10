@@ -1,0 +1,54 @@
+
+
+DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+
+def inside(n, x, y)
+  (x >= 0 && x < n && y >= 0 && y < n)
+end
+
+def no_barrier(n, flds, x, y)
+  (! inside(n, x, y) || flds[y][x] != '#')
+end
+
+d = gets.strip.to_i
+
+need_blank = false
+
+d.times.each do |di|
+  n = gets.strip.to_i
+
+  flds = n.times.map{" " * n}
+
+  x = 0
+  y = n - 1
+  flds[y][x] = '#'
+  dir = 0
+  fwd = 0
+  turn = 0
+
+  while true
+    dx, dy = DIRS[dir]
+    x0 = x + dx
+    y0 = y + dy
+    x1 = x0 + dx
+    y1 = y0 + dy
+
+    if inside(n, x0, y0) && no_barrier(n, flds, x1, y1)
+      x = x0
+      y = y0
+      flds[y][x] = '#'
+      fwd += 1
+    elsif fwd < 2 && turn > 0
+      break
+    else
+      dir = (dir + 1) % 4
+      fwd = 0
+      turn += 1
+    end
+  end
+
+  puts if need_blank
+  need_blank = true
+
+  flds.each{|hl| puts hl}
+end

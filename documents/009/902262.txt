@@ -1,0 +1,40 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define M 1002
+#define N 102
+
+int main(int argc, char const *argv[])
+{
+	int n,m,a;
+	int h,p,q;
+
+	int f[M][N];
+
+
+	while(1){
+		cin>>n>>m>>a;
+		if(n+m+a==0) break;
+
+		for(int i1=0;i1<M;i1++){
+			for(int i2=0;i2<N;i2++){
+				f[i1][i2]=0;
+			}
+		}
+
+		for(int i1=0;i1<m;i1++){
+			cin>>h>>p>>q;
+			f[M-h][p]=1;
+		}
+
+
+		for(int i1=0;i1<M;i1++){
+			if(f[i1][a-1]==1) a--;
+			else if(f[i1][a]==1) a++;
+		}
+		cout<<a<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,58 @@
+#include <stdio.h>
+
+#define CROAD '.'
+#define CNOENTRY '#'
+
+char field[52][52];
+int max_gifts;
+int tx, ty;
+int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
+
+void search(int x, int y, int k, int gifts) {
+    int i;
+    char g;
+    g = field[y][x];
+    if (x == tx && y == ty) {
+        if (max_gifts < gifts) max_gifts = gifts;
+        if (k == 0) return;
+    }
+    else {
+        if ('1' <= g && g <= '9') {
+            gifts += g - '0';
+            field[y][x] = CROAD;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        if (i >= 2 && k == 0) break;
+        if (field[y+dy[i]][x+dx[i]] != CNOENTRY) {
+            search(x + dx[i], y + dy[i], k - (i >= 2), gifts);
+        }
+    }
+
+    field[y][x] = g;
+}
+
+int main(void) {
+    int H, W, K, i, j;
+
+    scanf("%d%d%d", &H, &W, &K);
+    for (i = 0; i <= H + 1; i++) {
+        if (i == 0 || i == H+1) {
+            for (j = 0; j <= W + 1; j++) {
+                field[i][j] = CNOENTRY;
+            }
+            continue;
+        }
+        scanf("%s", &(field[i][1]));
+        field[i][0] = field[i][W+1] = CNOENTRY;
+    }
+
+    max_gifts = 0;
+    tx = W;
+    ty = H;
+    search(1, 1, K, 0);
+
+    printf("%d\n", max_gifts);
+
+    return 0;
+}

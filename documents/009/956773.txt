@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <utility>
+#include <algorithm>
+
+using namespace std;
+
+typedef pair<int,int> pii;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int main(){
+    int n, m;
+    while(cin>>m, m){
+        vector<pii> p(m);
+        for(int i=0; i<m; i++) cin >> p[i].first >> p[i].second;
+        // C++11 ならこう書ける↓
+        // for(auto& e:p) cin >> e.first >> e.second;
+        // repマクロを使うとこう書ける↓
+        // rep(i,m) cin >> p[i].first >> p[i].second;
+
+        cin >> n;
+        vector<pii> q(n);
+        for(int i=0; i<n; i++) cin >> q[i].first >> q[i].second;
+
+        // sortが使える条件は，要素の型に対する比較演算子"<"が定義されていること↓
+        sort(q.begin(), q.end());
+        // binary_search, set, priority_queue などでも同様
+        // pair の演算子は定義されているので不要だが，
+        // 自作の構造体を格納するコンテナでこれをやるときは
+        // 演算子を定義するか，第3引数に演算子として使う関数を渡すかしなければいけない
+        // 面倒なので pair や C++11 で追加された tuple を使うのが楽
+
+        int ax=-1, ay=-1;
+        rep(i,n){
+            int dx = q[i].first - p[0].first;
+            int dy = q[i].second - p[0].second;
+            bool ok = true;
+            rep(j,m){
+                pii t(p[j].first + dx, p[j].second + dy);
+                if(!binary_search(q.begin(), q.end(), t)){
+                    ok = false;
+                    break;
+                }
+            }
+            if(ok){
+                ax = dx;
+                ay = dy;
+            }
+        }
+
+        cout << ax << " " << ay << endl;
+    }
+}

@@ -1,0 +1,41 @@
+EPS = 1e-9
+class Point
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_f)
+  end
+  def -(p)
+    Point.new(@x - p.x, @y - p.y, @z - p.z)
+  end
+  def dot(p)
+    @x * p.x + @y * p.y + @z * p.z
+  end
+  def cross(p)
+    Point.new(@y * p.z - @z * p.y, @z * p.x - @x * p.z, @x * p.y - @y * p.x)
+  end
+  def ==(p)
+    (@x - p.x).abs < EPS && (@y - p.y).abs < EPS && (@z - p.z).abs < EPS
+  end
+  def abs
+    Math::sqrt(@x * @x + @y * @y + @z * @z)
+  end
+  def normalize
+    Point.new(@x / abs, @y / abs, @z / abs)
+  end
+end
+def parallel?(a, b, c, d)
+  (b - a).normalize == (d - c).normalize || (b - a).normalize == (c - d).normalize
+end
+
+def blocked
+  d, e, a, b, c = 5.times.map{Point.new(*gets.split)}
+  abde = (e - d).dot((b - a).cross(d - a)).abs
+  bcde = (e - d).dot((c - b).cross(d - b)).abs
+  cade = (e - d).dot((a - c).cross(d - c)).abs
+  abcd = (d - c).dot((b - a).cross(c - a)).abs
+  abce = (e - c).dot((b - a).cross(c - a)).abs
+  return false if parallel?(a, b, d, e) || parallel?(b, c, d, e) || parallel?(c, a, d, e)
+  abde + bcde + cade == abcd + abce
+end
+
+puts (blocked ? "MISS" : "HIT")

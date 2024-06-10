@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+typedef struct Node{
+  int p, left, right;
+} node;
+
+node T[100000];
+
+void new_node(int, int);
+
+main(){
+  int n, i, j, p, data, before = 0;
+  T[0].p = -1;
+  T[0].right = -1;
+  T[0].left = NULL;
+
+  scanf("%d", &n);
+  for(i = 0; i < n; i++){ 
+    scanf("%d", &p);
+    for(j = 0; j < p; j++){
+      scanf("%d", &data);
+      new_node(p, data);
+      if(j == 0){
+	T[p].left = data;
+      }
+
+      if(T[before].right == NULL){
+	T[before].right = data;
+      }
+
+      before = data;
+    }
+    T[data].right = -1;
+  }
+  p =1;
+   for(i = 0; i < n; i++){
+    printf("node %d: ", i);
+    printf("[");
+   
+    for(j = 0; j < p; j++){ 
+      if(j == 0 && T[i + j].left != -1){
+	printf("%d", T[i + j].left);
+	if(j != p - 1){
+	printf(", ");
+	} 
+      } else if(T[i + j].right != -1){
+	printf("%d", T[i + j].right);
+	if(j != p - 1){
+	printf(", ");
+	} 
+      }
+    }
+    printf("]");	
+    printf("\n");
+    p = T[i].p;
+  }
+  
+}
+
+void new_node(int p, int i){
+  T[i].p = p; 
+  T[i].right = NULL;
+  T[i].left = NULL;
+  return;
+}

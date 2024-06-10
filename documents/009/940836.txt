@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int sort[5];
+	int i, j, tmp;
+	
+	for (i = 0; i < 5; i++){
+		scanf("%d", &sort[i]);
+	}
+	
+	for (i = 0; i < 5; i++){
+		for (j = 0; j < 4; j++){
+			if (sort[j] < sort[j + 1]){
+				tmp = sort[j];
+				sort[j] = sort[j + 1];
+				sort[j + 1] = tmp;
+			}
+		}
+	}
+	
+	for (i = 0; i < 5; i++){
+		printf("%d", sort[i]);
+		if (i != 4){
+			printf(" ");
+		}
+		else {
+			printf("\n");
+		}
+	}
+	
+	return (0);
+}

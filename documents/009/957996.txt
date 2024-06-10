@@ -1,0 +1,50 @@
+#include <iostream>
+#include <queue>
+#include <map>
+#include <utility>
+using namespace std;
+using namespace std::rel_ops;
+
+#define PAIR pair<double, int>
+
+// /**********オーバーロード**********/
+// bool operator>(const PAIR &a, const PAIR &b){
+// 	return a.first > b.first;
+// }
+// bool operator<(const PAIR &a, const PAIR &b){
+// 	return a.first < b.first;
+// }
+
+
+int main(){
+	priority_queue<PAIR, vector<PAIR>, greater<PAIR> > race, timeq;
+	//map<double, int>timeq;
+
+	for(int r = 0; r < 3; r++){
+		for(int i = 0; i < 8; i++){
+			int player;
+			double tim;
+			cin >> player >> tim;
+			race.push(PAIR(tim, player));
+		}
+
+		//グループ上位２位
+		for(int i = 0; i < 2; i++){
+			cout << race.top().second << " " << race.top().first << endl;
+			race.pop();
+		}
+
+		//グループ３、４位
+		for(int i = 0; i < 2; i++){
+			timeq.push(race.top());
+			race.pop();
+		}
+	}
+
+	//Time抜け
+	for(int i = 0; i < 2; i++){
+		cout << timeq.top().second << " " << timeq.top().first << endl;
+		timeq.pop();
+	}
+
+}

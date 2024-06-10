@@ -1,0 +1,51 @@
+class StrSet
+  attr_reader :str, :len, :num
+  def initialize(s = "")
+    @str = s
+    @len = s.length()
+    @num = 1
+  end
+  
+  def check_len(s)
+    if (@len < s.length())
+      @str = s
+      @len = s.length()
+    end
+  end
+  def check_num(s, n)
+    if (@num < n)
+      @str = s
+      @num = n
+    end
+  end
+  def count
+    @num += 1
+  end
+end
+
+max = StrSet.new()
+requency = StrSet.new()
+str_ary = []
+
+gets().split().each() do |word|
+  max.check_len(word)
+  
+  a_length = str_ary.length()
+  str_ary.each() do |set|
+    if (set.str == word)
+      set.count()
+      break
+    end
+    a_length -= 1
+  end
+  if (a_length == 0)
+    str_ary << StrSet.new(word)
+  end
+end
+
+requency = StrSet.new()
+str_ary.each() do |set|
+  requency.check_num(set.str, set.num)
+end
+
+puts("#{requency.str} #{max.str}")

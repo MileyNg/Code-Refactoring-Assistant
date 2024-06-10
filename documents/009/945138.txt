@@ -1,0 +1,125 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<queue>
+#include<set>
+#include<map>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 50;
+const int L = 6*2*N;
+
+int n,m,st,en;
+
+typedef pair<string,int> E;
+vector<E> edge[N];
+
+typedef pair<int,int> pii;
+pii dp[N][L];
+
+string solve(){
+	
+	rep(i,N)edge[i].clear();
+	rep(i,m){
+		int a,b;
+		string c;
+		cin>>a>>b>>c;
+		edge[a].push_back(E(c,b));
+	}
+	rep(i,n)sort(edge[i].begin(),edge[i].end());
+	rep(i,N)rep(j,L)dp[i][j]=pii(-1,-1);
+	
+	rep(i,n){
+		rep(j,edge[i].size()){
+			E e = edge[i][j];
+			
+			reps(k,j+1,edge[i].size()){
+				if(edge[i][k].first.size() == e.first.size() && edge[i][k].second==e.second){
+					edge[i].erase(edge[i].begin()+k);
+					k--;
+				}
+			}
+		}
+	}
+	
+	int maxlen = n*2*6+10;
+	
+	dp[st][0]=pii(0,0);
+	rep(i,maxlen){
+		rep(j,n){
+			if(dp[j][i].first==-1)continue;
+			rep(k,edge[j].size()){
+				E e = edge[j][k];
+				dp[e.second][i+e.first.size()]=pii(i,j);
+			}
+		}
+	}
+	/*
+	rep(i,maxlen){
+		printf("%d  ",i);
+		rep(j,n)printf("(%2d,%2d) ",dp[j][i]);puts("");
+	}*/
+	
+	vector<string> answers;
+	rep(i,maxlen){
+		int posn = en;
+		int poslen = i;
+		string str="";
+		while(1){
+			pii next = dp[posn][poslen];
+			if(next.first==-1)break;
+			rep(j,edge[next.second].size()){
+				E e = edge[next.second][j];
+				if(e.second == posn){
+					str = e.first + str;
+					break;
+				}
+			}
+			
+			if(next.first==0){
+				answers.push_back(str);
+				break;
+			}
+			posn = next.second;
+			poslen = next.first;
+		}
+	}
+	
+	
+	if(answers.size()==0)return "NO";
+	
+	int minp = 0;
+	reps(i,1,answers.size()){
+		if(answers[minp]>answers[i])minp=i;
+	}
+	
+	if(answers[minp].size()>=maxlen-3)return "NO";
+	
+	return answers[minp];
+}
+
+int main(){
+	while(1){
+		cin>>n>>m>>st>>en;
+		if(n==0)break;
+		cout<<solve()<<endl;
+		//break;
+	}
+}
+
+/*
+2 5 0 1
+0 1 aa
+0 1 ba
+0 1 aac
+0 1 ac
+0 1 baa
+
+
+*/

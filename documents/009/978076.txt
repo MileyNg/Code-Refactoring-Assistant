@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+  int n, i;
+  int s[1000];
+  double m, sum, alpha2, alpha;
+
+  while (1) {
+    scanf("%d", &n);
+    if (n == 0) {
+      break;
+    }
+    sum = 0;
+    for (i = 0; i < n; i++) {
+      scanf("%d", &s[i]);
+      sum += s[i];
+    }
+    m = sum / n;
+  
+    sum = 0;
+    for (i = 0; i < n; i++) {
+      sum += (s[i] - m) * (s[i] - m);
+    }
+    alpha2 = sum / n;
+    alpha = sqrt(alpha2);
+
+    printf("%.4f\n", alpha);
+  }
+  return 0;
+}

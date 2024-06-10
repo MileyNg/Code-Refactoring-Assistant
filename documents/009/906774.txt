@@ -1,0 +1,87 @@
+#include <map>
+#include <set>
+#include <list>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <complex>
+#include <cstdlib>
+#include <cstring>
+#include <numeric>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+
+#define mp       make_pair
+#define pb       push_back
+#define all(x)   (x).begin(),(x).end()
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+
+typedef    long long          ll;
+typedef    unsigned long long ull;
+typedef    vector<bool>       vb;
+typedef    vector<int>        vi;
+typedef    vector<vb>         vvb;
+typedef    vector<vi>         vvi;
+typedef    pair<int,int>      pii;
+
+const int INF=1<<29;
+const double EPS=1e-9;
+
+const int dx[]={1,0,-1,0},dy[]={0,-1,0,1};
+class team
+{
+public:
+	int id,b,acc,pen;
+	team(int i = 0,int b = 0,int a = 0, int p = 0):
+	id(i),b(b),acc(a),pen(p){}
+	bool operator < (const team &t)const {
+		if(acc==t.acc){
+			if(pen==t.pen){
+				return id < t.id;
+			}else return pen < t.pen;
+		}else return acc > t.acc;
+	}
+};
+int n;
+team T[1010];
+int main(){
+	while(cin>>n,n){
+		for(int i =0;i < n;i++){
+			cin>>T[i].id>>T[i].b>>T[i].acc>>T[i].pen;
+		}
+		sort(T,T + n);
+		int select = 0;
+		int bel_sele[100] ={0};
+		for(int i =0;i < n;i++){
+			int id = T[i].id;
+			int belong = T[i].b;
+			if(select < 10){
+				if(bel_sele[belong] < 3){
+					select++;
+					bel_sele[belong]++;
+					cout <<id<<endl;
+				}
+			}else if(select < 20){
+				if(bel_sele[belong] < 2){
+					select++;
+					bel_sele[belong]++;
+					cout <<id<<endl;
+				}
+			}else if(select < 26){
+				if(bel_sele[belong]==0){
+					select++;
+					bel_sele[belong]++;
+					cout <<id<<endl;
+				}
+			}
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,44 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <cassert>
+
+using namespace std;
+
+void failed() {
+  cout << "NA" << endl;
+}
+
+int main() {
+  
+  int Q1, B, C1, C2, Q2;
+  
+  while(cin >> Q1 >> B >> C1 >> C2 >> Q2) {
+    if(Q1 == 0) break;
+    
+    if(B/C1 == 0) {
+      failed(); continue;
+    }
+    
+    int AizuCh = min(B/C1, Q2);
+    int NCh = 0;
+    for(;;) {
+      
+      if(AizuCh + NCh >= Q1) {
+        cout << AizuCh << ' ' << NCh << endl; break;
+      }
+      
+      else if(B - (NCh+1)*C2 - AizuCh*C1 >= 0) {
+        while(B - (NCh+1)*C2 - AizuCh*C1 >= 0) NCh ++;
+      }
+      else if(B - (NCh+1)*C2 - (AizuCh-1)*C1 >= 0) {
+        NCh ++, AizuCh --;
+      }
+      
+      if(AizuCh == 0) { failed(); break; }
+    }
+    
+  }
+  
+  return 0;
+}

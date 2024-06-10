@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<math.h>
+
+enum{
+	A_in_B = -2,
+	A_not_touch_B = 0,
+	A_CROSS_B,
+	B_in_A
+};
+
+int detectA_B(float *fs);
+	
+
+int main(void){
+	int n;
+	float *fs;
+	scanf("%d",&n);
+	while(n--){
+		scanf("%f %f %f %f %f %f", &fs[0], &fs[1], &fs[2], &fs[3], &fs[4], &fs[5]);
+		printf("%d\n",detectA_B(fs));
+	}
+	return 0;
+}
+
+int detectA_B(float *fs){
+	float xa = fs[0], ya = fs[1], ra = fs[2], xb = fs[3], yb = fs[4], rb = fs[5];
+	float d = (float) sqrt( (xa - xb)*(xa - xb) + (ya-yb)*(ya-yb) );
+	if(d==0){
+		if(ra > rb ) return B_in_A;
+		return A_in_B;
+	}
+	
+	if( d > ra + rb) return A_not_touch_B;
+	if( ra > d + rb) return B_in_A;
+	if( rb > d + ra) return A_in_B;
+	return A_CROSS_B;
+}

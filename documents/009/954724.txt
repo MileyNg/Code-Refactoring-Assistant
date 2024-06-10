@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+	int mount[10], i, j, t;
+	for (i = 0; i < 10; ++i)
+	{
+		scanf("%d", &mount[i]);
+		j = i;
+		while (j > 0 && mount[j] > mount[j - 1])
+		{
+			t = mount[j - 1];
+			mount[j - 1] = mount[j];
+			mount[j] = t;
+			--j;
+		}
+	}
+	for (i = 0; i < 3; ++i)
+		printf("%d\n", mount[i]);
+	return 0;
+}

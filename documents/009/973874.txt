@@ -1,0 +1,34 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a1[101],c=0,n,size=0;
+    cin>>n;
+    while(n--)
+    {
+        cin>>a1[size];
+        size++;
+    }
+    for(int i=0;i<size;i++)
+    {
+        for(int j=i+1;j<size;j++)
+        {
+            if(a1[i]>a1[j])
+            {
+                int temp=a1[j];
+                a1[j]=a1[i];
+                a1[i]=temp;
+                c++;
+            }
+        }
+    }
+    for(int i=0;i<size;i++){
+        cout<<a1[i];
+        if(i==size-1)
+            continue;
+        else
+            cout<<" ";
+    }
+    cout<<endl<<c<<endl;
+    return 0;
+}

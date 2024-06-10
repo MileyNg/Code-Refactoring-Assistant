@@ -1,0 +1,89 @@
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+#include <string>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <ctime>
+#include <iostream>
+#include <climits>
+using namespace std;
+const int N = 600;
+const int K = 10;
+const int LEN = 10;
+set<string> sStr;
+int n, en, cnt;
+string a[K], b[K], st, ed;
+string que[N];
+int step[N];
+bool input(){
+ scanf("%d", &n);
+ if(!n) return false;
+ int i;
+ for(i = 0; i < n; i ++){
+  cin >>a[i]>>b[i];
+ }
+ cin >>st>>ed;
+ return true;
+}
+string rep(string org, int i){
+ int j, size=org.size(), aSize=a[i].size();
+ if(aSize > size || aSize == 0) return org;
+ string ans;
+ int len, l, k;
+ for(l = j = 0; j <= size-aSize; j++){
+  for(len = 0; len < aSize; len++){
+   if(org[j+len] != a[i][len]) break;
+  }
+  if(len >= aSize){
+   ans.append(b[i]);
+   j = j+aSize-1;
+  }else{
+   ans.push_back(org[j]);
+  }
+ }
+ for(; j < size; j++){
+  ans.push_back(org[j]);
+ }
+ return ans;
+}
+void solve(){
+ if(st == ed){
+  printf("0\n");
+  return;
+ }
+ sStr.clear();
+ cnt = 0;
+ sStr.insert(st);
+ int l, r, i;
+ string now, next;
+ l = r = 0;
+ que[r++] = st;
+ step[0] = 0;
+ while(l != r){
+  now = que[l++];
+  for(i = 0; i < n; i++){
+   next = rep(now, i);
+   if(sStr.find(next) == sStr.end()){
+    sStr.insert(next);
+    que[r] = next;
+    step[r] = step[l-1]+1;
+    if(next == ed){
+     printf("%d\n", step[r]);
+     return;
+    }
+    if(next.size() > LEN) continue;
+    r = (r+1)%N;
+   }
+  }
+ }
+ printf("-1\n");
+}
+int main(){
+ //freopen("in.txt", "r", stdin);
+ while(input()) solve();
+ return 0;
+}

@@ -1,0 +1,42 @@
+#include<iostream>
+
+using namespace std;
+
+const int MaxI = 51;
+int C[MaxI][MaxI];
+int Dh[] = {-1,-1,-1,0,0,1,1,1};
+int Dw[] = {-1,0,1,-1,1,-1,0,1};
+int H, W;
+
+void dfs(int i, int j);
+
+int main() {
+
+  while(cin>>W>>H && !(W==0 && H==0)) {
+    for(int i=0; i<H; i++) {
+      for(int j=0; j<W; j++) {
+	cin>>C[i][j];
+      }
+    }
+
+    int ans = 0;
+    for(int i=0; i<H; i++) {
+      for(int j=0; j<W; j++) {
+	if(C[i][j] == 1) {
+	  dfs(i,j);
+	  ans++;
+	}
+      }
+    }
+    cout<<ans<<endl;
+  }
+}
+
+void dfs(int i, int j) {
+  C[i][j] = 0;
+  for(int a=0; a<8; a++) {
+    if(0<=i+Dh[a] && i+Dh[a]<H && 0<=j+Dw[a] && j+Dw[a]<W && C[i+Dh[a]][j+Dw[a]] == 1) {
+      dfs(i+Dh[a], j+Dw[a]);
+    }
+  }
+}

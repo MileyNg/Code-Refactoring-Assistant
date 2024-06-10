@@ -1,0 +1,133 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// infty
+#define ULLINF (ULLONG_MAX)
+#define LLINF  (LLONG_MAX)
+#define IINF   (INT_MAX)
+#define INF    (1<<29)
+
+// math
+#define Sq(x) ((x)*(x))
+
+// container utility
+#define ALL(x) (x).begin(), (x).end()
+#define MP make_pair
+#define PB push_back
+
+// rep
+#define REP(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,n) REP(i,0,n)
+
+// typedef
+typedef pair<int, int> PII;
+typedef vector<int> VI;
+typedef vector<PII> VII;
+typedef vector<VI> VVI;
+
+typedef long long ll;
+
+// pair util
+#define FST first
+#define SND second
+
+// range validator
+#define CK(n,a,b) (a<=n && n<b)
+
+// conversion
+template<class T> inline string toStr(T a) { ostringstream oss_; oss_ << a; return oss_.str(); }
+inline int toInt(string s) { return atoi(s.c_str()); }
+
+// prime
+bool isPrime(int a) { for(int i=2; i*i <=a; i++) if(a%i == 0) return false; return true; }
+
+int const dx[] = {-1,0,1,0,-1,1,1,-1};
+int const dy[] = {0,-1,0,1,-1,-1,1,1};
+
+//////////////////////////////////////////////////////////////
+
+string line;
+set<int> memo[200][200];
+set<PII> used;
+
+set<int> eval(int const l, int const r) {
+  
+  /*
+  for(int i=l; i<r; i++) cout << line[i];
+  cout << endl;
+  */
+  set<int>& ret = memo[l][r];
+  if(l == r) return ret;
+  
+  if(used.count(MP(l, r))) return ret;
+  used.insert(MP(l, r));
+  
+  // check is digits [l, r)
+  bool digits = true;
+  for(int i=l; i<r; i++) { digits = digits && isdigit(line[i]); }
+  if(digits) { ret.insert(toInt(line.substr(l, r-l))); return ret; }
+  
+  int par = 0; bool check = true;
+  for(int i=l; i<r-1; i++) {
+    if(line[i] == '(') { par ++; }
+    if(line[i] == ')') { par --; }
+    if(par == 0) { check = false; }
+  }
+  
+  // "(expr)"
+  if(check) {
+    if(line[r-1] == ')') {
+      /*
+      for(int i=l; i<r; i++) cout << line[i];
+      cout << endl;
+      */
+      return ret = eval(l+1, r-1);
+    }
+  }
+  
+  par = 0;
+  // parsing loop
+  for(int i=l; i<r; i++) {
+    if(line[i] == '(') { par ++; }
+    if(line[i] == ')') { par --; }
+    if(par != 0) continue;
+    
+    switch(line[i]) {
+    case '+': case '-': case '*': case '/': {
+      set<int> st_a = eval(l, i), st_b = eval(i+1, r);
+      set<int>::iterator iter_a, iter_b;
+      for(iter_a = st_a.begin(); iter_a!=st_a.end(); iter_a++) {
+	for(iter_b = st_b.begin(); iter_b!=st_b.end(); iter_b++) {
+	  if(line[i] == '+') { ret.insert(*iter_a + *iter_b); }
+	  if(line[i] == '-') { ret.insert(*iter_a - *iter_b); }
+	  if(line[i] == '*') { ret.insert(*iter_a * *iter_b); }
+	  if(line[i] == '/') {
+	    if(*iter_b == 0) continue;
+	    ret.insert(*iter_a / *iter_b);
+	  }
+	}
+      }
+      break;
+    }
+    default:;
+    }
+  } // for parsing loop
+  
+  return ret;
+}
+
+int main() {
+  
+  while(cin >> line) {
+    for(int i=0; i<200; i++)
+      for(int j=0; j<200; j++)
+	memo[i][j].clear();
+    
+    used.clear();
+    
+    if(line == "#") break;
+    cout << eval(0, line.size()).size() << endl;
+  }
+  
+  return 0;
+}

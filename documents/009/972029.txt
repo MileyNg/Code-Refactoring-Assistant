@@ -1,0 +1,21 @@
+paths = []
+while (line = gets)
+  ns = line.chomp.split(",").map{|s| s.to_i}
+  paths.push ns
+end
+
+sums = []
+for ns in paths
+  if sums.length < ns.length
+    sums.unshift 0
+    sums.push 0
+  end
+
+  sums0 = []
+  for i in (0...ns.length)
+    sums0[i] = [sums[i], sums[i + 1]].max + ns[i]
+  end
+  sums = sums0
+end
+
+puts sums[0]

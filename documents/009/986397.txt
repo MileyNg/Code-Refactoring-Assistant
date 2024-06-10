@@ -1,0 +1,22 @@
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+int dist(int x1, int x2, int y1, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+
+int main() {
+    int n, a, b, c, d;
+    cin >> n;
+    cin >> a >> b >> c >> d;
+    a--; b--; c--; d--;
+
+    int res = 50000;
+    for (int i = 1; i <= n; i++) {
+        res = min(res, dist(a % i, b % i, a / i, b / i) + dist(c % i, d % i, c / i, d / i));
+    }
+    cout << res << endl;
+
+    return 0;
+}

@@ -1,0 +1,206 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define pb(a) push_back(a)
+#define mp(a,b) make_pair(a,b)
+#define ALL(a) (a).begin(),(a).end()
+#define SZ(a) ((int)(a).size())
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+int n,m,r;
+int a[100];
+int b[100];
+
+vector<int> xx[100];
+int y[100];
+
+bool become(int,int,int);
+bool become2(int,int,int);
+
+signed char eatmemo[51][51][60][11];
+bool eat(int as,int at,int ridx,int s){
+  signed char& ret=eatmemo[as][at][ridx][s];
+  if(ret != -1) return ret;
+  if(as==at)
+    return
+      ret=(s==SZ(xx[ridx]));
+  if(s==SZ(xx[ridx]))
+    return
+      ret=0;
+  
+  if(s==SZ(xx[ridx])-1)
+    return
+      ret=become(as,at,xx[ridx][s]);  
+  
+  //cout << "e " << as << " " << at << " " << ridx << " " << s << endl;
+  
+  for(int nas=as+1;nas<at;++nas)
+    if(become(as,nas,xx[ridx][s]) && eat(nas,at,ridx,s+1)){
+      //cout << "e " << as << " " << at << " " << ridx << " " << s << endl;
+      return
+        ret=1;
+    }
+  
+  return
+    ret=0;
+}
+
+signed char eatmemo2[51][51][60][11];
+bool eat2(int as,int at,int ridx,int s){
+  signed char& ret=eatmemo2[as][at][ridx][s];
+  if(ret != -1) return ret;
+  
+  if(as==at)
+    return
+      ret=(s==SZ(xx[ridx]));
+  if(s==SZ(xx[ridx]))
+    return
+      ret=0;
+
+  if(s==SZ(xx[ridx])-1)
+    return
+      ret=become2(as,at,xx[ridx][s]);
+  
+  for(int nas=as+1;nas<at;++nas)
+    if(become2(as,nas,xx[ridx][s]) && eat2(nas,at,ridx,s+1))
+      return
+        ret=1;
+  
+  return
+    ret=0;
+}
+
+signed char becmemo[60][60][33];
+
+bool become(int as,int at,int to){
+  signed char& ret=becmemo[as][at][to];
+  if(ret != -1) return ret;
+  //ret = 0;  
+  if(as+1 == at)
+    return
+      ret=(a[as]==to);
+  //cout << "b " << as << " " << at << " " << to << endl;
+  
+  rep(i,r)
+    if(y[i]==to && eat(as,at,i,0)){
+      //cout << "b " << as << " " << at << " " << to << endl;      
+      return
+        ret=1;
+    }
+  return
+    ret=0;
+}
+
+signed char becmemo2[60][60][33];
+
+bool become2(int as,int at,int to){
+  signed char& ret=becmemo2[as][at][to];
+  if(ret != -1) return ret;
+  //ret = 0;
+  if(as+1 == at)
+    return
+      ret=(b[as]==to);
+  
+  rep(i,r)
+    if(y[i]==to && eat2(as,at,i,0)){
+      //cout << "b2 " << as << " " << at << " " << to << endl;
+      return
+        ret=1;
+    }
+  
+  return
+    ret=0;
+}
+
+signed char tosmemo[51][51][51][51];
+
+bool tosame(int as,int at,int bs,int bt){
+  signed char& ret=tosmemo[as][at][bs][bt];
+  if(ret != -1) return ret;
+  //cout << as << " " << at << " " << bs << " " << bt << " "  << endl;
+  
+  for(int i=1;i<=30;++i)
+    if(become(as,at,i) && become2(bs,bt,i)){
+      //cout << as << " " << at << " " << bs << " " << bt << " " << i << endl;
+      return
+        ret=1;
+    }
+  
+  return
+    ret=0;
+}
+
+int okmemo[51][51][51][51];
+int okvis[51][51][51][51];
+
+
+bool ok(int as,int at,int bs,int bt,int len){
+  if(as==at && bs==bt && len==0) return 1;
+  int ret=(okmemo[as][at][bs][bt]>>len)&1;
+  int vi=(okvis[as][at][bs][bt]>>len)&1;
+  if(vi) return ret;
+  okvis[as][at][bs][bt] |= 1 << len;
+  //if(ret != -1) return ret;
+  //cout << "fok" << endl;
+  for(int nas=as+1;nas<=at;++nas){
+    for(int nbs=bs+1;nbs<=bt;++nbs){
+      if(tosame(as,nas,bs,nbs) &&
+         ok(nas,at,nbs,bt,len-1)){
+        okmemo[as][at][bs][bt] |= 1 << len;
+        return 1;
+      }
+    }
+  }
+  
+  return 0;
+}
+
+bool oklen(int as,int bs,int len){
+  return ok(as,as+n,bs,bs+m,len);
+}
+
+int sol(int as,int bs,int cans){
+  //cout << "fsol" << endl;
+  for(int i=cans-1;i>0;--i)
+    if(oklen(as,bs,i))
+      return i;
+  
+  return -1;
+}
+
+void solve(){
+  rep(i,n) cin >> a[i];
+  rep(i,m) cin >> b[i];
+
+  rep(i,n-1) a[i+n]=a[i];
+  rep(i,m-1) b[i+m]=b[i];
+  
+  rep(i,r){
+    int k;
+    cin >> k;
+    xx[i].resize(k);
+    rep(j,k) cin >> xx[i][j];
+    cin >> y[i];
+  }
+
+  int ans=-1;
+#define m1(a) memset(a,-1,sizeof(a));
+#define m0(a) memset(a,0,sizeof(a));    
+  m1(eatmemo);
+  m1(eatmemo2);
+  m1(becmemo);
+  m1(becmemo2);
+  m1(tosmemo);
+  m0(okmemo);
+  m0(okvis);
+  
+  rep(i,n)rep(j,m) ans = max(ans,sol(i,j,ans==-1?max(n,m)+1:ans));
+  
+  cout << ans << endl;
+}
+
+int main(){
+  while(cin >> n >> m >> r && n) solve();
+}

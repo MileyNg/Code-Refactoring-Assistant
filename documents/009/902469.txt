@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+ 
+using namespace std;
+ 
+typedef pair<int, int> P;
+ 
+int main(){
+    int D;
+    cin >> D;
+    int x, y;
+    vector<P> v;
+    cin >> x;
+    while (x--){
+        string s;
+        cin >> s;
+        int p;
+        cin >> p;
+        if (s == "D") v.push_back(make_pair(1, p));
+    }
+    cin >> y;
+    while (y--){
+        string s;
+        cin >> s;
+        int p;
+        cin >> p;
+        if (s == "DD") v.push_back(make_pair(2, p));
+    }
+ 
+    int n = v.size();
+ 
+    int ans = 0;
+    for (int i = 0; i < (1 << n); ++i){
+        int cost = 0, tmp = 0;
+        for (int j = 0; j < n; ++j){
+            if (i&(1 << j)){
+                cost += v[j].first;
+                tmp += v[j].second;
+            }
+        }
+        if (cost <= D) ans = max(ans, tmp);
+    }
+    cout << ans << endl;
+ 
+    return 0;
+}

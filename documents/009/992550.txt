@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+
+int W;
+int w[1001],v[1001];
+int N;
+int dp[1001][1001];
+
+int rec(int i, int j){
+
+  //もうやった
+  if(dp[i][j] >= 0){
+    return dp[i][j];
+  }
+  int res;
+
+  if(i == N){ // もう品物は無い
+    res = 0;
+
+  }else if(j < w[i]){ // この品物は入らない
+    res = rec(i + 1,j);
+ 
+  }else{ // 品物を加えることが出来るとき
+        res = max(rec(i+1,j), rec(i+1,j-w[i]) + v[i]);
+    /* 
+   int tmp1,tmp2;
+    tmp1 = rec(i+1,j);
+    tmp2 = rec(i+1,j-w[i]) + v[i];
+    if(tmp1 < tmp2){
+      res = tmp2;
+    }else{
+      res = tmp1;
+    }
+    */
+  }
+  return dp[i][j] = res;
+}
+
+
+int main(){
+
+  int num = 1;
+
+  while(1){
+    cin >> W;
+    if(W == 0) break;
+    cin >> N;
+    //初期化
+    /*
+    for(int i = 0; i < 1001; i++){
+      w[i] = v[i] = -1;
+      for(int j = 0; j < 1001; j++)
+	dp[i][j] = -1; 
+    }
+    */
+    memset(dp,-1,sizeof(dp));
+    memset(w,-1,sizeof(w));
+    memset(v,-1,sizeof(v));
+
+
+    //入力
+    char tmp;
+    for(int i = 0; i < N; i++) cin >> v[i] >> tmp >> w[i];
+
+    int ans = rec(0,W);
+
+    // dp配列を全て埋める
+    for(int i = 0; i < N; i++){
+      for(int j = 0; j <= W; j++){
+	if(dp[i][j] == -1)
+	  rec(i,j);
+      }
+    }   
+  
+    cout << "Case "<< num  << ":"<< endl;
+    num++;
+    cout << ans << endl; 
+    int j;
+    for( j = 0; dp[0][j] != ans ; j++){}
+    cout << j << endl;
+    
+  }
+  return 0;
+}

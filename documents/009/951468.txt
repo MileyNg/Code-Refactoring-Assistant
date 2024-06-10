@@ -1,0 +1,90 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+string in;
+int index;
+int f;
+
+int siki(int p,int q,int r){
+	int num=-1;
+	if(in[index]=='0'||in[index]=='1'||in[index]=='2'){
+		num=in[index]-'0';
+		index++;
+		if(index==in.size()) return num;
+	}
+	else if(in[index]=='('){
+		index++;
+		num=siki(p,q,r);
+	}
+	else if(in[index]=='-'){
+		index++;
+		f++;
+		num=siki(p,q,r);
+		f--;
+		if(num==0) num=2;
+		else if(num==2) num=0;
+	}
+	else if(in[index]=='P') num=p,index++;
+	else if(in[index]=='Q') num=q,index++;
+	else if(in[index]=='R') num=r,index++;
+	if(f!=0) return num;
+	if(in[index]=='*'){
+		int num2;
+		index++;
+		num2=siki(p,q,r);
+		if(num==0&&num2==0) num=0;
+		else if(num==0&&num2==1) num=0;
+		else if(num==0&&num2==2) num=0;
+		else if(num==1&&num2==0) num=0;
+		else if(num==1&&num2==1) num=1;
+		else if(num==1&&num2==2) num=1;
+		else if(num==2&&num2==0) num=0;
+		else if(num==2&&num2==1) num=1;
+		else if(num==2&&num2==2) num=2;
+	}
+	else if(in[index]=='+'){
+		int num2;
+		index++;
+		num2=siki(p,q,r);
+		if(num==0&&num2==0) num=0;
+		else if(num==0&&num2==1) num=1;
+		else if(num==0&&num2==2) num=2;
+		else if(num==1&&num2==0) num=1;
+		else if(num==1&&num2==1) num=1;
+		else if(num==1&&num2==2) num=2;
+		else if(num==2&&num2==0) num=2;
+		else if(num==2&&num2==1) num=2;
+		else if(num==2&&num2==2) num=2;
+	}
+	if(in[index]==')'){
+		index++;
+		return num;
+	}
+	return num;
+}
+
+int main(){
+
+	int pdata[]={0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
+	int qdata[]={0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2};
+	int rdata[]={0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2};
+	int cnt;
+
+	while(1){
+
+		cin>>in;
+		if(in==".") break;
+
+		cnt=0;
+		for(int i=0;i<27;i++){
+			index=0;
+			f=0;
+			if(siki(pdata[i],qdata[i],rdata[i])==2) cnt++;
+		}
+		cout<<cnt<<endl;
+
+	}
+
+}

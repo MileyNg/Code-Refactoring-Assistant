@@ -1,0 +1,22 @@
+# main
+
+while true
+  i = gets.strip.to_i
+  break if i == 0
+
+  as = gets.strip.split(' ').map{|s| s.to_i}
+
+  hn = 32
+  j = 0
+
+  while hn > 0
+    # ichiro
+    hn -= (hn - 1) % 5
+    puts hn
+
+    # jiro
+    hn -= (hn < as[j]) ? hn : as[j]
+    j = (j + 1) % i
+    puts hn
+  end
+end

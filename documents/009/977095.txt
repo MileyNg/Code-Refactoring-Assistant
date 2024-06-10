@@ -1,0 +1,32 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+
+void main() {
+  bool[][string] cards;
+  string[] suits = [ "S", "H", "C", "D" ];
+
+  foreach (suit; suits) {
+    cards[suit] = new bool[13];
+  }
+
+  readln;
+
+  foreach (string line; stdin.lines) {
+    auto card = line.chomp.split;
+    string suit = card[0];
+    int num = card[1].to!int;
+
+    cards[suit][num-1] = true;
+  }
+
+  foreach (suit; suits) {
+    foreach (i, num; cards[suit]) {
+      if (num == false) {
+        writefln("%s %d", suit, i + 1);
+      }
+    }
+  }
+}

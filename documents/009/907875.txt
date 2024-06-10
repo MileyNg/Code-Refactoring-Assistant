@@ -1,0 +1,53 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int minprice(string name, map<string,vector<string> > recipes, map<string,int> price){
+	int p = price[name];
+	map<string,vector<string> >::iterator recipe;
+	if((recipe = recipes.find(name)) != recipes.end()){
+		int tmp = 0;
+		vector<string> materials = recipe->second;
+		for(vector<string>::iterator material = materials.begin(); material != materials.end(); ++material){
+			tmp += minprice(*material, recipes, price);
+		}
+		if(p > tmp){
+			p = tmp;
+		}
+	}
+	return p;
+}
+
+int main(){
+	int n;
+	cin >> n;
+	while(n != 0){
+		map<string,int> items;
+		for(int i = 0; i < n; ++i){
+			string name;
+			int price;
+			cin >> name >> price;
+			items[name] = price;
+		}
+		int m;
+		cin >> m;
+		map<string,vector<string> > recipes;
+		for(int i = 0; i < m; ++i){
+			string name;
+			int k;
+			cin >> name >> k;
+			for(int j = 0; j < k; ++j){
+				string material;
+				cin >> material;
+				recipes[name].push_back(material);
+			}
+		}
+		string item;
+		cin >> item;
+		cout << minprice(item, recipes, items) << endl;
+		cin >> n;
+	}
+}

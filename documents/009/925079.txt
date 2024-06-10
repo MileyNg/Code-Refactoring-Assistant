@@ -1,0 +1,94 @@
+#include<iostream>
+#include<string>
+#include<cstdlib>
+using namespace std;
+
+
+#define MAX_NUM_PROCESS 100000
+#define MAX_LEN_PROC_NAME 10
+
+
+struct proc{
+        string name;
+        int time;
+};
+
+class queue
+{
+        struct proc que[MAX_NUM_PROCESS];
+        int head;
+        int tail;
+public:       
+        void init();
+        void inline enque(struct proc p);
+        struct proc inline deque();
+};
+
+void queue::init()
+{
+        tail = 0;
+        head = 0;
+}
+
+void queue::enque(struct proc p)
+{
+        // tailがheadの直前にあるか、tailが最後でかつheadが先頭の時
+        // if( (tail+1==head) || ((tail==MAX_NUM_PROCESS-1)&&(head==0)) ){
+        //         cout << "Error:Queue is full.\n";
+        //         exit(1);
+        // }
+        que[tail] = p;
+        tail++;
+}    
+
+struct proc queue::deque()
+{
+        // if( tail == head ){
+        //         cout << "Error:Queue is empty.\n";
+        //         exit(1);
+        // }
+        return que[head++];
+}
+                
+
+
+int main()
+{
+        int n, time;
+        cin >> n >> time;
+
+        string s;
+        int t, totalTime=0, curTime=0;
+        queue q;
+        struct proc p;
+
+        q.init();
+        while( cin >> s >> t ){
+                totalTime += t;
+                p.name = s;
+                p.time = t;
+                if( t <= time ){
+                        curTime += t;
+                        cout << p.name << " " << curTime << endl;
+                }else{
+                        p.time -= time;
+                        curTime += time;
+                        q.enque(p);
+                }
+        }
+
+
+        while( totalTime != curTime ){
+                p  = q.deque();
+                if( p.time > time ){
+                        p.time -= time;
+                        curTime += time;
+                        q.enque(p);
+                }else{
+                        curTime += p.time;
+                        cout << p.name << " " << curTime << endl;
+                }
+        }
+
+        return 0;
+}

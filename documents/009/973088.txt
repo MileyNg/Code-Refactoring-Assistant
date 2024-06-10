@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+void solve(int n);
+
+char str[102];
+
+int main(){
+
+  int n;
+
+  while(1){
+
+    scanf("%d",&n);
+
+    if(n==0)break;
+
+    scanf("%s",str);
+
+    solve(n);
+
+  }
+
+  return 0;
+}
+void solve(int n){
+
+  int i,j;
+  int ground=0;
+  int player[10]={0};
+
+  for(i=0;i<100;){
+    for(j=0;j<n;j++,i++){
+      player[j]++;
+      if(str[i]=='S'){
+	ground+=player[j];
+	player[j]=0;
+      }
+      else if(str[i]=='L'){
+	player[j]+=ground;
+	ground=0;
+      }
+    }
+  }
+
+  sort(player,player+n);
+
+  for(i=0;i<n;i++){
+    printf("%d ",player[i]);
+  }
+  printf("%d\n",ground);
+
+}

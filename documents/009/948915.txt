@@ -1,0 +1,37 @@
+#include<stdio.h>
+
+int main(void){
+    int n,i,j,a;
+    int card[4][14]={0};
+    char m;
+    scanf("%d",&n);
+    for(i=0;i<n;i++){
+        scanf("%c %d",&m,&a);
+        switch(m){
+            case 'S':
+                card[0][a]=1;
+                break;
+            case 'H':
+                card[1][a]=1;
+                break;
+            case 'C':
+                card[2][a]=1;
+                break;
+            case 'D':
+                card[3][a]=1;
+        }
+    }
+    for(i=0;i<4;i++){
+        for(j=1;j<14;j++){
+            if(card[i][j]==0){
+                if(i==0)m='S';
+                else if(i==1)m='H';
+                else if(i==2)m='C';
+                else m='D';
+                printf("%c %d\n",m,j);
+            }
+        }
+    }
+
+    return 0;
+}

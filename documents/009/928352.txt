@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int top,s[100];
+
+int pop() {
+  
+  top = top - 1;
+  return s[top+1];
+  
+}
+
+void push(int x) {
+  
+  top = top + 1;
+  s[top] = x;
+  
+}
+
+int main(){
+  int a,b,x;
+  char s[100];
+  top=0;
+  
+  while( scanf("%s", s) != EOF ){
+    
+    if ( s[0] == '+' ){
+      a=pop();
+      b=pop();
+      push(b+a);
+      
+      
+    } else if ( s[0] == '-' ){
+      a=pop();
+      b=pop();
+      push(b-a);
+      
+      
+      
+    } else if ( s[0] == '*' ){
+      a=pop();
+      b=pop();
+      push(b*a);
+      
+    } else {
+      x = atoi(s);
+      push(x);
+      
+      
+    }
+    
+  }
+  
+  printf("%d\n",pop());
+  
+  
+  return 0;
+}
+
+ 

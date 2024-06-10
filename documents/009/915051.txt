@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n,m;
+	int t,s,d;
+	int cnt;
+
+	while(1){
+		cin>>n>>m;
+		if(n+m==0) break;
+
+		map<int,pair<int,int> > mp;
+		vector<bool> v(n);
+
+		for(int i1=0;i1<n;i1++) v[i1]=false;
+		v[0]=true;
+
+		for(int i1=0;i1<m;i1++){
+			cin>>t>>s>>d;
+			mp[t]=make_pair(s-1,d-1);
+		}
+
+		cnt=1;
+		for(map<int,pair<int,int> >::iterator it=mp.begin();it!=mp.end();it++){
+			if(v[(*it).second.first] && !v[(*it).second.second]) {
+				v[(*it).second.second]=true;
+				cnt++;
+			}
+		}
+		cout<<cnt<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,84 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<P,P> PP;
+
+int n,a,b,c,m,INF=(1<<24);
+P A,B;
+vector<PP> t[10000];
+
+P now,now2;
+PP Z = PP(P(-1,-1),P(-1,-1));
+PP get_next();
+PP get_next2();
+
+int main(){
+  while(cin>>n>>a>>b&&a&&b){
+    A=P(a/100,a%100);
+    B=P(b/100,b%100);
+    for(int i=0;i<n;i++){
+      t[i].clear();
+      cin>>m;
+      for(int j=0;j<m;j++){
+	cin>>a>>b;
+	t[i].push_back(PP(P(a/100,a%100),P(b/100,b%100)));
+      }
+
+      t[i].push_back(PP(B,B));
+      sort(t[i].begin(),t[i].end());
+
+    }
+    
+    PP next;
+    int cnt=0,ans=0;
+    now=A;
+    while(now<B){
+      next=get_next();
+      
+      if(next.first==now){//cout<<'a'<<endl;
+	next=get_next2();
+	//cout<<next.first.first<<' '<<next.first.second<<' '<<next.second.first<<' '<<next.second.second<<endl;
+	now=next.second;
+	cnt=0;
+      }else{//cout<<'b'<<endl;
+	cnt+= (next.first.first*60+next.first.second)-(now.first*60+now.second);
+	ans=max(ans,cnt);
+	now=next.first;now2=next.second;
+      }
+    }
+
+    cout<<ans<<endl;
+  }
+  return 0;
+}
+
+PP get_next(){
+  PP res=PP(now,P(0,0));
+  for(int i=0;i<n;i++){
+    if(t[i].size()==0)continue;
+    if(res < t[i][0]){
+      res=t[i][0];
+    }
+  }
+  for(int i=0;i<n;i++){
+    while(t[i].size()>0&&t[i][0].second<=res.first)t[i].erase(t[i].begin());
+  }
+  return res;
+}
+
+PP get_next2(){
+  int tmpI=-1;
+  PP res = PP(P(INF,INF),P(INF,INF));
+  for(int i=0;i<n;i++){
+    if(t[i].size()==0)continue;
+    if(res.second>t[i][0].second){
+      res=t[i][0];
+      tmpI=i;
+    }
+  }
+  if(tmpI==-1)return res;
+  t[tmpI].erase(t[tmpI].begin());
+  return res;
+}

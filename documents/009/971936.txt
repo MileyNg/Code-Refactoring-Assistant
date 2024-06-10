@@ -1,0 +1,31 @@
+#include<stdio.h>
+#include<math.h>
+
+double p(int n){
+  double x=(double)n;
+  return x*x;
+}
+
+double hoftr(int x,int h){
+  return sqrt(p(x)/4+p(h));
+}
+
+double pyramid(int x,int h){
+  return ((double)p(x))+((double)(2*x))*hoftr(x,h);
+}
+
+void ans(){
+  int x,h;
+  scanf("%d",&x);
+  scanf("%d",&h);
+  if((x!=0)||(h!=0)){
+    double a=pyramid(x,h);
+    printf("%f\n",a);
+    ans();
+  }
+}
+
+int main(){
+  ans();
+  return 0;
+}

@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void) {
+
+	int n=0, i, j;
+	
+	while( scanf("%d", &n) != EOF ) {
+		int count = 2;
+		
+		if(n==1 || n==2 || n==3) {
+			printf("%d\n", n-1);
+			continue;
+		}
+		
+		else {
+			for(j=5; j<=n; j=j+2){
+				for(i=2; i<=sqrt(j); i++) {
+					if(j%i == 0) break;
+				
+					if(i == (int)sqrt(j)) count++;
+				}
+			}
+			printf("%d\n", count);
+			
+		}
+	
+	}
+	
+	return 0;
+}
+			

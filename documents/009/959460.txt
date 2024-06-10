@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string>
+#include <queue>
+
+int main(){
+	const std::string single_hit("HIT");
+	const std::string homerun("HOMERUN");
+	const std::string out("OUT");
+	
+	
+	std::queue<int> base;
+	int out_count = 0;
+	int score = 0;
+	int game = 1;
+	int num;
+	std::string str;
+	
+	std::cin >> num;
+	while(num){
+		out_count = 0;
+		score = 0;
+		game = 1;
+		while(game){
+			std::cin >> str;
+			if(str == single_hit){
+					base.push(1);
+					if(base.size() == 4){
+						++score;
+						base.pop();
+					}
+			}
+			else if(str == homerun){
+					score += base.size() + 1;
+					while(base.size() !=0)	base.pop();
+			}
+			else if(str == out){
+					++out_count;
+					if(out_count == 3) game = 0;
+			}
+		}
+		std::cout << score << std::endl;
+		--num;
+	}
+	
+	
+
+
+}

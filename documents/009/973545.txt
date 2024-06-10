@@ -1,0 +1,75 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+const int MOD = 100000;
+int dp[2][(1<<20)],H,W;
+bool CONTINUE[1<<20];
+char G[20][20];
+/*
+dp[(x,y) & 1][column][Is the left is J?] := the number % 10^5
+ */
+
+inline void compute(int other){
+
+  dp[0][0] = 1;
+
+  rep(y,H)rep(x,W) {
+    int phase = ( x + y * W ) & 1;
+    rep(i,(1<<W)) dp[!phase][i] = 0;
+    rep(bitmask,(1<<W)){     
+
+      int nbitmask = bitmask;
+
+      if( G[y][x] == 'O' ) goto O;
+      if( G[y][x] == 'I' ) goto I;
+
+      // put J
+      if( x-1 >= 0 ) nbitmask &= ~(1<<(x-1));
+      if( x+1 != W ) nbitmask |= (1<<x);
+      ( dp[!phase][nbitmask] += ( dp[phase][bitmask] ) ) %= MOD;
+      if( G[y][x] == 'J' ) goto Skip;
+
+    O:;
+      // put O
+      nbitmask = bitmask;
+      nbitmask &= ~(1<<x);
+      ( dp[!phase][nbitmask] += dp[phase][bitmask] ) %= MOD;
+      if( G[y][x] == 'O' ) goto Skip;
+
+    I:;
+      // put I
+      nbitmask = bitmask;
+      nbitmask &= ~(1<<x);
+      if( x-1 >= 0 ) nbitmask &= ~(1<<(x-1));
+      if( !( ( bitmask>>x ) & 1 ) ) {
+        ( dp[!phase][nbitmask] += dp[phase][bitmask] ) %= MOD;
+      }
+      
+    Skip:;
+      
+    }
+  }
+
+  int sum = 0;
+  rep(i,(1<<W)) ( sum += dp[(H*W)&1][i] ) %= MOD;
+
+  int total = 1;
+  rep(i,other) ( total *= 3 ) %= MOD;
+  cout << ( total - sum + MOD ) % MOD << endl;
+}
+
+int main(){
+
+  scanf("%d %d",&H,&W);
+  int other = 0;
+  rep(i,H)rep(j,W){
+    cin >> G[i][j];
+    other += (G[i][j]=='?');
+  }
+  compute(other);
+  return 0;
+}

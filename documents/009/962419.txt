@@ -1,0 +1,25 @@
+from collections import deque
+
+n = int(input())
+
+q = deque()
+for i in range(n):
+    cmd = input().strip()
+    if cmd == 'deleteFirst':
+        q.popleft()
+        continue
+    if cmd == 'deleteLast':
+        q.pop()
+        continue
+    cmd, x = cmd.split()
+    if cmd == 'insert':
+        q.appendleft(x)
+        continue
+    if cmd == 'delete':
+        try:
+            q.remove(x)
+        except:
+            pass
+        continue
+
+print(' '.join(q))

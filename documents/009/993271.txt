@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+void printit(int *a){
+  int fst=0,scd=0,trd=0;
+  int i;
+  for(i=0;i<10;i++){
+    if(fst<a[i]){
+      trd=scd;
+      scd=fst;
+      fst=a[i];
+    }
+    else if(scd<a[i]){
+      trd=scd;
+      scd=a[i];
+    }
+    else if(trd<a[i]){
+      trd=a[i];
+    }
+  }
+  printf("%d",fst+scd+trd);
+}
+
+void doit(){
+  int a[10];
+  int f=0;
+  while(f<2){
+    int i;
+    for(i=0;i<10;i++){
+      scanf("%d",&a[i]);
+    }
+    printit(a);
+    if(f==0){
+      printf(" ");
+    }
+    else{
+      printf("\n");
+    }
+    f++;
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

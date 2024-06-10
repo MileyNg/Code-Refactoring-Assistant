@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int num,hand;
+    char m;
+    int c[4][14];
+    
+    for(int i=0;i<4;i++){
+        for(int j=0;j<14;j++){
+            c[i][j]=1;
+        }
+    }
+    
+    scanf("%d",&hand);
+    for(int i=0;i<=hand;i++){
+        scanf("%c %d",&m,&num);//S H C D
+        switch (m) {
+            case 'S':
+                c[0][num]=0;
+                break;
+            case 'H':
+                c[1][num]=0;
+                break;
+            case 'C':
+                c[2][num]=0;
+                break;
+            case 'D':
+                c[3][num]=0;
+            default:
+                break;
+        }
+    }
+    
+    for(int i=0;i<4;i++){
+        for(int j=0;j<14;j++){
+            if(c[i][j]==1 && j!=0){
+                switch (i) {
+                    case 0:
+                        printf("S");
+                        break;
+                    case 1:
+                        printf("H");
+                        break;
+                    case 2:
+                        printf("C");
+                        break;
+                    case 3:
+                        printf("D");
+                        break;
+                    default:
+                        break;
+                }
+                printf(" %d\n",j);
+            }
+        }
+    }
+    
+    return 0;
+}

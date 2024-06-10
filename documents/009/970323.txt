@@ -1,0 +1,24 @@
+#include <iostream>
+#include <algorithm>
+#include <iterator>
+using namespace std;
+
+int main() {
+  int n, p;
+  double h;
+  double a[] = {165.0, 170.0, 175.0, 180.0, 185.0};
+  int b[6];
+  cin >> n;
+  for (int i=0; i<6; i++) b[i] = 0;
+  for (int i=0; i<n; i++) {
+    cin >> h;
+    ++b[distance(a, upper_bound(a, a+5, h))];
+  }
+  for (int i=0; i<6; i++) {
+    cout << i+1 << ":";
+    for (int j=0; j<b[i]; j++) {
+      cout << "*";
+    }
+    cout << endl;
+  }
+}

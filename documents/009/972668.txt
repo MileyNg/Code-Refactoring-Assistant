@@ -1,0 +1,123 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int decode(char c)
+{
+	if(isupper(c)) return c-'A';
+	if(islower(c)) return c-'a'+26;
+	if(isdigit(c)) return c-'0'+52;
+	if(c=='+') return 62;
+	if(c=='/') return 63;
+	assert(0);
+}
+
+vvi parse(int w,int h)
+{
+	vvi res(h);
+	rep(i,h){
+		string s; cin>>s;
+		for(char c:s){
+			int x=decode(c);
+			per(j,6) res[i].push_back(x>>j&1);
+		}
+		res[i].erase(begin(res[i])+w,end(res[i]));
+	}
+	return res;
+}
+
+vvi mirror(const vvi& a)
+{
+	return vvi(a.rbegin(),a.rend());
+}
+
+vvi rotate(const vvi& a)
+{
+	int n=a.size();
+	vvi b(n,vi(n));
+	rep(i,n) rep(j,n)
+		b[n-1-j][i]=a[i][j];
+	return b;
+}
+
+int main()
+{
+	//clock_t t0=clock();
+	const uint prime=16777619;
+	
+	for(int w,h,p;cin>>w>>h>>p && w|h|p;){
+		//vvi image=parse(w,h);
+		vvi _image=parse(w,h);
+		static int image[1000][1000];
+		rep(i,h) rep(j,w) image[i][j]=_image[i][j];
+		vvi pattern=parse(p,p);
+		if(p>w || p>h){
+			cout<<0<<endl;
+			continue;
+		}
+		
+		uint pp=1;
+		rep(i,p) pp*=prime;
+		
+		vvi match(h,vi(w));
+		for(int _=0;_<2;_++,pattern=mirror(pattern))
+		for(int _=0;_<4;_++,pattern=rotate(pattern)){
+			//vector<uint> ph(p);
+			uint ph[100]={};
+			rep(i,p) rep(j,p) (ph[i]*=prime)+=pattern[i][j];
+			rep(i,h-p+1){
+				//vector<uint> ih(p);
+				uint ih[100]={};
+				rep(k,p) rep(j,p) (ih[k]*=prime)+=image[i+k][j];
+				rep(j,w-p+1){
+					//if(ih==ph) match[i][j]=1;
+					bool eq=true;
+					rep(k,p) if(ih[k]!=ph[k]){eq=false; break;}
+					match[i][j]|=eq;
+					if(j+p==w) continue;
+					rep(k,p) ((ih[k]*=prime)-=image[i+k][j]*pp)+=image[i+k][j+p];
+				}
+			}
+		}
+		
+		int res=0;
+		rep(i,h) rep(j,w) res+=match[i][j];
+		cout<<res<<endl;
+	}
+	//printf("%.3f\n",1.*(clock()-t0)/CLOCKS_PER_SEC);
+}

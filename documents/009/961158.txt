@@ -1,0 +1,73 @@
+#include<cstdio>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+
+struct record{
+  int team;
+  int solve;
+  int time;
+  vector< int > wa;
+  
+};
+
+int getPenalty(record data, int pass){
+  int cnt=0;
+  for(int i=0;i<data.wa.size();i++){
+    if(pass==data.wa[i])
+      cnt++;
+  }
+  return cnt*20;
+
+}
+
+bool cmp(const record& a,const record& b){
+  if(a.solve!=b.solve) return a.solve>b.solve;
+  if(a.time!=b.time) return a.time<b.time;
+  return a.team > b.team;
+
+}
+
+int main(){
+  
+  int m,t1,p,r;
+  int t2,f;
+
+  while(1){
+    cin>>m>>t1>>p>>r;
+    if(m==0 && t1==0 && p==0 && r==0) break;
+    record record[t1];
+    for(int i=0;i<t1;i++){
+      record[i].team=i+1;
+      record[i].solve=0;
+      record[i].time=0;
+    }
+    
+    for(int i=0;i<r;i++){
+      cin>>m>>t2>>p>>f;
+      if(f==0){
+	record[t2-1].solve++;
+	record[t2-1].time+=m+getPenalty(record[t2-1],p);
+      }else{
+	record[t2-1].wa.push_back(p);
+      }
+    }
+    
+    sort(record,record+t1,cmp);
+    
+    for(int i=0;i<t1;i++){
+      printf("%d",record[i].team);
+      if(i==t1-1) break;
+      if(record[i].solve!=record[i+1].solve)
+	printf(",");
+      else{
+	if(record[i].time!=record[i+1].time) printf(",");
+	else printf("=");
+      }
+    }
+    puts("");
+  }
+  return 0;
+}

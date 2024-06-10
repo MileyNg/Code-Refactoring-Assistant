@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1<<28;
+
+int N, E, T;
+vector<int> W;
+vector<int> G;
+vector<vector<int> > S;
+
+int main() {
+  cin >> N >> E >> T;
+  W.resize(N);
+  for(int i = 0; i < N; ++i) cin >> W[i];
+  for(int i = 0; i < N; ++i) if(W[i] == 0) W[i] = INF;
+  S.resize(E);
+  G.resize(E);
+  for(int i = 0; i < E; ++i) {
+    int C;
+    cin >> G[i] >> C;
+    G[i] -= 1;
+    S[i].resize(C);
+    for(int j = 0; j < C; ++j) {
+      cin >> S[i][j];
+      S[i][j] -= 1;
+    }
+  }
+
+  bool update = true;
+  while(update) {
+    update = false;
+    for(int i = 0; i < E; ++i) {
+      int maxi = S[i].size();
+      vector<int> v;
+      for(int j = 0; j < S[i].size(); ++j) {
+	v.push_back(W[S[i][j]]);
+      }
+      sort(v.begin(), v.end(), greater<int>());
+      for(int j = 0; j < v.size(); ++j) {
+	maxi = max(maxi, W[S[i][j]] + j);
+      }
+      if(W[G[i]] > maxi) {
+	update = true;
+	W[G[i]] = maxi;
+      }
+    }
+  }
+  if(W[T-1] == INF) cout << -1 << endl;
+  else cout << W[T-1] << endl;
+  return 0;
+}

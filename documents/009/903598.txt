@@ -1,0 +1,98 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+struct node_t {
+	string name;
+	unordered_map<string, unique_ptr<node_t>> children;
+
+	bool is_leaf() const {
+		return children.size() == 0;
+	}
+
+	void add_child(const string &key, unique_ptr<node_t> &&p) {
+		children[key] = move(p);
+	}
+
+	string find(const vector<string>& query, int depth = 0) const {
+		if(depth == query.size()) return is_leaf() ? "string \"" + name + "\"" : "object";
+		if(children.count(query[depth])) return children.at(query[depth])->find(query, depth + 1);
+		return "no such property";
+	}
+
+	string to_string() const {
+		if(is_leaf()) return name;
+		string res = " ";
+		for(const auto &e : children) {
+			res += e.first + "(" + e.second->to_string() + ") ";
+		}
+		return res;
+	}
+};
+
+vector<string> split(string s, const string &delim) {
+	vector<string> res;
+	int pos;
+	while((pos = s.find(delim)) != string::npos) {
+		if(pos) res.emplace_back(s.substr(0, pos));
+		s = s.substr(pos + 1);
+	}
+	if(s.size()) res.emplace_back(s);
+	return res;
+}
+
+int indent(const string &s) {
+	for(unsigned i = 0; i < s.size(); ++i) {
+		if(s[i] != ' ') return i;
+	}
+	return 0;
+}
+
+unique_ptr<node_t> mapping(const vector<string> &input, int &idx, int ind) {
+	unique_ptr<node_t> res(new node_t);
+	while(idx < input.size()) {
+		if(indent(input[idx]) < ind) break;
+
+		const int pos = input[idx].find(':');
+		string property = input[idx].substr(ind, pos - ind);
+
+		if(pos + 1 == input[idx].size()) {
+			++idx;
+			res->add_child(property, mapping(input, idx, indent(input[idx])));
+		}
+		else {
+			unique_ptr<node_t> child(new node_t);
+			child->name = input[idx++].substr(pos + 2);
+			res->add_child(property, move(child));
+		}
+	}
+	return res;
+}
+
+unique_ptr<node_t> parse(const vector<string> &input) {
+	int idx = 0;
+	return mapping(input, idx, 0);
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	string query;
+	getline(cin, query);
+
+	vector<string> input;
+	string line;
+	while(getline(cin, line)) {
+		input.emplace_back(line);
+	}
+
+	const auto root = parse(input);
+	cout << root->find(split(query, ".")) << endl;
+
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,66 @@
+#include<iostream>
+#include<deque>
+#include<algorithm>
+#define INF 1<<28
+using namespace std;
+
+struct P{
+  int x, y, c;
+  P(int x, int y, int c):x(x),y(y),c(c){}
+};
+
+int w, h;
+char s[999][999];
+int sx, sy;
+int dx[] = {0,0,1,-1};
+int dy[] = {1,-1,0,0};
+
+int bfs(){
+
+  deque < P > que;
+  int ans = INF;
+  bool flag[999][999] = {};
+
+  que.push_front(P(sx, sy, 0));
+  flag[sy][sx] = true;
+ 
+  while(!que.empty()){
+    P p = que.front(); que.pop_front();
+    int nx = p.x, ny = p.y;
+
+    for(int i=0;i<4;i++){
+      int x = nx + dx[i], y = ny + dy[i];
+
+      if(flag[y][x]) continue;
+      if(!y || !x || y == h+1 || x == w+1){
+	ans = min(p.c, ans);
+	continue;
+      }
+      
+      if(s[ny][nx] != '#' && s[y][x] == '#') que.push_back(P(x,y,p.c+1));
+      else que.push_front(P(x,y,p.c));
+    }
+    flag[ny][nx] = true;
+  }
+  return ans;
+}
+
+int main(){
+
+  while(true){
+    cin >> w >> h;
+    if(!w && !h) break;
+
+    for(int i=0;i<999;i++){
+      for(int j=0;j<999;j++){
+	s[i][j] = '.';
+	if(i > h || j > w || !i || !j) continue;
+	cin >> s[i][j];
+	if(s[i][j] == '&') sx = j, sy = i;
+      }
+    }
+
+    cout << bfs() << endl;
+
+  }
+}

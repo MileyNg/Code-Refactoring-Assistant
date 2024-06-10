@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int p, q, a, n, ans;
+
+void dfs( int nume, int deno , int num, int pos ){
+	if( p * deno == q * nume ){
+		ans++;
+		return;
+	}
+	if( num == n ) return;
+	if( p * deno < q * nume ) return;
+	for( int i = pos; i * deno <= a; i++ ){
+		dfs( nume*i+deno, deno*i, num+1, i );
+	}
+}
+
+int main(){
+    while( cin >> p >> q >> a >> n && p ){
+			ans = 0;
+			dfs(0,1,0,1);
+			cout << ans << endl;
+    }
+}

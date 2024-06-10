@@ -1,0 +1,63 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<int> vi;
+
+ostream & operator<<(ostream & os, vi const& v){
+    rep(i,v.size()){
+        os << v[i];
+        if(i==v.size()-1) continue;
+        os << ' ';
+    }
+    return os;
+}
+
+void solve(vi & v, int begin, int end){
+    int const n = end-begin+1;
+    if(n<=1) return;
+    else if(n==2){
+        if(v[begin]>v[end]) swap(v[begin],v[end]);
+        return;
+    }
+
+    int pt[3];
+    rep(i,3) pt[i] = rand()%(n-2);
+    sort(pt,pt+3);
+    rep(i,3) pt[i]+=i;
+
+    int piv=v[begin+pt[1]];
+
+    int l=begin, r=end;
+    while(1){
+        // cout << l << " " << r << endl;
+        while(v[l]<piv) l++;
+        while(v[r]>piv) r--;
+        if(l<r){
+            swap(v[l],v[r]);
+            l++;
+            r--;
+        } else break;
+    }
+    // cout << v << endl;
+    solve(v,begin,l-1);
+    solve(v,l,end);
+}
+
+int main(){
+    srand(time(0u));
+    int n;
+    while(cin>>n){
+        vi v(n);
+        rep(i,n) scanf("%d",&v[i]);
+        solve(v,0,n-1);
+        cout << v << endl;
+    }
+}

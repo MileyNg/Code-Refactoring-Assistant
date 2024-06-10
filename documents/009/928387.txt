@@ -1,0 +1,59 @@
+#include<stdio.h>
+#define N 100000
+
+typedef struct{
+  char name[10];
+  int time;
+}Pro;
+
+Pro pro[N];
+int head = 0, tail = 0, n;
+
+void enqueue(Pro);
+Pro dequeue(void);
+
+main(){
+  int i, q, r, time = 0;
+  Pro pro2;
+  scanf("%d %d", &n, &q);
+  for(i = 0;i < n;i++){
+    scanf("%s %d", pro2.name, &pro2.time);
+    enqueue(pro2);
+  }
+  while(head != tail){
+    pro2 = dequeue();
+    r = pro2.time;
+    pro2.time -= q;
+    if(pro2.time > 0){
+      enqueue(pro2);
+      time += q;
+    }
+    else if(pro2.time <= 0){
+      time += r;
+      printf("%s %d\n", pro2.name, time);
+    }
+  }
+  return 0;
+}
+
+void enqueue(Pro x){
+  pro[tail] = x;
+  if(tail == n){
+    tail = 0;
+  }
+  else{
+    tail++;
+  }
+}
+
+Pro dequeue(void){
+  Pro y;
+  y = pro[head];
+  if(head == n){
+    head = 0;
+  }
+  else{
+    head++;
+  }
+  return y;
+}

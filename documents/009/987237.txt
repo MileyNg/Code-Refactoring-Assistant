@@ -1,0 +1,102 @@
+#include<stdio.h>
+#define N 100000
+
+typedef struct{
+  int parent;
+  int left;
+  int right;
+}Node;
+
+int depth(int);
+int height(int);
+
+Node node[N];
+
+int main(){
+  int n, id, i, j, sub, child;
+
+  scanf("%d", &n);
+  for(i = 0;i < n;i++){
+    node[i].parent = node[i].left = node[i].right = -1;
+  }
+  for(i = 0;i < n;i++){
+    scanf("%d", &id);
+    sub = id;
+    for(j = 0;j < 2;j++){
+      scanf("%d", &child);
+      if(j == 0){
+        node[sub].left = child;
+        node[node[sub].left].parent = id;
+        sub = child;
+      }
+      else{
+        node[sub].right = child;
+        node[node[sub].right].parent = id;
+        sub = child;
+      }
+    }
+  }
+  for(i = 0;i < n;i++){
+    printf("node %d: parent = %d, sibling = ", i, node[i].parent);
+    if(node[i].right == -1){
+      if(node[node[node[i].parent].left].right == i){
+        printf("%d ", node[node[i].parent].left);
+      }
+      else{
+        printf("%d ", -1);
+      }
+    }
+    else{
+      printf("%d, ", node[i].right);
+    }
+    printf("degree = ");
+    if(node[i].left == -1){
+      printf("0, ");
+    }
+    else{
+      printf("2, ");
+    }
+    printf("depth = %d, height = %d, ", depth(i), height(i));
+    if(node[i].parent == -1){
+      printf("root\n");
+    }
+    else{
+      if(node[i].left == -1){
+        printf("leaf\n");
+      }
+      else{
+        printf("internal node\n");
+      }
+    }
+  }
+  return 0;
+}
+
+int depth(int id){
+  int dep = 0;
+  while(1){
+    if(node[id].parent == -1){
+      return dep;
+    }
+    else{
+      dep++;
+      id = node[id].parent;
+    }
+  }
+}
+int height(int id){
+  int hei = 0, left, right;
+  if(node[id].left == -1){
+    return hei;
+  }
+  else{
+    left = height(node[id].left);
+    right = height(node[node[id].left].right);
+    if(left < right){
+      return ++right;
+    }
+    else{
+      return ++left;
+    }
+  }
+}

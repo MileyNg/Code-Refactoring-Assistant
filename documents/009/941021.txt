@@ -1,0 +1,12 @@
+import itertools
+while 1:
+	n = input()
+	if n == 0: break
+	xy = sorted([map(int,raw_input().split()) for i in range(n)])
+	dxy = [[xy1[0]-xy2[0],xy1[1]-xy2[1]] for xy1,xy2 in itertools.combinations(xy,2)]
+	for dx,dy in dxy:
+		if dxy.count([dx,dy]) > 1 and (dxy.count([dy,-dx]) > 1 or dxy.count([-dy,-dx]) > 1):
+			print dx**2+dy**2
+			break
+	else:
+		print 0

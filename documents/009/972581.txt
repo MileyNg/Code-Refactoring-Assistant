@@ -1,0 +1,65 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+const int MAX = 2*123500;
+
+/** Problem1173 : The Balance of the World **/
+int main()
+{
+	string s; int t;
+	
+	while (1) {
+		getline(cin, s);
+		if (s==".") break;
+		
+		stack<int> stak;
+		bool flg=true;
+		for (int i=0; i<s.length(); i++) {
+			switch (s[i]) {
+				case '[' :
+					stak.push(1);
+					break;
+					
+				case ']' :
+					if (!stak.size()) {flg=false; break;}
+					t = stak.top(); stak.pop();
+					if (t!=1)
+						flg=false;
+					break;
+					
+				case '(' :
+					stak.push(0);
+					break;
+					
+				case ')' :
+					if (!stak.size()) {flg=false; break;}
+					t = stak.top(); stak.pop();
+					if (t!=0)
+						flg=false;
+					break;
+			}
+		}
+		cout << (flg&&!stak.size()?"yes":"no") << endl;
+	}
+	return 0;
+}

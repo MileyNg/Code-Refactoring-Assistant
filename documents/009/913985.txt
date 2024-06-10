@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+#define M 1000000
+char s[M][11],*p,*q;
+int r,l,i,n[M],f;
+int main()
+{
+	for(;gets(s[0]),s[0][0]!='0';)
+	{
+		for(r=n[0]=0,l=1;r<l;r++)
+		{
+			for(i=f=0,p=s[r];p[i+1];i++)
+				if(p[i]!=p[i+1]&&l<M)
+				{
+					strcpy(q=s[l],p);
+					q[i]=q[i+1]=315-q[i]-q[i+1];
+					n[l]=n[r]+1;
+					f=l++;
+				}
+			if(!f&&l<M)
+			{
+				printf("%d\n",n[r]);
+				l=-1;
+				break;
+			}
+		}
+		if(l!=-1)puts("NA");
+	}
+	return 0;
+}

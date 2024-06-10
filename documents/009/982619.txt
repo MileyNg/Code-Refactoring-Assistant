@@ -1,0 +1,85 @@
+#include <stdio.h>
+#define N 100000
+
+typedef struct{
+  int id,p,d,k;
+  int jisu[1000];
+}Node;
+
+Node tree[N];
+
+int jisu(int,int);
+
+int kaisu = 0;
+main(){
+
+  int n,j,i;
+
+  scanf("%d",&n);
+
+  for(j = 0 ; j < n; j++){
+    tree[n].d = 0;
+  }
+
+  for(j = 0 ; j < n; j++){
+    scanf("%d %d",&tree[j].id,&tree[j].k);
+    jisu(tree[j].k,j);
+  }
+
+  tree[0].p = -1;
+  tree[0].d = 0;
+
+  for(j = 0 ; j < n; j++ ){
+
+    printf("node %d: parent = %d, depth = %d",tree[j].id,tree[j].p,tree[j].d);
+
+    if(tree[j].id == 0){
+      printf(" root,[");
+      for(i = 0 ; i < tree[j].k ; i++ ){
+	printf("%d",tree[j].jisu[i]);
+	if(i != tree[j].k - 1){
+	  printf(", ");
+	}
+	
+      }
+      printf("]");
+    }
+
+    if(tree[j].k == 0 && tree[j].id != 0){
+      printf(" leaf, []");
+    }
+
+    if(tree[j].k != 0 && tree[j].id != 0){
+      printf(" internal node, [");
+     for(i = 0 ; i < tree[j].k ; i++ ){
+	printf("%d",tree[j].jisu[i]);
+	if(i != tree[j].k - 1){
+	  printf(", ");
+	}
+     }
+      printf("]");
+    }
+    
+    printf("\n");
+  }
+  
+  return 0;
+  
+}
+
+
+
+
+int jisu(int k,int now){
+  int ii;
+  if(k != 0){
+    for(ii = 0 ; ii < k; ii++){
+      scanf("%d",&tree[now].jisu[ii]);
+      //次数に親のidいれる
+      tree[tree[now].jisu[ii]].p = now; 
+      tree[tree[now].jisu[ii]].d = tree[now].d + 1;
+    }
+    return 1;
+  }
+  else return 0;
+}

@@ -1,0 +1,47 @@
+#include<stdio.h>
+
+int cnt=0,m,G[100000];
+
+void insertionSort(int *A,int n,int g){
+	int i,v,j;
+	for(i=g;i<n;i++){
+		v=A[i];
+		j=i-g;
+		while(j>=0 && A[j]>v){
+			A[j+g]=A[j];
+			j=j-g;
+			cnt++;}
+			A[j+g]=v;}
+}
+
+void shellSort(int *A, int n){
+	int i,m;
+	int G[]={4,1};
+	cnt=0;
+	m=n/2;
+	for(i=0;i<m;i++) insertionSort(A,n,G[i]);
+}
+
+int main(){
+	int i,j,lengh,A[101];
+	
+	scanf("%d",&lengh);
+	for(i=0;i<lengh;i++) scanf("%d",&A[i]);
+	shellSort(A,lengh);
+	
+
+	printf("%d uuuu\n",m);
+	for(i=0;i<lengh/2;i++) printf("%d ",G[i]);
+	printf("\n");
+	
+	printf("%d\n",cnt);
+	for(i=0;i<lengh;i++) printf("%d\n",A[i]);
+
+return 0;}
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,31 @@
+
+#include <iostream>
+
+int gcd(int m, int n);
+
+
+int main(int argc, const char * argv[])
+{
+    //std::cout << "Hello World\n";
+    while(true){
+        int n, m;
+        std::cin >> n >> m;
+        //std::cout << n << "," << m << "\n";
+        std::cout << gcd(n, m) << "\n";
+    }
+    return 0;
+}
+
+int gcd(int m, int n){
+	// 引数に０がある場合は０を返す
+	if ( ( 0 == m ) || ( 0 == n ) )
+		return 0;
+	
+	// ユークリッドの方法
+	while( m != n )
+	{
+		if ( m > n ) m = m - n;
+		else         n = n - m;
+	}
+	return m;
+}

@@ -1,0 +1,58 @@
+MOD = 10**9 + 7
+s = ""; l = 0; pos = 0;
+
+def number():
+    global pos
+    x = pos
+    while pos<l and s[pos].isdigit():
+        pos += 1
+    return int(s[x:pos]) if x!=pos else -1
+
+def sp():
+    global pos
+    while pos<l and s[pos]==' ':
+        pos += 1
+    return 0
+
+def term():
+    global pos
+    if pos>=l:
+        return -1
+    ret = 0
+    if s[pos]=='S':
+        pos += 1 # 'S'
+        sp()
+        pos += 1 # '<'
+        sp()
+        ret = (expr() ** 2) % MOD
+        sp()
+        pos += 1 # '>'
+    else:
+        ret = number()
+    return ret
+
+def expr():
+    global pos
+    ret = term()
+    while pos<l:
+        x = pos
+        sp()
+        if pos<l-1 and s[pos:pos+2]==">>":
+            pos += 2
+            sp()
+            r = term()
+            if r==-1:
+                pos = x
+                break
+            ret = int( ret / (2 ** r) )
+        else:
+            pos = x
+            break
+    return ret
+
+while True:
+    s = raw_input();
+    if s=="#":
+        break
+    l = len(s); pos = 0;
+    print expr()

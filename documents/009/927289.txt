@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+int main() {
+  int n, sum;
+  int student[1000];
+  double a2, m, result;
+
+  while(1) {
+    cin >> n;
+    if(!n)break;
+
+    for(int i = 0; i < n; i++) cin >> student[i];
+
+    sum = 0;
+    for(int i = 0; i < n; i++) sum += student[i];
+    m = sum / n;
+
+    a2 = 0; 
+    for(int i = 0; i < n; i++) a2 += pow((student[i]-m), 2);
+
+    result = sqrt(a2/n);
+
+    printf("%.8lf\n", result);
+  }
+}

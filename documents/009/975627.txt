@@ -1,0 +1,37 @@
+n, q = gets.chomp.split(" ").map{|s| s.to_i}
+
+avs = (0...n).map{|i| [i, i + 1, 0]}
+idx = (0...n).map{|i| avs[i]}
+
+q.times.each do
+  a, v = gets.chomp.split(" ").map{|s| s.to_i}
+
+  av0 = avs[a - 1]
+  k0 = av0[0]
+  v0 = (av0[2] += v)
+
+  if v > 0
+    while k0 > 0 &&
+        ((av1 = idx[k0 - 1])[2] < v0 || av1[2] == v0 && av1[1] > a)
+      idx[k0] = av1
+      idx[k0 - 1] = av0
+
+      av0[0] -= 1
+      av1[0] += 1
+      k0 -= 1
+    end
+  else
+    while k0 < n - 1 &&
+        ((av1 = idx[k0 + 1])[2] > v0 || av1[2] == v0 && av1[1] < a)
+      idx[k0] = av1
+      idx[k0 + 1] = av0
+
+      av0[0] += 1
+      av1[0] -= 1
+      k0 += 1
+    end
+  end
+
+  #p idx
+  puts [idx[0][1], idx[0][2]].join(" ")
+end

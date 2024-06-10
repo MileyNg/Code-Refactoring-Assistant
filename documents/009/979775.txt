@@ -1,0 +1,24 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+  int ans[4]={0,0,0,0};
+  int a,b,c;
+  for(;cin>>a>>b>>c;)
+    {
+      if(a+b<=c||c+b<=a||a+c<=b)
+	break;
+      ans[0]++;
+      if(c<a)
+	swap(a,c);
+      if(c<b)
+	swap(b,c);
+      if(a*a+b*b==c*c)
+	ans[1]++;
+      else if(a*a+b*b>c*c)
+	ans[2]++;
+      else if(a*a+b*b<c*c)
+	ans[3]++;
+    }
+  cout<<ans[0]<<" "<<ans[1]<<" "<<ans[2]<<" "<<ans[3]<<endl;
+}

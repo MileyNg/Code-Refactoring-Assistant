@@ -1,0 +1,65 @@
+#include <cstdio>
+#include <queue>
+#include <string>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+
+
+bool judge(string s){
+  for(int i = 1; i < s.length(); ++i) if(s[0] != s[i]) return false;
+  return true;
+}
+
+int main(){
+  char worm[16];
+  while(scanf("%s", worm) && worm[0] != '0'){
+    queue<string> q;
+    q.push(string(worm));
+    set<string>s;
+    s.insert(string(worm));
+    if(judge(q.front())){
+      puts("0");
+      continue;
+    }
+    int res = 1;
+    while(!q.empty()){
+      int q_size = (int)q.size();
+      for(int j = 0; j < q_size; ++j){
+	string tmp = q.front(); q.pop();
+	int len = (int)tmp.length();
+	for(int i = 0; i < len-1; ++i){
+	  string n = tmp;
+	  if(n[i] != n[i+1]){
+	    if((n[i] == 'r' && n[i+1] == 'b') || (n[i] == 'b' && n[i+1] == 'r')) n[i] = n[i+1] = 'g';
+	    else if((n[i]=='r'&&n[i+1]=='g') || (n[i]=='g'&&n[i+1]=='r')) n[i] = n[i+1] = 'b';
+	    else if((n[i]=='g'&&n[i+1]=='b') || (n[i]=='b'&&n[i+1]=='g')) n[i] = n[i+1] = 'r';
+	  }
+	  ///	  puts(n.c_str());
+	  if(s.find(n) != s.end()) continue;
+
+	  if(judge(n)){
+	    printf("%d\n", res);
+	    goto end;
+	  }
+	  s.insert(n);
+	  q.push(n);
+	}
+      }
+      //      printf("%d\n", res);
+      //      for(int i = 0; i < f.size(); ++i) puts(f[i].c_str());
+      //      queue<string>t;
+      //      t = q;
+      //      while(!t.empty()){ puts(t.front().c_str()); t.pop();}
+      //      puts("");
+      
+      res++;
+    }
+    puts("NA");
+  end:;
+
+  }
+  return 0;
+}

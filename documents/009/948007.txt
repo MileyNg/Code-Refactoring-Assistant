@@ -1,0 +1,15 @@
+PATTERN = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]].freeze
+
+def judge(list)
+  PATTERN.each do |p|
+    if list[p[0]] == list[p[1]] && list[p[1]] == list[p[2]] and list[p[0]] != 's'
+      return list[p[0]]
+    end
+  end
+  return 'd'
+end
+
+while gets
+  list = $_.chomp.chars
+  puts judge(list)
+end

@@ -1,0 +1,144 @@
+#include <iostream>
+using namespace std;
+
+int F[102][102];
+int ans=0;
+
+void set(int C2, int D2, int X2, int Y2){
+	switch(D2){
+				case 0:
+					for(int i=0; i<2; i++){
+						for(int j=0; j<4; j++){
+							F[Y2+i][X2+j] = C2;
+						}
+					}
+					break;
+				case 1:
+					for(int k=0; k<4; k++){
+						for(int l=0; l<2; l++){
+							F[Y2+k][X2+l] = C2;
+						}
+					}
+					break;
+			}
+			
+			return ;
+			
+}
+
+
+
+
+
+void maze(int C, int D, int X, int Y){
+	switch(C){
+		case 1:
+			set(C, D, X, Y);
+			break;
+		case 2:
+			set(C, D, X, Y);
+			break;
+		case 3:
+			set(C, D, X, Y);
+			break;
+		case 4:
+			set(C, D, X, Y);
+			break;
+		case 5:
+			set(C, D, X, Y);
+			break;
+	
+	}
+
+	return ;
+	
+}
+
+void judge(int X, int Y, int XG, int YG, int A){
+	
+	if(A==0)
+		return;
+	
+	cout << F[Y][X] << endl;
+	
+	
+	if(F[YG][XG]==A)
+		ans = 1;
+	
+	if(F[Y][X]!=A)		//　再帰関数が停止する条件
+		return;
+		
+	F[Y][X] = 7;
+	
+	judge(Y-1, X  , XG, YG, A);		//　上
+	
+	judge(Y  , X+1, XG, YG, A);		//　右
+	
+	judge(Y+1, X  , XG, YG, A);		//　下
+	
+	judge(Y  , X-1, XG, YG, A);		//　左
+	
+
+}
+
+
+int main()
+{
+
+	int w, h;
+	int xs, ys;
+	int xg, yg;
+	int n;
+	int c, d, x, y;
+	
+	while(1){
+	
+	cin >> w >> h;
+	
+	if(w==0 && h==0)
+		return 0;
+	
+	cin >> xs >> ys;
+	cin >> xg >> yg;
+	cin >> n;
+	
+	
+	
+	
+	for(int i=0; i<102; i++){
+		for(int j=0;j<102; j++){
+			F[i][j] = 0;
+		}
+	}
+	
+	for(int i=0; i<n; i++){
+		cin >> c >> d >> x >> y;
+		maze(c, d, x, y);
+	
+	}
+	 
+	for(int i=1; i<=h; i++){
+		for(int j=1;j<=w; j++){
+			cout << F[i][j];
+		}
+		cout << endl;
+	}
+			 
+	ans = 0;
+			 
+			 
+	int a = F[xs][ys];
+			 
+	judge(xs, ys, xg, yg, a);
+	
+	if(ans==1)
+		cout << "OK" << endl;
+		
+	else
+		cout << "NG" << endl;
+		
+	}
+
+	return 0;
+
+}

@@ -1,0 +1,50 @@
+#include <iostream>
+#include <map>
+#include <set>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n;
+	int m,p;
+	int k,l;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		map<int,set<int> > mp;
+		map<int,set<int> >::iterator it;
+		
+		for(int i1=0;i1<n;i1++){
+			cin>>m;
+			set<int> s;
+			for(int i2=0;i2<m;i2++){
+				cin>>p;
+				s.insert(p);
+			}
+			mp[i1]=s;
+		}
+		cin>>k;
+		for(int i1=0;i1<k;i1++){
+			cin>>l;
+
+			for(it=mp.begin();it!=mp.end();it++){
+				if((*it).second.find(l)==(*it).second.end()) {
+					mp.erase(it);
+					
+				}
+			}
+		}
+
+
+		if(mp.size()==1) {
+			it=mp.begin();
+			cout<<(*it).first+1<<endl;
+		}
+		else cout<<-1<<endl;
+
+	}
+	return 0;
+}

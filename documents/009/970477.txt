@@ -1,0 +1,23 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main() {
+	int N,A,B,C;
+	cin >> N >> A >> B >> C;
+	vector<int> vi(N);
+	int sum=C;
+	for(int i=0; i<N; ++i){
+		cin >> vi[i];
+	}
+	sort(vi.begin(),vi.end(),greater<int>());
+	int result=sum/A;
+	for(int i=0; i<N; ++i){
+		sum+=vi[i];
+		if(result<sum/(A+B*(i+1))) result=sum/(A+B*(i+1));
+		else break;
+	}
+	cout << result << endl;
+	return 0;
+}

@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+
+using namespace std;
+
+int main(){
+  int page;
+  string word;
+  map<string, set<int> > index;
+
+  while(cin >> word >> page){
+    index[word].insert(page);
+  }
+
+  for(map<string, set<int> >::iterator i = index.begin(); i != index.end(); i++){
+    cout << i -> first << endl;
+    for(set<int>::iterator j = i -> second.begin(); j != i -> second.end(); j++){
+      if(j != i -> second.begin() ){
+        cout << " ";
+      }
+    cout << *j;
+    }
+    cout << endl;
+  }
+}

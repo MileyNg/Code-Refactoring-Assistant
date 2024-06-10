@@ -1,0 +1,47 @@
+#include<iostream>
+#include<map>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+int N;
+int B[40];
+long long pb[40];
+map<int,map<long long,int> > mem;
+
+int dfs(int x,long long cpb){
+  if(x==N)return 0;
+  long long fpb=cpb>>x;
+  if(mem[x].count(fpb))return mem[x][fpb];
+  int r=dfs(x+1,cpb);
+  if(!(cpb>>x&1)){
+    r=max(r,B[x]+dfs(x+1,cpb|pb[x]));
+  }
+  return mem[x][fpb]=r;
+}
+
+int main(){
+  while(cin>>N,N){
+    mem.clear();
+    map<string,int> m;
+    vector<string> d[40];
+    for(int i=0;i<N;i++){
+      string a;
+      int c;
+      cin>>a>>B[i]>>c;
+      m[a]=i;
+      d[i].resize(c);
+      for(int j=0;j<c;j++){
+	cin>>d[i][j];
+      }
+    }
+    for(int i=0;i<N;i++){
+      pb[i]=0;
+      for(auto e:d[i]){
+	pb[i]|=1LL<<m[e];
+      }
+    }
+    cout<<B[0]+dfs(1,pb[0])<<endl;
+  }
+}

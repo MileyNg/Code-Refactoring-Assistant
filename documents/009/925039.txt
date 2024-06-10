@@ -1,0 +1,17 @@
+#include<stdio.h>
+
+int main(void){
+	int x,j,k,in[20];
+
+	j = 0;
+	while(scanf("%d",&x) != EOF){
+		if(x != 0){
+			in[j] = x;
+			j ++;
+		}else{
+			printf("%d\n",in[j - 1]);
+			j --;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,39 @@
+#include<vector>
+#include<complex>
+#include<cstdlib>
+#include<cstring>
+#include<numeric>
+#include<sstream>
+#include<iostream>
+#include<algorithm>
+#include<functional>
+using namespace std;
+int main(){
+	int N;
+	cin>>N;
+	for(int i=0;i<N;i++){
+		string dat;
+		int ou=0,hi=0,ans=0;
+		for(;;){
+			cin>>dat;
+			if(dat[0]=='O' && dat[1]=='U'){
+			ou++;
+			}
+			else if(dat[0]=='H' && dat[1]=='I'){
+			hi++;}
+			else if(dat[0]=='H' && dat[1]=='O'){
+			ans=ans+hi+1;
+			hi=0;
+			}
+			if(ou==3){
+				cout<<ans<<endl;
+				break;
+			}
+			if(hi==4){
+				ans++;
+				hi--;
+			}
+		}
+	}
+	return 0;
+}

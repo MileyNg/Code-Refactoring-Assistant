@@ -1,0 +1,21 @@
+#include <iostream>
+#include <string>
+
+int main(){
+  u_int max_line;
+  const std::string before("Hoshino");
+  const std::string after("Hoshina");
+  std::cin >> max_line;
+  std::cin.ignore();
+  for(int i = 0; i < max_line; ++i){
+    std::string str;
+    std::getline(std::cin,str);
+    auto pos = str.find(before);
+    while(pos != std::string::npos){
+      str.replace(pos, before.length(), after);
+      pos = str.find(before);
+    }
+    std::cout << str << std::endl;
+  }
+  return 0;
+}

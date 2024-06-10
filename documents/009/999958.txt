@@ -1,0 +1,59 @@
+#include<iostream>
+#include<math.h>
+using namespace std ;
+
+int num[2][262144] = {} ; // 0 point , 1 num
+int ranking[100001] = {} ;
+int n , r , l ;
+int d , t , x ;
+int minus = -1001 ;
+int btd , bt , sum1=-1 , sum2=0 ;
+
+void count( int p ){
+	
+	if( num[0][p*2] >= num[0][p*2+1] ){
+		num[0][p] = num[0][p*2] ;
+		num[1][p] = num[1][p*2] ;
+	}else {
+		num[0][p] = num[0][p*2+1] ;
+		num[1][p] = num[1][p*2+1] ;
+	}
+	
+	if( p!=1 ) count( p/2 ) ;
+}
+
+int main(){
+	
+	cin >> n >> r >> l ;
+	
+	for( int i=1 ; i<=n ; i++ ){
+		num[1][i+131071] = i ;
+	}
+	
+	for( int i=0 ; i<r ; i++ ){
+		cin >> d >> t >> x ;
+		if( i==0 ) ranking[1] = t ;
+		num[0][d+131071] += x ;
+		
+		if( minus < t ) minus = t ;
+		if( minus < 0 && t < 0 ){
+			count( 131072 / 2 ) ;
+		}else count( ( d+131071 ) / 2 ) ;
+		
+		if( i != 0 ) ranking[btd] = t-bt ;
+		bt = t ;
+		btd = num[1][1] ;
+	}
+	
+	ranking[btd] = l-bt ;
+	
+	for( int i=1 ; i<=n ; i++ ){
+		if( sum1 < ranking[i] ){
+			sum1 = ranking[i] ;
+			sum2 = i ;
+		}
+	}
+	cout << sum2 << endl ;
+	
+return 0;
+}

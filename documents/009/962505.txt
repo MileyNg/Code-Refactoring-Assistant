@@ -1,0 +1,25 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+int n,m;
+int l[20],d[20];
+int main()
+{
+    while(~scanf("%d%d",&n,&m),n+m)
+    {
+        for(int i=0;i<n;i++)
+            scanf("%d",&l[i]);
+        for(int i=0;i<m;i++)
+            scanf("%d",&d[i]);
+        int ans=0;
+        for(int i=0;i<n;i++)
+            for(int j=0;j<m;j++)
+                if(l[i]==d[j]){ans+=l[i];l[i]=d[j]=0;break;}
+        for(int i=0;i<n;i++)
+            ans+=l[i];
+        for(int i=0;i<m;i++)
+            ans+=d[i];
+        cout<<ans<<endl;
+    }
+    return 0;
+}

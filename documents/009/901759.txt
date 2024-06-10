@@ -1,0 +1,168 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+#include <cassert>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+
+struct State{
+    int t, panel[10][10];
+    State(int _t, int (&_panel)[10][10])
+        :t(_t)
+    {
+        REP(i, 10){
+            REP(j, 10){
+                panel[i][j] = _panel[i][j];
+            }
+        }
+    }
+};
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+int W, H;
+int panel[10][10];
+
+int nextColor(){
+    int res = 0;
+    bool used[10][10];
+    REP(y, 10){
+        REP(x, 10){
+            used[y][x] = false;
+        }
+    }
+
+    std::queue<P> q;
+    q.push(mp(0, 0));
+
+    while(!q.empty()){
+        P p = q.front(); q.pop();
+        int x = p.first, y = p.second;
+        if(used[y][x]){continue;}
+        used[y][x] = true;
+        REP(i, 4){
+            int nx = x + dx[i], ny = y + dy[i];
+            if(0 <= nx && nx < W && 0 <= ny && ny < H){
+                if(!used[ny][nx] && panel[ny][nx] == panel[0][0]){q.push(mp(nx, ny));}
+                if(panel[ny][nx] != panel[0][0]){res |= 1 << panel[ny][nx];}
+            }
+        }
+    }
+    return res;
+}
+
+void changeColor(int c){
+    bool used[10][10];
+    REP(y, 10){
+        REP(x, 10){
+            used[y][x] = false;
+        }
+    }
+
+    std::queue<P> q;
+    q.push(mp(0, 0));
+
+    int prev_color = panel[0][0];
+    while(!q.empty()){
+        P p = q.front(); q.pop();
+        int x = p.first, y = p.second;
+
+        if(used[y][x]){continue;}
+        used[y][x] = true;
+        panel[y][x] = c;
+
+        REP(i, 4){
+            int nx = x + dx[i], ny = y + dy[i];
+            if(0 <= nx && nx < W && 0 <= ny && ny < H && !used[ny][nx] && panel[ny][nx] == prev_color){
+                q.push(mp(nx, ny));
+            }
+        }
+    }
+}
+
+int bfs(){
+    std::queue<State> q;
+    q.push({0, panel});
+
+    while(!q.empty()){
+        State s = q.front(); q.pop();
+
+        REP(y, H){
+            REP(x, W){
+                panel[y][x] = s.panel[y][x];
+            }
+        }
+
+        int next_colors = nextColor();
+        if(next_colors == 0){return s.t;}
+
+        REP(i, 3){
+            if(!(next_colors >> i & 1)){continue;}
+            REP(y, H){
+                REP(x, W){
+                    panel[y][x] = s.panel[y][x];
+                }
+            }
+            changeColor(i);
+            q.push({s.t+1, panel});
+        }
+    }
+}
+
+int dfs(){
+    int next_colors = nextColor();
+    if(next_colors == 0){return 0;}
+
+    int _panel[10][10];
+    REP(y, H){
+        REP(x, W){
+            _panel[y][x] = panel[y][x];
+        }
+    }
+
+    int res = INF;
+    REP(i, 3){
+        if(!(next_colors >> i & 1)){continue;}
+        REP(y, H){
+            REP(x, W){
+                panel[y][x] = _panel[y][x];
+            }
+        }
+        changeColor(i);
+        res = std::min(res, 1 + dfs());
+    }
+
+    return res;
+}
+
+int main(){
+    while(std::cin >> W >> H, W){
+        REP(y, H){
+            REP(x, W){
+                char c;
+                std::cin >> c;
+
+                if(c == 'R'){panel[y][x] = 0;}
+                if(c == 'G'){panel[y][x] = 1;}
+                if(c == 'B'){panel[y][x] = 2;}
+            }
+        }
+
+        std::cout << bfs() << std::endl;
+    }
+}

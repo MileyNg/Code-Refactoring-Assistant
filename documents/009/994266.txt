@@ -1,0 +1,59 @@
+#include<cstdio>
+
+int main(void)
+{
+	int n,m;
+	int i,j,flag;
+	int taro[100],hanako[100];
+	int set,set1,set2;
+	int sum=0,sum_taro,sum_hanako;
+	
+	
+	for(;;)
+	{
+		scanf("%d %d",&n,&m);
+		if(n==0 && m==0) break;
+		
+		set=200,flag=0,sum=0,sum_taro=0,sum_hanako=0;
+		for(i=0; i<100; i++)
+		{
+			taro[i]=0;
+			hanako[i]=0;
+		}
+		
+		for(i=0; i<n; i++)
+		{
+			scanf("%d", &taro[i]); //太郎の点数取り込み
+			sum_taro+=taro[i];
+		}
+		for(i=0; i<m; i++)
+		{
+			scanf("%d",&hanako[i]); //花子の点数取り込み
+			sum_hanako+=hanako[i];
+		}
+		
+		for(i=0; i<n; i++)
+		{
+			for(j=0; j<m; j++)
+			{
+				if(sum_taro-taro[i]+hanako[j]==sum_hanako-hanako[j]+taro[i])
+				{
+					if(taro[i]+hanako[j]<=set)
+					{
+						set=taro[i]+hanako[j];
+						set1=i,set2=j;
+					}
+					flag=1;
+				}
+			}
+			if(flag==1)
+			{
+				break;
+			}
+		}
+		if(flag==1) printf("%d %d\n",taro[set1],hanako[set2]);
+		if(i==n && j==m) printf("-1\n");
+	}
+	
+	return 0;
+}

@@ -1,0 +1,194 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		while(true){
+			//var d=Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));
+			var d=Console.ReadLine().Split(' ');
+			
+			if(int.Parse(d[0])==0&&int.Parse(d[1])==0)break;
+			Sol mySol =new Sol(int.Parse(d[0]),int.Parse(d[1]));
+			mySol.Solve();
+		}
+	}
+}
+
+class Sol{
+	public void Solve(){
+		int[] Catch=new int[N];
+		for(int i=0;i<N;i++){
+			Catch[i]=0;
+		}
+
+		Point[] UMove=new Point[N];
+		double[] Time=new double[N];
+		for(int i=0;i<M;i++){
+			for(int j=0;j<N;j++){
+				// |Fris+ t*FVelo - Dogs|^2 == |t*Velo|^2
+				//　よりtを求める（判別式でcan/cannot catchを判定
+				double A=FVelo[i].X*FVelo[i].X+FVelo[i].Y*FVelo[i].Y-Velo[j]*Velo[j];
+				double B=2*(Fris[i].X-Dogs[j].X)*FVelo[i].X+2*(Fris[i].Y-Dogs[j].Y)*FVelo[i].Y;
+				double C=(Fris[i].X-Dogs[j].X)*(Fris[i].X-Dogs[j].X)+(Fris[i].Y-Dogs[j].Y)*(Fris[i].Y-Dogs[j].Y);
+				double D=B*B-4*A*C;
+				
+				if(A<=eps&&A>=-eps){
+					//A=0の場合、犬とフリスビーが等速
+					//　C=0（犬の位置とフリスビー位置が同じ（このケースは無い筈）
+					//　B<0の時のみ解をもつ（犬とフリスビーを結ぶ線分の垂直二等分線とフリスビー軌道が交わる
+					if(C<=eps&&C>=-eps){
+						Time[j]=0.0;
+						UMove[j]=new Point(0,0);
+					}else{
+						if(B>-eps){
+							Time[j]=inf;
+							UMove[j]=new Point(0,0);
+						}else{
+							Time[j]=-C/B;
+							Point Ptemp1=Fris[i];
+							Ptemp1=Ptemp1.Add(FVelo[i].Times(Time[j]));
+							Ptemp1=Ptemp1.Add(Dogs[j].Times(-1.0));
+							if(Ptemp1.Length!=0){
+								UMove[j]=Ptemp1.Times(Velo[j]/Ptemp1.Length);
+							}else{	UMove[j]=new Point(0,0);}
+						}
+					}
+				}
+				if(A<-eps){
+					//A<0の時は必ず解があり、かつ0の両側にある
+					//（A<0⇔犬の方が速い）
+					//　フリスビーがアポロニウスの円に囲まれている
+					Time[j]=(-B-Math.Sqrt(D))/(2.0*A);//正の解
+					Point Ptemp=Fris[i];
+					Ptemp=Ptemp.Add(FVelo[i].Times(Time[j]));
+					Ptemp=Ptemp.Add(Dogs[j].Times(-1.0));
+					if(Ptemp.Length!=0){
+						UMove[j]=Ptemp.Times(Velo[j]/Ptemp.Length);
+					}else{	UMove[j]=new Point(0,0);}
+				}
+				if(A>eps){
+					//A>0の時は解がある時とない時がある						//（A<0⇔犬の方が速い）
+					//　犬がアポロニウスの円に囲まれている
+					//　フリスビー軌跡がT>0でアポロニウスの円と交わる時のみキャッチ可
+					//　　⇔D>=0 かつ　解が正　この時、小さいほうの解を取る
+					//　(解は 正,正 または 負,負　しかない）
+					if(D<-eps){
+						Time[j]=inf;
+						UMove[j]=new Point(0,0);
+					}else{
+						//D+=eps;//RE避ける
+						Time[j]=(-B-Math.Sqrt(D))/(2.0*A);//小さい方の符号を見ればよい
+						if(Time[j]<-eps){
+							Time[j]=inf;
+							UMove[j]=new Point(0,0);
+						}else{
+							Point Ptemp=Fris[i];
+							Ptemp=Ptemp.Add(FVelo[i].Times(Time[j]));
+							Ptemp=Ptemp.Add(Dogs[j].Times(-1.0));
+							if(Ptemp.Length!=0){
+								UMove[j]=Ptemp.Times(Velo[j]/Ptemp.Length);
+							}else{	UMove[j]=new Point(0,0);}
+						}
+					}
+				}
+//Console.WriteLine("dog{0}:",j);
+//Console.WriteLine("A:{0,5:F2}\tB:{1,5:F2}\tC:{2,5:F2}\tD:{3,5:F2}",A,B,C,D);
+//Console.WriteLine("UMove=({0,5:F2},{1,5:F2})",UMove[j].X,UMove[j].Y);
+			}
+			
+			double Tmin=inf;
+			int idx=0;
+			for(int j=0;j<N;j++){
+				if(Tmin>Time[j]){
+					Tmin=Time[j];
+					idx=j;
+				}
+			}
+			//if(idx==-1)idx=0;
+			Catch[idx]++;
+			for(int j=0;j<N;j++){
+				Time[j]=Tmin;
+				Dogs[j]=Dogs[j].Add(UMove[j].Times(Time[j]));
+			}
+		}
+		
+		
+		for(int i=0;i<N;i++){
+			Console.Write(i==0?"{0}":" {0}",Catch[i]);
+		}
+		Console.WriteLine("");
+		
+		
+	}
+
+	Point[] Dogs;
+	double[] Velo;
+	Point[] Fris;
+	Point[] FVelo;
+	
+	double inf;
+	double eps;
+	int N;
+	int M;
+	public Sol(int n_,int m_){
+		N=n_;M=m_;
+		eps=1e-9;inf=1e30;
+		//eps=0.0;
+		
+		Dogs=new Point[N];
+		Velo=new double[N];
+		for(int i=0;i<N;i++){
+			var d=rda();
+			Dogs[i]=new Point(d[0],d[1]);
+			Velo[i]=d[2];
+		}
+		
+		Fris=new Point[M];
+		FVelo=new Point[M];
+		for(int i=0;i<M;i++){
+			var d=rda();
+			Fris[i]=new Point(d[0],d[1]);
+			FVelo[i]=new Point(d[2],d[3]);
+		}
+	}
+
+	struct Point{
+		public double X;
+		public double Y;
+		public Point(double x_,double y_){
+			X=x_;Y=y_;
+		}
+		public Point Times(double r){
+			this.X*=r;
+			this.Y*=r;
+			return this;
+		}
+		
+		public Point Add(Point q){
+			this.X+=q.X;
+			this.Y+=q.Y;
+			return this;
+		}
+		public double Length{
+			get{return Math.Sqrt(this.X*this.X+this.Y*this.Y);}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}

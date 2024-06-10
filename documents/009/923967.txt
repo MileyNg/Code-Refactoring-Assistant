@@ -1,0 +1,59 @@
+#include<stdio.h>
+#include<math.h>
+#define compile 0
+
+void sigma(double num1, double num2, double *sum1)
+{
+	if(0 <= num1 && 0 <= num2) //x1, x2が正数
+	{
+		*sum1 = num1 + num2;
+	}
+	else if(num1 <= 0 && num2 < 0) //x1, x2が負数
+	{
+		*sum1 = num2 + num1;
+	}
+	else if(0 <= num1 && num2 < 0) //x1が正数、x2が負数
+	{
+		*sum1 = num1 - num2;
+	}
+	else if(num1 < 0 && 0 <= num2) //x1が負数、x2が正数
+	{
+		*sum1 = num2 - num1;
+	}
+}
+double distance(double x_sum, double y_sum)
+{
+	double d = 0;
+	double px = pow(x_sum, 2);
+	double py = pow(y_sum, 2);
+	d = sqrt(px + py);
+	return d;
+}
+
+main()
+{
+	double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+	double x_sum = 0, y_sum = 0;
+	double result = 0;
+	
+	scanf("%lf %lf %lf %lf", &x1, &y1, &x2, &y2);
+	
+	sigma(x1, x2, &x_sum);
+	sigma(y1, y2, &y_sum);
+	
+	result = distance(x_sum, y_sum);
+	
+	#if compile == 1
+	printf("x1 = %lf\n", x1);
+	printf("x2 = %lf\n", x2);
+	printf("y1 = %lf\n", y1);
+	printf("y2 = %lf\n", y2);
+	printf("x_sum = %lf\n", x_sum);
+	printf("y_sum = %lf\n", y_sum);
+	printf("result = ");
+	#endif
+	
+	printf("%f\n", result);
+	
+	return 0;
+}

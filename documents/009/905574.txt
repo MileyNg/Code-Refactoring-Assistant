@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int M, T, P, R;
+
+struct Team {
+    int id, penalty[11], score, ans;
+    Team() {
+        for (int i = 0; i < 11; ++i)
+            penalty[i] = 0;
+        score = ans = 0;
+    }
+};
+
+bool cmp(const Team &a, const Team &b)
+{
+    return (a.ans > b.ans) || (a.ans == b.ans && (a.score < b.score))
+        || ((a.ans == b.ans && a.score == b.score && a.id > b.id));
+}
+
+int main()
+{
+    while (cin >> M >> T >> P >> R) {
+        if (M + T + P + R == 0)
+            break;
+
+        Team team[T];
+        for (int i = 0; i < T; ++i)
+            team[i].id = i + 1;
+
+        int m, t, p, j;
+        for (int i = 0; i < R; ++i) {
+            cin >> m >> t >> p >> j;
+
+            --t;
+            if (j == 0) { // 正解
+                ++team[t].ans;
+                team[t].score += m + 20 * team[t].penalty[p];
+            }
+            else { // 不正解
+                ++team[t].penalty[p];
+            }
+        }
+
+        sort(team, team + T, cmp);
+
+        cout << team[0].id;
+        for (int i = 1; i < T; ++i) {
+            if (team[i - 1].ans == team[i].ans &&
+                team[i - 1].score == team[i].score)
+                cout << "=";
+            else
+                cout << ",";
+            cout << team[i].id;
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

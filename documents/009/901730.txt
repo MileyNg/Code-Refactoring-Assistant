@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+using namespace std;
+
+vector<string> SplitWord(const string str){
+  int size=str.length();
+  string buf=str;
+  for(int i=0;i<size;i++){
+    if(buf[i]==','||buf[i]=='.'){
+      buf[i]=' ';
+    }
+  }
+
+  istringstream iss(buf);
+  vector<string> wordarray;
+  string word;
+  while(iss>>word){
+    wordarray.push_back(word);
+  }
+  wordarray.erase(unique(wordarray.begin(),wordarray.end()),wordarray.end());
+  wordarray.erase(remove_if(wordarray.begin(),wordarray.end(),[](string word){
+        return word.length()<3||6<word.length();}),wordarray.end());
+  return wordarray;
+}
+  
+int main(){
+  string str;
+  getline(cin,str);
+  vector<string> wordarray=SplitWord(str);
+  cout<<wordarray[0];
+  for(int i=1;i<wordarray.size();i++){
+    cout<<" ";
+    cout<<wordarray[i];
+  }
+  cout<<endl;
+}

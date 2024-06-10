@@ -1,0 +1,32 @@
+inf = 1e10
+def solve(G,start):
+	cost = [inf]*n
+	visited = [False]*n
+	cost[start] = 0
+	min = inf
+	while 1:
+		visited[start] = True
+		next = -1
+		for i in range(n):
+			if visited[i]: continue
+			if G[start][i]:
+				d = cost[start] + G[start][i]
+				if d < cost[i]:
+					cost[i] = d
+			if min > cost[i]:
+				min = cost[i]
+				next = i
+		start = next
+		if next == -1: break
+	return cost
+
+while 1:
+	e = input()
+	if e == 0: break
+	road = [map(int,raw_input().split()) for i in range(e)]
+	n = max(max(road[i][0],road[i][1]) for i in range(e)) + 1
+	G = [[0]*n for i in range(n)]
+	for s,t,d in road:
+		G[s][t] = G[t][s] = d
+	cost = [sum(solve(G,i)) for i in range(n)]
+	print cost.index(min(cost)),min(cost)

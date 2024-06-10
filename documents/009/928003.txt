@@ -1,0 +1,37 @@
+#include<stdio.h>
+
+int main(){
+  int dec[4][13];
+  int n,i,j;
+  char mark,str[10];
+  int num;
+  for(i=0;i<4;i++){
+    for(j=0;j<13;j++){
+      dec[i][j]=0;
+    }
+  }
+  scanf("%s%*c",str);
+  sscanf(str,"%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%c %d%*c",&mark,&num);
+    switch(mark){
+      case 'S':dec[0][num-1]=1;break;
+      case 'H':dec[1][num-1]=1;break;
+      case 'C':dec[2][num-1]=1;break;
+      case 'D':dec[3][num-1]=1;break;
+    }
+  }
+  for(i=0;i<4;i++){
+    for(j=0;j<13;j++){
+      if(dec[i][j]==0){
+        switch(i){
+          case 0:printf("S %d\n",j+1);break;
+          case 1:printf("H %d\n",j+1);break;
+          case 2:printf("C %d\n",j+1);break;
+          case 3:printf("D %d\n",j+1);break;
+        }
+      }
+    }
+  }
+  return 0;
+}

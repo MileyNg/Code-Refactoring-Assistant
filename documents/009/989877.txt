@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define UNION_FIND_MAX 200
+
+int uf_table[UNION_FIND_MAX];
+
+void uf_init(void) {
+	int i;
+	for(i=0;i<UNION_FIND_MAX;i++)uf_table[i]=0;
+}
+
+void uf_merge(int a,int b) {
+	int next;
+	while(uf_table[a]>0) {
+		next=uf_table[a]-1;
+		if(uf_table[next]>0)uf_table[a]=uf_table[next];
+		a=next;
+	}
+	while(uf_table[b]>0) {
+		next=uf_table[b]-1;
+		if(uf_table[next]>0)uf_table[b]=uf_table[next];
+		b=next;
+	}
+	if(a!=b)uf_table[a]=b+1;
+}
+
+int uf_issame(int a,int b) {
+	int next;
+	while(uf_table[a]>0) {
+		next=uf_table[a]-1;
+		if(uf_table[next]>0)uf_table[a]=uf_table[next];
+		a=next;
+	}
+	while(uf_table[b]>0) {
+		next=uf_table[b]-1;
+		if(uf_table[next]>0)uf_table[b]=uf_table[next];
+		b=next;
+	}
+	return a==b;
+}
+
+typedef struct {
+	int id,tb_time;
+} island_t;
+
+typedef struct {
+	int a,b,cost;
+} bridge_t;
+
+/* desc */
+int tbt_comp(const void* x,const void* y) {
+	int tbx=((const island_t*)x)->tb_time;
+	int tby=((const island_t*)y)->tb_time;
+	if(tbx<tby)return 1;
+	if(tbx>tby)return -1;
+	return 0;
+}
+
+/* asc */
+int cost_comp(const void* x,const void* y) {
+	int cx=((const bridge_t*)x)->cost;
+	int cy=((const bridge_t*)y)->cost;
+	if(cx>cy)return 1;
+	if(cx<cy)return -1;
+	return 0;
+}
+
+int main(void) {
+	int N,M;
+	while(scanf("%d%d",&N,&M)==2 && (N|M)!=0) {
+		static island_t islands[200];
+		static int iss_taio[200];
+		static bridge_t bridges[200*199];
+		int i,j;
+		int answer;
+		int connect_count;
+		for(i=0;i<N;i++) {
+			islands[i].id=i;
+			scanf("%d",&islands[i].tb_time);
+		}
+		for(i=0;i<M;i++) {
+			scanf("%d%d%d",&bridges[i].a,&bridges[i].b,&bridges[i].cost);
+			bridges[i].a--;
+			bridges[i].b--;
+		}
+		qsort(islands,N,sizeof(island_t),tbt_comp);
+		qsort(bridges,M,sizeof(bridge_t),cost_comp);
+		for(i=0;i<N;i++)iss_taio[islands[i].id]=i;
+		uf_init();
+		answer=0;
+		connect_count=0;
+		for(i=0;i<N;i++) {
+			while(i+1<N && islands[i].tb_time==islands[i+1].tb_time)i++;
+			for(j=0;j<M;j++) {
+				if(islands[iss_taio[bridges[j].a]].tb_time>=islands[i].tb_time &&
+				islands[iss_taio[bridges[j].b]].tb_time>=islands[i].tb_time) {
+					if(!uf_issame(bridges[j].a,bridges[j].b)) {
+						uf_merge(bridges[j].a,bridges[j].b);
+						answer+=bridges[j].cost;
+						connect_count++;
+					}
+				}
+			}
+			if(connect_count<i) {
+				/* can't connect all islands */
+				uf_init();
+				answer=0;
+				connect_count=0;
+			}
+		}
+		printf("%d\n",answer);
+	}
+	return 0;
+}

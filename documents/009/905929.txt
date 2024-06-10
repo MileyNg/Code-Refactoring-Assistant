@@ -1,0 +1,48 @@
+#include<iostream>
+#include<sstream>
+#include<fstream>
+#include<cstdio>
+#include<vector>
+#include<list>
+#include<stack>
+#include<queue>
+#include<deque>
+#include<map>
+#include<set>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+bool isPrime[50005];
+
+void generate(){
+	memset(isPrime,true,sizeof(isPrime));
+	isPrime[0] = isPrime[1] = false;
+	for(int x=2;x<50005;++x){
+		if(isPrime[x]){
+			for(int i=x*x;i<50005;i += x){
+				isPrime[i] = false;
+			}
+		}
+	}
+}
+
+int main(){
+	generate();
+	int n;
+	while(cin>>n){
+		int j = n-1;
+		while(!isPrime[j]){
+			j--;
+		}
+		cout<<j<<" ";
+		j = n+1;
+		while(!isPrime[j]){
+			j++;
+		}
+		cout<<j<<endl;
+	}
+	return 0;
+}

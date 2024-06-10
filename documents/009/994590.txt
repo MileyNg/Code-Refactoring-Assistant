@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <string.h>
+
+int jo,io;
+
+int main(void){
+  char c[10000];
+  int cnum;
+  while(  (scanf("%s",c)) != EOF){
+    jo = io = 0;
+    check(c,strlen(c));
+    printf("%d\n%d\n",jo,io);
+  }
+  return 0;
+}
+
+int check(char *c,int i){
+  if(i < 2)
+    return 0;
+  
+  if(c[i] == 'I'){
+
+    if(c[i-1] == 'O'){
+
+      switch(c[i-2]){
+      case 'I':
+	io++;
+	check(c,i-2);
+	break;
+      case 'J':
+	jo++;
+	check(c,i-3);
+	break;
+      default:
+	check(c,i-3);
+	break;
+      }
+
+    }else{
+      check(c,i-2);
+    }
+  }else{
+    check(c,i-1);
+  }
+      
+  return 0;
+	  
+}

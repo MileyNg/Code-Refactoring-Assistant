@@ -1,0 +1,60 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P complex<double>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+#define x real()
+#define y imag()
+
+//P getinput(){
+//  string tmp, str;
+//  getline(cin, str);
+//  vector<double> res;
+//  stringstream ss(str);
+//  while(getline(ss, tmp, ',')) res.push_back(tmp);
+//  return P(tmp[0], tmp[1]);
+//}
+
+int main() {
+  int N;
+  while(cin >>N && N){
+    vector<P> v(N);
+    REP(i, N){
+      double tmpx, tmpy;
+      char c;
+      scanf("%lf%c%lf", &tmpx, &c, &tmpy);
+      v[i] = P(tmpx, tmpy);
+    }
+    int ans = 1;
+    REP(i, N){
+      int cnt = 1;
+      REP(j, N){
+        if(i == j) continue;
+        if(abs(v[i] - v[j]) <= 2.0) ++cnt;
+      }
+      ans = max(ans, cnt);
+    }
+    cout <<ans <<endl;
+  }
+  return 0;
+}

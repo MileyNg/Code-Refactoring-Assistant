@@ -1,0 +1,43 @@
+#include <stdio.h>
+#define S_MAX 100000
+#define T_MAX 50000
+
+int main(){
+  int ns,nt,i,j,temp,count = 0;
+  int s[S_MAX],t[T_MAX];
+
+  scanf("%d" ,&ns);
+  for(i = 0; i < ns; i++){
+    scanf("%d", &s[i]);
+  }
+
+  scanf("%d" ,&nt);
+  for(i = 0; i < nt; i++){
+    scanf("%d", &t[i]);
+  }
+
+  //ソートする                                                        
+  for(j = 0; j < ns; j++){
+    for(i = j+1; i < ns; i++){
+      if(s[j] > s[i]){
+	temp = s[j];
+        s[j] = s[i];
+	s[i] = temp;
+      }
+    }
+  }
+
+  for(i = 0; i < ns; i++){
+    for(j = 0; j < nt; j++){
+      if(s[i] == t[j]){
+        count++;
+        t[j] = -1;
+        break;
+      }
+    }
+  }
+
+  printf("%d\n" ,count);
+
+  return 0;
+}

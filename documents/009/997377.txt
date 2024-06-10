@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+
+int main(void){
+  int no;
+  double time;
+  vector<pair<double, int> > v;
+  vector<pair<double, int> > buf;
+  vector<pair<int, double> > result;
+
+  for(int i=0; i<3; i++){
+    v.clear();
+
+    for(int j=0; j<8; j++){
+      cin >> no >> time;
+
+      v.push_back(make_pair(time, no));
+    }
+    sort(v.begin(), v.end());
+
+    for(int j=0; j<8; j++){
+      if(j < 2){
+        result.push_back(make_pair(v[j].second, v[j].first));
+      } else {
+        buf.push_back(v[j]);
+      }
+    }
+  }
+  sort(buf.begin(), buf.end());
+  result.push_back(make_pair(buf[0].second, buf[0].first));
+  result.push_back(make_pair(buf[1].second, buf[1].first));
+
+  for(int i=0; i<result.size(); i++){
+    cout << result[i].first << " " << result[i].second << endl;
+  }
+
+  return 0;
+}

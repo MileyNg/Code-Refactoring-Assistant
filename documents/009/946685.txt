@@ -1,0 +1,18 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int c1, c2, c3;
+	while(cin >> c1 >> c2 >> c3){
+	    bool card[11];
+        fill(card, card+11, false);
+        card[c1] = card[c2] = card[c3] = true;
+
+        int count = 0;
+        for(int i=1; i <= 10; i++){
+            if(!card[i] && c1+c2+i <= 20) count++;
+        }
+        if(4 <= count) cout << "YES" << endl;
+        else cout << "NO" << endl;
+    }
+}

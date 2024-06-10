@@ -1,0 +1,44 @@
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+const int maxn = 130 * 130 * 2;
+
+int prime[maxn];
+int cnt = 0;
+bool check[maxn];
+
+void getPrime() {
+	for (int i = 2; i < maxn; i++) {
+		if (check[i] == false) {
+			prime[cnt++] = i;
+		}
+		for (int j = i + i; j < maxn; j += i) {
+			check[j] = true;
+		}
+	}
+}
+
+int gao(int n) {
+	int res = 0;
+	for (int i = 0; prime[i] <= n / 2; i++) {
+		if (check[n-prime[i]] == false) {
+			res++;
+		}
+	}
+	return res;
+}
+
+int main() {
+	int n; getPrime();
+	while (scanf("%d", &n) != EOF) {
+		if (n == 0) {
+			break;
+		}
+		printf("%d\n", gao(n));
+	}
+	return 0;
+}

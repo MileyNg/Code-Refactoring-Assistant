@@ -1,0 +1,32 @@
+sci = (380 * 5 * 0.8).to_i
+scj = (550 * 4 * 0.85).to_i
+sck = (850 * 3 * 0.88).to_i
+
+while true
+  w = gets.chomp.to_i
+  break if w == 0
+
+  w /= 100
+
+  min_cost = nil
+
+  for i in (0..(w / 2))
+    wi = w - 2 * i
+    ci = (i / 5) * sci + (i % 5) * 380
+    for j in (0..(wi / 3))
+      wj = wi - 3 * j
+      if wj % 5 == 0
+        cj = (j / 4) * scj + (j % 4) * 550
+        k = wj / 5
+        ck = (k / 3) * sck + (k % 3) * 850
+
+        cost = ci + cj + ck
+        if min_cost.nil? || min_cost > cost
+          min_cost = cost
+        end
+      end
+    end
+  end
+
+  puts min_cost
+end

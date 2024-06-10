@@ -1,0 +1,53 @@
+#include <cstdio>
+#include <algorithm>
+
+void ink(int,int,int);
+void change(int,int,int);
+
+char paper[10][10]={0};
+
+int main(void){
+	int white=0,max_ink=0;
+
+	for(int x,y,size;scanf("%d,%d,%d",&x,&y,&size)!=EOF;)
+		ink(x,y,size);
+
+	for(int i=0;i<10;i++)
+		for(int j=0;j<10;j++)
+			if(!paper[i][j])
+				white++;
+			else
+				max_ink=std::max(max_ink,int(paper[i][j]));
+
+	printf("%d\n%d\n",white,max_ink);
+	return 0;
+}
+
+void ink(int x,int y,int size){
+	switch(size){
+		case 1:
+			ink(x,y,2);
+			for(int i=-1;i<=1;i+=2)
+				for(int j=-1;j<=1;j+=2)
+					change(x+i,y+j,-1);
+			change(x,y,-1);
+			break;
+		case 2:
+			for(int i=-1;i<=1;i++)
+				for(int j=-1;j<=1;j++)
+					change(x+i,y+j,1);
+			break;
+		case 3:
+			ink(x,y,2);
+			change(x-2,y,1);
+			change(x+2,y,1);
+			change(x,y-2,1);
+			change(x,y+2,1);
+			break;
+	}
+}
+
+void change(int x,int y,int inc){
+	if(x>=0&&x<10&&y>=0&&y<10)
+		paper[x][y]+=inc;
+}

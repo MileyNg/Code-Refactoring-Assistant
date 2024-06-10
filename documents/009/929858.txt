@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+  int a,b;
+  for(;cin>>a>>b,a;)
+    {
+      int ans=a*b;
+      for(int a1=1;a1<=a/2;a1++)
+	for(int b1=1;b1<=b/2;b1++)
+	  {
+	    //   cout<<a1<<" "<<a/a1<<" ";
+	    //	    cout<<b1<<" "<<b/b1<<endl;
+	    if(a%a1!=0)
+	      {
+		b1=b;
+		continue;
+	      }
+	    if(b%b1!=0)
+	      continue;
+	    int a2=a/a1;
+	    int b2=b/b1;
+	    vector<int> tmp;
+	    int tt=0;
+	    tmp.push_back(a1);
+	    tmp.push_back(a2);
+	    tmp.push_back(b1);
+	    tmp.push_back(b2);
+	    sort(tmp.begin(),tmp.end());
+	    for(int i=1;i<4;i++)
+	      {
+		//	cout<<tmp[i]<<" ";
+		tt+=(tmp[i]-tmp[i-1])*(tmp[i]-tmp[i-1]);
+	      }
+	    //	    cout<<endl;
+	    ans=min(ans,tt);
+	  }
+      cout<<ans<<endl;
+    }
+
+}

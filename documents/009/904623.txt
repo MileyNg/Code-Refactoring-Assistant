@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void solve()
+{
+	string s;
+	cin >> s;
+	bool update = true;
+	while(update)
+	{
+		if(s.size() <= 3)
+		{
+			break;
+		}
+		update = false;
+		string next = "";
+		next += s[0];
+		for(int i = 1; i < s.size() - 1; ++i)
+		{
+			if(i <= s.size() - 3 && s[i] == 'm' && s[i + 1] == 'e' && s[i + 2] == 'w')
+			{
+				update = true;
+				i += 2;
+				continue;
+			}
+			else
+			{
+				next += s[i];
+			}
+		}
+		next += s[s.size() - 1];
+		s = next;
+	}
+	if(s == "" || s == "mew")
+	{
+		cout << "Cat" << endl;
+	}
+	else
+	{
+		cout << "Rabbit" << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

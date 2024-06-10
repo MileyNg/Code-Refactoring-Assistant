@@ -1,0 +1,88 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 4;
+const int M = 17;
+const int T = (1<<N);
+const int INF = (1<<30);
+
+int n,m;
+double cat[M][N];
+
+void input(){
+	cin>>n>>m;
+	rep(i,n)rep(j,m)cin>>cat[i][j];
+}
+
+bool has(int state, int i){
+	return (state&(1<<i))>0;
+}
+
+string getbit(int state,int n){
+	string ret = "";
+	rep(i,n)ret += has(state,i) ? '1' : '0';
+	return ret;
+}
+
+double dp[2][T][N];
+double solve_dp(){
+	int t = (1<<n);
+	rep(i,m){
+		rep(j,T)rep(k,N)dp[i%2][j][k]=0.0;
+		for(int j=t-1;j>=0;j--){
+			rep(k,n){
+				if(has(j,k))continue;
+				
+				double befval = 1.0;
+				if(i!=0)befval = dp[(i+1)%2][j][k];
+				double win = cat[k][m-1-i];
+				
+				double mini = 0;
+				
+				double ans1 = befval * win;
+				
+				mini = max(mini, ans1);
+				rep(p,n){
+					int next = j^(1<<k);
+					if(!has(next,p)){
+						double ans2 = dp[i%2][j^(1<<k)][p] * (1-win);
+						mini = max(mini, ans2);
+					}
+				}
+				dp[i%2][j][k] = mini;
+			}
+		}
+	}
+	/*
+	rep(i,m){
+		rep(j,t){
+			rep(k,n){
+				printf("%s-%d  %lf | ",getbit(j,n).c_str(),k,dp[i][j][k]);
+			}puts("");
+		}puts("");
+	}*/
+	
+	double ret = 0;
+	rep(i,n)ret += dp[(m-1)%2][0][i];
+	
+	
+	return ret;
+}
+
+double solve(){
+	return solve_dp();
+}
+
+
+int main(){
+	input();
+	printf("%.12f\n",solve());
+}

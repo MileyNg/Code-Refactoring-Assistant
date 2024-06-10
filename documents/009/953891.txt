@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+const int inf = 100 * 1000;
+
+int n, m, s, g1, g2;
+vector<vector<int> > cost;
+
+int solve(){
+    rep(k, n)rep(i, n)rep(j, n){
+        cost[i][j] = min(cost[i][j], cost[i][k] + cost[k][j]);
+    }
+    int res = inf;
+    for(int i=1; i<n; ++i)res = min(res, cost[s][i] + cost[i][g1] + cost[i][g2]);
+    return res;
+}
+
+int main(){
+    while(cin >> n >> m >> s >> g1 >> g2, n|m|s|g1|g2){
+        n++;
+        cost.assign(n, vector<int>(n, inf));
+        rep(i, m){
+            int b1, b2, c;
+            cin >> b1 >> b2 >> c;
+            cost[b1][b2] = c;
+        }
+        cout << solve() << '\n';
+    }
+    return 0;
+}

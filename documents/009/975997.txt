@@ -1,0 +1,72 @@
+class Phrase
+  def initialize s, l, p
+    @s = s
+    @l = l
+    @p = p
+  end
+  attr_reader :s, :l, :p
+end
+
+def main
+  n = gets.chomp.to_i
+  phrases = []
+  n.times do
+    s,l,p = gets.chomp.split(' ').map(&:to_i)
+    phrases << Phrase.new(s, l, p)
+  end
+
+  error = false
+  results = []
+  m = gets.chomp.to_i
+  m.times do
+    w = gets.chomp.to_i
+    if w < phrases.map{|x|x.s}.min
+      error = true
+      break
+    end
+
+    s_arr = Array.new(w + 1, nil)
+    p_arr = Array.new(w + 1, 0)
+
+    phrases.each do |phrase|
+      phrase.s.upto(w) do |i|
+        pp = p_arr[i-phrase.s] + phrase.p
+        if pp > p_arr[i]
+          p_arr[i] = pp
+          s_arr[i] = phrase
+        end
+      end
+    end
+
+    max_index = p_arr.index(p_arr.max)
+    unless max_index == w - 1
+      results << p_arr[max_index]
+      next
+    end
+
+    diff = 0
+    next_index = max_index
+    while next_index >= 0
+      diff += s_arr[next_index].l - s_arr[next_index].s
+      break if s_arr[next_index].s == next_index
+      next_index -= s_arr[next_index].s
+    end
+
+    if w - max_index > diff
+      error = true
+      break
+    end
+
+    results << p_arr[max_index]
+  end
+
+  if error
+    puts '-1'
+  else
+    results.each do |result|
+      puts result
+    end
+  end
+end
+
+main

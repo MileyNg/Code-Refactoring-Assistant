@@ -1,0 +1,36 @@
+#include<stdio.h>
+#define MAX 10
+int func_judge(int number);
+main()
+{
+	int n = 0, counter = 0;
+	while(scanf("%d", &n) != EOF)
+	{
+		counter = func_judge(n);
+		printf("%d\n", counter);
+	}
+	return 0;
+}
+int func_judge(int number)
+{
+	int a = 0, b = 0, c = 0, d = 0;
+	int counter_in_func = 0;
+	for(a = 0; a < MAX; a++)
+	{
+		for(b = 0; b < MAX; b++)
+		{
+			for(c = 0; c < MAX; c++)
+			{
+				for(d = 0; d < MAX; d++)
+				{
+					if((a + b + c + d) == number)
+					{
+						counter_in_func++;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return counter_in_func;
+}

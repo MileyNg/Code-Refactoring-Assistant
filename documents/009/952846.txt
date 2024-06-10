@@ -1,0 +1,51 @@
+
+#include<iostream>
+using namespace std;
+
+int ans[100];
+
+double pwd( double tei,int n ){
+	double ans = 1;
+	for(int i = 0;i < n;i++)
+		ans *= tei;
+	return ans;
+}
+
+int main(){
+	int i,j;
+	int n,y;
+	int b,r,t;
+	int max1_num,max1_r;
+	int max2_num,max2_r;
+	
+	for(i = 0; cin >> n ;i++){
+		if(n == 0)break;
+		cin >> y;
+		max1_num = 0;
+		max1_r = 0;
+		max2_num = 0;
+		max2_r = 0;
+
+		for(j = 0;j < n;j++){
+			cin >> b >> r >> t;
+			if( t == 1 && max1_r < r ){
+				max1_num = b;
+				max1_r = r;
+			}
+			if( t == 2 && max2_r < r ){
+				max2_num = b;
+				max2_r = r;
+			}
+		}
+		double tanri = 1 + max1_r/100.0 * y;
+		double fukuri = pwd( 1 + max2_r/100.0 , y );
+		if( tanri > fukuri )
+			ans[i] = max1_num;
+		else
+			ans[i] = max2_num;
+	}
+	for(j = 0;j < i;j++){
+		cout << ans[j] << endl;
+	}
+	return 0;
+}

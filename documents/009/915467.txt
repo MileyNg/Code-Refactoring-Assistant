@@ -1,0 +1,27 @@
+//============================================================================
+// Name        : aoj0047.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <cstdio>
+
+using namespace std;
+
+int main(void){
+	int a[3] = {1,0,0};
+	char str[4];
+	while(scanf("%s",str) != EOF){
+		int tmp = a[str[0] - 'A'];
+		a[str[0] - 'A'] = a[str[2] - 'A'];
+		a[str[2] - 'A'] = tmp;
+	}
+	for(int i = 0;i < 3;i++){
+		if(a[i] == 1){
+			printf("%c\n",'A' + i);
+		}
+	}
+	return 0;
+}

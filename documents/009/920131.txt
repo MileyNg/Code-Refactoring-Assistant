@@ -1,0 +1,59 @@
+
+#include<iostream>
+#include<sstream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+vector<int> check(vector<int>data,int i)
+{
+  vector<int> ans;
+  ans.push_back(0);
+  if(data.size()<=i)
+    return ans;
+  ans.clear();
+  vector<int> tmp=check(data,i+1);
+  if(data[i]!=1)
+    {
+      for(int j=0;j<tmp.size();j++)
+          if(data[i]+tmp[j]<=21)
+              ans.push_back(data[i]+tmp[j]);
+    }
+  else
+    {
+      for(int j=0;j<tmp.size();j++)
+        {
+          if(1+tmp[j]<=21)
+            ans.push_back(1+tmp[j]);
+          if(11+tmp[j]<=21)
+            ans.push_back(11+tmp[j]);
+        }
+    }
+
+  return ans;
+
+}
+
+int main()
+{
+  string s;
+  for(;getline(cin,s),s!="0";)
+    {
+      istringstream ss(s);
+      vector<int> data;
+      int tmp;
+      for(;ss>>tmp;)
+        {
+          if(tmp>10)
+            tmp=10;
+          data.push_back(tmp);
+        }
+      vector<int> ans=check(data,0);
+      int out=0;
+      for(int i=0;i<ans.size();i++)
+        {
+          out=max(out,ans[i]);
+        }
+      cout<<out<<endl;
+    }
+}

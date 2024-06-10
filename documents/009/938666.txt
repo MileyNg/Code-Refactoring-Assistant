@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+#include <cstring>
+#define llint long long
+
+using namespace std;
+
+bool les[26][26];
+char s[105][15];
+
+void analyse(char* x, char* y) {
+	int len = min(strlen(x), strlen(y));
+	for (int i = 0; i < len; ++i) {
+		if (x[i] != y[i]) {
+			les[x[i] - 'a'][y[i] - 'a'] = true;
+			return;
+		}
+	}
+}
+
+bool illegal(char* x, char* y) {
+	int l1 = strlen(x);
+	int l2 = strlen(y);
+	if (l1 <= l2) return false;
+	for (int i = 0; i < l2; ++i) {
+		if (x[i] != y[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+int main() {
+	int n;
+	while (scanf("%d", &n) && n) {
+		getchar();
+		memset(les, 0, sizeof(les));
+		for (int i = 0; i < n; ++i) {
+			gets(s[i]);
+		}
+		for (int i = 0; i < n - 1; ++i) {
+			for (int j = i + 1; j < n; ++j) {
+				analyse(s[i], s[j]);
+			}
+		}
+		for (int k = 0; k < 26; ++k) {
+			for (int i = 0; i < 26; ++i) {
+				for (int j = 0; j < 26; ++j) {
+					if (les[i][k] && les[k][j]) {
+						les[i][j] = true;
+					}
+				}
+			}
+		}
+		bool flag = true;
+		for (int i = 0; i < 26; ++i) {
+			for (int j = i + 1; j < 26; ++j) {
+				if (les[i][j] && les[j][i]) {
+					flag = false;
+				}
+			}
+		}
+		for (int i = 0; i < n; ++i) {
+			for (int j = i + 1; j < n; ++j) {
+				if (illegal(s[i], s[j])) {
+					flag = false;
+				}
+			}
+		}
+		if (flag) puts("yes");
+		else puts("no");
+	}
+    return 0;
+}

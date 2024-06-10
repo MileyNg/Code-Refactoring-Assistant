@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+
+
+int main(void)
+{
+	int i;
+	int length;
+	char str[50+1];
+
+	fgets(str, sizeof(str), stdin);
+	length = strlen(str);
+	if(str[length - 1] == '\n'){
+		str[length - 1] = '\0';
+	}
+//	gets(str);
+	
+	for(i = 0; i < strlen(str); i++){
+		str[i] = toupper(str[i]);
+	}
+	printf("%s\n",str);
+	
+	return 0;
+}

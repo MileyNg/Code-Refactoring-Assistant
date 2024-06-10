@@ -1,0 +1,46 @@
+//AOJ 0183
+#include <iostream>
+#include <string>
+using namespace std;
+int main(){
+	string s[3];
+	char w;
+	while (1) {
+		w = 'q';
+		for (auto& i : s) {
+			cin>>i;
+			if(i == "0") return 0;
+		}
+		bool end = false;
+		for (int i = 0; i < 3; i++) {
+			char c = s[i][0];
+			bool flag = true;
+			for (int j = 0; j < 3; j++)
+				if(s[i][j] != c) {flag = false;break;}
+			if(flag && s[i][0] != '+') putchar(c),putchar('\n'),end = true;
+		}
+		if(end) goto fin;
+		for (int i = 0; i < 3; i++) {
+			char c = s[0][i];
+			bool flag = true;
+			for (int j = 0; j < 3; j++)
+				if(s[j][i] != c) {flag = false;break;}
+			if(flag && s[0][i] != '+') putchar(c),putchar('\n'),end = true;
+		}
+		if(end) goto fin;
+		w = s[0][0];
+		end = true;
+		for (int i = 0; i < 3; i++)
+			if(s[i][i] != w){end = false;break;}
+		if(end && w != '+') {putchar(w);putchar('\n');goto fin;}
+		w = s[0][2];
+		end = true;
+		for (int i = 0; i < 3; i++) {
+			if(s[i][2-i] != w) {end = false;break;}
+		}
+		if(end && w != '+') putchar(w),putchar('\n');
+fin:
+		if(!end || w == '+') puts("NA");
+	}
+	return 0;
+}

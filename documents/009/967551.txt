@@ -1,0 +1,35 @@
+#include<stdio.h>
+int a,A[20],M[20];
+int equal(int,int);
+int main(){
+  int i,m,a;
+  int A[20],M[200];
+    scanf("%d",&a);
+  for(i=0;i<a;i++){
+    scanf("%d",&A[i]);
+  }
+  scanf("%d",&m);
+  for(i=0;i<m;i++){
+    scanf("%d",&M[i]);
+  }
+  for(i=0;i<m;i++){
+    if(equal(0,M[i])){
+      printf("yes\n");
+    }
+    else{
+      printf("no\n");
+    }
+  }
+  return 0;
+
+}
+int equal(int j,int l){
+  if(A[j]==l)return 1;
+  if(j==a)return 0;
+  else{
+    if(equal(j+1,l)||equal(j+1,l-A[j]))
+      return 1;
+  }
+  return 0;
+}
+  

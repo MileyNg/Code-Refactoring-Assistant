@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+#include <unistd.h>
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,n) loop(i,0,n)
+
+using namespace std;
+
+char hand[10][10];
+int win[10]={};
+int table[1000]={};
+
+inline void pon(int n){
+    printf("%d\n", n);
+}
+
+inline int get(){
+    int res;
+    scanf("%d",&res);
+    return res;
+}
+
+int main(){
+    srand(time(0u)+getpid());
+
+    int n;
+    scanf("%d",&n);
+    rep(i,n) scanf("%s", hand[i]);
+
+    int c=0;
+    rep(i,n)rep(j,n){
+        if(hand[i][j]=='o'){
+            table[c++] = i+1;
+        }
+    }
+
+    int r;
+    rep(i,1000){
+        r=rand()%c;
+        pon(table[r]);
+        int t=get();
+        r+=t;
+    }
+}

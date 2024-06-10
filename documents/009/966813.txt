@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+
+class Baseball{
+private:
+  int point;
+  int runner;
+  int out_count;
+  void hit();
+  void homerun();
+  void out();
+public:
+  Baseball(){
+    point = 0;
+    runner = 0;
+    out_count = 0;
+  }
+  ~Baseball(){}
+  
+  void show_point(){ std::cout << point << std::endl;}
+  void start();
+};
+
+void Baseball::hit(){
+  ++runner;
+  if(runner == 4){
+    ++point;
+    --runner;
+  }
+}
+
+void Baseball::homerun(){
+  point += runner + 1;
+  runner = 0;
+}
+
+void Baseball::out(){
+  ++out_count;
+}
+
+void Baseball::start(){
+  while(out_count < 3){
+    std::string event;
+    std::cin >> event;
+    if(event == "HIT"){ hit(); }
+    else if(event == "HOMERUN"){ homerun(); }
+    else if(event == "OUT"){ out(); }
+  }
+}
+ 
+int main(){
+  int data_num;
+  std::cin >> data_num;
+
+  for(int i = 0; i < data_num; ++i){
+    Baseball baseball;
+    baseball.start();
+    baseball.show_point();
+  }
+  return 0;
+}

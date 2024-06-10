@@ -1,0 +1,32 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+int main()
+{
+  string s;
+  for(;cin>>s,s!="0";)
+    {
+      int data[3][2];
+      memset(data,0,sizeof(data));
+      //1st game
+      for(int i=1;i<s.size();i++)
+	data[0][s[i]-'A']++;
+      //2nd game
+     cin>>s;
+      data[0][s[0]-'A']++;
+      for(int i=1;i<s.size();i++)
+	data[1][s[i]-'A']++;
+      //3rd game
+      cin>>s;
+      data[1][s[0]-'A']++;
+      for(int i=1;i<s.size();i++)
+	data[2][s[i]-'A']++;
+      if(data[2][0]>data[2][1])
+	data[2][0]++;
+      else
+	data[2][1]++;
+
+      for(int i=0;i<3;i++)
+	cout<<data[i][0]<<" "<<data[i][1]<<endl;
+    }
+}

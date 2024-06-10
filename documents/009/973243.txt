@@ -1,0 +1,39 @@
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  pl = []
+  n.times.each do
+    hl = gets.chomp.split("").map{|s| s == "."}
+
+    prev_w = 0
+    ws = []
+
+    for i in (0...n)
+      ws[i] = hl[i] ? prev_w + 1 : 0
+      prev_w = ws[i]
+    end
+
+    pl.push ws
+  end
+
+  max_l = 0
+
+  for y in (0...n)
+    for x in (0...n)
+      min_w = pl[y][x]
+      h = 1
+      y0 = y
+      while y0 > 0
+        y0 -= 1
+        w = pl[y0][x]
+        min_w = w if min_w > w
+        break if min_w <= h
+        h += 1
+      end
+      max_l = h if max_l < h
+    end
+  end
+
+  puts max_l
+end

@@ -1,0 +1,76 @@
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<double, double> P;
+
+/** Problem0069 : Drowing Lots II **/
+int amida[5][30], N, M, H, D;
+
+int check(int n)
+{
+	rep(i, D) {
+		if (amida[n][i]==1)
+			n++;
+		else if (amida[n][i]==-1)
+			n--;
+	}
+	return n;
+}
+
+int main()
+{
+	while (cin>>N, N) {
+		cin >> M >> H >> D;
+		M--; H--;
+		memset(amida, 0, sizeof(amida));
+
+		rep(d, D) {
+			rep(i, N-1) {
+				char bo; cin >> bo;
+				if (bo=='1') {
+					amida[i][d] = 1;
+					amida[i+1][d] = -1;
+				}
+			}
+		}
+		
+		if (check(M)==H) {
+			cout << 0 << endl;
+			continue;
+		}
+		
+		rep(d, D) {
+			rep(i, N-1) {
+				if (amida[i][d] == 0 && amida[i+1][d] == 0) {
+					amida[i][d] = 1; amida[i+1][d] = -1;
+					if (check(M)==H) {
+						cout << d+1 << " " << i+1 << endl;
+						goto end;
+					}
+					amida[i][d]=0; amida[i+1][d] = 0;
+				}
+			}
+		}
+		
+		cout << 1 << endl;
+	end:;
+	}
+	return 0;
+}

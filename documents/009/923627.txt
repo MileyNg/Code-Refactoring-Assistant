@@ -1,0 +1,18 @@
+class EnglishText
+  def initialize
+    @texts = []
+  end
+
+  def read (lineage)
+    lineage.times{@texts << gets.chomp}
+  end
+
+  def change (before_string, after_string)
+    @texts.each{|text| puts text.gsub(/#{before_string}/, after_string) }
+  end
+end
+
+lineage = gets.chomp.to_i
+text = EnglishText.new
+text.read(lineage)
+text.change('Hoshino', 'Hoshina')

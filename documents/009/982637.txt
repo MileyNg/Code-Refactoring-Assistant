@@ -1,0 +1,32 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+int main(){
+  int n;
+  cin>>n;
+  rep(i,n){
+    vector<int>a,b;
+    int tmp;
+    cin>>tmp;
+    pb(a,tmp);
+    rep(j,9){
+      cin>>tmp;
+      if(a[a.size()-1]<tmp)pb(a,tmp);
+      else pb(b,tmp);
+    }
+    bool han=true;
+    rep(j,b.size()-1)if(b[j]>b[j+1])han=false;
+    if(han)cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;
+  }
+}

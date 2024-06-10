@@ -1,0 +1,24 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+int main(){
+    string w;
+    cin >> w;
+
+    int cnt = 0;
+
+    while(1){
+        string s; cin>>s;
+        if(s=="END_OF_TEXT") break;
+        s[0] = tolower(s[0]);
+        if(s[0]=='"') s = s.substr(1);
+        if(s[s.size()-1] == '"') s = s.substr(0,s.size()-1);
+
+        if(s==w) cnt++;
+    }
+
+    cout << cnt << endl;
+}

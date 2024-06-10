@@ -1,0 +1,87 @@
+#include<stdio.h>
+struct Node
+{
+  int p;
+  int l;
+  int r;
+};
+
+struct Node T[100000];
+
+void preorder(int id)
+{
+  printf(" %d",id);
+  if(T[id].l!=-1) 
+    {
+      preorder(T[id].l);
+    }
+  if(T[id].r!=-1)
+    {
+      preorder(T[id].r);
+    }
+}
+
+void inorder(int id)
+{
+  if(T[id].l!=-1)
+    {
+      inorder(T[id].l);
+    }
+  printf(" %d",id);
+  if(T[id].r!=-1)
+    {
+      inorder(T[id].r);
+    }
+}
+
+void postorder(int id)
+{
+  if(T[id].l!=-1)
+    {
+      postorder(T[id].l);
+    }
+  if(T[id].r!=-1)
+    {
+      postorder(T[id].r);
+    }
+  printf(" %d",id);
+}
+
+main()
+{
+  int n,i,id;
+  
+  scanf("%d",&n);
+  
+  for(i=0;i<n;i++)
+    {
+      T[i].p=T[i].l=T[i].r=-1;
+    }
+  
+  for(i=0;i<n;i++)
+    {
+      scanf("%d",&id);
+      scanf("%d %d",&T[id].l,&T[id].r);
+      T[T[id].l].p=id;
+      T[T[id].r].p=id;
+    }
+  printf("Preorder\n");
+  for(i=0;i<n;i++)
+    {
+      if(T[i].p==-1)
+	{
+	  preorder(i);
+	  printf("\n");
+	  break;
+	}
+    }
+  
+  printf("Inorder\n");
+  inorder(i);
+  printf("\n");
+  
+  printf("Postorder\n");
+  postorder(i);
+  printf("\n");
+  return 0;
+}

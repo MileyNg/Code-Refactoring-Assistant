@@ -1,0 +1,51 @@
+#include<stdio.h>
+
+int pt(int*, int, int);
+
+main(){
+  int a[100001],i,n,sugi;
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      scanf("%d", &a[i]);
+    }
+  //ここから
+  sugi = pt(a,0,n-1);
+  for(i=0;i<n;i++)
+    {
+      if(i == sugi){
+	printf("[%d]",a[i]);
+      }
+      else{
+	printf("%d",a[i]);
+      }
+      if(i!=n-1){
+	printf(" ");
+      }
+    }
+
+
+  printf("\n");
+  return 0;
+}
+
+int pt(int *a, int b, int c)
+{
+  int x, i, j, tmp;
+  x = a[c];
+  i = b-1;
+  for(j=b;j<c;j++)
+    {
+      if(a[j] <= x)
+	{
+	  i = i+1;
+	  tmp =  a[i];
+          a[i] = a[j];
+          a[j] = tmp;
+	}
+    }
+  tmp = a[i+1];
+  a[i+1] = a[c];
+  a[c] = tmp;
+  return i+1;
+}

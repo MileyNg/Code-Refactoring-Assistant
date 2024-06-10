@@ -1,0 +1,21 @@
+#include<stdio.h>
+int main(void){
+    int total,totalmax,n,i,a;
+    for(;;){
+        scanf("%d",&n);
+            if(n==0){
+                break;
+            }
+    for(i=0,total=0,totalmax=0;i<n;i++){
+        scanf("%d",&a);
+        total=total+a;
+            if(total<0)
+                total=0;
+            if(total>totalmax){
+                totalmax=total;
+            }
+    }
+    printf("%d\n",totalmax);
+    }
+    return 0;
+}

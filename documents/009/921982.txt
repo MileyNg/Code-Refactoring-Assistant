@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100001
+
+typedef struct{
+  char name[11];
+  int time;
+} queue;
+
+queue Q[MAX];
+int front,p,pos,empty;
+
+void push(queue);
+queue pop(void);
+
+int main(){
+  int n,q,i,sum = 0;
+  queue que;
+
+  scanf("%d %d" ,&n ,&q);
+  for(i = 0 ; i < n ; i++){
+    scanf("%s %d" ,Q[i].name ,&Q[i].time);
+  }
+
+  front = 0;
+  empty = p = n;
+  while(empty != 0){
+    que = pop(); 
+
+    if(que.time == 0){
+      continue;
+    }
+  
+    if(que.time > q){
+      Q[pos].time -= q;
+      sum += q;
+      push(Q[pos]);
+    }else{
+      sum += Q[pos].time;
+      Q[pos].time = 0;
+
+      printf("%s %d\n" ,Q[pos].name, sum);
+    }
+  }
+
+  return 0;
+}
+
+void push(queue que){
+  empty++;
+  Q[p++] = que;
+  p %= MAX;
+}
+
+queue pop(){
+  empty--;
+  pos = front;
+  queue res = Q[front++];
+  front %= MAX;
+  return res;
+}

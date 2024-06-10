@@ -1,0 +1,163 @@
+#include<stdio.h>
+#include<iostream>
+#include<cstring>
+#include<queue>
+using namespace std;
+#define LL long long
+const int kind =26;
+struct node
+{
+   node * fail;
+   node *next[kind];
+   int count,sz;
+   node()
+   {
+		fail=NULL;
+		sz=count =0;
+		for(int i=0;i<kind;i++)
+		next[i]=NULL;
+	}
+};
+
+char keyword[3001000];
+char str[1100];
+
+
+
+void insert(node *root,char *word,int x)
+{
+	node *location=root;
+	int i=0,branch=0;
+
+	while(word[i])
+	{
+		branch=word[i]-'a';
+		if(location->next[branch]==NULL)
+		   location->next[branch]=new node();
+		   i++;
+		   location=location->next[branch];
+	}
+	location->sz=i;
+	if(location->count==0) location->count=x;
+	else location->count=min(location->count,x);
+
+}
+
+void buid_fail(node * root)
+{
+      queue<node *> q;
+	  while(!q.empty())
+	          q.pop();
+
+	    root->fail=NULL;
+	    int i=0;
+		q.push(root);
+		while(!q.empty())
+		{
+			node *temp=q.front();
+			           q.pop();
+			node *p=NULL;
+			for(i=0;i<26;i++)
+			    if(temp->next[i]!=NULL)
+				{
+					if(temp==root)
+					      temp->next[i]->fail=root;
+					else
+					{
+						p=temp->fail;
+						while(p!=NULL)
+						{
+						     if(p->next[i]!=NULL)
+							 {
+								temp->next[i]->fail=p->next[i];
+								break;
+							 }
+							p=p->fail;
+						}
+						if(p==NULL)
+						   temp->next[i]->fail=root;
+					}
+					q.push(temp->next[i]);
+				}
+
+		}
+}
+
+LL dp[1009];
+
+void AC_search(node * root,char * str)
+{
+	int i=0,index,len=strlen(str);
+	node *p=root;
+	i=0;
+//	cout<<str<<" str"<<endl;
+	while(str[i])
+	{
+//	    printf("%c\n",str[i]);
+		index=str[i]-'a';
+		while(p->next[index]==NULL && p!=root)
+	                      p=p->fail;
+	    p=p->next[index];
+	    p=(p==NULL) ? root : p;
+
+	    node *temp=p;
+	    while(temp!=root)
+	    {
+			dp[i]=min(dp[i],temp->count + dp[i- temp->sz]);
+			temp=temp->fail;
+		}
+//		puts("...............");
+		i++;
+	}
+}
+#define inf 10000000000000000LL
+int main()
+{
+    freopen("1.in","r",stdin);
+    freopen("k1.out","w",stdout);
+    int T;
+    scanf("%d",&T);
+    while(T--)
+    {
+        gets(str);gets(str);
+//        puts(str);
+        node *root=new node();
+        int n;
+        scanf("%d",&n);
+        for(int i=0;i<n;i++)
+        {
+            gets(keyword);
+            int x;
+            scanf("%s%d",keyword,&x);
+//            puts(keyword);
+            insert(root,keyword,x);
+        }
+//        puts("*********");
+        buid_fail(root);
+//        puts("+++++++++++");
+        int m=strlen(str);
+        for(int i=0;i<m;i++) dp[i]=inf;
+//        puts("pppppppp");
+        AC_search(root,str);
+//        puts("========");
+        if(dp[m-1]<inf) printf("%I64d\n",dp[m-1]);
+        else puts("-1");
+    }
+    return 0;
+}
+
+/*
+2
+abcd
+6
+a 5
+bc 10
+cd 8
+bcd 20
+d 5
+ab 7
+ab
+2
+c 1
+dd 1
+*/

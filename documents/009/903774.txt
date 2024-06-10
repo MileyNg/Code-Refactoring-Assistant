@@ -1,0 +1,77 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+char c[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+int main() {
+	int n; cin >> n;
+	string s1, s2;
+	
+	for (int i=0; i<n; i++) {
+		cin >> s1 >> s2;
+		reverse(s1.begin(), s1.end());
+		reverse(s2.begin(), s2.end());
+		
+		string s = "";
+		
+		if (s1.size() == s2.size()) {
+			int r = 0, t = 0;
+			for (int i=0; i<(int)s1.size(); i++) {
+				int x = s1[i]-c[0], y = s2[i]-c[0];
+				int z = x + y + t;
+				r = z%10;
+				t = z/10;
+				s += c[r];
+			}
+			if (t) s += c[t];
+		} else if (s1.size() > s2.size()) {	
+			int r = 0, t = 0;
+			for (int i=0; i<(int)s2.size(); i++) {
+				int x = s1[i]-c[0], y = s2[i]-c[0];
+				int z = x + y + t;
+				r = z%10;
+				t = z/10;
+				s += c[r];
+			}
+			if (t) {
+				for (int i=(int)s2.size(); i<(int)s1.size(); i++) {
+					int z = s1[i]-c[0]+t;
+					r = z%10;
+					t = z/10;
+					s += c[r];
+				}
+				if (t) s += c[t];
+			} else {
+				for (int i=(int)s2.size(); i<(int)s1.size(); i++) s += c[s1[i]-c[0]];
+			}
+		} else {
+			int r = 0, t = 0;
+			for (int i=0; i<(int)s1.size(); i++) {
+				int x = s1[i]-c[0], y = s2[i]-c[0];
+				int z = x + y + t;
+				r = z%10;
+				t = z/10;
+				s += c[r];
+			}
+			if (t) {
+				for (int i=(int)s1.size(); i<(int)s2.size(); i++) {
+					int z = s2[i]-c[0]+t;
+					r = z%10;
+					t = z/10;
+					s += c[r];
+				}
+				if (t) s += c[t];
+			} else {
+				for (int i=(int)s1.size(); i<(int)s2.size(); i++) s += c[s2[i]-c[0]];
+			}
+		}
+		
+		reverse(s.begin(), s.end());
+		cout << s << endl;
+	}
+	
+	return 0;
+}

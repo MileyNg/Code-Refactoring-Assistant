@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+	char s[201],tmp[201];
+	int n,m;
+	int i,j;
+	
+	while(1){
+		scanf("%s",s);
+		if(strcmp(s,"-")==0)
+			break;
+		scanf("%d",&n);
+		for(i=0;i<n;i++)
+		{
+			scanf("%d",&m);
+			strncpy(tmp,s,m);
+			for(j=0;j<strlen(s)-m;j++)
+				s[j] = s[m+j];
+			s[j] = '\0';
+			strcat(s,tmp);
+		}
+		printf("%s\n",s);
+	}
+	return 0;
+}

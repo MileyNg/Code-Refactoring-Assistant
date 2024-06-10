@@ -1,0 +1,73 @@
+#include<stdio.h>
+#define N -1
+#define MAX 100001
+ 
+struct Node{
+  int p,l,r;
+};
+struct Node T[MAX]; 
+ 
+void preorder(int);
+void inorder(int);
+void postorder(int);
+
+main(){
+  int parent;
+  int n;
+  int i;
+  
+scanf("%d",&n);
+ 
+ for(i=0; i < n; i++){
+   T[i].p = T[i].l = T[i].r = N;
+ }
+ 
+ for(i = 0; i < n; i++){
+   scanf("%d",&parent);
+   scanf("%d %d",&T[parent].l,&T[parent].r);
+   T[T[parent].l].p = parent;
+   T[T[parent].r].p = parent;
+ }
+ 
+ for(i =0; i<n; i++){
+   if( T[i].p == N) break;
+ }
+ printf("Preorder\n");
+ preorder(i);
+ printf("\n");
+ printf("Inorder\n");
+ inorder(i);
+ printf("\n");
+ printf("Postorder\n");
+ postorder(i);
+ printf("\n");
+ return 0;
+}
+
+void preorder(int i){
+  printf(" %d",i);
+  if(i != N){
+    if(T[i].l != N) preorder(T[i].l);
+    if(T[i].r != N) preorder(T[i].r);
+  }
+}
+
+void inorder(int i){
+  if(i != N){
+    if(T[i].l != N){
+      inorder(T[i].l);
+    }
+    printf(" %d",i);
+    if(T[i].r != N){
+      inorder(T[i].r);
+    }
+  }
+}
+
+void postorder(int i){
+  if(i!=N){
+    if(T[i].l != -1) postorder(T[i].l);
+    if(T[i].r != -1) postorder(T[i].r);
+  }
+  printf(" %d",i);
+}

@@ -1,0 +1,55 @@
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define rep(i,n) for (int i = 0; i < int(n); i++)
+
+int main() {
+    int T;
+    cin >> T;
+    rep (_, T) {
+        long long gx, gy, p, x1, x2, y1, y2, a[20][20], b[20][20];
+        rep (i,20) rep (j,20) a[i][j] = b[i][j] = 0;
+        a[0][0] = 1;
+        cin >> gx >> gy >> p;
+        rep (i,p) {
+            cin >> x1 >> y1 >> x2 >> y2;
+            if (x1 == x2) b[x1][min(y1, y2)] += 1;
+            if (y1 == y2) b[min(x1, x2)][y1] += 2;
+        }
+        
+        rep (i,19) rep (j,19) {
+            if (b[i][j] != 1 && b[i][j] != 3)
+                a[i][j+1] += a[i][j];
+            if (b[i][j] != 2 && b[i][j] != 3)
+                a[i+1][j] += a[i][j];
+        }
+
+       //  rep (j, 20) {
+       //      rep (i,20) cout << a[i][j] << " ";
+       //      cout << endl;
+       //  }
+       //  cout << endl;
+       //  rep (j, 20) {
+       //      rep (i,20) cout << b[i][j] << " ";
+       //      cout << endl;
+       //  }
+       //       cout << endl;
+       //  rep (j, 20) {
+       //      rep (i,20) cout << (b[i][j] & 1) << " ";
+       //      cout << endl;
+       //  }
+       // cout << endl;
+       //  rep (j, 20) {
+       //      rep (i,20) cout << (b[i][j] & 2) << " ";
+       //      cout << endl;
+       //  }
+
+        if (a[gx][gy] == 0) {
+            cout << "Miserable Hokusai!" << endl;
+        } else {
+            cout << a[gx][gy] << endl;
+        }
+    }
+}

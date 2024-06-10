@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  for(int H, W; cin >> H >> W, H || W; ) {
+    int A[H], B[W];
+    for(int i = 0; i < H; i++) cin >> A[i];
+    for(int i = 0; i < W; i++) cin >> B[i];
+
+    int ans = 0;
+    for(int i = 0; i < H; i++) {
+      for(int j = 0; j < W; j++) {
+        if(A[i] == B[j]) {
+          ans += A[i];
+          A[i] = 0;
+          B[j] = 0;
+        }
+      }
+    }
+    for(int i = 0; i < H; i++) ans += A[i];
+    for(int i = 0; i < W; i++) ans += B[i];
+    cout << ans << endl;
+  }
+}

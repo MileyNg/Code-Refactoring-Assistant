@@ -1,0 +1,104 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+#include <queue>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define PB push_back
+#define F first
+#define S second
+#define mkp make_pair
+
+static const int INF=1<<24;
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef pair<pii,int> piii;
+
+
+
+
+
+struct E{
+	int v,l,thief;
+};
+
+int N,M,L;
+vector<vector<E> > a;
+priority_queue<E> pq;
+int dp[110][110];
+
+bool operator < (E a,E b){
+	return a.thief>b.thief;
+}
+
+
+int dij(){
+	rep(i,110) rep(j,110) dp[i][j]=INF;
+	E tmp;
+	tmp.v=0;
+	tmp.l=0;
+	tmp.thief=0;
+	pq.push(tmp);
+	dp[0][0]=0;
+	int ans=INF;
+	while(!pq.empty()){
+		E now = pq.top();
+		//cout<<now.v<<" "<<now.l<<" "<<now.thief<<endl;
+		pq.pop();
+		if(now.v==N-1){
+			if(now.l<=L) ans=min(ans,now.thief);
+			continue;
+		}
+		rep(i,a[now.v].size()){
+			E next = a[now.v][i];
+			//雇う
+			if(now.thief<dp[next.l+now.l][next.v]){
+				if(next.l+now.l>105) continue;
+				// if(next.l+now.l>110) cout<<"hoge "<<dp[next.l+now.l][next.v]<<" "<<next.l+now.l<<endl; 
+				dp[next.l+now.l][next.v]=now.thief;
+				// cout<<"dp "<<dp[next.l+now.l][next.v]<<" "<<next.l+now.l<<" "<<next.v<<endl;
+				E t1=next;
+				t1.l+=now.l;
+				t1.thief=now.thief;
+				pq.push(t1);
+			}
+			//雇わない
+			if(now.thief+next.thief<dp[now.l][next.v]){
+				dp[now.l][next.v]=now.thief+next.thief;
+				// cout<<"dp "<<dp[now.l][next.v]<<" "<<now.l<<" "<<next.v<<endl;
+				E t1=next;
+				t1.l=now.l;
+				t1.thief+=now.thief;
+				pq.push(t1);				
+			}
+		}
+	}
+	return ans;
+}
+
+
+int main(){
+	while(cin>>N>>M>>L,N||M||L){
+		a.resize(N);
+		rep(i,N) a.clear();
+		rep(i,M){
+			int b,c,l,thi;
+			cin>>b>>c>>l>>thi;
+			b--;
+			c--;
+			E t1,t2;
+			t1.v=b;
+			t1.l=l;
+			t1.thief=thi;
+			t2.v=c;
+			t2.l=l;
+			t2.thief=thi;
+			a[c].PB(t1);
+			a[b].PB(t2);
+		}
+		cout<<dij()<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,133 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+typedef long long LL;
+
+// count # (<= X)
+LL check(const LL N, const LL X){
+    LL right = N;
+    LL p2 = 1;
+    LL res = 0;
+    LL mid = X;
+    // printf("n = %lld x = %lld\n", N, X);
+    while(right > 2){
+        // [left, right]
+        LL left = right / 3 + 1;
+        if(left <= 2) left = 3;
+
+        // [left, mid] (mid, right]
+        if(mid > right) mid = right;
+        // printf("left = %lld mid = %lld right = %lld\n", left, mid, right);
+
+        // [left, mid]のうち奇数の個数
+        if(!(left & 1)) left++;
+        LL m = mid;
+        if(!(m & 1)) m--;
+        if(left <= m){
+            res += ((m - left) >> 1) + 1;
+        }
+
+        right = right / 3;
+        mid >>= 1;
+        p2 <<= 1;
+    }
+    if(p2 <= X) res++;
+
+    // printf("-> %lld\n\n", res);
+    return res;
+}
+
+LL solve(LL N, LL K){
+    if(K > (N + 1) / 2) return -1;
+    if(N % 2 == 0) N--;
+    LL lb = 0;
+    LL ub = N;
+    while(ub - lb > 1){
+        LL x = (ub + lb) / 2;
+        if(check(N, x) >= K){
+            ub = x;
+        }else{
+            lb = x;
+        }
+    }
+    return ub;
+}
+LL f(LL x, LL n){
+    LL q = x;
+    LL p2 = 1;
+    while(3 * x <= n){
+        x *= 3;
+        p2 *= 2;
+    }
+    return q * p2;
+}
+LL solve2(LL N, LL K){
+    if(N <= 2){
+        if(K == 1) return 1;
+        else return -1;
+    }
+    if(N % 2 == 0) N --;
+    vector<LL> v;
+    v.push_back(f(2, N));
+    for(LL i = 3; i <= N; i += 2){
+        v.push_back(f(i, N));
+    }
+    sort(v.begin(), v.end());
+    if(v.size() < K) return -1;
+    return v[K - 1];
+}
+vector<vector<int>> max(int n){
+    int max_l = 0;
+    vector< vector<int> > res;
+    REP(s, 1 << (n - 1)){
+        vector<int> v;
+        REP(i, n - 1) if(s >> i & 1){
+            v.push_back(i + 2);
+        }
+        bool ok = true;
+        REP(i, v.size()) REP(j, i) if(v[i] % v[j] == 0) ok = false;
+        if(ok){
+            if(max_l < v.size()) {
+                max_l = v.size();
+                res.clear();
+            }
+            if(max_l == v.size()){
+                res.push_back(v);
+            }
+        }
+    }
+    return res;
+}
+LL solve3(LL N, LL K){
+    cout << N << " " << K << endl;
+    if(N <= 2) {
+        if(K == 1) return 1;
+        else return -1;
+    }
+    vector<vector<int>> res = max(N);
+    if(res[0].size() < K) return -1;
+    return res[0][K - 1];
+}
+
+int main(){
+    int C;
+    cin >> C;
+    while(C--){
+        LL N, K;
+        scanf("%lld %lld", &N, &K);
+        printf("%lld\n", solve(N, K));
+    }
+    // for(int n = 1; n < 25; n++){
+    //     for(int k = 1; k <= n; k++){
+    //         printf("n = %d k = %d\n", n, k);
+    //         LL x = solve(n, k);
+    //         LL y = solve3(n, k);
+    //         printf("x = %lld y = %lld\n", x, y);
+    //         if(x != y){
+    //             assert(false);
+    //         }
+    //     }
+    // }
+    return 0;
+}

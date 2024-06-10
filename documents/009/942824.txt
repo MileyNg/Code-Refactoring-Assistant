@@ -1,0 +1,39 @@
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+const int MAX = 10000;
+
+/** Problem0566 : Soccer **/
+int main()
+{
+	int team[100]={0};
+	int n, a, b, as, bs;
+	
+	cin >> n;
+	rep(i, n*(n-1)/2) {
+		cin >> a >> b >> as >> bs;
+		a--; b--;
+		if (as > bs) {
+			team[a]+=3;
+		} else if (bs > as) {
+			team[b]+=3;
+		} else {
+			team[a]++; team[b]++;
+		}
+	}
+	rep(i, n) {
+		int myS = team[i];
+		int rank=1;
+		rep(j, n) {
+			if (i!=j && myS<team[j])
+				rank++;
+		}
+		cout << rank << endl;
+	}
+	return 0;
+}

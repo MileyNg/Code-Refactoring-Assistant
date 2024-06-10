@@ -1,0 +1,57 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+typedef std::pair<int, int> P;
+
+int main(){
+
+	int n, r, l;
+	std::cin >> n >> r >> l;
+
+	std::vector<int>point(n, 0);
+	std::vector<int>time(n, 0);
+
+	std::priority_queue<P>que;
+
+	int betime = 0;
+	for (int i = 0; i < r; i++){
+		int d, t, x;
+		std::cin >> d >> t >> x;
+		d--;
+
+		while (!que.empty()){
+			P res = que.top();
+
+			if (res.first == point[-res.second]){
+				time[-res.second] += (t - betime);
+				break;
+			}
+			que.pop();
+		}
+
+		point[d] += x;
+		que.push(P(point[d], -d));
+
+		betime = t;
+	}
+
+	while (!que.empty()){
+		P res = que.top();
+
+		if (res.first == point[-res.second]){
+			time[-res.second] += (l - betime);
+			break;
+		}
+		que.pop();
+	}
+
+	int max = 0;
+	for (int i = 1; i < n; i++){
+		if (time[i]>time[max])max = i;
+	}
+
+	std::cout << max + 1 << std::endl;
+
+	return 0;
+}

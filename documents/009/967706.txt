@@ -1,0 +1,59 @@
+def solve_eq(m, v)
+  #print "m=", m.to_s, "\n", "v=", v.to_s, "\n"
+
+  n = m.length
+  ans = []
+
+  for i in (0...n)
+    max_i = (i...n).max { |k| m[k][i].abs }
+    #puts max_i
+    if (max_i != i)
+      tmi = m[i]; m[i] = m[max_i]; m[max_i] = tmi
+      tvi = v[i]; v[i] = v[max_i]; v[max_i] = tvi
+    end
+
+
+    mii = m[i][i]
+    for j in (i...n)
+      m[i][j] /= mii
+    end
+    v[i] /= mii
+
+    for k in ((i + 1)...n)
+      dki = m[k][i]
+      for j in (i...n)
+        m[k][j] -= dki * m[i][j]
+      end
+      v[k] -= dki * v[i]
+    end
+  end
+  #print "m=", m.to_s, "\n", "v=", v.to_s, "\n"
+
+  (n - 1).step(0, -1). each do |i|
+    sum = 0
+    ((i + 1)...n).each { |j| sum += m[i][j] * ans[j] }
+    ans[i] = v[i] - sum
+  end
+
+  #print "ans=", ans, "\n"
+  return ans
+end
+
+n = gets.chop.to_i
+
+n.times do
+  x1, y1, x2, y2, x3, y3 = gets.chop.split(/\s+/).map { |s| s.to_f }
+  #puts [x1, y1, x2, y2, x3, y3].join(', ')
+
+  mat = [ [x1, y1, 1], [x2, y2, 1], [x3, y3, 1] ]
+  vec = [-(x1 * x1 + y1 * y1), -(x2 * x2 + y2 * y2), -(x3 * x3 + y3 * y3)]
+
+  ans = solve_eq(mat, vec)
+  #puts ans
+
+  px = -ans[0] / 2
+  py = -ans[1] / 2
+  r = Math.sqrt(px * px + py * py - ans[2])
+
+  printf("%.3f %.3f %.3f\n", px, py, r)
+end

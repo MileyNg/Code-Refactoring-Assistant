@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+#define max(a,b)(a>b?a:b)
+
+struct POINT{
+	int x;
+	int y;
+	int c;
+	POINT(int X,int Y,int C){
+		x = X;y = Y;c=C;
+	}
+};
+
+stack<POINT> st;
+
+int h,w,c;
+int panel[8][8][2]={0};
+int ans=0;
+
+
+
+void show(int ans){
+	cout << "--- panel contents"<<endl;
+	for(int i=0;i<h;i++){
+		for(int j=0;j<w;j++){
+			cout << panel[i][j][0] << " ";
+		}
+		cout << endl;
+	}
+	cout<< "--- count = "<< ans<< endl<<endl;
+}
+
+void change(int c){
+	for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+			if(panel[i][j][1])
+				panel[i][j][0]=c;
+}
+
+int countPanel(){
+	int count=0;
+	for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+			if(panel[i][j][1])
+				count++;
+	return count;
+}
+
+void push(POINT pt,int dp){
+	panel[pt.y][pt.x][1]=dp;
+	if(pt.x>0&&panel[pt.y][pt.x-1][1]!=dp&&panel[pt.y][pt.x-1][0]==pt.c){
+		st.push(POINT(pt.x-1,pt.y,panel[pt.y][pt.x-1][0]));
+	}
+	if(pt.x<w-1&&panel[pt.y][pt.x+1][1]!=dp&&panel[pt.y][pt.x+1][0]==pt.c){
+		st.push(POINT(pt.x+1,pt.y,panel[pt.y][pt.x+1][0]));
+	}
+	if(pt.y>0&&panel[pt.y-1][pt.x][1]!=dp&&panel[pt.y-1][pt.x][0]==pt.c){
+		st.push(POINT(pt.x,pt.y-1,panel[pt.y-1][pt.x][0]));
+	}
+	if(pt.y<h-1&&panel[pt.y+1][pt.x][1]!=dp&&panel[pt.y+1][pt.x][0]==pt.c){
+		st.push(POINT(pt.x,pt.y+1,panel[pt.y+1][pt.x][0]));
+	}
+	if(!st.empty()){
+		POINT t_st=st.top();
+		st.pop();
+		push(t_st,dp);
+	}
+}
+
+
+void depth(int dp){
+
+	if(dp==5){
+		push(POINT(0,0,panel[0][0][0]),dp+1);
+		ans=max(ans,countPanel());
+	}
+	else{
+		//状態を保存
+		int tmp[8][8][2]={0};
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				tmp[i][j][0]=panel[i][j][0];
+				tmp[i][j][1]=panel[i][j][1];
+			}
+		}
+
+		if(dp==4){
+			//同色を結合
+			push(POINT(0,0,panel[0][0][0]),dp+1);
+			change(c);
+			//再帰
+			depth(dp+1);
+			//状態を戻す
+			for(int i=0;i<h;i++){
+				for(int j=0;j<w;j++){
+					panel[i][j][0]=tmp[i][j][0];
+					panel[i][j][1]=tmp[i][j][1];
+				}
+			}
+		}else{
+			//全色色を変えていく
+			for(int i=1;i<=6;i++){
+				//同色を結合
+				push(POINT(0,0,panel[0][0][0]),dp+1);
+				change(i);
+				//再帰
+				depth(dp+1);
+				//状態を戻す
+				for(int i=0;i<h;i++){
+					for(int j=0;j<w;j++){
+						panel[i][j][0]=tmp[i][j][0];
+						panel[i][j][1]=tmp[i][j][1];
+					}
+				}
+			}
+		}
+
+	}
+}
+
+int main(void){
+
+	while(1){
+
+		ans=0;
+		cin >> h>>w>>c;
+
+		if(!h&&!w&&!c)
+			break;
+
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				cin >> panel[i][j][0];
+			}
+		}
+
+		depth(0);
+
+		cout << ans <<endl;
+
+	}
+
+	return 0;
+}

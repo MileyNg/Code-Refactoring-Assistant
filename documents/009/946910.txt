@@ -1,0 +1,67 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int main(){
+    int n, k;
+    while(cin >> n >> k, n+k){
+        vi c;
+        for(int i=0; i < n; i++){
+            int m;
+            cin >> m;
+            c.push_back(m);
+        }
+
+        int ck=0;
+        for(int i=0; i <= c.size()-k; i++){
+            int sum = 1;
+            for(int j=0; j < k; j++){
+                sum *= c[i+j];
+            }
+            if(ck < sum) ck = sum;
+        }
+        int ans = 0;
+        for(int i=0; i < c.size(); i++){
+            for(int j=i+1; j < c.size(); j++){
+                swap(c[i], c[j]);
+                for(int l=0; l <= c.size()-k; l++){
+                    int sum = 1;
+                    for(int o=0; o < k; o++){
+                        sum *= c[l+o];
+                    }
+                    ans = max(ans, sum);
+                }
+		swap(c[i], c[j]);
+            }
+        }
+        if(ck <= ans) cout << ans-ck << endl;
+        else cout << "NO GAME" << endl;
+    }
+}

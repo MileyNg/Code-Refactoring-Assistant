@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <utility>
+#include <cstring>
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+typedef long long ll;
+
+int main() {
+	string dec = "";
+	rep(i,26) dec += (char)('a'+i);
+	rep(i,26) dec += (char)('A'+i);
+	int n;
+	while( cin >> n, n ) {
+		int k[n];
+		rep(i,n) cin >> k[i];
+		string in;
+		cin >> in;
+		int ik = 0;
+		string out = "";
+		rep(i, in.length()) {
+			int x=0;
+			while(in[i]!=dec[x]) x++;
+			out += dec[(x+52-k[ik])%52];
+			ik = (ik+1)%n;
+		}
+		cout << out << endl;
+	}
+	return 0;
+}

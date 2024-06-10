@@ -1,0 +1,16 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var n = +lines.shift();
+
+for (var i = 0; i < n; i++) {
+	var nums = lines[i].split(' ').sort(function(a,b){return a-b;});
+	var a = nums[0];
+	var b = nums[1];
+	var c = nums[2];
+
+	if (c * c == a * a + b * b)
+		console.log('YES');
+	else
+		console.log('NO');
+}

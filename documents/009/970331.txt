@@ -1,0 +1,19 @@
+# 最大公約数
+def gcd(a, b)
+  a, b = b, a if a > b
+  loop do
+    b, a = a, b%a
+    break if a == 0
+  end
+  b
+end
+
+# 最小公倍数
+def lcm(a, b)
+  a*b/gcd(a, b)
+end
+
+while gets do
+  a, b = $_.split(' ').map(&:to_i)
+  puts "#{gcd(a, b)} #{lcm(a, b)}"
+end

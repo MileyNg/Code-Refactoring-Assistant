@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+
+bool m[5000][5];
+int h[5];
+int sum;
+
+bool check(int a) {
+  int i, j;
+  for (i=0; i<5; i++) {
+    if (!m[a][i]) break;
+  }
+  if (i != 5) return false;
+  for (i=0; i<5; i++) {
+    j = a;
+    while (j < h[i]) {
+      m[j][i] = m[j+1][i];
+      ++j;
+    }
+    j = h[i]-1;
+    while (j>=0 && !m[j][i]) {
+      --j;
+    }
+    h[i] = j+1;
+  }
+  return true;
+}
+
+int main() {
+  int n, d, p, q, mh;
+  while (1) {
+    cin >> n;
+    if (!n) break;
+    sum = 0;
+    for (int i=0; i<5*n; i++) {
+      for (int j=0; j<5; j++) {
+        m[i][j] = false;
+      }
+    }
+    for (int i=0; i<5; i++) {
+      h[i] = 0;
+    }
+    for (int i=0; i<n; i++) {
+      cin >> d >> p >> q;
+      --q;
+      sum += p;
+      if (d == 1) {
+        mh = 0;
+        for (int j=0; j<p; j++) {
+          if (mh < h[j+q]) {
+            mh = h[j+q];
+          }
+        }
+        for (int j=0; j<p; j++) {
+          m[mh][j+q] = true;
+          h[j+q] = mh+1;
+        }
+        if (check(mh)) sum -= 5;
+      } else {
+        mh = h[q];
+        for (int j=0; j<p; j++) {
+          m[j+mh][q] = true;
+        }
+        h[q] += p;
+        for (int j=p-1; j>=0; j--) {
+          if (check(j+mh)) sum -= 5;
+        }
+      }
+    }
+    cout << sum << endl;
+  }
+  return 0;
+}

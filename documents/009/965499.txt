@@ -1,0 +1,35 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n; cin >> n;
+	
+	for (int rep=0; rep<n; rep++) {
+		
+		int x = 0, y = 0;
+		int maxdist = 0, memox = 0;
+		int ansx = 0, ansy = 0;
+		
+		while (1) {
+			int dx, dy; cin >> dx >> dy; if (dx==0 && dy==0) break;
+			
+			x += dx; y += dy;
+			int dist = x*x  + y*y;
+			
+			if (maxdist < dist) {
+				maxdist = dist;
+				memox = x;
+				ansx = x; ansy = y;
+			} else if (maxdist == dist && x > memox) {
+				maxdist = dist;
+				memox = x;
+				ansx = x; ansy = y;
+			}
+		}
+		
+		cout << ansx << " " << ansy << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,24 @@
+import std.algorithm;
+import std.conv;
+import std.stdio;
+import std.string;
+
+void main() {
+  int w = readln.chomp.to!int;
+
+  int[] amida;
+  amida.length = w + 1;
+  foreach (i, ref n; amida) {
+    n = i.to!int;
+  }
+
+  int n = readln.chomp.to!int;
+  for (int i = 0; i < n; i++) {
+    auto ab = readln.chomp.split(",").map!(to!int);
+    swap(amida[ab[0]], amida[ab[1]]);
+  }
+
+  foreach (x; amida[1..$]) {
+    x.writeln;
+  }
+}

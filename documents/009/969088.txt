@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct Ans{
+  int x;
+  int y;
+}Ans;
+
+void Sort(int*,int,int);
+Ans Cost_Sort(int*,int,int);
+
+int sum=0,c=0;
+
+main(){
+  int i,n,*A;
+
+  scanf("%d",&n);
+
+  A=(int *)malloc(sizeof(int)*n);
+
+  for(i=0;i<n;i++){
+    scanf("%d",&A[i]);
+  }
+ 
+  Sort(A,0,n-1);
+
+  printf("%d\n",sum);
+
+  return 0;
+}
+
+void Sort(int *A,int i,int n){
+  Ans ans;
+
+  if(c<n){
+    ans=Cost_Sort(A,i,n);
+
+    Sort(A,ans.x,ans.y);
+  }
+}
+
+Ans Cost_Sort(int *A,int i,int n){
+  int j,tmp,min=A[i],k=0,l=0,submin;
+  Ans ans;
+  c++;
+  for(j=i+1;j<=n;j++){
+    if(min>A[j]){
+      min=A[j];
+      k=j;
+    }
+  }
+
+  if(min==A[i]){
+    ans.x=i+1;
+    ans.y=n;
+    return ans;
+  }
+
+  if(min==A[n]){
+    sum+=A[i]+A[n];
+    tmp=A[i];
+    A[i]=A[n];
+    A[n]=tmp;
+    ans.x=i+1;
+    ans.y=n-1;
+    return ans;
+    
+  }
+  else{
+    submin=A[i];
+    for(j=i;j<=n;j++){
+      if(min<A[j] && submin>A[j] && k<j){
+	submin=A[j];
+	l=j;
+      }
+    }
+    if(min<submin){
+      sum+=A[k]+A[l];
+      tmp=A[l];
+      A[l]=A[k];
+      A[k]=tmp;
+    }
+    ans.x=i;
+    ans.y=n;
+    return ans;
+  }
+}

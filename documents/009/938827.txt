@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+int main()
+{
+	for(;;){
+
+	int m,n,X[200],Y[200],x[1000],y[1000];
+	cin >> m;
+	if(m==0)return 0;
+	for(int i=0;i<m;i++)cin >> X[i] >> Y[i];
+	cin >> n;
+	for(int i=0;i<n;i++)cin >> x[i] >> y[i];
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			int ans1=X[i]-x[j];
+			int ans2=Y[i]-y[j];
+			for(int k=0;k<m;k++){
+				int a=X[k]-ans1;
+				int b=Y[k]-ans2;
+				for(int l=0;l<n;l++){
+					if(a==x[l]&&b==y[l])goto next;
+				}
+				goto fail;
+				next:;
+			}
+			printf("%d %d\n",0-ans1,0-ans2);
+			goto a;
+			fail:;
+		}
+	}
+	a:;
+	
+	}
+	return 0;
+}

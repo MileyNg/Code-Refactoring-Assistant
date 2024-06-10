@@ -1,0 +1,34 @@
+#include<stdio.h>
+#define N 20
+#define Q 200
+int i,n,q,key,A[N],M[Q],c,sum;
+void solve(int c,int sum);
+
+int main(){
+ 
+ scanf("%d",&n);
+  for(i=0;i<n;i++)
+    scanf("%d",&A[i]);
+  scanf("%d",&q);
+  for(i=0;i<q;i++)
+    scanf("%d",&M[i]);
+ 
+ for(i=0;i<q;i++){
+    key=0;
+    solve(0,0);
+    if(key==1)printf("yes\n");
+    else printf("no\n");
+  }
+  return 0;
+}
+
+void solve(int c,int sum){
+  if(c==n)return;
+  else if(sum==M[i]){
+    key=1;
+    return;
+  }
+  solve(c+1,sum+A[c]);
+  solve(c+1,sum);
+  return;
+}

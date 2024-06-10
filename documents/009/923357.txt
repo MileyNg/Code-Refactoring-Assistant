@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  string str;
+
+  cin >> str;
+
+  for(int i = 0; str[i] != '\0'; i += 2) {
+    char c = str[i];
+    char a = str[i+1];
+    if(c == '2')cout << 'k';
+    else if(c == '3')cout << 's';
+    else if(c == '4')cout << 't';
+    else if(c == '5')cout << 'n';
+    else if(c == '6')cout << 'h';
+    else if(c == '7')cout << 'm';
+    else if(c == '8')cout << 'y';
+    else if(c == '9')cout << 'r';
+    else if(c == '0') {
+      if(str[i+1] == 'U'){
+	cout << "nn";
+	continue;
+      }
+      cout << 'w';
+    }
+
+    if(a == 'T') cout << 'a';
+    else if(a == 'L') cout << 'i';
+    else if(a == 'U') cout << 'u';
+    else if(a == 'R') cout << 'e';
+    else cout << 'o';
+  
+  }
+  cout << endl;
+}

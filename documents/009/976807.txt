@@ -1,0 +1,49 @@
+#include <iostream>
+
+using namespace std;
+
+string solve(char op, string t1, string t2) {
+	string ret = "";
+	unsigned int i = 0, j = 0;
+	while (i < t1.size() && j < t2.size()) {
+		if (t1[i] == t2[j]) {
+			ret += t1[i];
+			i ++;
+			j ++;
+		} else {
+			bool comma = (t1[i] == ',' || t2[i] == ',');
+			if ((comma && t1[i] == ',') || (!comma && t1[i] == ')')) {
+				swap(i, j);
+				swap(t1, t2);
+			}
+			int c = 0;
+			unsigned int k = i;
+			for ( ; k<t1.size(); ++k) {
+				if (t1[k] == '(') c ++;
+				else if (t1[k] == ')') c --;
+				if (c <= 0) {
+					break;
+				} else if (op == 'u') { // for union
+					ret += t1[k];
+				}
+			}
+			if (op == 'u') ret += t1[k]; // for union
+			i = k + 1;
+		}
+	}
+	return ret;
+}
+
+int main() {
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+
+	char op;
+	string t1, t2;
+	while (cin >> op) {
+		cin >> t1 >> t2;
+		cout << solve(op, t1, t2) << endl;
+	}
+
+	return 0;
+}

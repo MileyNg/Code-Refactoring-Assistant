@@ -1,0 +1,91 @@
+using System;
+
+namespace aoj
+{
+    class Bundou
+    {
+        static void Main(String[] args)
+        {
+            int i, max = 999;
+            int input = 0;
+            int[] res = new int[11];
+            int flag = 0, res_max = 0;
+
+
+            while (true)
+            {
+                /* initialization */
+                for (i = 0; i < 11; i++)
+                {
+                    res[i] = 0;
+                }
+
+                    /* read input */
+                    try
+                    {
+                        input = int.Parse(Console.ReadLine());
+                    }
+                    catch (System.ArgumentNullException)
+                    {
+                        break;
+                    }
+                    catch (System.FormatException)
+                    {
+                        break;
+                    }
+                    catch (System.IndexOutOfRangeException)
+                    {
+                        break;
+                    }
+
+                while (input > 0)
+                {
+                    /* calc */
+                    for (i = 0; i < 11; i++)
+                    {
+                        if (exa2(i) > input)
+                        {
+                            max = i - 1;
+
+                            /* preserve max */
+                            if(flag == 0){
+                              res_max = max;
+                                flag = 1;
+                            }
+                            break;
+                        }
+                    }
+
+                    input -= exa2(max);
+                    res[max]++;
+                }
+
+                /* output */
+                for (i = 0; i < 11; i++)
+                {
+                    if (res[i] != 0)
+                    {
+                        Console.Write(exa2(i));
+                        if(i != res_max){
+                            Console.Write(" ");
+                        }
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public static int exa2(int num)
+        {
+            int i;
+            int res = 1;
+
+            for (i = 0; i < num; i++)
+            {
+                res *= 2;
+            }
+
+            return res;
+        }
+    }
+}

@@ -1,0 +1,122 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <string>
+#include <cmath>
+#include <cassert>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<b?(a=b,1):0)
+#define chmin(a,b) (a>b?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+
+const int H = 50;
+const int W = 50;
+
+const int dy[] = {-1,0,1,0};
+const int dx[] = {0,-1,0,1};
+
+struct Field {
+  char a[H][W];
+  int h,w;
+  int dist[H][W];
+  void input_hw() {
+    cin >> h >> w;
+  }
+  void set_hw(int _h, int _w) {
+    h = _h; w = _w;
+  }
+  void input_field() {
+    REP(i,h)REP(j,w)cin>>a[i][j];
+  }
+  void bfs(int y, int x) {
+    memset(dist,-1,sizeof(dist));
+    queue<pii> Q;
+    Q.push(pii(y,x));
+    dist[y][x] = 0;
+    while(!Q.empty()) {
+      pii p = Q.front(); Q.pop();
+      REP(i,4) {
+        int yy = p.first + dy[i];
+        int xx = p.second + dx[i];
+        if (valid(yy,xx,h,w)) {
+          if (a[yy][xx] == '#') continue;
+          if (dist[yy][xx] == -1) {
+            dist[yy][xx] = dist[p.first][p.second] + 1;
+            Q.push(pii(yy,xx));
+          }
+        }
+      }
+    }
+  }
+  bool canGo(int y, int x) {
+    return dist[y][x] != -1;
+  }
+} field;
+
+int a[H][W];
+
+int main() {
+  int h,w,d,n;
+  while(cin >> h >> w >> d >> n) {
+    field.set_hw(h,w);
+    field.input_field();
+    int sy,sx;
+    REP(i,h)REP(j,w)if(field.a[i][j] == 'D') sy=i,sx=j;
+    field.bfs(sy,sx);
+    int r[d+2];
+    REP(i,d) {
+      cin >> r[i+1];
+    }
+    r[0] = -1;
+    r[d+1] = INF;
+    memset(a,0,sizeof(a));
+    REP(ii,n) {
+      int x,y,s;
+      cin >> x >> y >> s;
+      REP(i,h) {
+        REP(j,w) {
+          int dist = max(abs(i-y),abs(j-x));
+          if (r[s] < dist && dist <= r[s+1]) {
+            a[i][j]++;
+          }
+        }
+      }
+    }
+    int S = 0;
+    REP(i,h)REP(j,w) {
+      if (a[i][j] == n && field.a[i][j] != '#') {
+        if (field.canGo(i,j)) S |= 1;
+        else S |= 2;
+      }
+    }
+    // REP(i,h) {
+    //   REP(j,w) cout << a[i][j] << " ";
+    //   cout << endl;
+    // }
+    if (S == 0) puts("Broken");
+    else if (S == 1) puts("Yes");
+    else if (S == 2) puts("No");
+    else puts("Unknown");
+  }
+}

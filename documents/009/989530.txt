@@ -1,0 +1,95 @@
+#include<stdio.h>
+#define N 100000
+ 
+int getDepth(int u);
+void print(int v);
+
+typedef struct{
+  int parent;
+  int left;
+  int right;
+}Node;
+ 
+Node Tree[N];
+int n;
+int Depth[N];
+int child[N];
+ 
+int main(void){
+  int i, j;
+  int degree;
+  int vertex;
+ 
+  scanf("%d", &n);
+ 
+  for ( i = 0; i < n; i++ ) {
+    Tree[i].parent = -1;
+    Tree[i].left = -1;
+    Tree[i].right = -1;
+  }
+ 
+  for ( i = 0; i < n; i++ ){
+    scanf("%d",&vertex);
+	scanf("%d",&degree);
+    for ( j = 0; j < degree; j++ ){
+      scanf("%d", &child[j]);
+ 
+      Tree[child[j]].parent = vertex;
+       
+      if(j == 0)
+    Tree[vertex].left = child[0];
+       
+      else
+    Tree[child[j - 1]].right = child[j];
+    }
+  }
+   
+  for ( i = 0; i < n; i++ )
+    Depth[i] = getDepth(i);
+   
+  for ( i = 0; i < n; i++ )
+    print(i);
+   
+  return 0;
+}
+ 
+int getDepth(int u){
+  int d = 0;
+ 
+  while(Tree[u].parent >= 0){
+    u = Tree[u].parent;
+    d++;
+  }
+ 
+  return d;
+}
+ 
+void print(int v){
+ 
+  int i;
+  int cnt = 0;
+ 
+  printf("node %d: parent = %d, depth = %d, ",v,Tree[v].parent,Depth[v]);
+ 
+  if(Tree[v].parent == -1)
+    printf("root, [");
+ 
+  else if(Tree[v].left == -1)
+    printf("leaf, [");
+ 
+  else
+    printf("internal node, [");
+ 
+  v= Tree[v].left;
+  while(v != -1){
+    if(cnt == 0)
+      printf("%d",v); 
+ 
+    else
+      printf(", %d",v);
+   
+    v = Tree[v].right;
+    cnt++;
+ }
+    printf("]\n");
+}

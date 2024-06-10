@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void compare( int * const a, int * const b);
+
+int main( int argc, char *argv[] ){
+   int x, y, z;
+
+   if ( scanf( "%d*%d*%d", &x, &y, &z ) != 3 ){
+      exit( 1 );
+   }
+
+   compare( &x, &y );
+   compare( &y, &z );
+   compare( &x, &y );
+
+   printf( "%d %d %d", x, y, z );
+}
+
+void compare( int * const a, int * const b ){
+   int tmp;
+
+   if ( *a > *b){
+      *a = tmp;
+      *a = *b;
+      *b = tmp;
+   }
+}

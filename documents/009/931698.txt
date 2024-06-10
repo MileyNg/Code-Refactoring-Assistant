@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector> 
+#include <cctype>
+#include <cassert>
+#include <stdio.h>
+#include <algorithm>
+using namespace std;
+const string nothing = "OUT OF MAIN PANEL 1";
+string S;
+int cur;
+struct Tag{
+  int p[4];
+  string name;
+  int layer,child;
+  bool operator>(const Tag &a) const{
+    return layer > a.layer;
+  }
+  bool checkP(Tag a){
+    if(p[0] <= a.p[0] && p[1] <= a.p[1] && p[2] >= a.p[2] && p[3] >= a.p[3]){
+      return true;
+    }
+    return false;
+  }
+  bool checkI(int x,int y){
+    if(p[0] <= x && p[1] <= y && p[2] >= x && p[3] >= y){
+      return true;
+    }
+    return false;
+  }
+};
+
+vector<Tag> keep;
+void tag_st(int);
+string tag_name();
+void tag_st_f();
+void tag_value(Tag &);
+
+int number();
+int main(){
+  int n;
+  cur = 0;
+  cin >> n;
+  cin >> S;
+  vector<pair<int,int> > point(n);
+
+  for(int i = 0;i < n;i++){
+    int x,y;
+    cin >> x >> y;
+    point[i] = pair<int,int>(x,y);
+  }
+  tag_st(0);
+  //sort(keep.begin(),keep.end());
+  for(int i = 0;i < n;i++){
+    string ans_n;int ans_l = -1;int keep_num;
+    for(int j = 0;j < keep.size();j++){
+      if(keep[j].checkI(point[i].first,point[i].second)){
+	if(ans_l <= keep[j].layer){
+	  ans_l = keep[j].layer;
+	  keep_num = j;
+	}
+      }
+    }
+    if(ans_l == -1)cout << nothing << endl;
+    else{
+      cout << keep[keep_num].name << " " << keep[keep_num].child << endl;
+    }
+		    
+  }
+  
+  return 0;
+}
+
+
+
+
+void tag_st(int layer){
+  assert(S[cur] == '<' && S[cur+1] != '/');
+  Tag tag;
+  string name = tag_name();
+  tag.layer = layer;
+  tag.name = name;
+  tag_value(tag);
+  
+  int cnt = 0;
+  while(1){
+    if(S[cur] == '<' && S[cur+1] != '/'){
+      tag_st(layer+1);
+      cnt++;
+    }else break;
+  }
+  tag.child = cnt;
+  keep.push_back(tag);
+  tag_st_f();
+  
+}
+string tag_name(){
+  assert(S[cur] == '<' && S[cur+1] != '/');
+  cur++;
+  string name = "";
+  while(S[cur] != '>'){
+    name += S[cur];
+    cur++;
+  }
+  cur++;
+  return name;
+}
+void tag_st_f(){
+  assert(S[cur] == '<' && S[cur+1] == '/');
+  cur++;cur++;
+  string name = "";
+  while(S[cur] != '>'){
+    name += S[cur];
+    cur++;
+  }
+  cur++;
+}
+void tag_value(Tag &tag){
+  for(int i = 0;i < 4;i++){
+    tag.p[i] = number();
+    if(i != 3)cur++;
+  }
+}
+int number(){
+  assert(isdigit(S[cur]));
+  int num = S[cur] - '0';
+  cur++;
+  int cnt = 10;
+  while(isdigit(S[cur])){
+    num = num*cnt+(S[cur]-'0');
+    cur++;
+  }
+  return num;
+}

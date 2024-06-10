@@ -1,0 +1,87 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+
+int main(){
+	int n,m;
+	while(cin>>m>>n,n||m){
+		int a[n][m];
+		rep(i,n){
+			rep(j,m){
+				cin>>a[i][j];
+				//cout<<a[i][j]<<" ";
+			}
+			//cout<<endl;
+			
+		}
+		//cout<<endl;
+		int ans=0;
+		rep(i,n){
+			rep(j,m){
+				if(a[i][j]==1){
+					a[i][j]=0;
+					ans++;
+					queue<pii> q;
+					q.push(mkp(i,j));
+					while(!q.empty()){
+						int qs= q.size();
+						rep(k,qs){
+							pii tp=q.front();
+							q.pop();
+							int v[8][2]={0,1,0,-1,1,0,-1,0,1,1,1,-1,-1,1,-1,-1};
+							rep(l,8){
+								int x=tp.F+v[l][0],y=tp.S+v[l][1];
+								if(x>=0&&y>=0&&x<n&&y<m){
+									if(a[x][y]==1){
+										q.push(mkp(x,y));
+										a[x][y]=0;
+									}
+								}
+							}
+						}
+					}/*
+					
+					rep(k,n){
+						rep(l,m){
+							cout<<a[k][l]<<" ";
+						}
+						cout<<endl;
+					}
+					cout<<endl;
+					*/
+				}
+			}
+		}
+		cout<<ans<<endl;
+	}
+	return 0;
+}
+				

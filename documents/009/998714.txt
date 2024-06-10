@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+int parent(int );
+int left(int );
+int right(int );
+void maxHeapInsert(int );
+int heapIncreaseKey(int ,int ); 
+int heapExtractMax(void);
+void maxHeapify(int );
+int heap_size=0;
+int A[2000000];
+int main() {
+	char string[10];
+	int key;
+	while(1) {
+		scanf("%s",string);
+		if(strcmp(string,"end") == 0) break;
+		if(strcmp(string, "insert") == 0)  {
+			scanf("%d",&key);
+			maxHeapInsert(key);
+		}
+		if(strcmp(string,"extract") == 0) printf("%d\n",heapExtractMax());
+	}
+	return 0;
+}
+
+int parent(int i) { return i/2; }
+int left(int i) { return 2*i; }
+int right(int i) { return 2*i+1; }
+
+void maxHeapInsert(int key) {
+	heap_size++;
+	A[heap_size] = -1;
+	heapIncreaseKey(heap_size,key);
+}
+
+int heapIncreaseKey(int i,int key) {
+	int temp;
+	if(key < A[i]) return 0; //新しいキーは、現在のキーより小さい
+	A[i] = key;
+	while ( i >1&& A[parent(i)] < A[i]) {
+		temp = A[i];
+		A[i] = A[parent(i)];
+		A[parent(i)] = temp;
+		i = parent(i);
+	}
+}
+
+int heapExtractMax(void) {
+	int max;
+	if( heap_size < 1) return 0; //ヒープアンダーフロー
+	max = A[1];
+	A[1] = A[heap_size];
+	heap_size--;
+	maxHeapify(1);
+	return max;
+}
+
+void maxHeapify(int i) {
+    int l,r,temp,largest=0;
+    l = left(i);
+    r = right(i);
+    if( l <= heap_size && A[l] > A[i] ) largest = l;
+    else largest = i;
+    if( r <= heap_size && A[r] > A[largest] ) largest = r;
+    if(largest != i) {
+        temp = A[i];
+        A[i] = A[largest];
+        A[largest] = temp;
+        maxHeapify(largest);
+    }
+}

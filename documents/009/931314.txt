@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void){
+	
+	char w[11], t[1001];
+    char e[] = {"END_OF_TEXT"};
+    int i, p, ep, sum;
+    
+	sum = 0;
+    p = 0;
+    ep = 0;
+    
+    scanf("%s", &w);
+    getchar();
+    
+    while (1) {
+        
+        scanf("%s", &t);
+        getchar();
+        
+        if (!(strcmp(t, e))) {
+            break;
+        }
+        
+        p = 0;
+        for (i=0; t[i] != '\0'; i++) {
+            if ((w[p] == toupper(t[i]) || w[p] == tolower(t[i]))) {
+                p++;
+            }
+            else {
+                break;
+            }
+        }
+        
+        if (p == strlen(w)) {
+            sum++;
+            printf("sum = %d\n", sum);
+        }
+        
+        
+        
+    }
+    
+    printf("%d\n", sum);
+    
+	
+	return 0;
+    
+}

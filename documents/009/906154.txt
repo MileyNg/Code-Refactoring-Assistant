@@ -1,0 +1,20 @@
+#include<iostream>
+#include<map>
+#include<algorithm>
+using namespace std;
+typedef pair < int , int > Pi;
+int main(){
+  int n;
+  Pi a[20];
+  cin >> n;
+  for(int i = 0 ; i < n ; i++ ){
+    cin >> a[i].second >> a[i].first;
+  }
+
+  int no = -1, big = -1;
+  for(int i = 0 ; i < n ; i++ ){
+    if(big < a[i].first) big = a[i].first, no = a[i].second;
+    else if(big == a[i].first && no > a[i].second) no = a[i].second;
+  }
+  cout << no << " " << big << endl;
+}

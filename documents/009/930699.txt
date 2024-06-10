@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 256;
+int N;
+char G[MAXN][MAXN];
+
+int count(int pi, int pj, int vi, int vj) {
+  if(G[pi][pj] == '0') return 0;
+  int ni = pi + vi;
+  int nj = pj + vj;
+  if(ni < 0 || ni >= N) return 1;
+  if(nj < 0 || nj >= N) return 1;
+  return count(ni, nj, vi, vj) + 1;
+}
+
+int main() {
+  while(cin >> N && N) {
+    for(int i = 0; i < N; ++i) {
+      for(int j = 0; j < N; ++j) {
+        cin >> G[i][j];
+      }
+    }
+    int maxi = 0;
+    for(int i = 0; i < N; ++i) {
+      for(int j = 0; j < N; ++j) {
+        maxi = max(maxi, count(i,j,1,0));
+        maxi = max(maxi, count(i,j,0,1));
+        maxi = max(maxi, count(i,j,1,1));
+        maxi = max(maxi, count(i,j,1,-1));
+      }
+    }
+    cout << maxi << endl;
+  }
+  return 0;
+}

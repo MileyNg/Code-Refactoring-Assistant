@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef complex<double> P;
+
+double cross(P a, P b) {
+  return a.real()*b.imag() - a.imag()*b.real();
+}
+
+bool isIn(P p, P a, P b, P c) {
+  if(cross(b-a, p-a) < 0) return false;
+  if(cross(c-b, p-b) < 0) return false;
+  if(cross(a-c, p-c) < 0) return false;
+  return true;
+}
+
+int main() {
+  int Tc;
+  cin >> Tc;
+  while(Tc--) {
+    P a, b, c, d, e;
+    cin >> a.real() >> a.imag() >> b.real() >> b.imag()
+        >> c.real() >> c.imag() >> d.real() >> d.imag()
+        >> e.real() >> e.imag();
+    if(cross(b-a, c-a) < 0) swap(b,c);
+    bool A = isIn(d,a,b,c);
+    bool B = isIn(e,a,b,c);
+    if(A ^ B) cout << "OK" << endl;
+    else cout << "NG" << endl;
+  }
+  return 0;
+}

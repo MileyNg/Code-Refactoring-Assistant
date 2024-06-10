@@ -1,0 +1,29 @@
+#include<iostream>
+
+int univ[4][3][10];
+
+int main(){
+
+	int n;
+	std::cin >> n;
+
+	for (int i = 0; i < n; i++){
+		int b, f, r, v;
+		std::cin >> b >> f >> r >> v;
+		b--, f--, r--;
+
+		univ[b][f][r] += v;
+	}
+
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 3; j++){
+			for (int k = 0; k < 10; k++){
+				std::cout << " " << univ[i][j][k];
+			}
+			std::cout << std::endl;
+		}
+		std::cout << "####################" << std::endl;
+	}
+
+	return 0;
+}

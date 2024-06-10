@@ -1,0 +1,53 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+#define MAX_SIZE 80
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    string n1, n2;
+
+    for(int i=0; i<n; i++)
+    {
+        cin >> n1 >> n2;
+        if( n1.size()>80 || n2.size()>80 ){
+                cout << "overflow" << endl;
+                continue;
+        }
+
+        // 先頭を0で埋めて80桁に合わせる
+        char num1[MAX_SIZE], num2[MAX_SIZE];
+        for(int i=n1.size(); i<80; i++) n1.insert(0, "0");
+        for(int i=n2.size(); i<80; i++) n2.insert(0, "0");
+
+        int c=0; // carry out
+        char s=0; // sum
+        for(int i=0; i<MAX_SIZE; i++){
+            s = n1.at(n1.size()-i-1) + n2.at(n2.size()-i-1) - 2*'0' + c;
+            // 桁上がりの有無
+            if(s>=10){ 
+                c = 1;
+                s -= 10;
+            }else{
+                c = 0;
+            }
+            n1.at(n1.size()-i-1) = s + '0';
+        }
+ 
+        if(c){ 
+            cout << "overflow" << endl; 
+        }else{
+            while(n1.at(0)=='0' && n1.size()>=2 ) n1.erase(0,1); // 先頭の0を除く処理
+            cout << n1 << endl;
+        }
+
+        n1.clear();
+        n2.clear();
+    }
+
+    return 0;
+}

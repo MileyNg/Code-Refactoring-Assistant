@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+struct point {
+    int x;
+    int y;
+} point;
+
+int main(void)
+{
+    struct point point[2];
+    scanf("%d %d %d %d", 
+        &point[0].x, &point[0].y, &point[1].x, &point[1].y);
+    
+    int x = abs(point[0].x - point[1].x);
+    int y = abs(point[0].y - point[1].y);
+    
+    int n = abs(x*x + y*y);
+    
+    double distance = sqrt((double)n);
+    printf("%lf\n", distance);
+    return 0;
+}

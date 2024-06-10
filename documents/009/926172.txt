@@ -1,0 +1,201 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <unordered_set>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+typedef unsigned int hash_t;
+
+constexpr int MAX_LEN = 40 + 2;
+constexpr hash_t base = 1000000007;
+hash_t pows[MAX_LEN + 1];
+
+class rolling_hash {
+private:
+	vector<hash_t> hashes;
+
+public:
+	rolling_hash(const string &s):hashes(s.size() + 1) {
+		hashes[0] = 0;
+		for(unsigned i = 0; i < s.size(); ++i) {
+			hashes[i + 1] = hashes[i] * base + s[i];
+		}
+	}
+
+	hash_t hash(int l, int r) const {
+		return hashes[r] - hashes[l] * pows[r - l];
+	}
+
+	static hash_t hash(const string &s) {
+		long long res = 0;
+		for(const auto &c : s) {
+			res *= base;
+			res += c;
+		}
+		return res;
+	}
+};
+
+constexpr int MAX_N = 30;
+int l;
+int n, d;
+vector<string> ans;
+string pieces[MAX_N];
+unordered_set<hash_t> hashes[MAX_N];
+unordered_map<int, int> visited;
+unordered_set<hash_t> checked;
+
+inline void init() {
+	l = pieces[0].size();
+	checked.clear();
+
+	for(int i = 0; i < n; ++i) {
+		hashes[i].clear();
+		hashes[i].insert(rolling_hash::hash(pieces[i]));
+
+		for(int j = 0; j < l; ++j) {
+			const char c = pieces[i][j];
+			pieces[i][j] = '?';
+			hashes[i].insert(rolling_hash::hash(pieces[i]));
+
+			if(d == 2) {
+				for(int k = j + 1; k < l; ++k) {
+					const char t = pieces[i][k];
+					pieces[i][k] = '?';
+					hashes[i].insert(rolling_hash::hash(pieces[i]));
+					pieces[i][k] = t;
+				}
+			}
+
+			pieces[i][j] = c;
+		}
+	}
+}
+
+void rec(int idx, int ok, string &s, const vector<int> &question, const rolling_hash &rh) {
+	if(ok >= s.size()) {
+		ans.emplace_back(s);
+		return;
+	}
+	if(idx + l > s.size()) return;
+
+	int state = 0;
+	for(const auto &pos : question) {
+		state = state * 1000 + s[pos];
+	}
+
+	if(visited.count(state) && visited[state] >= idx) return;
+	visited[state] = idx;
+
+	for(int i = 0; i < n; ++i) {
+		if(hashes[i].count(rh.hash(idx, idx + l))) {
+			string tmp = "";
+			bool change = false;
+			for(const auto &pos : question) {
+				tmp += s[pos];
+				if(s[pos] == '?' && idx <= pos && pos < idx + l) {
+					s[pos] = pieces[i][pos - idx];
+					change = true;
+				}
+			}
+			if(change) {
+				rec(idx + 1, idx + l, s, question, rolling_hash(s));
+				for(int j = 0; j < question.size(); ++j) {
+					s[question[j]] = tmp[j];
+				}
+			}
+			else {
+				rec(idx + 1, idx + l, s, question, rh);
+				return;
+			}
+		}
+	}
+
+	if(ok > idx) {
+		rec(idx + 1, ok, s, question, rh);
+	}
+}
+
+void check(string &s) {
+	const int m = s.size();
+	const rolling_hash rh(s);
+
+	if(checked.count(rh.hash(0, m))) return;
+	checked.insert(rh.hash(0, m));
+
+	vector<int> question;
+	for(int i = 0; i < m; ++i) {
+		if(s[i] == '?') question.emplace_back(i);
+	}
+
+	visited.clear();
+	rec(0, 0, s, question, rh);
+}
+
+void dfs(int rest, string &s) {
+	check(s);
+	if(rest == 0) return;
+
+	const int n = s.size();
+
+	// erase
+	for(int i = 0; i < n; ++i) {
+		string tmp(s);
+		tmp.erase(i, 1);
+		dfs(rest - 1, tmp);
+	}
+
+	// change
+	for(int i = 0; i < n; ++i) {
+		const char t = s[i];
+		s[i] = '?';
+		dfs(rest - 1, s);
+		s[i] = t;
+	}
+
+	// insert
+	for(int i = 0; i <= n; ++i) {
+		s.insert(i, 1, '?');
+		dfs(rest - 1, s);
+		s.erase(i, 1);
+	}
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	pows[0] = 1;
+	for(int i = 1; i <= MAX_LEN; ++i) {
+		pows[i] = pows[i - 1] * base;
+	}
+
+	while(cin >> d >> n && (d | n)) {
+		string sentence;
+		cin >> sentence;
+
+		for(int i = 0; i < n; ++i) {
+			cin >> pieces[i];
+		}
+
+		init();
+
+		ans.clear();
+		dfs(d, sentence);
+
+		sort(ans.begin(), ans.end());
+		ans.erase(unique(ans.begin(), ans.end()), ans.end());
+
+		const int c = ans.size();
+		cout << c << endl;
+		if(c <= 5) {
+			for(const auto &e : ans) {
+				cout << e << endl;
+			}
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

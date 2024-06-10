@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 1000
+
+void sort(int a[], int n){
+  int i,j,k,key;
+
+  for( i = 1; i < n; i++ ){
+    key = a[i];
+    j = i -1;
+
+    while( (j >= 0) && (a[j] > key) ){
+      a[j+1] = a[j];
+      j--;
+    }
+
+    a[j+1] = key;
+
+    for( k = 0; k < n; k++ ){
+      printf("%d", a[k]);
+      printf(" ");
+    }
+    printf("\n");
+  }
+}
+
+int main(void){
+
+  int i,n,k;
+  int a[N];
+  scanf("%d",&n);
+  for( i = 0; i < n; i++ ){
+    scanf("%d", &a[i]);
+  }
+
+  for(k = 0; k < n; k++ ){
+    printf("%d ", a[k]);
+  }
+  printf("\n");
+
+  sort(a, n);
+
+  return 0;
+}

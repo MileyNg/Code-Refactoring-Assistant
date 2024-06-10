@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+    string node[6] = {"12","@3","1@","45","52","21"};
+    string input;
+    while(cin >> input, input != "#"){
+        int start = 0;
+        bool isPossibble = true;
+        for(int i=0; i < input.size(); i++){
+            string hoge = input.substr(i,1);
+            string city = node[start].substr(atoi(hoge.c_str()), 1);
+            if(city == "@"){
+                isPossibble = false;
+                cout << "No" << endl;
+                break;
+            }
+            start = atoi(city.c_str());
+        }
+        if(isPossibble && start == 5) cout << "Yes" << endl;
+        else cout << "No" << endl;
+    }
+}

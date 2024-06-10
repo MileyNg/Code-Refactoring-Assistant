@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void){
+    char key[9][6]={".,!? ","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    char input[1025];
+    int mcount[9]={5,3,3,3,3,3,4,3,4};
+    int n,count,write;
+    int i,j;
+    scanf("%d",&n);
+    char output[n][1024];
+    for(i=0;i<n;i++){
+        //for(j=0;j<1024;j++)output[n][j]="";
+        count=0;
+        write=0;
+        scanf("%s",input);
+        for(j=1;j<strlen(input);j++){
+            if(input[j]!='0')count++;
+            if(input[j]=='0' && input[j-1]!='0'){
+                //printf("%c",key[input[j-1]-'1'][(count%mcount[input[j-1]-'1'])]);
+                output[i][write]=key[input[j-1]-'1'][(count%mcount[input[j-1]-'1'])];
+                write++;
+                count=-1;
+            }
+            if(input[j]=='0' && input[j-1]=='0'){
+                count=-1;
+            }
+        }
+        output[i][write]='\0';
+    }
+    for(i=0;i<n;i++){
+        printf("%s\n",output[i]);
+    }
+    return 0;
+}

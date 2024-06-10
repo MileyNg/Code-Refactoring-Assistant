@@ -1,0 +1,87 @@
+#include <iostream>
+#include <sstream>
+
+
+using namespace std;
+/*
+ 入力1までの日数　−　入力2までの日数
+*/
+
+
+int main(){
+    int n;
+    cin>>n;
+    for(int roop=0; roop<n; roop++){
+        
+        int puzzle[9][9];
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++){
+                cin>>puzzle[i][j];
+            }
+        }
+        /*横*/
+        char ans[9][9];        
+        for(int i=0; i<9; i++){
+            bool checker[10]={0};
+            for(int j=0; j<9; j++){
+                if(checker[puzzle[i][j]]==0){
+                    checker[puzzle[i][j]]=true;
+                    ans[i][j]=' ';
+                }else{
+                    for(int k=0; k<j; k++){
+                        if(puzzle[i][j]==puzzle[i][k])ans[i][k]='*';
+                    }
+                    ans[i][j]='*';
+                }
+            }
+        }
+        
+        /*縦*/
+        for(int i=0; i<9; i++){
+            bool checker[10]={0};
+            for(int j=0; j<9; j++){
+                if(checker[puzzle[j][i]]==0){
+                    checker[puzzle[j][i]]=true;
+                }else{
+                    for(int k=0; k<j; k++){
+                        if(puzzle[j][i]==puzzle[k][i]){
+                            ans[k][i]='*';
+                        }
+                    }
+                    ans[j][i]='*';
+                }
+            }
+        }
+        
+        /*四角*/
+        for(int i=0; i<3; i++){
+            for(int j=0; j<3; j++){
+                int i2 = i*3;
+                int j2 = j*3;
+                bool checker[10]={0};
+                for(int k=0; k<9; k++){
+                    if(checker[puzzle[i2+k/3][j2+k%3]]==0){
+                        checker[puzzle[i2+k/3][j2+k%3]]=true;
+                    }else{
+                        for(int l=0; l<k; l++){
+                            if(puzzle[i2+k/3][j2+k%3]==puzzle[i2+l/3][j2+l%3])ans[i2+l/3][j2+l%3]='*';
+                        }
+                        ans[i2+k/3][j2+k%3]='*';
+                    }
+                }
+            }
+        }
+        
+        
+        
+        
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++){
+                cout<<ans[i][j]<<puzzle[i][j];
+            }
+            cout<<endl;
+        }
+        cout<<endl;
+        
+    }
+}

@@ -1,0 +1,101 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+using namespace std;
+
+class Dice
+{
+public:
+	Dice( char c[ 6 ] )
+	{
+		for( int i = 0; i < 6; ++i ){
+			face[ i ] = c[ i ];
+		}
+		face[ 6 ] = '\0';
+	}
+	void rotateVertical()
+	{
+		char t = face[ 0 ];
+		face[ 0 ] = face[ 1 ];
+		face[ 1 ] = face[ 5 ];
+		face[ 5 ] = face[ 4 ];
+		face[ 4 ] = t;
+	}
+	void rotateHorizontal()
+	{
+		char t = face[ 1 ];
+		face[ 1 ] = face[ 2 ];
+		face[ 2 ] = face[ 4 ];
+		face[ 4 ] = face[ 3 ];
+		face[ 3 ] = t;
+	}
+	char roundFace( int index )
+	{
+		static int a[] = { 1, 2, 4, 3 };
+		return face[ a[ index ] ];
+	}
+	int getId()
+	{
+		static string pattern[] = {
+			"RBMGCY", "RBMCGY", "RBGMCY", "RBGCMY", "RBCMGY", "RBCGMY",
+			"RYMGCB", "RYMCGB", "RYGMCB", "RYGCMB", "RYCMGB", "RYCGMB",
+			"RYBGCM", "RYBCGM", "RYGBCM", "RYGCBM", "RYCBGM", "RYCGBM",
+			"RYBMCG", "RYBCMG", "RYMBCG", "RYMCBG", "RYCBMG", "RYCMBG",
+			"RYBMGC", "RYBGMC", "RYMBGC", "RYMGBC", "RYGBMC", "RYGMBC",
+		};
+		if( face[ 2 ] == 'R' || face[ 3 ] == 'R' ){
+			rotateHorizontal();
+		}
+		while( face[ 0 ] != 'R' ){
+			rotateVertical();
+		}
+		if( face[ 5 ] == 'Y' ){
+			while( face[ 1 ] != 'B' ){
+				rotateHorizontal();
+			}
+		}else{
+			while( face[ 1 ] != 'Y' ){
+				rotateHorizontal();
+			}
+		}
+		string diceStr( face );
+		for( int i = 0; i < 30; ++i ){
+			if( pattern[ i ] == diceStr ){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	char face[ 6 + 1 ];
+};
+
+int main()
+{
+	int n;
+	while( cin >> n && n ){
+		int id[ 30 ];
+		memset( id, 0, sizeof(id) );
+
+		for( int i = 0; i < n; ++i ){
+			string s;
+			char c[ 6 ];
+			for( int i = 0; i < 6; ++i ){
+				cin >> s;
+				c[ i ] = s[ 0 ];
+			}
+			Dice dice( c );
+			++id[ dice.getId() ];
+		}
+
+		int ans = 0;
+		for( int i = 0; i < 30; ++i ){
+			if( id[ i ] > 1 ){
+				ans += ( id[ i ] - 1 );
+			}
+		}
+		cout << ans << endl;
+	}
+
+	return 0;
+}

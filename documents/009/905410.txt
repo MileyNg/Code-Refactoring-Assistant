@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+int sum(int n, int x){
+	int ret = 0, n1 = 1, n2 = n1 + 1, n3 = n2 + 1;
+
+	for (int i = 0; n1 < n2; n1++){
+		n2 = n1 + 1;
+		for (int j = 0; n2 < n3; n2++){
+			n3 = n2 + 1;
+			for (int k = 0; n3 < n + 1; n3++){
+				if (n1 + n2 + n3 == x){
+					ret++;
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+int main(void){
+	int n = 0, x = 0;
+
+	while (cin >> n >> x, n || x){
+		cout << sum(n, x) << endl;
+	}
+	return 0;
+}

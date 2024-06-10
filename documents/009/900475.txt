@@ -1,0 +1,16 @@
+input = gets(nil).chomp
+
+o = {}
+
+input.split("\n").each do |line|
+  n = line.to_i
+  o[n] = 0 unless o[n]
+  o[n] += 1
+end
+
+m = 0
+o.each do |k,v|
+  m = v if v > m
+end
+
+o.select{|k,v| v == m}.keys.sort.each {|i| puts i}

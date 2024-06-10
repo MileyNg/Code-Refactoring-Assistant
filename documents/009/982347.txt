@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	const double pi = M_PI;
+	
+	int dis, turn;
+	int theta = 90;
+	double x = 0, y = 0;
+	
+	while (1){
+		
+		scanf("%d,%d", &dis, &turn);
+		
+		if (dis == 0 && turn == 0) break;
+		
+		x += cos(theta * 1.0 / 180 * pi) * dis * 1.0;
+		y += sin(theta * 1.0 / 180 * pi) * dis * 1.0;
+		
+		theta =(theta + turn) % 360;
+	}
+	
+	printf("%.0f\n%.0f\n", x * -1, y);
+	
+	return (0);
+}

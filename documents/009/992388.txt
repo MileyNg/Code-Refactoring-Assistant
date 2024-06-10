@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+int ary[210][210]={0};
+
+int main(void){
+
+	while(1){
+
+		for(int i=0;i<210;i++)
+			for(int j=0;j<210;j++)
+				ary[i][j]=-1;
+
+		int n;
+		int nn,dd;
+		ary[100][100]=0;
+		int left=0,right=0,up=0,down=0;
+
+
+		cin >> n;
+		if(!n)break;
+
+		for(int k=1;k<n;k++){
+			cin >> nn >>dd;
+			for(int i=0;i<210;i++)
+				for(int j=0;j<210;j++)
+					if(ary[i][j]==nn){
+						if(dd==0){
+							ary[i][j-1]=k;
+							if(j-1-100<left)left--;
+						}
+						else if(dd==1){
+							ary[i+1][j]=k;
+							if(i+1-100>down)down++;
+						}
+						else if(dd==2){
+							ary[i][j+1]=k;
+							if(j+1-100>right)right++;
+						}
+						else{
+							ary[i-1][j]=k;
+							if(i-1-100<up)up--;
+						}
+					}
+		}
+
+		//int left,right,up,down;
+		//for(int i=0;i<210;i++){
+		//	for(int j=0;j<210;j++){
+		//		if(ary[i][j]!=-1){
+		//			up=i-100;
+		//			break;
+		//		}
+		//	}
+		//}
+		//for(int i=209;i>=0;i--){
+		//	for(int j=0;j<210;j++){
+		//		if(ary[i][j]!=-1){
+		//			down=i-100;
+		//			break;
+		//		}
+		//	}
+		//}
+		//for(int i=0;i<210;i++){
+		//	for(int j=0;j<210;j++){
+		//		if(ary[j][i]!=-1){
+		//			left=i-100;
+		//			break;
+		//		}
+		//	}
+		//}
+		//for(int i=209;i>=0;i--){
+		//	for(int j=0;j<210;j++){
+		//		if(ary[j][i]!=-1){
+		//			right=i-100;
+		//			break;
+		//		}
+		//	}
+		//}
+
+		//cout << left<<" " << down<<" " << right<<" "<<up<<endl;
+		cout << right-left+1<<" "<<down-up+1<<endl;
+
+	}
+
+	return 0;
+}

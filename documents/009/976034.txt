@@ -1,0 +1,70 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=x && x<w && 0<=y && y<h)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+const int MAX = 2*123500;
+
+/** Problem2253 : Brave Force Story **/
+int T;
+const int dx0[6]={0, 1, 1, 0, -1, -1};
+const int dy0[6]={1, 1, 0, -1, -1, 0};
+set<P> vis;
+typedef struct {
+  P pos; int cost;
+} S;
+
+int main()
+{
+  int n, sx, sy;
+  while (cin>>T>>n, T||n) {
+    vis.clear();
+
+    rep(k, n) {
+      int x, y;
+      cin>>x>>y;
+      vis.insert(P(x, y));
+    }
+    cin >> sx >> sy;
+    S s = {P(sx, sy), 0};
+    queue<S> Q;
+    Q.push(s);
+    vis.insert(s.pos);
+    int ans = 1;
+    while (Q.size()) {
+      S t = Q.front(); Q.pop();
+      rep(i, 6) {
+        int nx=t.pos.first+dx0[i], ny=t.pos.second+dy0[i];
+        if (-30<=nx&&nx<=30 && -30<=ny&&ny<=30) {
+          if (vis.count(P(nx, ny)) == 0 && t.cost+1<=T) {
+            S ns = {P(nx, ny), t.cost+1};
+            Q.push(ns);
+            vis.insert(ns.pos);
+            ans++;
+          }
+        }
+      }
+    }
+    cout << ans << endl;
+  }
+  return 0;
+}

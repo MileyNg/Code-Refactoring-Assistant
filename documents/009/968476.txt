@@ -1,0 +1,36 @@
+#include<stdio.h>
+#define N 100001
+
+main(){
+
+  int i, j, x, n, A[N], p, r;
+
+  scanf("%d", &n);
+  for(i = 1;i < n+1;i++){
+    scanf("%d", &A[i]);
+  }
+  p = 1;
+  x = A[n];
+  i = p - 1;
+  for(j = p;j < n;j++){
+    if(A[j] <= x){
+      i++;
+      r = A[i];
+      A[i] = A[j];
+      A[j] = r;
+    }
+  }
+  r = A[i+1];
+  A[i+1] = A[n];
+  A[n] = r;
+
+  for(j = 1;j < i+1;j++){
+    printf("%d ", A[j]);
+  }
+  printf("[%d] ", A[i+1]);
+  for(j = i+2;j < n;j++){
+    printf("%d ", A[j]);
+  }
+  printf("%d\n", A[j]);
+  return 0;
+}

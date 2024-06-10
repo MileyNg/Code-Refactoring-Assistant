@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<double,double> P;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+int N;
+P ps[50];
+
+double triangleArea(P p1, P p2, P p3){
+    P a = mp(p2.first-p1.first, p2.second-p1.second),
+      b = mp(p3.first-p1.first, p3.second-p1.second);
+    return 0.5 * (a.first*b.second - b.first*a.second);
+}
+
+int main(){
+    int T = 1;
+
+    while(std::cin >> N, N){
+        REP(i, N){
+            std::cin >> ps[i].first >> ps[i].second;
+        }
+
+        double res = 0.0;
+        for(int i=1;i+1<N;i++){
+            res += triangleArea(ps[0], ps[i], ps[i+1]);
+        }
+
+        res = std::abs(res);
+
+        printf("%d %.1f\n", T, res);
+        T += 1;
+    }
+}

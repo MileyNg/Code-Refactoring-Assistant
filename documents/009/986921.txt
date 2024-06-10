@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <math.h>
+
+typedef struct {
+	double x, y, r;
+} Circle;
+
+int main(void)
+{
+	Circle a, b;
+	double d;
+	double xdif, ydif;
+	int n;
+	
+	scanf("%d", &n);
+	while (n-- > 0){
+		scanf("%lf %lf %lf", &a.x, &a.y, &a.r);
+		scanf("%lf %lf %lf", &b.x, &b.y, &b.r);
+		xdif = a.x > b.x ? a.x - b.x : b.x - a.x;
+		ydif = a.y > b.y ? a.y - b.y : b.y - a.y;
+		d = sqrt(xdif * xdif + ydif * ydif);
+		if (d <= a.r + b.r){
+			if (d + b.r <= a.r){
+				puts("2");
+			}
+			else if (d + a.r <= b.r){
+				puts("-2");
+			}
+			else {
+				puts("1");
+			}
+		}
+		else puts("0");
+	}
+	
+	return 0;
+}

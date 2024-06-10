@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int> g[5010];
+int cnt[5010];
+
+int main(){
+  int n,m,a,b;
+  cin >> n >> m;
+
+  for(int i=0;i<n;i++)g[i].clear();
+  memset(cnt,0,sizeof(cnt));
+
+  for(int i=0;i<m;i++){
+    cin >> a >> b;
+    g[a].push_back(b);
+    cnt[b]++;
+  }
+
+  queue<int> q;
+  for(int i=1;i<=n;i++){
+    if(!cnt[i])q.push(i);
+  }
+
+  int f = 0;
+  vector<int> ans;
+  while(q.size()){
+    if(q.size() > 1)f = 1;
+    int v = q.front(); q.pop();
+
+    ans.push_back(v);
+    for(int i=0;i<(int)g[v].size();i++){
+      cnt[g[v][i]]--;
+      if(cnt[g[v][i]]==0)q.push(g[v][i]);
+    }
+  }
+
+  for(int i=0;i<(int)ans.size();i++)cout << ans[i] << endl;
+  cout << f << endl;
+}

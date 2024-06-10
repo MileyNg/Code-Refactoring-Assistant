@@ -1,0 +1,112 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef pair<int,int> P;
+vector<P> vec;
+
+bool check(){
+  for(int i = 0 ; i < (int)vec.size() ; i++){
+    if(vec[i].first != -1) return true;
+  }
+
+  vec.clear();
+  return false;
+}
+
+void Wri(){
+  int len = (int)vec.size(), l, S;
+
+  cin >> l >> S;
+
+  if(len == 0 || !check()){
+    vec.push_back(P(l,S));
+    return;
+  }
+
+  for(int i = 0 ; i < len ; i++){
+    if(vec[i].first == -1){
+      if(S - vec[i].second >= 0){
+        vec[i].first = l;
+        S -= vec[i].second;
+      }
+    }
+  }
+
+  if(S > 0){
+    vec.push_back(P(l,S));
+  }
+}
+
+void Del(){
+  int len = (int)vec.size(), l;
+
+  cin >> l;
+  if(len == 0){
+    return;
+  }
+
+  for(int i = 0 ; i < len ; i++){
+    if(vec[i].first == l){
+      vec[i].first = -1;
+    }
+  }
+}
+
+int Ref(){
+  int cnt = 0;
+  int len = (int)vec.size(), l, num = vec[0].first;
+  bool found = false;
+
+  cin >> l;
+  if(len == 0){
+    return -1;
+  }
+
+  for(int i = 0 ; i < len ; i++){
+    if(cnt > l){
+      return num;
+    }
+    if(vec[i].first != -1){
+      found = true;
+      cnt += vec[i].second;
+      num = vec[i].first;
+    }else{
+      cnt += vec[i].second;
+    }
+  }
+
+  if(cnt <= l || !found){
+    return -1;
+  }else{
+    return vec[len-1].first;
+  }
+}
+
+int main(){
+  int N;
+  char ch;
+
+  while(cin >> N, N){
+    vec.clear();
+    for(int i = 0 ; i < N ; i++){
+      cin >> ch;
+
+      switch(ch){
+      case 'W':
+        Wri();
+        break;
+      case 'D':
+        Del();
+        break;
+      default:
+	cout << Ref() << endl;
+        break;
+      }
+    }
+
+    cout << endl;
+  }
+
+  return 0;
+}

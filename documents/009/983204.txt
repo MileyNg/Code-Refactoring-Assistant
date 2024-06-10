@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int compute(string s) {
+    int n = 0;
+    int nest = 0;
+    vector<int> vote[1000];
+    for (int i=0; i<(int)s.length(); i++) {
+        if (s[i] == '[') {
+            nest++;
+        }
+        else if (s[i] == ']') {
+            if (vote[nest].size() == 0) {
+                n = n/2+1;
+            }
+            else {
+                sort(vote[nest].begin(), vote[nest].end());
+                n = 0;
+                for (int i=0; i<=(int)vote[nest].size()/2; i++) {
+                    n += vote[nest][i];
+                }
+            }
+            vote[nest].clear();
+            nest--;
+            vote[nest].push_back(n);
+            n = 0;
+        }
+        else {
+            n *= 10;
+            n += s[i]-'0';
+        }
+    }
+    return vote[0][0];
+}
+
+int main() {
+    int n;
+    string s;
+    cin >> n;
+    for (int i=0; i<n; i++) {
+        cin >> s;
+        cout << compute(s) << endl;
+    }
+    return 0;
+}

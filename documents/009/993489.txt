@@ -1,0 +1,33 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+int N;
+int main(){
+  cin >> N;
+  for(int t=0;t<N;t++){
+    int x=0,y=0;
+    int dx,dy;
+    ll maxk = 0;
+    int ax=0,ay=0;
+    while(1){
+      cin >> dx >> dy;
+      if( !dx && !dy ) break;
+      x+=dx; y+=dy;
+      if( maxk <= x*x + y*y ){
+	if( ax < x ){
+	  maxk = x*x + y*y;
+	  ax = x; ay = y;
+	} else if( ax == x && ay < y ){
+	  maxk = x*x + y*y;
+	  ax = x; ay = y;
+	}
+      }
+    }
+    cout << ax << " " << ay << endl;
+  }
+}

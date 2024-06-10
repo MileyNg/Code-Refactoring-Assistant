@@ -1,0 +1,73 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <utility>
+#include <cctype>
+#include <numeric>
+using namespace std;
+
+#define rep(i,n) for(int (i)=0; (i)<(int)(n); ++(i))
+#define foreach(c,i) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++)
+#define all(a) (a).begin(),(a).end()
+
+const int kN = 1002;
+int N, M, NN;
+int a[kN];
+int m[kN*kN];
+
+int solve() {
+  sort(a, a + N);
+  sort(m, m + NN);  
+  if (binary_search(a ,a + N, M)
+      || binary_search(m, m + NN, M)) {
+    return M;
+  }
+
+  rep(i,NN) {
+    int val = m[i];
+    if (val > M) continue;
+    if (binary_search(a, a + N, M - val)
+        || binary_search(m, m + NN, M - val)) {
+      return M;
+    }
+  }
+
+  int ans = -1;
+  rep(i,NN) {
+    int val = m[i];
+    if (val > M) continue;
+    int *p = lower_bound(a, a + N, M - val);
+    --p;
+    // printf("val=%d, *p=%d\n", val, *p);
+    ans = max(ans, val + *p);
+    p = lower_bound(m, m + NN, M - val);
+    --p;
+    ans = max(ans, val + *p);
+    // printf("-val=%d, *p=%d\n", val, *p);
+  }
+  return ans;
+}
+
+int main() {
+  while (cin >> N >> M, N | M) {
+    rep(i,N) cin >> a[i];
+    rep(i,N) rep(j,N) {
+      m[i * N + j] = a[i] + a[j];
+    }
+    NN = N * N;
+    printf("%d\n", solve());
+  }
+  
+  return 0;
+}

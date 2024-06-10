@@ -1,0 +1,33 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int s,n;
+  while(cin>>s,s){
+    cin >> n;
+    char c[n+2];
+    for(int i=1;i<=n;i++) cin >> c[i];
+    c[n+1] = 'A';
+    int t=1,f=0;
+    int count=0;
+    while(f<=n){
+      while(c[t]=='O') t++;
+      if(c[t]=='A') break;
+      f=t+1;
+      while(f-t<s*2){
+	if(c[f]=='O'&&(f-t)%2==1) f++;
+	else if(c[f]=='I'&&(f-t)%2==0) f++;
+	else{
+	  t = f - 1;
+	  break;
+	}
+	if(f-t==s*2){
+	  count++;
+	  t+=2;
+	}
+      }
+      t++;
+    }
+    cout << count << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+typedef long long LL;
+vector<LL> inverse_list(int n, int p){
+    vector<LL> inv(n + 1);
+    inv[1] = 1;
+    for (int i = 2; i <= n; ++i){
+        inv[i] = inv[p % i] * (p - p / i) % p;
+    }
+    return inv;
+}
+
+int main(){
+    LL N, M, K;
+    const LL MOD = 1000000007;
+    const LL MAX = 300000;
+    vector<LL> inv = inverse_list(MAX, MOD);
+    vector<LL> fact(MAX, 1);
+    vector<LL> factinv(MAX, 1);
+    for(int i = 1; i < MAX; i++) {
+        fact[i] = fact[i - 1] * i % MOD;
+        factinv[i] = factinv[i - 1] * inv[i] % MOD;
+    }
+    auto conb = [&](LL a, LL b) -> int {
+        LL res = fact[a];
+        res = res * factinv[b] % MOD;
+        res = res * factinv[a - b] % MOD;
+        return res;
+    };
+    cin >> N >> M >> K;
+    int ans = 0;
+    for(int k1 = 0; k1 <= K; k1++) {
+        int k2 = K - k1;
+        LL res = (conb(N + 2 * k1, k1) - conb(N + 2 * k1, k1 - 1) + MOD)
+            * (conb(M + 2 * k2, k2) - conb(M + 2 * k2, k2 - 1) + MOD) % MOD
+            * conb(N + M + 2 * K, N + 2 * k1) % MOD;
+        ans = (ans + res) % MOD;
+    }
+    cout << ans << endl;
+    return 0;
+}

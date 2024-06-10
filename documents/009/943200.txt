@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+int calc(int g, int gunit, int yen, int unit, int discount) {
+	int p, p1, p2;
+	if(g % gunit > 0) {
+		p = g / gunit + 1;
+	} else {
+		p = g / gunit;
+	}
+	p1 = p / unit;
+	p2 = p % unit;
+	
+	return p1*unit*yen*discount/100 + p2*yen;
+}
+
+
+int main(void) {
+	//		A店 	B店 	C店
+	//1袋あたりの量 	200g	300g	500g
+	//1袋の単価(定価) 	380円 	550円 	850円
+	//割引が適用される単位 	5袋毎 	4袋毎 	3袋毎
+	//割引率 	20%引き	15%引き	12%引き
+	int n, val[3], m, t;
+	while(scanf("%d\n", &n) == 1) {
+		if(n == 0) break;
+		
+		m = calc(n, 200, 380, 5, 80);
+		t = calc(n, 300, 550, 4, 85);
+		if(m > t) m = t;
+		t = calc(n, 500, 850, 3, 88);
+		if(m > t) m = t;
+		
+		printf("%d\n", m);
+	}
+	
+	return 0;
+}

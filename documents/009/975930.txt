@@ -1,0 +1,28 @@
+grades = []
+
+loop do
+  m, f, r = gets.chomp.split.map {|s| s.to_i}
+  break if m == -1 && f == -1 && r == -1
+
+  if m == -1 || f == -1 then
+    grades << 'F'
+  elsif m + f >= 80 then
+    grades << 'A'
+  elsif m + f >= 65 && m + f < 80 then
+    grades << 'B'
+  elsif m + f >= 50 && m + f < 65 then
+    grades << 'C'
+  elsif m + f >= 30 && m + f < 50 then
+    if r >= 50 then
+      grades << 'C'
+    else
+      grades << 'D'
+    end
+  else
+    grades << 'F'
+  end
+end
+
+grades.each do |g|
+  puts g
+end

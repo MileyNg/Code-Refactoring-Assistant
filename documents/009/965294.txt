@@ -1,0 +1,45 @@
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+
+constexpr int SIZE = 5;
+int field[SIZE][SIZE];
+
+bool ok(int l, int r, int u, int d) {
+	for(int y = u; y < d; ++y) {
+		for(int x = l; x < r; ++x) {
+			if(field[y][x] == 0) return false;
+		}
+	}
+	return true;
+}
+
+int solve() {
+	for(auto &row : field) for(auto &e : row) cin >> e;
+
+	int ans = 0;
+	for(int l = 0; l < SIZE; ++l) {
+		for(int r = l + 1; r <= SIZE; ++r) {
+			for(int u = 0; u < SIZE; ++u) {
+				for(int d = u + 1; d <= SIZE; ++d) {
+					if(ok(l, r, u, d)) chmax(ans, (r - l) * (d - u));
+				}
+			}
+		}
+	}
+
+	return ans;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int n;
+	cin >> n;
+	while(n--) cout << solve() << endl;
+
+	return EXIT_SUCCESS;
+}

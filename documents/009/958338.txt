@@ -1,0 +1,33 @@
+#include<stdio.h>
+int main(void)
+{
+  int in;
+  int i;
+  int jou[10]={1,2,4,8,16,32,64,128,256,512};
+
+  while(scanf("%d",&in)!=EOF){
+    int c=0;
+    int han[10]={0};
+    for(i=9;i>=0;i--){
+      if(han[i]==1)
+	continue;
+      if(jou[i]<=in){
+	han[i]=1;
+	in-=jou[i];
+      }
+    }
+    for(i=0;i<10;i++){
+      if(han[i]==1){
+	if(c==0){
+	  printf("%d",jou[i]);
+	  c=1;
+	}else{
+	  printf(" %d",jou[i]);
+	}
+      }
+    }
+    putchar('\n');
+  }
+
+  return 0;
+}

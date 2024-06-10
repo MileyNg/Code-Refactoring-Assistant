@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <math.h>
+
+int c=0,n;
+typedef struct XY{
+  double x;
+  double y;
+}XY;
+
+XY add(XY p1,XY p2){
+  XY p3 = {p1.x+p2.x,p1.y+p2.y};
+  return p3;
+}
+
+double bunkatu(XY p1, XY p2,int c){
+  if(c>=n){return 0;}
+
+  XY p3 = {((p2.x-p1.x)/3.0),((p2.y-p1.y)/3.0)};
+  XY s=add(p1,p3);
+  XY t=add(s,p3);
+  XY u;
+
+ //if(p1.x<p2.x){
+   u.x=((t.x-s.x)*cos(M_PI/3)-(t.y-s.y)*sin(M_PI/3))+s.x;
+   u.y=((t.x-s.x)*sin(M_PI/3)+(t.y-s.y)*cos(M_PI/3))+s.y;
+// }else{
+ //  u.x=((t.x-s.x)*cos(-M_PI/3)-(t.y-s.y)*sin(-M_PI/3))+s.x;
+ //  u.y=((t.x-s.x)*sin(-M_PI/3)+(t.y-s.y)*cos(-M_PI/3))+s.y;
+ //}
+
+  bunkatu(p1,s,c+1); 
+  printf("%f %f\n",s.x,s.y); 
+  bunkatu(s,u,c+1);
+  printf("%f %f\n",u.x,u.y); 
+  bunkatu(u,t,c+1);
+ printf("%f %f\n",t.x,t.y);
+  bunkatu(t,p2,c+1);
+}
+
+int main(){
+scanf("%d",&n);
+printf("%f %f\n",0.0,0.0);
+XY p1={0,0},p2={100.0};
+  bunkatu(p1,p2,0);
+
+printf("%f %f\n",100.0,0.0);
+  return 0;
+}

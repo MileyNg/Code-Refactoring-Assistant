@@ -1,0 +1,40 @@
+### constant
+
+MAX_P = 1000000
+
+### subroutines
+
+def gen_primes(max_p)
+  primes = Array.new(max_p + 1){true}
+  primes[0] = primes[1] = false
+
+  for p in (2..max_p)
+    if primes[p]
+      for q in (p * p).step(max_p, p)
+        primes[q] = false
+      end
+    end
+  end
+
+  return primes
+end
+
+### main
+
+primes = gen_primes(MAX_P)
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  hn = n / 2
+  count = 0
+
+  for i in (3..hn)
+    if primes[i] && primes[n - i]
+      count += 1
+    end
+  end
+
+  puts count
+end

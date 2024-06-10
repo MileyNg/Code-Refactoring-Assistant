@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <stdlib.h>
+using namespace std;
+vector<string> split(const string &str, char delim){
+  vector<string> res;
+  size_t current = 0, found;
+  while((found = str.find_first_of(delim, current)) != string::npos){
+    res.push_back(string(str, current, found - current));
+    current = found + 1;
+  }
+  res.push_back(string(str, current, str.size() - current));
+  return res;
+}
+bool cal(int i,int j,int l,int k,vector<double> &val){
+  double kata = (val[i*2]-val[j*2])/(val[i*2+1]-val[j*2+1]);
+  double sen1 = kata*(val[2*l] - val[i*2])+val[i*2+1];
+  double sen2 = kata*(val[2*k] - val[i*2])+val[i*2+1];
+  if((sen1 - val[2*l+1])*(sen2 - val[2*k+1]) > 0 )return true;
+  return false;
+}
+int main(){
+  string str;
+  while(cin >> str){
+    vector<string> s_v = split(str,',');
+    vector<double> val(8);
+    for(int i = 0;i < 8;i++){
+      val[i] = stod(s_v[i]);
+    }
+    int flag = 0;
+    for(int i = 0;i < 4;i++){
+      for(int j = 0;j < 4;j++){
+	if(i == j)break;
+	for(int k = 0;k < 4;k++){
+	  if(i == k || j == k)break;
+	  for(int l = 0;l < 4;l++){
+	    if(i == l || j == l || k == l)break;
+	    if(cal(i,j,k,l,val)){
+	      flag = 1;
+	    }
+	  }
+	}
+      }
+    }
+    if(flag)cout << "NO" << endl;
+    else cout << "YES" << endl;
+  }
+  return 0;
+}

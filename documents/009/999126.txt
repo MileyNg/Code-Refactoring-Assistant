@@ -1,0 +1,52 @@
+#include <stdio.h>
+typedef struct node{
+  int p,l,r,key;
+} node;
+
+node heap[1000];
+
+int parent(int x){
+  return (x/2);
+}
+
+int left(int x){
+  return 2*x;
+}
+
+int right(int x){
+  return 2*x+1;
+}
+
+
+int main(){
+  int hs,i;
+  int m=2000000001;
+
+  for(i=0;i<=999;i++){
+    heap[i].key=m;
+  }
+
+  scanf("%d",&hs);
+  for(i=1;i<=hs;i++){
+    scanf("%d",&heap[i].key);
+  }
+  for(i=1;i<=hs;i++){
+    heap[i].p = heap[parent(i)].key;
+    heap[i].l = heap[left(i)].key;
+    heap[i].r = heap[right(i)].key;
+  
+     printf("node %d: key = %d, ",i,heap[i].key);
+     if(heap[i].p!=m){
+       printf("parent key = %d, ",heap[i].p);
+     }
+     if(heap[i].l!=m){
+       printf("left key = %d, ",heap[i].l);
+     }
+     if(heap[i].r!=m){
+       printf("right key = %d, ",heap[i].r);
+     }
+     printf("\n");
+  }
+
+  return 0;
+}

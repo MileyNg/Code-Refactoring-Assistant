@@ -1,0 +1,47 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+
+int main(){
+    int n;
+    while(cin>>n,n){
+    vector<int> T,H;
+        rep(i,n){
+            int a;
+            cin>>a;
+            T.push_back(a);
+        }
+        sort(T.begin(),T.end());
+        for(int i=1;i<=2*n;i++){
+            if(!binary_search(T.begin(),T.end(),i))
+                H.push_back(i);
+        }
+        int card=0,turn=1;
+        while(!T.empty() && !H.empty()){
+            vector<int>::iterator p;
+            if(turn%2){
+                p = upper_bound(all(T), card);
+                if(p!=T.end()){
+                    card = *p;
+                    T.erase(p);
+                }
+                else card=0;
+            }
+            else{
+                p = upper_bound(all(H), card);
+                if(p!=H.end()){
+                    card = *p;
+                    H.erase(p);
+                }
+                else card=0;
+            }
+            turn++;
+        }
+        cout << H.size() << "\n" << T.size() << endl;
+    }
+}

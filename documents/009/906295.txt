@@ -1,0 +1,119 @@
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <stack>
+#include <list>
+#include <vector>
+
+using namespace std;
+int N, R;
+bool **cover;
+int dx[4] = {0,1,0,-1};
+int dy[4] = {-1,0,1,0};
+int main(){
+  cover = new bool*[10002];
+  for(int i=0; i<10002; ++i){
+    cover[i] = new bool[10002];
+  }
+  for(int j=0; j<10002; ++j){
+    for(int i=0; i<10002; ++i){
+      cover[j][i] = false;
+    }
+  }
+  while(cin >> N >> R && N){
+    int a,b,c,d;
+    for(int k=0; k<N; ++k){
+      cin >> a >> b >> c >> d;
+      for(int j=b+1; j<d+1; ++j){
+        for(int i=a+1; i<c+1; ++i){
+          
+          cover[j][i] = true;
+        }
+      }
+    }
+    int area_c = 0;
+    int len = 0;
+    for(int j=1; j<10001; ++j){
+      for(int i=1; i<10001; ++i){
+            
+        if(cover[j][i] == true){
+          area_c++;
+          for(int a = 0; a<4; ++a){
+            int nx = i+dx[a];
+            int ny = j+dy[a];
+            if(cover[ny][nx] == false) len++;
+          }
+        }
+      }
+    }
+    cout << area_c << endl;
+    if(R==2) cout << len << endl;
+  }
+  
+  for(int i=0; i<10001; ++i){
+    delete[] cover[i];
+  }
+  delete[] cover;
+  return 0;
+}#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <stack>
+#include <list>
+#include <vector>
+
+using namespace std;
+int N, R;
+bool **cover;
+int dx[4] = {0,1,0,-1};
+int dy[4] = {-1,0,1,0};
+int main(){
+  cover = new bool*[10002];
+  for(int i=0; i<10002; ++i){
+    cover[i] = new bool[10002];
+  }
+  for(int j=0; j<10002; ++j){
+    for(int i=0; i<10002; ++i){
+      cover[j][i] = false;
+    }
+  }
+  while(cin >> N >> R && N){
+    int a,b,c,d;
+    for(int k=0; k<N; ++k){
+      cin >> a >> b >> c >> d;
+      for(int j=b+1; j<d+1; ++j){
+        for(int i=a+1; i<c+1; ++i){
+          
+          cover[j][i] = true;
+        }
+      }
+    }
+    int area_c = 0;
+    int len = 0;
+    for(int j=1; j<10001; ++j){
+      for(int i=1; i<10001; ++i){
+            
+        if(cover[j][i] == true){
+          area_c++;
+          for(int a = 0; a<4; ++a){
+            int nx = i+dx[a];
+            int ny = j+dy[a];
+            if(cover[ny][nx] == false) len++;
+          }
+        }
+      }
+    }
+    cout << area_c << endl;
+    if(R==2) cout << len << endl;
+  }
+  
+  for(int i=0; i<10001; ++i){
+    delete[] cover[i];
+  }
+  delete[] cover;
+  return 0;
+}

@@ -1,0 +1,27 @@
+repeat = gets
+for i in 1 .. repeat.to_i do
+   line = gets
+   test = line.split(/\s+/)
+   tmp =[]
+   tmp[0] = test[0].to_i
+   tmp[1] = test[1].to_i
+   tmp[2] = test[2].to_i
+
+   if tmp[0]<tmp[1] then
+   	te = tmp[0]
+   	tmp[0] = tmp[1]
+   	tmp[1]=te
+   end
+
+   if tmp[0]<tmp[2] then
+   	te = tmp[0]
+   	tmp[0] = tmp[2]
+   	tmp[2]=te
+   end
+
+   if tmp[0]*tmp[0]==tmp[1]*tmp[1]+tmp[2]*tmp[2] then
+   	puts "YES"
+   else
+   	puts "NO"
+   end
+end

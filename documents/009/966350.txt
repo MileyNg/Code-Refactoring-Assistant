@@ -1,0 +1,42 @@
+#include<stdio.h>
+
+int main(){
+  int n,m;
+  int i;
+
+  scanf("%d %d",&n,&m);
+  while((n!=0)&&(m!=0)){
+    int board[n];
+    int dice[m];
+    int stts=0;
+    int f=0;
+
+    for(i=0;i<n;i++){
+      scanf("%d",&board[i]);
+    }
+    for(i=0;i<m;i++){
+      scanf("%d",&dice[i]);
+    }
+
+    i=0;
+    while(f==0){
+      stts=stts+dice[i];
+
+      if(stts<n-1){
+	stts=stts+board[stts];
+	if(stts>=n){
+	  f=1;
+	}
+      }
+      else{
+	f=1;
+      }
+
+      i++;
+    }
+    printf("%d\n",i);
+    scanf("%d %d",&n,&m);
+  }
+
+  return 0;
+}

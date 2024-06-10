@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main(void)
+{
+    int n;
+    int taro_p=0,hana_p=0;
+    char taro[1000],hana[1000];
+    
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        scanf("%s %s",&taro,&hana);
+        if(strcmp(taro, hana)>0){
+            taro_p+=3;
+        }else if(strcmp(taro, hana)==0){
+            taro_p++;
+            hana_p++;
+        }else{
+            hana_p+=3;
+        }
+    }
+    printf("%d %d\n",taro_p,hana_p);
+    return 0;
+}

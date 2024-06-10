@@ -1,0 +1,34 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int stack[100];
+int *top;
+
+void push(int x) {
+	*top = x;
+	top++;
+}
+int pop() {
+	top--;
+	return *top;
+}
+
+int main(){
+	top = stack;
+	char s[100];
+
+	while (scanf("%s", s) != EOF){
+		if ( s[0] == '+' )
+			push(pop() + pop());
+		else if ( s[0] == '-' )
+			push(-pop() + pop());
+		else if ( s[0] == '*' )
+			push(pop() * pop());
+		else
+	 		push(atoi(s));
+	}
+	printf("%d\n", pop());
+	
+	return 0;
+}

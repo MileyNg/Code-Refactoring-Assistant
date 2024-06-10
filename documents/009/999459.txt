@@ -1,0 +1,104 @@
+using System;
+using System.Collections.Generic;
+
+namespace AOJ
+{
+    class Program
+    {
+
+        const int BLOCK_W = 2;
+        const int BLOCK_H = 4;
+
+        private int w, h;
+        private int[,] borad;
+        private int start_x;
+        private int start_y;
+        private int goal_x;
+        private int goal_y;
+
+        private bool isToGoal(int c,int x,int y){
+
+            if (borad[x, y] != c) return false;
+
+            if (x == goal_x && goal_y == y) return true;
+
+            if (x > w || y > h) return false;
+
+            borad[x, y] += 10; //通過フラグ
+
+            bool r = false;
+            r = isToGoal(c, x + 1, y);
+            if (!r) r = isToGoal(c, x - 1, y);
+            if (!r) r = isToGoal(c, x, y + 1);
+            if (!r) r = isToGoal(c, x, y - 1);
+            return r;
+        }
+
+        private string solve(int p_w,int p_h)
+        {
+            w = p_w;
+            h = p_h;
+            string[] tmp_start = Console.ReadLine().Split(new char[] { ' ' });
+            string[] tmp_goal = Console.ReadLine().Split(new char[] { ' ' });
+            start_x = int.Parse(tmp_start[0]);
+            start_y = int.Parse(tmp_start[1]);
+            goal_x = int.Parse(tmp_goal[0]);
+            goal_y = int.Parse(tmp_goal[1]);
+
+            borad = new int[w+1,h+1];
+            
+            int n = int.Parse(Console.ReadLine());
+
+            //ブロック読み込み
+            for (int i = 0; i < n; i++)
+            {
+                string[] block_i = Console.ReadLine().Split(new char[] { ' ' });
+                int color = int.Parse(block_i[0]);
+                int d = int.Parse(block_i[1]);
+                int x = int.Parse(block_i[2]);
+                int y = int.Parse(block_i[3]);
+
+                int x_e,y_e;
+                if(d == 0){
+                    x_e = x+BLOCK_H;
+                    y_e = y+BLOCK_W;
+                }else{
+                    x_e = x+BLOCK_W;
+                    y_e = y+BLOCK_H;
+                }
+                for(int x_i = x;x_i<= x_e;x_i++){
+                    for (int y_i = y; y_i <= y_e;y_i++ )
+                    {
+                        borad[x_i, y_i] = color;
+                    }   
+                }
+            }
+
+            //for (int i = 0; i < w; i++)
+            //{
+            //    for (int j = 0; j < h; j++)
+            //    {
+            //        Console.Write(borad[i, j].ToString() + ",");
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            for (int c = 1; c <= 5; c++)
+            {
+                if (isToGoal(c, start_x, start_y)) return "OK";
+            }
+            return "NG";
+
+        }
+        
+        static void Main(string[] args)
+        {
+            Program obj = new Program();
+            while (true) {
+                string[] s = Console.ReadLine().Split(new char[] { ' ' });
+                if (s[0] == "0" && s[1] == "0") break;
+                Console.WriteLine(obj.solve(int.Parse(s[0]), int.Parse(s[1])));
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+int main() {
+	
+	int n;
+	int *elm;
+	int sum,total;
+	
+	while(cin>>n,n){
+		
+		elm = new int[n*n];
+		
+		for(int i=0;i<n*n;++i){
+			cin >> elm[i];
+		}
+		
+		
+		
+		for( int i=0;i<n;++i){
+			sum = 0;
+			for(int j=0;j<n;++j){
+				cout << setw(5) << elm[j+i*n];
+				sum += elm[j+i*n];
+			}
+			cout << setw(5) << sum;
+			cout << endl;
+		}
+		
+		total = 0;
+		for(int i=0;i<n;++i){
+			sum = 0;
+			for(int j=0;j<n;++j){
+				sum += elm[j*n+i];
+			}
+			cout<<setw(5)<<sum;
+			total += sum;
+		}
+		cout<<setw(5)<<total<<endl;
+		delete[]elm;
+	}
+	return 0;
+}

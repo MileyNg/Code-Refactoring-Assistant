@@ -1,0 +1,57 @@
+#include <iostream>
+using namespace std;
+
+void rotate(int part[][51],int m){
+  int ret[51][51];
+  for(int i = 0 ; i < m ; i++){
+    for(int j = 0 ; j < m ; j++){
+      ret[i][j] = part[i][j];
+    }
+  }
+
+  for(int i = 0 ; i < m ; i++){
+    for(int j = 0 ; j < m ; j++){
+      part[i][j] = ret[j][m-i-1];
+    }
+  }
+}
+
+int main(){
+  int m,n,x,y;
+  int pic[101][101],part[51][51];
+   
+  while(cin >> n >> m,n||m){
+    x = 2<<20; y = 2<<20;
+    for(int i = 0 ; i < n ; i++){
+      for(int j = 0 ; j < n ; j++) cin >> pic[i][j];
+    }
+    for(int i = 0 ; i < m ; i++){
+      for(int j = 0 ; j < m ; j++) cin >> part[i][j];
+    }
+    
+    for(int cnt = 0 ; cnt < 4 ; cnt++){
+      for(int i = 0 ; i < n-m+2 ; i++){
+	for(int j = 0 ; j < n-m+2 ; j++){
+	  for(int k = 0 ; k < m ; k++){
+	    for(int l = 0 ; l < m ; l++){
+	      if(part[k][l] == -1) continue;
+	      if(pic[i+k][j+l] != part[k][l]) goto next;
+	    }
+	  }
+	  for(int k = 0 ; k < m ; k++){
+	    for(int l = 0 ; l < m ; l++){
+	      if(part[k][l] != -1){
+		x = l + j,y = k + i; goto end;
+	      }
+	    }
+	  }
+	end:;
+	next:;
+	}
+      }
+      rotate(part,m);
+    }
+    if(x == 2<<20) cout << "NA" << endl;
+    else cout << x+1 << " " << y+1 << endl;
+  }
+}

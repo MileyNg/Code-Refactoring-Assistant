@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+#include <ctime>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+const int N = 5;
+
+int score[N];
+
+pair<int, vector<vector<int>>> check(vector<vector<int>> v){
+	auto nxt = v;
+	rep(i, N) rep(j, N){
+		int c = v[i][j];
+		if (0 < i && i < N - 1 && v[i - 1][j] == c && c == v[i + 1][j]){
+			for (int k = -1; k <= 1; ++k) nxt[i + k][j] = 0;
+		}
+		if (0 < j && j < N - 1 && v[i][j - 1] == c && c == v[i][j + 1]){
+			for (int k = -1; k <= 1; ++k) nxt[i][j + k] = 0;
+		}
+	}
+	int cnt = 0;
+	rep(i, N) rep(j, N) if (!nxt[i][j] && v[i][j]) cnt += score[v[i][j]-1];
+
+	return MP(cnt, nxt);
+}
+
+void down(vector<vector<int>> &v){
+	for (int i = N - 2; i >= 0; --i) rep(j, N){
+		int k = i;
+		while (++k < N) if (!v[k][j]) swap(v[k][j], v[k - 1][j]);
+	}
+}
+
+int simulate(vector<vector<int>> v){
+	int res = 0, bonus = 1, x;
+	while (1){
+		tie(x, v) = check(v);
+		if (!x) return res;
+		res += bonus++*x;
+		down(v);
+	}
+}
+
+int dx[] = { 0, 1, 0, -1 };
+int dy[] = { 1, 0, -1, 0 };
+int dfs(int i, int j, int n, vector<vector<int>> &v){
+	int res = simulate(v);
+	if (n == 0) return res;
+	rep(d, 4){
+		int ni = i + dx[d], nj = j + dy[d];
+		if (ni < 0 || ni >= N || nj < 0 || nj >= N) continue;
+		swap(v[i][j], v[ni][nj]);
+		res = max(res, dfs(ni, nj, n - 1, v));
+		swap(v[i][j], v[ni][nj]);
+	}
+	return res;
+}
+
+int main(){
+	ios::sync_with_stdio(false);
+
+	auto v = vector<vector<int>>(N, vector<int>(N));
+
+	int n;
+	while (cin >> n, ~n){
+		rep(i, N) rep(j, N) cin >> v[i][j];
+		rep(i, N) cin >> score[i];
+		int ans = 0;
+		rep(i, N) rep(j, N) ans = max(ans, dfs(i, j, n, v));
+		cout << ans << endl;
+	}
+
+
+	return 0;
+}

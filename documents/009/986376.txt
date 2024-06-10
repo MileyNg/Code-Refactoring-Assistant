@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+int cost[21][21];
+int n,m;
+
+int go_to_home(int start, int goal, int now_place, int now_cost, bool village[21]);
+
+int go_to_village(int start, int goal, int now_place, int now_cost, bool village[21]){
+    if(goal == now_place){
+        
+        int min_temp = 9999999*20;
+        for(int i=1; i<=n; i++){
+            if(cost[now_place][i]!=-1){
+                bool init_village[21]={0};
+                init_village[now_place]=1;
+                init_village[i]=1;
+                min_temp = min(min_temp, go_to_home(goal, start, i, now_cost+cost[now_place][i], init_village));
+            }
+        }
+        return min_temp;
+    }
+    
+    int min_temp = 9999999*20;
+    for(int i=1; i<=n; i++){
+        if(cost[now_place][i]!=-1&&village[i]==0){
+            bool temp_village[21];
+            for(int j=0; j<=n; j++){
+                temp_village[j]=village[j];
+            }
+            temp_village[now_place]=1;
+            temp_village[i]=1;
+            min_temp = min(min_temp, go_to_village(start, goal, i, now_cost+cost[now_place][i], temp_village));
+        }
+    }
+    return min_temp;
+    
+}
+
+int go_to_home(int start, int goal, int now_place, int now_cost, bool village[21]){
+    if(goal == now_place){
+        return now_cost;
+    }
+    
+    int min_temp = 9999999*20;
+    for(int i=0; i<=n; i++){
+        if(cost[now_place][i]!=-1&&village[i]==0){
+            bool temp_village[21];
+            for(int j=0; j<=n; j++){
+                temp_village[j]=village[j];
+            }
+            temp_village[now_place]=1;
+            temp_village[i]=1;
+            min_temp = min(min_temp, go_to_home(start, goal, i, now_cost+cost[now_place][i], temp_village));
+        }
+    }
+    return min_temp;
+}
+
+
+int main(){
+    for(int i=0; i<21; i++){
+        for(int j=0; j<21; j++){
+            cost[i][j]=-1;
+        }
+    }
+    
+    while(cin>>n){
+        cin>>m;
+        for(int i=0; i<m; i++){
+            string text;
+            cin>>text;
+            
+            for(int i=0; i<text.size(); i++){
+                if(text[i] == ',')text[i] = ' ';
+            }
+            
+            stringstream ss;
+            ss<<text;
+            
+            int a,b,c,d;
+            ss>>a>>b>>c>>d;
+            
+            cost[a][b]=c;
+            cost[b][a]=d;
+            
+            
+        }
+        
+        string text2;
+        cin>>text2;
+        
+        for(int i=0; i<text2.size(); i++){
+            if(text2[i] == ',')text2[i] = ' ';
+        }
+        
+        stringstream ss;
+        ss<<text2;
+        
+        int x1,x2,y1,y2;
+        ss>>x1>>x2>>y1>>y2;
+        
+        bool village[21]={0};
+        village[x1]=1;
+        int ans = go_to_village(x1, x2, x1, 0, village);
+        cout<<y1-y2-ans<<endl;
+    }
+}

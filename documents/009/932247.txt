@@ -1,0 +1,14 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+stdin().every(function(line, i) {
+	var tmp = line.split(' '),
+		X = +tmp[0], Y = +tmp[1];
+
+	if(X && Y)
+		return !console.log(Math.min(X, Y), Math.max(X, Y));
+	else
+		return false;
+});

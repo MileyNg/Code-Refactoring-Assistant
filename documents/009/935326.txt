@@ -1,0 +1,79 @@
+cost_ans = []
+time_ans = []
+
+def set_ans(cost , time):
+    cost_ans.append(cost)
+    time_ans.append(time)
+
+def reset_ans():
+    global cost_ans
+    global time_ans
+    cost_ans = []
+    time_ans = []
+
+class Sta(object):
+    """station"""
+    def __init__(self, station_name):
+        super(Sta, self).__init__()
+        self.station_name = station_name
+        self.route = []
+
+    def add_route(self, route):
+        self.route.append(route)
+
+
+
+class Route(object):
+    """route"""
+    def __init__(self, cost, time, next_station):
+        super(Route, self).__init__()
+        self.time = time
+        self.cost = cost
+        self.next_station = next_station
+
+def search_route(now_station, gool_station, cost, time):
+    """search route"""
+
+    if now_station.station_name == gool_station.station_name:
+        set_ans(cost, time)
+        return
+
+    elif len(now_station.route) == 0:
+        return
+
+    for r in now_station.route:
+        search_route(
+                r.next_station,
+                gool_station,
+                cost + r.cost,
+                time + r.time)
+
+
+def main():
+
+    while True:
+        reset_ans()
+        n,m = map(int, raw_input().split())
+        if n == 0 and m == 0:
+            return
+
+        stations = [Sta(x) for x in xrange(1,m+1) ]
+
+        for i in xrange(n):
+            a, b, cost, time = map(int, raw_input().split())
+            tmp = Route(cost, time, stations[b-1])
+            stations[a-1].add_route(tmp)
+
+        k = input()
+        for i in xrange(k):
+            p, q, r = map(int, raw_input().split())
+            search_route(stations[p-1], stations[q-1], 0, 0)
+            if r == 0:
+                print(min(cost_ans))
+            else:
+                print(min(time_ans))
+
+
+
+if __name__ == '__main__':
+    main()

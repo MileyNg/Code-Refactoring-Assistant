@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <memory.h>
+#include <math.h>
+
+int main(void) {
+	int size, b, f, r, v;
+	int i, j, k;
+	int count[4][3][10];
+	
+	memset((char*)count, 0x00, sizeof(count));
+	scanf("%d\n", &size);
+	for(i=0;i<size;i++) {
+		scanf("%d %d %d %d\n", &b, &f, &r, &v);
+		count[b-1][f-1][r-1] += v;
+	}
+	
+	for(i=0;i<4;i++) {
+		for(j=0;j<3;j++) {
+			for(k=0;k<10;k++) {
+				printf(" %d", count[i][j][k]);
+			}
+			printf("\n");
+		}
+		if(i<3) {
+			printf("####################\n");
+		}
+	}
+	printf("\n");
+	
+	return 0;
+}

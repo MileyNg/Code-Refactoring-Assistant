@@ -1,0 +1,45 @@
+
+//=====================================================
+// 
+// (setq backup-inhibited t)
+// (setq auto-save-default nil)
+// 
+// (column-number-mode t)
+// (setq-default tab-width 2 indent-tabs-mode nil)
+// 
+// (global-set-key "\C-h" 'delete-backward-char)
+// 
+// (setq indent-line-function 'indent-relative-maybe)
+// (global-set-key "\C-m" 'newline-and-indent)
+// 
+//=====================================================
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+pair<bool,int> valid(string& s, int i = 0) {
+  if (s[i] != 'm') return make_pair(true, i);
+  auto res1 = valid(s, i+1);
+  if (!res1.first || res1.second >= s.size()-1 || s[res1.second] != 'e') return make_pair(false, 0);
+  auto res2 = valid(s, res1.second + 1);
+  if (!res2.first || res2.second >= s.size() || s[res2.second] != 'w') return make_pair(false, 0);
+  return make_pair(true, res2.second + 1);
+}
+
+int main() {
+  string s;
+  cin >> s;
+  auto res = valid(s);
+  if(res.first && res.second == s.size())
+    cout << "Cat" << endl;
+  else
+    cout << "Rabbit" << endl;
+  return 0;
+}

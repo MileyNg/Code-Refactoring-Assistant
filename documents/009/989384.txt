@@ -1,0 +1,88 @@
+#include <stdio.h>
+
+
+
+
+
+typedef struct {
+  int p,l,r; 
+} Node;
+
+
+
+Node Tree[100000];
+int dep(int);
+int PrintChild(int);
+void Print(int);
+
+
+int main()
+{
+  int n;
+  int i=0,j;
+  int c,id,k;
+    int pre=0;
+  scanf("%d",&n);
+  while(i<n){
+      Tree[i].p = -2; 
+      Tree[i].l = -2;
+      Tree[i].r = -2;
+      i++;
+    }
+  i=0;
+  while(i<n){
+      scanf("%d %d",&id,&k);
+      for(j=0;j<k;j++)
+    {
+      scanf("%d",&c);
+      Tree[c].p=id;
+      if(j==0) Tree[id].l = c;
+      else Tree[pre].r = c;
+      pre = c;
+    }
+      i++;
+    }
+  i=0;
+  while(i<n){
+      Print(i);
+      i++;
+    }
+  return 0;
+}
+void Print(int id)
+{
+  int i;
+  printf("node %d: parent = %d, depth = %d, ",id,Tree[id].p,dep(id));
+  if(Tree[id].p == -2){
+
+ printf("root, [");
+
+  }
+  else if(Tree[id].l == -2){
+ printf("leaf, ");
+    
+    printf("[");
+  } 
+  
+ else printf("internal node, [");
+  PrintChild(Tree[id].l);
+  printf("]\n");
+}
+
+int dep(int id)
+{
+  if(Tree[id].p == -2) return 0;
+  return 1+dep(Tree[id].p);
+}
+
+int PrintChild(int id)
+{
+  if(id == -2) return 0;
+  if(Tree[id].r == -2)printf("%d",id);
+  else
+    {
+      printf("%d, ",id);
+      PrintChild(Tree[id].r);
+    }
+  return 0;
+}

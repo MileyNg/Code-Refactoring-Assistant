@@ -1,0 +1,90 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep(i,0,n)
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+
+int cost[110][110];
+int mincost[110];
+bool used[110];
+int V;
+
+int prim(){
+	rep(i,V){
+		mincost[i]=INF;
+		used[i]=false;
+	}
+	mincost[0]=0;
+	int res = 0;
+	
+	while(1){
+		int v=-1;
+		rep(u,V){
+			if(!used[u]&&(v==-1||mincost[u]<mincost[v])) v=u;
+		}
+		
+		if(v==-1){
+			break;
+		}
+		used[v]=true;
+		res+=mincost[v];
+		rep(u,V){
+			mincost[u]=min(mincost[u],cost[v][u]);
+		}
+	}
+	return res;
+}
+					
+
+int main(){
+	
+	while(cin>>V,V!=0){
+		rep(i,V){
+			rep(j,V){
+				cost[i][j]=INF;
+			}
+		}
+		int m;
+		cin>>m;
+		rep(i,m){
+			int a,b;
+			char t;
+			cin>>a>>t>>b>>t;
+			int c;
+			cin>>c;
+			c/=100;
+			c--;
+			cost[a][b]=cost[b][a]=c;
+			//cout<<cost[a][b]<<" "<<cost[b][a]<<endl;
+		}
+		
+		cout<<prim()<<endl;
+	}
+	return 0;
+}
+	

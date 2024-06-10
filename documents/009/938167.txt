@@ -1,0 +1,11 @@
+def solve(a,i,sa,sb):
+	if 2*sa >= all: return 2*sa-all
+	if 2*sb >= all: return 2*sb-all
+	return min(solve(a,i+1,sa+a[i],sb),solve(a,i+1,sa,sb+a[i]))
+	
+while 1:
+	n = input()
+	if n == 0: break
+	a = sorted(map(int,raw_input().split()))
+	all = sum(a)
+	print solve(a,0,a[0],0)

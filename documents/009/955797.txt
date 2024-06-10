@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	char word[1024];
+	int i;
+	int isFirst = 1;
+	
+	while( scanf("%s", word) != EOF )
+	{
+		if( strncmp( word, "peach", 5 ) == 0 )
+		{
+			char buf = word[5];
+			strcpy( word, "apple" );
+			word[5] = buf;
+		}
+		else if( strncmp( word, "apple", 5 ) == 0 )
+		{
+			char buf = word[5];
+			strcpy( word, "peach" );
+			word[5] = buf;
+		}
+		printf("%s%s", isFirst == 1 ? "" : " ", word );
+		
+		isFirst = 0;
+	}
+	puts("");
+	
+	return (0);
+}

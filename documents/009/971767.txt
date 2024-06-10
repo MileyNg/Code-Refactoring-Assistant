@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<int> vi;
+
+int solve(string const& s, string const& t){
+    int m=s.size(), n=t.size();
+    int ans = -1;
+    vi prev(n+1);
+    rep(i,m){
+        vi cur(n+1);
+        rep(j,n){
+            if(s[i]==t[j])cur[j+1]=prev[j]+1;
+            ans = max(ans,cur[j+1]);
+        }
+        swap(cur,prev);
+    }
+    return ans;
+}
+
+int main(){
+    string s,t;
+    while(cin>>s>>t){
+        cout << solve(s,t) << endl;
+    }
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+const int INF = 10000000;
+
+using namespace std;
+/** Problem0114 : Electro-Fly **/
+int main()
+{
+	int a1, m1, a2, m2, a3, m3, x, y, z, i;
+	while (1) {
+		cin >> a1 >> m1 >> a2 >> m2 >> a3 >> m3;
+		if (a1 == 0 && m1 == 0 && a2 == 0 && m2==0 && a3==0 && m3==0)
+			break;
+		
+		x = a1%m1;
+		y = a2%m2;
+		z = a3%m3;
+		i=1;
+		while (x!=1 || y!=1 || z!=1) {
+			x=(a1*x)%m1;
+			y=(a2*y)%m2;
+			z=(a3*z)%m3;
+			i++;
+		}
+		cout << i << endl;
+	}
+	return 0;
+}

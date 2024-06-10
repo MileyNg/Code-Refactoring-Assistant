@@ -1,0 +1,15 @@
+#include <iostream>
+using namespace std;
+int main() {
+    int a, b;
+    while (cin >> a >> b) {
+        long long ta = a, tb = b, tmp;
+        while (ta != 0) {
+            tmp = ta;
+            ta = tb % ta;
+            tb = tmp;
+        }
+        cout << tb << " " << a / tb * b << endl;
+    }
+    return 0;
+}

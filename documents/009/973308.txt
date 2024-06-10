@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+template<class T> inline void chmin(T &a, const T &b) { if(a > b) a = b; }
+
+constexpr int INF = (1 << 29);
+
+inline void warshall_floyd(vector<vector<int>> &mat) {
+	const int n = mat.size();
+	for(int k = 0; k < n; ++k) {
+		for(int i = 0; i < n; ++i) {
+			for(int j = 0; j < n; ++j) {
+				chmin(mat[i][j], mat[i][k] + mat[k][j]);
+			}
+		}
+	}
+}
+
+int tsp(int limit, const vector<int> &s_cost, const vector<vector<int>> &mat, const vector<int> &eat) {
+	const int n = mat.size();
+	vector<vector<int>> dp(1 << n, vector<int>(n, INF));
+	for(int v = 0; v < n; ++v) {
+		dp[1 << v][v] = s_cost[v] + eat[v];
+	}
+
+	int res = 0;
+	for(int used = 1; used < (1 << n); ++used) {
+		for(int v = 0; v < n; ++v) {
+			if(!(used & (1 << v)) || dp[used][v] + s_cost[v] > limit) continue;
+			chmax(res, __builtin_popcount(used));
+
+			for(int to = 0; to < n; ++to) {
+				if(used & (1 << to)) continue;
+				chmin(dp[used | (1 << to)][to], dp[used][v] + mat[v][to] + eat[to]);
+			}
+		}
+	}
+
+	return res;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n, m, l, s, t; cin >> n >> m >> l >> s >> t && n;) {
+		--s;
+		vector<vector<int>> mat(n, vector<int>(n, INF));
+		for(int i = 0; i < n; ++i) {
+			mat[i][i] = 0;
+		}
+
+		for(int i = 0; i < m; ++i) {
+			int a, b, c;
+			cin >> a >> b >> c;
+			--a; --b;
+			mat[a][b] = mat[b][a] = c;
+		}
+
+		warshall_floyd(mat);
+
+		vector<int> jiro(l);
+		vector<int> eat_time(l);
+
+		for(int i = 0; i < l; ++i) {
+			cin >> jiro[i] >> eat_time[i];
+			--jiro[i];
+		}
+
+		vector<vector<int>> mat_jiro(l, vector<int>(l));
+		for(int i = 0; i < l; ++i) {
+			for(int j = i + 1; j < l; ++j) {
+				mat_jiro[i][j] = mat_jiro[j][i] = mat[jiro[i]][jiro[j]];
+			}
+		}
+
+		vector<int> s_cost(l);
+		for(int i = 0; i < l; ++i) {
+			s_cost[i] = mat[s][jiro[i]];
+		}
+
+		cout << tsp(t, s_cost, mat_jiro, eat_time) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

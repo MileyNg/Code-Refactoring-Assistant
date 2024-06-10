@@ -1,0 +1,49 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 505;
+
+int N, H;
+bool v[MAX_N][MAX_N][MAX_N];
+
+int main() {
+  while(cin >>N >>H && N){
+    memset(v, 0, sizeof(v));
+    REP(h, H){
+      int a, b;
+      string s;
+      cin >>s >>a >>b;
+      --a; --b;
+      if(s == "xy") REP(i, N) v[a][b][i] = true;
+      if(s == "xz") REP(i, N) v[a][i][b] = true;
+      if(s == "yz") REP(i, N) v[i][a][b] = true;
+    }
+    int ans = 0;
+    REP(i, N) REP(j, N) REP(k, N) if(!v[i][j][k]) ++ans;
+    cout <<ans <<endl;
+  }
+  
+  return 0;
+}

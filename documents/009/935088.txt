@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char str[81];
+	int i;
+	int diff;
+	
+	while (gets(str) != NULL){
+		diff = 't' - str[0];
+		for (i = 0; str[i] != 0; i++){
+			if ('a' <= str[i] && str[i] <= 'z'){
+				str[i] -= 'a';
+				str[i] = (str[i] + diff) % 26;
+				str[i] += 'a';
+			}
+		}
+		puts(str);
+	}
+	
+	return 0;
+}

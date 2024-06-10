@@ -1,0 +1,125 @@
+W, H, D = 100.0, 50.0, 30.0
+
+EPS = 1e-10
+class Tank
+  def initialize(board, tap)
+    @time = 0.0
+
+    @tap = tap
+    @block = make_block(board)
+  end
+
+  def make_block(board)
+    board.each_cons(2).map{|b1, b2| Block.new(b1.x, b2.x, b1.height, b2.height)}
+  end
+
+  def height(x)
+    @block.find{|b| b.in?(x)}.water_height
+  end
+
+  def pour(time)
+    difference = time - @time
+    @tap.each do |t|
+      block = @block.find{|b| b.in?(t.x)}
+      pour_run(block, t.stream * difference)
+    end
+    @time = time
+  end
+
+  def pour_run(block, volume)
+    overflow = block.pour(volume)
+    return if @block.size == 1
+    return unless overflow
+    i = @block.index(block)
+    if (block.left_height < block.right_height)
+      left = @block[i - 1]
+      left = merge(left, block) if (left.water_height - left.right_height).abs < EPS
+      pour_run(left, overflow)
+    elsif (block.left_height > block.right_height)
+      right = @block[i + 1]
+      right = merge(block, right) if (right.water_height - right.left_height).abs < EPS
+      pour_run(right, overflow)
+    end
+  end
+
+  def merge(left, right)
+    i = @block.index(left)
+    water = left.water + right.water
+    block = Block.new(left.left_x, right.right_x, left.left_height, right.right_height)
+    block.pour(water)
+    @block.delete(right)
+    @block[i] = block
+  end
+end
+
+class Block
+  attr_reader :left_x, :right_x, :left_height, :right_height
+  attr_reader :volume, :water
+
+  def initialize(left_x, right_x, left_height, right_height)
+    @left_x, @right_x, @left_height, @right_height = [left_x, right_x, left_height, right_height].map(&:to_f)
+    @volume = (@right_x - @left_x) * [@left_height, @right_height].min * D
+    @water = 0.0
+  end
+
+  def in?(x)
+    (@left_x ... @right_x).include?(x)
+  end
+
+  def water_height
+    @water / (@right_x - @left_x) / D
+  end
+
+  def pour(volume)
+    if @water + volume > @volume
+      overflow = volume - (@volume - @water)
+      @water = @volume
+      return overflow
+    end
+    @water += volume
+    nil
+  end
+end
+
+class Tap
+  attr_reader :x, :stream
+  def initialize(x, stream)
+    @x, @stream = [x, stream].map(&:to_f)
+  end
+end
+
+class Board
+  attr_reader :x, :height
+  def initialize(x, height)
+    @x, @height = [x, height].map(&:to_f)
+  end
+end
+
+gets.to_i.times do
+  board = Array.new
+  board << Board.new(0, H)
+  board.push( *gets.to_i.times.map{Board.new(*gets.split)} )
+  board << Board.new(W, H)
+
+  tap = gets.to_i.times.map{Tap.new(*gets.split)}
+
+  tank = Tank.new(board, tap)
+
+  list = Array.new
+  check = Hash.new{Array.new}
+  gets.to_i.times do
+    p, t = gets.split.map(&:to_f)
+    list << [p, t]
+    check[t] = check[t] + [p]
+  end
+  result = Hash.new{|h, k| h[k] = Hash.new}
+  list.transpose.last.sort.uniq.each do |t|
+    tank.pour(t)
+    check[t].each do |p|
+      result[t][p] = tank.height(p)
+    end
+  end
+  list.each do |p, t|
+    p result[t][p]
+  end
+end

@@ -1,0 +1,88 @@
+//#include <algorithm>
+//#include <cctype>
+//#include <climits>
+//#include <cmath>
+//#include <complex>
+//#include <cstdlib>
+//#include <cstdio>
+//#include <cstring>
+//#include <ctime>
+//#include <deque>
+//#include <functional>
+//#include <iomanip>
+#include <iostream>
+//#include <map>
+//#include <queue>
+//#include <set>
+#include <sstream>
+//#include <stack>
+#include <string>
+#include <vector>
+//const double pi = 3.14159265358979;
+using namespace std;
+//typedef long long int lli;
+//typedef long long llong;
+//typedef vector <int> vi;
+//typedef vector <llong> vll;
+//typedef vector <vi> vvi;
+//typedef vector <double> vd;
+//typedef vector <string> vs;
+//typedef pair<double,double> pd;
+//typedef vector <pd > vp;
+//typedef map <int,int> mapii;
+//typedef map <char,char> mapcc;
+//#define EPS 1e-6
+//#define REP(i,n) for(i=0;i<n;i++)
+//#define REP1(i,n1,n2) for (i=n1; i<n2; i++)
+//#define x(ALL) x.begin(), x.end()
+//#define max(a,b) a>b?a:b
+//#define min(a,b) a<b?a:b
+//string A2Z="abcdefghijklmnopqrstuvwxyz";
+//vi SIEVES;
+//vi PRIMES;
+
+vector<double>X;
+double s2d(string a){
+	stringstream ss;
+	double d;
+	ss << a;
+	ss >> d;
+	return d;
+}
+double f(char c,vector<double>&X){
+	double a, b, x;
+	b = X.back(); X.pop_back();
+	a = X.back(); X.pop_back();
+	switch (c){
+		case'+':
+			x = a + b;
+			break;
+		case'-':
+			x = a - b;
+			break;
+		case'*':
+			x = a * b;
+			break;
+		case'/':
+			x = a / b;
+	}
+	return x;
+}
+int main(){
+	string s;
+	stringstream ss;
+	double a;
+	while(getline(cin,s),s!=""){
+		ss<<s;
+		while(ss>>s){
+			if (s[0] < '0')
+				a=f(s[0],X);
+			else
+				a=s2d(s);
+			X.push_back(a);
+		}
+		cout << X[0] << endl;
+		ss.clear();
+		X.pop_back();
+	}
+}

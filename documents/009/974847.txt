@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main(void) {
+	int i,c,n;
+	char c1[256];
+	char table[256];
+	
+	for(i=0;i<256;i++) {
+		table[i] = (char)i;
+	}
+	
+	for(;;) {
+		if(scanf("%d\n", &n)!=1) break;
+		if(n==0) break;
+		
+		for(i=0;i<n;i++) {
+			gets(c1);
+			table[c1[0]] = c1[2];
+		}
+		
+		scanf("%d\n", &n);
+		for(i=0;i<n;i++) {
+			scanf("%c\n", &c);
+			printf("%c",table[c]);
+			
+			if(i==(n-1)) {
+				printf("\n");
+			}
+		}
+	}
+	
+	return 0;
+}

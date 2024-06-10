@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100001
+#define NIL (-1)
+
+
+
+int Parent[MAX],Child[MAX],List[MAX];
+
+int main(void){
+  
+  int i,j,n,node[MAX],num[MAX],num2[i],depth,now,count=0,flag=0;
+  
+  scanf("%d",&n);
+  
+  for( i = 0; i < n; i++){
+    //nilをいれる
+    Parent[i]=NIL;
+    Child[i] = NIL;
+    List[i]= NIL;
+      }
+  
+  
+  for( i = 0; i < n; i++){
+    scanf("%d %d",&node[i],&num[i]);
+    
+    for( j = 0; j < num[i]; j++){    
+      scanf("%d",&num2[i]);
+      Parent[num2[i]] = node[i];
+      if(j == 0){
+
+	Child[node[i]] = num2[i];
+      }
+      else{
+	List[depth] = num2[i];
+      }
+
+      depth = num2[i];
+    }  
+  }
+   /////////////////in for/////////////////////////////
+  //printf("depth = %d",dep);
+  //dep[i] = get_depth(node[i]);  
+
+  for( i = 0; i < n; i++){
+    printf("node %d: parent = %d ",i,Parent[i]);
+    now = i;
+
+    while(1){
+      if(Parent[now] == NIL) break;
+      count++;
+      now = Parent[now];
+    }
+
+    printf(", depth = %d,",count);  
+    if(Parent[i] == NIL){    
+      printf(" root,");
+    }
+    else if(Child[i] == NIL){
+      printf(" leaf,");
+    }
+    else printf(" internal node,");
+  
+    now = Child[i];
+    
+    printf(" [");
+
+    while(1){
+      if(now == NIL) break;
+      
+      if(flag == 0){
+	printf("%d,",now);
+	 flag = 1;
+	 //	printf(" ");
+    continue;
+   }
+      //flagをたてる//
+      
+      // flag += 1;
+      if(flag ==1){
+      printf(" %d",now);  
+
+      now = List[now];
+      }
+      //printf(",");
+    }
+    printf("]\n");
+  }
+  return 0;
+}

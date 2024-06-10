@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int table[6][2] = {{1500,2244},{1200,1870},{1000,1520},{500,850},{300,550},{200,380}};
+
+int main(void) {
+	int i, n, t, value;
+	
+	while(scanf("%d\n", &n) == 1) {
+		if(n == 0) break;
+		
+		value = 0;
+		while(n>0) {
+			for(i=0;i<6;i++) {
+				t = n / table[i][0];
+				if(t >= 1) {
+					if(t == 1 && n % table[i][0] == 100) {
+						continue;
+					}
+					
+					value += table[i][1];
+					n -= table[i][0];
+				}
+			}
+		}
+		
+		printf("%d\n", value);
+	}
+	
+	return 0;
+}

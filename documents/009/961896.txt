@@ -1,0 +1,97 @@
+#include "stdio.h"
+#include "math.h"
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+
+/** Problem0146 : Lupin The 4th **/
+typedef pair<double, vector<int> > P;
+
+int kura[16];
+int dis[16];
+int weight[16];
+P dp[1<<16][16];
+P ans;
+int N;
+
+
+P check(int S, int n, int w)
+{
+	P res(INF, vector<int>());
+	
+	if (dp[S][n].first<INF) {
+		return dp[S][n];
+	}
+	
+	if (S == (1<<N)-1) {
+		res.second.push_back(n);
+		res.first = 0;
+		return dp[S][n] = res;
+	}
+	
+	P min(INF, vector<int>());
+	rep(i, N) {
+		if (!(S>>i&1)) {
+			P time = check(S|1<<i, i, w+weight[i]);
+			time.first += double(abs(dis[i]-dis[n]))/(2000/(70 + w));
+
+			if (min.first>time.first) {
+				min = time;
+				res=min;
+			}
+		}
+	}
+	
+	res.second.push_back(n);
+	return dp[S][n] = res;
+}
+
+int main()
+{
+	cin>>N;
+	rep(i, N) {
+		cin>>kura[i]>>dis[i]>>weight[i];
+		weight[i]*=20;
+	}
+	rep(i, N) {
+		rep(j, 1<<16)
+		dp[j][i].first = INF;
+	}
+	
+	double min=INF;
+	rep(i, N) {
+		P time = check(1<<i, i, weight[i]);
+		time.first += (double)dis[i]/(2000/(70));
+		if (min>time.first) {
+			min = time.first;
+			ans = time;
+		}
+	}
+	
+	reverse(ans.second.begin(), ans.second.end());
+	rep(i, N-1) {
+		cout << kura[ans.second[i]] << " ";
+	}
+	cout << kura[ans.second[N-1]] << endl;
+	return 0;
+}

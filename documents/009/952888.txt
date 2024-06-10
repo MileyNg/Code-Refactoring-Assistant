@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+#ifndef min
+#define min(a,b) (a) < (b) ? (a) : (b)
+#endif
+#define INF 9999999
+int e;
+
+int all(){	
+	int x,y,p,q,limx=(int)pow(e,1.0/3.0),minm=INF;
+	for(y=(int)sqrt(e);y>=0;y--){
+		p=y*y;
+		for(x=0;x<=limx;x++){
+			q=x*x*x+p;
+			if(q>e)break;
+			minm=min(minm,x+y+(e-q));
+		}
+	}
+	return minm;
+}
+
+int main(){
+	int i,j;
+	while((scanf("%d",&e))!=-1){
+		if(e==0)break;
+		printf("%d\n",all());
+	}
+	return 0;
+}

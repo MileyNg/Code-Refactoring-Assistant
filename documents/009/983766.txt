@@ -1,0 +1,94 @@
+#include <iostream>
+#include <cmath>
+#include <cstdint>
+#include <vector>
+#include <array>
+
+using namespace std;
+
+typedef array<double, 2> Point;
+
+
+uint32_t specialSolve(const vector<Point> v, double centerX, double centerY)
+{
+    uint32_t cnt = 0;
+    for(const auto& p: v)
+    {
+        const auto r = sqrt(pow(p[0] - centerX, 2) + pow(p[1] - centerY, 2));
+        if(r <= 1 || abs(r - 1) <= 1.0E-5)
+            ++cnt;
+    }
+
+    return cnt;
+}
+
+
+uint32_t solve(const vector<Point>& ps)
+{
+    const auto N = ps.size();
+
+    uint32_t maxCount = 0;
+    for(uint32_t i = 0; i < N; ++i)
+    {
+        auto const x1 = ps[i][0],
+                   y1 = ps[i][1];
+
+        for(uint32_t j = i + 1; j < N; ++j)
+        {
+            auto const x2 = ps[j][0],
+                       y2 = ps[j][1];
+
+            auto const a = -(x2 - x1)/(y2 - y1);
+            auto const a2 = pow(a, 2.0);
+            auto const ds2_4 = pow(x1 - x2, 2) + pow(y1 - y2, 2);
+            auto const dt2 = 1 - ds2_4/4;
+
+            // 2点は同じ半径1の円に入ることはない
+            if(dt2 < 0)
+                continue;
+
+            auto const dx = sqrt(dt2 / (1 + a2));
+            auto const dy = dx * a;
+            auto const avgPosX = (x2 + x1) / 2,
+                       avgPosY = (y2 + y1) / 2;
+            auto const m1 = specialSolve(ps, avgPosX + dx, avgPosY + dy),
+                       m2 = specialSolve(ps, avgPosX - dx, avgPosY - dy);
+
+            if(maxCount < m1)
+                maxCount = m1;
+            if(maxCount < m2)
+                maxCount = m2;
+        }
+    }
+
+
+    return maxCount;
+}
+
+
+
+int main()
+{
+    while(1)
+    {
+        uint32_t N;
+        cin >> N;
+
+        if(N == 0)
+            break;
+
+        vector<Point> ps;
+        for(uint32_t i = 0; i < N; ++i){
+            double a, b;
+            cin >> a >> b;
+            Point p = {a, b};
+            ps.push_back(p);
+        }
+
+
+        auto ans = solve(ps);
+        cout << ans << endl;
+    }
+
+    return 0;
+}

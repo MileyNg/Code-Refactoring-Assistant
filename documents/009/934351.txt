@@ -1,0 +1,44 @@
+#include<iostream>
+#include<string>
+#include<queue>
+
+using namespace std;
+ 
+#define NMAX 50
+
+struct St{
+	double P;
+	string L;
+};
+
+bool operator<(St a,St b){
+	return (a.P<b.P||(a.P==b.P&&a.L>b.L));
+}
+
+int main(void){
+	
+	int N;
+	string L;
+	int P,A,B,C,D,E,F,S,M;
+	priority_queue<St> q;
+	St tm;
+
+	while(1){
+
+		cin>>N;
+		if(N==0) break;
+
+		for(int i=0;i<N;i++){
+			cin>>L>>P>>A>>B>>C>>D>>E>>F>>S>>M;
+			tm.P=(double)((M*S*F)-P)/((A+B+C+D+E)*1+(D+E)*(M-1));
+			tm.L=L;
+			q.push(tm);
+		}
+		while(!q.empty()){
+			cout<<q.top().L<<endl;
+			q.pop();
+		}
+		cout<<"#"<<endl;
+	}
+	return 0;
+}

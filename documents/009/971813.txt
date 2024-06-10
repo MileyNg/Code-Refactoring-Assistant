@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX(a,b) ((a) > (b) ? (a) : (b));
+
+main(){
+	int W,H;
+	while(1){
+		scanf("%d%d",&W,&H);
+		if(W+H==0) break;
+		int ward,m[70][70];
+		int maxcode;
+		for(i=0;i<H;i++){
+			for(j=0;j<W;j++){
+				ward=getchar();
+				if(isdigit(ward)){
+					if(i+j==0) m[i][j]=ward; //0行0列目ならば．
+					else if(i>0&&j==0){
+						if(isdigit(m[i-1][j])) m[i][j]=ward+m[i-1][j]*10;
+						else m[i][j]=ward;
+					}else if(j>0&&i==0){
+						if(isdigit(m[i][j-1])) m[i][j]=ward+m[i][j-1]*10;
+						else m[i][j]=ward;
+					}else{
+						int up=0,right=0;
+						if(isdigit(m[i-1][j])) up=m[i-1][j];
+						if(isdigit(m[i][j-1])) right=[i-1][j];
+						m[i][j]=ward+MAX(up,right)*10;
+					}
+				}else m[i][j]=ward;
+				maxcode=MAX(maxcode,m[i][j]);
+			}
+		}
+		printf("%d",maxcode);
+	}
+}

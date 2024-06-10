@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+bool rec ( string& str, int begin ,int end )
+{
+	if ( begin > end ) {
+		return true;
+	}
+	if ( begin == end ) {
+		return false;
+	}
+	bool result = false;
+	for ( int i = begin + 1; i < end; ++i ) {
+		if ( str[i] == 'e' ) {
+			result |= rec( str, begin + 1, i - 1 ) && rec( str, i + 1, end - 1 );
+		}
+	}
+	return result;
+}
+
+int main()
+{
+	string str;
+	while ( cin >> str  ) {
+		cout << ( rec( str, 0, str.size() - 1 ) ? "Cat" : "Rabbit" ) << endl;
+	}
+	return 0;
+}

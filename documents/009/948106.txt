@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_LEN (80)
+
+int main(void)
+{
+	char num1[100000];
+	char num2[100000];
+
+	int n, carry, sum;
+	int i, j, len;
+	
+	
+	scanf("%d", &n);
+	
+	for (i = 0; i < n; i++){
+		scanf("%s %s", num1, num2);
+		if (strlen(num1) > MAX_LEN || strlen(num2) > MAX_LEN){
+			printf("overflow\n");
+			continue;
+		}
+		
+		len = strlen(num1);
+		for (j = MAX_LEN; j >= 0; j--){
+			if (len > 0){
+				num1[j] = num1[len - 1];
+				len--;
+			}
+			else {
+				num1[j] = '0';
+			}
+		}
+		
+		len = strlen(num2);
+		for (j = MAX_LEN; j >= 0; j--){
+			if (len > 0){
+				num2[j] = num2[len - 1];
+				len--;
+			}
+			else {
+				num2[j] = '0';
+			}
+		}
+		
+		carry = 0;
+		for (j = MAX_LEN; j >= 0; j--){
+			sum = (num1[j] - '0') + (num2[j] - '0') + carry;
+			num1[j] = (sum % 10) + '0';
+			carry = sum / 10;
+		}
+		
+		for (j = 0; j <= MAX_LEN; j++){
+			if (num1[j] != '0'){
+				break;
+			}
+		}
+		if (j == 0){
+			printf("overflow");
+		}
+		else if (j > MAX_LEN){
+			printf("0");
+		}
+		else {
+			while (j <= MAX_LEN){
+				printf("%c", num1[j]);
+				j++;
+			}
+		}
+		printf("\n");
+	}
+	
+	return (0);
+}

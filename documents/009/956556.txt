@@ -1,0 +1,96 @@
+#include<stdio.h>
+
+//マクロの定義
+#define TRUE 1
+#define FALSE 0
+#define X1 0
+#define Y1 1
+#define X2 2
+#define Y2 3
+#define D_SET 4
+
+#define compile 0 //デバッグ用,0:実装,1:func_judgeのデバッグ,2:func_outputのデバッグ
+
+//構造体の宣言
+struct straight
+{
+	double cdn[D_SET]; //座標を代入する配列
+};
+
+//関数のプロトタイプ宣言
+int func_judge(double cdn1[], double cdn2[]);
+void func_output(int flag);
+
+main()
+{
+	int i = 0, n = 0, flag = 0; //i:制御変数,n:データセット数を代入する変数,flag:フラグ管理変数
+	
+	scanf("%d", &n); //データセット数を取得
+	
+	for(i = 0; i < n; i++)
+	{
+		flag = 0; //フラグ変数を初期化
+		struct straight s1 = {0, 0, 0, 0}; //構造体変数の初期化
+		struct straight s2 = {0, 0, 0, 0}; //構造体変数の初期化
+		scanf("%lf %lf %lf %lf %lf %lf %lf %lf", &s1.cdn[X1], &s1.cdn[Y1], &s1.cdn[X2], &s1.cdn[Y2], &s2.cdn[X1], &s2.cdn[Y1], &s2.cdn[X2], &s2.cdn[Y2]);
+		//入力を取得
+#if compile == 1
+		printf("%lf %lf %lf %lf %lf %lf %lf %lf\n", s1.cdn[X1], s1.cdn[Y1], s1.cdn[X2], s1.cdn[Y2], s2.cdn[X1], s2.cdn[Y1], s2.cdn[X2], s2.cdn[Y2]);
+#endif
+		flag = func_judge(s1.cdn, s2.cdn); //判定を行う関数への値渡し
+#if compile == 1
+		printf("flag = %d\n", flag);
+#endif
+		func_output(flag);
+	}
+	
+	return 0;
+}
+int func_judge(double cdn1[], double cdn2[])
+{
+	double temp = 0; //値入れ替え用の変数
+	double delta1 = 0, delta2 = 0; //傾き代入用変数
+	
+#if compile == 2
+	int r = 0;
+	for(r = 0; r < D_SET; r++)
+	{
+		printf("cdn1[%d] = %lf\n", r, cdn1[r]);
+	}
+	for(r = 0; r < D_SET; r++)
+	{
+		printf("cdn2[%d] = %lf\n", r, cdn2[r]);
+	}
+#endif
+	
+	delta1 = (cdn1[Y2] - cdn1[Y1]) / (cdn1[X2] - cdn1[X1]); //傾きの計算
+#if compile == 2
+	printf("delta1 = %lf\n", delta1);
+#endif
+	
+	delta2 = (cdn2[Y2] - cdn2[Y1]) / (cdn2[X2] - cdn2[X1]);
+	
+#if compile == 2
+	printf("delta2 = %lf\n", delta2);
+#endif
+	
+	if((0.000001 > (delta1 - delta2)) || (0.000001 > (delta2 - delta1)))
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+void func_output(int flag)
+{
+	if(FALSE == flag)
+	{
+		printf("NO\n");
+	}
+	else
+	{
+		printf("YES\n");
+	}
+}

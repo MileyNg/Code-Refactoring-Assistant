@@ -1,0 +1,46 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+  int n,i,j,x[15][20];
+  
+  
+  for ( i = 0 ; i < 15 ; i++){
+    
+    for (j = 0 ; j < 10 ; j++){
+      if ( i == 3 || i == 7 || i == 11){
+	continue;
+      }
+      else{
+	x[i][j] = 0;
+      }
+    }
+  }
+  
+  cin >> n;
+  int b,f,r,v;
+  for ( i = 0 ; i < n ; i++){
+    cin >> b >> f >> r >> v;
+    switch (b){
+    case 1: x[f-1][r-1] =x[f-1][r-1]+ v;continue;
+    case 2: x[f+3][r-1] =x[f+3][r-1]+  v;continue;
+    case 3: x[f+7][r-1] =x[f+7][r-1]+  v;continue;
+    case 4: x[f+11][r-1] =x[f+11][r-1]+  v;continue;
+    }
+  }
+    
+  for ( i = 0 ; i < 15 ; i++){
+    for (j = 0 ; j < 10 ; j++){
+      if ( i == 3 || i == 7 || i == 11){
+	cout <<"##";
+      }
+      else{
+	cout <<" " << x[i][j];
+      }
+    }
+    cout <<endl;
+  }
+      
+  return 0;
+}
+    

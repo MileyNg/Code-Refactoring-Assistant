@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+#define RANGE_MAX 2147483647
+#define MAX 100001
+
+int A[MAX];
+
+int main(void) {
+	int i, j, n, q, m;
+	int com, x, y, min;
+
+	scanf("%d %d\n", &n, &q);
+	for(i=0;i<n;i++) A[i] = RANGE_MAX;
+	
+	for(i=0;i<q;i++) {
+		scanf("%d %d %d\n", &com, &x, &y);
+		if(com == 0) {
+			A[x] = y;
+		} else { 
+			m = RANGE_MAX;
+			for(j=x;j<=y;j++) {
+				if(m > A[j])
+					m = A[j];
+				if(m==1) break;
+			}
+			printf("%d\n", m);
+		}
+	}
+	
+	return 0;
+}

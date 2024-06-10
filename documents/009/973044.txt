@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+	int n;
+	cin >> n;
+	int a,b,c,d;
+	int ryokin;
+	int kari;
+	for (int i = 0; i < n; i++) {
+		cin >> a >> b >> c >> d;
+		ryokin = a*c+b*d;
+		if (c >= 5 && d >= 2) {
+			ryokin = (double)ryokin * 0.8;
+		} else if (c >= 5) {
+			kari = (double)(a*c+b*2)*0.8;
+			ryokin = min(ryokin, kari);
+		} else {
+			kari = (double)(a*5+b*d)*0.8;
+			ryokin = min(ryokin, kari);
+		}
+		cout << ryokin << endl;
+	}
+	return 0;
+}

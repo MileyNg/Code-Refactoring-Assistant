@@ -1,0 +1,23 @@
+#include<iostream>
+using namespace std;
+string t[3];
+
+void solve(){
+  for(int i=0;i<3;i++){
+    if(t[i][0]==t[i][1]&&t[i][1]==t[i][2]&&t[i][0]!='+'){cout<<t[i][0]<<endl;return;}
+    if(t[0][i]==t[1][i]&&t[1][i]==t[2][i]&&t[0][i]!='+'){cout<<t[0][i]<<endl;return;}
+    
+  }
+  if(t[0][0]==t[1][1]&&t[1][1]==t[2][2]&&t[1][1]!='+'){cout<<t[0][0]<<endl;return;}
+  if(t[0][2]==t[1][1]&&t[1][1]==t[2][0]&&t[1][1]!='+'){cout<<t[0][2]<<endl;return;}
+  cout<<"NA"<<endl;
+}
+
+
+int main(){
+  while(cin>>t[0]&&t[0]!="0"){
+    for(int i=1;i<3;i++)cin>>t[i];
+    solve();
+  }
+  return 0;
+}

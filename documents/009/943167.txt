@@ -1,0 +1,172 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T> inline T pmod(T v,T MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+
+int INF=1<<28;
+
+class Main{
+public:
+
+    int N;
+    vector<string> ss;
+    map<string,int> lmap;
+    map<int,string> ilmap;
+    map<string,int> gmap;
+    map<int,string> igmap;
+    bool input(){
+        //   ifstream cin("in");
+        //  ofstream cout( "out" );
+        cin >> N;
+        REP(i,N){
+            string s;cin >> s;
+            if(s=="goto")cin >> s;
+            
+            if(s[s.size()-1]==':'){
+                lmap[s.substr(0,s.size()-1)]=i;
+                ilmap[i]=s.substr(0,s.size()-1);
+            }else{
+                gmap[s.substr(0,s.size()-1)]=i;
+                igmap[i]=s.substr(0,s.size()-1);
+            }
+        }
+        return true;
+    }
+
+    void run(){
+        input();
+        vector<int> dp(N+1,INF);
+        dp[N]=0;
+        queue<int> que;que.push(N);
+
+        while(!que.empty()){
+            int v=que.front();que.pop();
+
+            //goto -> ...
+            if(igmap.count(v-1)){
+                if(dp[v-1]>dp[v]+1){
+                    dp[v-1]=dp[v]+1;
+                    que.push(v-1);
+                }  
+            }else{//label -> ...
+                if(dp[v-1]>dp[v]){
+                    dp[v-1]=dp[v];
+                    que.push(v-1);
+                }  
+            }
+
+            // goto -> label
+            if(ilmap.count(v)){
+                int nv=gmap[ilmap[v]];
+                if(dp[nv]>dp[v]){
+                    dp[nv]=dp[v];
+                    que.push(nv);
+                }
+            }
+        }
+        cout <<dp[0]<<endl;
+    }
+};
+
+int main(){
+	//cout <<fixed<<setprecision(3);	
+	//ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

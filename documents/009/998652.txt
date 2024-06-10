@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <cctype>
+
+using namespace std;
+typedef string::const_iterator State;
+
+class Zone
+{
+public:
+    int value;
+    vector<Zone> zones;
+
+    Zone() :value(-1) {}
+    Zone(int v) :value(v) {}
+
+    int best()
+    {
+        if(value != -1) return value / 2 + 1;
+
+        vector<int> needs;
+
+        for(auto zone : zones) {
+            needs.push_back(zone.best());
+        }
+
+        sort(needs.begin(), needs.end());
+
+        return accumulate(needs.begin(), needs.begin() + needs.size() / 2 + 1, 0);
+    }
+};
+
+Zone read(State& it)
+{
+    if(isdigit(*it)) {
+        int n = 0;
+
+        for(; isdigit(*it); it++) {
+            n *= 10;
+            n += *it - '0';
+        }
+
+        return n;
+    } else {
+        Zone zone;
+
+        while(*it == '[') {
+            it++;
+            zone.zones.push_back(read(it));
+            it++;
+        }
+
+        return zone;
+    }
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    for(int i = 0; i < n; i++) {
+        string line;
+        cin >> line;
+        State it = line.begin();
+        cout << read(it).best() << endl;
+    }
+}

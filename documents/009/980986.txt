@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+bool ok(const vi& uses,int cap,double x)
+{
+	double cur=cap,a[3]={};
+	rep(k,3){
+		a[k]=cur;
+		rep(i,uses.size()){
+			cur-=uses[i];
+			cur+=x;
+			cur=min<double>(cur,cap);
+			if(cur<0) return false;
+		}
+	}
+	return abs(a[1]-a[2])<EPS;
+}
+
+int main()
+{
+	for(int n,cap;cin>>n>>cap && n|cap;){
+		vi uses(86400);
+		rep(i,n){
+			int s,t,u; cin>>s>>t>>u;
+			repi(j,s,t) uses[j]=u;
+		}
+		double lo=0,hi=1e6;
+		rep(_,50){
+			double mi=(lo+hi)/2;
+			if(ok(uses,cap,mi))
+				hi=mi;
+			else
+				lo=mi;
+		}
+		printf("%f\n",lo);
+	}
+}

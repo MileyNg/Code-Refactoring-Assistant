@@ -1,0 +1,61 @@
+objects = []
+
+while line = gets do
+  # time, number, question, bool
+  arr = line.split(" ").map(&:to_i)
+  break if arr == [0, 0, 0, 0]
+  objects.push arr
+end
+
+#objects = [
+#  [300,10,8,5], [50,5,2,1], [70,5,2,0], [75,1,1,0], [100,3,1,0], [150,3,2,0], [240,5,5,7],
+#  [50,1,1,0], [60,2,2,0], [70,2,3,0]
+#]
+
+team = {}
+
+objects.each do |o|
+  if !team.has_key?(o[1])
+    team[o[1]] = {}
+    team[o[1]][:sum] = 0
+    team[o[1]][:time] = 0
+  end
+  if o[3] == 0
+    team[o[1]][:sum] += 1
+    team[o[1]][:time] += o[2]
+  end
+end
+
+results = team.to_a.sort do |a, b|
+  if a[1][:sum] == b[1][:sum]
+    a[1][:time] <=> b[1][:time]
+  else
+    b[1][:sum] <=> a[1][:sum]
+  end
+end
+
+i = 0
+j = 10000000000
+while i < results.size
+  ii = i
+  arr = []
+  arr.push results[i]
+  while ii < j
+    ii = ii + 1
+    break unless results[ii]
+    if results[ii][1][:sum] == results[i][1][:sum] && results[ii][1][:time] == results[i][1][:time]
+      arr.push results[j]
+      i = i + 1
+    else
+      break
+    end
+  end
+  arr.sort! do |a, b|
+    b[0] <=> a[0]
+  end
+  puts arr.map{|x| x[0] }.join("=")
+  i = i + 1
+  unless i == results.size
+    puts ","
+  end
+end

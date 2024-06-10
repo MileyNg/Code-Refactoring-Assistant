@@ -1,0 +1,39 @@
+#include<stdio.h>
+
+int suma(int n){
+  return n*(n+1)/2;
+}
+
+int sumb(int n,int m){
+  return suma(m+n-1)-suma(m-1);
+}
+
+int main(){
+  int ans[1001];
+  int i,j;
+  int a;
+
+  for(i=0;i<1001;i++){
+    ans[i]=0;
+  }
+
+  for(i=2;i<45;i++){
+    j=1;
+    while(sumb(i,j)<=1000){
+      ans[sumb(i,j)]++;
+      j++;
+    }
+  }
+
+  while(1){
+    scanf("%d",&a);
+    if(a==0){
+      break;
+    }
+    else{
+      printf("%d\n",ans[a]);
+    }
+  }
+
+  return 0;
+}

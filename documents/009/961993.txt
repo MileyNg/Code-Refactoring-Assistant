@@ -1,0 +1,42 @@
+class Rect
+	attr_accessor :h, :w, :len
+	def initialize(h, w)
+		@h = h
+		@w = w
+		@len = h * h + w * w
+	end
+end
+
+rects = []
+
+for i in 1..151
+	for j in (i+1)..151
+		rects << Rect.new(i, j)
+	end
+end
+
+rects.sort!{|i,  j|
+	if i.len == j.len
+		i.h <=> j.h
+	else
+		i.len <=> j.len
+	end
+}
+
+#for i in 0..20
+#	puts "#{rects[i].h} #{rects[i].w} #{rects[i].len}"
+#end
+
+loop do
+	h, w = gets.chomp.split.map(&:to_i)
+	if h == 0 && w == 0
+		break
+	end
+	ans = 0
+	rects.each_with_index do |r, i|
+		if r.h == h && r.w == w
+			ans = i+1
+		end
+	end
+	puts "#{rects[ans].h} #{rects[ans].w}"
+end

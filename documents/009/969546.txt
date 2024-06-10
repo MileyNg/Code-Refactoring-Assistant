@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int W, H;
+vector<string> map;
+int ans;
+
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = { 0,-1, 0, 1};
+
+void dfs(int x, int y) {
+	map[y][x] = '*';
+	ans++;
+	
+	for (int d=0; d<4; d++) {
+		if (!(0 <= y + dy[d] && y + dy[d] < H && 0 <= x + dx[d] && x + dx[d] < W)) continue;
+		if (map[ y + dy[d] ][ x + dx[d] ] == '.') {
+			dfs(x + dx[d], y + dy[d]);
+		}
+	}
+}
+
+int main() {
+	while (1) {
+		cin >> W >> H; if (W == 0 && H == 0) break;
+		map.assign(H, "");
+		
+		int sx, sy;
+		for (int i=0; i<H; i++) {
+			cin >> map[i];
+			for (int j=0; j<W; j++) if (map[i][j] == '@') { sx = j; sy = i; }
+		}
+		
+		ans = 0;
+		dfs(sx, sy);
+		cout << ans << endl;
+	}
+	
+	return 0;
+}

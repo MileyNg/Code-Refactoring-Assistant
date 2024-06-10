@@ -1,0 +1,19 @@
+def L(cake1,cake2):
+	return ((cake1+cake2)**2-abs(cake1-cake2)**2)**0.5
+
+while 1:
+	try:
+		raw_cakes=map(int,raw_input().split())
+		box=raw_cakes.pop(0)
+		raw_cakes=sorted(raw_cakes)[::-1]
+		cakes=[]
+		while raw_cakes:
+			if raw_cakes: cakes.append(raw_cakes.pop(-1))
+			if raw_cakes: cakes.append(raw_cakes.pop( 0))
+		cakes=cakes[:len(cakes)/2]+cakes[len(cakes)/2:][::-1]
+		size=cakes[0]+cakes[-1]
+		for i in range(len(cakes)-1):
+			size+=L(cakes[i],cakes[i+1])
+		print "OK" if size<=box else "NA"
+	except:
+		break

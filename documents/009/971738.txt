@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct bar{int h, p, q; bool operator>(const bar &b)const{return h>b.h;}};
+
+int main(){
+    int n, m, a;
+    while(cin >> n >> m >> a, n+m+a){
+        vector<bar> v;
+        for(int i=0; i < m; i++){
+            bar b;
+            cin >> b.h >> b.p >> b.q;
+            v.push_back(b);
+        }
+        sort(v.begin(), v.end(), greater<bar>());
+
+        for(int i=0; i < v.size(); i++){
+            if(v[i].p == a) a = v[i].q;
+            else if(v[i].q == a) a = v[i].p;
+        }
+        cout << a << endl;
+    }
+}

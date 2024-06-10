@@ -1,0 +1,75 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+map<char, int> step;
+
+void Init()
+{
+    step['1'] = 0;
+    step['2'] = 1;
+    step['3'] = 2;
+    step['4'] = 0;
+    step['6'] = 2;
+    step['7'] = 0;
+    step['8'] = 1;
+    step['9'] = 2;
+}
+
+int Solve(string s)
+{
+    const int N = s.size();
+    if (N == 2)
+        return 0;
+
+    int cnt1 = 0;  // left -> right
+    bool left1 = true;
+    int cnt2 = 0;  // right -> left
+    bool left2 = false;
+
+    for (int i = 1; i < N; ++i) {
+        if (left1) {
+            if (step[s[i - 1]] < step[s[i]])
+                ++cnt1;
+            else
+                left1 = false;
+        }
+        else {
+            if (step[s[i]] < step[s[i - 1]])
+                ++cnt1;
+            else
+                left1 = true;
+        }
+        if (left2) {
+            if (step[s[i - 1]] < step[s[i]])
+                ++cnt2;
+            else
+                left2 = false;
+        }
+        else {
+            if (step[s[i]] < step[s[i - 1]])
+                ++cnt2;
+            else
+                left2 = true;
+        }
+    }
+
+    return min(cnt1, cnt2);
+}
+
+int main()
+{
+    string s;
+
+    Init();
+
+    while (cin >> s) {
+        if (s == "#")
+            break;
+
+        cout << Solve(s) << '\n';
+    }
+
+    return 0;
+}

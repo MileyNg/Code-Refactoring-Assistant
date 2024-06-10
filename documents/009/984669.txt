@@ -1,0 +1,99 @@
+#include<cstdio>
+#include<cstring>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define reg(i,a,b) for(int i=(a);i<=(b);i++)
+typedef long long int lli;
+typedef pair<int,int> mp;
+#define fir first
+#define sec second
+
+
+
+int dijkstra(int dijksize,int start,vector<mp>* dijkedges,int* dijkdist,int goal=-1){
+	memset(dijkdist,-1,sizeof(int)*dijksize);
+	priority_queue<mp,vector<mp>,greater<mp> > que;
+	que.push(mp(0,start));
+	while(!que.empty()){
+		mp pa=que.top();
+		que.pop();
+		int co=pa.fir,
+			no=pa.sec;
+		
+		if(dijkdist[no]!=-1 && dijkdist[no]<co)continue;
+		dijkdist[no]=co;
+		if(no==goal)return co;
+		rep(i,dijkedges[no].size()){
+			mp pb=dijkedges[no][i];
+			int to=pb.fir,
+				tc=co+pb.sec;
+			if(dijkdist[to]!=-1 && dijkdist[to]<=tc)continue;
+			dijkdist[to]=tc;
+			que.push(mp(tc,to));
+		}
+	}
+	return -1;
+}
+
+
+int n,m;
+
+vector<int> dv[5005];
+vector<mp> vs[5005];
+
+
+int dat[5005][2];
+int gone[5005];
+int dist[5005];
+
+void dfs(int no,int p,int q){
+	if(gone[no])return;
+	gone[no]=1;
+	if(no!=p){
+		//vs[no].push_back(mp(p,dat[p][0]));
+		vs[p].push_back(mp(no,dat[p][0]));
+		
+		//printf("    %d %d %d\n",no,p,dat[p][0]);
+	}
+	
+	if(q==0)return;
+	rep(i,dv[no].size()){
+		int to=dv[no][i];
+		dfs(to,p,q-1);
+	}
+}
+
+int main(void){
+	scanf("%d%d",&n,&m);
+	rep(i,n){
+		rep(j,2){
+			scanf("%d",&dat[i][j]);
+		}
+	}
+	
+	rep(i,m){
+		int a,b;
+		scanf("%d%d",&a,&b);a--;b--;
+		dv[a].push_back(b);
+		dv[b].push_back(a);
+	}
+	
+	
+	rep(i,n){
+		memset(gone,0,sizeof(gone));
+		dfs(i,i,dat[i][1]);
+	}
+	
+	
+	int cos=dijkstra(n,0,vs,dist,n-1);
+	dijkstra(n,0,vs,dist);
+	if(cos!=dist[n-1])printf("-1\n");
+	else printf("%d\n",cos);
+	
+	
+	return 0;
+}

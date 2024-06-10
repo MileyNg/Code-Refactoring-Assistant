@@ -1,0 +1,13 @@
+def judgment(formula)
+  0.upto(9) do |n|
+    /(\d+)(\+|\-|\*|\/)(\d+)(\=)(\d+)/.match(formula.gsub(/X/, n.to_s))
+    next unless $1.to_i.send($2,$3.to_i) == $5.to_i
+    return $5.to_i
+  end
+  "NA"
+end
+
+while f=gets
+  break unless f.size > 1 && f[0..0]=='X'
+  puts judgment(f)
+e

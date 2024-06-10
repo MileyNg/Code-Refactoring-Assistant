@@ -1,0 +1,58 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<stack>
+#include<cmath>
+
+using namespace std;
+
+struct S{
+	long double L, a, b;
+};
+
+int N, M;
+S color[30];
+stack<int> calcs;
+
+
+
+double search(int n,int num){
+	if (n == 0){
+		double sum = 0;
+		int arr[100];
+		for (int i = 0; i < M; i++){
+			//cout << calcs.top()<<"="<<n << endl;
+			arr[i] = calcs.top();
+			calcs.pop();
+		}
+		for (int i = 0; i < M; i++){
+			//cout << arr[i] << ",";
+			for (int j = i + 1; j < M; j++){
+				sum += pow(color[arr[i]].L - color[arr[j]].L, 2) + pow(color[arr[i]].a - color[arr[j]].a, 2) + pow(color[arr[i]].b - color[arr[j]].b, 2);
+			}
+		}
+		//cout << endl;
+		for (int i = M - 1; i >= 0; i--) calcs.push(arr[i]);
+		//cout << sum << "," << calcs.size() << endl;
+		return sum;
+	}
+	double mx = 0;
+	for (int i = num; i < N; i++){
+		calcs.push(i);
+		mx = max(mx,search(n - 1, i+1));
+		calcs.pop();
+	}
+	return mx;
+}
+
+int main(){
+
+	cin >> N >> M;
+
+	for (int i = 0; i < N; i++){
+		cin >> color[i].L >> color[i].a >> color[i].b;
+	}
+
+	printf("%.6f\n", search(M, 0));
+	return 0;
+}

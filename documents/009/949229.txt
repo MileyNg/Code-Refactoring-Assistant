@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+int i,j,d,k,n1,n2,n3,temp;
+ int l[3];
+
+int rt()
+{
+//入力
+cin >> n1 >> n2 >> n3;
+while(n1 < 1 or n1 > 1000 or n2 < 1 or n2 >1000 or n3 < 1 or n3 > 1000){
+cin >> n1 >> n2 >> n3;
+}
+if(n1 >= 1 and n1 <= 1000 and n2 >= 1 and n2 <=1000 and n3 >= 1 and n3 <= 1000){
+       l[0]=n1;
+       l[1]=n2;
+       l[2]=n3;
+        for (i = 0; i < 2; i++) {
+        for (j = 2; j > i; j--) {
+            if (l[j - 1] > l[j]) {  
+                temp = l[j];  
+                l[j] = l[j - 1];
+                l[j - 1] = temp;
+            }
+        }
+    }
+ }
+    if(l[2]*l[2] == (l[1]*l[1]+l[0]*l[0])){
+    cout << "YES\n";
+    }else{
+    cout << "NO\n";
+    }
+}
+
+
+
+int main(){
+
+   cin >> d;
+   while(d < 1 or d > 1000){
+       cin >> d;
+   }
+
+for(k=0;k<d;k++){
+    rt();
+}
+
+    return 0;
+}

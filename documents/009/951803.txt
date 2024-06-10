@@ -1,0 +1,11 @@
+import itertools
+while 1:
+	N,M = map(int,raw_input().split())
+	if N == 0: break
+	P = set([int(raw_input()) for i in range(N)])
+	ans = 0
+	for i in range(2,5):
+		for p in itertools.combinations_with_replacement(P,i):
+			if ans < sum(p) <= M:
+				ans = sum(p)
+	print ans

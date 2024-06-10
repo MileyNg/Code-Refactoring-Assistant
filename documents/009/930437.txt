@@ -1,0 +1,29 @@
+while true
+    n = gets.to_i
+    if n ==0
+        break
+    end
+    num = Array.new(n)
+    line = gets
+    for i in 1..n do
+        num = line.split.map(&:to_i)
+    end
+    print num[0]
+    cont = false
+    for i in 1..n-1 do
+        if num[i] == num[i-1] + 1
+            cont = true
+            next
+        end
+        if cont
+            print "-" + num[i-1].to_s + " " + num[i].to_s
+        else
+            print " " + num[i].to_s
+        end
+        cont = false
+    end
+    if cont
+        print "-" + num[n-1].to_s
+    end
+    puts
+end

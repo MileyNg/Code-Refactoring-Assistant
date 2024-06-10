@@ -1,0 +1,20 @@
+loop {
+  n, x = gets.chomp.split(' ').map { |i| i.to_i }
+  if n == 0 and x == 0 then break
+  else
+    ary = Array.new
+    num = 0
+    (1..n).each { |i| ary.push(i) }
+    while ary.size > 1
+      remain = x - ary.pop
+      (1..ary.last).each { |i|
+        (i..ary.last).each { |j|
+          unless i == j
+            if i + j == remain then num += 1 end
+          end
+        }
+      }
+    end
+    puts num
+  end
+}

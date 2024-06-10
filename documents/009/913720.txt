@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstdio>
+#include<stack>
+#include<queue>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+string func(stack<int>,stack<int>,stack<int>);
+
+int main(){
+		  stack<int> s,st,right,left;
+		  int loop,num;
+
+		  cin>>loop;
+		  for(int i=0;i<loop;i++){
+
+					 while(!s.empty()) s.pop();
+					 while(!st.empty()) st.pop();
+					 while(!right.empty()) right.pop();
+					 while(!left.empty()) left.pop();
+					 right.push(0);left.push(0);
+
+					 for(int l=0;l<10;l++){
+								cin>>num;
+								s.push(num);
+					 }
+					 while(!s.empty()){
+								st.push(s.top());
+								s.pop();
+					 }
+
+					 cout<<func(st,right,left)<<endl;
+		  }
+		  return 0;
+}
+
+string func(stack<int> st,stack<int> right, stack<int> left){
+		  if(st.empty()) return "YES";
+
+		  if(right.top()<st.top()){
+					 right.push(st.top());
+					 st.pop();
+					 if(func(st,right,left)=="YES") return "YES";
+					 else{
+								st.push(right.top());
+								right.pop();
+					 }
+		  }
+		  if( left.top()<st.top()){
+					 left.push(st.top());
+					 st.pop();
+					 if(func(st,right,left)=="YES") return "YES";
+					 else{
+								st.push(left.top());
+								left.pop();
+					 }
+		  }
+
+		  return "NO";
+}

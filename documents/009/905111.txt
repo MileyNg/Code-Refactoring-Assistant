@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+int t[100];
+int m,n,L,R,M;
+
+
+bool check(int x){
+  int cnt=0,cnt2=0,sum=0;
+  
+  while(cnt<n&&cnt2<m){
+    if(sum+t[cnt]>x){
+      sum=0;
+      cnt2++;
+    }else{
+      sum+=t[cnt];
+      cnt++;
+    }
+  }
+  
+  if(cnt==n)return true;
+  else return false;
+}
+
+int main(){
+  while(cin>>m>>n){
+    if(m==0&&n==0)break;
+    R=0;
+    for(int i=0;i<n;i++){
+      cin>>t[i];
+      R+=t[i];
+    }
+
+    L=0;
+    M=(L+R)/2;
+
+    while(L<R){
+      if(check(M)){
+	R=M-1;
+	M=(L+R)/2;
+      }else{
+	L=M+1;
+	M=(L+R)/2;
+      }
+    }
+    cout<<L+1<<endl;
+  }
+  return 0;
+}

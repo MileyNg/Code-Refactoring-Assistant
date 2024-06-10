@@ -1,0 +1,119 @@
+#include<stdio.h>
+#include<math.h>
+#define first_prime 2
+#define second_prime 3
+#define compile 1
+
+int func_primeFound(int n);
+void func_init(int array[], int n);
+int func_primeCount(int array[]);
+
+main()
+{
+	int n = 0, result = 0;
+	while(scanf("%d", &n) != EOF)
+	{
+		result = func_primeFound(n);
+#if compile == 2
+		printf("result = ");
+#endif
+		printf("%d\n", result);
+		n = 0;
+	}
+	return 0;
+}
+
+int func_primeFound(int n)
+{
+	int counter_in_func = 0;
+	int i = 5, j = 0;
+	//n = sqrt(n); //nにnの平方根を整数値化したものを代入
+	int array_prime[n];
+	
+	func_init(array_prime, n);
+	
+	switch(n)
+	{
+	case 1:
+#if compile == 1
+		printf("case 1 break\n");
+#endif
+		break;
+	case 2:
+		return ++counter_in_func;
+#if compile == 1
+		printf("case 2 return\n");
+#endif
+	case 3:
+	case 4:
+		counter_in_func += 2;
+		return counter_in_func;
+#if compile == 1
+		printf("case 3 & 4 return\n");
+#endif
+	default:
+#if compile == 1
+		printf("default\n");
+#endif
+		while(i <= n)
+		{
+#if compile == 2
+			printf("i = %d\n", i);
+#endif
+			j = 0;
+			while(array_prime[j] != 0)
+			{
+#if compile == 2
+				printf("array_prime[%d] = %d\n", j, array_prime[j]);
+#endif
+				if(0 == (i % array_prime[j]))
+				{
+#if compile == 2
+					printf("i = %d array_prime[%d] = %d\n", i, j, array_prime[j]);
+					printf("break\n");
+#endif
+					break;
+				}
+				else if(0 != (i % array_prime[j]))
+				{
+					if(0 == array_prime[j + 1])
+					{
+					array_prime[j + 1] = i;
+#if compile == 2
+					printf("array_prime[%d] = %d\n", j, array_prime[j + 1]);
+#endif
+					}
+					else
+					{
+						j++;
+						continue;
+					}
+				}
+			}
+			i++;
+		}
+	}
+	counter_in_func = func_primeCount(array_prime);
+	return counter_in_func;
+}
+
+void func_init(int array[], int n)
+{
+	int i = 2;
+	array[0] = first_prime; //2
+	array[1] = second_prime; //3
+	while(i < n)
+	{
+		array[i] = 0;
+		i++;
+	}
+}
+int func_primeCount(int array[])
+{
+	int i = 0;
+	while(array[i] != 0)
+	{
+		i++;
+	}
+	return i;
+}

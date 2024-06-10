@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int rec( int a, int b, int c){
+  if(!a & !b) return(0);
+  if(c & 1) return( rec( a >> 1, b >> 1, c >> 1));
+  if(b & 1) return( rec( c >> 1, b >> 1, a >> 1) + rec( ( a|b|c) >> 1, 0, 0) + 1);
+  if(a & 1) return( rec( a >> 1, b >> 1, c >> 1) + 2 * rec( ( a|b|c) >> 1, 0, 0) + 2);
+}
+
+
+int main()
+{
+  int n, m, data[3];
+
+  while( cin >> n >> m, m){
+    for(int i = 0; i < 3; i++){
+      int k;
+      cin >> k;
+      data[i] ^= data[i];
+      for(int j = 0; j < k; j++){
+        int num;
+        cin >> num;
+        data[i] |= 1 << --num;
+      }
+    }
+
+    int ret = min( rec( data[0], data[1], data[2]), rec( data[2], data[1], data[0]));
+    if(ret <= m) cout << ret << endl;
+    else cout << -1 << endl;
+  }
+}

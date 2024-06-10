@@ -1,0 +1,27 @@
+hash = Hash.new
+output = String.new
+
+while line = gets do
+	exit if line.to_i == 0
+
+	# 変換表
+	line.to_i.times do
+		a, b = gets.split()
+		hash[a] = b
+	end
+
+	# データ
+	gets.to_i.times do
+		a = gets.gsub(/(\t|\n)/,'')	# 余計な文字を削除
+		if hash.has_key?(a)
+			output << hash[a]
+		else
+			output << a
+		end
+	end
+	output << "\n"
+	print output
+
+	output.clear
+	hash.clear	# hashの初期化
+end

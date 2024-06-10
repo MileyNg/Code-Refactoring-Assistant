@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	int i;
+	
+	scanf("%d", &n);
+	for (i = 0; i < n; i++){
+		int num[10] = {0};
+		int j;
+		char str[10];
+		int max, min;
+		
+		scanf("%s", str);
+		for (j = 0; str[j] != 0; j++){
+			num[str[j] - '0']++;
+		}
+		max = min = 0;
+		for (j = 9; j >= 0; j--){
+			if (num[j] > 0){
+				int k;
+				for (k = 0; k < num[j]; k++){
+					max *= 10;
+					max += j;
+				}
+			}
+		}
+		for (j = 0; j < 10; j++){
+			if (num[j] > 0){
+				int k;
+				for (k = 0; k < num[j]; k++){
+					min *= 10;
+					min += j;
+				}
+			}
+		}
+		printf("%d\n", max - min);
+	}
+	
+	return 0;
+}

@@ -1,0 +1,66 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+int N, Q;
+struct P {
+    int begin, end; // [begin, end]
+    P(int begin = 0, int end = 0) : begin(begin), end(end) {}
+    bool contains(int year) {
+        return begin <= year && year <= end;
+    }
+    int transform(int year) {
+        return year - begin + 1;
+    }
+};
+map<string, P> Map;
+vector<int> Queries;
+bool input() {
+    cin >> N >> Q;
+    if (N == 0 && Q == 0) return false;
+    Map.clear();
+    Queries.clear();
+    for (int i = 0; i < N; i++) {
+        string Name; int Year, GYear;
+        cin >> Name >> Year >> GYear;
+        Map[Name].begin = GYear - Year + 1;
+        Map[Name].end   = max(Map[Name].end, GYear);
+    }
+    for (int i = 0; i < Q; i++) {
+        int Y;
+        cin >> Y;
+        Queries.push_back(Y); 
+    }
+    return true;
+}
+
+void solve() {
+    for (int i = 0; i < Q; i++) {
+        for (map<string, P>::iterator it = Map.begin(); it != Map.end(); it++) {
+            if (it->second.contains(Queries[i])) {
+                cout << it->first << " " << it->second.transform(Queries[i]) << endl;
+                goto next;
+            }
+        }
+        cout << "Unknown" << endl;
+next:;
+    }
+}
+
+int main() {
+    while (input()) {
+        solve();
+    }
+    return 0;
+}

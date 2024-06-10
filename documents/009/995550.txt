@@ -1,0 +1,70 @@
+#include <cstring>
+#include <algorithm>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+typedef pair<int, int> P;
+
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+int W, H;
+vector<string> field;
+
+int main() {
+	while (cin >> W >> H, W || H) {
+		field = vector<string>(H);
+		vector<P> targets;
+		P pos;
+		for (int i = 0 ; i < H; i++) {
+			cin >> field[i];
+			for (int j = 0; j < W; j++) {
+				if (field[i][j] == '*') {
+					targets.emplace_back(j, i);
+				}
+				else if (field[i][j] == 'o') {
+					pos = P(j, i);
+				}
+			}
+		}
+
+		int ans = -1;
+		queue<pair<P, P>> que;
+		que.push(make_pair(P(0, 0), pos));
+		bool visited[W][H][1<<11];
+		memset(visited, 0, sizeof(visited));
+		while (!que.empty()) {
+			auto& cur = que.front();
+			int step = cur.first.first;
+			int bit = cur.first.second;
+			int x = cur.second.first;
+			int y = cur.second.second;
+			que.pop();
+			if (visited[x][y][bit]) continue;
+			visited[x][y][bit] = true;
+			if (bit == (1 << (targets.size())) - 1) {
+				ans = step;
+				//cout << bit << endl;
+				break;
+			}
+			for (int i = 0; i < 4; i++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				if (!(0 <= nx && nx < W && 0 <= ny && ny < H && field[ny][nx] != 'x')) continue;
+				int nbit = bit;
+				if (field[ny][nx] == '*') {
+					nbit = nbit | (1 << (find(targets.begin(), targets.end(), P(nx, ny)) - targets.begin()));
+				}
+				for (int i = 0; i < targets.size(); i++) {
+					que.push(make_pair(P(step + 1, nbit), P(nx, ny)));
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+
+	return 0;
+}

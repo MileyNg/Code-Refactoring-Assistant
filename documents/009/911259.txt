@@ -1,0 +1,36 @@
+#pragma warning (disable:4996)
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+double average(double *data, int *n){
+	double sum = 0.0;
+	int i;
+	for (i = 0; i < *n; i++)sum += data[i];
+	sum /= *n;
+	return sum;
+}
+double* input(int *n){
+	int i;
+	scanf("%d", n);
+	double *data = (double*)calloc(*n, sizeof(double));
+	if (!*n)exit(0);
+	for (i = 0; i < *n; i++)scanf("%lf", &data[i]);
+	return data;
+}
+double calc(double *data, int *n){
+	double sq_of_alpha = 0.0, ave;
+	unsigned short int i;
+	ave = average(data, n);
+	for (i = 0; i < *n; i++)sq_of_alpha += (pow(data[i] - ave, 2) / *n);
+	return fabs(sqrt(sq_of_alpha));
+}
+int main(void){
+	int n;
+	double *p;
+	while (1){
+		p = input(&n);
+		printf("%lf\n", calc(p, &n));
+	}
+	return 0;
+}

@@ -1,0 +1,25 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int main(void){
+	int mt[10];
+	for(int i=0;i<10;i++)
+		cin>>mt[i];
+	int max_mt[3];
+	fill(max_mt,max_mt+3,0);
+
+	for(int j=0;j<3;j++){
+		for(int k=0;k<10;k++){
+			max_mt[j]=max(max_mt[j],mt[k]);
+		}
+		cout<<max_mt[j]<<endl;
+		for(int ll=0;ll<10;ll++)
+			if(max_mt[j]==mt[ll]){
+				mt[ll]=0;
+				break;
+			}
+	}
+	return 0;
+}

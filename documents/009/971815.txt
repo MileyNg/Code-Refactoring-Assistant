@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+int main() {
+    double x1, y1, x2, y2, xq, yq, m;
+
+    while ((scanf("%lf,%lf,%lf,%lf,%lf,%lf", &x1, &y1, &x2, &y2, &xq, &yq)) != EOF) {
+        x2 -= x1;
+        y2 -= y1;
+        xq -= x1;
+        yq -= y1;
+        m = (x2 * xq + y2 * yq) / (x2 * x2 + y2 * y2);
+        printf("%.6lf %.6lf\n", x1 + 2*m*x2 - xq, y1 + 2*m*y2 - yq);
+    }
+
+    return 0;
+}

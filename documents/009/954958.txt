@@ -1,0 +1,127 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+template<typename T>
+struct PaddingArray {
+    T* array;
+    int size;
+    int PAD;
+    int right, left;
+    PaddingArray(int right = 0, int left = 0) : right(right), left(left) { // [right, left]
+        PAD = -right;
+        size = PAD + left + 1;
+        array = new T[size];
+    }
+    ~PaddingArray() {
+        delete[] array;
+    }
+    void init(int right, int left) {
+        delete[] array;
+        this->right = right;
+        this->left = left;
+        PAD = -right;
+        size = PAD + left + 1;
+        array = new T[size];
+    }
+    T& operator[](int index) {
+        if (index < right || left < index) throw "PaddingArray ERROR";
+        return array[index + PAD];
+    }
+};
+
+#define INF (1<<28)
+int SX, SY, GX, GY;
+int N;
+int LX, LY;
+PaddingArray< PaddingArray<int> > F[6];
+void input() {
+    cin >> SX >> SY >> GX >> GY;
+    cin >> N;
+    vector< pair<int, int> > Blocks;
+    for (int i = 0; i < N; i++) {
+        int x, y; cin >> x >> y;
+        Blocks.push_back(make_pair(x, y));
+    }
+    cin >> LX >> LY;
+    for (int t = 0; t < 6; t++) {
+        F[t].init(-LY, LY);
+        for (int i = -LY; i <= LY; i++) F[t][i].init(-LX, LX);
+        for (int i = -LY; i <= LY; i++) 
+            for (int j = -LX; j <= LX; j++) 
+                F[t][i][j] = -1;
+        for (int i = 0; i < N; i++) {
+            int x = Blocks[i].first,
+                y = Blocks[i].second;
+            F[t][y][x] = INF;
+        }
+    }
+}
+
+struct S {
+    int ignore, y, x, t;
+    S() {}
+    S(int ignore, int y, int x, int t) : ignore(ignore), y(y), x(x), t(t) {}
+    int mod6() {
+        return abs(y * x * t) % 6;
+    }
+};
+bool operator<(const S& a, const S& b) {
+    return a.ignore > b.ignore;
+}
+ostream& operator<<(ostream& os, const S& s) {
+    os << "S(" << s.ignore << ", (" << s.y << "," << s.x << ")" << ", " << s.t << ")";
+    return os;
+}
+
+const int dy[2][7] = { 
+    {1, 0, -1, -1, -1, 0, 0},
+    {1, 1, 0, -1, 0, 1, 0}
+};
+const int dx[7] = { 0, 1, 1, 0, -1, -1, 0 };
+void solve() {
+    F[0][SY][SX] = 0;
+    priority_queue< S, vector<S> > PQ;
+    PQ.push(S(0, SY, SX, 0));
+    while (!PQ.empty()) {
+        S s = PQ.top(); PQ.pop();
+        if (F[s.t][s.y][s.x] >= 0 && F[s.t][s.y][s.x] < s.ignore) continue;
+        //cout << s << endl;
+        for (int i = 0; i < 7; i++) {
+            S next;
+            next.y = s.y + dy[abs(s.x) % 2][i];
+            next.x = s.x + dx[i];
+            next.t = (s.t + 1) % 6;
+            if (next.y < -LY || LY < next.y) continue;
+            if (next.x < -LX || LX < next.x) continue;
+            next.ignore = s.ignore + (s.mod6() != i);
+            int& prev = F[next.t][next.y][next.x];
+            if (prev == INF) continue;
+            if (0 <= prev && prev <= next.ignore) continue;
+            prev = next.ignore;
+            PQ.push(next);
+        }
+    }
+    int Ans = INF;
+    for (int t = 0; t < 6; t++) {
+        Ans = min(Ans, F[t][GY][GX]);
+    }
+    cout << Ans << endl;
+}
+
+int main() {
+    input();
+    solve();
+    return 0;
+}

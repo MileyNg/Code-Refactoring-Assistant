@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = 1001;
+
+int dp[N];
+int cnt;
+
+int main(void){
+    for(int ww; cin >> ww, ww;){
+        int n; cin >> n;
+        rep(i, N) dp[i] = -1;
+        dp[0] = 0;
+        while(n--){
+            int p, w;
+            char c; cin >> p >> c >> w;
+
+            COUNT(i, N){
+                int cur = N - i;
+                if(~dp[cur] && cur + w <= ww) dp[cur + w] = max(dp[cur + w], dp[cur] + p);
+            }
+        }
+        int ind = max_element(dp, dp + N) - dp;
+        cout << "Case " << ++cnt << ":" << endl << dp[ind] << endl << ind << endl;
+    }
+
+    return 0;
+}

@@ -1,0 +1,18 @@
+#include<cstdio>
+#include<algorithm>
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+int main(){
+  for(;;){
+    int n;scanf("%d",&n);
+    if(!n){break;}
+    int min=0, max=0x80000000, sum=0;
+    REP(i,n){
+      int a;scanf("%d",&a);
+      min=std::min(min,sum);
+      max=std::max(std::max(max,sum+a-min),a);
+      sum+=a;
+    }
+    printf("%d\n",max);
+  }
+}

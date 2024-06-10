@@ -1,0 +1,65 @@
+#include<iostream>
+using namespace std;
+
+#define b_month 20	//大の月
+#define s_month 19	//小の月
+#define yeardate	((5*b_month)+(5*s_month))	//1年の日数を求める
+#define three_yeardate	(10*b_month)			//3の倍数の場合の1年の日数を求める
+
+unsigned int datecount(unsigned int y,unsigned int m,unsigned int d);
+
+int main()
+{
+	unsigned int n;			//入力するデータセット数
+	unsigned int y,m,d;		//入力するyear, month, date
+	unsigned int m_date=0;	//1年1月1日から記念日までの日数
+	unsigned int date=0;	//入力したデータから記念日までの日数
+
+	cin>>n;
+
+	m_date = datecount(1000,1,1);
+
+	for(unsigned int i=0;i<n;i++)
+	{
+		cin>>y>>m>>d;
+		
+		date = datecount(y,m,d);
+
+		cout<<m_date-date<<endl;
+	}
+	return 0;
+}
+
+//入力されたデータから記念日までの日数を出力する関数
+unsigned int datecount(unsigned int y,unsigned int m,unsigned int d)
+{
+		unsigned int s_count=0;	//合計日数
+		unsigned int y_count=0;	//年を日数に変換した値
+		unsigned int m_count=0;	//月を日数に変換した値
+		unsigned int d_count=0;	//日を日数に変換した値
+
+		//年を日数に変換
+		y_count = (((y-1)/3)*three_yeardate)+(((y-1)-((y-1)/3))*yeardate);
+
+		//月を日数に変換
+		if(y%3==0)	//現在の年が3の倍数の場合
+		{
+			m_count = (m-1)*b_month;
+		}
+		else if(m%2==0)	//現在の月が偶数の場合
+		{
+			m_count = (((m-1)/2)*s_month) + ((m-1-((m-1)/2))*b_month);
+		}
+		else	//現在の月が奇数の場合
+		{
+			m_count = (((m-1)/2)*s_month) + (((m-1)/2)*b_month);
+		}
+
+		//日を日数に変換
+		d_count = d;
+
+		//合計値を計算
+		s_count = y_count + m_count + d_count;
+
+		return s_count;
+}

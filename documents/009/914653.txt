@@ -1,0 +1,35 @@
+#include<stdio.h>
+#include<math.h>
+int pn(int);
+
+int main(){
+  int r,n,i,cnt=0;
+  scanf("%d",&r);
+  for(i=0;i<r;i++){
+    scanf("%d",&n);
+    if(pn(n)==1){
+      cnt++;
+    }
+  }
+  printf("%d\n",cnt);
+  return 0;
+}
+
+int pn(int n){
+  
+  int a=3;
+  
+  if(n==2){
+    return 1;
+  }
+  if(n<2 || n%2==0){
+    return -1;
+  }
+  while(a <= sqrt(n)){
+    if(n%a==0){
+      return -1;
+    }
+    a+=2;
+  }
+  return 1;
+}

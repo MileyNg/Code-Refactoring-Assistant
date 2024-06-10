@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+int w,h, ans;
+int map[20][20];
+int mvx[4] = {0, 0, 1, -1};
+int mvy[4] = {1, -1, 0, 0};
+
+void getStartPoint(int* sx, int* sy){
+  for (int i = 0; i < h; i++) {
+    for (int j = 0; j < w; j++) {
+      if (map[i][j] == 2){
+	*sx = j;
+	*sy = i;
+	return;
+      }
+    }
+  }
+}
+
+void dfs(int sx, int sy, int count){
+  if (count >= ans)
+    return;
+  for (int i = 0; i < 4; i++) {
+    int mx = sx + mvx[i];
+    int my = sy + mvy[i];
+    if ((mx < 0) || (mx >= w) || (my < 0) || (my >= h))
+      continue;
+    if (map[my][mx] == 1){
+      continue;
+    }
+    while (true){
+      if (map[my][mx] == 3){
+	ans = count;
+	return;
+      }
+      mx += mvx[i];
+      my += mvy[i];
+      if ((mx < 0) || (mx >= w) || (my < 0) || (my >= h)){
+	break;
+      }
+      if (map[my][mx] == 1){
+	map[my][mx] = 0;
+	dfs(mx-mvx[i], my-mvy[i], count+1);
+	map[my][mx] = 1;
+	break;
+      }
+    }
+  }
+}
+
+int main()
+{
+  int sx, sy;
+  while (true) {
+    cin >> w >> h;
+    if ((w == 0) && (h == 0))
+      break;
+
+    for (int i = 0; i < h; i++) {
+      for (int j = 0; j < w; j++) {
+	cin >> map[i][j];
+      }
+    }
+    ans = 11;
+    getStartPoint(&sx, &sy);
+    dfs(sx, sy, 1);
+    if (ans > 10)
+      cout << -1 << endl;
+    else
+      cout << ans << endl;
+  }
+  return 0;
+}

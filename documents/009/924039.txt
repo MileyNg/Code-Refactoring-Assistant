@@ -1,0 +1,88 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 101;
+const int INF = 1e9 + 7;
+
+int N, M, c[MAX_N][MAX_N][2];
+
+class C{
+  public:
+    int now, cost;
+    bool used;
+    C(int _n, int _c, bool _u){ now = _n; cost = _c; used = _u; }
+    C(){}
+    bool operator > (const C &c) const { return cost > c.cost; }
+};
+
+vector<int> checkSkipNext(int now){
+  vector<int> tmp;
+  REP(i, N) if(c[now][i][0] != INF) tmp.push_back(i);
+  set<int> s;
+  REP(i, tmp.size()) REP(j, N) if(c[tmp[i]][j][0] != INF) s.insert(j);
+  vector<int> ret;
+  for(set<int>::iterator it = s.begin(); it != s.end(); ++it) ret.push_back((*it));
+  return ret;
+}
+
+int calc(){
+  priority_queue<C, vector<C>, greater<C> > open;
+  open.push(C(0, 0, false));
+  int closed[MAX_N][2];
+  REP(i, N) REP(j, N) closed[i][j] = INF;
+  while(!open.empty()){
+    C tmp = open.top(); open.pop();
+    int now = tmp.now, cost = tmp.cost;
+    bool used = tmp.used;
+    if(cost >= closed[now][used]) continue;
+    closed[now][used] = cost;
+    REP(type, 2){
+      REP(next, N){
+        if(c[now][next][type] == INF) continue;
+        if(type && !used) open.push(C(next, cost + c[now][next][type], true));
+        if(type == 0) open.push(C(next, cost + c[now][next][type], used));
+      }
+    }
+  }
+  return min(closed[N - 1][0], closed[N - 1][1]);
+}
+
+int main() {
+  while(cin >>N >>M && N){
+    REP(i, N) REP(j, N) REP(k, 2) c[i][j][k] = INF;
+    REP(i, M){
+      int from, to, cost; cin >>from >>to >>cost;
+      --from; --to;
+      c[from][to][0] = cost;
+      c[to][from][0] = cost;
+    }
+    REP(now, N){
+      vector<int> next = checkSkipNext(now);
+      REP(i, next.size()) c[now][next[i]][1] = 0;
+    }
+    cout <<calc() <<endl;
+  }
+  return 0;
+}

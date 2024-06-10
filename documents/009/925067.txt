@@ -1,0 +1,30 @@
+
+#include <stdio.h>
+
+int main(void)
+{
+    int x=0,sum=0,i=0,count=0,keta=0;
+    while(1){
+        x=0;//入力整数
+        sum=0;//和
+        count=0;//桁数カウント
+        scanf("%d",&x);
+        if(x==0){
+           break; 
+        }
+        keta=x;//桁数カウント用
+        for(i=0;i<1000;i++){
+            keta=keta/10;
+            count++;
+            if(keta==0){
+                break;
+            }
+        }
+        for(i=0;i<count;i++){
+            sum=sum+x%10;
+            x=x/10;
+        }
+        printf("%d\n",sum);
+    }
+    return 0;
+}

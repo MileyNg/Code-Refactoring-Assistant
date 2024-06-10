@@ -1,0 +1,10 @@
+def f(line)
+  a, b, c, d, e, f = line.split(" ").map(&:to_f)
+  y = (a * f - d * c) / (a * e - d * b)
+  x = (c - b * y) / a
+  sprintf("%.3f %.3f", x, y)
+end
+
+while line = gets
+  puts f(line)
+end

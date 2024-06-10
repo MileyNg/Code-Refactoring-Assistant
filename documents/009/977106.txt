@@ -1,0 +1,30 @@
+#include <cstdio>
+#include <cmath>
+#include <cfloat>
+#include <algorithm>
+using namespace std;
+
+typedef pair<int,int> P;
+
+int main() {
+  int n, id, w, h, ans_id;
+  double bmi, err, min_err;
+  while (1) {
+    scanf("%d", &n);
+    if (!n) break;
+    min_err = DBL_MAX;
+    for (int i=0; i<n; i++) {
+      scanf("%d %d %d", &id, &h, &w);
+      bmi = (double)w * 10000. / (h * h);
+      err = fabs(bmi - 22.);
+      if (err < min_err) {
+        min_err = err;
+        ans_id = id;
+      } else if (err == min_err && id < ans_id) {
+        ans_id = id;
+      }
+    }
+    printf("%d\n", ans_id);
+  }
+  return 0;
+}

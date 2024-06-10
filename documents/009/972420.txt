@@ -1,0 +1,52 @@
+#include <bits/stdc++.h> // only for GCC
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vbb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+
+#define loop(i,a,b) for(int i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+
+vs v;
+set<string> a;
+bool used[10];
+int n, m;
+void bfs(string s, int num){
+    if(m == num){
+        a.insert(s);
+    }
+    else {
+        rep(i, n){
+            if(!used[i]){
+                used[i] = true;
+                bfs(s+v[i], num+1);
+                used[i] = false;
+            }
+        }
+    }
+}
+
+int main(){
+    while(cin >> n >> m, n+m){
+        v.clear(); a.clear();
+        rep(i, n){
+            string s;
+            cin >> s;
+            v.pb(s);
+        }
+        fill(used, used+10, false);
+        bfs("", 0);
+        cout << a.size() << endl;
+    }
+}

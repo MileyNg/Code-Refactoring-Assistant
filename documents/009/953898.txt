@@ -1,0 +1,98 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define N 1000
+
+using namespace std;
+
+int num[N][N], dp[N][N];
+bool prime[N][N], is_reach[N][N];
+
+bool is_prime(int& n, vector<int>* p){
+  if(n==1) return false;
+  for(vector<int>::iterator it=p->begin();
+      it!=p->end() && (*it)*(*it)<=n; ++it){
+    if(!(n%(*it))) return false;
+  }
+  p->push_back(n);
+  return true;
+}
+void init(){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      num[i][j]=0, prime[i][j]=false;
+    }
+  }
+  vector<int> p;
+  for(int i=N/2, j=N/2-1, k=1, is=1; k<=N*N; ++k){
+    num[i][j] = k;
+    prime[i][j] = is_prime(k, &p);
+    if(is==1){
+      ++j;
+      if(!num[i-1][j]) ++is;
+    }else if(is==2){
+      --i;
+      if(!num[i][j-1]) ++is;
+    } else if(is==3){
+      --j;
+      if(!num[i+1][j]) ++is;
+    }else if(is==4){
+      ++i;
+      if(!num[i][j+1]) is=1;
+    }
+  }
+}
+
+bool is_over(int& i, int& j, int& m){
+  return (i==-1 || i==N || j==-1 || j==N || num[i][j]>m);
+}
+void set(int i, int j, int& m){
+  if(!is_over(i,j,m)) is_reach[i][j]=true;
+}
+int get(int i, int j, int& m){
+  return (is_over(i,j,m) ? 0 : dp[i][j]);
+}
+bool is_max(int& i, int& j, int& max_, int& num_){
+  if(!prime[i][j]) return false;
+  if(dp[i][j] > max_) return true;
+  if(dp[i][j]==max_ && num[i][j]>num_) return true;
+  return false;
+}
+
+void solve(int& m, int& n){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      dp[i][j]=0, is_reach[i][j]=false;
+    }
+  }
+  int max_=0, num_=0;
+  bool is=false;
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      if(num[i][j]==n){
+	is=true;
+	dp[i][j]=prime[i][j];
+	set(i,j,m), set(i+1,j-1,m), set(i+1,j,m), set(i+1,j+1,m);
+	if(prime[i][j]) max_=1, num_=num[i][j];
+	break;
+      }
+      if(num[i][j]>m || !is || !is_reach[i][j]) continue;
+      dp[i][j] = prime[i][j] +
+	max(get(i-1,j-1,m), max(get(i-1,j,m), get(i-1,j+1,m)));
+      set(i+1,j-1,m), set(i+1,j,m), set(i+1,j+1,m);
+      if(is_max(i,j,max_,num_)) max_=dp[i][j], num_=num[i][j];
+    }
+  }
+  cout << max_ << " " << num_ << endl;
+}
+
+int main(){
+  init();
+  int m, n;
+  while(1){
+    cin >> m >> n;
+    if(!m && !n) break;
+    solve(m, n);
+  }
+  return 0;
+}

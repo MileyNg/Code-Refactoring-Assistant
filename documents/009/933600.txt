@@ -1,0 +1,70 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int n,i,g;
+	int s[13],h[13],c[13],d[13];
+	char j;
+	scanf("%d",&n);
+	for(i = 0;i < n*2;i++)
+	{
+		scanf("%c",&j);
+		if(j == 'S')
+		{
+			scanf("%d",&g);
+			s[g-1] = g;
+		}
+		else if(j == 'H')
+		{
+			scanf("%d",&g);
+			h[g-1] = g;
+		}
+		else if(j == 'C')
+		{
+			scanf("%d",&g);
+			c[g-1] = g;
+		}
+		else if(j == 'D')
+		{
+			scanf("%d",&g);
+			d[g-1] = g;
+		}
+		else
+		{
+		}
+	}
+	for(i = 0;i < 4;i++)
+	{
+		for(n = 0;n < 13;n++)
+		{
+			switch(i)
+			{
+			case 0:
+				if(s[n] == 0)
+				{
+					printf("S %d\n",n+1);
+				}
+				break;
+			case 1:
+				if(h[n] == 0)
+				{
+					printf("H %d\n",n+1);
+				}
+				break;
+			case 2:
+				if(c[n] == 0)
+				{
+					printf("C %d\n",n+1);
+				}
+				break;
+			default :
+				if(d[n] == 0)
+				{
+					printf("D %d\n",n+1);
+				}
+				break;
+			}
+		}
+	}
+	return 0;
+}

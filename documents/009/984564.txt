@@ -1,0 +1,82 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+
+using namespace std;
+
+int pow10(int n){
+	int res=1;
+	while(n--)
+		res*=10;
+	return res;
+}
+
+int main(){
+	ostringstream out;
+
+	int n,m;
+	cin >> n >> m;
+	vector<int> boy;
+	for(int i=0;i<n;i++)
+		boy.push_back(9);
+
+	vector<char> prime(pow10(m>=0?2*n+1:2*n));
+	for(int i=2;i<prime.size();i++){
+		if(prime[i])continue;
+		for(int j=i*2;j<prime.size();j+=i)
+			prime[j]=true;
+	}
+
+/*
+	for(int i=0;i<prime.size();i++)
+		cout << i << " "<<prime[i] << endl;
+
+	if(true)
+		return 0;
+*/
+
+	while(true){
+		vector<int>num;
+		for(int i=0;i<n;i++)
+			num.push_back(boy[i]);
+		if(m>=0)
+			num.push_back(m);
+		for(int i=n-1;i>=0;i--)
+			num.push_back(boy[i]);
+		int number=0;
+		for(int i=0;i<num.size();i++)
+			number+=num[i]*pow10(num.size()-1-i);
+		if(!prime[number]){
+			out << number << endl;
+			break;
+		}
+
+		int i=boy.size()-1;
+		for(;i>=0;i--){
+			if(boy[i]<0){
+				boy[i]=9;
+				if(i>0)
+					boy[i-1]--;
+				continue;
+			}else{
+				boy[i]--;
+				break;
+			}
+		}
+
+		if(i<0||boy[i]==0){
+			for(int i=0;i<n;i++)
+				out << 9;
+			if(m>=0)
+				out << m;
+			for(int i=0;i<n;i++)
+				out << 9;
+			out << endl;
+			break;
+		}
+
+	}
+
+	cout << out.str();
+	return 0;
+}

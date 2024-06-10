@@ -1,0 +1,64 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+
+#define MAXH 101
+#define MAXW 101
+bool done[MAXH][MAXW];
+char table[MAXH][MAXW];
+int W, H;
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+
+void dfs(int y, int x) {
+    char mark = table[y][x];
+    done[y][x] = true;
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (0 <= nx && nx < W && 0 <= ny && ny < H && table[ny][nx] == mark && !done[ny][nx]) {
+            dfs(ny, nx);
+        }
+    }
+    return;
+}
+
+int main(void) {
+    while (1) {
+        cin >> H >> W;
+        if (H == 0 && W == 0) break;
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                cin >> table[i][j];
+            }
+        }
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                done[i][j] = false;
+            }
+        }
+        int ret = 0;
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                if (!done[i][j]) {
+                    dfs(i, j);
+                    ret++;
+                }
+            }
+        }
+        cout << ret << endl;
+    }
+    return 0;
+}

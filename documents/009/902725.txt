@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+
+long long dp[1001];
+
+
+
+int main(){
+	int m;
+	int a[7],b[7];
+	while(cin>>m&&m){
+		memset(dp,0,sizeof(dp));
+		for(int i=0;i<m;i++){
+			cin>>a[i]>>b[i];
+		}
+		dp[0]=1;
+		for(int i=0;i<m;i++){
+			for(int j=1000;j>=0;j--){
+				for(int k=1;k<=b[i];k++){
+					if(1000<j+k*a[i])break;
+					dp[j+k*a[i]]+=dp[j];
+				}
+			}
+		}
+		int g;
+		cin>>g;
+		for(int i=0;i<g;i++){
+			int n;
+			cin>>n;
+			cout<<dp[n]<<endl;
+		}
+	}
+	return 0;
+}

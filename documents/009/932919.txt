@@ -1,0 +1,69 @@
+#include<iostream>
+#include<complex>
+#include<vector>
+#include<algorithm>
+using namespace std;
+namespace std{
+  template<class T> bool operator<(const complex<T> &a,const complex<T> &b)
+  {
+    return a.real()== b.real() ? a.imag()<b.imag():a.real()<b.real();
+  }
+  /*
+ template<class T> bool operator-(const complex<T> &a)
+  {
+     return complex<T>(real()-a.real(),imag()-a.imag());
+  }
+  */
+};
+
+#define X real()
+#define Y imag()
+
+double det(complex<double> a,complex<double> b)
+{
+  return a.X*b.Y-a.Y*b.X;
+}
+
+int count_data(vector<complex<double> > data)
+{
+  sort(data.begin(),data.end());
+  int k=0;
+  vector<complex<double> >ans(data.size()*2);
+  //  for(int i=0;i<data.size();i++)
+  //    {
+  //   cout<<data[i].X<<" "<<data[i].Y<<endl;
+  //  }
+  for(int i=0;i<data.size();i++)
+    {
+      while(k>1 && det(ans[k-1]-ans[k-2],data[i]-ans[k-1])<=0)
+	k--;
+      ans[k++]=data[i];
+    }
+  for(int i=data.size()-2,t=k;i>=0;i--)
+    {
+      while(k>t && det(ans[k-1]-ans[k-2],data[i]-ans[k-1])<=0)
+	k--;
+      ans[k++]=data[i];
+    }
+  return k-1;
+}
+
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      double a,b;
+      char tmp;
+      vector<complex<double> >data;
+      for(int i=0;i<n;i++)
+	{
+	  cin>>a>>tmp>>b;
+	  data.push_back(complex<double>(a,b));
+	}
+      cout<<n-count_data(data)<<endl;
+    }
+
+
+}

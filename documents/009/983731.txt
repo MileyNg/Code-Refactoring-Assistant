@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 100;
+
+char area[N][N];
+int r[11], h, w, dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1};
+bool vis[N][N], tre[N][N];
+
+void dfs(int y, int x){
+	vis[y][x] = true;
+	for(int i=0;i<4;i++){
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+		if(ny < 0 || ny >= h) continue;
+		if(nx < 0 || nx >= w) continue;
+		if(area[ny][nx] == '.' && !vis[ny][nx]){
+			dfs(ny, nx);
+		}
+	}
+}
+
+string solve(){
+	bool f[3] = {false, true, false};
+	for(int i=0;i<h;i++){
+		for(int j=0;j<w;j++){
+			f[0] |= tre[i][j];
+			if(tre[i][j]){
+				f[1] &= vis[i][j];
+				f[2] |= vis[i][j];
+			}
+		}
+	}
+	if(!f[0]) return "Broken";
+	if(f[1]) return "Yes";
+	if(!f[2]) return "No";
+	return "Unknown";
+}
+
+int main(){
+	int d, n, sy, sx;
+	cin >> h >> w >> d >> n;
+	for(int i=0;i<h;i++){
+		for(int j=0;j<w;j++){
+			cin >> area[i][j];
+			if(area[i][j] == 'D'){
+				sy = i;
+				sx = j;
+				area[i][j] = '.';
+			}
+		}
+	}
+	fill(vis[0], vis[N], false);
+	dfs(sy, sx);
+	r[0] = 0;
+	for(int i=0;i<d;i++) cin >> r[i+1];
+	fill(tre[0], tre[N], true);
+	for(int k=0;k<n;k++){
+		int x, y, s;
+		cin >> x >> y >> s;
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				if(area[i][j] == '#') tre[i][j] = false;
+				else{
+					if(s == d){
+						tre[i][j] &= (abs(i - y) > r[s] || abs(j - x) > r[s]);
+					}else{
+						tre[i][j] &= (abs(i - y) <= r[s+1] && abs(j - x) <= r[s+1] && 
+													(abs(i - y) > r[s] || abs(j - x) > r[s]));
+					}
+				}
+			}
+		}
+	}
+	cout << solve() << endl;
+	return 0;
+}

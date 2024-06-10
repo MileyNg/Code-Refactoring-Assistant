@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int bloodVal[4] = {0};
+	int num;
+	char bloodType;
+	
+	while( scanf("%d,%c", &num, &bloodType) != EOF )
+	{
+		switch( bloodType )
+		{
+			case 'A':
+				scanf("%c", &bloodType);
+				if( bloodType == '\n' )
+				{
+					bloodVal[0]++;
+				}
+				else
+				{
+					bloodVal[2]++;
+				}
+				break;
+			case 'B':
+				bloodVal[1]++;
+				break;
+			case 'O':
+				bloodVal[3]++;
+				break;
+		}
+	}
+	
+	printf( "%d\n%d\n%d\n%d\n", bloodVal[0], bloodVal[1], bloodVal[2], bloodVal[3] );
+	
+	return (0);
+}

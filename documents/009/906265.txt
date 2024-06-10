@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define X first
+#define Y second
+#define IN first
+#define OUT second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+
+int main(void){
+    for(int n, res; cin >> n, n; cout << res << endl){
+        res = 0;
+        vector<pii> t(n);
+        rep(i, n){
+            string out, in; cin >> out >> in;
+            rep(j, 2) out.erase(out.find(":"), 1);
+            rep(j, 2) in.erase(in.find(":") , 1);
+            stringstream is;
+            is << in;
+            is >> t[i].IN;
+            is.clear();
+            is << out;
+            is >> t[i].OUT;
+        }
+        sort(ALL(t));
+        int wait = 0;
+        priority_queue<int, vi, greater<int> > q;
+        rep(i, n){
+            while(!q.empty() && q.top() <= t[i].OUT)
+                wait++, q.pop();
+
+            if(!wait) res++;
+            else wait--;
+            
+            q.push(t[i].IN);
+        }
+    }
+
+    return 0;
+}

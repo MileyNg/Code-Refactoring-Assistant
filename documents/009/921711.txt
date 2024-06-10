@@ -1,0 +1,28 @@
+#include <map>
+#include <iostream>
+
+using namespace std;
+
+/** Problem0029 : English Sentence **/
+int main()
+{
+	map<string, int> sentences;
+	pair<string, int> t;
+	string tmp, maxLength;
+	
+	while (cin >> tmp) {
+		if (tmp.length() > maxLength.length())
+			maxLength = tmp;
+		
+		if (sentences.count(tmp) == 0) {
+			sentences.insert(map<string,int>::value_type(tmp, 1));
+		} else {
+			sentences[tmp]++;
+		}
+	}
+	
+	t = *max_element(sentences.begin(), sentences.end());
+	cout << t.first << " " << maxLength << endl;
+	
+	return 0;
+}

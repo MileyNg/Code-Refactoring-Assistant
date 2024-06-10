@@ -1,0 +1,27 @@
+#include<stdio.h>
+int main(void){
+	while(1){
+		int a, b, c = 0, i, j; //変数の宣言
+		scanf("%d %d", &a, &b); //a,bの入力
+		if(a == 0 && b == 0){
+			break; //無限ループ抜け出し
+		}
+		for(i = 0;i < a;i++){
+			for(j = 0;j < b;j++){
+				if(c == 0){
+					printf("#"); //cが0のとき＃を出力
+					c = 1; //cを1に変える
+				}else{
+					printf("."); //cが1のとき.を出力
+					c = 0; //cを1に変える
+				}
+			}
+			printf("\n");
+			if(c == 0){	//cを反転させる
+				c = 1;
+			}
+		}
+		printf("\n"); //次の入力のために改行
+	}
+	return 0;
+}

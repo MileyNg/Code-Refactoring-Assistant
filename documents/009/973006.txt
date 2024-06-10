@@ -1,0 +1,43 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),n.end()
+#define PI acos(-1)
+using namespace std;
+int main(){
+
+  int n,m;
+  while(cin>>n>>m,n){
+    int a[1000];
+    int b[1000]={0};
+
+    rep(i,m)a[i]=i;
+    rep(i,n){
+      rep(j,m){
+	int tmp;
+	cin>>tmp;
+	b[j]+=tmp;
+      }
+    }
+    //cout<<b[0]<<endl;;
+    rep(i,m-1){
+      rep(j,m-1){
+	if(b[j]<b[i]){
+	  swap(b[i],b[j]);
+	  swap(a[i],a[j]);
+	}
+      }
+    }
+    rep(i,m){
+      if(i==m-1)cout<<++a[i]<<endl;
+      else cout<<++a[i]<<" ";
+    }
+  }
+}

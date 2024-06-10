@@ -1,0 +1,33 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int a,b,c,d,e;
+  for(;cin>>a>>b>>c>>d>>e,a||b||c||d||e;)
+    {
+      int na,nb,nc;
+      cin>>na>>nb>>nc;
+      int ans=a*na+b*nb+c*nc;
+      if(d<=nc)
+	ans=min(ans,a*na+b*nb+e*nc);
+      else
+	ans=min(ans,a*na+b*nb+d*e);
+
+      while((nc<d &&(nb>0 || na>0)))
+	{
+	  if(nb>0)
+	    nb--;
+	  else
+	    na--;
+	  
+	  nc++;
+	}
+      if(d<=nc)
+	ans=min(ans,a*na+b*nb+e*nc);
+      else
+	ans=min(ans,a*na+b*nb+e*d);
+      cout<<ans<<endl;
+    }
+
+}

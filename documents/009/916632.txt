@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+  int map[101];
+  int tmp;
+  int max;
+  int i;
+
+  memset(map, 0, sizeof(map));
+
+  while(scanf("%d", &tmp) != EOF){
+    map[tmp]++;
+  }
+  
+  max = 0;
+
+  for (i = 1; i <= 100; i++){
+    if (max < map[i]){
+      max = map[i];
+    }
+  } 
+
+  for (i = 1; i <= 100; i++){
+    if (max == map[i]){
+      printf("%d\n", i);
+    }
+  }
+
+  return 0;
+}

@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int x, key=0;
+  int stack[100];
+  char s[100];
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+		stack[key-1] = stack[key] + stack[key-1];
+                key--;
+
+    } else if ( s[0] == '-' ){
+                if(stack[key] > stack[key-1]){
+		   stack[key-1] = stack[key] - stack[key-1];
+                }else{
+                   stack[key-1] = stack[key] - stack[key-1];
+                }
+                key--;
+
+    } else if ( s[0] == '*' ){
+		   stack[key-1] = stack[key] * stack[key-1];
+                key--;
+
+    } else {
+      x = atoi(s);
+      key++;
+      stack[key] = x;
+    }
+  }
+  printf("%d\n",stack[1]);
+
+  return 0;
+}

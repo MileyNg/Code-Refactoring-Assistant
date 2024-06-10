@@ -1,0 +1,96 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <string>
+#include <stack>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++)
+#define ascent(i, a, b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+#define ii pair<int, int>
+
+using namespace std;
+
+vector<string> shop;
+
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, -1, 0, 1};
+
+bool dfs(int w, int h) {
+  int map[1000][1000] = {0};
+  /*  ascent(i, 0, w) {
+    ascent(j, 0, h) {
+      map[h][w] = 0;
+    }
+  }
+  */
+  //  cout << "m  " << map[0][0] << endl;
+
+
+  stack<ii> pos;
+  pos.push(make_pair(0, 0));
+
+  while(!pos.empty()) {
+    int x = pos.top().first, y = pos.top().second;
+    pos.pop();
+
+    if(map[y][x] == 0) {
+      map[y][x] = 1;
+      //  cout << x << " " << y << endl;
+      ascent(i, 0, 4) {
+	int _x = x + dx[i];
+	int _y = y + dy[i];
+	
+	if(0 <= _x && _x < 1000 && 0 <= _y && _y < 1000) {
+	  if(map[_y][_x] == 0 && shop[_y][_x] == '.') {
+	    pos.push(make_pair(_x, _y));
+	  }
+	  if(shop[_y][_x] == 't') {
+	    //    cout << "ttttttttttttttttttttt" << endl;
+	    return true;
+	  }
+	}
+      }
+    }
+  }
+
+  return false;
+}
+
+int main() {
+  int w, h, n;
+  //  map<int, pair<int, int> > wall;
+
+  cin >> w >> h;
+  ascent(i, 0, h) {
+    string tmp;
+    cin >> tmp;
+    shop.pb(tmp);
+  }
+
+  cin >> n;
+  ascent(i, 0, n) {
+    /*
+    ascent(j, 0, h) {
+      cout << shop[j] << endl;
+    }
+    cout << endl;
+    */
+    if(dfs(w, h)) {
+      cout << i << endl;
+      return 0;
+    }
+    else {
+      int x, y;
+      cin >> x >> y;
+
+      shop[y][x] = '.';
+    }
+  }
+
+  cout << -1 << endl;
+  return 0;
+}

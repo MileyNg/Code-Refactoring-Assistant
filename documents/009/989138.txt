@@ -1,0 +1,84 @@
+#include <stdio.h>
+#define N 100000
+
+typedef struct{
+  int id,parent,dep,deg,s,height,left,right,type;
+  //int jisu[50];                                                                                                                                                                                 
+}Node;
+
+int hhh = 0;
+
+Node tree[N];
+
+void jisu(int);
+
+main(){
+
+  int j,i,nodeb,n;
+
+  scanf("%d",&n);
+
+  for(i = 0 ; i < n; i++){
+    tree[i].parent = -1;
+    tree[i].dep = 0;
+    tree[i].height = 1;
+    tree[i].s = -1;
+  }
+
+  for(i = 0 ; i < n ; i++ ){
+
+    scanf("%d",&nodeb);
+
+    tree[nodeb].id = nodeb;
+
+    scanf("%d",&tree[nodeb].left);
+    scanf("%d",&tree[nodeb].right);
+
+    if(tree[nodeb].left == 0 && tree[nodeb].right == 0) continue;
+
+    tree[tree[nodeb].left].parent = nodeb;
+
+    tree[tree[nodeb].left].s = tree[nodeb].right;
+    //                                                                                                                                                                                            
+    tree[tree[nodeb].right].parent = nodeb;
+    tree[tree[nodeb].right].s =  tree[nodeb].left;
+
+    jisu(nodeb);
+
+  }
+for(i = n - 1 ; i >= 0; i--){
+
+    if(tree[i].deg != 0 && tree[tree[i].right].height > tree[tree[i].left].height) tree[i].height = tree[tree[i].right].height + 1;
+    else if(tree[i].deg != 0 && tree[tree[i].left].height > tree[tree[i].right].height) tree[i].height = tree[tree[i].left].height + 1;
+    //    printf("[%d %d %d]\n",tree[i].id,i,tree[i].height);                                                                                                                                     
+  }
+
+  for(i = 0 ; i < n; i++){
+    if(tree[i].parent == -1) {
+      if(tree[tree[i].left].height == tree[i].height || tree[tree[i].right].height == tree[i].height) tree[i].height = tree[i].height + 1;
+    }
+    if(tree[i].parent != -1) tree[i].dep = tree[tree[i].parent].dep + 1;
+    printf("node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d, ",tree[i].id,tree[i].parent,tree[i].s,tree[i].deg,tree[i].dep,tree[i].height);
+    if(tree[i].height == 0 && tree[i].parent != -1) printf("leaf\n");
+    else if(tree[i].dep == 0) printf("root\n");
+    else printf("internal node\n");
+  }
+
+  return 0;
+
+}
+
+void jisu(int now){
+
+  if(tree[now].right != -1 && tree[now].left != -1) tree[now].deg = 2;
+  else if(tree[now].right == -1 && tree[now].left != -1) tree[now].deg = 1;
+  else if(tree[now].right != -1 && tree[now].left == -1) tree[now].deg = 1;
+  else {tree[now].deg = 0;
+    tree[now].height = 0;
+  }
+
+  //if(tree[now].parent != -1) tree[now].dep = tree[tree[now].parent].dep + 1;                                                                                                                    
+
+  //if(hhh <= tree[now].dep) hhh = tree[now].dep;                                                                                                                                                 
+
+}

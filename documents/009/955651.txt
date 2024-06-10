@@ -1,0 +1,98 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+
+#define INF 20
+
+int field_x, field_y;
+int res = INF;
+
+bool check(int field[10][10]){
+
+	int r = 0, g = 0, b = 0;
+
+	for (int i = 0; i < field_y; i++){
+		for (int j = 0; j < field_x; j++){
+			field[i][j] == 0 ? r++ : field[i][j] == 1 ? g++ : b++;
+		}
+	}
+
+	int a = field_x*field_y;
+	if (r == a || g == a || b == a)return true;
+	return false;
+}
+
+void bfs(int(&field)[10][10], int color){
+
+	bool used[10][10];
+	memset(used, false, sizeof(used));
+
+	int dx[] = { 1, 0, -1, 0 }, dy[] = { 0, 1, 0, -1 };
+
+	typedef std::pair<int, int> P;
+	std::queue<P>q;
+	q.push(P(0, 0));
+	used[0][0] = true;
+
+	while (!q.empty()){
+
+		P p = q.front();
+		q.pop();
+
+		for (int i = 0; i < 4; i++){
+			int nx = p.first + dx[i], ny = p.second + dy[i];
+			if (0 <= nx&&nx < field_x && 0 <= ny&&ny < field_y&&!used[ny][nx] && field[ny][nx] == field[0][0]){
+				field[ny][nx] = color;
+				q.push(P(nx, ny));
+				used[ny][nx] = true;
+			}
+		}
+	}
+
+	field[0][0] = color;
+}
+
+void calc(int field[10][10], int count){
+
+	if (check(field)){
+		res = count;
+		return;
+	}
+
+	if (count >= res)return;
+
+	for (int i = 0; i < 3; i++){
+		if (field[0][0] == i)continue;
+
+		int copy_field[10][10];
+		memcpy(copy_field, field, sizeof(copy_field));
+
+		bfs(copy_field, i);
+
+		calc(copy_field, count + 1);
+	}
+}
+
+int main(){
+
+	while (std::cin >> field_x >> field_y, field_x || field_y){
+
+		int field[10][10];
+
+		for (int i = 0; i < field_y; i++){
+			for (int j = 0; j < field_x; j++){
+				char c;
+				std::cin >> c;
+				c == 'R' ? field[i][j] = 0 : c == 'G' ? field[i][j] = 1 : field[i][j] = 2;
+			}
+		}
+
+		calc(field, 0);
+
+		std::cout << res << std::endl;
+
+		res = INF;
+	}
+
+	return 0;
+}

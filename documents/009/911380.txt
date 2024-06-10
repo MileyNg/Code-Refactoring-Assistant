@@ -1,0 +1,71 @@
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#include <climits>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <cstring>
+#include <tuple>
+#include <bitset>
+#include <unordered_map>
+using namespace std;
+typedef long long ll;
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    while (1) {
+        int N;
+        cin >> N;
+
+        if (N == 0) {
+            break;
+        }
+
+        // 誰が誰の個人情報を知っているか
+        bitset<101> has_privacy[100];
+
+        for (int i=0; i<N; ++i) {
+            int M;
+            cin >> M;
+            for (int j=0; j<M; ++j) {
+                int p;
+                cin >> p;
+                has_privacy[i].set(p, 1);
+            }
+        }
+
+        int K;
+        cin >> K;
+
+        bitset<101> leaked_list;
+        for (int i=0; i<K; ++i) {
+            int l;
+            cin >> l;
+            leaked_list.set(l, 1);
+        }
+
+        int ans = -1;
+        for (int i=0; i<N; ++i) {
+            if ((has_privacy[i] & leaked_list) == leaked_list) {
+                if (ans == -1) {
+                    ans = i + 1;
+                } else {
+                    ans = -1;
+                    break;
+                }
+            }
+        }
+
+        cout << ans << endl;
+    }
+
+    return 0;
+}

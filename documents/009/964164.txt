@@ -1,0 +1,72 @@
+#include<stdio.h>
+
+#define MAX 101
+
+void adventure(char tiles[][MAX], short h, short w);
+
+main()
+{
+	short h = 0, w = 0; //h:高さ,w:幅
+	short i = 0, j = 0;
+	while(scanf("%d %d", &w, &h), ((h != 0) && (w != 0))) //h=0&&w=0で終了
+	{
+		char tiles[MAX][MAX];
+		for(i = 0; i < MAX; i++)
+		{
+			for(j = 0; j < MAX; j++)
+			{
+				tiles[i][j] = 0x00;
+			}
+		}
+		for(i = 0; i < h; i++)
+		{
+			scanf("%*c%s", tiles[i]); //入力
+		}
+		/*
+		puts("");
+		for(i = 0; i < h; i++)
+		{
+			for(j = 0; j < w; j++)
+			{
+				printf("%c", tiles[i][j]);
+			}
+			puts("");
+		}
+		*/
+		adventure(tiles, i, j);
+	}
+	return 0;
+}
+void adventure(char tiles[][MAX], short h, short w)
+{
+	short i = 0, j = 0;
+	short counter_limit = 0, limit = h * w; //LOOPを表示するためのリミット
+	while(counter_limit <= limit)
+	{
+		//printf("tiles[%d][%d] = %c\n", i, j, tiles[i][j]);
+		if('>' == tiles[i][j])
+		{
+			j++;
+		}
+		else if('<' == tiles[i][j])
+		{
+			j--;
+		}
+		else if('^' == tiles[i][j])
+		{
+			i--;
+		}
+		else if('v' == tiles[i][j])
+		{
+			i++;
+		}
+		else if('.' == tiles[i][j])
+		{
+			printf("%d %d\n", i, j);
+			return;
+		}
+		counter_limit++;
+	}
+	printf("LOOP");
+	return;
+}

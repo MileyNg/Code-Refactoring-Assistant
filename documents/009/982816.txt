@@ -1,0 +1,111 @@
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define rep(i,n) for(int i = 0;i < n;i++)
+
+using namespace std;
+#define INF 1e16
+typedef long long lint;
+
+bool went[5]={0};   //全探索で、現在使用中かどうかのフラグ
+lint tm[5];         //馬車の出発時間
+lint S[5];
+lint dist;
+lint D[5];
+int n,m;
+lint answer = INF;  //答え
+lint pre;           //適切な出発時間であるような、答えの候補
+
+void judge(){   //tmが適切かどうかを判定する(ほそながいところとゴール以外で追いつかないか・ほそながいところで3つ以上の馬車が同時に追いつかないか)
+    vector<pair<lint,lint> > meet;
+    rep(i,n-1){
+        for(int j = i + 1;j < n;j++){
+            int hoge = 0;
+            if(S[i] < S[j]||tm[j]-tm[i] >= (S[i]-S[j])*dist)
+                continue;
+            rep(k,m){
+                if(tm[i]-tm[j] == (S[j]-S[i])*D[k]){
+                    meet.push_back(make_pair(tm[j]+S[j]*D[k],k));
+                    hoge = 1;
+                    break;
+                }
+            }
+            if(!hoge){
+                return;
+            }
+        }
+    }
+    if(!meet.empty()){
+        sort(meet.begin(),meet.end());
+        rep(i,meet.size()-1){ //3つ以上の馬車が同時に細長いところで追いついている
+            if(meet[i] == meet[i+1])
+                return;
+        }
+    }
+    pre = 0;
+    rep(i,n){
+        pre = max(pre,tm[i]+dist*S[i]);
+    }
+    answer = min(answer,pre);
+}
+
+void search(int p){ //全探索 pは探索の深さ
+    if(p == 0){
+        tm[0] = 0;
+        went[0]=1;
+        search(1);
+        return;
+    }
+    rep(i,n-1){
+        if(went[i] && went[i+1] && tm[i] >= tm[i+1])
+            return;
+    }
+    if(p == n){
+        judge();
+        return;
+    }
+    rep(i,n-1){
+        if(went[i] && !went[i+1]){
+            tm[i+1] = tm[i]+1;
+            went[i+1] = 1;
+            search(p+1);
+            went[i+1] = 0;
+        }
+        //!went[i] && went[i+1]の場合は探索しなくてよい(馬車iは必ずどこかで他の馬車に追いつくから)
+    }
+    rep(i,n){
+        if(!went[i]){
+            rep(j,n){
+                if((i < j && S[i]<S[j])||(i > j && S[i]>S[j]))
+                    continue;
+                if(went[j]){
+                    rep(k,m){   //iとjがkで追いつく
+                        tm[i] = tm[j]+(S[j]-S[i])*D[k];
+                        went[i] = 1;
+                        search(p+1);
+                        went[i] = 0;
+                    }
+                    tm[i] = tm[j]+(S[j]-S[i])*dist;
+                    went[i] = 1;
+                    search(p+1);
+                    went[i] = 0;
+                }
+            }
+        }
+    }
+}
+
+int main(){
+    cin  >> dist;
+    cin >> n;
+    rep(i,n){
+        cin >> S[i];
+    }
+    cin >> m;
+    rep(i,m){
+        cin >> D[i];
+    }
+    search(0);
+    cout << answer << endl;
+}

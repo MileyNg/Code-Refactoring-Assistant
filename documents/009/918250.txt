@@ -1,0 +1,71 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+char map[1005][1005];
+int d[1005][1005];
+int cx[12], cy[12];
+int W, H, N;
+
+typedef pair<int, int> P;
+
+void solve(int x0, int y0, int hard, int* res) {
+	queue<P> q;
+	q.push(P(x0, y0));
+	d[x0][y0] = 0;
+	while (!q.empty()) {
+		P pp = q.front(); q.pop();
+		int x = pp.first, y = pp.second;
+		int dx[4] = {0, -1, 0, 1};
+		int dy[4] = {1, 0, -1, 0};
+		int i;
+		for (i = 0; i < 4; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (nx >= 0 && nx < H && ny >= 0 && ny < W 
+				&& map[nx][ny] != 'X' && d[nx][ny] == 0 
+				&& !(nx == x0 && ny == y0)) {
+				d[nx][ny] = d[x][y] + 1;
+				if (nx == cx[hard] && ny == cy[hard]) {
+					*res += d[nx][ny];
+					return;
+				}
+				q.push(P(nx, ny));
+			}
+		}
+	}
+}
+
+int main() {
+	while (scanf("%d%d%d", &H, &W, &N) == 3) {
+		getchar();
+		int i, j;
+		for (i = 0; i < H; i++) {
+			for (j = 0; j < W; j++) {
+				scanf("%c", &map[i][j]);
+				if (map[i][j] >= '1' && map[i][j] <= '9') {
+					cx[map[i][j] - '0'] = i;
+					cy[map[i][j] - '0'] = j;
+					map[i][j] = '.';
+				}
+				else if (map[i][j] == 'S') {
+					cx[0] = i, cy[0] = j;
+					map[i][j] = '.';
+				}
+			}
+			getchar();
+		}
+		int res = 0;
+		for (i = 0; i < N; i++) {
+			memset(d, 0, sizeof(d));
+			solve(cx[i], cy[i], i+1, &res);
+		}
+		cout << res << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,22 @@
+while 1:
+    v = set()
+    edges = 0
+    try:
+        a, b = map(int, raw_input().split())
+        v.add(a)
+        v.add(b)
+        edges += 1
+    except EOFError:
+        break
+    while 1:
+        a, b = map(int, raw_input().split())
+        if a == b == 0:
+            break
+        v.add(a)
+        v.add(b)
+        edges += 1
+    ret = edges - (len(v) - 1)
+    if ret % 2:
+        print "NG"
+    else:
+        print "OK"

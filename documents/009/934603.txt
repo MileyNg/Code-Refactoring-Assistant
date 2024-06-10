@@ -1,0 +1,50 @@
+#include "stdio.h"
+#include "math.h"
+#include <cstring>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <stack>
+#include <iomanip>
+#include <iostream>
+
+using namespace std;
+/** Problem0087 : Strange Mathematical Expression **/
+int main()
+{
+	stack<double> stk;
+	string s;
+	int tmp;
+	
+	while (1) {
+		getline(cin, s);
+		
+		tmp=0;
+		for (int i=0; i<s.length(); i++) {
+			if ('0' <= s[i] && s[i] <= '9') {
+				tmp*=10; tmp+=s[i]-'0';
+			} else if (tmp != 0 && s[i] == ' ') {
+				stk.push(tmp);
+				tmp=0;
+			} else if (s[i] == '+') {
+				double a = stk.top(); stk.pop();
+				double b = stk.top(); stk.pop();
+				stk.push(a+b);
+			} else if (s[i] == '-') {
+				double a = stk.top(); stk.pop();
+				double b = stk.top(); stk.pop();
+				stk.push(b-a);
+			} else if (s[i] == '*') {
+				double a = stk.top(); stk.pop();
+				double b = stk.top(); stk.pop();
+				stk.push(a*b);
+			} else if (s[i] == '/') {
+				double a = stk.top(); stk.pop();
+				double b = stk.top(); stk.pop();
+				stk.push(a/b);
+			}
+		}
+		printf("%.6lf\n", stk.top());
+	}
+}

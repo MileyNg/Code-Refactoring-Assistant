@@ -1,0 +1,51 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<char, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+int main() {
+  string s; cin >>s;
+  vector<P> v;
+  int cnt = 1;
+  FOR(i, 1, s.length()){
+    if(s[i] == s[i - 1]) ++cnt;
+    else {
+      v.push_back( P(s[i - 1], cnt) );
+      cnt = 1;
+    }
+  }
+  v.push_back( P(s[s.length() - 1], cnt) );
+  //REP(i, v.size()) cout <<v[i].first <<", " <<v[i].second <<endl;
+
+  int k = 0;
+  REP(i, v.size() - 2){
+    //cout <<v[i].first <<", " <<v[i + 1].first <<", " <<v[i + 2].first <<endl;
+    if(!(v[i].first == 'J' && v[i + 1].first == 'O' && v[i + 2].first == 'I')) continue;
+    int min_num = min(v[i].second, min(v[i + 1].second, v[i + 2].second));
+    if(!(v[i].second >= v[i + 1].second && v[i + 1].second <= v[i + 2].second)) continue;
+    k = max(k, v[i + 1].second);
+  }
+  cout <<k <<endl;
+  return 0;
+}

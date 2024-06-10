@@ -1,0 +1,16 @@
+loop do
+    n, r = gets.split.map(&:to_i)
+    if n==0&&r==0
+        break
+    end
+    cs = Array.new(n)
+    n.times do |i|
+        cs[i] = n-i
+    end
+    r.times do
+        p, c = gets.split.map(&:to_i)
+        out = cs.slice!(p-1,c)
+        cs = out.concat cs
+    end
+    puts cs[0]
+end

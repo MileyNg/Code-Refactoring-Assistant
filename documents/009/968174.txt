@@ -1,0 +1,48 @@
+#include<iostream>
+#include<sstream>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+string int_to_string(int n){
+  stringstream ss;
+  ss << n;
+  return ss.str();
+}
+
+int string_to_int(const string& s){
+  int n;
+  istringstream iss(s);
+  iss >> n;
+  return n;
+}
+
+bool is_equal(const string& s){
+  for(int i=1; i<s.size(); ++i){
+    if(s[0]!=s[i]) return false;
+  }
+  return true;
+}
+
+int main(){
+  int cnt;
+  string s, max_, min_;
+  while(1){
+    cin >> s;
+    if(s=="0000") break;
+    if(is_equal(s)){
+      cout << "NA" << endl;
+      continue;
+    }
+    for(cnt=0; s!="6174"; ++cnt){
+      min_ = s;
+      sort(min_.begin(), min_.end());
+      max_ = min_;
+      reverse(max_.begin(), max_.end());
+      s = int_to_string(string_to_int(max_)-string_to_int(min_));
+    }
+    cout << cnt << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,11 @@
+n,q = map(int, raw_input().split())
+ls = [set([i]) for i in range(n)]
+ref = [i for i in range(n)]
+for i in range(q):
+	com,x,y = map(int, raw_input().split())
+	if com == 0: # unite
+		ls[x] = ls[x]|ls[ref[y]]
+		for i in list(ls[x]):
+			ref[i] = ref[x]
+	else: # same
+		print 1 if y in ls[ref[x]] and x in ls[ref[y]] else 0

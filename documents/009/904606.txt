@@ -1,0 +1,18 @@
+#include <cmath>
+#include <iostream>
+const int N=1001;
+double A[N]={0},B[N]={0};
+double x=1,y=0;
+int main(){
+	for(int i=1;i<N;i++){
+		A[i]=x;B[i]=y;
+		double tmp=sqrt(i),dx=-y/tmp,dy=x/tmp;
+		x+=dx,y+=dy;
+	}
+	while(1){
+		int n;
+		std::cin>>n;
+		if(n==-1)break;
+		std::cout<<A[n]<<"\n"<<B[n]<<"\n";
+	}
+}

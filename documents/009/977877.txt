@@ -1,0 +1,69 @@
+//2013-5
+
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <algorithm>
+#include <time.h>
+#define mp make_pair
+#define INF 1e8
+#define fs first
+#define sc second
+#define rep(x,n) for(int x = 0;x < n;x ++)
+#define Rep(x,n) for(int x = 1;x <= n;x ++)
+using namespace std;
+
+int d[2][105][105]; //行き先、cost...0 time...1
+
+int main(){
+    int n,m;
+    while(scanf("%d %d",&n,&m)&&(n!=0||m!=0){
+
+    rep(i,m){
+        rep(j,m){
+            d[0][i][j]=INF;
+            d[1][i][j]=INF;
+        }
+    }
+    rep(i,m){
+        d[0][i][i]=0;
+        d[1][i][i]=0;
+    }
+
+    rep(i,n){
+        int a,b,cost,time;
+        scanf("%d %d %d %d",&a,&b,&cost,&time);
+        a--;b--;
+        d[0][a][b]=cost;
+        d[0][b][a]=cost;
+        d[1][a][b]=time;
+        d[1][b][a]=time;
+    }
+    
+    
+    rep(i,2){
+        rep(j,m){
+            rep(k,m){
+                rep(l,m){
+                    d[i][k][l]=min(d[i][k][l],d[i][k][j]+d[i][j][l]);
+                    if(d[i][k][l]>INF)
+                        d[i][k][l]=INF;
+                }
+            }
+        }
+    }
+    
+    int k;
+    scanf("%d",&k);
+    rep(i,k){
+        int p,q,r;
+        scanf("%d %d %d",&p,&q,&r);
+        p--;q--;
+        printf("%d\n",d[r][p][q]);
+    }
+    }
+}

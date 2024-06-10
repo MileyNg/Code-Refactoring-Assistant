@@ -1,0 +1,40 @@
+#include<stdio.h>
+main(){
+  int r,c=0;
+  int a,b,d,e=0;
+  int f,g,h,i=0;
+  int j,k,l=0;
+  int A[101][101]={0};
+  scanf("%d %d",&r,&c);
+  for(a=0;a<r;a++){
+    for(b=0;b<c;b++){
+      scanf("%d",&A[a][b]);
+    }
+  }
+  for(d=0;d<r;d++){
+    for(e=0;e<c;e++){
+      A[d][c]=A[d][c]+A[d][e];
+    }
+  }
+  for(f=0;f<c;f++){
+    for(g=0;g<r;g++){
+      A[r][f]=A[r][f]+A[g][f];
+    }
+  }
+  for(i=0;i<r;i++){
+    for(j=0;j<c;j++){
+      A[r][c]=A[r][c]+A[i][j];
+    }
+  }
+  for(k=0;k<=r;k++){
+    for(l=0;l<=c;l++){
+      if(l==c){
+	printf("%d\n",A[k][l]);
+      }
+      else{
+	printf("%d ",A[k][l]);
+      }
+    }
+  }
+  return 0;
+}

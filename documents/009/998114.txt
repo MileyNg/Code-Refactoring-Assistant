@@ -1,0 +1,34 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  teams = []
+
+  for id in (1..n)
+    nm, *pts = gets.strip.split(' ')
+
+    w = l = 0
+
+    for pt in pts
+      if pt == '0'
+        w += 1
+      else
+        pt == '1'
+        l += 1
+      end
+    end
+
+    teams << [nm, w, l, id]
+  end
+
+  for t in teams.sort{|a, b|
+      (c0 = b[1] <=> a[1]) != 0 ? c0 :
+      (c1 = a[2] <=> b[2]) != 0 ? c1 :
+      a[3] <=> b[3]
+    }
+
+    puts t[0]
+  end
+end

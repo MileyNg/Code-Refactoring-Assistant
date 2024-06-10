@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    ios::sync_with_stdio(false);
+    int a, b;
+    vector<int> v(101);
+    while (1) {
+        fill(v.begin(), v.end(), 0);
+        while (1) {
+            if (!(cin >> a >> b)) return 0;
+            if ( ! a && ! b) break;
+            v[a] ++;
+            v[b] ++;
+        }
+        bool ok = true;
+        if (v[1] % 2 == 0 || v[2] % 2 == 0) {
+            ok = false;
+        }
+        for (int i=3; i<101; ++i) {
+            if (v[i] % 2 != 0) {
+                ok = false;
+            }
+        }
+        cout << (ok ? "OK" : "NG") << endl;
+    }
+    return 0;
+}

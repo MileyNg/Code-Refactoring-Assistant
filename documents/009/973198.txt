@@ -1,0 +1,39 @@
+#include<iostream>
+using namespace std;
+int main () {
+
+  int t,n,a[100],max,max2;
+
+  cin >>t;
+  
+  for(int i=0; i < t ;i++){
+    
+    for(int j=0 ; j < 100 ; j++){
+      a[i]=0;
+    }
+
+    cin >>n;
+    
+    for(int j=0 ; j < n ; j++){
+      cin >>a[j];
+    }
+
+    max=a[1]-a[0];
+    max2=a[n-1]-a[n];
+    
+    for(int j=1 ; j < n ; j++){
+      if( a[j+1]-a[j] > max ){
+	max=a[j+1]-a[j];
+      }
+      if( a[n-1-j]-a[n-j] > max2){
+	max2=a[n-1-j]-a[n-j];
+      }
+    }
+
+    cout <<max<<" "<<max2<<endl;
+
+  }
+
+  return 0;
+
+}

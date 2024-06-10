@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+int main(){
+    int n;
+    while(cin >> n,n){
+        vector<int> ms, as, bs, abs;
+        vector<pair<int, int>> evs; // time, v
+
+        for(int i(0); i < n; ++ i){
+            int m, a, b;
+            cin >> m >> a >> b;
+            ms.push_back(m);
+            evs.push_back(make_pair(a, m));
+            evs.push_back(make_pair(b, -m)); // b-1?
+        }
+        sort(begin(evs), end(evs));
+        int v = 0;
+        for(auto e: evs){
+            v += e.second;
+            if(v > 150) {
+                cout << "NG" << endl;
+                goto l;
+            }
+        }
+        cout << "OK" << endl;
+    l:;
+    }
+}

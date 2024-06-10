@@ -1,0 +1,103 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_LEN = 1100010;
+
+char ans;
+bool end_flg = false;
+int I;
+char N[MAX_LEN];
+
+pair<string, char *> getStr(char *p){
+  stringstream ss;
+  while(isalpha(*p)){
+    ss << (*p);
+    ++p;
+  }
+  return pair<string, char *>(ss.str(), p);
+}
+
+pair<int, char *> getInt(char *p){
+  int ret = 0;
+  while(isdigit((*p))){
+      ret *= 10;
+      ret += ((*p) - '0');
+      ++p;
+  }
+  return pair<int, char *>(ret, p);
+}
+
+pair<string, char *> check(char *p){
+  if(end_flg) return pair<string, char *>("", p);
+  pair<int, char *> tmpi = getInt(p);
+  int num = tmpi.first;
+  p = tmpi.second;
+  string str = "";
+  while(isdigit(*(p + 1))){
+    pair<string, char *> tmpc = check(p + 1);
+    str += tmpc.first;
+    p = tmpc.second;
+    if(end_flg) return pair<string, char *>("", p);
+  }
+  pair<string, char *> tmps = getStr(p + 1);
+  string now_str = tmps.first;
+  str += now_str;
+  p = tmps.second;
+  string ret = "";
+  if(str.length() * num - 1 >= I){
+    ans = str[I % str.length()];
+    end_flg = true;
+  } else if(str.length() * num <= MAX_LEN){
+    stringstream ss;
+    REP(i, num) ss << str;
+    ret = ss.str();
+  }
+  return pair<string, char *>(ret, p);
+}
+
+int main() {
+  string tmp_s;
+  while(cin >>tmp_s >>I && tmp_s != "0"){
+    stringstream ss;
+    ss <<"1(";
+    REP(i, tmp_s.length()){
+      if(i + 1 < tmp_s.length() && isdigit(tmp_s[i]) && isalpha(tmp_s[i + 1]))
+        ss <<tmp_s[i] <<"(";
+      else if(i + 1 < tmp_s.length() && isalpha(tmp_s[i]) && isdigit(tmp_s[i + 1]))
+        ss <<")" <<tmp_s[i];
+      else
+        ss <<tmp_s[i];
+    }
+    ss <<")";
+    char *tmp_c = new char[ss.str().length() + 1];
+    strcpy(tmp_c, ss.str().c_str());
+    strcpy(N, tmp_c);
+    end_flg = false;
+    pair<string, char *> s = check(N);
+    if(end_flg) cout <<ans <<endl;
+    else cout <<0 <<endl;
+  }
+  return 0;
+}

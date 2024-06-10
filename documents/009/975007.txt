@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <queue>
+
+using namespace std;
+
+struct cha{
+	string name;
+	queue<int> q;
+	int toku;
+};
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		int d[30];
+		for (int i = 0; i < 30; i++) {
+			d[i] = n+1;
+		}
+		cha c[20];
+		int a, b;
+		for (int i = 0; i < n; i++) {
+			cin >> c[i].name;
+			cin >> a;
+			for (int j = 0; j < a; j++) {
+				cin >> b;
+				d[b]--;
+				(c[i].q).push(b);
+			}
+		}
+		cha max;
+		for (int i = 0; i < n; i++) {
+			c[i].toku = 0;
+			int v;
+			while (!(c[i].q).empty()) {
+				v = (c[i].q).front();
+				(c[i].q).pop();
+				c[i].toku += d[v];
+			}
+			if (i == 0) {
+				max.name = c[i].name;
+				max.toku = c[i].toku;
+			} else if (max.toku > c[i].toku) {
+				max.name = c[i].name;
+				max.toku = c[i].toku;
+			} else if (max.toku == c[i].toku) {
+				if (max.name > c[i].name) {
+					max.name = c[i].name;
+				}
+			}
+		}
+		cout << max.toku << " " << max.name << endl;
+	}
+	return 0;
+}

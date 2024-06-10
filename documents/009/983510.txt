@@ -1,0 +1,48 @@
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#include <climits>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <cstring>
+#include <tuple>
+#include <bitset>
+#include <unordered_map>
+
+using namespace std;
+
+int main() {
+    const string search = "Hoshino";
+
+    int n;
+    cin >> n;
+    cin.get();
+
+    string text;
+    while (n --) {
+        getline(cin, text);
+        for (int i=0; i<(int)text.size(); ) {
+            int j;
+            for (j=0; j<(int)search.size(); ++j) {
+                if ((int)text.size() < i+j || search[j] != text[i+j]) {
+                    i += (j == 0 ? 1 : j);
+                    break;
+                }
+            }
+            if (j == (int)search.size()) {
+                text[i+j-1] = 'a';
+                i += j;
+            }
+        }
+        cout << text << endl;
+    }
+
+    return 0;
+}

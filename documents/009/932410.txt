@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+/** Problem0052 : Factorial II **/
+int main()
+{
+	int n, t, fact2, fact5;
+	
+	while (1) {
+		cin >> n;
+		if (n == 0) break;
+		
+		fact2 = 0; fact5 = 0;
+		for (int i=1; i<=n; i++) {
+			t = i;
+			while (t%5==0) {
+				fact5++;
+				t/=5;
+			}
+			t = i;
+			while (t%2==0) {
+				fact2++;
+				t/=2;
+			}
+		}
+		
+		cout << min(fact5, fact2) << endl;
+	}
+}

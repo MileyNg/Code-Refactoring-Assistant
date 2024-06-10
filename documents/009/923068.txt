@@ -1,0 +1,58 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+int data[101][101], ks;
+vector<int>k;
+vector<int>m;
+bool judge(int x){
+  int j;
+  rep(i, ks){
+    for(j = 0; j < m[x]; ++j) if(k[i] == data[x][j]) break;
+    if(j == m[x]) return false;
+  }
+  return true;
+}
+
+int main(){
+  int n, in;
+  while(scanf("%d", &n) && n){
+    k.clear(); m.clear();
+    rep(i, n){
+      scanf("%d", &in);
+      m.push_back(in);
+      rep(j, m[i]) scanf("%d", &data[i][j]);
+      sort(data[i], data[i]+m[i]);
+    }
+    //    printf("member");
+    scanf("%d", &ks);
+    rep(i, ks){ scanf("%d", &in); k.push_back(in);}
+    sort(k.begin(), k.end());
+    int f = 0, res;
+    rep(i, n)
+      if(judge(i)){ f++; res = i;}
+    /*    rep(i, n){
+      rep(j, m[i]) printf("%d ", data[i][j]);
+      puts("");
+    }
+    printf("%d %d\n", f, res);
+    rep(i, ks) printf("%d ", k[i]);
+    puts(""); */    
+    if(f == 1) printf("%d\n", res+1);
+    else puts("-1");
+    //    puts("end");
+  }
+  return 0;
+}

@@ -1,0 +1,26 @@
+#include<stdio.h>
+#include<string.h>
+main(){
+  int i,j,k,l,p,m,h,x,z;
+  char n[201],copy[201];
+  while(1){
+    scanf("%s",n);
+    if(n[0] == '-')break;
+    x=strlen(n);
+    strcpy(copy,n);
+    scanf("%d",&m);
+    for(i=0;i<m;i++){
+      scanf("%d",&h);
+      for(j=h-1,l=0;l<h;j++,l++){
+	copy[x-h+l] = n[l];
+      }
+      for(k=h-1,p=0;p<x-h;k++,p++){
+	copy[p] = n[h+p];
+      }
+      strcpy(n,copy);
+    }
+    printf("%s\n",n);
+  } 
+  return 0;
+}
+  

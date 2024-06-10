@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 10
+#define INF 1e9
+typedef vector<int> Vec;
+
+int N;
+map<Vec,int> dist[2];
+
+void bfs(int p,Vec &start){
+  Vec st;
+  queue<Vec> que; 
+
+  dist[p][start] = 0;
+  que.push(start);
+
+  while(!que.empty()){
+    Vec s = que.front(); que.pop();
+
+    if(dist[p][s] >= N/2){
+      break;
+    }
+
+    for(int i = 0 ; i < N-1 ; i++){
+      for(int j = i + 1 ; j < N ; j++){
+	Vec next = s;
+	reverse(next.begin()+i, next.begin()+j+1);
+
+	if(!dist[p].count(next)){
+	  dist[p][next] = dist[p][s] + 1;
+	  que.push(next);
+	} 
+      }
+    }
+  }
+}
+
+int main(){
+  Vec start, goal;
+
+  cin >> N;
+  start.resize(N);
+  for(int i = 0 ; i < N ; i++){
+    cin >> start[i];
+    goal.push_back(i+1);
+  }
+
+  bfs(0,start); bfs(1,goal);
+  map<Vec,int>::iterator it, val;
+  
+  int min = INF;
+  for(it = dist[0].begin() ; it != dist[0].end() ; ++it){
+    val = dist[1].find(it->first);
+    if(val != dist[1].end()){
+      min = std::min(min, it->second+val->second);
+    }    
+  }
+  cout << min << endl;
+
+  return 0;
+}

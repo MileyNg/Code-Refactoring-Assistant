@@ -1,0 +1,47 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int n;
+  cin>>n;
+  pair<int,int> data[n];
+  for(int i=0;i<n;i++)
+    {
+      data[i]=make_pair(0,i+1);
+    }
+  for(int i=0;i<n*(n-1)/2;i++)
+    {
+      int a,b,c,d;
+      cin>>a>>b>>c>>d;
+      a--;
+      b--;
+      if(c>d)
+	data[a].first+=3;
+      else if(c<d)
+	data[b].first+=3;
+      else
+	{
+	  data[a].first+=1;
+	  data[b].first+=1;
+	}
+    }
+  sort(data,data+n,greater<pair<int,int> >());
+
+  int rank=1;
+  int tmp;
+  int ans[n];
+  for(int i=1;i<=n;i++)
+    {
+      if(tmp!=data[i-1].first)
+	rank=i;
+      tmp=data[i-1].first;
+      
+      ans[data[i-1].second-1]=rank;
+    }
+  for(int i=0;i<n;i++)
+    {
+      cout<<ans[i]<<endl;
+    }
+
+}

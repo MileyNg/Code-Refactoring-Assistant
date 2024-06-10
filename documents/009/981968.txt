@@ -1,0 +1,66 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <map>
+using namespace std;
+
+const int MAX_=500000;
+map<int,bool> is_mon_sat_prime;
+vector<int> mon_sat_prime;
+vector<int> mon_sat_number;
+
+void sieve(){
+	for(auto it=mon_sat_number.begin(); it!=mon_sat_number.end(); ++it){
+		is_mon_sat_prime[*it]=true;
+	}
+	is_mon_sat_prime[1]=false;
+	for(auto it=mon_sat_number.begin(); it!=mon_sat_number.end(); ++it){
+		if(it==mon_sat_number.begin()) ++it;
+		if(is_mon_sat_prime[*it]){
+			mon_sat_prime.push_back((*it));
+			for(auto it_=mon_sat_number.begin(); (*it_)*(*it)<MAX_; ++it_){
+				if(it_==mon_sat_number.begin()) ++it_;
+				is_mon_sat_prime[(*it_)*(*it)]=false;
+			}
+		}
+	}
+}
+
+void init(){
+	for(int i=0; 6+i<MAX_ ; i+=7){
+		mon_sat_number.push_back(6+i);
+		mon_sat_number.push_back(1+i);
+	}
+	sort(mon_sat_number.begin(),mon_sat_number.end());
+	sieve();
+}
+
+void solve(int n){
+	vector<int> ans;
+	int tmp=n;
+	for(auto it=mon_sat_prime.begin(); (*it)<=n; ++it){
+		if(n%(*it)==0){
+			ans.push_back(*it);
+		}
+	}
+	sort(ans.begin(),ans.end());
+	cout << tmp << ": ";
+	for(auto it=ans.begin(); it!=ans.end(); ++it){
+		cout << *it;
+		if(++it==ans.end()){
+			cout << endl;
+		} else {
+			cout << ' ';
+		}
+		--it;
+	}
+}
+
+int main(){
+	init();
+	int N;
+	while(cin >> N&&N!=1){
+		solve(N);
+	}
+	return 0;
+}

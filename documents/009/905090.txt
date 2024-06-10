@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 11
+#define INF (1<<29)
+
+int main(){
+  int n,a,b,c;
+
+  while(cin >> n ,n){
+    int G[MAX][MAX],m = 0;
+    fill(G[0],G[MAX],INF);
+    
+    for(int i = 0 ; i < MAX ; i++){
+      G[i][i] = 0;
+    }
+    for(int i = 0 ; i < n ; i++){
+      cin >> a >> b >> c;
+      G[a][b] = G[b][a] = c;
+      m = max(m,max(a,b));
+    }
+  
+
+    for(int k = 0 ; k <= m ; k++){
+      for(int i = 0 ; i <= m ; i++){
+	for(int j = 0 ; j <= m ; j++){
+	  G[i][j] = min(G[i][j],G[i][k]+G[k][j]);
+	}
+      }
+    }
+
+    int min_ = INF,num;
+    for(int i = 0 ; i <= m ; i++){
+      int sum = 0;
+      for(int j = 0 ; j <= m ; j++){
+	sum += G[i][j];
+      }
+      if(min_ > sum){
+	min_ = sum;
+	num = i;
+      }
+    }
+    cout << num << " " << min_ << endl;
+  }
+
+  return 0;
+}

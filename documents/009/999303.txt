@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define NIL 500009
+#define INF -1
+#define N 2000001
+
+int heap_size = 0, A[N];
+
+void maxHeapify(int i){
+  int l, r, largest, tmp;
+
+  l = getLeft(i);
+  r = getRight(i);
+  if(l <= heap_size && A[l] > A[i]){
+    largest = l;
+  }else{
+    largest = i;
+  }
+  if(r <= heap_size && A[r] > A[largest]){
+    largest = r;
+  }
+  if(largest != i){
+    tmp = A[i];
+    A[i] = A[largest];
+    A[largest] = tmp;
+    maxHeapify(largest);
+  }
+}
+
+int getLeft(int i){
+  i *= 2;
+  if(i > heap_size) return NIL;
+  else return i;
+}
+
+int getRight(int i){
+  i = i * 2 + 1;
+  if(i > heap_size) return NIL;
+  else return i;
+}
+
+int getParent(int i){
+  i = i / 2;
+  if(i > heap_size) return NIL;
+  else return i;
+}
+
+int heapExtractMax(){
+  int max;
+  if(heap_size < 1){
+    printf("error\n");
+    return;
+  }
+    max = A[1];
+    A[1] = A[heap_size];
+    heap_size = heap_size - 1;
+    maxHeapify(1);
+    return max;
+}
+
+void heapIncreaseKey(int i, int key){
+  int tmp;
+  if(key < A[i]){
+    printf("error\n");
+  }
+  A[i] = key;
+  while(i > 1 && A[getParent(i)] < A[i]){
+    tmp = A[i];
+    A[i] = A[getParent(i)];
+    A[getParent(i)] = tmp;
+    i = getParent(i);
+  }
+}
+
+void maxHeapInsert(int key){
+  heap_size = heap_size + 1;
+  A[heap_size] = INF;
+  heapIncreaseKey(heap_size, key);
+}
+
+main(){
+  int i, key;
+  char com[20];
+
+  while(scanf("%s", com), strcmp(com, "end")){
+    if(com[0] == 'i'){
+      scanf("%d", &key);
+      maxHeapInsert(key);
+    }
+    if(com[0] == 'e'){
+      printf("%d\n", heapExtractMax());
+    }
+  }
+  return 0;
+}

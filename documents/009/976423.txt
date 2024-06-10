@@ -1,0 +1,129 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i = 0; i < (int)n; i++)
+using namespace std;
+
+const double EPS = 1e-9;
+int sign(double x){return x > EPS ? 1 : -x > EPS ? -1 : 0;}
+
+typedef complex<double> P;
+double dot(P a, P b){return real(conj(a) * b);}
+double cross(P a, P b){return imag(conj(a) * b);}
+int ccw(P a, P b, P c){b -= a; c -= a; return sign(cross(b,c)) ? : dot(b,c) < 0 ? 2 : norm(b) < norm(c) ? -2 : 0;}
+
+typedef vector<P> L;
+P vec(L l){P p = l[1] - l[0]; return p / abs(p);}
+/////
+
+
+P proj(L l, P p){
+    double t = dot(p - l[0], vec(l)) / norm(vec(l));
+    return l[0] + t * vec(l);
+}
+
+bool iLP(L l, P p) {return sign(cross(vec(l), p - l[0])) == 0;}
+bool iSP(L s, P p) {return ccw(s[0], s[1], p) == 0;}
+
+vector<P> pLL(L l, L m){
+    double A = cross(vec(l), vec(m));
+    double B = cross(vec(l), l[1] - m[0]);
+    if(sign(A) == 0 && sign(B) == 0) return {{0,0},{0,0}}; // &#228;&#186;&#140;&#231;&#155;卒&#231;&#183;&#154;&#227;&#129;&#140;&#233;&#135;&#141;&#227;&#129;&#170;&#227;&#129;&#163;&#227;&#129;?&#227;&#129;&#132;&#227;&#130;&#139;
+    if(sign(A) == 0) return {}; // &#231;&#155;卒&#231;&#183;&#154;&#227;&#129;&#140;&#228;&#186;&#164;&#227;&#130;&#143;&#227;&#130;&#137;&#227;&#129;&#170;&#227;&#129;&#132;
+    return {m[0] + vec(m) * B / A};
+}
+
+int n;
+P s,t;
+L l[111];
+
+int main(){
+    int T = 0;
+
+    while(scanf("%d",&n),n){
+        double xs,ys,xt,yt;
+        scanf("%lf%lf%lf%lf",&xs,&ys,&xt,&yt);
+        s = {xs,ys}; t = {xt,yt};
+
+        rep(i,n){
+            scanf("%lf%lf%lf%lf",&xs,&ys,&xt,&yt);
+            P ls = {xs,ys}, lt = {xt,yt};
+            ls += vec({lt,ls}) * EPS;
+            lt += vec({ls,lt}) * EPS;
+            l[i] = {ls,lt};
+        }
+
+        vector<L> mov;
+        rep(i,n){
+            P ss = proj(l[i],s);
+            if(iSP(l[i],ss)) mov.push_back({s,ss});
+            P tt = proj(l[i],t);
+            if(iSP(l[i],tt)) mov.push_back({t,tt});
+
+            mov.push_back({l[i][0],l[i][0]+vec(l[i])*polar(1.0,M_PI/2)});
+            mov.push_back({l[i][1],l[i][1]+vec(l[i])*polar(1.0,M_PI/2)});
+        }
+
+        //arrangement
+        int m = mov.size();
+        vector<P> pttmp = {s,t};
+
+        rep(i,m) rep(j,i){
+            vector<P> isp = pLL(mov[i],mov[j]);
+            if(isp.size() != 1) continue;
+            pttmp.push_back(isp[0]);
+        }
+
+        vector<P> pt;
+        for(int i = 0; i < pttmp.size(); i++){
+            bool ok = true;
+            for(int j = 0; j < pt.size() && ok; j++){
+                ok &= pttmp[i] != pt[j];
+            }
+            if(ok) pt.push_back(pttmp[i]);
+        }
+
+
+        vector<int> G[pt.size()];
+
+        rep(i,mov.size()){
+            vector<int> on;
+            rep(j,pt.size()){
+                if(iLP(mov[i],pt[j])) on.push_back(j);
+            }
+
+            rep(j,on.size()) rep(k,j){
+                G[on[j]].push_back(on[k]);
+                G[on[k]].push_back(on[j]);
+            }
+        }
+
+        //dijkstra
+        double d[pt.size()];
+        fill(d,d+pt.size(),1e99);
+        d[0] = 0;
+        typedef pair<double,int> pdi;
+        priority_queue<pdi, vector<pdi>, greater<pdi>> pq;
+        pq.push({0,0});
+
+        while(!pq.empty() && d[1] > 1e90){
+            int v = pq.top().second;
+            double x = pq.top().first;
+            pq.pop();
+            if(x > d[v]) continue;
+            for(int w : G[v]){
+                double l = abs(pt[v]-pt[w]);
+                if(d[w] > d[v] + l){
+                    d[w] = d[v] + l;
+                    pq.push({d[w],w});
+                }
+            }
+        }
+ 
+        T++;
+        printf("Case %d: ",T);
+        if(d[1] > 1e90){
+            puts("Impossible");
+        } else {
+            printf("%.5f\n", d[1]);
+        }
+    }
+}

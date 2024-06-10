@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void)
+{
+	double syosu, sum, syosu2;
+	int a;
+	
+	while (scanf("%lf", &syosu) != EOF){
+		sum = 0;
+		a = 1;
+		while (a != 11) {
+			if (a == 1) {
+				sum += syosu;
+				syosu2 = syosu;
+			}
+			else if (a % 2 == 0) {
+				sum += syosu2 * 2.0;
+				syosu2 = syosu2 * 2.0;
+			}
+			else if (a % 2 == 1) {
+				sum += syosu2 / 3.0;
+				syosu2 = syosu2 / 3.0;
+			}
+			a++;
+		}
+		printf("%.8f\n", sum);
+	}
+	
+	return (0);
+}

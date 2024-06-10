@@ -1,0 +1,32 @@
+#include<cstdio>
+void shuffle (int [], int, int);
+
+int main(){
+  int n,r,p,c;
+  while(1){
+    scanf("%d%d",&n,&r);
+    if(n==0 && r==0)
+      break;
+    int data[n];
+    for(int i=0;i<n;i++)
+      data[i]=n-i;
+    for(int i=0;i<r;i++){
+      scanf("%d%d",&p,&c);
+      shuffle(data,p,c);
+    }
+    printf("%d\n",data[0]);
+  }
+  return 0;
+  
+}
+
+void shuffle(int data[] ,  int p ,int c){
+  int bd[c];
+  p--;
+  for(int i=0;i<c;i++)
+    bd[i]=data[p+i];
+  for(int i=0;i<p;i++)
+    data[p+c-1-i]=data[p-1-i];
+  for(int i=0;i<c;i++)
+    data[i]=bd[i];
+}

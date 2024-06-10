@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+
+class Baseball{
+    u_int runner, out, point;
+    
+public:
+    Baseball();
+    ~Baseball(){}
+        
+    u_int get_runner() const {return runner;}
+    u_int get_out() const {return out;}
+    u_int get_point() const {return point;}
+    void set_runner(const u_int r) {runner = r;}
+    void set_out(const u_int o) {out = o;}
+    void set_point(const u_int p) {point = p;}
+    
+    void event_hit();
+    void event_homerun();
+    void event_out();
+    
+private:
+    void inc_runner() {++runner;}
+    void inc_out() {++out;}
+    void add_point(const u_int p) {point += p;}
+};
+
+Baseball::Baseball()
+{
+    runner = 0;
+    out = 0;
+    point = 0;
+}
+
+void Baseball::event_hit()
+{
+    if(get_runner() == 3){
+        add_point(1);
+    }
+    else{
+        inc_runner();
+    }   
+}
+
+void Baseball::event_homerun()
+{
+    add_point(1 + get_runner());
+    set_runner(0);
+}
+
+void Baseball::event_out()
+{
+    inc_out();
+}
+
+int main()
+{
+    u_int inning;
+    std::cin >> inning;
+    
+    std::string event;
+    for(u_int i = 0; i < inning; ++i){
+        Baseball b_ball;
+        while(b_ball.get_out() != 3){
+            std::cin >> event;
+            if(event == "HIT"){
+                b_ball.event_hit();
+            }
+            else if(event == "HOMERUN"){
+                b_ball.event_homerun();
+            }
+            else{
+                b_ball.event_out();
+            }
+        }
+        std::cout << b_ball.get_point() << std::endl;
+    }
+
+    return 0;
+}

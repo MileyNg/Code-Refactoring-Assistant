@@ -1,0 +1,79 @@
+//2013-5
+
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <algorithm>
+#include <time.h>
+#define INF 1e8
+#define fs first
+#define sc second
+#define rep(x,n) for(int x = 0;x < n;x ++)
+#define Rep(x,n) for(int x = 1;x <= n;x ++)
+using namespace std;
+
+
+char mp[1005][1005];
+int d[1005][1005];
+int chx[10];
+int chy[10];
+int dx[4]={-1,1,0,0},dy[4]={0,0,-1,1};
+
+//下向きにx,右向きにy
+int main(){
+    int H,W;
+    int N;
+    cin >> H >> W;
+    cin >> N;
+    int ans = 0;
+    
+    rep(i,H){
+        scanf("%s",mp[i]);
+        rep(j,W){
+            if('1'<=mp[i][j]&&mp[i][j]<'9'){
+                chx[mp[i][j]-'0']=i;
+                chy[mp[i][j]-'0']=j;
+            }else if(mp[i][j]=='S'){
+                chx[0]=i;
+                chy[0]=j;
+            }
+        }
+    }    rep(i,N){
+        queue<pair<int,int> > que;
+        rep(j,H){
+            rep(k,W){
+                d[j][k]=-1;
+            }
+        }
+        d[chx[i]][chy[i]]=0;
+        que.push(make_pair(chx[i],chy[i]));
+        while(!que.empty()){
+            int flag = 0;
+            int nowx = que.front().first;
+            int nowy = que.front().second;
+            que.pop();
+            rep(j,4){
+                int nextx = nowx+dx[j];
+                int nexty = nowy+dy[j];
+                if(!(0<=nextx&&nextx<H&&0<=nexty&&nexty<W))
+                    continue;
+                if( mp[nextx][nexty]!='X' && d[nextx][nexty]==-1){
+                    d[nextx][nexty]=d[nowx][nowy]+1;
+                    que.push(make_pair(nextx,nexty));
+                }
+                if(mp[nextx][nexty]=='1'+i){
+                    ans += d[nextx][nexty];
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag == 1)
+                break;
+        }
+    }
+    cout << ans << endl;
+}

@@ -1,0 +1,60 @@
+#include<stdio.h>
+
+struct Card{
+  char suit;
+  char value;
+};
+
+typedef struct Card Card;
+ 
+void swap(Card *a, Card *b){
+    Card k;
+    k = *b;
+    *b = *a;
+    *a = k;
+}
+ 
+void Bubble(Card *C, int n){
+    int i, j;
+    for (i = 0; i <= n - 1; i++){
+        for (j = n - 1; j >= i + 1; j--){
+            if (C[j].value < C[j - 1].value){
+                swap(&C[j], &C[j - 1]);
+            }
+        }
+    }
+}
+ 
+void Selection(Card *C, int n){
+    int i, j, min;
+    for (i = 0; i<n - 1; i++){
+        min = i;
+        for (j = i; j <= n - 1; j++){
+            if (C[j].value < C[min].value){
+                min = j;
+            }
+        }
+        swap(&C[i], &C[min]);
+    }
+}
+ 
+int check(Card *C1, Card *C2, int n){
+    int i, j, k;
+    for (i = 0; i < n; i++){
+        if (C2[i].suit != C1[i].suit){ return 0; }
+    }
+    return 1;
+}
+
+int main(){
+  struct Card C1[101], C2[101];
+  int n, i;
+  char c;
+
+  scanf("%d%c", &n, &c);
+  for ( i = 1; i <= n; i++ ){
+    scanf("%c%c%c", &C1[i].suit, &C1[i].value, &c);
+  }
+
+for (i = 0; i < n; i++){
+        C2[i] = C1[i];

@@ -1,0 +1,84 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <complex>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+int graph[15][15];
+
+int v=0;
+
+int main(void){
+	int n;
+	while(cin >> n,n){
+		rep(i,15)rep(j,15) graph[i][j]=(i==j)?0:inf;
+		v=-1;
+		rep(i,n){
+			int a,b,c;
+			cin >> a >> b >> c;
+			v=max(v,max(a,b)+1);
+			graph[a][b]=graph[b][a]=c;
+		}
+		rep(k,v)rep(i,v)rep(j,v){
+			graph[i][j]=min(graph[i][j],graph[i][k]+graph[k][j]);
+		}
+		int ansv=-1,anst=inf;
+
+		rep(i,v){
+			int cur=0;
+			rep(j,v) cur+=graph[i][j];
+			if(cur<anst)
+				anst=cur,ansv=i;
+		}
+
+		cout << ansv <<  " " << anst << endl;
+	}
+	return 0;
+}

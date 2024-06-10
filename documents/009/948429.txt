@@ -1,0 +1,136 @@
+#include <iostream>
+#include <algorithm>
+
+#define MAX 100
+
+using namespace std;
+
+int n,m;
+char chair[MAX+1];
+ 
+void A(){
+  for(int i = 0 ; i < n ; i++){
+    if(chair[i] == '#'){
+      chair[i] = 'A';
+      return;
+    }
+  }
+}
+
+void B(){
+  int pos = -1;
+  
+  for(int i = 0 ; i < n ; i++){
+    if(chair[i] == 'A'){
+      pos = i;
+    }
+  }
+  
+  if(pos == -1){
+    for(int i = n-1 ; i >= 0 ; i--){
+      if(chair[i] == '#'){
+	chair[i] = 'B';
+	return;
+      }
+ 
+    }
+ 
+  }
+  else{
+    for(int i = n-1 ; i > 0 ; i--){
+      if(chair[i] == '#' && chair[i-1] != 'A'){
+	chair[i] = 'B';
+	return;
+      }
+    }
+    if(chair[0] == '#'){
+      chair[0] = 'B';
+      return;
+    }
+ 
+    for(int i = 0 ; i < n ; i++){
+      if(chair[i] == '#'){
+	chair[i] = 'B';
+	return;
+      }
+    }
+  }
+}
+ 
+void C(){
+  int cnt = count(chair,chair+n,'#');
+ 
+  if(cnt == n){
+    if(n % 2){
+      chair[(n+1)/2] = 'C';
+    }
+    else{
+      chair[n/2+1] = 'C';
+    }
+    return;
+  }
+  else{
+    for(int i = 0 ; i < n-1 ; i++){
+      if(chair[i] != '#' && chair[i+1] == '#'){
+	chair[i+1] = 'C';
+	return;
+      }
+    }
+  }
+}
+ 
+void D(){
+  int Breadth = 0, pos;
+ 
+  for(int i = 0 ; i < n ; i++){
+    int dist = (1<<29);
+    if(chair[i] != '#') continue;
+    for(int j = 0 ; j < n ; j++){
+      if(chair[j] != '#'){
+	dist = min(dist,abs(i-j));
+      }
+    }
+    if(Breadth < dist){
+      Breadth = dist;
+      pos = i;
+    } 
+  }
+ 
+  chair[pos] = 'D';
+}
+ 
+int main(){
+  while(cin >> n >> m , n | m){
+    char person;
+ 
+    for(int i = 0 ; i < n ; i++)
+      chair[i] = '#';
+ 
+    for(int i = 0 ; i < m ; i++){
+      cin >> person;
+      
+      switch(person){
+      case 'A': 
+	A(); 
+	break;
+      case 'B': 
+	B(); 
+	break;
+      case 'C': 
+	C(); 
+	break;
+      case 'D': 
+	D(); 
+	break;
+      }
+ 
+    }
+ 
+    for(int i = 0 ; i < n ; i++){
+      cout << chair[i];
+    }
+    cout << endl;
+  }
+ 
+  return 0;
+}

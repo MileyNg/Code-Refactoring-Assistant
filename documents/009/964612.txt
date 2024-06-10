@@ -1,0 +1,58 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#define maxn 100009
+using namespace std;
+
+int dp1[10009];
+int dp2[10006];
+char s[25];
+
+int num[105];
+
+int main()
+{
+    int n,m,x,y;
+    while(scanf("%d",&n)&&n!=0)
+    {
+        int ma=-1;
+        for(int i=0; i<n; i++)
+            scanf("%d",&num[i]);
+        sort(num,num+n);
+        memset(dp1,0,sizeof dp1);
+        memset(dp2,0,sizeof dp2);
+        scanf("%d",&m);
+        for(int i=0; i<m; i++)
+        {
+            scanf("%s",s);
+            scanf("%d",&x);
+            scanf("%s",s);
+            scanf("%d",&y);
+//        printf("%d %d\n",x,y);
+            if(s[0]=='S')
+            {
+                for(int j=x; j<=10000; j++)
+                    dp1[j]=max(dp1[j],dp1[j-x]+y);//single
+            }
+            else
+            {
+                for(int j=x; j<=10000; j++)
+                    dp2[j]=max(dp2[j],dp2[j-x]+y);//all
+            }
+        }
+        int ans=1<<28,sum;
+        for(int i=0; i<n; i++)
+        {
+            sum=lower_bound(dp2,dp2+10000,num[i])-dp2;
+            int tmp=sum;
+//        printf("%d\n",tmp);
+            for(int j=i+1; j<n; j++)
+            {
+                sum+=lower_bound(dp1,dp1+10000,num[j]-dp2[tmp])-dp1;
+            }
+            ans=min(ans,sum);
+        }
+        printf("%d\n",ans);
+    }
+    return 0;
+}

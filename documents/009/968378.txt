@@ -1,0 +1,32 @@
+#include<iostream>
+using namespace std;
+
+int main() {
+  int m[100];
+  int f[100];
+  int r[100];
+  int i=0,j=0;
+
+  while(1) {
+    cin>>m[i]>>f[i]>>r[i];
+    if(m[i]==-1 && f[i]==-1 && r[i]==-1)
+      break;
+    i++;
+  }
+
+  for(j=0;j<i;j++) {
+    if(m[j] + f[j] >= 80)
+      cout << 'A' << endl;
+    else if(m[j] + f[j] < 80 && m[j] + f[j] >= 65)
+      cout << 'B' << endl;
+    else if(m[j] + f[j] < 65 && m[j] + f[j] >= 50)
+      cout << 'C' << endl;
+    else if(m[j] + f[j] < 50 && m[j] + f[j] >= 30 && r[j] < 50)
+      cout << 'D' << endl;
+    else if(m[j] + f[j] < 50 && m[j] + f[j] >= 30 && r[j] >= 50)
+      cout << 'C' << endl;
+    else if(m[j] + f[j] < 30)
+      cout << 'F' << endl;
+  }
+  return 0;
+}

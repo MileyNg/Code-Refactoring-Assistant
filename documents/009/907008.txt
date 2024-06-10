@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <cstdio>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+struct edge {
+    int to, cost;
+    edge(int t, int c) : to(t), cost(c) { }
+};
+
+typedef pair<int, int> P;
+
+int prim(int n, vector<vector<edge>> const& E ){
+    vector<bool> used(n, false);
+
+    priority_queue<P, vector<P>, greater<P> > que;
+    que.push(P(0, 0));
+
+    int res = 0;
+    while (!que.empty()) {
+        P p = que.top(); que.pop();
+        int v = p.second;
+        if (used[v]) { continue; }
+        used[v] = true;
+        res += max(0, p.first / 100 - 1);
+
+        vector<edge> es = E[v];
+        rep(i,es.size()){
+            edge const& e = es[i];
+            if (!used[e.to]){
+                que.push(P(e.cost, e.to));
+            }
+        }
+    }
+    return res;
+}
+
+int main(){
+    int n;
+    while(cin >> n, n) {
+        int m; cin >> m;
+        vector<vector<edge> > E(n);
+        rep(i,m){
+            int a, b, c;
+            scanf("%d,%d,%d", &a, &b, &c);
+            E[a].push_back(edge(b, c));
+            E[b].push_back(edge(a, c));
+        }
+        cout << prim(n,E) << endl;
+    }
+}

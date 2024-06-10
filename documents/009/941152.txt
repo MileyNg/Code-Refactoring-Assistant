@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int add(int a, int b) { return a + b; }
+int sub(int a, int b) { return a - b; }
+int mul(int a, int b) { return a * b; }
+int div(int a, int b) { return a / b; }
+
+int main(void) {
+	int a = 0, b = 0;
+	int expr = 0;
+	for (;;) {
+		scanf("%d %c %d", &a, &expr, &b);
+		int (*func)(int,int) = NULL;
+		switch (expr) {
+			case '+': func = add; break;
+			case '-': func = sub; break;
+			case '*': func = mul; break;
+			case '/': func = div; break;
+			case '?': return 0;
+			default : return 0;
+		}
+		printf("%d\n", func(a, b));
+	}
+	return 0;
+}

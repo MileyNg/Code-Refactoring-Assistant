@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+char convert[256];
+
+void init() {
+	convert['r' + 'g'] = 'b';
+	convert['g' + 'b'] = 'r';
+	convert['b' + 'r'] = 'g';
+}
+
+string bfs(const string &worm) {
+	typedef pair<string, int> state;
+
+	const int n = worm.size();
+
+	unordered_set<string> visited{worm};
+	queue<state> que;
+	que.push({worm, 0});
+
+
+	while(!que.empty()) {
+		const auto s = que.front().first;
+		const auto d = que.front().second;
+		que.pop();
+
+		if(all_of(s.begin(), s.end(), [&](char c) { return c == s[0]; })) {
+			return to_string(d);
+		}
+
+		for(int i = 0; i < n - 1; ++i) {
+			if(s[i] != s[i + 1]) {
+				string next(s);
+				next[i] = next[i + 1] = convert[s[i] + s[i + 1]];
+
+				if(!visited.count(next)) {
+					visited.insert(next);
+					que.push({next, d + 1});
+				}
+			}
+		}
+	}
+
+	return "NA";
+}
+
+int main() {
+	init();
+	for(string worm; cin >> worm && worm != "0";) {
+		cout << bfs(worm) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

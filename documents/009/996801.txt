@@ -1,0 +1,36 @@
+/*
+	0028:Mode Value
+*/
+#include	<iostream>
+
+using namespace std;
+
+int max(int a, int b);
+
+int main(void) {
+	int ds[100] = {0};
+	int nMode = 0;
+	
+	while(1) {
+		int a;
+		
+		cin >> a;
+		if( cin.eof() ) { break; }
+		ds[a-1]++;
+	}
+	for(int i = 0; i < 100; i++) {
+		nMode = max(nMode, ds[i]);
+	}
+	for(int i = 0; i < 100; i++) {
+		if(nMode == ds[i]) {
+			cout << i+1 << endl;
+		}
+	}
+}
+
+int max(int a, int b) {
+	if(a > b) {
+		return a;
+	}
+	return b;
+}

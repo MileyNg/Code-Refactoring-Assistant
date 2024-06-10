@@ -1,0 +1,73 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+
+
+int main(){
+	vi taro, hanako;
+	int n, m;
+	while(cin >> n >> m, n+m){
+		vi taro, hanako;
+		vi ans;
+		int taroTotal = 0, hanakoTotal = 0;
+		bool isPossible = false;
+		int minSwap = 10000;
+		
+		for(int i=0; i < n; i++){
+			int input;
+			cin >> input;
+			taro.push_back(input);
+			taroTotal += input;
+		}
+		for(int i=0; i < m; i++){
+			int input;
+			cin >> input;
+			hanako.push_back(input);
+			hanakoTotal += input;
+		}
+		for(int i=0; i < n; i++){
+			for(int j=0; j < m; j++){
+				if(taroTotal-taro[i]+hanako[j] == hanakoTotal-hanako[j]+taro[i]){
+					if(taro[i]+hanako[j] < minSwap){
+						ans.clear();
+						ans.push_back(taro[i]);
+						ans.push_back(hanako[j]);
+						minSwap = taro[i]+hanako[j];
+						isPossible = true;
+					}
+				}
+			}
+		}
+		if(isPossible) cout << ans[0] << " " << ans[1] << endl;
+		else cout << -1 << endl;
+		ans.clear();
+	}
+}

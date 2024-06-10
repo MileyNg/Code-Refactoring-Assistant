@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+class Dataset{
+private:
+ string X;
+ string Y;
+public:
+ Dataset(){
+  string tmp = "";
+  cin >> tmp; X = tmp; X = " " + X;
+  cin >> tmp; Y = tmp; Y = " " + Y;
+ };
+
+ unsigned long getLongestCommonLength(){
+  unsigned long Xsize = X.size();
+  unsigned long Ysize = Y.size();
+ 
+  vector< vector<unsigned long> > LC(Xsize, vector<unsigned long>(Ysize, 0));
+
+  for(unsigned long X_i = 1; X_i < Xsize; ++X_i){
+   for(unsigned long Y_i = 1; Y_i < Ysize; ++Y_i){
+    unsigned long tmp = LC[X_i][Y_i-1];
+    if(X[X_i] == Y[Y_i]) ++tmp;
+    if(tmp < LC[X_i-1][Y_i]) tmp = LC[X_i-1][Y_i];
+    LC[X_i][Y_i] = tmp;
+   }
+  }
+
+  return LC[Xsize-1][Ysize-1];
+ };
+
+
+protected:
+};
+
+int main(){
+ long datasetNum = 0; cin >> datasetNum;
+ for(unsigned long dataset_i = 0; dataset_i < datasetNum; ++dataset_i){
+  Dataset data;
+  cout << data.getLongestCommonLength() << endl;
+ }
+
+ return 0;
+};

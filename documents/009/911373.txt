@@ -1,0 +1,84 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+struct team{
+  int id;
+  int ans;
+  int time;
+  team(int i,int a,int t): id(i),ans(a),time(t){}
+
+  bool operator >(const team &e)const {
+    if(ans!=e.ans)
+      return ans > e.ans;
+    if(time != e.time)
+      return time<e.time;
+    return id>e.id;
+  }
+  bool operator <(const team &e)const {
+    if(ans!=e.ans)
+      return ans < e.ans;
+    if(time != e.time)
+      return time>e.time;
+    return id<e.id;
+  }
+};
+
+int main()
+{
+  int m,t,p,r;
+  for(;cin>>m>>t>>p>>r,m;)
+    {
+      int teamans[t+1];
+      int teamtime[t+1];
+      int teampena[t+1][p+1];
+      memset(teamans,0,sizeof(teamans));
+      memset(teamtime,0,sizeof(teamtime));
+      memset(teampena,0,sizeof(teampena));
+      for(int i=0;i<r;i++)
+	{
+	  int mm,tt,pp,jj;
+	  cin>>mm>>tt>>pp>>jj;
+	  //  if(m>mm)
+	  //   continue;
+	  if(jj==0)
+	    {
+	      teamans[tt]++;
+	      teamtime[tt]+=mm+teampena[tt][pp];
+	    }
+	  else
+	    {
+	      teampena[tt][pp]+=20;
+	    }
+	}
+      priority_queue<team> qu;
+      for(int i=1;i<=t;i++)
+	{
+	  qu.push(team(i,teamans[i],teamtime[i]));
+	}
+      int buf,buf2;
+      bool flag=false;
+      
+      while(!qu.empty())
+	{
+	  team tmp =qu.top();
+	  qu.pop();
+	  if(flag)
+	    {
+	      if(tmp.ans==buf &&tmp.time==buf2)
+		cout<<"=";
+	      else
+		cout<<",";
+	    }
+	  flag=true;
+	  buf=tmp.ans;
+	  buf2=tmp.time;
+	  cout<<tmp.id;
+	}
+      cout<<endl;
+      
+    }
+
+
+}

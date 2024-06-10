@@ -1,0 +1,20 @@
+m = input()
+S = [[1]*m for i in range(m)]
+for i in range(input()):
+	x,y = map(int,raw_input().split())
+	S[y-1][x-1] = 0
+	for j in range(m):
+		if S[x-1][j] == 0: S[y-1][j] = 0
+		if S[j][y-1] == 0: S[j][x-1] = 0
+A = [sum([S[h][i] for h in range(m)]) for i in range(m)]
+rank = m
+ans = [0]*m
+M = range(m)
+while M:
+	for i in M:
+		if A[i] >= rank:
+			rank -= 1
+			ans[rank] = i+1
+			del M[M.index(i)]
+			break
+for i in range(m): print ans[i]

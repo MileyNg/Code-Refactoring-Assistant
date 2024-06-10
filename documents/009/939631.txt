@@ -1,0 +1,354 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#include<algorithm>
+#include <iostream>
+#define LL long long
+#define debug 0
+using namespace std;
+
+LL f[22];
+char str[111];
+int n;
+
+LL ans;
+void update_ans(LL key)
+{
+    ans = min(ans, key);
+    return ;
+}
+
+LL get(int l, int r)
+{
+    LL res = 0;
+    for (int i=l; i<=r; i++)
+    {
+        res = res * 10 + str[i]-'0';
+    }
+    return res;
+}
+
+int get_len(LL n)
+{
+    int res = 0;
+    while (n)
+    {
+        res ++;
+        n/=10;
+    }
+    return res;
+}
+
+LL solve(LL n)
+{
+    if (n <= 0) return 0;
+
+    long long a = n, ans = 1, tmp = 0, flag = 9;
+    while (a)
+    {
+        a /= 10, tmp++;
+    }
+    for (int i = 1; i < tmp; i++)
+    {
+        ans += i * flag, flag *= 10;
+    }
+    ans += (n - (long long)f[(int)tmp] + 1) * tmp;
+
+    // printf("        solve %lld %lld\n",n,ans);
+    return ans-1;
+}
+
+
+int da[22];
+int db[22];
+int la = 0;
+int lb = 0;
+bool judge(LL a, LL b)
+{
+    la = 0;
+    lb = 0;
+    while (a)
+    {
+        da[++la] = a % 10;
+        a/=10;
+    }
+    while (b)
+    {
+        db[++lb] = b % 10;
+        b/=10;
+    }
+
+    while (la && lb)
+    {
+        if (da[la] == db[lb])
+        {
+            la--;
+            lb--;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+LL niuniu(LL a, LL b,int len , int j)
+{
+    return a * f[len - get_len(a)+1] + b;
+}
+void calc(int len)
+{
+    //   printf("************ %d\n",len);
+    int tt = len;
+    for (int i=0; i<=min(len, n); i++)
+    {
+        len = tt;
+        LL a = get(0, i - 1);
+        LL b = -1, c;
+        LL d = -1;
+        int j = i;
+        if (debug)
+            printf("      len %d  i = %d  a = %lld\n",len,  i,a);
+        while (j < n)
+        {
+            if (str[j]=='0')
+            {
+                d = -1;
+                break;
+            }
+            c  = get(j, min(n, j + len)-1);
+            if (debug)   printf("  j %d c %lld\n",j,c);
+            if (b == -1)
+            {
+                if (debug) puts("niuniu");
+                if (j+len > n)
+                {
+                    if (debug)puts("ai");
+
+                    if (i==0)
+                    {
+                        d = c + 1;
+                        break;
+                    }
+
+                    if (len >= n)
+                    {
+                        if (debug)printf("len %d n %d\n",len, n);
+
+                        if (c != 0) //ok
+                        {
+                            if (a == f[j+1]-1)
+                            {
+                                d = c*f[len - get_len(c)+1];
+                            }
+                            else
+                            {
+                                d = niuniu(c, a, len,j) + 1;
+                            }
+                        }
+                        else
+                            d = -1;
+                        if (debug) printf("d %lld\n",d);
+                        break;//no
+                    }
+                    else
+                    {
+                        //len < n
+                        if (debug)puts("      li");
+                        int k = n - len;
+                        if (a == f[j+1] - 1)
+                        {
+                            if (debug)   printf("         jkfjd %d\n",a);
+                            if (c!=0 && c % f[k+1] == 0)
+                            {
+                                d = (c/f[k+1]) * f[j+1] ;
+                                //ok
+                            }
+                            else
+                            {
+                                d = -1;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if ((c % f[k + 1]) == ((a+1) / f[j-k+1]))
+                            {
+                                d = (c / f[k+1] )*f[j+1] + a + 1;
+                                break;
+                            }
+                            else
+                            {
+                                d = -1;
+                                break;
+                            }
+                        }
+                    }
+                    //hanchunrui
+                }
+                else if (j + len == n)
+                {
+                    if (i!=0)
+                    {
+                        if ((c-1) % f[i+1] == a)
+                        {
+                            d = c;
+                        }
+                        else
+                        {
+                            d = -1;
+                            break;
+                        }
+
+                    }
+                    else
+                    {
+                        d = c + 1;
+                    }
+                }
+                else
+                {
+                    if (debug)   puts("now");
+                    if (i > 0)
+                    {
+                        if ((c - 1) % f[i+1] == a)
+                        {
+                            if (debug)  puts("ds");
+                            d = c ;
+                            //break;
+                            //ok;
+                        }
+                        else
+                        {
+                            d = -1;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (debug)   puts("be");
+                        //ok;
+                        d = c + 1;
+                        // printf("%d\n",d);
+                    }
+                }
+            }
+            else
+            {
+                if (j+len > n)
+                {
+                    if (c != 0 && judge(b+1, c))
+                    {
+                        if (debug)    printf("    %lld %lld      fuck\n",b+1,c);
+                        //ok
+                    }
+                    else
+                    {
+                        //no
+                        d = -1;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (b + 1 == c)
+                    {
+                        //ok
+                    }
+                    else
+                    {
+                        //no
+                        d = -1;
+                        break;
+                    }
+                }
+            }
+
+            j += len;
+            b = c;
+            if (get_len(b) != get_len(b+1))
+            {
+                len++;
+            }
+        }
+
+        if (d!=-1)
+        {
+            if (debug)   printf("  YYYYYYYYYYY  d %lld i %d\n",d,i);
+            if (i == 0)
+            {
+                update_ans(solve(d-2) + 1);
+            }
+            else
+            {
+                update_ans(solve(d-1) - i + 1);
+            }
+        }
+    }
+    return ;
+}
+bool teshu()
+{
+    if (strcmp(str,"01")==0)
+    {
+        puts("11");
+        return true;
+    }
+    int flag = 0;
+    for (int i=0; i<n; i++)
+    {
+        if (str[i]!='0')
+        {
+            flag = 1;
+            break;
+        }
+    }
+    if (flag)
+        return false;
+
+    printf("%lld\n",solve(f[n+1]-1) + 2);
+    return true;
+}
+int main()
+{
+//    printf("%d\n",judge(123,2));
+    f[0] = 0;
+    f[1] = 1;
+    for (int i=2; i<=19; i++)
+    {
+        f[i] = f[i-1]*10;
+    }
+    //  printf("gaga %lld\n",niuniu(14159265358979,3,15,1));
+
+//    printf("%lld\n",(long long)pow(10,18));
+    if (debug)printf("%lld\n",solve(f[16]));
+//141592653589793 141592653589794
+//314159265358979
+//931415926535897
+//79
+    //cout<<get_len(2012778692735799)<<endl;
+//4601277869273575
+//2012778692735799
+    while (scanf("%s",str)==1)
+    {
+        if (str[0]=='#')
+        {
+            break;
+        }
+        n = strlen(str);
+        if (teshu())
+        {
+            continue;
+        }
+
+        ans = f[19];
+        for (int k=1; k<=min(n,17); k++)
+        {
+            calc(k);
+        }
+
+        printf("%lld\n",ans);
+    }
+    return 0;
+}

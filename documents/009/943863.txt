@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+
+int main(void){
+	
+    int rp[100] = {0}, pp, i;
+    
+    char o[6];
+    char w[5];
+    int to, from, num;
+    char rbt[100][1001];
+    //char rbt2[1001];
+    char push[1001];
+    //char tmp;
+    
+    pp = 0;
+    
+    scanf("%d", &num);
+    
+	while (1) {
+        
+        scanf("%s", &o);
+
+        if (!(strcmp(o, "quit"))) {
+            break;
+        }
+        else if (!(strcmp(o, "push"))) {
+            
+            scanf("%d %s", &to, &w);
+            to--;
+            rbt[to][rp[to]] = w[0];
+            rp[to]++;
+            
+        }
+        else if(!(strcmp(o, "pop"))){
+            
+            scanf("%d", &to);
+            to--;
+            push[pp] = rbt[to][rp[to]-1];
+            rp[to]--;
+            pp++;
+            rbt[to][rp[to]] = '\0';
+            
+        }
+        else {
+            scanf("%d %d", &from, &to);
+            
+            from--;
+            to--;
+            
+            rbt[to][rp[to]] = rbt[from][rp[from]-1];
+            rp[from]--;
+            rp[to]++;
+            rbt[from][rp[from]] = '\0';
+            
+        }
+        
+    }
+    
+    for (i = 0; i < pp; i++) {
+        printf("%c\n", push[i]);
+    }
+    
+	return 0;
+    
+}

@@ -1,0 +1,18 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	// your code goes here
+	//0段目...まだ踏み出してない
+	//1段目...１通りなのは明らか
+	//2段目...1x2か2段でくる
+	int n[31]={1,1,2};
+	//3段目は0,1,2段目から来る
+	//同様に、i段目はi-1,i-2,i-3段目から来る
+	for(int i=3;i<=31;i++)n[i]=n[i-1]+n[i-2]+n[i-3];
+	int n_steps;
+	while(cin>>n_steps, n_steps){
+		cout<<n[n_steps]/10/365+1<<endl;
+	}
+	return 0;
+}

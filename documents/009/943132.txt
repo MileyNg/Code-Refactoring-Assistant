@@ -1,0 +1,36 @@
+lines = []
+while str = gets
+  break if str == "." || str == ".\n"
+  # [ => 1 ( => 2
+  this_kakko = ""
+  kakko_stack = []
+  str.length.times.each do |i|
+    if str[i] == "["
+      this_kakko = "["
+      kakko_stack.push "["
+    end
+    if str[i] == "("
+      this_kakko = "("
+      kakko_stack.push "("
+    end
+    if str[i] == "]"
+      if kakko_stack.size == 0
+        kakko_stack.push -1
+        break
+      end
+      break if this_kakko != "["
+      kakko_stack.pop
+      this_kakko = kakko_stack.last
+    end
+    if str[i] == ")"
+      if kakko_stack.size == 0
+        kakko_stack.push -1
+        break
+      end
+      break if this_kakko  != "("
+      kakko_stack.pop
+      this_kakko = kakko_stack.last
+    end
+  end
+  puts kakko_stack.size == 0 ? "yes" : "no"
+end

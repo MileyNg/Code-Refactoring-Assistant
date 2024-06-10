@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+int b[10000];
+for (int k=0;k<10001;k++){
+	b[k]=0;
+}
+for (int p=2;p<10001;p++){
+int i,a=0 ;
+	i=2;
+	while(i<p){
+		if(p%i==0){
+			break;
+	}i=i+1;
+	}
+	if (i==p){
+		a=1;
+	}
+	b[p]=a;
+}
+int c[10000];
+for (int l=0;l<10001;l++){
+	c[l+1]=c[l]+b[l+1];
+}
+int r;
+while(cin>>r){
+	cout<<c[r]<<endl;
+}
+	return 0;
+}

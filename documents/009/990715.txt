@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+#define X real()
+#define Y imag()
+
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+typedef vector<P> Pol;
+
+const D EPS = 1e-8;
+
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+
+D arg(P base, P a, P b) {return arg((b - base) / (a - base));}
+
+int main() {
+  while (true) {
+    int n, q;
+    D r;
+    cin >> n >> r >> q;
+    if (n == 0) break;
+    Pol pol;
+    rep (i, n) {
+      D x, y;
+      cin >> x >> y;
+      pol.push_back(P(x, y));
+    }
+    int pre = -1;
+    rep (_, q) {
+      int k = -1;
+      rep (i, n) if (i != pre && sig(abs(pol[i]), r) == 0) {
+	k = i;
+	break;
+      }
+      rep (i, n) if (i != k) {
+	D theta = asin(abs(pol[k] - pol[i]) / 2 / r);
+	P p = polar(r, arg(pol[k]) - theta * 2);
+	theta = arg(pol[k], pol[i], p);
+	Pol pol2;
+	rep (j, n) pol2.push_back(pol[k] + (pol[j] - pol[k]) * polar((D)1, theta));
+	rep (j, n) if (sig(abs(pol2[j]), r) > 0) goto next;
+	printf("%.12Lf %.12Lf\n", p.X, p.Y);
+	pol = pol2;
+	pre = k;
+	break;
+      next:;
+      }
+    }
+  }
+}

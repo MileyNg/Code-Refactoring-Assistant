@@ -1,0 +1,15 @@
+int main(){
+	int x[101]={0},i,j;
+	while(std::cin>>i>>j){
+		x[1]++;
+		x[2]++;
+		while(i!=0&&j!=0){
+			x[i]^=1;
+			x[j]^=1;
+			std::cin>>i>>j;
+		}
+		for(i=0;i<101;i++)if(x[i])break;
+		std::cout<<(i==101?"OK\n":"NG\n");
+		for(i=0;i<101;i++)x[i]=0;
+	}
+}

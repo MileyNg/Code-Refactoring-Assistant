@@ -1,0 +1,27 @@
+input = gets(nil).chomp
+
+ns = input.split("\n").map(&:to_i)
+max = ns.max
+
+f = {}
+1.upto(max) do |i|
+  if i == 1
+    f[1] = 1
+  else
+    f[i] = i * f[i-1]
+  end
+end
+
+ns.each do |n|
+  exit if n == 0
+  s = f[n].to_s.reverse
+  a = 0
+  s.each_char do |c|
+    if c == "0"
+      a += 1
+    else
+      puts a
+      break
+    end
+  end
+end

@@ -1,0 +1,68 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+#define INF 1000010
+
+using namespace std;
+
+int busstop[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+int main(){
+    int n;
+    cin >> n;
+    for(int k=0; k < n; k++){
+
+        int e1,e2;
+        bool isFirst = false;
+        cin >> e1 >> e2;
+
+        if(e1 > e2) isFirst = true;
+
+        for(int i=0;; i++){
+            if(busstop[i] == e1){
+                if(isFirst){
+                    isFirst = !isFirst;
+                    continue;
+                }
+                for(int j=i; ; j++){
+                    if(busstop[j] == e2){
+                        cout << " " << busstop[j];
+                        goto end_state;
+                    }
+                    else {
+                        if(j == i) cout << busstop[j];
+                        else cout << " " << busstop[j];
+                    }
+                }
+            }
+        }
+end_state:
+        cout << endl;
+    }
+}

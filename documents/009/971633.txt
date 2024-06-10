@@ -1,0 +1,150 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+char t[100][1000];
+int h;
+int w[100];
+
+char tmp[100];
+int tmp_size;
+
+char ch;
+int x,y;
+
+void input();
+void funcA();
+void funcE();
+void funcP();
+void funcN();
+void funcF();
+void funcB();
+void funcD();
+void funcK();
+void funcY();
+
+int main(){
+
+  input();
+  x=y=tmp_size=0;
+  while(1){
+    
+    cin>>ch;
+    if(ch=='a')funcA();
+    else if(ch=='e')funcE();
+    else if(ch=='p')funcP();
+    else if(ch=='n')funcN();
+    else if(ch=='f')funcF();
+    else if(ch=='b')funcB();
+    else if(ch=='d')funcD();
+    else if(ch=='k')funcK();
+    else if(ch=='y')funcY();
+    else break;
+    
+  }
+
+  for(int i=0;i<h;i++){
+    for(int j=0;j<w[i];j++){
+      cout<<t[i][j];
+    }
+    cout<<endl;
+  }
+  
+  return 0;
+}
+
+void funcA(){x=0;}
+void funcE(){x=w[y];}
+void funcP(){ if(y>0)y--; x=0; }
+void funcN(){ if(y+1<h)y++; x=0; }
+void funcF(){ 
+  if(x<w[y])x++;
+  else if(y+1<h){y++;x=0;}
+}
+void funcB(){
+  if(x>0)x--;
+  else if(y>0){y--;x=w[y];}
+}
+void funcD(){
+  if(x<w[y]){
+    w[y]--;
+    for(int i=x;i<w[y];i++)t[y][i]=t[y][i+1];
+    return;
+  }
+  if(y+1==h)return;
+  for(int i=0;i<w[y+1];i++)t[y][w[y]+i]=t[y+1][i];
+  w[y]+=w[y+1];
+  h--;
+  for(int i=y+1;i<h;i++){
+    w[i]=w[i+1];
+    for(int j=0;j<w[i];j++){
+      t[i][j]=t[i+1][j];
+    }
+  }
+}
+
+void funcK(){
+  if(x==w[y]){
+    if(y+1<h){
+      funcD();
+      tmp[0]='\n';
+      tmp_size=1;
+    }
+  }else{
+    tmp_size=0;
+    for(int i=x;i<w[y];i++)
+      tmp[tmp_size++]=t[y][i];
+    w[y]=x;
+  }
+}
+
+void funcY(){
+  
+  if(tmp_size==0)return;
+  if(tmp[0]!='\n'){
+    char z[100];
+    int zs=0;
+    for(int i=x;i<w[y];i++){
+      z[zs++]=t[y][i];
+    }
+    for(int i=x;i<x+tmp_size;i++){
+      t[y][i]=tmp[i-x];
+    }
+    w[y]+=tmp_size;
+    for(int i=x+tmp_size;i<w[y];i++){
+      t[y][i]=z[i-x-tmp_size];
+    }
+    x+=tmp_size;
+    return;
+  }
+  
+  h++;
+  for(int i=h-1;i>y+1;i--){
+    w[i]=w[i-1];
+    for(int j=0;j<w[i];j++)
+      t[i][j]=t[i-1][j];
+  }
+
+  w[y+1]=w[y]-x;
+  for(int i=0;i<w[y+1];i++){
+    t[y+1][i]=t[y][i+x];
+  }
+  w[y]=x;
+  y++;
+  x=0;
+  
+}
+
+void input(){
+  string str;
+  h=0;
+  while(1){
+    getline(cin,str);
+    if(str=="END_OF_TEXT")break;
+    w[h]=str.size();
+    for(int i=0;i<(int)str.size();i++)
+      t[h][i]=str[i];
+    h++;
+  }
+}

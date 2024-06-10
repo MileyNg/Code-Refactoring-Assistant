@@ -1,0 +1,39 @@
+#include <algorithm>
+#include <cctype>
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main(void) {
+	int n = 0;
+	string word;
+	string line;
+	int word_count = 0;
+	
+	cin >> word;
+	transform(word.begin(), word.end(), word.end(), tolower);
+	
+	size_t word_length = word.size();
+	
+	for (;;) {
+		int start_index = 0;
+		cin >> line;
+		if (line == "END_OF_TEXT") {
+			break;
+		}
+		transform(line.begin(), line.end(), line.end(), tolower);
+		size_t pos = string::npos;
+		while ((pos = line.find(word, start_index)) != string::npos) {
+			char c = line[pos + 1]; // 終端がEND_OF_TEXTなので必ずOK
+			if (ispunct(c) || isspace(c)) {
+				word_count++;
+			}
+			line = line.substr(word_length);
+		}
+	}
+	cout << word_count << endl;
+	
+	return 0;
+}

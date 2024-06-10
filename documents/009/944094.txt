@@ -1,0 +1,22 @@
+#include<stdio.h>
+main(){
+  int a[10],i,j,tmp;
+
+  for(i=0;i<10;i++){
+    scanf("%d",&a[i]);
+  }
+
+  for(i=0;i<9;i++){
+    for(j=9;j>i;j--){
+      if(a[j]<a[j-1]){
+	tmp=a[j];
+	a[j]=a[j-1];
+	a[j-1]=tmp;
+      }
+    }
+  }
+
+  printf("%d\n%d\n%d\n",a[9],a[8],a[7]);
+
+  return 0;
+}

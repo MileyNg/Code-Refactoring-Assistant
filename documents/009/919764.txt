@@ -1,0 +1,42 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n, p;
+	while (cin >> n >> p) {
+		if (n == 0 && p == 0) {
+			break;
+		}
+		int kouho[50] = {0};
+		int owan = p;
+		int counter = 0;
+		while (1) {
+			//cout << owan << endl;
+			if (owan > 0) {
+				kouho[counter]++;
+				owan--;
+				if (owan == 0) {
+					bool hantei = true;
+					for (int i = 0; i < n; i++) {
+						if (i != counter && kouho[i] != 0) {
+							hantei = false;
+						}
+					}
+					if (hantei) {
+						break;
+					}
+				}
+			} else {
+				owan = kouho[counter];
+				kouho[counter] = 0;
+			}
+			counter++;
+			if (counter >= n) {
+				counter = 0;
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,21 @@
+#include<stdio.h> 
+main(){
+  int a,b,c, n, i, ans[1000]= {};
+  char ch[100];
+  fgets(ch, sizeof(ch), stdin);
+  n = strlen(ch);  
+  for(i=0;i<n;i++){
+    if(ch[i]>=65 && ch[i]<=90){
+      ch[i]+=32;
+    }
+  }
+  for(i=0;i<n;i++){
+    ans[ch[i]]++; 
+  }
+  
+  for(i='a';i<'a'+26;i++){
+    printf("%c : %d\n", i, ans[i]);
+  }
+  
+  return 0;
+}

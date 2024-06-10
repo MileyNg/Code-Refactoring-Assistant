@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<cstring>
+#include<vector>
+#include<utility>
+#include<queue>
+#include<algorithm>
+#define INF 100000000
+using namespace std;
+typedef pair<int,int>P;
+int N,M,S,G1,G2,C[105][105],d[105],R,t;
+void dij(int f)
+{
+	
+	priority_queue<P,vector<P>,greater<P> >Q;
+	fill(d,d+N,INF);
+	d[f]=0;
+	Q.push(P(0,f));
+	for(;!Q.empty();)
+	{
+		P p=Q.top();Q.pop();
+		int v=p.second;
+		if(d[v]<p.first)continue;
+		for(int i=0;i<N;i++)
+			if(C[v][i]&&d[i]>d[v]+C[v][i])
+			{
+				d[i]=d[v]+C[v][i];
+				Q.push(P(d[i],i));
+			}
+	}
+}
+
+int main()
+{
+	for(;scanf("%d%d%d%d%d",&N,&M,&S,&G1,&G2),N;)
+	{
+		S--;G1--;G2--;R=INF;
+		memset(C,0,sizeof(C));
+		for(int i=0;i<M;i++)
+		{
+			int f,t,c;
+			scanf("%d%d%d",&f,&t,&c);
+			f--;t--;
+			C[f][t]=c;
+		}
+		for(int i=0;i<N;i++)
+		{
+			t=0;
+			dij(S);
+			t+=d[i];
+			dij(i);
+			t+=d[G1]+d[G2];
+			R=min(R,t);
+		}
+		printf("%d\n",R);
+	}
+	return 0;
+}

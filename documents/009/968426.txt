@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+
+int main()
+{
+
+  string word , a;
+  int words = 0 , counts[26];
+  
+  for( int j = 0; j < 26; j++ )
+    {
+      counts[j] = 0;
+    }
+  
+  while( cin >> word )
+    {
+      for( int i = 0; i < word.size(); i++ )
+	{ 
+	  if( isupper(word[i]) ) word[i] = tolower(word[i]);
+	  words = word[i] - 'a';
+	  counts[words]++;
+	  
+	}
+    }
+  
+  
+  for( int i = 0; i < 26; i++ ) 
+    {
+      a[i]  = (char)i + 'a';
+      cout << a[i] << " " << ":" << " " << counts[i] << endl;
+    }
+  
+  return 0;
+  
+}
+ 

@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair< int , int > Pi;
+typedef pair< int , Pi > Pii;
+#define fr first
+#define sc second
+#define INF 1e300
+
+int main()
+{
+  int n;
+  int num[15], dist[15], box[15];
+  double dp[1 << 15][15];
+  int prev[1 << 15][15];
+  long double speed[1 << 15];
+  fill_n( *prev, 15 * (1 << 15), -1);
+  fill_n( *dp, 15 * (1 << 15), INF);
+
+  cin >> n;
+  for(int i = 0; i < n; i++){
+    cin >> num[i] >> dist[i] >> box[i];
+  }
+  
+  for(int i = 0; i < 1 << n; i++){
+    int ret = 0;
+    for(int j = 0; j < n; j++){
+      if(i >> j & 1) continue;
+      ret += box[j];
+    }
+    speed[i] = 200.0 / ( 7.0 + ret * 2.0);
+  }
+  for(int i = 0; i < n; i++){
+    dp[1 << i][i] = 0;
+  }
+           
+  for(int bit = 0; bit < 1 << n; bit++){
+    for(int i = 0; i < n; i++){
+      if(!((bit >> i) & 1)) continue;
+      for(int k = 0; k < n; k++){
+        double power = abs( dist[i] - dist[k]) * speed[bit];
+        if((bit >> k) & 1) continue;
+
+        int nxbit = bit|(1 << k);
+        if(dp[nxbit][k] > dp[bit][i] + power){
+          dp[nxbit][k] = dp[bit][i] + power;
+          prev[nxbit][k] = i;
+        }
+      }
+    }
+  }
+  
+  int pos = 0;
+  int bit = (1 << n) - 1;
+  for(int i = 1; i < n; i++){
+    if( dp[bit][pos] > dp[bit][i]) pos = i;
+  }
+  stack< int > st;
+  while(pos != -1){
+    st.push(num[pos]);
+    int foo = prev[bit][pos];
+    bit ^= 1 << pos;
+    pos = foo;
+  }
+  while(st.size() > 1){
+    cout << st.top() << " ";
+    st.pop();
+  }
+  cout << st.top() << endl;
+  return(0);
+}

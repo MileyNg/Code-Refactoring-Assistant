@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <deque>
+
+using namespace std;
+
+int L, C, W, S;
+deque<string> lines;
+
+void Print() {
+  if (lines.size() < L*C) lines.resize(L*C);
+  for (int i = 0; i < L; ++i) {
+    string buf(W*C + S*(C-1), '.');
+    for (int j = 0; j < C; ++j) {
+      memcpy(&buf[(W+S)*j], lines[L*j+i].data(), lines[L*j+i].size());
+    }
+    cout << buf << endl;
+  }
+  cout << "#" << endl;
+  lines.erase(lines.begin(), lines.begin() + L*C);
+}
+
+int main() {
+  while (cin >> L >> C >> W >> S && L) {
+    lines.clear();
+    string line;
+    getline(cin, line);
+    while (getline(cin, line) && line != "?") {
+      if (line.size() < W) {
+	lines.push_back(line);
+      } else {
+	for (int x = 0; x < line.size(); x += W) {
+	  lines.push_back(line.substr(x, W));
+	}
+      }
+      while (lines.size() > L * C) Print();
+    }
+    Print();
+    cout << "?" << endl;
+  }
+}

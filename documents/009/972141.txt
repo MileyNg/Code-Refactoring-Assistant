@@ -1,0 +1,42 @@
+#include <cstdio>
+using namespace std;
+
+int main(){
+  int n ,num;
+  string seg="0000000"; // a b c d e f g の順
+  string set[10]={ /* 各数字のビット */
+    "0111111", // 0
+    "0000110", // 1
+    "1011011", // 2
+    "1001111", // 3
+    "1100110", // 4
+    "1101101", // 5
+    "1111101", // 6
+    "0100111", // 7
+    "1111111", // 8
+    "1101111"  // 9
+  };
+
+  while( true ){ // -1まで
+    cin >> n;
+    if( n == -1 ){
+      break;
+    }
+
+    for( int i=0 ; i<n ; i++ ){
+      cin >> num;
+      for( int j=0 ; j<7 ; j++ ){
+	if( seg[j] != set[num][j] ){ // ビットが違ったら
+	  cout << '1';
+	}
+	else{ // 同じなら
+	  cout << '0' ;
+	}
+      }
+      seg = set[num];
+      cout << endl;
+    }
+
+    seg = "0000000"; // セグメントを0のに初期化
+  }
+}

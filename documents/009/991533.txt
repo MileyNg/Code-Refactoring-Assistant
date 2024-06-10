@@ -1,0 +1,75 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+int E;
+
+int calc2(){
+  int ans = 5000000;
+  REP(z, 100){
+    int y = (int)(floor(sqrt(E - z))), x = E - y - z;
+    if(y >= 0 && x >= 0){
+      cout <<x <<", " <<y <<", " <<z <<", " <<x + y + z <<endl;
+      ans = min(ans, x + y + z);
+    }
+  }
+  return ans;
+}
+
+int calc(){
+  int ans = 5000000;
+  for(int z = 100; z >= 0; --z){
+    if((int)(pow(z, 3)) > E) continue;
+    for(int y = 1000; y >= 0; --y){
+      int tmp = ((int)(pow(z, 3)) + (int)(pow(y, 2)));
+      if(tmp > E) continue;
+      int x = E - tmp;
+      //return x + y + z;
+      ans = min(ans, x + y + z);
+    }
+  }
+  return ans;
+}
+
+int calc1(){
+  int ans = 1e9 + 7;
+  REP(y, 1000){
+    if((int)(pow(y, 2)) > E) continue;
+    REP(z, 100){
+      int tmp = ((int)(pow(z, 3)) + (int)(pow(y, 2)));
+      if(tmp > E) break;
+      int x = E - tmp;
+      ans = min(ans, x + y + z);
+    }
+  }
+  return ans;
+}
+
+int main() {
+  while(cin >>E && E) cout <<calc1() <<endl;
+  //while(cin >>E && E) cout <<calc() <<endl;
+  //while(cin >>E && E) cout <<calc2() <<endl;
+  return 0;
+}

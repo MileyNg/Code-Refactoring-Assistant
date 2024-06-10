@@ -1,0 +1,132 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+std::vector<ll> split(const std::string& s){
+    std::vector<std::string> ss;
+    int pos = 0, prev_pos = 0;
+    while(pos = s.find(".", pos), pos != std::string::npos){
+        ss.push_back(s.substr(prev_pos, pos-prev_pos));
+        pos += 1;
+        prev_pos = pos;
+    }
+    ss.push_back(s.substr(prev_pos, s.size()-prev_pos));
+
+    std::vector<ll> res;
+    for(const auto &s : ss){
+        res.push_back(std::stoi(s));
+    }
+
+    return res;
+}
+
+std::string join(const std::vector<ll>& ns){
+    if(ns.empty()){return "";}
+
+    std::string res = std::to_string(ns[0]);
+    for(int i=1;i<ns.size();i++){
+        res += "." + std::to_string(ns[i]);
+    }
+    return res;
+}
+
+ll f(ll y, ll m, ll d){
+    return 365 * y + y / 4 - y / 100 + y / 400 + 306 * (m+1) / 10 + d - 429;
+}
+
+std::vector<ll> ADToMaya(std::vector<ll> ns){
+    ll y = ns[0], m = ns[1], d = ns[2], day = f(y, m, d) - f(2012, 12, 21);
+    
+    day %= 1872000;
+
+    std::vector<ll> res;
+    res.push_back(day / 144000);
+    day %= 144000;
+    res.push_back(day / 7200);
+    day %= 7200;
+    res.push_back(day / 360);
+    day %= 360;
+    res.push_back(day / 20);
+    day %= 20;
+    res.push_back(day);
+
+    return res;
+}
+
+bool isLeap(int y){
+    if(y % 400 == 0){
+        return true;
+    }else if(y % 100 == 0){
+        return false;
+    }else if(y % 4 == 0){
+        return true;
+    }
+
+    return false;
+}
+
+std::vector<ll> MayaToAD(std::vector<ll> ns){
+    ll day = ns[4]+20*(ns[3]+18*(ns[2]+20*(ns[1]+20*ns[0]))) + f(2012, 12, 21);
+    std::vector<ll> res;
+
+    ll lb = 0, ub = 10000001;
+    while(ub-lb > 1){
+        ll mid = (lb+ub) / 2;
+        if((mid-1)*365 + (mid-1)/4 - (mid-1)/100 + (mid-1)/400 <= day){
+            lb = mid;
+        }else{
+            ub = mid;
+        }
+    }
+
+    res.push_back(lb);
+    day -= (lb-1)*365 + (lb-1)/4 - (lb-1)/100 + (lb-1)/400;
+    day += 1;
+    
+    const ll table[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    for(ll m=1,sum=0;m<=12;m++){
+        ll max = (m==2&&isLeap(lb))?29:table[m];
+        if(m == 12 || day <= sum + max){
+            res.push_back(m);
+            day -= sum;
+            res.push_back(day);
+            break;
+        }
+
+        sum += max;
+    }
+
+    return res;
+}
+
+int main(){
+    std::string s;
+    while(std::cin >> s, s != "#"){
+        auto ns = split(s);
+        if(ns.size() == 3){
+            std::cout << join(ADToMaya(ns)) << std::endl;
+        }else{
+            std::cout << join(MayaToAD(ns)) << std::endl;
+        }
+    }
+}

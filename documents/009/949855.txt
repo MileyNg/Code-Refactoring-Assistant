@@ -1,0 +1,123 @@
+$dx = [0,1,0,-1]
+$dy = [1,0,-1,0]
+def bfs(f, sy, sx, steps, q, r, c)
+    for i in 0..3
+        cy = sy + $dy[i]
+        cx = sx + $dx[i]
+        if cy.between?(0,r-1) && cx.between?(0,c-1) && steps[cy][cx]==100000 && f[cy][cx]!="#"
+            q.push([cy,cx])
+            steps[cy][cx] = steps[sy][sx] + 1
+        end
+    end
+    while q.size > 0
+        cy, cx = q.shift
+        steps = bfs(f,cy,cx,steps,q,r,c)
+    end
+    return steps
+end
+
+loop do
+    h, w = gets.split.map(&:to_i)
+    if h==0&&w==0
+        exit
+    end
+    f = Array.new()
+    a = Array.new()
+    b = Array.new()
+    h.times do |i|
+        f[i] = gets.chomp
+        if f[i].include?("A")
+            a[0] = i
+            a[1] = f[i].index("A")
+        end
+        if f[i].include?("B")
+            b[0] = i
+            b[1] = f[i].index("B")
+        end
+    end
+    if a[0]==nil || b[0]==nil
+        exit
+    end
+    steps = Array.new(h).map{Array.new(w,100000)}
+    steps[a[0]][a[1]] = 0
+    q = Array.new()
+    steps = bfs(f,a[0],a[1],steps,q,h,w)
+    pat = gets.chomp
+    cs = 0
+    cby = b[0]
+    cbx = b[1]
+    prevy = cby
+    prevx = cbx
+    min = Array.new(3,100000)
+    loop do
+        pat.each_char do |c|
+            cs += 1
+            case c
+            when '5'
+                if steps[cby][cbx] > cs
+                    next
+                end
+                if [steps[cby][cbx],cs].max < min[0]
+                    min[1] = cby
+                    min[2] = cbx
+                    min[0] = [steps[cby][cbx],cs].max
+                end
+            when '8'
+                if cby > 0
+                    cby -= 1
+                end
+                if steps[cby][cbx] > cs
+                    next
+                end
+                if [steps[cby][cbx],cs].max < min[0]
+                    min[1] = cby
+                    min[2] = cbx
+                    min[0] = [steps[cby][cbx],cs].max
+                end
+            when '6'
+                if cbx < w-1
+                    cbx += 1
+                end
+                if steps[cby][cbx] > cs
+                    next
+                end
+                if [steps[cby][cbx],cs].max < min[0]
+                    min[1] = cby
+                    min[2] = cbx
+                    min[0] = [steps[cby][cbx],cs].max
+                end
+            when '4'
+                if cbx > 0
+                    cbx -= 1
+                end
+                if steps[cby][cbx] > cs
+                    next
+                end
+                if [steps[cby][cbx],cs].max < min[0]
+                    min[1] = cby
+                    min[2] = cbx
+                    min[0] = [steps[cby][cbx],cs].max
+                end
+            when '2'
+                if cby < h-1
+                    cby += 1
+                end
+                if steps[cby][cbx] > cs
+                    next
+                end
+                if [steps[cby][cbx],cs].max < min[0]
+                    min[1] = cby
+                    min[2] = cbx
+                    min[0] = [steps[cby][cbx],cs].max
+                end
+            end
+        end
+        if cs > h*w*pat.length
+            break
+        else
+            prevx = cbx
+            prevy = cby
+        end
+    end
+    puts min[0]==100000 ?  "impossible" : min * " "
+end

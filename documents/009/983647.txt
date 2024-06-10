@@ -1,0 +1,47 @@
+#include<iostream>
+#include<algorithm>
+#include<numeric>
+#include<tuple>
+
+using namespace std;
+
+const int MAX_N=131072;
+int score[MAX_N];
+int dat[2*MAX_N-1];
+const int INF=1<<29;
+
+void update(int ok,int a){
+  score[ok]=a;
+  int k=ok+MAX_N-1;
+  dat[k]=ok;
+  while(k>0){
+    k=(k-1)/2;
+    dat[k]=(score[dat[k*2+1]]>=score[dat[k*2+2]])?dat[k*2+1]:dat[k*2+2];
+  }
+}
+
+int main(){
+  int N,R,L;
+  cin>>N>>R>>L;
+  vector<tuple<int,int,int> >v;
+  for(int i=0;i<R;i++){
+    int d,t,x;
+    cin>>d>>t>>x;
+    v.emplace_back(d,t,x);
+  }
+  fill(begin(score),end(score),-INF);
+  for(int i=1;i<=N;i++){
+    update(i,0);
+  }
+  int x=0;
+  int t[MAX_N]={};
+  for(int i=0;i<L;i++){
+    while(x<R&&get<1>(v[x])==i){
+      int d=get<0>(v[x]);
+      update(d,score[d]+get<2>(v[x]));
+      x++;
+    }
+    t[dat[0]]++;
+  }
+  cout<<max_element(begin(t),end(t))-begin(t)<<endl;
+}

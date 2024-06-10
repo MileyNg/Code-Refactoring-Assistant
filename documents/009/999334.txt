@@ -1,0 +1,73 @@
+#include<stdio.h>
+ 
+#define S 250
+#define N1 -2000000000
+#define N2 2000000000
+ 
+struct Node{
+  int id;
+  int k;
+  int pk;
+  int lk;
+  int rk;
+};
+ 
+struct Node T[S];
+ 
+void Print(int);
+ 
+main(){
+   
+  int i;
+  int n = 0;
+   
+  scanf("%d",&n);
+  
+   
+  for(i=1;i <= n;i++){
+    scanf("%d",&T[i].k);
+     
+    T[i].id = i;
+  }
+   
+  for(i=1;i <= n;i++){
+     
+    if((i/2) >= 1){
+      T[i].pk = T[i/2].k;
+    }
+     
+    if(2*i >= 1 || 2*i <= n){
+      T[i].lk = T[2*i].k;
+    }
+     
+    if((2*i+1) >= 1 ||  (2*i+1) <= n){
+      T[i].rk = T[2*i+1].k;
+    }
+  }
+   
+  Print(n);
+ 
+return 0;
+}
+ 
+void Print(int n){
+  int i;
+ 
+  for(i=1;i <= n;i++){
+    printf("node %d: key = %d,",T[i].id,T[i].k);
+     
+    if(T[i].pk > 0){
+      printf(" parent key = %d,",T[i].pk);
+    }
+     
+    if(T[i].lk > 0){
+    printf(" left key = %d,",T[i].lk);
+    }
+     
+    if(T[i].rk > 0){
+      printf(" right key = %d,",T[i].rk);
+    }
+    printf(" ");
+    printf("\n");
+  }
+}

@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+
+namespace AOJ
+{
+    class Program
+    {
+        private static int judge(int a, int b)
+        {
+            if (a == b) { return 0; }
+            if (a > b && a - 1 == b) { return -1; }
+            if (a < b && b - 1 == a) { return 1; }
+            if (a > b) return 1;
+            else return -1;
+        }
+
+        private static string solve(int l)
+        {
+            int[][] syusi;
+            syusi = new int[12][];
+            for (int i = 0; i < 12; i++)
+            {
+                string[] tmp = Console.ReadLine().Split(new char[]{' '});
+                int[]  tmp2 = new int[2];
+                tmp2[0] = int.Parse(tmp[0]);
+                tmp2[1] = int.Parse(tmp[1]);
+                syusi[i] = tmp2;
+            }
+
+            int sum = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                sum += syusi[i][0] - syusi[i][1];
+                if (sum >= l)
+                {
+                    return (i + 1).ToString();
+                }
+            }
+            return "NA";
+
+        }
+        
+        static void Main(string[] args)
+        {
+            while (true) {
+                int l = int.Parse(Console.ReadLine());
+                if (l == 0) break;
+                Console.WriteLine(solve(l));
+            }
+        }
+    }
+}

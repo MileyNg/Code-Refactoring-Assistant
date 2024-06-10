@@ -1,0 +1,49 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+  int n;
+  cin>>n;
+  string tar;
+  cin>>tar;
+  int ans=0;
+  for(int i=0;i<n;i++)
+    {
+      string tmp;
+      cin>>tmp;
+      //first
+      for(int a=0;a<tmp.size();a++)
+	{
+	  if(tmp[a]==tar[0])
+	    {
+	      for(int b=a+1;b<tmp.size();b++)
+		 {
+		   if(tmp[b]==tar[1])
+		     {
+		       bool flag=false;
+		       int cnt=2;
+		       for(int c=b+(b-a);b<tmp.size();c+=(b-a))
+			 {
+			   if(tar[cnt]!=tmp[c])
+			     break;
+			   if(cnt>=tar.size()-1)
+			     {
+			       flag=true;
+			       break;
+			     }
+			   cnt++;
+			 }
+		       if(flag)
+			 {
+			   ans++;
+			   a=b=tmp.size()+2;
+			 }
+		     }
+		 }
+	    }
+	}
+
+    }
+  cout<<ans<<endl;
+
+}

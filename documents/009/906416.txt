@@ -1,0 +1,100 @@
+#include <cstdlib>
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+
+
+
+
+
+
+
+int T,n,num,m;
+char z[55][55];
+int dp[55][55][55][55];
+int vi[55][55];
+void dfs(int q,int w)
+{
+    if(z[q][w]=='#')
+        return;
+    vi[q][w]=1;
+    if(q==n-1&&w==m-1)
+        return;
+    if(vi[q+1][w]==0)
+        dfs(q+1,w);
+    if(vi[q][w+1]==0)
+        dfs(q,w+1);
+}
+int main()
+{
+    while(~scanf("%d%d",&n,&m))
+    {
+        if(n==0&&m==0)
+            break;
+        for(int q=0;q<n;q++)
+            scanf("%s",z[q]);
+        memset(dp,0,sizeof dp);
+        memset(vi,0,sizeof vi);
+        dfs(0,0);
+        if(vi[n-1][m-1]==0)
+        {
+            printf("-1\n");
+            continue;
+        }
+        for(int w=0;w<=n;w++)
+            for(int q=0;q+w<=n;q++)
+                for(int r=0;r<=m;r++)
+                    for(int e=0;e+r<=m;e++)
+                    {
+                        if(q+w>=q+1&&e+r>=e+2)
+                        {
+                            if(z[q][e]-'a'==z[q+w-1][e+r-1]-'A')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e+1][e+r-1]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w][e+1][e+r-1]);
+                        }
+                        if(q+w>=q+2&&e+r>=e+1)
+                        {
+                            if(z[q][e]-'a'==z[q+w-1][e+r-1]-'A')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w-1][e][e+r]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w-1][e][e+r]);
+                        }
+                        if(q+w>=q+2&&e+r>=e+2)
+                        {
+                            if(z[q][e]-'a'==z[q+w-1][e+r-1]-'A')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w][e][e+r-1]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q+1][q+w][e][e+r-1]);
+                        }
+                        if(q+w>=q+2&&e+r>=e+2)
+                        {
+                            if(z[q][e]-'a'==z[q+w-1][e+r-1]-'A')
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w-1][e+1][e+r]+1);
+                            else
+                                dp[q][q+w][e][e+r]=max(dp[q][q+w][e][e+r],dp[q][q+w-1][e+1][e+r]);
+                        }
+                        for(int t=q;t<=q+w;t++)
+                        {
+                            dp[q][w][e][r]=max(dp[q][w][e][r],dp[q][t][e][r]+dp[t][w][e][r]);
+                        }
+                        for(int t=e;t<=e+r;t++)
+                        {
+                            dp[q][w][e][r]=max(dp[q][w][e][r],dp[q][w][e][t]+dp[q][w][t][r]);
+                        }
+                        // printf("%d %d %d %d %d\n",q,q+w,e,e+r,dp[q][q+w][e][e+r]);
+                    }
+
+                    // for(int q=0;q<=n;q++)
+
+
+                    printf("%d\n",dp[0][n][0][m]);
+    }
+
+
+
+
+}

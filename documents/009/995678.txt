@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+void DrawSquare(int h,int w)
+{
+	for(int y=0;y<h;y++)
+	{
+		for(int x=0;x<w;x++)
+		{
+			if(y==0 || y==(h-1))
+			{
+				printf("#");
+				if(x==(w-1))
+				{
+					printf("\n");
+				}
+			}
+			else
+			{
+				if(x==0)
+				{
+					printf("#");
+				}else if( x==(w-1))
+				{
+					printf("#\n");
+				}else
+				{
+					printf(".");
+				}
+			}
+		}
+	}
+	printf("\n");
+}	
+
+int main(void)
+{
+	int h,w;
+	while(1)
+	{
+		scanf("%d %d",&h,&w);
+		if(h==0 && w==0)
+		{
+			break;
+		}
+		DrawSquare(h,w);
+	}
+
+	return 0;
+
+}

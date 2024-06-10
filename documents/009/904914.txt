@@ -1,0 +1,17 @@
+#!/bin/ruby
+until (n=gets.to_i)==0
+  c=0
+  b=gets.split.map(&:to_i)
+  while c<=10000
+    f=false
+    b.each_with_index do |e,x|
+      f|=e!=x+1
+    end
+    break if !f
+    c+=1
+    b=b.map{|e|e-=1}
+    b<< b.size
+    b=b.select{|e|e!=0}
+  end
+  puts (c<=10000)?c: -1
+end

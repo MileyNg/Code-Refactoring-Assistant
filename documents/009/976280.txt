@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  while(1){
+    int n;
+    cin >> n;
+    if(!n) break;
+    vector<vector<int>> d(10, vector<int>(10, 1000000000));
+    for (int i = 0; i < 10; ++i)
+      d[i][i] = 0;
+    int cmx = 1;
+    for (int i = 0; i < n; ++i) {
+      int a, b, c;
+      cin >> a >> b >> c;
+      d[a][b] = d[b][a] = c;
+      cmx = max(cmx, max(a,b)+1);
+    }
+    for (int k = 0; k < cmx; ++k)
+      for (int i = 0; i < cmx; ++i)
+        for (int j = 0; j < cmx; ++j)
+          d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+    int mind = 1000000000;
+    int mini = 0;
+    for (int i = 0; i < cmx; ++i) {
+      int sum=0;
+      for (int j = 0; j < cmx; ++j) {
+        sum += d[i][j];
+      }
+      if(mind > sum) {
+        mind = sum;
+        mini = i;
+      }
+    }
+    cout << mini << ' ' << mind << endl;
+  }
+  return 0;
+}

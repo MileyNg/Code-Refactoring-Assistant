@@ -1,0 +1,53 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int w,h;
+char map[20][20];
+int cnt;
+
+int dirx[4] = {1,0,-1,0};
+int diry[4] = {0,1,0,-1};
+
+bool inField(int x,int y){
+	return (0<=x) && (x<w) && (0<=y) && (y<h);
+}
+
+//深さ優先探索
+void dfs(int posx,int posy){
+	cnt ++;
+	map[posy][posx] = '#';
+	for(int i=0;i<4;i++){
+		int nextx = posx + dirx[i];
+		int nexty = posy + diry[i];
+		if(inField(nextx,nexty) && map[nexty][nextx] != '#'){
+			dfs(nextx,nexty);
+		}
+	}
+	
+}
+//名簿
+int main(){
+	while(true){
+		cin >> w >> h;
+		if(w==0){
+			break;
+		}
+		cnt =0;
+		int posx,posy;
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				cin >> map[i][j];
+				if(map[i][j] == '@'){
+					posx = j;
+					posy = i;
+					map[i][j] = '.';
+				}
+				
+			}
+		}
+		dfs(posx,posy);
+		cout << cnt << endl;
+	}
+}

@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+const int MAX_N = 1005;
+bool p[MAX_N];
+vector<int> prime;
+
+void make_prime (void ){
+
+	prime.clear();
+	fill (p, p+MAX_N, true );
+	p[0] = false;
+	p[1] = false;
+	for (int i = 2; i < MAX_N; i++ ){
+		if (p[i] ){
+			for (int j = 2*i; j < MAX_N; j+= i ){
+				p[j] = false;
+			} // end for
+		} // end if
+	} // end for
+	rep (i, MAX_N )
+		if (p[i] ) prime.push_back (i );
+}
+int main()
+{
+	make_prime();
+	ios_base::sync_with_stdio(0);
+	int m, a, b;
+	while (cin >> m >> a >> b, m ){
+		ll res = 0LL;
+		P ans = P(0, 0 );
+		rep (i, prime.size() ){
+			for (int j = i; j < prime.size(); j++ ){
+				ll area = (ll)prime[i]*prime[j];
+				if (area > (ll)m ) continue;
+				if ((ll)a*prime[j] > (ll)b*prime[i] ) continue;
+				if (res < area ){
+					ans.first = prime[i];
+					ans.second = prime[j];
+					res = area;
+				} // end if
+			} // end for
+		} // end rep
+		cout << ans.first << ' ' << ans.second << endl;
+	} // end while
+		
+	return 0;
+}

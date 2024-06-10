@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+
+int p, q, a, n;
+double EPS = 1e-9;
+
+int solve(double sum, int mul, int prev, int num) {
+	if (num > n) return 0;
+	if (mul > a) return 0;
+	
+	if (fabs(sum - (double)p/(double)q) < EPS) return 1;
+	if (sum > (double)p/(double)q) return 0;
+	
+	int ret = 0;
+	for (int i=prev; mul*i<=a; i++) {
+		ret += solve(sum + 1.0/(double)i, mul * i, i, num + 1);
+	}
+	return ret;
+}
+
+int main() {
+	while (1) {
+		cin >> p >> q >> a >> n; if (p==0 && q==0 && a==0 && n==0) break;
+		
+		cout << solve(0.0, 1, 1, 0) << endl;
+	}
+	
+	return 0;
+}

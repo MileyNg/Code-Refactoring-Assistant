@@ -1,0 +1,29 @@
+def isHit(a,b,ufo):
+	D=abs(a*ufo[0]+b*ufo[1])/int((a**2+b**2)**0.5)
+	return True if D<=ufo[2] else False
+
+while 1:
+	R,N=map(int,raw_input().split())
+	if R==0:break
+	ufos=[map(int,raw_input().split()) for i in range(N)]
+	for i in range(N):
+		ufos[i].append((ufos[i][0]**2+ufos[i][1]**2)**0.5)
+	#ufos[i]=[x,y,r,v,d]
+	invade=0
+	while ufos:
+		for i in range(len(ufos)):
+			ufos[i][4]-=ufos[i][3]
+
+		for i in range(len(ufos)-1,-1,-1):
+			if ufos[i][4]<=R:
+				invade+=1
+				ufos.pop(i)
+				
+		target=sorted(ufos,key=lambda i:i[4]).pop(0)
+		a,b=target[1],-target[0]
+
+		for i in range(len(ufos)-1,-1,-1):
+			if isHit(a,b,ufos[i]):
+				ufos.pop(i)
+				
+	print invade

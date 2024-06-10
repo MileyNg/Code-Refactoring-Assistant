@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+
+using namespace std;
+
+int cm[128];
+bool pm[128];
+
+int dfs(vector<string> &v,int c,int p){
+  if(v.back().empty()){
+    return all_of(begin(v),end(v),[](string s){
+	return s.empty();
+	  })&&c==0;
+  }else{
+    for(auto &e:v){
+      if(!e.empty()&&cm[e.back()]<0){
+	int sum=0;
+	for(int i=0;i<10;i++){
+	  if(!(p>>i&1)&&(i||!pm[e.back()])){
+	    cm[e.back()]=i;
+	    sum+=dfs(v,c,p|1<<i);
+	    cm[e.back()]=-1;
+	  }
+	}
+	return sum;
+      }
+    }
+    for(int i=0;i+1<v.size();i++){
+      if(!v[i].empty()){
+	c+=cm[v[i].back()];
+      }
+    }
+    if(c%10==cm[v.back().back()]){
+      vector<string> n;
+      for(auto &e:v){
+	n.push_back(e.empty()?e:e.substr(0,e.size()-1));
+      }
+      return dfs(n,c/10,p);
+    }else{
+      return 0;
+    }
+  }
+}
+ 
+int main(){
+  for(int N;cin>>N,N;){
+    fill(begin(cm),end(cm),-1);
+    fill(begin(pm),end(pm),false);
+    vector<string> s(N);
+    for(auto &e:s){
+      cin>>e;
+      if(e.size()>1){
+	pm[e[0]]=true;
+      }
+    }
+    cout<<dfs(s,0,0)<<endl;
+  }
+}
+
+  

@@ -1,0 +1,37 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int numA[4], numB[4], tmpA[4], tmpB[4], hit=0, blow=0;
+	
+	cin >> numA[0] >> numA[1] >> numA[2] >> numA[3];
+	cin >> numB[0] >> numB[1] >> numB[2] >> numB[3];
+	
+	while (1) {
+		hit = 0; blow = 0;
+		cin >> tmpA[0] >> tmpA[1] >> tmpA[2] >> tmpA[3];
+		for (int i=0; i<4; i++)
+			if (tmpA[i] == numB[i])
+				hit++;
+		for (int i=0; i<4; i++)
+			for (int j=0; j<4; j++)
+				if (i != j && tmpA[i] == numB[j])
+					blow++;
+		cout << hit << " " << blow << endl;
+		
+		hit = 0; blow = 0;
+		cin >> tmpB[0] >> tmpB[1] >> tmpB[2] >> tmpB[3];
+		for (int i=0; i<4; i++)
+			if (tmpB[i] == numA[i])
+				hit++;
+		for (int i=0; i<4; i++)
+			for (int j=0; j<4; j++)
+				if (i != j && tmpB[i] == numA[j])
+					blow++;
+		
+		cout << hit << " " << blow << endl;
+	}
+	
+}

@@ -1,0 +1,32 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		int age[7] = {0};
+		int ag[] = {10, 20, 30, 40, 50, 60};
+		int a;
+		for (int i = 0; i < n; i++) {
+			cin >> a;
+			for (int i = 0; i < 7; i++) {
+				if (i == 6) {
+					age[6]++;
+				} else {
+					if (a < ag[i]) {
+						age[i]++;
+						break;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < 7; i++) {
+			cout << age[i] << endl;
+		}
+	}
+	return 0;
+}

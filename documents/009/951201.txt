@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+
+class Point {
+public:
+	int x;
+	int y;
+	void set(int, int);
+	int getx();
+	int gety();
+};
+void Point::set(int newx, int newy){
+	x = newx;
+	y = newy;
+}
+int Point::getx(){
+	return x;
+}
+int Point::gety(){
+	return y;
+}
+
+int main()
+{
+	int N, n, d, xmax, xmin, ymax, ymin;
+	Point p[200];
+	while(cin >> N, N){
+		p[0].set(0, 0);
+		for(int i = 1; i < N; i++){
+			cin >> n >> d;
+			switch (d){
+			case 0:
+				p[i].set(p[n].getx()-1, p[n].gety());
+				break;
+			case 1:
+				p[i].set(p[n].getx(), p[n].gety()-1);
+				break;
+			case 2:
+				p[i].set(p[n].getx()+1, p[n].gety());
+				break;
+			case 3:
+				p[i].set(p[n].getx(), p[n].gety()+1);
+				break;
+			}	
+		}
+		xmax = -1000;
+		xmin = 1000;
+		ymax = -1000;
+		ymin = 1000;
+		for(int i = 0; i < N; i++){
+			if(p[i].getx() > xmax)
+				xmax = p[i].getx();
+			if(p[i].gety() > ymax)
+				ymax = p[i].gety();
+			if(p[i].getx() < xmin)
+				xmin = p[i].getx();
+			if(p[i].gety() < ymin)
+				ymin = p[i].gety();
+		}
+		cout<<xmax - xmin + 1<<" "<< ymax - ymin + 1<<endl;
+
+	}
+	return 0;
+}

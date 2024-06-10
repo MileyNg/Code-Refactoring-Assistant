@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define INF 1 << 30
+
+/* いんぷっと */
+int S, T, U; // S:体力の上限 T:トレーニングの種類 U:一日に行うトレーニングの種類数
+int N, O, D; // N:ドーナツの種類 O:1日の回復体力量  D:日数
+int e[100], c[100]; // e[i]:トレーニングiに必要な体力 c[i]:トレーニングiの消費カロリー
+int h[100], a[100]; // h[i]:i番目の幸福度 a[i]:i番目の摂取カロリー
+/* おわり */
+
+/* あうとぷっと */
+// D日間で得られる幸福の総和の最大値 */
+
+int chMax(int s,int n){return max(s,n);}
+
+int main()
+{
+  cin >> S >> T >> U >> N >> O >> D;
+  for(int i = 0; i < T; i++){
+    cin >> e[i] >> c[i];
+  }
+  for(int i = 0; i < N; i++){
+    cin >> h[i] >> a[i];
+  }
+
+  int dp1[101][101]; // dp[トレーニングの種類数][つかう体力]: 最大消費カロリー
+  fill_n( *dp1, 101 * 101, -1);
+  dp1[0][0] = 0;
+  for(int i = 0; i < T; i++){
+    for(int j = U - 1; j >= 0; j--){
+      for(int k = 0; k <= S - e[i]; k++){ // 1回i番目のトレーニングをやる
+        if(dp1[j][k] == -1) continue;
+        dp1[j + 1][k + e[i]] = max( dp1[j + 1][k + e[i]], dp1[j][k] + c[i]);
+      }
+    }
+  }
+
+  vector< int >  dp2(101 * 101 + 1, -1); // dp2[摂取カロリー]: 最大幸福度
+  dp2[0] = 0;
+
+  for(int i = 0; i < N; i++){
+    for(int j = 0 ; j < dp2.size() - a[i]; j++){
+      if(dp2[j] == -1) continue;
+      dp2[j + a[i]] = max( dp2[j + a[i]], dp2[j] + h[i]);
+    }
+  }
+  partial_sum( dp2.begin(), dp2.end(), inserter(dp2,dp2.begin()), chMax);
+
+
+  int dp3[101][101]; // dp3[日数][体力]: 幸福の総和の最大値
+  fill_n( *dp3, 101 * 101, -1);
+  dp3[0][S] = 0;
+  for(int i = 0; i < D; i++){
+    for(int j = 0; j <= S; j++){
+      for(int k = 0; k <= j; k++){ //消費カロリーはjまでじゃん
+        if(dp3[i][j] == -1) continue;
+        if(dp1[U][k] == -1 || dp2[dp1[U][k]] == -1) continue;
+        dp3[i + 1][min( j + O - k, S)] = max( dp3[i + 1][min( j + O - k, S)], dp3[i][j] + dp2[dp1[U][k]]);
+      }
+    }
+  }
+
+  int ret = -1;
+  for(int i = 0; i <= S; i++) ret = max( ret, dp3[D][i]);
+  cout << ret << endl;
+  return(0);
+}

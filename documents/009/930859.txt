@@ -1,0 +1,28 @@
+#include<iostream>
+using namespace std;
+#define MAX 20000
+
+bool isP[MAX];
+int sumP[MAX];
+void make_table(){
+  for(int i=0;i<MAX;i++)isP[i]=true;
+  isP[0]=isP[1]=false;
+  for(int i=2;i*i<=MAX;i++){
+    if(isP[i]==false)continue;
+    for(int j=i*i;j<MAX;j+=i)isP[j]=false;
+  }
+  sumP[0]=0;
+  for(int i=1;i<MAX;i++)sumP[i]=isP[i]+sumP[i-1];
+}
+int main(){
+  make_table();
+  int n,cnt;
+  while(cin>>n){
+    cnt=0;
+    for(int i=1;i<=n;i++){
+      cnt+=isP[i]&&isP[n-i+1];
+    }
+    cout<<cnt<<endl;
+  }
+  return 0;
+}

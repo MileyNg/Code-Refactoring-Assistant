@@ -1,0 +1,21 @@
+#include <iostream>
+int main(){
+	int x[101]={0},a,b,i;
+	while (std::cin>>a>>b){
+		x[1]++;
+		x[2]++;
+		while(a!=0&&b!=0){
+			x[a]^=1;
+			x[b]^=1;
+			std::cin>>a>>b;
+		}
+		a=0;
+		for(i=0;i<101;i++)
+			if(x[i]){
+				a=1;
+				break;
+			}
+		std::cout<<(a==0?"OK\n":"NG\n");
+		for(i=0;i<101;i++)x[i]=0;
+	}
+}

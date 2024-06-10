@@ -1,0 +1,23 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+using namespace std;
+
+int main(void){
+	int n;cin>>n;
+	while(n--){
+		double x1,y1,x2,y2,x3,y3,x4,y4;
+		cin>>x1>>y1>>x2>>y2>>x3>>y3>>x4>>y4;
+		double dx1 = x2 - x1;
+		double dy1 = y2 - y1;
+		double dx2 = x4 - x3;
+		double dy2 = y4 - y3;
+		double dot = (dx1 * dx2 + dy1 * dy2);
+		if(fabs((dx1*dx1 + dx2*dx2)*(dy1*dy1 + dy2*dy2) - dot*dot) < 1e-7) cout << "YES" << endl;
+		else cout << "NO" << endl;
+	}
+	return 0;
+}

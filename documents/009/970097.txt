@@ -1,0 +1,33 @@
+#include <iostream>
+#include <queue>
+#include <map>
+using namespace std;
+typedef long long ll;
+
+int main(){
+	int n;
+	while( cin >> n, n ){
+		map<int, ll> worker;
+		queue<int> order;
+		for( int i = 0; i < n; i++ ){
+			int id;
+			ll price, num;
+			cin >> id >> price >> num;
+			if( worker.find(id) == worker.end() ){
+				order.push(id);
+			}
+			worker[id] += (price * num);
+		}
+		bool flag = true;
+		while( !order.empty() ){
+			if( worker[order.front()] >= 1000000 ){
+				cout << order.front() << endl;
+				flag = false;
+			}
+			order.pop();
+		}
+		if( flag ){
+			cout << "NA" << endl;
+		}
+	}
+}

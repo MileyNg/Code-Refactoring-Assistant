@@ -1,0 +1,97 @@
+#include<stdio.h>
+#define N 100000
+ 
+typedef struct {
+  int id,k,p,depth;
+  int child[10];
+} Node;
+ 
+void scan(void);
+void desideDepth(int,int);
+ 
+Node t[N];
+int n=0;
+ 
+int main(){
+ 
+  int i,j;
+ 
+  scan();
+  // fprintf(stderr,"Check!\n");
+  
+  /*for(i=0;i<n;i++){
+    printf("node %d: parent = %d\n",i,t[i].p);
+  }
+ */
+  for(i=0;i<n;i++){
+    printf("node %d: parent = %d, depth = %d,",i,t[i].p,t[i].depth);
+     
+    if(t[i].k==0){
+      if(t[i].depth==0){
+    printf(" root, []\n");
+      }else {
+    printf(" leaf, []\n");
+      }
+    } else if(t[i].k!=0){
+      if(t[i].depth==0){
+    printf(" root, [");
+    for(j=0;j<t[i].k;j++){
+      if(j>0){
+        printf(", ");
+      }
+      printf("%d",t[i].child[j]);
+    }
+    printf("]\n");
+      } else {
+    printf(" internal node, [");
+    for(j=0;j<t[i].k;j++){
+      if(j>0){
+        printf(", ");
+      }
+      printf("%d",t[i].child[j]);
+    }
+    printf("]\n");
+      }
+    }
+  }
+  return 0;
+   
+}
+void scan(void){
+   
+  int i,j;
+   
+  scanf("%d",&n);
+  for(i = 0; i < n; i++){
+    scanf("%d %d",&t[i].id,&t[i].k);
+    if(t[i].k != 0){
+      if(t[0].id == 0){
+    t[0].p=-1;
+      }
+      for(j=0;j<t[i].k;j++){
+    scanf("%d",&t[i].child[j]);
+    t[t[i].child[j]].p = t[i].id;  
+      }
+    }else{
+      if(t[i].p==0){
+    t[i].p = -1;
+      }
+    }
+    
+    desideDepth(t[i].p,i);
+     
+  }
+   
+}
+ 
+void desideDepth(int parent,int nodeNumber){
+  //fprintf(stderr,"Check!\n");
+  if(parent != -1){
+    t[nodeNumber].depth++;
+ 
+    desideDepth(t[parent].p,nodeNumber);
+  }
+  
+  
+   
+}

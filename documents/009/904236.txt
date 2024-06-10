@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	string str;
+	string in;
+	vector<string> s;
+	while (cin >> in) s.push_back(in);
+	for (int i=0; i<(int)s.size(); i++) {
+		str += s[i];
+		if (i<(int)s.size()-1) str += " ";
+	}
+	
+	for (int i=1; i<=26; i++) {
+		for (int j=0; j<(int)str.size(); j++) {
+			if (str[j] == '.' || str[j] == ' ') continue;
+			str[j] = str[j] + i;
+			if (str[j] >= 'z') str[j] = 'a' + str[j] - 'z';
+		}
+		if (str.find("the")!=str.npos || str.find("this")!=str.npos || str.find("that")!=str.npos) break;
+	}
+	
+	cout << str << endl;
+	
+	return 0;
+}

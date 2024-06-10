@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(void){
+  int data[200],cnt=0,i;
+  char input;
+
+  while(input=getchar()){
+    if(input==EOF || input=='\n') break;
+    if(input==' ') continue;
+
+    //オペランドの処理
+    if('0'<=input && input<='9'){
+      data[cnt]=atoi(&input);
+      cnt++;
+    }
+
+    //演算子の処理
+    else{
+      switch(input){
+      case '+':
+	data[cnt-2]=data[cnt-2]+data[cnt-1];
+	break;
+      case '-':
+	data[cnt-2]=data[cnt-2]-data[cnt-1];
+	break;
+      case '*':
+	data[cnt-2]=data[cnt-2]*data[cnt-1];
+	break;
+      default:
+	printf("Error!\n");
+	exit(1);
+      }
+      cnt--;
+    }
+  }
+
+  //出力
+  printf("%d\n",data[0]);
+  
+  return 0;
+}

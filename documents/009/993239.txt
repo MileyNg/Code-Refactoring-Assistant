@@ -1,0 +1,233 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef int  i32;
+typedef long long i64,ll;
+typedef vector<int> vi; typedef pair<int,int> pii; typedef vector<pair<int,int> > vpii;
+typedef long long ll; typedef vector<long long> vl; typedef pair<long long,long long> pll; typedef vector<pair<long long,long long> > vpll;
+typedef vector<string> vs; typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#undef NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T mod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+// checked by  http://codeforces.com/contest/237/submission/4710047
+//                  http://codeforces.com/contest/277/submission/4710018
+
+namespace MinCostFlows{
+using Flow=int;using Cost=ll;
+const Flow FINF=1<<30;
+const Cost CINF=1<<30,EPS =0;
+class MinCostFlow{
+private:
+    bool EQ(Cost a,Cost b){return abs(a-b)<EPS;}
+    int V;
+    struct Edge{
+        int from,to;Flow cap;Cost cost;int rev;
+        Edge(int from,int to,Flow cap,Cost cost,int rev):from(from),to(to),cap(cap),cost(cost),rev(rev){}
+    };
+    using  Graph=vector<vector<Edge>>;
+    vector<Cost> dist,h;vector<int> prevv,preve;
+    using pci=pair<Cost,int>;
+public:
+    Graph G;
+    
+    MinCostFlow(int V):V(V){
+        G=Graph(V);
+        dist=vector<Cost>(V);h=vector<Cost>(V);
+        prevv=vector<int>(V);preve=vector<int>(V);
+    }
+    void add_edge(int from,int to,Flow cap,Cost cost){
+        G[from].push_back(Edge(from,to,cap,cost,G[to].size()));
+        G[to].push_back(Edge(to,from,0,-cost,G[from].size()-1));
+    }
+    // void clearGraph(){
+    //     REP(i,V)G[i].clear();
+    // }
+
+    //primal Dual O(V^2*U*C)
+    pair<Cost,Flow> mincostflow(int s,int t,Flow f){
+        pair<Cost,Flow> res(0,0);
+        fill(ALL(h),0);
+        while(f > 0){
+            fill(ALL(dist),FINF);dist[s] = 0;
+
+            priority_queue<pci,vector<pci>,greater<pci> > que;
+            que.push(pci(0,s));
+            while(!que.empty()){
+                pci p = que.top();que.pop();
+                int v = p.second;
+                if(dist[v] < p.first)continue;
+                REP(i,(int)G[v].size()){
+                    Edge &e = G[v][i];
+                    if(e.cap<=0)continue;
+                    if(dist[e.to] > dist[v] + e.cost + h[v] - h[e.to]){
+                        dist[e.to] = dist[v] + e.cost + h[v] - h[e.to];
+                        prevv[e.to] = v;preve[e.to] = i;
+                        que.push(pci(dist[e.to],e.to));
+                    }
+                }
+            }
+            if(EQ(dist[t],FINF))break;
+
+            REP(i,V)h[i] += dist[i];
+            Flow d = f;
+            for(int v = t; v != s; v = prevv[v])d = min(d,G[prevv[v]][preve[v]].cap);
+            f -= d;res.first += d*h[t];res.second+=d;
+
+            for(int v = t; v != s; v = prevv[v]){
+                Edge &e = G[prevv[v]][preve[v]];
+                e.cap -= d;G[v][e.rev].cap += d;
+            }
+        }
+        return res;
+    }
+};
+}
+using namespace MinCostFlows;
+
+
+class Main{
+public:
+
+	void run(){
+		int n;cin >> n;
+		MinCostFlow mcf(n+n+2);
+		int S=n+n,T=n+n+1;
+
+		vector<vector<int>> ws(n,vector<int>(n));
+		REP(y,n)REP(x,n)cin >> ws[y][x];
+		vector<vector<int>> es(n,vector<int>(n));
+		REP(y,n)REP(x,n)cin >> es[y][x];
+
+		vector<string> board(n);
+		REP(i,n)cin >> board[i];
+
+		REP(y,n)mcf.add_edge(S,y,1,0);
+		REP(x,n)mcf.add_edge(n+x,T,1,0);
+		REP(y,n)REP(x,n){
+			int c=0;
+			//cost 差分
+			if(board[y][x]=='.')c+=2*ws[y][x];
+			REP(y1,n)if(y!=y1)if(board[y1][x]=='o')c+=es[y1][x];
+			REP(x1,n)if(x!=x1)if(board[y][x1]=='o')c+=es[y][x1];
+			mcf.add_edge(y,n+x,1,c);
+		}
+
+		Cost c=mcf.mincostflow(S,T,n).first/2;
+
+		int num=0;
+		vector<vector<int> > wboard(n,vector<int>(n));
+		vector<vector<int> > eboard(n,vector<int>(n));
+		
+		REP(i,n+n+2){
+			EACH(e,mcf.G[i]){
+				if(IN(0,e->from,n) && IN(n,e->to,n+n)){
+					if(e->cap==0 && board[e->from][e->to-n]=='.'){
+						num++;wboard[e->from][e->to-n]=1;
+					}
+					if(e->cap==1 && board[e->from][e->to-n]=='o'){
+						num++;eboard[e->from][e->to-n]=1;
+					}
+				}
+			}
+		}
+		cout << c <<endl;
+		cout << num <<endl;
+		REP(y, n)REP(x,n)if(wboard[y][x]){
+			cout <<y+1 <<" "<< x+1 << " write" << endl; 
+		}
+		REP(y, n)REP(x,n)if(eboard[y][x]){
+			cout <<y+1 <<" "<< x+1 << " erase" << endl; 
+		}
+
+	}
+};
+
+ int main(){
+ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

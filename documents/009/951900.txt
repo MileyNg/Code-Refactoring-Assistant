@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <set>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int m;
+  scanf("%d", &m);
+  while(m--){
+    string s;
+    cin >> s;
+    set<string>c;
+    for(int i = 1; i < s.size(); i++){
+      string s1 = s.substr(0, i);
+      string s2 = s.substr(i);
+      string rs1 = s1, rs2 = s2;
+      reverse(rs1.begin(), rs1.end()); reverse(rs2.begin(), rs2.end());
+      c.insert(s1 + s2);
+      c.insert(s2 + s1);
+      c.insert(s1 + rs2);
+      c.insert(rs2 + s1);
+      c.insert(rs1 + s2);
+      c.insert(s2 + rs1);
+      c.insert(rs1 + rs2);
+      c.insert(rs2 + rs1);
+      //      cout << s1 << ' ' << s2 << endl;
+    }
+    printf("%d\n", (int)c.size());
+  }
+  return 0;
+}

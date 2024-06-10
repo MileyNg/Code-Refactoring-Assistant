@@ -1,0 +1,128 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+typedef int D;
+using namespace std;
+const D EPS = 0;
+struct P {
+  D x, y;
+  P() {}
+  P(D x_, D y_) : x(x_), y(y_) {}
+};
+
+struct L {
+  P a, b;
+  L() {}
+  L(P a_, P b_) : a(a_), b(b_) {}
+};
+
+struct C {
+  P p; D r;
+  C() {}
+  C(P p_, D r_) : p(p_), r(r_) {}
+};
+P operator +(P a, P b) { return P(a.x + b.x, a.y + b.y);}
+P operator -(P a, P b) { return P(a.x-b.x, a.y-b.y);}
+P operator *(P a, D b) { return P(a.x * b, a.y * b); }
+P operator /(P a, D b) { return P(a.x / b, a.y/b); }
+P vec(P from, P to) { return to-from;}
+D inp(P a, P b) {return a.x*b.x + a.y*b.y;}
+D outp(P a, P b) {return a.x*b.y - a.y*b.x;}
+D norm(P p) {return inp(p, p);}
+D abs(P p) {return sqrt(norm(p)); }
+int sig(D a, D b) {
+  if (a<b - EPS) return -1;
+  if (a>b + EPS) return +1;
+  return 0;
+}
+
+int ccw(P a, P b, P c) {
+  b = vec(a, b); c = vec(a, c);
+  if(sig(outp(b, c), 0.0) > 0) return +1;
+  if(sig(outp(b, c), 0.0) < 0) return -1;
+  if(sig(inp(b, c), 0.0) < 0) return +2;
+  if(norm(b) < norm(c)) return -2;
+  return 0;
+}
+bool iSP(L s, P p) {
+    return ccw(s.a, s.b, p) == 0;
+}
+bool iSS(L s, L t) {
+  return ccw(s.a, s.b, t.a) * ccw(s.a, s.b, t.b) <= 0 &&
+    ccw(t.a, t.b, s.a) * ccw(t.a, t.b, s.b) <= 0;
+}
+typedef vector<P> G;
+bool operator <(P a, P b) {
+  if(sig(a.x, b.x) != 0) return a.x < b.x;
+  return a.y < b.y;
+}
+G convex_hull(vector<P> ps) {
+  int N = ps.size();
+  int k = 0;
+  sort(ps.begin(), ps.end());
+  G res(N*2);
+  for(int i = 0; i < N; i++) {
+    while(k >= 2 && ccw(res[k - 2], res[k - 1], ps[i]) <= 0) k--;
+    res[k++] = ps[i];
+  }
+  int t = k + 1;
+  for(int i = N - 2; i >= 0; i--) {
+    while(k >= t && ccw(res[k - 2], res[k - 1], ps[i]) <= 0) k--;
+    res[k++] = ps[i];
+  }
+  res.resize(k - 1);
+  return res;
+}
+
+int main() {
+  while(true) {
+    int N, M;
+    cin >> N >> M;
+    if(N == 0 && M == 0) break;
+    vector<P> black(N);
+    vector<P> white(M);
+    for(int i = 0; i < N; i++) {
+      cin >> black[i].x >> black[i].y;
+    }
+    for(int i = 0; i < M; i++) {
+      cin >> white[i].x >> white[i].y;
+    }
+    if(N == 1 && M == 1) {
+      cout << "YES" << endl;
+      continue;
+    }
+    bool ok = false;
+    G bh = convex_hull(black);
+    for(int i = 0; i < (int)bh.size(); i++) {
+      P a = bh[i]; P b = bh[(i + 1) % bh.size()];
+      // cerr << "line(" << a.x << "," << a.y << "," << b.x << "," << b.y << ");" << endl;
+      bool f = true;
+      for(int j = 0; j < M; j++) {
+        if(ccw(a, b, white[j]) != -1) f = false;
+      }
+      if(f) ok = true;
+    }
+    G wh = convex_hull(white);
+    for(int i = 0; i < (int)wh.size(); i++) {
+      P a = wh[i]; P b = wh[(i + 1) % wh.size()];
+      // cerr << "line(" << a.x << "," << a.y << "," << b.x << "," << b.y << ");" << endl;
+      bool f = true;
+      for(int j = 0; j < N; j++) {
+        if(ccw(a, b, black[j]) != -1) f = false;
+      }
+      if(f) ok = true;
+    }
+
+    if(bh.size()==2 && wh.size()==2) {
+      if(iSS(L(bh[0],bh[1]),L(wh[0],wh[1])) == false) ok = true;
+    }
+    if(bh.size()==1 && wh.size()==2) {
+      if(iSP(L(wh[0],wh[1]), bh[0]) == false) ok = true;
+    }
+    if(bh.size()==2 && wh.size()==1) {
+      if(iSP(L(bh[0],bh[1]), wh[0]) == false) ok = true;
+    }
+    cout << (ok?"YES":"NO") << endl;
+  }
+}

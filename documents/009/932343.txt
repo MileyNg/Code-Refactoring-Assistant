@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+int main() {
+	string str,code="";
+	string thi=">+++[<++++++++++>-]<";
+	int i,j,s,k,a;
+	
+	cin>>str;
+	
+	
+	if(str[0]/30){
+		a=str[0]/30;
+		for(k=0;k<a;++k){
+			code+=thi;
+		}
+		str[0]-=a*30;
+	}
+	
+	for(i=0;i<str[0];++i)code+="+";
+	code+=".";
+	str[0]+=a*30;
+	
+	
+	
+	
+	for(i=1;i<str.length();++i){
+		s = str[i] - str[i-1];
+		
+		if(s>=0){
+			if(s/30){
+				for(k=0;k<s/30;++k){
+					code+=thi;
+				}
+				s-=((s/30)*30);
+			}
+			
+			
+			for(j=0;j<s;++j){
+				code+="+";
+			}
+			code+=".";
+		}else{
+			for(j=0;j<-s;++j){
+				code+="-";
+			}
+			code+=".";
+		}
+	}
+	cout<<code<<endl;
+	
+	return 0;
+}

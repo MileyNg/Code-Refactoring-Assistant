@@ -1,0 +1,47 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int M = 333333;
+int sosu[M];
+
+vector<int> num;
+int main(){
+	sosu[1]=1;
+	for(int i=7;i<M;i+=7){
+		int di[2]={-1,1};
+		for(int j=0;j<2;j++){
+			int p = i+di[j];
+			if(sosu[p]==1)continue;
+			for(int k=p*2;k<M;k+=p){
+				sosu[k]=1;
+			}
+			num.push_back(p);
+		}
+	}
+	
+	
+	while(1){
+		int n;
+		cin>>n;
+		
+		if(n==1)break;
+		map<int,int> visit;
+		
+		printf("%d: ",n);
+		rep(i,num.size()){
+			if(i!=0)printf(" ");
+			if(n%num[i]==0){
+				printf("%d",num[i]);
+			}
+		}puts("");
+	}
+}

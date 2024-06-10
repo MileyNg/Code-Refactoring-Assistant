@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int m[64][64], in[64][32];
+
+int main(){
+  int n, f, day;
+  while(scanf("%d", &n) && n){
+    memset(m, 0, sizeof(m));
+    memset(in, 0, sizeof(in));
+
+    rep(i, n){
+      scanf("%d", &f);
+      rep(j, f){
+	scanf("%d", &day);
+	in[i][day] = 1;
+      }
+      m[i][i] = 1;
+    }
+    
+    REP(d, 1, 31){
+      set<int>s;
+      rep(i, n){
+	if(!in[i][d]) continue;
+	rep(j, n) if(m[i][j]) s.insert(j);
+      }
+      rep(i, n){
+	if(!in[i][d]) continue;
+
+	for(set<int>::iterator it = s.begin(); it != s.end(); it++){
+	  //	  cout << *it << endl;
+	  m[i][*it] = 1;
+	}
+      }
+      /*      rep(i, n){
+	rep(j, n) printf("%d ", m[i][j]);
+	puts("");
+	}*/
+
+      if(s.size() == n){
+	printf("%d\n", d);
+	goto e;
+      }
+    }
+    printf("-1\n");
+  e:;
+  }
+  return 0;
+}

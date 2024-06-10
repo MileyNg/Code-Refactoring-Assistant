@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+
+int main(){
+
+	int n;
+	std::vector<int>v;
+	while (std::cin >> n)v.push_back(n);
+
+	for (int k = 0; k < v.size(); k++){
+		char soro[8][5];
+		for (int i = 0; i < 8; i++){
+			for (int j = 0; j < 5; j++){
+				soro[i][j] = '*';
+			}
+		}
+		for (int i = 0; i < 5; i++)soro[2][i] = '=';
+
+		for (int i = 4; i >= 0; i--){
+			int mod = v[k] % 10;
+
+			if (mod == 0 || mod == 5)soro[3][i] = ' ';
+			if (mod == 1 || mod == 6)soro[4][i] = ' ';
+			if (mod == 2 || mod == 7)soro[5][i] = ' ';
+			if (mod == 3 || mod == 8)soro[6][i] = ' ';
+			if (mod == 4 || mod == 9)soro[7][i] = ' ';
+
+			if (mod < 5)soro[1][i] = ' ';
+			else soro[0][i] = ' ';
+
+			v[k] /= 10;
+		}
+
+		for (int i = 0; i < 8; i++){
+			bool flg = false;
+			for (int j = 0; j < 5; j++)if (soro[i][j] != ' ')flg = true;
+
+			if (flg){
+				for (int j = 0; j < 5; j++){
+					std::cout << soro[i][j];
+				}
+				std::cout << std::endl;
+			}
+			else std::cout << std::endl;
+		}
+		if (k != v.size() - 1)std::cout << std::endl;
+	}
+	return 0;
+}

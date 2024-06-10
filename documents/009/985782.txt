@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <memory.h>
+
+void sort(char* buff, int len) {
+	int i,j;
+	char t;
+	for(i=0;i<len-1;i++) {
+		for(j=i+1;j<len;j++) {
+			if(buff[i] > buff[j]) {
+				t = buff[i];
+				buff[i] = buff[j];
+				buff[j] = t;
+			}
+		}
+	}
+}
+
+void reverse(char* buff, int len) {
+	int i;
+	char t;
+	for(i=0;i<len/2;i++) {
+		t = buff[i];
+		buff[i] = buff[len-i-1];
+		buff[len-i-1] = t;
+	}
+}
+
+int main(void) {
+	int i,n,len;
+	char buff[20];
+	char asc[20];
+	char desc[20];
+	
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%s\n", buff);
+		len = strlen(buff);
+
+		strcpy(asc, buff);
+		sort(asc, len);
+
+		strcpy(desc, asc);
+		reverse(desc, len);
+		
+		printf("%d\n", atoi(desc)-atoi(asc));
+	}
+	
+	return 0;
+}

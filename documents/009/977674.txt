@@ -1,0 +1,63 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<cstdlib>
+#define DOT '.'
+
+using namespace std;
+
+int h, w, cl, sp;
+vector<string> data;
+
+void insert(const string& s){
+  int i=0;
+  while(i+w<s.size()){
+    data.push_back(s.substr(i,w));
+    i+=w;
+  }
+  data.push_back(s.substr(i) + string(i+w-s.size(),DOT));
+}
+
+void print(){
+  const string SP1(w,DOT);
+  const string SP2(sp,DOT);
+
+  int tmp=data.size();
+  for(int i=0; i<h*cl-tmp%(h*cl); ++i) data.push_back(SP1);
+
+  for(int k=0; k<data.size()/(h*cl); ++k){
+    for(int i=0; i<h; ++i){
+      for(int j=0; j<cl; ++j){
+	cout << data[i+h*j+h*cl*k] << (j==cl-1 ? "\n" : SP2);
+      }
+    }
+    cout << "#" << endl;
+  }
+  cout << "?" << endl;
+}
+
+int main(){
+  string s;
+  bool end=false;
+  while(1){
+    data.clear();
+    for(int i=0; ; ++i){
+      getline(cin, s);
+      if(i<4){
+	int x = atoi(s.c_str());
+	if(i==0 && x==0){ end=true; break; }
+	if(i==0) h=x;
+	if(i==1) cl=x;
+	if(i==2) w=x;
+	if(i==3) sp=x;
+	continue;
+      }
+      if(s=="?") break;
+      insert(s);
+    }
+    if(end) break;
+    print();
+  }
+  return 0;
+}

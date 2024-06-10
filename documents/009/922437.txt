@@ -1,0 +1,41 @@
+def main
+  output = []
+  loop do
+    n,h = gets.chomp.split(' ').map{|x|x.to_i}
+    break if n == 0 and h == 0
+    output << get_non_hole_cubes_num(n, h)
+  end
+  output.each{|x|puts x}
+end
+
+def get_non_hole_cubes_num n, h
+  hole_cubes = {}
+
+  h.times do
+    coordinate,a,b = gets.chomp.split(' ')
+    case coordinate
+    when 'xy'
+      x = a.to_i - 1
+      y = b.to_i - 1
+      n.times do |idx|
+        hole_cubes["#{x}#{y}#{idx}"] = 1
+      end
+    when 'xz'
+      x = a.to_i - 1
+      z = b.to_i - 1
+      n.times do |idx|
+        hole_cubes["#{x}#{idx}#{z}"] = 1
+      end
+    when 'yz'
+      y = a.to_i - 1
+      z = b.to_i - 1
+      n.times do |idx|
+        hole_cubes["#{idx}#{y}#{z}"] = 1
+      end
+    end
+  end
+
+  n * n * n - hole_cubes.size
+end
+
+main

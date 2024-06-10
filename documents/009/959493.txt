@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<math.h>
+
+#define OBLONG 0 //長方形
+#define RHOMBUS 1 //菱形
+
+struct rectangle
+{
+	int edge1;
+	int edge2;
+	int diagonal;
+};
+
+void find_rectangle(int edge1, int edge2, int diagonal, int result[]);
+
+main()
+{
+	int result[2] = {0, 0};
+	
+	while(1)
+	{
+		struct rectangle input = {0, 0, 0};
+		if(scanf("%d,%d,%d", &input.edge1, &input.edge2, &input.diagonal) == EOF)
+		{
+			break;
+		}
+		find_rectangle(input.edge1, input.edge2, input.diagonal, result);
+	}
+	printf("%d\n%d\n", result[OBLONG], result[RHOMBUS]);
+	return 0;
+}
+
+void find_rectangle(int edge1, int edge2, int diagonal, int result[])
+{
+	//printf("edge1 = %d edge2 = %d, diagonal = %d\n", edge1, edge2, diagonal);
+	//printf("");
+	if(edge1 == edge2)
+	{
+		result[RHOMBUS]++;
+	}
+	else if(pow(diagonal, 2) == (pow(edge1, 2) + pow(edge2, 2)))
+	{
+		result[OBLONG]++;
+	}
+	return;
+}

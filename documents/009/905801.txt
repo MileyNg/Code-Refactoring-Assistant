@@ -1,0 +1,263 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define FOR(i,a,b) for(int i=(int)(a);i<(int)(b);i++)
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+#define fs first
+#define sc second
+using namespace std;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef long double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+typedef vector<P> Poly;
+
+const D EPS = 1e-6;
+const D PI = acos(-1);
+
+namespace std{
+  bool operator<(const P &a,const P &b){
+    return real(a)==real(b)?imag(a)<imag(b):real(a)<real(b);
+  }
+}
+
+D dot(P x,P y){return real(conj(x)*y);}
+D cross(P x,P y){return imag(conj(x)*y);}
+D arg(P a,P b,P c){
+  D res = acos(dot(b-a,c-a)/(abs(b-a)*abs(c-a))); 
+  return (cross(b-a,c-a)<EPS)?2*PI-res:res;
+}
+
+int ccw(P a,P b,P c){
+  b -= a;c -= a;
+  if (cross(b,c)>EPS) return 1;   //counter clockwise
+  if (cross(b,c)<-EPS) return -1; //clockwise
+  if (dot(b, c)<-EPS) return 2;   //c--a--b on line
+  if (abs(b)<abs(c)) return -2;   //a--b--c on line
+  return 0;                       //on segment
+}
+
+bool is_cp(L a,L b){
+  if(ccw(a.fs,a.sc,b.fs)*ccw(a.fs,a.sc,b.sc)<=0)
+    if(ccw(b.fs,b.sc,a.fs)*ccw(b.fs,b.sc,a.sc)<=0)return true;
+  return false;
+}
+
+P seg_cp(L a,L b){
+  double d = abs(cross(b.sc-b.fs,a.fs-b.fs));
+  return a.fs + (a.sc-a.fs)*( d /(d + abs(cross(b.sc-b.fs,a.sc-b.fs))) );
+}
+
+bool para(L a,L b){return abs(cross(a.fs-a.sc,b.fs-b.sc))<EPS;}
+
+bool inter_cp(Poly p,P x){
+  if(p.empty())return false;
+
+  int s = p.size();
+  D max = p[0].real();
+  FOR(i,1,s)if(max < p[i].real())max = p[i].real();
+  L h = L( x,P(max+1.0,x.imag()) );
+
+  int c = 0;
+  FOR(i,0,s){
+    L l = L(p[i],p[(i+1)%s]);
+    if(para(h,l) && abs(ccw(h.fs,h.sc,l.fs))!=1)c++;
+    else if(is_cp(h,l))c++;
+  }
+
+  if(c&1)return true;
+  return false;
+}
+
+vector<L> seg_set_cut(vector<L> l){
+  int card = l.size();
+  vector< vector<L> > vl(card);
+  rep(i,card)vl[i].push_back(l[i]);
+  
+  rep(i,card){
+    for(int j=i+1;j<card;j++){
+      bool f = false;
+      rep(ii,vl[i].size()){
+	rep(jj,vl[j].size()){
+	  if(is_cp(vl[i][ii],vl[j][jj])){
+	    P cp = seg_cp(vl[i][ii],vl[j][jj]);
+	    if(!EQ(vl[i][ii].fs,cp) && !EQ(vl[i][ii].sc,cp)){
+	      vl[i].push_back(L(vl[i][ii].fs,cp));
+	      vl[i].push_back(L(vl[i][ii].sc,cp));
+	      vl[i].erase(vl[i].begin()+ii);
+	    }
+	    if(!EQ(vl[j][jj].fs,cp) && !EQ(vl[j][jj].sc,cp)){
+	      vl[j].push_back(L(vl[j][jj].fs,cp));
+	      vl[j].push_back(L(vl[j][jj].sc,cp));
+	      vl[j].erase(vl[j].begin()+jj);
+	    }
+	    f = true;
+	    break;
+	  }
+	}
+	if(f)break;
+      }
+    }
+  }
+  vector<L> res;
+  rep(i,card){
+    rep(j,vl[i].size())res.push_back(vl[i][j]);
+  }
+  return res;
+}
+
+//union-find
+vi uf,rank;
+void init(int n){
+  uf.resize(n); rank.resize(n);
+  rep(i,n)uf[i] = i, rank[i] = 0;
+}
+
+int find(int a){
+  if(uf[a]==a)return a;
+  return uf[a] = find(uf[a]);
+}
+
+int unite(int a, int b){
+  a = find(a); b = find(b);
+  if(a==b)return 0;
+  if(rank[a]<rank[b])uf[a] = b;
+  else{
+    uf[b] = a;
+    if(rank[a]==rank[b])rank[a]++;
+  }
+  return 1;
+}
+
+int main(){
+  int n;
+  cin >> n;
+  vector<L> seg(n);
+
+  rep(i,n){
+    int x,y;
+    cin >> x >> y; seg[i].fs = P(x,y);
+    cin >> x >> y; seg[i].sc = P(x,y);
+  }
+
+  vector<L> SegSet = seg_set_cut(seg);
+
+  vector<P> tmp,p;
+  rep(i,SegSet.size()){
+    tmp.push_back(SegSet[i].fs);
+    tmp.push_back(SegSet[i].sc);
+  }
+  sort(tmp.begin(),tmp.end());
+
+  rep(i,(int)tmp.size()){
+    if(i && EQ(tmp[i],tmp[i-1]))continue;
+    p.push_back(tmp[i]);
+  }
+
+  vector<pii> l(SegSet.size());
+  vector<vi> wall(p.size());
+ 
+  rep(i,SegSet.size()){
+    int s,t;
+    rep(j,p.size()){
+      if(EQ(SegSet[i].fs,p[j]))s = j;
+      if(EQ(SegSet[i].sc,p[j]))t = j;
+    }
+    l[i] = make_pair(s,t);
+    wall[s].push_back(t); wall[t].push_back(s);
+  }
+
+  rep(i,p.size()){
+    for(int j=1;j<(int)wall[i].size();j++){
+      for(int k=j+1;k<(int)wall[i].size();k++){
+	D s1 = arg(p[i],p[wall[i][0]],p[wall[i][j]]);
+	D s2 = arg(p[i],p[wall[i][0]],p[wall[i][k]]); 
+	if(s1>s2)swap(wall[i][j],wall[i][k]);
+      }
+    }
+  }
+
+  vector<vi> g(l.size(),vi(2,-1));
+  int group = 0;
+  vector<Poly> PolySet;
+  vi id;
+
+  rep(i,p.size()){
+    rep(j,wall[i].size()){
+      int cur = -1, dir = -1;
+      rep(k,l.size()){
+	if(i == l[k].fs && wall[i][j] == l[k].sc){
+	  cur = k; dir = 0; break;
+	}
+	if(i == l[k].sc && wall[i][j] == l[k].fs){
+	  cur = k; dir = 1;  break;
+	}
+      }
+      if(g[cur][dir]>=0)continue;
+      
+      D seta = 0;
+      Poly poly;
+      while(true){
+	g[cur][dir] = group;
+	poly.push_back(dir?p[l[cur].fs]:p[l[cur].sc]);
+	//cout << (dir?p[l[cur].fs]:p[l[cur].sc]) << endl;
+
+	int node = dir?l[cur].fs:l[cur].sc;
+	int prv = dir?l[cur].sc:l[cur].fs;
+	rep(k,wall[node].size()){
+	  if(wall[node][k] == prv){
+	    int nxt = wall[node][(k+1)%wall[node].size()];
+	    seta += arg(p[node],p[prv],p[nxt]);
+	    //cout << seta << endl;
+	    prv = node;
+	    node = nxt;
+	    break;
+	  }
+	}
+	
+	rep(k,l.size()){
+	  if(prv == l[k].fs && node == l[k].sc){
+	    cur = k; dir = 0; break;
+	  }
+	  if(prv == l[k].sc && node == l[k].fs){
+	    cur = k; dir = 1;  break;
+	  }
+	}
+	if(g[cur][dir]>=0)break;
+      }
+      if(EQ(seta,((int)poly.size()-2)*PI)){
+	id.push_back(PolySet.size());
+	PolySet.push_back(poly);
+      }else{
+	id.push_back(-1);
+      }
+      //cout << endl;
+      group++;
+    }
+  }
+
+  int ans = PolySet.size();
+  vi del(PolySet.size(),1);
+  rep(i,PolySet.size()){
+    rep(j,PolySet.size()){
+      if(i==j)continue;
+      bool f = true;
+      rep(k,PolySet[i].size()){
+	f &= inter_cp(PolySet[j],PolySet[i][k]);
+	if(!f)break;
+      }
+      if(f)ans--, del[i] = 0;
+    }
+  }
+
+
+  init(PolySet.size());
+  rep(i,l.size()){
+    int a = id[g[i][0]], b = id[g[i][1]];
+    if(a<0 || b<0)continue;
+    if(!del[a] || !del[b])continue;
+    ans -= unite(a,b);
+  }
+
+  cout << ans << endl;
+}

@@ -1,0 +1,108 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct edge {
+	int to, cost;
+	edge(int to_, int cost_):to(to_), cost(cost_) {}
+};
+
+struct state {
+	int v;
+	int dist;
+	bool used;
+	state(int v_, int dist_, bool used_):v(v_), dist(dist_), used(used_) {}
+	bool operator>(const state &s) const {
+		return dist > s.dist;
+	}
+};
+
+vector<int> calc(int s, const vector<vector<edge>> &G) {
+	typedef pair<int, int> P;
+	const int n = G.size();
+
+	queue<P> que;
+	que.push({0, s});
+
+	vector<int> res;
+	vector<bool> in_res(n, false);
+	in_res[s] = true;
+
+	while(!que.empty()) {
+		const int d = que.front().first;
+		const int v = que.front().second;
+		que.pop();
+
+		if(d > 2) break;
+
+		if(d == 2 && !in_res[v]) {
+			res.emplace_back(v);
+			in_res[v] = true;
+		}
+
+		for(const auto &e : G[v]) {
+			que.push({d + 1, e.to});
+		}
+	}
+
+	return res;
+}
+
+int dijkstra(const vector<vector<edge>> &G, const vector<vector<int>> &G_dist2) {
+	const int n = G.size();
+	vector<vector<int>> dist(n, vector<int>(2, INT_MAX));
+	dist[0][0] = 0;
+	priority_queue<state, vector<state>, greater<state>> que;
+	que.push(state(0, 0, false));
+
+	while(!que.empty()) {
+		const state s = que.top();
+		que.pop();
+
+		if(dist[s.v][s.used] < s.dist) continue;
+		if(s.v == n - 1) return s.dist;
+
+		for(const auto &e : G[s.v]) {
+			const int next_dist = s.dist + e.cost;
+			if(dist[e.to][s.used] > next_dist) {
+				dist[e.to][s.used] = next_dist;
+				que.push(state(e.to, next_dist, s.used));
+			}
+		}
+
+		if(s.used) continue;
+		for(const auto &to : G_dist2[s.v]) {
+			if(dist[to][true] > s.dist) {
+				dist[to][true] = s.dist;
+				que.push(state(to, s.dist, true));
+			}
+		}
+	}
+	assert(false);
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n, m; cin >> n >> m && (n | m);) {
+		vector<vector<edge>> G(n);
+
+		for(int i = 0; i < m; ++i) {
+			int a, b, c;
+			cin >> a >> b >> c;
+			--a; --b;
+			G[a].emplace_back(b, c);
+			G[b].emplace_back(a, c);
+		}
+
+		vector<vector<int>> G_dist2;
+		G_dist2.reserve(n);
+		for(int i = 0; i < n; ++i) {
+			G_dist2.emplace_back(calc(i, G));
+		}
+
+		cout << dijkstra(G, G_dist2) << endl;
+	}
+
+	return 0;
+}

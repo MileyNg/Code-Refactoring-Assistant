@@ -1,0 +1,68 @@
+#include <stdio.h>
+#define N 100000
+#define NIL -1
+
+struct Node{
+  int p, l, r;
+};
+struct Node T[N];
+
+int getDepth(int p){
+  int count = 0;
+  while( T[p].p != NIL ){
+    count++;
+    p = T[p].p;
+  }
+  return count++;
+}
+
+main(){
+  int n, i, k, j, c;
+  int id, sib;
+  int dep[N];
+
+  scanf("%d", &n);
+  for(i = 0; i < n; i++){
+    T[i].l = T[i].p = T[i].r = NIL;
+  }
+  for(i = 0; i < n; i++){
+    scanf("%d%d", &id, &k);
+    for(j = 0; j < k; j++){
+      scanf("%d", &c);
+      if(j == 0){
+	T[i].l = c;
+	T[c].p = id;
+	sib = c;
+      }else{
+	T[sib].r = c;
+	T[c].p = id;
+	sib = c;
+      }
+    }    
+  }
+  for(i = 0; i < n; i++){
+    dep[i] = getDepth(i);
+  }
+  
+  for(i = 0; i < n; i++){
+    printf("node %d: parent = %d, depth = %d, ", i, T[i].p, dep[i]);
+    if(i == 0){
+      printf("root, [");
+    }else if(T[i].l == NIL){
+      printf("leaf, []\n");
+    }else{
+      printf("internal node, [");
+    }
+    if(T[i].l != NIL || i == 0){
+      printf("%d", T[i].l);
+      sib = T[i].l;
+      while(1){
+	if(T[sib].r == NIL) break;
+	printf(", %d", T[sib].r);
+	sib = T[sib].r;
+      }
+      printf("]\n", sib);
+    }
+  }
+  return 0;
+}

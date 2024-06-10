@@ -1,0 +1,29 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+
+void main() {
+  foreach (string line; stdin.lines) {
+    double a, b;
+    line.formattedRead("%f %f\n", &a, &b);
+
+    writef("%.0f ", gcd(a, b));
+    writef("%.0f\n", lcm(a, b));
+  }
+}
+
+double gcd(double x, double y) {
+  while (y != 0) {
+    x = x % y;
+    swap(x, y);
+  }
+  return x;
+}
+
+double lcm(double x, double y) {
+  return x / gcd(x, y) * y;
+}

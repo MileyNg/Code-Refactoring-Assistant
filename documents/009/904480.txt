@@ -1,0 +1,24 @@
+while 1:
+	try:
+		n,x=map(int,raw_input().split())
+		if n==0:break
+		menu=[int(raw_input()) for i in range(n)]
+		p=[0]*(x+1)
+		for price in menu:
+			p[price]=1
+		i=1
+		mm=min(menu)
+		while i<x-mm:
+			if p[i]==1:
+				for price in menu:
+					if i+price>x:break
+					p[i+price]=1
+			i+=1
+		for i in range(x,1,-1):
+			if p[i]==1 and pow(2,i-1,i)==1:
+				print i
+				break
+		else:
+			print "NA"
+	except:
+		pass

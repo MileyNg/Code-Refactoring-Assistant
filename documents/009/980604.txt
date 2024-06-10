@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+ 
+ 
+ 
+int main() {
+ 
+//変数の宣言
+ 
+    int i,j,temp;
+    vector<int> hight;
+ 
+ 
+/////メイン処理/////
+ 
+    for(i=0;i<10;i++){
+        cin >> temp;
+        hight.push_back(temp);
+    }
+     
+    for(j=0;j<hight.size()-1;j++){
+        for(i=0;i<hight.size()-1-j;i++){
+            if (hight[i] > hight[i+1]) {
+                temp = hight[i];
+                hight[i] = hight[i+1];
+                hight[i+1] = temp;
+            }
+        }
+    }
+     
+    for(i=0;i<3;i++){
+        cout << hight[hight.size() -i -1] <<endl;
+    }
+     
+    return 0;
+}

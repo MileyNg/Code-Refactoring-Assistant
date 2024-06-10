@@ -1,0 +1,214 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<complex>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#define X real()
+#define Y imag()
+
+
+typedef complex<double> Point;
+typedef pair<int,double> pid;
+
+class Line{
+	public:
+	double A,B,C;
+	Line(double A,double B,double C):A(A),B(B),C(C){}
+	Line(){}
+};
+class Circle : public Point{
+	public:
+	double R;
+	Circle(Point pt, double R):Point(pt),R(R){}
+	Circle(){}
+};
+double Dot(Point p1, Point p2){return p1.X*p2.X + p1.Y*p2.Y;}
+double Cross(Point p1, Point p2){return p1.X*p2.Y - p1.Y*p2.X;}
+
+bool CircleHit(Circle a, Circle b){return abs(a-b) <= a.R + b.R;}
+
+Line CircleCommonLine(Circle a,Circle b){
+	double C = pow(b.R, 2)-pow(a.R, 2)+norm(a)-norm(b);
+	return Line(2*(b.X-a.X), 2*(b.Y-a.Y), C);
+}
+
+pair<Point,Point> Suisen(Line line, Point pt){
+	Point v(line.A, line.B);  v/=Point(abs(v),0);
+	Point toPoint;
+	
+	if(line.B!=0){
+		Point slide = pt-Point(0, -line.C/line.B);
+		toPoint = v*Point(Dot(v,slide),0);
+	}else{
+		toPoint = Point(pt.X + line.C/line.A, 0);
+	}
+	return pair<Point,Point>(pt-toPoint, toPoint);
+}
+
+pair<Point,Point> CircleCross(Circle a, Circle b){
+	Line commonLine = CircleCommonLine(a,b);
+	pair<Point,Point> s = Suisen(commonLine, a);
+	
+	double d = abs(s.second);
+	if(d!=0){
+		Point e = s.second*Point(0,1)/d;
+		double dist = sqrt(a.R*a.R - d*d);
+		return pair<Point,Point>(s.first+e*Point(dist,0), s.first+e*Point(-dist,0));
+	}
+	return pair<Point,Point>(s.first-Point(0,a.R), s.first+Point(0,a.R));
+}
+
+bool ccw(Point p1, Point p2, Point p3){
+	double ret = Cross(p2-p1, p3-p1);
+	//cout<<"ccw "<<(p2-p1)<<" "<<(p3-p1)<<" "<<ret<<endl;
+	return ret>=0;
+}
+
+const int N = 111;
+typedef pair<int,double> pid;
+
+int n;
+Circle cir[N];
+
+vector<pid> edge[N];
+pair<Point,Point> cross[N];
+
+void init(){
+	rep(i,N){
+		edge[i].clear();
+		cir[i] = Circle();
+		cross[i] = pair<Point,Point>(Point(),Point());
+	}
+}
+
+void setCross(){
+	rep(i,n-1){
+		cross[i] = CircleCross(cir[i],cir[i+1]);
+	}
+	rep(i,n-1){
+		if(!ccw(cir[i], cross[i].first, cross[i].second)){
+			swap(cross[i].first, cross[i].second);
+		}
+	}
+	/*
+	rep(i,n-1){
+		cout<<"cross "<<cross[i].first<<" "<<cross[i].second<<endl;
+	}*/
+}
+
+bool canAdd(Point pt, Point pt2, int from, int to){
+	if(from<0)from=0;
+	reps(i,from,to){
+		if(!ccw(pt, pt2, cross[i].second))return false;
+	}
+	reps(i,from,to){
+		if(ccw(pt, pt2, cross[i].first))return false;
+	}
+	return true;
+}
+
+void addEdge(Point pt,int num, int now){
+	reps(i,now+1,n){
+		if(i!=n-1){
+			if(canAdd(pt, cross[i].second, now+1, i)){
+				edge[num].push_back(pid(i*2, abs(cross[i].second-pt)));
+			}
+			if(canAdd(pt, cross[i].first, now+1, i)){
+				edge[num].push_back(pid(i*2+1, abs(cross[i].first-pt)));
+			}
+		}else{
+			if(canAdd(pt, cir[n-1], now+1, n-1)){
+				edge[num].push_back(pid(n*2, abs(cir[n-1]-pt)));
+			}
+		}
+	}
+}
+
+void makeEdge(){
+	
+	reps(i,-1,n-1){
+		if(i==-1){
+			addEdge(cir[0],n*2-1,i);
+		}else{
+			addEdge(cross[i].first,i*2+1, i);
+			addEdge(cross[i].second,i*2, i);
+		}
+	}
+}
+
+class P{
+	public:
+	int now;
+	double val;
+	P(int now,double val):now(now),val(val){}
+	bool operator<(const P& a)const{
+		return val>a.val;
+	}
+};
+double dijkstra(){
+	
+	/*
+	rep(i,n*2+2){
+		printf("i(%d) :: ",i);
+		rep(j,edge[i].size()){
+			printf("(%d,%lf)",edge[i][j].first, edge[i][j].second);
+		}puts("");
+	}*/
+	
+	priority_queue<P> que;
+	que.push(P(n*2-1, 0));
+	
+	int visit[111]={0};
+	while(1){
+		if(que.empty())break;
+		
+		P u = que.top();
+		que.pop();
+		
+		if(u.now==n*2)return u.val;
+		if(visit[u.now]==1)continue;
+		visit[u.now]=1;
+		
+		//printf("ijk %d %lf\n",u.now,u.val);
+		rep(i,edge[u.now].size()){
+			pid e = edge[u.now][i];
+			que.push(P(e.first, u.val+e.second));
+		}
+	}
+	return -1;
+}
+
+double solve(){
+	init();
+	
+	rep(i,n){
+		double a,b,c;
+		cin>>a>>b>>c;
+		cir[i] = Circle(Point(a,b),c);
+	}
+	
+	setCross();
+	makeEdge();
+	
+	return dijkstra();
+}
+
+int main(){
+	
+	while(1){
+		cin>>n;
+		if(n==0)break;
+		printf("%.9lf\n",solve());
+		//break;
+	}
+}

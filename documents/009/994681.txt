@@ -1,0 +1,79 @@
+#include<iostream>
+#include<array>
+
+using namespace std;
+
+array<char,4> plane[6];
+int fn;
+
+void rp(int x,int n){
+  while(n--){
+    int t=plane[x][1];
+    int tn[]={1,0,2,3};
+    for(int i=0;i<3;i++){
+      plane[x][tn[i]]=plane[x][tn[i+1]];
+    }
+    plane[x][3]=t;
+  }
+}
+
+void cf(char c){
+  while(c!="FURBDL"[fn]){
+    auto t=plane[0];
+    int x[][4]={{0,4,2,5},{0,1,2,3}};
+    int *cx=x[fn%2];
+    for(int i=0;i<3;i++){
+      plane[cx[i]]=plane[cx[i+1]];
+    }
+    plane[cx[3]]=t;
+    if(fn%2==0){
+      for(int i=2;i<=4;i+=2){
+	for(int j=0;j<2;j++){
+	  swap(plane[i][j],plane[i][j^3]);
+	}
+      }
+    }
+    rp(3+fn%2,1);
+    rp(1+fn%2*4,3);
+    fn=(fn+1)%6;
+  }
+}
+
+int main(){
+  for(int i=0;i<6;i++){
+    fill(begin(plane[i]),end(plane[i]),"ybwgro"[i]);
+  }
+  for(char c;cin>>c;){
+    cf(c);
+    rp(0,1);
+    int rt=plane[1][0];
+    int rb=plane[1][2];
+    for(int i=0;i<3;i++){
+      int pn[]={1,4,3,5};
+      int tn[]={0,2,3,1};
+      int bn[]={2,3,1,0};
+      plane[pn[i]][tn[i]]=plane[pn[i+1]][tn[i+1]];
+      plane[pn[i]][bn[i]]=plane[pn[i+1]][bn[i+1]];
+    }
+    plane[5][1]=rt;
+    plane[5][0]=rb;
+  }
+  cf('F');
+  char g[6][8];
+  fill(g[0],g[6],'.');
+  for(int i=0;i<6;i++){
+    int x[]={2,4,6,0,2,2};
+    int y[]={2,2,2,2,0,4};
+    for(int j=0;j<2;j++){
+      for(int k=0;k<2;k++){
+	g[y[i]+j][x[i]+k]=plane[i][j*2+k];
+      }
+    }
+  }
+  for(auto e:g){
+    for(int i=0;i<8;i++){
+      cout<<e[i];
+    }
+    cout<<endl;
+  }
+}

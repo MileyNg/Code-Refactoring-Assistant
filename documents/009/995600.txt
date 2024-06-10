@@ -1,0 +1,68 @@
+<?php
+/*
+	AOJ 2015
+	title:Square Route
+	@kankichi573
+*/
+
+while(fscanf(STDIN,"%d %d",$n,$m) && ($n||$m))
+  {
+    $row=array();
+    $col=array();
+
+    for($i=0;$i<$n;$i++)
+      fscanf(STDIN,"%d",$h[$i]);
+    for($i=0;$i<$m;$i++)
+      fscanf(STDIN,"%d",$w[$i]);
+    $sum=0;		
+    for($i=0;$i<$n;$i++)
+      {
+	$sum=$h[$i];
+	//fprintf(STDOUT,":NUM=%d\n",$sum);
+	if(empty($row[$sum]))
+	  $row[$sum]=1;
+	else
+	  $row[$sum]++;	
+	for($j=$i+1;$j<$n;$j++)
+	  {
+	    $sum += $h[$j];
+	    //fprintf(STDOUT,"::NUM=%d\n",$sum);
+	    if(empty($row[$sum]))
+	      $row[$sum]=1;
+	    else
+	      $row[$sum]++;
+	  }
+      }
+    $sum=0;
+    for($i=0;$i<$m;$i++)
+      {
+	$sum=$w[$i];
+	//fprintf(STDOUT,";NUM=%d\n",$sum);
+	if(empty($col[$sum]))
+	  $col[$sum]=1;
+	else
+	  $col[$sum]++;	
+	for($j=$i+1;$j<$m;$j++)
+	  {
+	    $sum += $w[$j];
+	    //fprintf(STDOUT,":;NUM=%d\n",$sum);
+	    if(empty($col[$sum]))
+	      $col[$sum]=1;
+	    else
+	      $col[$sum]++;	
+	  }
+      }
+    
+    $result=0;
+      foreach($row as $rowkey => $rowval) 
+	{
+	  //fprintf(STDOUT,"*=%d\n",$rowkey);
+	  if(!empty($col[$rowkey]))
+	    $result += $rowval * $col[$rowkey];
+	}
+    fprintf(STDOUT,"%d\n",$result);
+    	
+  }
+
+return(0);
+?>

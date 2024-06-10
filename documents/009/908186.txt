@@ -1,0 +1,50 @@
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  int N; cin >> N;
+  int mat[N+1][N+1];
+  for(int i = 1; i <= N; i++)
+    for(int j = 1; j <= N; j++)
+      cin >> mat[i][j];
+
+  int hsum[N+1][N+1];
+  memset(hsum, 0, sizeof(hsum));
+  for(int i = 1; i <= N; i++) {
+    for(int j = 1; j <= N; j++) {
+      hsum[i][j] = hsum[i][j - 1] + mat[i][j];
+    }
+  }
+
+  int vsum[N+1][N+1];
+  memset(vsum, 0, sizeof(vsum));
+  for(int j = 1; j <= N; j++)
+    for(int i = 1; i <= N; i++)
+      vsum[i][j] = vsum[i - 1][j] + mat[i][j];
+
+  int psum[N+1][N+1];
+  memset(psum, 0, sizeof(psum));
+  for(int i = 1; i <= N; i++)
+    for(int j = 1; j <= N; j++)
+      psum[i][j] = psum[i - 1][j - 1] + vsum[i][j] + hsum[i][j] - mat[i][j];
+
+#if 0
+  for(int y = 0; y <= N; y++)
+    for(int x = 0; x <= N; x++)
+      cerr << psum[y][x] << " \n"[x == N];
+#endif
+
+  int ans = 0;
+  for(int y = 0; y <= N; y++) {
+    for(int x = 0; x <= N; x++) {
+      for(int y2 = y + 1; y2 <= N; y2++) {
+        for(int x2 = x + 1; x2 <= N; x2++) {
+          ans = max(ans, psum[y2][x2] + psum[y][x] - psum[y2][x] - psum[y][x2]);
+        }
+      }
+    }
+  }
+  cout << ans << endl;
+}

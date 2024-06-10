@@ -1,0 +1,39 @@
+gets
+
+$suits = %w(S H C D)
+cards = gets.split.map {|card| [card[0], card[1..-1]]}
+
+def bubble_sort(cards)
+  (0).upto(cards.length-1) do |i|
+    (cards.length-1).downto(i+1) do |j|
+      cards[j], cards[j-1] = cards[j-1], cards[j] if cards[j][1] < cards[j-1][1]
+    end
+  end
+  return cards
+end
+
+def selection_sort(cards)
+  (0).upto(cards.length-1) do |i|
+    mini = i
+    (i).upto(cards.length-1) do |j|
+      mini = j if cards[j][1] < cards[mini][1]
+    end
+    cards[i], cards[mini] = cards[mini], cards[i]
+  end
+  return cards
+end
+
+def check(cards)
+  (1).upto(cards.length-1) do |i|
+    return 'Not stable' if cards[i-1][1] == cards[i][1] && $suits.index(cards[i][0]) < $suits.index(cards[i-1][0])
+  end
+  return 'Stable'
+end
+
+bubble = bubble_sort(cards.clone)
+puts bubble.map {|card| card * ''} * ' '
+puts check(bubble)
+
+selection = selection_sort(cards.clone)
+puts selection.map {|card| card * ''} * ' '
+puts check(selection)

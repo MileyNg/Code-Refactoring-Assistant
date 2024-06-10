@@ -1,0 +1,43 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+
+/** Problem1153 : Equal Total Score **/
+int main()
+{
+	int n, m;
+	while (cin>>n>>m, n||m) {
+		int taro[n], hanako[m], sumT=0, sumH=0;
+		rep(i, n) {
+			cin >> taro[i];
+			sumT+=taro[i];
+		}
+		rep(i, m) {
+			cin >> hanako[i];
+			sumH+=hanako[i];
+		}
+		int tmpT=INF, tmpH=INF;
+		rep(i, n) {
+			rep(j, m) {
+				if (sumT+hanako[j]-taro[i] == sumH-hanako[j]+taro[i]) {
+					if (tmpT + tmpH>taro[i]+hanako[j]) {
+						tmpT = taro[i]; tmpH = hanako[j];
+					}
+				}
+			}
+		}
+		if (tmpT==INF)
+			cout << -1 << endl;
+		else
+			cout << tmpT << " " << tmpH << endl;
+	}
+}

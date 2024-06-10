@@ -1,0 +1,119 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define PR pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 105;
+const int MAX_C = 25;
+const int INF = 1e9 + 7;
+
+int N, M, C, S, G, P[MAX_N];
+int Q[MAX_N][MAX_N], R[MAX_N][MAX_N];
+int v[MAX_N][MAX_N][MAX_C];
+
+void remake_graph(int c){
+  REP(k, N){
+    REP(i, N){
+      REP(j, N){
+        v[i][j][c] = min(v[i][j][c], v[i][k][c] + v[k][j][c]);
+      }
+    }
+  }
+}
+
+int calc(int c, int d){
+  if(P[c] == 0) return d * R[c][0];
+  if(Q[c][0] >= d) return d * R[c][0];
+  int ret = R[c][0] * Q[c][0];
+  FOR(i, 1, P[c] - 1){
+    if(Q[c][i - 1] >= d) continue;
+    if(Q[c][i] < d) ret += (Q[c][i] - Q[c][i - 1]) * R[c][i];
+    else ret += (d - Q[c][i - 1]) * R[c][i];
+  }
+  if(Q[c][P[c] - 2] < d) ret += (d - Q[c][P[c] - 2]) * R[c][P[c] - 1];
+  return ret;
+}
+
+int dij(){
+  //cout <<"--------------" <<endl;
+  //REP(k, C){
+  //  cout <<k <<" ---" <<endl;
+  //  REP(i, N){
+  //    cout <<i <<" : " <<endl;
+  //    //REP(j, N) cout <<(v[i][j][k] == INF ? 0 : v[i][j][k]) <<" ";
+  //    REP(j, N) if(v[i][j][k] != INF) cout <<v[i][j][k] <<", " <<calc(k, v[i][j][k]) <<endl;
+  //    cout <<endl;
+  //  }
+  //}
+  priority_queue<PR, vector<PR>, greater<PR> > open;
+  open.push( PR(0, S) );
+  int closed[MAX_N];
+  REP(i, N) closed[i] = INF;
+  closed[S] = 0;
+  while(!open.empty()){
+    PR tmp = open.top(); open.pop();
+    int cost = tmp.first, now = tmp.second;
+    //if(closed[now] <= cost) continue;
+    REP(next, N){
+      REP(c, C){
+        if(next == now) continue;
+        int next_cost = cost + calc(c, v[now][next][c]);
+        if(closed[next] <= next_cost) continue;
+        closed[next] = next_cost;
+        //cout <<"to " <<next <<" from " <<now <<" | " <<v[now][next][c] <<", " <<calc(c, v[now][next][c]) <<", " <<next_cost <<endl;
+        open.push( PR(next_cost, next) );
+      }
+    }
+  }
+  return (closed[G] == INF ? -1 : closed[G]);
+}
+
+int main() {
+  while(cin >>N >>M >>C >>S >>G && N){
+    --S; --G;
+    REP(i, MAX_N) REP(j, MAX_N) REP(k, MAX_C) v[i][j][k] = INF;
+    REP(i, M){
+      int x, y, d, c; cin >>x >>y >>d >>c;
+      --x; --y; --c;
+      v[x][y][c] = min(v[x][y][c], d);
+      v[y][x][c] = min(v[y][x][c], d);
+    }
+    REP(i, C) cin >>P[i];
+    REP(i, C){
+      REP(j, P[i] - 1) cin >>Q[i][j];
+      REP(j, P[i]) cin >>R[i][j];
+    }
+    REP(i, C) remake_graph(i);
+    //cout <<"--------------" <<endl;
+    //REP(k, C){
+    //  cout <<k <<" ---" <<endl;
+    //  REP(i, N){
+    //    cout <<i <<" : ";
+    //    REP(j, N) cout <<(v[i][j][k] == INF ? 0 : v[i][j][k]) <<" ";
+    //    cout <<endl;
+    //  }
+    //}
+    cout <<dij() <<endl;
+  }
+  return 0;
+}

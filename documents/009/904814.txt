@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+bool exist;
+bool ok;
+vector<int> num;
+
+void dfs(int depth)
+{
+	if(depth == 4)
+	{
+		ok = true;
+		return;
+	}
+	for(int i = 1; i <= 7; ++i)
+	{
+		if(num[i] >= 1 && num[i + 1] >= 1 && num[i + 2] >= 1)
+		{
+			num[i]--;
+			num[i + 1]--;
+			num[i + 2]--;
+			dfs(depth + 1);
+			num[i]++;
+			num[i + 1]++;
+			num[i + 2]++;
+		}
+	}
+	for(int i = 1; i <= 9; ++i)
+	{
+		if(num[i] >= 3)
+		{
+			num[i] -= 3;
+			dfs(depth + 1);
+			num[i] += 3;
+		}
+	}
+	return;
+}
+
+void solve()
+{
+	string s;
+	while(cin >> s)
+	{
+		bool first = true;
+		exist = false;
+		for(int i = 1; i <= 9; ++i)
+		{
+			num.clear();
+			num.resize(10);
+			for(int j = 0; j < s.size(); ++j)
+			{
+				num[s[j] - '0']++;
+			}
+			if(num[i] == 4)
+			{
+				continue;
+			}
+			else
+			{
+				++num[i];
+			}
+			vector<int> buffer = num;
+			ok = false;
+			for(int j = 1; j <= 9; ++j)
+			{
+				num = buffer;
+				if(num[j] >= 2)
+				{
+					num[j] -= 2;
+					dfs(0);
+					if(ok)
+					{
+						if(first)
+						{
+							cout << i;
+							first = false;
+							exist = true;
+						}
+						else
+						{
+							cout << " " << i;
+						}
+						break;
+					}
+				}
+			}
+		}
+		if(!exist)
+		{
+			cout << 0 << endl;
+		}
+		else
+		{
+			cout << endl;
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

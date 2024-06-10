@@ -1,0 +1,56 @@
+#include<stdio.h>
+
+#define N 20
+#define Q 200
+
+void solve(int,int);
+
+int n,q,ar1[N],ar2[Q];
+int i,j;
+int sugi;
+int main()
+{
+  
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      scanf("%d",&ar1[i]);
+    }
+  scanf("%d",&q);
+ for(i=0;i<q;i++)
+    {
+      scanf("%d",&ar2[i]);
+    }
+
+ for(i=0;i<q;i++)
+   {
+     sugi = 0;
+     solve(0,ar2[i]);
+     if(sugi==1)
+       {
+	 printf("yes\n");
+       }
+     else
+       {
+	 printf("no\n");
+       }
+   }
+ return 0;
+}
+
+void solve(int a, int b)
+{
+  if(a==n)
+    {
+      if(b==0)
+	{
+	  sugi=1;
+	}
+    }
+
+  else
+    {
+      solve(a+1,b-ar1[a]);
+      solve(a+1,b);
+    }
+}

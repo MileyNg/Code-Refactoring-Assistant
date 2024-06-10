@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cstdio>
+
+int main() {
+  int cnt[1000000];
+  for (int i = 0; i < 1000000; ++i) cnt[i] = 0;
+  for (int i = 2; i < 1000000; ++i) {
+    bool is_prime = true;
+    for (int j = 2; j*j <= i; ++j) {
+      if ((i % j) == 0) {
+        is_prime = false;
+        break;
+      }
+    }
+    cnt[i] = cnt[i-1];
+    if (is_prime)
+      ++cnt[i];
+  }
+  int n;
+  while(std::scanf("%d",&n) != EOF) {
+    std::cout << cnt[n] << std::endl;
+  }
+  return 0;
+}

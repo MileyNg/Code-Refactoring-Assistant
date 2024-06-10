@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int main(void){
+    int seq[5000];
+    int n;
+    scanf("%d", &n);
+    while(n > 0){
+        int i,j,k;
+        int part_sum;
+        int max_sum = -100000*n;
+        
+        for(i = 0; i < n; i++){
+            scanf("%d", &seq[i]);
+        }
+        for(i = 0; i < n; i++){
+            for(j = i; j < n; j++){
+                part_sum = 0;
+                for(k = i; k <= j; k++){
+                    part_sum += seq[k];
+                }
+                if(part_sum > max_sum) max_sum = part_sum;
+            }
+        }
+        printf("%d\n", max_sum);
+        scanf("%d", &n);
+    }
+    return 0;
+}

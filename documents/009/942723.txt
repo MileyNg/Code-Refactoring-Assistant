@@ -1,0 +1,34 @@
+#include<iostream>
+#include<vector>
+
+int main(){
+
+	int n, m;
+
+	while (std::cin >> n >> m){
+
+		if (n == 0 && m == 0)break;
+
+		int now = 0;
+		std::vector<int>v(n);
+
+		for (int i = 0; i < n; i++)std::cin >> v[i];
+
+		bool flg = true;
+		for (int i = 1, a; i <= m; i++){
+			std::cin >> a;
+			now += a;
+
+			if (now>m){
+				if (flg)std::cout << i << std::endl;
+				flg = false;
+
+				continue;
+			}
+
+			now += v[now];
+		}
+	}
+
+	return 0;
+}

@@ -1,0 +1,14 @@
+var lines=[];
+var reader = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+});
+reader.on('line', function (line) {
+      lines.push(line);
+});
+reader.on('close', function () {
+      lines.sort(function(a, b){return b - a})
+          .slice(0, 3).forEach(function(x) {
+              console.log(x);
+          });
+});

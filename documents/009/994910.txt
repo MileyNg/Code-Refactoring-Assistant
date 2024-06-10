@@ -1,0 +1,112 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define MP(a, b) make_pair(a, b)
+#define Cost first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+struct Dice{
+  int t, s, e;
+};
+
+struct State{
+  Dice d;
+  int y, x;
+
+  // 最後のconstを忘れると"instaniated from here"とエラーがでる
+  bool operator<( const State& right) const{
+    return y == right.y ? x < right.x : y < right.y;
+  }
+};
+
+int h, w, sy, sx, gy, gx;
+int cost[16][16];
+int dy[] = {0,-1,0,1}, dx[] = {-1,0,1,0};
+
+int main(){
+  while(scanf("%d%d", &h, &w) && h+w){
+    int res = INF;
+    rep(i, h) rep(j, w) scanf("%d", &cost[i][j]);
+    scanf("%d%d%d%d", &sy, &sx, &gy, &gx);
+
+    State s;
+    s.d.t = 1; s.d.s = 2; s.d.e = 3;
+    s.y = sy; s.x = sx;
+
+    priority_queue<pair<int, State>, vector<pair<int, State> >, greater<pair<int, State> > > q;
+    q.push(MP(0, s));
+    map<pi, int> m;
+    m[MP(sy, sx)] = 0;
+    while(!q.empty()){
+      int qsize = (int)q.size();
+      //      printf("qsize %d\n", qsize);
+      rep(i, qsize){
+	pair<int, State> now = q.top(); q.pop();
+	rep(d, 4){
+	  pair<int , State> next = now;
+	  next.S.y += dy[d]; next.S.x += dx[d];
+	  int ny = next.S.y, nx = next.S.x;
+	  if(ny < 0 || nx < 0 || ny >= h || nx >= w) continue;
+
+	  int tmp;
+	  switch(d){
+	  case 0: // west
+	    tmp = 7 - next.S.d.t;
+	    next.S.d.t = next.S.d.e;
+	    next.S.d.e = tmp;
+	    break;
+	  case 1: // north
+	    tmp = 7 - next.S.d.t;
+	    next.S.d.t = next.S.d.s;
+	    next.S.d.s = tmp;
+	    break;
+	  case 2: // south
+	    tmp = 7 - next.S.d.e;
+	    next.S.d.e = next.S.d.t;
+	    next.S.d.t = tmp;
+	    break;
+	  case 3: // east
+	    tmp = 7 - next.S.d.s;
+	    next.S.d.s = next.S.d.t;
+	    next.S.d.t = tmp;
+	    break;
+	  }
+
+	  next.Cost += cost[ny][nx] * (7 - next.S.d.t);
+	  if(m.count(MP(ny, nx)) != 0  && m[MP(ny,nx)] <= next.Cost) continue;
+	  m[MP(ny,nx)] = next.Cost;
+	  //	  printf("%d %d\n", ny, nx);
+	  if(ny == gy && nx == gx){
+	    res = min(res, next.Cost);
+	    break;
+	  }
+	  q.push(next);
+	}
+      }
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

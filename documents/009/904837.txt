@@ -1,0 +1,18 @@
+#!/bin/ruby
+until (n=gets.to_i)==0
+  c=gets.chomp.split('')
+  b=0
+  p=Array.new(n){0}
+  c.each_with_index do |e,x|
+    mx=x%p.size
+    p[mx]+=1
+    if e=='S' then
+      b+=p[mx]
+      p[mx]=0
+    elsif e=='L' then
+      p[mx]+=b
+      b=0
+    end
+  end
+  puts (p.sort<< b).join(' ')
+end

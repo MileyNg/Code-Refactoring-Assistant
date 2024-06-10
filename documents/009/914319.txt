@@ -1,0 +1,51 @@
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <stack>
+#include <list>
+#include <vector>
+
+using namespace std;
+int N, P;
+int Num[201];
+void refr(){
+  int tmp[201];
+  for(int i=0; i<2*N; ++i){
+    tmp[i] = Num[i];
+  }
+  for(int i=0; i<N; ++i){
+    Num[2*i] = tmp[i];
+    Num[2*i+1] = tmp[N+i];
+  }
+}
+void cut(int k){
+  int tmp[201];
+  for(int i=0; i<2*N; ++i){
+    tmp[i] = Num[i];
+  }
+  for(int i=k; i<2*N; ++i){
+    Num[i-k] = tmp[i];
+  }
+  for(int i=0; i<k; ++i){
+    Num[i+(2*N-k)] = tmp[i];
+  }
+}
+int main(){
+  cin >> N >> P;
+  for(int i=0; i<2*N; ++i){
+    Num[i] = i+1;
+  }
+  for(int i=0; i<P; ++i){
+    int a;
+    cin >> a;
+    if(a == 0) refr();
+    else cut(a);
+  }
+  
+  for(int i=0; i<2*N; ++i){
+    cout << Num[i] << endl;
+  }
+  return 0;
+}

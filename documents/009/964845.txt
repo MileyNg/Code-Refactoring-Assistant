@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<string.h>
+int P,Q,cp[15][9],cq[15][9],T[11][5],i,j,k,f,R,C,S,cR,cC,cS,ch;
+int K[8001][3],pat;
+char t,a[]="(){}[]";
+
+void in(int N,int I[15][9])
+{
+	for(i=0;i<N;i++)
+	{
+		for(f=1;(t=getchar())!=10;)
+		{
+			if(t!='.')f=0;
+			if(f)I[i][0]++;
+			for(k=0;k<6;k++)
+				if(t==a[k])
+					I[i][k+1]++;
+		}
+	}
+}
+
+int main()
+{
+	for(;scanf("%d%d\n",&P,&Q),P;)
+	{
+		memset(T,-1,sizeof(T));
+		memset(cp,0,sizeof(cp));
+		memset(cq,0,sizeof(cq));
+		in(P,cp);in(Q,cq);
+		cR=cp[0][1]-cp[0][2];
+		cC=cp[0][3]-cp[0][4];
+		cS=cp[0][5]-cp[0][6];
+		for(ch=1;ch<P;ch++)
+		{
+			T[ch-1][0]=cR;
+			T[ch-1][1]=cC;
+			T[ch-1][2]=cS;
+			T[ch-1][3]=cp[ch][0];
+			cR+=cp[ch][1]-cp[ch][2];
+			cC+=cp[ch][3]-cp[ch][4];
+			cS+=cp[ch][5]-cp[ch][6];
+		}
+		R=C=S=-1;
+		for(pat=0,i=1;i<=20;i++)
+			for(j=1;j<=20;j++)
+				for(k=1;k<=20;k++)
+				{
+					cR=cp[0][1]-cp[0][2];
+					cC=cp[0][3]-cp[0][4];
+					cS=cp[0][5]-cp[0][6];
+					for(ch=1;ch<P;ch++)
+					{
+						if(i*cR+j*cC+k*cS!=cp[ch][0])
+							break;
+						cR+=cp[ch][1]-cp[ch][2];
+						cC+=cp[ch][3]-cp[ch][4];
+						cS+=cp[ch][5]-cp[ch][6];
+					}
+					if(ch==P)
+					{
+						K[pat][0]=i;
+						K[pat][1]=j;
+						K[pat][2]=k;
+						pat++;
+					}
+				}
+		R=K[0][0];C=K[0][1];S=K[0][2];
+		for(i=1;i<pat;i++)
+		{
+			if(R!=K[i][0])R=-1;
+			if(C!=K[i][1])C=-1;
+			if(S!=K[i][2])S=-1;
+		}
+		cR=cq[0][1]-cq[0][2];
+		cC=cq[0][3]-cq[0][4];
+		cS=cq[0][5]-cq[0][6];
+		for(printf("0%s",Q==1?"\n":" "),i=1;i<Q;i++)
+		{
+			for(j=0;j<P;j++)
+				if(cR==T[j][0]&&cC==T[j][1]&&cS==T[j][2])
+				{
+					printf("%d%s",T[j][3],i==Q-1?"\n":" ");
+					break;
+				}
+			if(j==P)
+			{
+				if((cR&&R==-1)||(cC&&C==-1)||(cS&&S==-1))
+					printf("-1%s",i==Q-1?"\n":" ");
+				else
+					printf("%d%s",cR*R+cC*C+cS*S,i==Q-1?"\n":" ");
+			}
+			cR+=cq[i][1]-cq[i][2];
+			cC+=cq[i][3]-cq[i][4];
+			cS+=cq[i][5]-cq[i][6];
+		}
+	}
+	return 0;
+}

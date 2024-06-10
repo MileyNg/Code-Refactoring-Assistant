@@ -1,0 +1,78 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<queue>
+#include<cmath>
+using namespace std;
+
+#define pow2(x) ((x)*(x))
+#define N 100
+
+class UnionFind {
+	int parent[N];
+public:
+	void init(int n) {
+		for(int i=0; i<n; ++i) parent[i] = i;
+	}
+	int root(int x) {
+		if(x==parent[x]) return x;
+		return parent[x] = root(parent[x]);
+	}
+	bool issame(int x, int y) {
+		return root(x)==root(y);
+	}
+	int unite(int x, int y) {
+		if(root(x)==root(y)) return root(x);
+		if(root(x)<root(y)) {
+			parent[root(x)] = parent[root(y)];
+		}else {
+			parent[root(y)] = parent[root(x)];
+		}
+		return root(y);
+	}
+};
+
+struct Edge {
+	int from, to;
+	double cost;
+	bool operator<(const Edge& e) const {
+		return cost < e.cost;
+	}
+		bool operator>(const Edge& e) const {
+		return cost > e.cost;
+	}
+};
+
+int main() {
+	int n, c;
+	UnionFind uf;
+	double x[N], y[N], z[N], r[N], ans;
+	priority_queue<Edge, vector<Edge>, greater<Edge> > q;
+	while(cin >> n && n) {
+		while(!q.empty()) q.pop();
+		uf.init(n); ans = 0.0; c = 0;
+		for(int i=0; i<n; ++i) cin >> x[i] >> y[i] >> z[i] >> r[i];
+		for(int i=0; i<n; ++i) {
+			for(int j=i+1; j<n; ++j) {
+				double rr = pow2(x[j]-x[i]) + pow2(y[j]-y[i]) + pow2(z[j]-z[i]);
+				if(rr <= pow2(r[j]+r[i])) {
+					uf.unite(i, j);
+					++c;
+				}else {
+					q.push((Edge){i, j, sqrt(rr)-r[i]-r[j]});
+				}
+			}
+		}
+		while(!q.empty() && n!=c) {
+			Edge e = q.top(); q.pop();
+			if(!uf.issame(e.from, e.to)) {
+				uf.unite(e.from, e.to);
+				++c;
+				ans += e.cost;
+			}
+		}
+		//cout << ans << endl;
+		printf("%.5f\n", ans);
+	}
+	return 0;
+}

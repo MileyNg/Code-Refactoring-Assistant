@@ -1,0 +1,48 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+#include <utility>
+using namespace std;
+#define foreach(i,n) for (int i = 0; i < n; ++i)
+#define foreach_down(i,n) for (int i = (n)-1; 0 <= i; --i)
+#define foreach_from(i,m,n) for (int i = m; i < n; ++i)
+typedef vector<int> veci;
+
+#define MAX_PAZZLE 1000
+int dirctions[4] = { -4, 4, -1, 1 };
+bool on_board(int n) { return 0 <= n && n < 8; }
+bool movable(int n, int m) { return on_board(m) && (n+1) * (m+1) != (3+1) * (4+1); }
+int find_zero(const veci & v) { return find(v.begin(), v.end(), 0) - v.begin(); }
+
+int main() {
+    veci pzl = veci(8); foreach (i,8) pzl[i] = i;
+    int cnt = 0;
+    map<veci,int> memo;
+    memo[pzl] = cnt;
+    queue<veci> que;
+    que.push(pzl);
+    while (not que.empty()) {
+        pzl = que.front(); que.pop();
+        cnt = memo[pzl];
+        int zero = find_zero(pzl);
+        foreach (d,4) {
+            int nzero = zero + dirctions[d];
+            if (movable(zero,nzero)) {
+                veci npzl = pzl;
+                swap(npzl[zero], npzl[nzero]);
+                if (memo.find(npzl) == memo.end()) {
+                    memo[npzl] = cnt + 1;
+                    que.push(npzl);
+                }
+            }
+        }
+    }
+    while (true) {
+        foreach (i,8) cin >> pzl[i];
+        if (cin.fail()) break;
+        cout << memo[pzl] << endl;
+    }
+    return 0;
+}

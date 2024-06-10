@@ -1,0 +1,83 @@
+//
+//  main.cpp
+//  AOJ0558
+//
+//  Created by aki33524 on 2014/04/22.
+//  Copyright (c) 2014年 aki33524. All rights reserved.
+//
+
+#include <iostream>
+#include <stdio.h>
+#include <queue>
+using namespace std;
+
+typedef pair<int, int> pii;
+int H, W, N;
+char fields[1001][1001];
+
+int dh[] = {0, 0, 1, -1};
+int dw[] = {1, -1, 0, 0};
+pii cheese[10];
+
+const int INF = 100000000;
+
+int bfs(int sh, int sw, int gh, int gw){
+    int d[H][W];
+    for(int i=0; i<H; i++)
+        for(int j=0; j<W; j++)
+            d[i][j] = INF;
+    queue<pii> que;
+    que.push(make_pair(sh, sw));
+    d[sh][sw] = 0;
+    
+    while(!que.empty()){
+        pii p = que.front();
+        que.pop();
+        
+        for(int i=0; i<4; i++){
+            int nh = p.first + dh[i];
+            int nw = p.second + dw[i];
+            if(0<=nh && nh<H && 0<=nw && nw<W && fields[nh][nw] != 'X' && d[nh][nw] == INF){
+                que.push(make_pair(nh, nw));
+                d[nh][nw] = d[p.first][p.second] + 1;
+            }
+            if(nh == gh && nw == gw)
+                return d[nh][nw];
+            
+        }
+    }
+    return -1;
+}
+
+int main(int argc, const char * argv[])
+{
+    cin >> H >> W >> N;
+    
+    for(int i=0; i<H; i++)
+        cin >> fields[i];
+    
+    for(int i=0; i<=N; i++){
+        if(i==0){
+            for(int j=0; j<H; j++)
+                for(int k=0; k<W; k++)
+                    if(fields[j][k] == 'S')
+                        cheese[i] = make_pair(j, k);
+        }else{
+            for(int j=0; j<H; j++)
+                for(int k=0; k<W; k++)
+                    if(fields[j][k] == '0'+i)
+                        cheese[i] = make_pair(j, k);
+        }
+    }
+    
+    int ans = 0;
+    for(int i=0; i<N; i++){
+        pii s = cheese[i];
+        pii g = cheese[i+1];
+        ans += bfs(s.first, s.second, g.first, g.second);
+    }
+    
+    cout << ans << endl;
+    
+    return 0;
+}

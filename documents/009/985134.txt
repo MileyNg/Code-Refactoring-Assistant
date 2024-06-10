@@ -1,0 +1,71 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int prime[1100000];
+int table[1200][1200];
+pair<int,int> dp[1200][1200];
+int dx[]={0,-1,0,1};
+int dy[]={1,0,-1,0};
+int main(){
+	int a,b;
+	prime[0]=prime[1]=-1;
+	for(int i=2;i<1100000;i++){
+		if(~prime[i]){
+			prime[i]=1;
+			for(int j=i+i;j<1100000;j+=i)prime[j]=-1;
+		}
+	}
+	
+	while(scanf("%d%d",&a,&b),a){
+		int sr;
+		int sc;
+		int at=0;
+		int dir=0;
+		int row=600;
+		int col=600;
+		for(int i=0;i<1200;i++)
+			for(int j=0;j<1200;j++){
+				table[i][j]=0;
+				dp[i][j]=make_pair(-99999,-99999);
+			}
+		for(int i=0;i<a;i++){
+			table[row][col]=i+1;
+			if(b==i+1){
+				sr=row;
+				sc=col;
+			}
+			row+=dx[dir%4];
+			col+=dy[dir%4];
+			at++;
+			if(at==dir/2+1){
+				dir++;
+				at=0;
+			}
+		}
+		dp[sr][sc]=make_pair(0,0);
+		if(~prime[table[sr][sc]])dp[sr][sc]=make_pair(1,table[sr][sc]);
+		pair<int,int>ret=dp[sr][sc];
+		for(int i=1;i<1199;i++){
+			for(int j=1;j<1199;j++){
+				ret=max(ret,dp[i][j]);
+				if(dp[i][j].first<0)continue;
+				if(~prime[table[i+1][j-1]]){
+					dp[i+1][j-1]=max(dp[i+1][j-1],make_pair(dp[i][j].first+1,table[i+1][j-1]));
+				}else{
+					dp[i+1][j-1]=max(dp[i+1][j-1],dp[i][j]);
+				}
+				if(~prime[table[i+1][j]]){
+					dp[i+1][j]=max(dp[i+1][j],make_pair(dp[i][j].first+1,table[i+1][j]));
+				}else{
+					dp[i+1][j]=max(dp[i+1][j],dp[i][j]);
+				}
+				if(~prime[table[i+1][j+1]]){
+					dp[i+1][j+1]=max(dp[i+1][j+1],make_pair(dp[i][j].first+1,table[i+1][j+1]));
+				}else{
+					dp[i+1][j+1]=max(dp[i+1][j+1],dp[i][j]);
+				}
+			}
+		}
+		printf("%d %d\n",ret.first,ret.second);
+	}
+}

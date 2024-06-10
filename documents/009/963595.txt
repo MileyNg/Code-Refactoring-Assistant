@@ -1,0 +1,38 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+double cross(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4) {
+	double m;
+	m=(x4-x3)*(y2-y1)-(x2-x1)*(y4-y3);
+	if (m==0) return -1;
+	return ((x1-x3)*(y4-y3)-(x4-x3)*(y1-y3))/m;
+ }
+
+int main() {
+  double a,s,sx[3],sy[3],ex[3],ey[3],cx[3],cy[3],hx,lx,hy,ly;
+  int i,k;
+  while(true) {
+	lx=ly=9999999; hx=hy=-lx;  
+   for (i=0;i<3;i++) {
+	      cin >> sx[i] >> sy[i] >> ex[i] >> ey[i];
+	      if (sx[i]==0 &&  sy[i]==0 && ex[i]==0 && ey[i]==0) return 0; 
+	      }
+	   for (i=0;i<3;i++) {
+		k=(i+1) % 3;
+		s=cross(sx[i],sy[i],ex[i],ey[i],sx[k],sy[k],ex[k],ey[k]);
+		if (s<0 || s>1) break;
+		cx[i]=sx[i]+s*(ex[i]-sx[i]); cy[i]=sy[i]+s*(ey[i]-sy[i]);
+		hx=hx<cx[i] ? cx[i]:hx; lx=lx>cx[i] ? cx[i]:lx;
+		hy=hy<cy[i] ? cy[i]:hy; ly=ly>cy[i] ? cy[i]:ly;
+	}
+	if (i!=3) { cout << "kyo" << endl; continue;}
+	for (s=0,i=0;i<3;i++) s+=abs(cx[i]-cx[(i+1) % 3])*abs(cy[i]-cy[(i+1) % 3]);
+	a=(hx-lx)*(hy-ly)-s/2;
+	if (a>=1900000) cout << "dai-kichi"; else if (a>=1000000) cout << "chu-kichi";
+	else if (a>=100000) cout << "kichi"; else if (a>0) cout << "syo-kichi";
+	else cout << "kyo";
+	cout << endl; 
+ } 
+  return 0;
+}	

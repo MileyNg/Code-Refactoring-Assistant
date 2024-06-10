@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+#define INF 1<<10
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+const int dx[] = { 0, 1, 1, 0,-1,-1 };
+const int dy[] = { 1, 1, 0,-1,-1, 0 };
+const int basex = 100;
+const int basey = 100;
+const int MAX_N = 200;
+
+int vis[MAX_N][MAX_N];
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int t, n;
+	while (cin >> t >> n, t ){
+		memset (vis, -1, sizeof (vis ) );
+		rep (i, n ){
+			int x, y; cin >> x >> y;
+			x += basex, y += basey;
+			vis[y][x] = 0;
+		} // end rep
+		int sx, sy; cin >> sx >> sy;
+		sx += basex, sy += basey;
+		queue<P> que;
+		que.push (P (sy, sx ) );
+		vis[sy][sx] = 0;
+		int res = 1;
+
+		while (!que.empty() ){
+			P cur = que.front(); que.pop();
+			int cy = cur.first;
+			int cx = cur.second;
+			int ct = vis[cy][cx];
+			if (ct == t ) continue;
+
+			rep (k, 6 ){
+				int ny = cy + dy[k];
+				int nx = cx + dx[k];
+				if (vis[ny][nx] == -1 ){
+					vis[ny][nx] = ct + 1;
+					que.push (P (ny, nx ) );
+					res++;
+				} // end if
+			} // end rep
+		} // end while
+		cout << res << endl;
+
+	} // end while
+
+	return 0;
+}

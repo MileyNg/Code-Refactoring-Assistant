@@ -1,0 +1,72 @@
+$stack = []
+$x=0
+$y=0
+$cnt = 0
+
+def calc(x,y)
+	$stack.push([x,y])
+	while $stack.size() != 0 do
+		(posx,posy) = $stack.pop()
+		if posx+1 < $x then
+			check(posx+1,posy)
+		end
+		if posx-1 >= 0 then
+			check(posx-1,posy)
+		end
+		if posy+1 < $y then
+			check(posx,posy+1)
+		end
+		if posy-1 >= 0 then
+			check(posx,posy-1)
+		end
+	end
+end
+
+def check(x,y)
+	tmp = $bord[y][x]
+	if tmp == 0 then
+		$bord[y][x] = 2
+		$stack.push([x,y])
+		$cnt += 1
+	end
+end
+	
+loop{
+	line = gets
+	if line==nil then
+		break
+	end
+	sp = line.split(nil)
+	
+	if sp.count() != 2 then
+		break
+	else
+		$x = sp[0].to_i()
+		$y = sp[1].to_i()
+		if $x == 0 and $y == 0 then
+			break
+		end
+		
+		sx = 0
+		sy = 0
+		$cnt = 1 
+		$bord = Array.new($y).map{Array.new($x,0)}
+		for i in 1..$y
+			line = gets
+			for j in 0..$x-1
+				tmp = 0
+				if line[j] == "#" then
+					tmp = 1
+				elsif line[j] == "@" then
+					tmp = 2
+					sx = j
+					sy = i-1
+				end
+				$bord[i-1][j] = tmp
+			end
+		end
+		calc(sx,sy)
+		print $cnt
+		print("\n")
+	end
+}

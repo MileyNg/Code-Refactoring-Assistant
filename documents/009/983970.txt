@@ -1,0 +1,76 @@
+#include<iostream>
+#include<string>
+#include<sstream>
+
+using namespace std;
+
+long long p10(int i){
+  long long l=1;
+  while(i--){
+    l*=10;
+  }
+  return l;
+}
+
+int l10(long long l){
+  int i=0;
+  while(l>=10){
+    i++;
+    l/=10;
+  }
+  return i;
+}
+
+string fb(long long l){
+  if(l%15==0){
+    return "FizzBuzz";
+  }else if(l%3==0){
+    return "Fizz";
+  }else if(l%5==0){
+    return "Buzz";
+  }else{
+    stringstream ss;
+    ss<<l;
+    return ss.str();
+  }
+}
+
+long long bs(long long s){
+  for(long long c=0,l=0;;){
+    if(s-c<=15){
+      string str;
+      for(long long i=c+1;i<=s;i++){
+	l+=fb(i).size();
+      }
+      return l;
+    }else if(l10(c)==l10(c+15)){
+      long long nc=(min(p10(l10(c)+1)-1,s)-c)/15;
+      l+=(8*(l10(c)+1)+32)*nc;
+      c+=nc*15;
+    }else{
+      do{
+	c++;
+	l+=fb(c).size();
+      }while(l10(c)==l10(c-1));
+    }
+  }
+}
+
+int main(){
+  long long s;
+  cin>>s;
+  long long l=0,h=1000000000000000000;
+  while(h-l>1){
+    long long m=(l+h)/2;
+    if(bs(m)<=s-1){
+      l=m;
+    }else{
+      h=m;
+    }
+  }
+  string str;
+  for(int i=0;i<20;i++){
+    str+=fb(i+l+1);
+  }
+  cout<<str.substr(s-bs(l)-1,20)<<endl;
+}

@@ -1,0 +1,83 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+const vvi r3{
+    { 1, 1, 1 },
+    { 2, 2, 2 },
+    { 3, 3, 3 },
+    { 4, 4, 4 },
+    { 5, 5, 5 },
+    { 6, 6, 6 },
+    { 7, 7, 7 },
+    { 8, 8, 8 },
+    { 9, 9, 9 },
+    { 1, 2, 3 },
+    { 2, 3, 4 },
+    { 3, 4, 5 },
+    { 4, 5, 6 },
+    { 5, 6, 7 },
+    { 6, 7, 8 },
+    { 7, 8, 9 }
+};
+
+const vvi r2{
+    { 1, 1 },
+    { 2, 2 },
+    { 3, 3 },
+    { 4, 4 },
+    { 5, 5 },
+    { 6, 6 },
+    { 7, 7 },
+    { 8, 8 },
+    { 9, 9 }
+};
+
+int n = r3.size();
+int m = r2.size();
+
+bool ok(vi const& s){
+    rep(i, n)rep(j, n)rep(k, n)rep(l, n)rep(p,m){
+        vi take;
+        take.reserve(14);
+        take.insert(take.end(), all(r3[i]));
+        take.insert(take.end(), all(r3[j]));
+        take.insert(take.end(), all(r3[k]));
+        take.insert(take.end(), all(r3[l]));
+        take.insert(take.end(), all(r2[p]));
+        sort(all(take));
+        if (take == s) return true;
+    }
+    return false;
+}
+
+int main(){
+    string str;
+    while (cin >> str){
+        vi ans;
+        vi s(14);
+        rep(i, 13) s[i] = str[i] - '0';
+        loop(i, 1, 10){
+            s[13] = i;
+            sort(all(s));
+            if (ok(s)) ans.push_back(i);
+        }
+        if (ans.size()){
+            rep(i, ans.size() - 1) cout << ans[i] << " ";
+            cout << ans.back() << endl;
+        }
+        else{
+            cout << 0 << endl;
+        }
+    }
+}

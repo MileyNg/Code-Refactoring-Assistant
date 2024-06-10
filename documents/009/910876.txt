@@ -1,0 +1,47 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int top_search(int,int,int,int *);
+int main(){
+	int n,r,c,p;
+	int cnt=0;
+	int top[50000];
+	while(1){
+		cin>>n>>r;
+		if(n==0&&r==0)
+			break;
+		int *hanahuda=new int[n+1];
+
+		for (int i = n-1; i>=0 ; i--)
+			hanahuda[i]=n-i;
+
+		for(int i=0;i<r;i++){
+			cin>>p>>c;
+			top[cnt]=top_search(n,p,c,hanahuda);
+		}
+		delete[] hanahuda;
+		cnt++;
+	}
+	for(int m=0;m<cnt;m++)
+		cout<<top[m]<<endl;
+
+	
+	return 0;
+}
+int top_search(int n,int p,int c,int *hanahuda){
+	int cnt=0;
+	for(int k=p-1;k<p+c-1;k++){
+
+		int nokori=hanahuda[k];
+
+		for(int l=p-2;l>=0;l--){
+			hanahuda[l+1]=hanahuda[l];
+		}
+
+		hanahuda[cnt]=nokori;
+		cnt++;
+	}
+	return *hanahuda;
+}

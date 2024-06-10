@@ -1,0 +1,21 @@
+#include<stdio.h>
+void swap(int *a,int *b){
+  int *w;
+  *w=*a;*a=*b;*b=*w;
+}
+
+int main(void){
+  int n[1000],s,i,j;
+  scanf("%d",&s);
+  for(i=0;i<s;i++)
+    scanf("%d",&n[i]);
+
+  for(i=0;i<s-1;i++)
+    for(j=i;j<s;j++)
+      if(n[i]<n[j])swap(&n[i],&n[j]);
+
+  for(i=s-1;0<=i;i--)
+    printf("%d ",n[i]);
+  printf("\n");
+  return 0;
+}

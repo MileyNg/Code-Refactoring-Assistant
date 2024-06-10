@@ -1,0 +1,42 @@
+#include<cstdio>
+#include<vector>
+#include<cmath>
+#define ALL(v) (v).begin(), (v).end()
+using namespace std;
+
+vector<vector<int> > result;
+
+void fuga(vector<int> a, int col, int rest){
+  if(rest == 0){
+    result.push_back(a);
+    return;
+  }
+  if(col >= (int)a.size()) { return; }
+  for(int i = col == 0 ? rest : min(rest, a[col-1]-1); i > 0; i--){
+    vector<int> b;
+    copy(ALL(a), back_inserter(b));
+    b[col]+=i;
+    fuga(b, col+1, rest-i);
+  }
+}
+
+void hoge(int n){
+  for(int i = 0; i < n; i++){
+    fuga(vector<int>(i+1,1),0,n-i-1);
+  }
+}
+
+int main(){
+  for(;;){
+    int n;
+    scanf("%d", &n);
+    if(!n) break;
+    hoge(n);
+    for(auto i : result){
+      for(auto j = i.begin(); j < i.end(); j++){
+	printf("%d", (*j));
+	printf(j+1 == i.end() ? "\n" : " ");
+      }
+    }
+  }
+}

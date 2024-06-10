@@ -1,0 +1,84 @@
+#include<iostream>
+#include<map>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+int main(void)
+{
+	map<char,string> mapA;
+	map<string,char> mapB;
+	string s1=" \',-.?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string s2="ABCDEFGHIJKLMNOPQRSTUVWXYZ .,-\'?";
+	string s3[32]={
+		"101",
+		"000000",
+		"000011",
+		"10010001",
+		"010001",
+		"000001",
+		"100101",
+		"10011010",
+		"0101",
+		"0001",
+		"110",
+		"01001",
+		"100110110",
+		"010000",
+		"0111",
+		"10011000",
+		"0110",
+		"00100",
+		"10011001",
+		"10011110",
+		"00101",
+		"111",
+		"10011111",
+		"1000",
+		"00110",
+		"00111",
+		"10011100",
+		"10011101",
+		"000010",
+		"10010010",
+		"10010011",
+		"10010000"
+	};
+	string s4[32];
+	for(int i=0;i<32;i++){
+		int p=i;
+		char tmp[6];
+		for(int j=0;j<5;j++){
+			tmp[4-j]='0'+p%2;
+			p/=2;
+		}
+		tmp[5]='\0';
+		s4[i]=tmp;
+	}
+	for(int i=0;i<32;i++){
+		mapA[s1[i]]=s3[i];
+		mapB[s4[i]]=s2[i];
+	}
+
+	string str;
+	while(getline(cin,str)){
+		string tmp;
+		for(int i=0;i<(int)str.size();i++){
+			tmp+=mapA[str[i]];
+		}
+		for(int i=0;i<(int)tmp.size()%5;i++){
+			tmp+="0";
+		}
+		string ans;
+		for(int i=0;i<(int)tmp.size()/5;i++){
+			string tok;
+			for(int j=0;j<5;j++){
+				tok+=tmp[i*5+j];
+			}
+			ans+=mapB[tok];
+		}
+		cout<<ans<<endl;
+	}
+	return 0;
+}

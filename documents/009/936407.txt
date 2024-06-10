@@ -1,0 +1,28 @@
+#include<stdio.h>
+int main(void){
+    int mon,dat,a[13],i,j,cnt;
+    a[1]=a[3]=a[5]=a[7]=a[8]=a[10]=a[12]=31;
+    a[4]=a[6]=a[9]=a[11]=30;
+    a[2]=29;
+    while(scanf("%d%d",&mon,&dat),mon){
+        cnt=3;
+        for(i=1;i<=12;i++){
+            for(j=1;j<=a[i];j++){
+                cnt++;
+                if(i==mon && j==dat)goto NEXT;
+            }
+        }
+        NEXT:
+        while(cnt>=7){
+            cnt%=7;
+        }
+        if(cnt==1)printf("Monday\n");
+        else if(cnt==2)printf("Tuesday\n");
+        else if(cnt==3)printf("Wednesday\n");
+        else if(cnt==4)printf("Thursday\n");
+        else if(cnt==5)printf("Friday\n");
+        else if(cnt==6)printf("Saturday\n");
+        else if(cnt==0)printf("Sunday\n");
+    }
+    return 0;
+}

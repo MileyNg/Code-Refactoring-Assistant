@@ -1,0 +1,181 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long lint;
+
+//定数
+const double EPS = 1e-10;
+const int dx[] = {-1, 0, 1, 0};
+const int dy[] = {0, 1, 0, -1};
+const int INF = 1001001001;
+const lint INFLL = 1001001001001001001ll;
+
+//初期化関連
+#define zclear(a) memset((a), 0 ,sizeof(a))
+#define mclear(a) memset((a), -1, sizeof(a))
+
+//デバッグ出力
+#define show(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+bool eq(double a, double b) //a == b
+{
+    return (fabs(a - b) <= EPS);
+}
+
+bool neq(double a, double b) //a != b
+{
+    return (!eq(a, b));
+}
+  
+bool lt(double a, double b) //a < b
+{
+    return (a - b < -EPS);
+}
+  
+bool leq(double a, double b) //a <= b
+{
+    return (lt(a, b) || eq(a, b));
+}
+  
+bool gt(double a, double b) //a > b
+{
+    return (a - b > +EPS);
+}
+  
+bool geq(double a, double b) //a >= b
+{
+    return (gt(a, b) || eq(a, b));
+}
+
+class Point{
+public:
+	double x, y;
+	Point(double x = 0, double y = 0): x(x), y(y){}
+	Point operator + (Point p){return Point(x + p.x, y + p.y);}
+	Point operator - (Point p){return Point(x - p.x, y - p.y);}
+	Point operator * (double a){return Point(x * a, y * a);}
+	Point operator / (double a){return Point(x / a, y / a);}
+	Point operator * (const Point &a){
+		return Point(x * a.x - y * a.y, x * a.y + y * a.x);
+	}
+	bool operator < (const Point &p) const {
+		return (x != p.x ? x < p.x : y < p.y);
+	}
+	bool operator == (const Point &p) const {
+		return (fabs(x - p.x) < EPS && fabs(y - p.y) < EPS);
+	}
+};
+
+typedef Point Vector;
+typedef vector<Point> Polygon;
+
+double norm(Vector a){return (a.x * a.x + a.y * a.y);}
+double abs(Vector a){return (sqrt(norm(a)));}
+double abs(Vector a, Vector b){return (sqrt(norm(a - b)));}
+double dot(Vector a, Vector b){return (a.x * b.x + a.y * b.y);}
+double cross(Vector a, Vector b){return (a.x * b.y - a.y * b.x);}
+double atan(Vector a){return atan2(a.y, a.x);}
+bool sortX(Point a, Point b){return (a.x != b.x ? lt(a.x, b.x) : lt(a.y, b.y));}
+bool sortY(Point a, Point b){return (a.y != b.y ? lt(a.y, b.y) : lt(a.x, b.x));}
+Point baseP;
+bool sortT(Point a, Point b){return (gt(cross(a - baseP, b - baseP), 0));}
+
+int ccw(Point p0, Point p1, Point p2)
+{
+	Vector a = p1 - p0;
+	Vector b = p2 - p0;
+	if (cross(a, b) > EPS) return (+1); //p0, p1, p2 が反時計周り
+	if (cross(a, b) < -EPS) return (-1);//p0, p1, p2 が時計回り
+	if (dot(a, b) < -EPS) return (+2); //p2--p0--p1 の順で一直線上
+	if (norm(a) < norm(b)) return (-2); //p0--p1--p2 の順で一直線上
+	return (0); //p0--p2--p1 の順で一直線上
+}
+
+vector<Point> interPointCC(Point c1, double r1, Point c2, double r2)
+{
+	vector<Point> res;
+	if (abs(c1 - c2) < EPS) return (vector<Point>()); // 交点が絶対にない
+	double d = abs(c1 - c2);
+	double rc = (d * d + r1 * r1 - r2 * r2) / (2 * d);
+	double rs = sqrt(r1 * r1 - rc * rc);
+	Point diff = (c2 - c1) / d;
+	res.push_back(Point(c1 + diff * Point(rc, rs)));
+	res.push_back(Point(c1 + diff * Point(rc, -rs)));
+	return (res);
+}
+
+bool isIntersectSS(Point p1, Point p2, Point p3, Point p4)
+{
+    return (ccw(p1, p2, p3) * ccw(p1, p2, p4) <= 0 &&
+             ccw(p3, p4, p1) * ccw(p3, p4, p2) <= 0);
+}
+
+int main()
+{
+	int n;
+	
+	while (scanf("%d", &n) && n){
+		vector<Point> p(n);
+		double r[128];
+		vector<pair<double, int> > G[256];
+		
+		for (int i = 0; i < n; i++){
+			scanf("%lf %lf %lf", &p[i].x, &p[i].y, &r[i]);
+		}
+		
+		vector<Point> q(2 * n + 2);
+		int belong[256], ctr = 0;
+		
+		belong[ctr] = 0; q[ctr++] = p[0];
+		
+		for (int i = 1; i < n; i++){
+			vector<Point> cand = interPointCC(p[i - 1], r[i - 1], p[i], r[i]);
+			belong[ctr] = i; q[ctr++] = cand[0];
+			belong[ctr] = i; q[ctr++] = cand[1];
+		}
+		
+		belong[ctr] = n - 1; q[ctr++] = p[n - 1];
+		
+		for (int i = 0; i < ctr - 1; i++){
+			for (int j = i + 1; j < ctr; j++){
+				bool ng = false;
+				for (int k = belong[i]; k <= belong[j]; k++){
+					if (k == 0) continue;
+					
+					if (!(q[j] == q[k * 2 - 1]) && !(q[j] == q[k * 2]) && isIntersectSS(q[i], q[j], q[k * 2 - 1], q[k * 2]) == false){
+						ng = true;
+						break;
+					}
+				}
+				
+				if (!ng){
+					G[i].push_back(make_pair(abs(q[i] - q[j]), j));
+				}
+			}
+		}
+		
+		bool done[256] = {0};
+		priority_queue<pair<double, int>, vector<pair<double, int> >, greater<pair<double, int> > > pq;
+		
+		for (pq.push(make_pair(0, 0)); pq.size(); pq.pop()){
+			pair<double, int> x = pq.top();
+			
+			if (done[x.second]) continue;
+			done[x.second] = true;
+			
+			if (x.second == ctr - 1){
+				printf("%.10f\n", x.first);
+				break;
+			}
+			
+			for (int i = 0; i < G[x.second].size(); i++){
+				pq.push(make_pair(x.first + G[x.second][i].first, G[x.second][i].second));
+			}
+		}
+	}
+	
+	
+	return (0);
+}

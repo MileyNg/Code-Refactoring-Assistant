@@ -1,0 +1,26 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+string Permute(const string &src_str){
+  int foundpos=0;
+  string dst_str=src_str;
+  while((foundpos=dst_str.find("Hoshino"))!=string::npos)
+    dst_str[foundpos+6]='a';
+  return dst_str;
+}
+
+int main(){
+  int n;
+  cin>>n;
+  vector<string> dataset(n);
+  cin.get();
+  for(int i=0;i<n;i++){
+    getline(cin,dataset[i]);
+  }
+  for(int i=0;i<n;i++)
+    cout<<Permute(dataset[i])<<endl;
+
+}

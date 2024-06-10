@@ -1,0 +1,36 @@
+using System;
+
+namespace ALDS111A
+{
+    class Program
+    {
+        static void Main()
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[,] ans = new int[n, n];
+            string outs;
+            for (int i = 0; i < n; ++i) 
+            {
+                for (int j = 0; j < n; ++j) 
+                    ans[i, j] = 0;
+
+                string s = Console.ReadLine();
+                string[] nums = s.Split(' ');
+                int k = int.Parse(nums[1]);
+                for (int v = 0; v < k; ++v) 
+                {
+                    ans[i, int.Parse(nums[v + 2])] = 1;
+                }
+            }
+            for (int i = 0; i < n; ++i) 
+            {
+                outs = ans[i, 0].ToString();
+                for (int j = 0; j < n; ++j)
+                {
+                    outs += " " + ans[i, j].ToString();
+                }
+                Console.WriteLine(outs);
+            }
+        }
+    }
+}

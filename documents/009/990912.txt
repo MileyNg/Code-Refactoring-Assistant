@@ -1,0 +1,138 @@
+### subroutines
+
+def neighbors(nd, n)
+  r = nd >> n
+  is = nd & ((1 << n) - 1)
+
+  nbrs = []
+
+  for r0 in (0...n)
+    if $edges[r][r0] && (is & (1 << r0)) != 0
+      nbrs << (r0 << n | is)
+    end
+  end
+
+  for r0 in $sws[r]
+    if r0 != r
+      nbrs << ((r << n) | (is ^ (1 << r0)))
+    end
+  end
+
+  nbrs
+end
+
+def step_str(n, nd0, nd1)
+  r0 = nd0 >> n
+  is0 = nd0 & ((1 << n) - 1)
+  r1 = nd1 >> n
+  is1 = nd1 & ((1 << n) - 1)
+
+  if r0 != r1
+    return "Move to room #{r1 + 1}."
+  end
+
+  b = 1
+  for r in (0...n)
+    sr0 = is0 & b
+    sr1 = is1 & b
+
+    if sr0 != sr1
+      if sr0 != 0
+        return "Switch off room #{r + 1}."
+      else
+        return "Switch on room #{r + 1}."
+      end
+    end
+
+    b <<= 1
+  end
+
+  ""
+end
+
+### main
+
+while true
+  n, m = gets.strip.split(' ').map{|s| s.to_i}
+  break if n == 0 && m == 0
+
+  $edges = Array.new(n){Array.new(n){false}}
+
+  m.times.each do
+    s, t = gets.strip.split(' ').map{|s| s.to_i}
+    s -= 1
+    t -= 1
+    $edges[s][t] = $edges[t][s] = true
+  end
+
+  is = gets.strip.delete(' ').reverse.to_i(2)
+  #printf("%0*b\n", n, is)
+
+  $sws = []
+
+  n.times.each do
+    rs = gets.strip.split(' ').map{|s| s.to_i}
+    k = rs.shift
+    $sws << rs.map{|r| r - 1}
+  end
+  #p sws
+
+  sn = is
+  en = ((n - 1) << n) | (1 << (n - 1))
+  #p [sn, en].map{|i| sprintf("%b", i)}
+
+  prev = []
+  prev[sn] = sn
+  queue = [sn]
+
+  while ! queue.empty?
+    nd = queue.shift
+
+    for nd0 in neighbors(nd, n)
+      if prev[nd0].nil?
+        prev[nd0] = nd
+        if nd0 == en
+          queue = []
+          break
+        end
+        queue << nd0
+      end
+    end
+  end
+
+  if prev[en].nil?
+    goal = false
+    er = (n - 1) << n
+    en0 = er | 1 << (n - 1)
+    en1 = er | (1 << n) - 1
+
+    for nd in (en0..en1)
+      if ! prev[nd].nil?
+        goal = true
+        break
+      end
+    end
+
+    if goal
+      puts "You can not switch off all lights."
+    else
+      puts "Help me!"
+    end
+  else
+    steps = [en]
+    nd = en
+
+    while prev[nd] != nd
+      nd = prev[nd]
+      steps.unshift nd
+    end
+
+    nsteps = steps.length - 1
+    puts "You can go home in #{nsteps} steps."
+
+    for i in (1..nsteps)
+      puts step_str(n, steps[i - 1], steps[i])
+    end
+    #p steps
+  end
+end

@@ -1,0 +1,18 @@
+objects = []
+while line = gets do
+  h, w = line.split(" ").map(&:to_i)
+  break if h == 0 && w == 0
+  objects.push [h, w, Math.sqrt(h*h + w*w)]
+end
+
+sorted_objects = objects.sort do |a, b|
+  if a[2] == b[2]
+    a[0] <=> b[0]
+  else
+    a[2] <=> b[2]
+  end
+end
+
+sorted_objects.each do |o|
+  puts "#{o[0]} #{o[1]}\n"
+end

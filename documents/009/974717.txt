@@ -1,0 +1,25 @@
+#include <iostream>
+#include <utility>
+#include <set>
+
+using namespace std;
+
+#define ALL(n) n.begin(), n.end()
+#define mp make_pair
+
+int main(){
+    int n;
+    while (cin >> n) {
+	set< pair<int, pair<int, pair<int, int> > > > s;
+	for (int i = 0; i < 10; i++)
+	    for (int j = 0; j < 10; j++)
+		for (int k = 0; k < 10; k++)
+		    for (int l = 0; l < 10; l++)
+			if (i+j+k+l == n)
+			    s.insert(mp(i, mp(j, mp(k, l))));
+			    
+	cout << s.size() << endl;
+    }
+
+    return 0;
+}

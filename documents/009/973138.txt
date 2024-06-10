@@ -1,0 +1,28 @@
+#include<iostream>
+#include<string>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+using namespace std;
+int main(){
+
+  string in;
+  short int n,m;
+  while(cin>>n,n){
+    cin>>m;
+    cin>>in;
+    short int co=0;
+    rep(i,m-n*2){
+      bool han=true;
+      if(!in[i]=='I')han=false;
+      else{
+	rep(j,n){
+	  if(in[i+2*j-1]!='I'){han=false;break;}
+	  if(in[i+2*j]!='O'){han=false;break;}
+	}
+      }
+      if(han==true)co++;
+    }
+    cout<<co<<endl;
+  }
+
+}

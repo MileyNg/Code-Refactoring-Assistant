@@ -1,0 +1,54 @@
+#include <iostream>
+using namespace std;
+
+
+int main()
+{
+	int n, m, taro[101], hanako[101], sumtaro, sumhanako, min, anstaro, anshanako;
+	while (cin >> n >> m, n || m){
+
+		//初期化
+		for (int i = 0; i < 101; i++){
+			taro[i] = 0;
+			hanako[i] = 0;
+		}
+		sumtaro = 0;
+		sumhanako = 0;
+		min = 1000;
+
+
+		//入力
+		for (int i = 0; i < n; i++){
+			cin >> taro[i];
+			sumtaro += taro[i];
+		}
+		for (int i = 0; i < m; i++){
+			cin >> hanako[i];
+			sumhanako += hanako[i];
+		}
+
+
+		//交換
+		for (int i = 0; i < n; i++){
+			for (int j = 0; j < m; j++){
+				if (sumtaro - taro[i] + hanako[j] == sumhanako - hanako[j] + taro[i]){
+					if (taro[i] + hanako[j] < min){
+						min = taro[i] + hanako[j];
+						anstaro = taro[i];
+						anshanako = hanako[j];
+					}
+				}
+			}
+		}
+
+		if (min == 1000)
+			cout << -1 << endl;
+		else
+			cout << anstaro << " " << anshanako << endl;
+
+	}
+
+
+
+	return 0;
+}

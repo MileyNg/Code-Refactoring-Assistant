@@ -1,0 +1,92 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		String s="";
+		while(true){
+			s=Console.ReadLine();
+			if(s==null||s=="")break;
+			Sol mySol =new Sol(s);
+			mySol.Solve();
+		}
+	}
+}
+
+class Sol{
+	public void Solve(){
+		if(N>10){
+			Console.WriteLine("0");
+			return;
+		}
+		int[] route=new int[N];
+		Ans=0;
+		for(int i=0;i<N;i++)route[i]=-1;
+		
+		for(int i=0;i<=9;i++){
+			int sum=0;
+			route[0]=i;
+			dfs(route,sum);
+			route[0]=-1;
+		}
+		
+		Console.WriteLine("{0}",Ans);
+		
+	}
+	
+	int Ans;
+	
+	void dfs(int[] route_,int sum){
+		if(sum>S)return;
+		int[] route=new int[N];
+		int[] used=new int[10];
+		for(int i=0;i<10;i++)used[i]=0;
+		int now=-1;
+		for(int i=0;i<N;i++){
+			route[i]=route_[i];
+			if(route[i]!=-1){
+				now=i;
+				used[route[i]]=1;
+			}
+		}
+		sum+=(now+1)*route[now];
+		if(now==N-1){
+			if(S==sum)Ans++;
+			return;
+		}
+	
+		for(int i=0;i<=9;i++){
+			if(used[i]==0){
+				route[now+1]=i;
+				dfs(route,sum);
+				route[now+1]=-1;
+			}
+		}
+		sum-=(now+1)*route[now];
+		return;
+	
+	}
+	
+	
+	
+	int N;
+	int S;
+	public Sol(String s_){
+		var d=s_.Split(' ');
+		N=int.Parse(d[0]);
+		S=int.Parse(d[1]);
+	}
+
+
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}

@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int b[10],
+		cont[11] = {0},
+		cont2[11] = {0};
+	int n, i, x, y, count;
+	
+	scanf("%d", &n);
+	
+	for (; n > 0; n--){
+		for (i = 0; i < 10; i++){
+			scanf("%d", &b[i]);
+		}
+		x = 0;
+		y = 0;
+		count = 0;
+		
+		for (i = 0; i < 11; i++){
+			cont[i] = 0;
+			cont2[i] = 0;
+		}
+		
+		for (i = 0; i < 10; i++){
+			if (b[i] > cont[x] && b[i] > cont2[y]){
+				if (cont[x] >= cont2[y]){
+					x++;
+					cont[x] = b[i];
+					count++;
+				}
+				else {
+					y++;
+					cont2[y] = b[i];
+					count++;
+				}
+			}
+			else if(b[i] > cont[x]){
+				x++;
+				cont[x] = b[i];
+				count++;
+				
+			}
+			else if(b[i] > cont2[y]){
+				y++;
+				cont2[y] = b[i];
+				count++;
+			}
+			else {
+				count = 0;
+				break;
+			}
+		}
+		
+		if (count == 0){
+			printf("NO\n");
+		}
+		else {
+			printf("YES\n");
+		}
+		
+	}
+	
+	
+	
+	return (0);
+}

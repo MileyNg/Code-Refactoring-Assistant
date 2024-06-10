@@ -1,0 +1,234 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+struct C {
+  int h;
+  int w;
+  int fr;
+  int fc;
+  int s;
+  int shape[20];
+
+  void find_upperleft(bool b, int &r, int &c) {
+    bool flg = false;
+    for (int i=0; i<h; i++) {
+      if (b) {
+        if (shape[i] & ((1<<w)-1)) {
+          int j = 0;
+          while (!(shape[i] & (1<<j))) ++j;
+          r = i;
+          c = j;
+          break;
+        }
+      } else {
+        if (~shape[i] & ((1<<w)-1)) {
+          int j=0;
+          while (shape[i] & (1<<j)) ++j;
+          r = i;
+          c = j;
+          break;
+        }
+      }
+    }
+  }
+
+  void set(C &obj, bool rot) {
+    if (!rot) {
+      h = obj.h;
+      w = obj.w;
+      s = obj.s;
+      fr = obj.fr;
+      fc = obj.fc;
+      for (int i=0; i<h; i++) {
+        shape[i] = obj.shape[i];
+      }
+    } else {
+      h = obj.w;
+      w = obj.h;
+      s = obj.s;
+      for (int i=0; i<h; i++) {
+        shape[i] = 0;
+        for (int j=0; j<w; j++) {
+          if (obj.shape[obj.h-j-1] & (1<<i)) {
+            shape[i] |= (1<<j);
+          }
+        }
+      }
+      find_upperleft(true, fr, fc);
+    }
+  }
+
+  bool can_put(C &obj, int r, int c) {
+    int sr, sc, mask;
+    sr = r - obj.fr;
+    sc = c - obj.fc;
+    if (sr<0 || sc<0 || sr+obj.h>h || sc+obj.w>w) return false;
+
+    mask = ((1<<obj.w)-1) << sc;
+    for (int i=0; i<obj.h; i++) {
+      if ((shape[sr+i] & mask) & obj.shape[i]<<sc) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void put(C &obj, int r, int c, bool b) {
+    int sr, sc;
+    sr = r - obj.fr;
+    sc = c - obj.fc;
+    if (b) {
+      for (int i=0; i<obj.h; i++) {
+        shape[sr+i] |= (obj.shape[i] << sc);
+      }
+      s -= obj.s;
+    } else {
+      for (int i=0; i<obj.h; i++) {
+        shape[sr+i] &= ~(obj.shape[i] << sc);
+      }
+      s += obj.s;
+    }
+  }
+
+};
+
+
+int n, p, np;
+C board;
+C board_buf;
+C piece[10][4];
+int t[10];
+bool used[10];
+
+bool greater_piece(int l, int r) {
+  return piece[l][0].h * piece[l][0].w > piece[r][0].h * piece[r][0].w;
+}
+
+bool can_put_all() {
+  int mask = (1<<board.w)-1;
+  bool piece_flg;
+  for (int i=0; i<np; i++) {
+    if (used[i]) continue;
+    piece_flg = false;
+    for (int j=0; j<4; j++) {
+      for (int k=0; k<board.h; k++) {
+        if (~board.shape[k] & mask) {
+          for (int l=0; l<board.w; l++) {
+            if (~board.shape[k] & (1<<l)) {
+              if (board.can_put(piece[t[i]][j], k, l)) {
+                piece_flg = true;
+                break;
+              }
+            }
+          }
+        }
+        if (piece_flg) break;
+      }
+      if (piece_flg) break;
+    }
+    if (!piece_flg) return false;
+  }
+  return true;
+}
+
+bool dfs(int x, int l) {
+  if (!l) return !board.s;
+  if (x >= np) return false;
+  int r, c;
+  board.find_upperleft(false, r, c);
+  if (!used[x]) {
+    for (int i=0; i<4; i++) {
+      if (board.can_put(piece[t[x]][i], r, c)) {
+        board.put(piece[t[x]][i], r, c, true);
+        used[x] = true;
+        if (can_put_all() && dfs(0, l-1)) return true;
+        board.put(piece[t[x]][i], r, c, false);
+        used[x] = false;
+      }
+    }
+  }
+  return dfs(x+1, l);
+}
+
+int main() {
+  char c;
+  int s;
+  bool ans;
+  while (1) {
+    scanf("%d %d\n", &board.h, &board.w);
+    if (!board.h && !board.w) break;
+    s = 0;
+    for (int i=0; i<board.h; i++) {
+      board.shape[i] = 0;
+      for (int j=0; j<board.w; j++) {
+        c = getchar();
+        if (c == '#') {
+          board.shape[i] |= (1<<j);
+        } else {
+          ++s;
+        }
+      }
+      c = getchar();
+    }
+    board.s = s;
+    board_buf.set(board, false);
+
+
+    scanf("%d", &n);
+    for (int i=0; i<n; i++) {
+      s = 0;
+      scanf("%d %d\n", &piece[i][0].h, &piece[i][0].w);
+      for (int j=0; j<piece[i][0].h; j++) {
+        piece[i][0].shape[j] = 0;
+        for (int k=0; k<piece[i][0].w; k++) {
+          c = getchar();
+          if (c == '#') {
+            piece[i][0].shape[j] |= (1<<k);
+            ++s;
+          }
+        }
+        c = getchar();
+      }
+      piece[i][0].s = s;
+      piece[i][0].find_upperleft(true, piece[i][0].fr, piece[i][0].fc);
+
+      for (int j=0; j<3; j++) {
+        piece[i][j+1].set(piece[i][j], true);
+      }
+    }
+
+    scanf("%d", &p);
+    for (int i=0; i<p; i++) {
+      scanf("%d", &np); 
+      for (int j=0; j<np; j++) {
+        scanf("%d", &t[j]);
+        --t[j];
+      }
+      sort(t, t+np, greater_piece);
+
+      s = 0;
+      for (int j=0; j<np; j++) {
+        s += piece[t[j]][0].s;
+      }
+      if (board_buf.s != s) {
+        ans = false;
+      } else {
+        board.set(board_buf, false);
+        for (int j=0; j<np; j++) {
+          used[j] = false;
+        }
+
+        ans = dfs(0, np);
+      }
+      if (ans) {
+        printf("YES\n");
+      } else {
+        printf("NO\n");
+      }
+    }
+
+  }
+
+  return 0;
+}

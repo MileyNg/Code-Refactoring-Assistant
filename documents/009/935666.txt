@@ -1,0 +1,70 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+void push (int);
+int pop();
+int kakeru();
+int sub();
+int add();
+int top = 0;
+int x, n[100];
+
+int main(){
+  char s[100];
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      x = add();
+      push(x);
+    } else if ( s[0] == '-' ){
+      x = sub();
+      push(x);
+    } else if ( s[0] == '*' ){
+      x = kakeru();
+      push(x);
+    } else {
+      x = atoi(s);
+      push(x);
+    }
+  }
+
+  printf("%d\n", n[0]);
+  return 0;
+}
+
+void push(int x){
+  n[top] = x;
+  top += 1;
+}
+
+int pop(){
+  top -= 1 ;
+  return n[top];
+}
+
+int add(){
+  int x, y, z;
+  x = pop(n);
+  y = pop(n);
+  z = x + y;
+  top = 0;
+  return z;
+}
+
+int sub(){
+  int x, y, z;
+  x = pop(n);
+  y = pop(n);
+  z = y - x;
+  top = 0;
+  return z;
+}
+
+int kakeru(){
+  int x, y, z;
+  x = pop(n);
+  y = pop(n);
+  z = x * y;
+  top = 0;
+  return z;
+}

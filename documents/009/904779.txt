@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+#define INF 1<<29
+/*
+	Ritsumeikan University Programming Contest 2011 , Japan, 2011-10-05
+
+	2285 - Anipero
+
+	Anipero01.cpp
+	まずは全探索.
+
+	Anipero02.cpp
+	メモ化再帰
+
+	Anipero03.cpp
+	DPに書き直す
+
+	Anipero04.cpp
+	ループの向きを反対にする
+
+*/
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+const int MAX_LIMIT = 1000;
+const int MAX_N = 100;
+const int MAX_M = 100;
+
+int LIMIT, N, M, X;
+
+int sec_e[MAX_N+1], sec_s[MAX_N+1], e[MAX_M+1], s[MAX_M+1];
+
+int dp[MAX_M+1][MAX_LIMIT+1];
+/*
+int dfs (int depth, int cnt, int cost ){
+	if (cost > LIMIT ) return -INF;
+	if (depth >= M ){
+		return 0;
+	} // end if
+	if (memo[depth][cnt][cost] != -1 ) return memo[depth][cnt][cost];
+
+	int res = -INF;
+	res = max (res, dfs (depth + 1, cnt, cost ) );
+	res = max (res, dfs (depth + 1, cnt + 1, cost + e[depth] ) + s[depth] );
+
+	return memo[depth][cnt][cost] = res;
+}
+*/
+
+int solve (void ){
+	rep (j, MAX_M+1 ) rep (k, MAX_LIMIT + 1 ) dp[j][k] = -INF;
+	dp[0][0] = 0;
+
+	rep (i, M ){
+		for (int j = i; j >= 0; j-- ){
+			for (int k = 0; k <= LIMIT; k++ ){
+				if (k + e[i] <= LIMIT ){
+					dp[j+1][k+e[i]] = max (dp[j+1][k+e[i]], dp[j][k]+s[i] );
+					dp[j][k+e[i]] = max (dp[j][k+e[i]], dp[j][k] );
+				} // end if
+			} // end for
+		} // end for
+	} // end for
+
+#if DEBUG
+	rep (i, M+1 ){
+		for (int j = 0; j <= LIMIT; j++ ){
+			cerr << (dp[i][j] <= -INF/2 ? -1 : dp[i][j] ) << (j != LIMIT ? ' ' : '\n' );
+		} // end for
+	} // end rep
+#endif
+
+	int res = 0;
+	for (int j = X; j <= M; j++ )
+	rep (k, LIMIT+1 ){
+		if (dp[j][k] >= 0  ){
+			int curr = 0;
+			rep (ii, N ){
+				if (k + sec_e[ii] <= LIMIT )
+					curr = max (curr, sec_s[ii] );
+				rep (jj, ii )
+					if (k + sec_e[ii] + sec_e[jj] <= LIMIT )
+						curr = max (curr, sec_s[ii] + sec_s[jj] );
+			} // end rep
+			res = max (res, dp[j][k] + curr );
+		} // end if
+	} // end rep
+	
+	return res;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	while (cin >> LIMIT >> N >> M >> X, LIMIT ){
+		memset (sec_e, 0, sizeof (sec_e ) );
+		memset (sec_s, 0, sizeof (sec_s ) );
+		memset (e, 0, sizeof (e ) );
+		memset (s, 0, sizeof (s ) );
+		string str;
+		rep (i, N ) cin >> str >> sec_e[i] >> sec_s[i];
+		rep (j, M ) cin >> str >> e[j] >> s[j];
+		int res = solve() ;
+		cout << res << endl;
+	} // end while	
+		
+	return 0;
+}

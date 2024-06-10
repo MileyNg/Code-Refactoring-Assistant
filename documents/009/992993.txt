@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <array>
+
+// BEGIN CUT HERE
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+// END CUT HERE 
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) begin(v), end(v)
+#define REV(v) rbegin(v), rend(v)
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define MP make_pair
+#define MT make_tuple
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> P;
+typedef long long ll;
+
+int dist[110][110][4];
+char v[110][110];
+
+const int dx[] = { 0, 1, 0, -1 };
+const int dy[] = { -1, 0, 1, 0 };
+
+int main(){
+	ll n, m, L;
+	while (cin >> n >> m >> L, n){
+		MEMSET(v, 0);
+		FOR(i, 1, n + 1) FOR(j, 1, m + 1) cin >> v[i][j];
+		int r, c, d;
+		FOR(i, 1, n + 1) FOR(j, 1, m + 1){
+			if (v[i][j] != '.' && v[i][j] != '#'){
+				rep(dir, 4) if (v[i][j] == "NESW"[dir]) tie(r, c, d) = MT(i, j, dir);
+				v[i][j] = '.';
+			}
+		}
+
+		MEMSET(dist, -1);
+		int x = 0;
+		dist[r][c][d] = x++;
+		bool loop = true;
+		while (L){
+			r += dy[d], c += dx[d];
+			while (v[r + dy[d]][c + dx[d]] != '.') d = (d + 1) % 4;
+			dist[r][c][d] = x++, L--;
+			if (loop && dist[r][c][d] >= 0) L %= (x - dist[r][c][d]), loop = false;
+		}
+		cout << r << ' ' << c << ' ' << "NESW"[d] << '\n';
+	}
+
+	return 0;
+}

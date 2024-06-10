@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+
+int check_fizzbuzz(int d, char s[]) {
+    char ans[10];
+    if (d % 15 == 0) {
+        return strcmp(s, "FizzBuzz");
+    }
+    else if (d % 3 == 0) {
+        return strcmp(s, "Fizz");
+    }
+    else if (d % 5 == 0) {
+        return strcmp(s, "Buzz");
+    }
+    sprintf(ans, "%d", d);
+    return strcmp(s, ans);
+}
+
+int main(void) {
+    int m, n;
+
+    while (scanf("%d%d\n", &m, &n) == 2 && m && n) {
+        char s[10];
+        int player[1000] = {}, p, count, pfirst, i;
+        for (i = 1, p = 0, count = m;
+             i <= n; i++) {
+            scanf("%s", s);
+            if (check_fizzbuzz(i, s) != 0) {
+                player[p] = 1;
+                count--;
+            }
+            if (count == 1) break;
+            while (player[p = (p+1)%m] != 0);
+        }
+        pfirst = 1;
+        for (i = 1; i <= m; i++) {
+            if (player[i-1] == 0) {
+                printf("%s%d", pfirst ? "": " ", i);
+                if (pfirst) pfirst = 0;
+            }
+        }
+        printf("\n");
+    }
+    return 0;
+}

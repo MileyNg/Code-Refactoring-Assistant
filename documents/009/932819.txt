@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+void caesar (char cipher[], int shift);
+int autocaesar(char cipher[]);
+
+int main()
+{
+
+    char cipher[200];
+    int shift;
+
+    printf("Enter text to be encrypted (in small letter): ");
+    gets(cipher);
+
+    //printf("Number of shift to right? : ");
+    //scanf("%d", &shift);
+//    autocaesar(cipher);
+    caesar (cipher, shift);
+ //   printf("%s", cipher);
+    autocaesar(cipher);
+    printf("%s", cipher);
+
+    return 0;
+}
+
+void caesar(char cipher[], int shift)
+{
+    char *p = cipher;
+
+    while (*p)
+    {
+        if ('a' <= *p && *p <= 'z') {
+            *p = 'a' + (*p - 'a' + shift) % 26;
+        }
+        p++;
+    }
+}
+
+int autocaesar(char cipher[])
+{
+    int shift = 0;
+
+    while (shift < 26) {
+        if (strstr(cipher, "the")) return shift;
+        if (strstr(cipher, "this")) return shift;
+        if (strstr(cipher, "that")) return shift;
+
+        caesar(cipher, 1);
+        shift++;
+    }
+
+    return -1;
+}

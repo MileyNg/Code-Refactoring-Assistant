@@ -1,0 +1,58 @@
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+double w, h, r, vx, vy, ball[11][2], sx, sy;
+int n;
+
+bool input()
+{
+	scanf("%d", &n);
+	if(n == 0) return false;
+	scanf("%lf%lf%lf%lf%lf", &w, &h, &r, &vx, &vy);
+	n--;
+	scanf("%lf%lf", &sx, &sy);
+	for(int i =0 ; i < n; i++) {
+		scanf("%lf%lf", &ball[i][0], & ball[i][1]);
+	}
+	return true;
+}
+
+double dist(int j)
+{
+	double dx = sx - ball[j][0], dy = sy - ball[j][1];
+	return sqrt(dx * dx + dy * dy);
+}
+
+int simulate()
+{
+	double l = vx * vx + vy * vy;
+	vx /= sqrt(l) * 100;
+	vy /= sqrt(l) * 100;
+	for(int i = 0; i < 1000000; i++) {
+		sx += vx;
+		sy += vy;
+		if(sx + r > w) sx = w - (sx + r - w), vx = -vx;
+		if(sy + r > h) sy = h - (sy + r - h), vy = -vy;
+		if(sx - r < 0) sx = r - sx, vx = -vx;
+		if(sy - r < 0) sy = r - sy, vy = -vy;
+		for(int j = 0; j < n; j++) {
+			if(dist(j) < 2 * r) return j;
+		}
+	}
+	return -1;
+}
+
+int main()
+{
+	while(input()) {
+		int k = simulate();
+		if(k == -1) {
+			puts("-1");
+			continue;
+		}
+
+		printf("%d\n", k + 2);
+	}
+	return 0;
+}

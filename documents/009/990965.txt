@@ -1,0 +1,50 @@
+#include<stdio.h>
+#define MAX 251
+#define NIL -2000000001
+struct node{
+  int key;
+  int parent_key;
+  int left_key;
+  int right_key;
+};
+typedef struct node Node;
+int main(){
+
+  int n,i,size;
+  Node heap[MAX];
+
+  scanf("%d",&n);
+  for(i = 1; i <= n; i++){
+    heap[i].key = NIL;
+    heap[i].parent_key = NIL;
+    heap[i].left_key = NIL;
+    heap[i].right_key = NIL;
+  }
+  for(i = 1; i <= n; i++){
+    scanf("%d",&size);
+    if(i == 1)
+      heap[i].key = size;
+    else if(i % 2 == 0){
+      heap[i].key = size;
+      heap[i].parent_key = heap[i/2].key;
+      heap[i/2].left_key = heap[i].key;
+    }
+    else{
+      heap[i].key = size;
+      heap[i].parent_key = heap[i/2].key;
+      heap[i/2].right_key = heap[i].key;
+    }
+
+  }
+    for(i = 1; i <= n; i++){
+      if(i == 1)
+	printf("node %d: key = %d, left key = %d, right key = %d, \n",i,heap[i].key,heap[i].left_key,heap[i].right_key);
+      else if(heap[i].left_key != NIL && heap[i].right_key != NIL)
+	printf("node %d: key = %d, parent key = %d, left key = %d, right key = %d, \n",i,heap[i].key,heap[i].parent_key,heap[i].left_key,heap[i].right_key);
+      else if(heap[i].right_key == NIL && heap[i].left_key != NIL)
+	printf("node %d: key = %d, parent key = %d, left key = %d, \n",i,heap[i].key,heap[i].parent_key,heap[i].left_key);
+      else
+	printf("node %d: key = %d, parent key = %d, \n",i,heap[i].key,heap[i].parent_key);
+    }
+  return 0;
+}

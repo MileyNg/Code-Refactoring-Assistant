@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main()
+{
+    const int num_of_height = 10;
+    const int num_of_top = 3;
+    const int min = 0;
+    const int max = 10000;
+    
+    int h;
+    std::vector<int> height;
+    height.reserve(num_of_height);
+    
+    //std::cout << num_of_height << "個の高さの入力" << std::endl;
+    for(int i = 0; i < num_of_height; ++i){
+        while(1){
+            std::cin >> h;
+            if(min <= h && h <= max)
+                break;
+            else
+                std::cout << min << "<=h<=" << max << "に設定" << std::endl;
+        }
+        height.push_back(h);
+    }
+    
+    sort(height.begin(), height.end(), std::greater<int>());
+    
+    //std::cout << "高い順から" <<  num_of_top << "個出力" << std::endl;
+    for(int i = 0; i < num_of_top; ++i)
+        std::cout << height.at(i) << std::endl;
+        
+    return 0;
+}

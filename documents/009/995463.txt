@@ -1,0 +1,134 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define MP(a, b) make_pair(a, b)
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+struct Dice{
+  int t, s, e;
+};
+
+struct State{
+  int cost;
+  Dice d;
+  int y, x;
+  // 最後のconstを忘れると"instaniated from here"とエラーがでる
+  bool operator<( const State &s) const{
+    return cost > s.cost;
+  }
+};
+
+struct mstruct{
+  int y, x;
+  Dice d;
+
+  bool operator<(const mstruct &m) const{
+    return y == m.y ? x < m.x : y < m.y;
+  }
+};
+
+int h, w, sy, sx, gy, gx;
+int cost[16][16];
+int dy[] = {0,-1,0,1}, dx[] = {-1,0,1,0};
+
+int main(){
+  while(scanf("%d%d", &h, &w) && h+w){
+    int res = INF;
+    rep(i, h) rep(j, w) scanf("%d", &cost[i][j]);
+    scanf("%d%d%d%d", &sy, &sx, &gy, &gx);
+
+    State s;
+    s.cost = 0;
+    s.d.t = 1; s.d.s = 2; s.d.e = 3;
+    s.y = sy; s.x = sx;
+
+    priority_queue<State, vector<State> > q;
+
+    q.push(s);
+    map<mstruct, int> m;
+    mstruct ms;
+    ms.y = sy; ms.x = sx;
+    ms.d.t = 1; ms.d.s = 2; s.d.e = 3;
+    m[ms] = 0;
+    while(!q.empty()){
+      State now = q.top(); q.pop();
+
+      if(now.y == gy && now.x == gx){
+	// res = min(res, now.cost);
+	printf("%d\n", now.cost);
+	goto e;
+      }
+      rep(d, 4){
+	State next = now;
+	next.y += dy[d]; next.x += dx[d];
+	int ny = next.y, nx = next.x;
+	if(ny < 0 || nx < 0 || ny >= h || nx >= w) continue;
+
+	int tmp;
+	switch(d){
+	case 0: // west
+	  tmp = 7 - next.d.t;
+	  next.d.t = next.d.e;
+	  next.d.e = tmp;
+	  break;
+	case 1: // north
+	  tmp = 7 - next.d.t;
+	  next.d.t = next.d.s;
+	  next.d.s = tmp;
+	  break;
+	case 2: // east
+	  tmp = 7 - next.d.e;
+	  next.d.e = next.d.t;
+	  next.d.t = tmp;
+	  break;
+	case 3: // south
+	  tmp = 7 - next.d.s;
+	  next.d.s = next.d.t;
+	  next.d.t = tmp;
+	  break;
+	}
+
+	next.cost += cost[ny][nx] * (7 - next.d.t);
+	//	printf("%d\n", next.cost);
+	mstruct ns;
+	ns.y = ny; ns.x = nx;
+	ns.d.t = next.d.t; ns.d.s = next.d.s; ns.d.e = next.d.e;
+	if(m.count(ns) != 0  && m[ns] <= next.cost) continue;
+	m[ns] = next.cost;
+	//	  printf("%d %d\n", ny, nx);
+	/*	  if(ny == gy && nx == gx){
+		  res = min(res, next.cost);
+		  break;
+		  }*/
+	q.push(next);
+      }
+    }
+
+    //    printf("%d\n", res==INF?0:res);
+  e:;
+  }
+  return 0;
+}

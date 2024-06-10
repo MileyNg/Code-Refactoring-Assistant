@@ -1,0 +1,12 @@
+def solve(G,goal):
+	cost = 0
+	for i in range(n):
+		if G[i][goal]:
+			cost = max(cost,G[i][goal] + solve(G,i))
+	return cost
+n,m = map(int,raw_input().split())
+G = [[0]*n for i in range(n)]
+for i in range(m):
+	a,b,c = map(int,raw_input().split())
+	G[a][b] = c
+print solve(G,n-1)

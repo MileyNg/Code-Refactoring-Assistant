@@ -1,0 +1,82 @@
+import java.util.Scanner;
+
+class Main {
+
+	public static void main(String[] args) {
+		Main main = new Main();
+		main.solve();
+	}
+
+	public void solve() {
+		int k = 0;
+
+		Scanner sc = new Scanner(System.in);
+
+		int n = sc.nextInt();
+		int[] A = new int[n];
+		int[] B = new int[n];
+		for (int i = 0; i < A.length; i++) {
+			A[i] = sc.nextInt();
+			if (k < A[i]) {
+				k = A[i];
+			}
+		}
+
+		sc.close();
+
+		coutingSort(A, B, k);
+
+		for (int i = 0; i < B.length; i++) {
+			if (i > 0) {
+				System.out.print(" ");
+			}
+			System.out.print(B[i]);
+		}
+		System.out.println();
+	
+	}
+
+//	private int[] inputArray(int[] array) {
+//		Scanner sc = new Scanner(System.in);
+//
+//		n = sc.nextInt();
+//		array = new int[n];
+//		for (int i = 0; i < array.length; i++) {
+//			array[i] = sc.nextInt();
+//			if (k < array[i]) {
+//				k = array[i];
+//			}
+//		}
+//
+//		sc.close();
+//		return array;
+//	}
+
+	private void coutingSort(int[] array, int[] sortedArray, int k) {
+		int[] C = new int[k + 1];
+
+		for (int j = 0; j < array.length; j++) {
+			C[array[j]]++;
+		}
+
+		for (int i = 1; i <= k; i++) {
+			C[i] += C[i - 1];
+		}
+
+		for (int j = array.length - 1; j >= 0; j--) {
+			sortedArray[C[array[j]] - 1] = array[j];
+			C[array[j]]--;
+		}
+	}
+
+//	private void displayArray(int[] array) {
+//		for (int i = 0; i < array.length; i++) {
+//			if (i > 0) {
+//				System.out.print(" ");
+//			}
+//			System.out.print(array[i]);
+//		}
+//		System.out.println();
+//	}
+
+}

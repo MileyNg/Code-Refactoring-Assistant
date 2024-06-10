@@ -1,0 +1,95 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+#define INF	100000000
+#define pb	push_back
+#define fi first
+#define sec second
+#define SS stringstream
+using namespace std;
+typedef pair<int, int> P;
+typedef long long int	ll;
+
+string str;
+char num[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+int t[10];
+
+int main(){
+	while(cin >> str){
+		vector<int> ans;
+		for(int i = 0; i < 10; i++) t[i] = 0;
+		for(int i = 0; i < str.size(); i++){
+			for(int j = 1; j < 10; j++){
+				if(str[i] == num[j]){
+					t[j]++;
+					break;
+				}
+			}
+		}
+		bool flag = false;
+		for(int i = 1; i < 10; i++){
+			if(t[i] > 4){
+				cout << "0" << endl;
+				flag = true;
+				break;
+			}
+		}
+		if(flag == true) continue;
+		for(int i = 1; i < 10; i++){
+			if(t[i] == 4) continue;
+			t[i]++;
+			for(int j = 1; j < 10; j++){
+				if(t[j] >= 2){
+					int temp[10];
+					for(int k = 0; k < 10; k++) temp[k] = t[k];
+					t[j] -= 2;
+					for(int l = 1; l < 10; l++){
+						if(t[l] >= 3){
+							t[l] -= 3;
+						}
+						if(t[l] == 1 || t[l] == 2){
+							if(l > 7) break;
+							if(t[l+1] < t[l] || t[l+2] < t[l]) break;
+							else{
+								t[l+1] -= t[l];
+								t[l+2] -= t[l];
+								t[l] = 0;
+							}
+						}
+					}
+					bool hata = false;
+					for(int k = 0; k < 10; k++){
+						if(t[k] != 0) break;
+						if(k == 9){
+							ans.pb(i);
+							hata = true;
+						}
+					}
+					for(int k = 0; k < 10; k++) t[k] = temp[k];
+					if(hata == true) break;
+				}
+			}
+			t[i]--;
+		}
+		if(ans.size() == 0) cout << "0" << endl;
+		else{
+			cout << ans[0];
+			for(int i = 1; i < ans.size(); i++){
+				cout << " " << ans[i];
+			}
+			cout << endl;
+		}
+	}
+}

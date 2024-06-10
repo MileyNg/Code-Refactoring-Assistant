@@ -1,0 +1,79 @@
+#include <cstdio>
+
+int main()
+{
+    int n, b, f, r, v;
+    int A[3][10], B[3][10], C[3][10], D[3][10];
+
+    for (int i = 0; i < 3; i++){
+        for (int j = 0; j < 10; j++){
+            A[i][j] = 0;
+            B[i][j] = 0;
+            C[i][j] = 0;
+            D[i][j] = 0;
+        }
+    }
+
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++){
+        scanf(" %d %d %d %d", &b, &f, &r, &v);
+
+        switch (b){
+            case 1 :
+                A[f-1][r-1] += v;
+                break;
+            case 2 :
+                B[f-1][r-1] += v;
+                break;
+            case 3 :
+                C[f-1][r-1] += v;
+                break;
+            case 4:
+                D[f-1][r-1] += v;
+                break;
+        }
+    }
+    
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 3; j++){
+            for (int k = 0; k < 10; k++){
+                if (k != 9){
+                    switch (i){
+                        case 0 :
+                            printf("%d ", A[j][k]);
+                            break;
+                        case 1:
+                            printf("%d ", B[j][k]);
+                            break;
+                        case 2 :
+                            printf("%d ", C[j][k]);
+                            break;
+                        case 3: 
+                            printf("%d ", D[j][k]);
+                            break;
+                    }
+                }
+                else {
+                    switch (i){
+                        case 0 :
+                            printf("%d\n", A[j][k]);
+                            break;
+                        case 1:
+                            printf("%d\n", B[j][k]);
+                            break;
+                        case 2 :
+                            printf("%d\n", C[j][k]);
+                            break;
+                        case 3: 
+                            printf("%d\n", D[j][k]);
+                            break;
+                    }
+                }
+            }
+        }
+        printf("####################\n");
+    }
+
+    return 0;
+}

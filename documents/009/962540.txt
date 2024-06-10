@@ -1,0 +1,111 @@
+
+//http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0511
+
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+using namespace std;
+
+//テ」ツδ榲」ツつッテ」ツδュテ・ツョツ堙ァツセツゥ
+#define ALL(v) (v).begin(),(v).end()
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
+#define REP(i,a,b) for(int i=(int)(a); i<(int)(b); ++i)
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define SORT(x) sort(begin(x),end(x))
+#define SELECT_SORT(x, n) sort(begin(x),begin(x)+n)
+#define SWAP(type, a, b) do {type tmp = a; a = b; b = tmp;} while (0)
+#define rep_split(tok,a_str,re) for(char *tok = strtok((char *)a_str.c_str(),re); tok != NULL; tok = strtok(NULL,re))
+
+//テ・ツョツ堙ヲツ閉ー
+#define INF 2000000000000
+#define MAX 10
+
+//DEBUGテァツ板ィ
+#define BAR() cout << "----------------------------" << endl;
+#define DUMP(v) (cerr << #v << ": " << v << endl)
+#define PRINT(list) cout << "{ "; for(auto nth : list){ cout << nth << " "; } cout << "}" << endl;
+
+vector<int> cards;
+
+void kcut(int k){
+	vector<int> a;
+	vector<int> b;
+	
+	REP(i, 0, k){
+		a.push_back(cards[i]);
+	}
+	
+	REP(i, k, cards.size()){
+		b.push_back(cards[i]);
+	}
+	
+	cards.clear();
+	
+	rep(i, b.size()){
+		cards.push_back(b[i]);
+	}
+	
+	rep(i, a.size()){
+		cards.push_back(a[i]);
+	}
+	return;
+}
+
+void riffle(){
+	vector<int> tmp;
+	int n=cards.size()/2;
+	
+	rep(i, n)
+	{
+		tmp.push_back(cards[i]);
+		
+		if(i+n > cards.size()){
+			// Do Nothing...
+		}else{
+			tmp.push_back(cards[i+n]);
+		}
+	}
+	
+	cards.clear();
+	rep(i, tmp.size()){
+		cards.push_back(tmp[i]);
+	}
+}
+
+int main()
+{
+	int n=0;
+	int m=0;
+	cin >> n;
+	cin >> m;
+	
+	REP(i,1,2*n+1){
+		cards.push_back(i);
+	}
+	
+	//PRINT(cards);
+	
+	int k;
+	int count=0;
+	while(count < m)
+	{
+		cin >> k;
+		if(k == 0){
+			riffle();
+		}else{
+			kcut(k);
+		}
+		count++;
+	}
+	
+	//PRINT(cards);
+	rep(i,cards.size()){
+		cout << cards[i] << endl;
+	}
+	
+}

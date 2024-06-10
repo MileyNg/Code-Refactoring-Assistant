@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Refactoring Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <h1>Code Refactoring Assistant</h1>
+    <div id="container">
+        <div id="inputContainer">
+            <textarea id="codeInput" placeholder="Please enter your code here..." oninput="debounceAnalyzeCode()"></textarea>
+        </div>
+        <div class="button-container">
+            <button type="button" onclick="refactorCode()" title="refactor input code"><i class="fa fa-angle-double-right" style="color: rgb(94, 178, 94);"></i></button>
+            <button type="button" onclick="refactorAgain()" title="repeat refactoring"><i class="fa fa-undo" style='color:rgb(59, 146, 239); font-size:30px;'></i></button>
+        </div>
+        <div id="outputContainer">
+            <div id="results"></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-python.min.js"></script>
+    <script>
+        let typingTimer;
+        const debounceInterval = 1000;
+        let refactorCount = 0;
+        const maxRefactorCount = 5;
+        let refactorHistory = [];
+
+        function debounceAnalyzeCode() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(analyzeCode, debounceInterval);
+        }
+
+        async function analyzeCode() {
+            const code = document.getElementById('codeInput').value;
+            code.innerHTML += `
+                <pre><code class="language-python">${Prism.highlight(code, Prism.languages.python, 'python')}</code></pre>
+            `;
+            if (code.trim() === "") return;
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const result = await response.json();
+            console.log("Analysis Results:", result);
+        }
+
+        async function refactorCode() {
+            if (refactorCount >= maxRefactorCount) {
+                alert('Maximum number of refactorings reached');
+                return;
+            }
+
+            const code = document.getElementById('codeInput').value;
+            const response = await fetch('/refactor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const result = await response.json();
+            document.getElementById('results').innerHTML += `
+                <pre><code class="language-python">${Prism.highlight(result.refactored_code, Prism.languages.python, 'python')}</code></pre>
+            `;
+            refactorHistory = []
+            refactorHistory.push(result.refactored_code);
+            refactorCount = 1;
+            await analyzeRefactoredCode(result.refactored_code);
+        }
+
+        async function refactorAgain() {
+            if (refactorCount >= maxRefactorCount) {
+                alert('Maximum number of refactorings reached');
+                return;
+            }
+            const originalCode = document.getElementById('codeInput').value;
+            const refactoredCode = document.querySelector('#results pre code').innerText;
+            refactorHistory.push(refactoredCode);
+            const response = await fetch('/refactor_again', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ original_code: originalCode, refactor_history: refactorHistory })
+            });
+            const result = await response.json();
+            document.getElementById('results').innerHTML += `
+                <pre><code class="language-python">${Prism.highlight(result.further_refactored_code, Prism.languages.python, 'python')}</code></pre>
+            `;
+            refactorCount++;
+            await analyzeRefactoredCode(result.further_refactored_code);
+        }
+
+        async function analyzeRefactoredCode(code) {
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const result = await response.json();
+            console.log("Analysis of Refactored Code:", result);
+        }
+    </script>
+</body>
+</html>

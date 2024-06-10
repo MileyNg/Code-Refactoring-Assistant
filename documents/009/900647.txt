@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+constexpr int paper_w=10,paper_h=10;
+constexpr int ink_w=5,ink_h=5;
+int inkarea[3][ink_h][ink_w]={
+  0,0,0,0,0,
+  0,0,1,0,0,
+  0,1,1,1,0,
+  0,0,1,0,0,
+  0,0,0,0,0,
+
+  0,0,0,0,0,
+  0,1,1,1,0,
+  0,1,1,1,0,
+  0,1,1,1,0,
+  0,0,0,0,0,
+
+  0,0,1,0,0,
+  0,1,1,1,0,
+  1,1,1,1,1,
+  0,1,1,1,0,
+  0,0,1,0,0
+};
+
+int main(){
+  int paper[paper_h][paper_w]={0};
+  int x,y,size;
+  char c;
+  while(cin>>x>>c>>y>>c>>size){
+    for(int i=0;i<ink_h;i++){
+      for(int j=0;j<ink_w;j++){
+        int ink_x=x+j-2,ink_y=y+i-2;
+        if(ink_y<0||paper_h<=ink_y||ink_x<0||paper_w<=ink_x)
+          continue;
+        paper[ink_y][ink_x]+=inkarea[size-1][i][j];
+      }
+    }
+  } 
+  int white=0,density=0;
+  for(int i=0;i<paper_h;i++){
+    for(int j=0;j<paper_w;j++){
+      if(!paper[i][j])
+        white++;
+      if(density<paper[i][j])
+        density=paper[i][j];
+    }
+  }
+  cout<<white<<endl;
+  cout<<density<<endl;
+
+}

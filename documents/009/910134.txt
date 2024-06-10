@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main () {
+  int *a, i, j, n, cnt;
+  
+  // 動的配列の生成
+  scanf("%d", &n);
+  a = (int *)malloc(sizeof(int) * n);
+  
+  for (i = 0; i < n; i++) scanf("%d", &a[i]);
+  cnt = n - 1;
+  
+  // 素数判定
+  for (j = 0; j < n; j++) {
+    for (i = 2; i < sqrt(a[j]); i++) {
+      if (a[j] % i == 0) {
+	cnt--;
+	break;
+      }
+    }
+  }
+  
+  printf("%d\n", cnt);
+  
+  return 0;
+}

@@ -1,0 +1,76 @@
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <deque>
+#include <iostream>
+#include <iterator>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+
+using namespace std;
+typedef vector<int> veci;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+
+#define foreach(i, n) for (typeof(n) i = 0; i < (n); ++i)
+#define foreach_eq(i, n) for (typeof(n) i = 0; i <= (n); ++i)
+#define foreach_from(i, m, n) for (typeof(n) i = m; i < (n); ++i)
+#define foreach_eq_from(i, m, n) for (typeof(n) i = m; i <= (n); ++i)
+
+inline bool between(int lower, int upper, int x) { return lower <= x && x < upper; }
+inline bool between(pii lower, pii upper, pii x) {
+    return between(lower.first, upper.first, x.first)
+        && between(lower.second, upper.second, x.second);
+}
+pii dirctions[4] = { pii(0,-1), pii(0,1), pii(-1,0), pii(1,0) };
+template <typename S, typename T> inline
+pair<S,T> pair_plus(const pair<S,T> & p, const pair<S,T> & q) {
+    return pair<S,T>(p.first + q.first, p.second + q.second);
+}
+
+#define MAX_H 100
+#define MAX_W 100
+
+int H, W;
+char data[MAX_H][MAX_W];
+stack<pii> stk;
+
+int main() {
+    cin >> H >> W;
+    foreach (i, H) foreach (j, W) cin >> data[i][j];
+
+    int cnt = 0;
+    foreach (i, H) {
+        foreach (j, W) {
+            char self = data[i][j];
+            if (not self) continue;
+            ++ cnt;
+            stk.push(pii(i,j));
+            while (not stk.empty()) {
+                pii pos = stk.top();
+                stk.pop();
+                foreach (d, 4) {
+                    pii nxt = pair_plus(pos, dirctions[d]);
+                    if (not between(pii(0,0), pii(H,W), nxt)) continue;
+                    if (data[nxt.first][nxt.second] != self) continue;
+                    data[nxt.first][nxt.second] = 0;
+                    stk.push(nxt);
+                }
+            }
+            stk = stack<pii>();
+        }
+    }
+
+    cout << cnt << endl;
+}

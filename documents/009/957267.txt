@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int T,N,K,L,S,X[1000000+10],A[100000+10];
+int main() {
+	cin >> T;
+	for(int t=0;t<T; ++t){
+		cin >> N;
+		cin >> K;
+		for(int i=0;i<N; ++i) cin >> X[i];
+		for(int i=0;i+1<N; ++i) A[i] = X[i+1]-X[i];
+		if(K>N){
+		cout << 0 << endl;
+		}else{
+		sort(A,A+N);
+		reverse(A,A+N);
+		S=0;
+		for(int i=0;i<K-1; ++i) S+=A[i];
+		L=X[N-1]-X[0]-S;
+		cout << L << endl;
+		}
+	}
+
+	return 0;
+}

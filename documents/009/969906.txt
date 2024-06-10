@@ -1,0 +1,107 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<iostream>
+#include<algorithm>
+#include<fstream>
+#include<string>
+#include<map>
+#include<set>
+#include<utility>
+#include<queue>
+#include<stack>
+#include<ctime>
+#include<ctype.h>
+#define INF (1<<28)
+#define EPS 1e-6
+#define PI acos(-1)
+#define lowbit(a) ((a) & (-(a)))
+#define min(a,b) ((a)<(b) ? (a):(b))
+#define max(a,b) ((a)>(b) ? (a):(b))
+#define abs(a) ((a)>0?(a):-(a))
+#define swp(a,b) {int tem=a; a=b; b=tem;}
+#define SET(a,b) memset(a,b,sizeof(a))
+using namespace std;
+ifstream fin("C-large-practice.in");
+//ofstream fout("C-small-practice.out");
+typedef unsigned long ull;//2^63 
+typedef long long ll;//2^62 
+typedef pair<int, int> P;
+const int MAX_N=1010;
+const int MAX_M=100100;
+const int MAX_V=1000;
+const int MAX_E=1000;
+
+int w,h,n;
+int sx,sy;
+char maze[1010][1010]; 
+bool vis[1010][1010][11];
+int l[1010][1010][11];
+struct nod
+{
+    int x,y,c;
+};
+
+int dx[]={0,1,0,-1};
+int dy[]={1,0,-1,0};
+
+int bfs()
+{
+    queue<nod> q;
+    nod s={sx,sy,1};
+    //cout<<sx<<" "<<sy<<" "<<n<<endl;
+    q.push(s);
+    vis[sx][sy][1]=1;
+    l[sx][sy][1]=0;
+    while(q.size()>0)
+    {
+        nod t=q.front(); q.pop();
+        //cout<<t.x<<" "<<t.y<<" "<<t.c<<endl;
+        if(t.c==n+1) return l[t.x][t.y][t.c];
+        for(int k=0;k<4;k++)
+        {
+            nod tt=t;
+            tt.x+=dx[k]; tt.y+=dy[k];
+            if(maze[tt.x][tt.y]=='#' || maze[tt.x][tt.y]=='X') continue;
+            if(isdigit(maze[tt.x][tt.y]) && maze[tt.x][tt.y]-'0'<=tt.c)
+            {
+                tt.c++;
+                maze[tt.x][tt.y]='.';
+            }
+            if(vis[tt.x][tt.y][tt.c]) continue;
+            vis[tt.x][tt.y][tt.c]=1;
+            l[tt.x][tt.y][tt.c]=l[t.x][t.y][t.c]+1;
+            q.push(tt);
+        }
+    }
+}
+
+void solve()
+{
+    memset(vis,0,sizeof(vis));
+    cout<<bfs()<<endl;
+} 
+
+int main()
+{
+    cin>>h>>w>>n;
+    memset(maze,'#',sizeof(maze));//謖?菴堺サ倅ク?クェ蛟シ 蟆ア譏ッ謖営har襍句? 
+//    cout<<maze[0][0]<<endl;
+    for(int i=1;i<=h;i++)
+    {
+        cin.get();
+        for(int j=1;j<=w;j++) 
+        {  
+            maze[i][j]=cin.get();
+            if(maze[i][j]=='S')
+            {
+                sx=i; sy=j;
+            }
+        }
+    }
+    
+    solve(); 
+    //system("pause");
+    return 0;
+} 

@@ -1,0 +1,34 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int gcd( int x, int y, int* count )
+{
+	int t;
+	*count = 0;
+	if( x < y ){
+		t = x;
+		x = y;
+		y = t;
+	}
+	while( 1 ){
+		++*count;
+		if( ( t = x % y ) == 0 ){
+			break;
+		}
+		x = y;
+		y = t;
+	}
+	return y;
+}
+
+int main()
+{
+	int x, y;
+	while( cin >> x >> y  && ( x != 0 || y != 0 ) ){
+		int count = 0;
+		int g = gcd( x, y, &count );
+		cout << g << " " << count << endl;
+	}
+	return 0;
+}

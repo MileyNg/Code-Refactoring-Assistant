@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+int main(void){
+	int i, j, hit = 0, blow = 0;
+	int a[4], b[4];
+	while(scanf("%d %d %d %d", a, a + 1, a + 2, a + 3) != EOF && scanf("%d %d %d %d", b, b + 1, b + 2, b + 3) != EOF){
+		for(i = 0; i < 4; i++){
+			for(j = 0; j < 4; j++){
+				if(i == j && a[i] == b[j])	hit++;
+				else if(i != j && a[i] == b[j]) blow++;
+			}
+		}
+	
+		printf("%d %d\n", hit, blow);
+	}
+	return 0;
+}

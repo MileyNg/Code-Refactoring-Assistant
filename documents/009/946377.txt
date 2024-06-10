@@ -1,0 +1,25 @@
+#include<iostream>
+#include<cmath>
+#include<cstdio>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  int n;
+  cin >> n;
+  int a[n];
+  rep (i, n) cin >> a[i];
+  double dp[2][100000];
+  rep (i, 2) rep (j, 100000) dp[i][j] = 1e99;
+  dp[0][1] = 0;
+  rep (i, n) {
+    rep (j, 100000) if (j > 0) for (int k = j; k < 100000; k += j) dp[1][k] = min(dp[1][k], max(dp[0][j], (double)abs(k - a[i]) / a[i]));
+    rep (j, 100000) dp[0][j] = dp[1][j];
+    rep (j, 100000) dp[1][j] = 1e99;
+  }
+  double res = 1e99;
+  rep (i, 100000) res = min(res, dp[0][i]);
+  printf("%.12lf\n", res);
+}

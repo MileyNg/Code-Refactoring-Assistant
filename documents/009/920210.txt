@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct Point{
+	int x,y;
+};
+
+const Point dir[4] = {{1,0},{0,1},{-1,0},{0,-1}};
+
+int w,h;
+char map[20][20];
+bool visited[20][20];//訪問済みならtrue
+int cnt;//黒いタイルを数えるカウンタ
+
+bool inField(Point p){
+	return 0<=p.x && p.x < w && 0<=p.y && p.y < h;
+}
+
+//幅優先探索
+void dfs(Point pos){
+	cnt++;
+	visited[pos.y][pos.x] = true;
+	for(int i=0;i<4;i++){
+		Point next = {pos.x+dir[i].x, pos.y+dir[i].y};
+		if(inField(next)==true){
+			if(visited[next.y][next.x] == false && map[next.y][next.x] == '.'){
+				dfs(next);
+			}
+		}
+	}
+}
+
+int main(){
+	while(true){
+		cin >> w >> h;
+		if(w==0){
+			break;
+		}
+		Point init;//初期位置
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				cin >> map[i][j];
+				visited[i][j] = false;
+				if(map[i][j] == '@'){
+					//初期代入以外はキャストする必要がある。
+					init = (Point){j,i};
+					map[i][j] = '.';
+				}
+			}
+		}
+		cnt = 0;
+		dfs(init);
+		cout << cnt << endl;
+	}
+	return 0;
+}

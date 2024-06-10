@@ -1,0 +1,134 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+
+// define eps
+double EPS = 1e-10;
+
+// Point2D & Vector2D
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) : x(a), y(b) {}
+};
+typedef Point2D Vector2D;
+
+// Point2D's and Vector2D's operator
+Point2D operator + (Point2D a, Point2D b) { return Point2D(a.x + b.x, a.y + b.y); }
+Point2D operator - (Point2D a, Point2D b) { return Point2D(a.x - b.x, a.y - b.y); }
+Point2D operator * (Point2D a, double d) { return Point2D(a.x * d, a.y * d); }
+Point2D operator / (Point2D a, double d) { return Point2D(a.x / d, a.y / d); }
+
+bool operator < (const Point2D& a, const Point2D& b) { return a.x != b.x ? a.x < b.x : a.y < b.y; }
+bool operator > (const Point2D& a, const Point2D& b) { return b.x != a.x ? b.x < a.x : b.y < a.y; }
+bool operator == (const Point2D& a, const Point2D& b) { return fabs(a.x-b.x)<EPS && fabs(a.y-b.y)<EPS; }
+
+// basic function
+double norm(Point2D a) { return a.x*a.x + a.y*a.y; }
+double dot2D(const Vector2D& a, const Vector2D& b) { return a.x * b.x + a.y * b.y; }
+double cross2D(const Vector2D& a, const Vector2D& b) { return a.x*b.y - a.y*b.x; }
+double dist2D(const Point2D& a, const Point2D& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) ); }
+
+
+
+bool end(vector<bool>& use, int n) {
+	int cntf = 0;
+	for_(i, 0, n) if (!use[i]) cntf++;
+	return cntf==2;
+}
+
+int far(Point2D cent, vector<Point2D>& points, vector<bool>& use, int n) {
+	int bfar = 0, ret = -1;
+	for_(i, 0, n) {
+		if (use[i]) continue;
+		int dist = dist2D(cent, points[i]);
+		if (bfar < dist) {
+			bfar = dist;
+			ret = i;
+		}
+	}
+	return ret;
+}
+
+D calc(D a, D b, D c) {
+	D z = (a+b+c)/2.0;
+	return sqrt( z*(z-a)*(z-b)*(z-c) );
+}
+
+int main() {
+	vector<Point2D> points;
+	vector<bool> use(30, 0);
+	
+	D x, y; char c;
+	while (cin>>x>>c>>y) {
+		Point2D p(x, y);
+		points.pb(p);
+	}
+	
+	D ans = 0;
+	int n = (int)points.sz;
+	while (!end(use, n)) {
+		Point2D cent(0, 0);
+		int med = far(cent, points, use, n);
+		
+		int prev = (med-1+n)%n, next = (med+1)%n;
+		while (use[prev]) { prev = (prev-1+n)%n; }
+		while (use[next]) { next = (next+1)%n; }
+		
+		D a = dist2D(points[med],points[prev]);
+		D b = dist2D(points[med], points[next]);
+		D c = dist2D(points[prev], points[next]);
+		
+		D S_ = calc(a, b, c);
+		ans += S_;
+		
+		use[med] = 1;
+	}
+	
+	cout << ans << endl;
+	
+	return 0;
+}

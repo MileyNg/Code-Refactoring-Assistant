@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+	int i, n, turn, j, length, k;
+	char input[100], tmp;
+
+	scanf("%s\n%d", input, &turn);
+	length = strlen(input) - 1;
+	while(1){
+		for (i = 0; i < turn; i++){
+			scanf("%d", &n);
+			for (k = 0; k < n; k++){
+				for (j = 0; j < length; j++){
+					tmp = input[j];
+					//printf("%c", tmp);
+					input[j] = input[j + 1];
+					input[j + 1] = tmp;
+				}
+			}
+		}
+		printf("%s\n", input);
+		scanf("%s", input);
+		if (strcmp(input, "-") == 0) break;
+		scanf("%d", &turn);
+		length = strlen(input) - 1;
+	}
+
+	return 0;
+}

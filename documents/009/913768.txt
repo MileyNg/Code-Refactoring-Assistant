@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+void func(char,int,int);
+string map[100];
+int dir[]={-1,1};
+int h,w;
+
+int main(){
+		  char mark;
+		  int count=0;
+		  cin>>h>>w;
+
+		  for(int i=0;i<h;i++){
+					 cin>>map[i];
+		  }
+
+		  for(int i=0;i<h;i++){
+					 for(int l=0;l<w;l++){
+								if(map[i][l]=='#' || map[i][l]=='*' || map[i][l] == '@'){
+										  mark=map[i][l];
+										  count++;
+										  func(mark,i,l);
+								}
+					 }
+		  }
+		  cout<<count<<endl;
+		  return 0;
+}
+
+void func(char mark,int i,int l){
+		  map[i][l]='.';
+
+		  for(int x=0;x<2;x++){
+					 if(i+dir[x]>0 && i+dir[x]<h+1 && map[i+dir[x]][l]==mark) func(mark,i+dir[x],l);
+
+					 if(l+dir[x]>0 && l+dir[x]<w+1 && map[i][l+dir[x]]==mark) func(mark,i,l+dir[x]);
+		  }
+}

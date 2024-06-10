@@ -1,0 +1,169 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#include<complex>
+#include<set>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int H = 66;
+const int W = 11;
+const int INF = 1000000000;
+int w,h;
+string masu[H];
+int board[H][W];
+int n;
+
+typedef pair<int,int> pii;
+
+pii foot[H*W];
+vector<pii> pos[H*W];
+vector<int> edge[H*W];
+
+int dx[]={1,0,-1,0};
+int dy[]={0,1,0,-1};
+
+void makepos(){
+	rep(i,H)rep(j,W)board[i][j]=0;
+	rep(i,H*W){
+		pos[i].clear();
+		edge[i].clear();
+	}
+	n = 1;
+	
+	rep(i,h){
+		rep(j,w){
+			if(masu[i][j]!='.'){
+				char c = masu[i][j];
+				queue<pii> que;
+				que.push(pii(i,j));
+				
+				while(!que.empty()){
+					pii u = que.front();
+					que.pop();
+					
+					if(u.first<0 || u.second<0 || u.first>=h || u.second>=w)continue;
+					if(masu[u.first][u.second]!=c)continue;
+					masu[u.first][u.second]='.';
+					board[u.first][u.second]=n;
+					pos[n].push_back(u);
+					
+					rep(p,4)que.push(pii(u.first+dy[p], u.second+dx[p]));
+				}
+				n++;
+			}
+		}
+	}
+	
+	/*
+	rep(i,n){
+		rep(j,pos[i].size()){
+			printf("(%d,%d)",pos[i][j].first, pos[i][j].second);
+		}puts("");
+	}*/
+	
+	/*
+	rep(i,h){
+		rep(j,w)printf("%d ",board[i][j]);puts("");
+	}
+	*/
+}
+
+void make_edge_foot(){
+	rep(i,H*W)foot[i] = pii(INF,-INF);
+	foot[0] = pii(-INF, INF);
+	
+	rep(i,h){
+		rep(j,w){
+			if(board[i][j]!=0){
+				bool s = false;
+				if(i==h-1){
+					edge[0].push_back(board[i][j]);
+					s=true;
+				}else{
+					if(board[i+1][j]!=0 && board[i+1][j]!=board[i][j]){
+						edge[board[i+1][j]].push_back(board[i][j]);
+						s=true;
+					}
+				}
+				if(s){
+					pii temp = foot[board[i][j]];
+					foot[board[i][j]] = pii(min(temp.first, j), max(temp.second,j));
+				}
+			}
+		}
+	}
+	rep(i,n){
+		sort(edge[i].begin(),edge[i].end());
+		edge[i].erase(unique(edge[i].begin(),edge[i].end()), edge[i].end());
+	}
+	/*
+	rep(i,n){
+		printf("foot %d  %d %d\n",i,foot[i].first, foot[i].second);
+	}
+	rep(i,n){
+		printf("edge ");
+		rep(j,edge[i].size())printf("%d ",edge[i][j]);puts("");
+	}
+	*/
+}
+
+bool saiki(int val, vector<int>& befsum){
+	
+	bool ret = true;
+	
+	vector<int> sum(befsum.size());
+	rep(i,edge[val].size()){
+		ret &= saiki(edge[val][i], sum);
+	}
+	
+	rep(i,pos[val].size())sum[pos[val][i].second]++;
+	rep(i,sum.size())befsum[i]+=sum[i];
+	
+	double h = 0;
+	int count = 0;
+	rep(i,sum.size()){
+		h += i*sum[i];
+		count += sum[i];
+	}
+	
+	h/=count;
+	h+=0.5;
+	
+	
+	ret &= ((foot[val].first < h) && (h < foot[val].second+1));
+	/*
+	printf("val=%d\n",val);
+	rep(i,sum.size())printf("%d ",sum[i]);puts("");
+	printf("foot %d %d  %lf\n",foot[val].first, foot[val].second, h);
+	printf("%d\n\n",ret);
+	*/
+	return ret;
+}
+
+string solve(){
+	rep(i,h)cin>>masu[i];
+	
+	makepos();
+	
+	make_edge_foot();
+	
+	bool ans = saiki(0, vector<int>(w));
+	if(ans)return "STABLE";
+	return "UNSTABLE";
+}
+
+int main(){
+	while(1){
+		cin>>w>>h;
+		if(w==0 && h==0)break;
+		cout<<solve()<<endl;
+		//break;
+	}
+}

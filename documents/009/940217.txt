@@ -1,0 +1,81 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+
+using namespace std;
+
+#define MOD 100000007
+
+void solve()
+{
+	int dp1[100001], dp2[100001];
+	memset(dp1,0,sizeof(dp1));
+	memset(dp2,0,sizeof(dp2));
+	dp1[1] = 1; dp1[2] = 2; dp1[3] = 4; dp1[4] = 8; dp1[5] = 16;
+	dp2[1] = 1; dp2[2] = 2; dp2[3] = 4;
+	
+	for(int i = 6; i < 100001; ++i)
+	{
+		dp1[i] = (1 + dp1[i - 1] % MOD + dp1[i - 2] % MOD + dp1[i - 3] % MOD + dp1[i - 4] % MOD + dp1[i - 5] % MOD) % MOD;
+	}
+	for(int i = 4; i < 100001; ++i)
+	{
+		dp2[i] = (1 + dp2[i - 1] % MOD + dp2[i - 2] % MOD + dp2[i - 3] % MOD) % MOD;
+	}
+	
+	string str;
+	while(cin >> str)
+	{
+		if(str == "#")
+		{
+			break;
+		}
+		long long ret = 1;
+		char c;
+		c = str[0];
+		int num;
+		num = 1;
+		if(str.size() == 1)
+		{
+			cout << 1 << endl;
+		}
+		else
+		{
+			for(int i = 1; i < str.size(); ++i)
+			{
+				if(str[i] == c)
+				{
+					++num;
+				}
+				else
+				{
+					if(c == '0' || c == '8')
+					{
+						ret = ((long long)ret * dp2[num]) % MOD;
+					}
+					else
+					{
+						ret = ((long long)ret * dp1[num]) % MOD;
+					}
+					c = str[i];
+					num = 1;
+				}
+			}
+			if(c == '0' || c == '8')
+			{
+				ret = ((long long)ret * dp2[num]) % MOD;
+			}
+			else
+			{
+				ret = ((long long)ret * dp1[num]) % MOD;
+			}
+			cout << ret << endl;
+		}
+	}
+}
+
+int main(void)
+{
+	solve();
+	return(0);
+}

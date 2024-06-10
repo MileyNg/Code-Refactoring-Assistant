@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Question{
+public:
+    bool isAC;
+    int p;
+};
+class Team{
+public:
+    int ID;
+    int AC;
+    int ptime;
+    vector<Question> q;
+
+    Team() : ID(-1){}
+    Team(int id,int qn)
+        : ID(id), q(qn+1)
+    {
+    }
+
+    void submit(int m,int p,int j){
+        if(j == 0){
+            q[p].p += m;
+            q[p].isAC = true;
+            AC++;
+            ptime += q[p].p;
+        }else{
+            q[p].p += 20;
+        }
+    }
+};
+
+bool operator==(const Team& a,const Team& b){
+    return a.AC == b.AC && a.ptime == b.ptime;
+}
+bool operator!=(const Team& a,const Team& b){
+    return !(a == b);
+}
+
+//M:テァツオツづ、ツコツ?ヲツ卍づゥツ鳴?
+//T:テ」ツδ?」ツδシテ」ツδ?ヲツ閉ー
+//P:テ・ツ閉湘ゥツ。ツ古ヲツ閉ー
+//R:テヲツ渉静・ツ?コテヲツ閉ー
+void solve(int M,int T,int P,int R){
+    vector<Team> team;
+    for(int i=1;i<=T;i++){
+        team.push_back(Team(i,P));
+    }
+    for(int i=0;i<R;i++){
+        int m,t,p,j;
+        cin >> m >> t >> p >> j;
+        team[t-1].submit(m,p,j);
+    }
+    std::sort(team.begin(),team.end(),
+            [](const Team& a,const Team& b)->bool{
+                if(a.AC < b.AC)
+                    return true;
+                if(a.AC > b.AC)
+                    return false;
+                if(a.ptime > b.ptime)
+                    return false;
+                return a.ID < b.ID;
+            }
+            );
+    std::reverse(team.begin(),team.end());
+    bool f = false;
+    cout << team[0].ID;
+    for(int i=1;i<T;i++){
+        if(team[i-1] == team[i]){
+            cout << "=" << team[i].ID;
+        }else{
+            cout << "," << team[i].ID;
+        }
+    }
+    //for(auto t : team)
+    //{
+    //    //cout << t.ID << " :" << t.AC << " ," << t.ptime << endl;
+    //}
+    cout << endl;
+}
+
+int main(){
+    while(true){
+        int M,T,P,R;
+        cin >> M >> T >> P >> R;
+        if(!M&&!T&&!P&&!R)
+            return 0;
+        solve(M,T,P,R);
+    }
+}

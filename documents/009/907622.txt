@@ -1,0 +1,44 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int year,month,day;
+	char gengou[5][30]={
+		"pre-meiji",
+		"meiji",
+		"taisho",
+		"showa",
+		"heisei"
+	};
+	long start[5]={
+		0,
+		18680908,
+		19120730,
+		19261225,
+		19890108
+	};
+	long input;
+	while(1){
+		//input
+		if(scanf("%d %d %d",&year,&month,&day)==EOF) return 0;
+		//solve
+		//solve_gengou
+		input = year*100*100+month*100+day;
+		int gengou_ans=4;
+		for(int i=1;i<5;i++){
+			if(input<start[i]){
+				gengou_ans=i-1;
+				break;
+			}
+		}
+		//solve_year
+		year = year-start[gengou_ans]/10000+1;
+		//output
+		if(gengou_ans==0){
+			printf("pre-meiji\n");
+		}else{
+			printf("%s %d %d %d\n",gengou[gengou_ans],year,month,day);
+		}
+	}
+	return 0;
+}

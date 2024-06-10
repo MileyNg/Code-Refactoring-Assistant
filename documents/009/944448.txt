@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstdio>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+long long nck[60][60];
+
+int main() {
+  rep (i, 60) nck[i][i] = 1;
+  rep (i, 60) nck[i][0] = 1;
+  rep (i, 55) rep (j, i) nck[i + 1][j + 1] = nck[i][j] + nck[i][j + 1];
+  int n, m;
+  double l;
+  cin >> n >> m >> l;
+  double p[n], t[n], v[n];
+  rep (i, n) cin >> p[i] >> t[i] >> v[i];
+  rep (i, n) p[i] /= 100;
+  double tt[n][m + 1];
+  rep (i, n) rep (j, m + 1) tt[i][j] = l / v[i] + t[i] * j;
+  double pp[n][m + 1];
+  rep (i, n) rep (j, m + 1) {
+    pp[i][j] = nck[m][j];
+    rep (k, j) pp[i][j] *= p[i];
+    rep (k, m - j) pp[i][j] *= 1 - p[i];
+  }
+  rep (i, n) {
+    double res = 0;
+    rep (j, m + 1) {
+      double r = pp[i][j];
+      rep (ii, n) if (i != ii) {
+	double rr = 0;
+	rep (jj, m + 1) if (tt[i][j] < tt[ii][jj] - 1e-8) rr += pp[ii][jj];
+	r *= rr;
+      }
+      res += r;
+    }
+    printf("%.12lf\n", res);
+  }
+}

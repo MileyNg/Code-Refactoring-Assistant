@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int sum=0;
+int amount=0;
+
+int avrg(int am,int m){
+  int ama=10*am;
+  int a=ama/m+5;
+  return a/10;
+}
+
+void sanda(n){
+  int a,b;
+  if(scanf("%d,%d",&a,&b)!=EOF){
+    sum=sum+a*b;
+    amount=amount+b;
+    sanda(n+1);
+  }
+  else{
+    printf("%d\n%d\n",sum,avrg(amount,n));
+  }
+}
+
+int main(){
+  sanda(0);
+  return 0;
+}

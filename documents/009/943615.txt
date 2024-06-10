@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+
+class AOJ2424
+{
+    static void Main()
+    {
+        int n = int.Parse(Console.ReadLine());
+        for (int i = 0; i < n; i++)
+        {
+            int input = int.Parse(Console.ReadLine());
+            HashSet<int> apd=new HashSet<int>();
+            apd.Add(input);
+            int crt = input;
+            int cnt = 0;
+            while(true){
+                if (crt < 10)
+                {
+                    Console.WriteLine(cnt);
+                    break;
+                }
+                crt = subr(crt);
+                cnt++;
+                if (apd.Contains(crt))
+                {
+                    Console.WriteLine(input);
+                    break;
+                }
+            }
+
+        }
+    }
+    static int subr(int tgt)
+    {
+        int max = 0;
+        int len=tgt.ToString().Length;
+        for(int i=1;i<len;i++){
+            string ds = tgt.ToString();
+            int f = int.Parse(ds.Substring(0, i));
+            int b = int.Parse(ds.Substring(i));
+            int r = f * b;
+            if (r > max) max = r;
+        }
+        return max;
+    }
+}

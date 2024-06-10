@@ -1,0 +1,62 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+
+typedef std::pair<int, int> P;
+int vx[] = { 0, 1, 0, -1, 1, 1, -1, -1 }, vy[] = { 1, 0, -1, 0, 1, -1, 1, -1 };
+int w, h;
+int map[51][51];
+
+void bfs(int x, int y){
+
+	map[y][x] = 0;
+
+	std::queue<P>que;
+	que.push(P(x, y));
+
+	while (!que.empty()){
+
+		P p = que.front();
+		que.pop();
+
+		for (int i = 0; i < 8; i++){
+			int nx = p.first + vx[i], ny = p.second + vy[i];
+
+			if (0 <= nx&&nx < w && 0 <= ny&&ny < h&&map[ny][nx] != 0){
+				map[ny][nx] = 0;
+				que.push(P(nx, ny));
+			}
+		}
+	}
+
+	return;
+}
+
+int main(){
+
+	while (std::cin >> w >> h, w || h){
+
+		int cnt = 0;
+
+		memset(map, 0, sizeof(map));
+	
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++){
+				std::cin >> map[i][j];
+			}
+		}
+
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++){
+				if (map[i][j] != 0){
+					bfs(j, i);
+					cnt++;
+				}
+			}
+		}
+
+		std::cout << cnt << std::endl;
+	}
+
+	return 0;
+}

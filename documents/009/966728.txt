@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+struct polygonalLine {
+	vector<int> x, y;
+	int m;
+	
+	polygonalLine();
+	polygonalLine(int _m) : m(_m) { x.assign(_m, 0); y.assign(_m, 0); }
+};
+
+void rotate90(polygonalLine& p) {
+	int m = p.m;
+	for (int i=0; i<m; i++) {
+		int _x = p.x[i], _y = p.y[i];
+		p.x[i] = -_y;
+		p.y[i] = _x;
+	}
+}
+
+bool isSame(polygonalLine& s, polygonalLine& p) {
+	int ms = s.m, mp = p.m;
+	if (ms != mp) return false;
+	
+	int m = ms;
+	int sx = s.x[0], sy = s.y[0], px = p.x[0], py = p.y[0];
+	int dx = sx - px, dy = sy - py;
+	
+	bool same1 = true;
+	for (int i=1; i<m; i++) {
+		sx = s.x[i]; sy = s.y[i]; px = p.x[i]; py = p.y[i];
+		int _dx = sx - px, _dy = sy - py;
+		if (_dx != dx || _dy != dy) same1 = false;
+	}
+	
+	bool same2 = true;
+	sx = s.x[0], sy = s.y[0], px = p.x[m-1], py = p.y[m-1];
+	dx = sx - px; dy = sy - py;
+	for (int i=m-2; i>=0; i--) {
+		sx = s.x[m - i - 1]; sy = s.y[m - i - 1]; px = p.x[i]; py = p.y[i];
+		int _dx = sx - px, _dy = sy - py;
+		if (_dx != dx || _dy != dy) same2 = false;
+	}
+	
+	return (same1 || same2);
+}
+
+bool isSameShape(polygonalLine& s, polygonalLine& p) {
+	for (int i=0; i<4; i++) {
+		rotate90(p);
+		if (isSame(s, p)) return true;
+	}
+	return false;
+}
+
+int main() {
+	while (1) {
+		int n; cin >> n; if (n == 0) break;
+		
+		int m;
+		cin >> m;
+		polygonalLine source(m);
+		for (int i=0; i<m; i++) cin >> source.x[i] >> source.y[i];
+		
+		for (int i=1; i<=n; i++) {
+			cin >> m;
+			polygonalLine p(m);
+			for (int j=0; j<m; j++) cin >> p.x[j] >> p.y[j];
+			if (isSameShape(source, p)) cout << i << endl;
+		}
+		
+		cout << "+++++" << endl;		
+	}	
+	
+	return 0;
+}

@@ -1,0 +1,57 @@
+def set(x, y, f)
+  f[y] ^= (1 << x)
+end
+
+def isset?(x, y, f)
+  return (f[y] & (1 << x)) != 0
+end
+
+def shoot(x, y, f)
+  set(x, y, f)
+  set(x - 1, y, f) if x > 0
+  set(x + 1, y, f) if x < 9
+  set(x, y - 1, f) if y > 0
+  set(x, y + 1, f) if y < 9
+end
+
+### main
+
+n = gets.strip.to_i
+
+max_bits = 1 << 10
+
+n.times.each do
+  flds = []
+  10.times.each do
+    hl = gets.strip.gsub(/ /, '').reverse.to_i(2)
+    flds.push hl
+  end
+
+  ans = []
+  for bits in (0...max_bits)
+    flds0 = flds.clone
+
+    for x in (0..9)
+      if (bits & (1 << x)) != 0
+        shoot(x, 0, flds0)
+      end
+    end
+    ans.push bits
+
+    for y in (1..9)
+      by = 0
+      for x in (0..9)
+        if isset?(x, y - 1, flds0)
+          shoot(x, y, flds0)
+          by |= (1 << x)
+        end
+      end
+      ans.push by
+    end
+
+    if flds0[9] == 0
+      ans.each{|b| puts ("%010b" % b).reverse.split("").join(" ")}
+      break
+    end
+  end
+end

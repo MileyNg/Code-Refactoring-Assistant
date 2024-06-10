@@ -1,0 +1,29 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+
+int main()
+{
+	int n;
+	
+	while (cin>>n) {
+		int ans=0;
+		rep(i, 10) {
+			rep(j, 10) {
+				rep(k, 10) {
+					if (n-i-j-k>=0 && n-i-j-k<10)
+						ans++;
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+}

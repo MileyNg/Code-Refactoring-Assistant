@@ -1,0 +1,23 @@
+until [0,0] == (num,s = gets.split.map &:to_i)
+  next if num.nil?
+  ary =Array.new()
+  (num).times do
+    ary.push(gets.chomp.to_i)
+  end
+  ary.sort!
+  count=0
+  (num-1).times do |x|
+    if (num==1)
+      count+=1 if s<ary[0]
+      break
+    end
+    (x+1).upto(num-1) do |y|
+      if ary[x]+ary[y]>s
+        ##print ary[x]," ",ary[y]," ",num-y,"\n"
+        count+=(num-y)
+        break
+      end
+    end
+  end
+  p count
+end  

@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
+#include <cassert>
+
+using namespace std;
+
+char con[10];
+int f[128];
+
+void init() {
+  con[0] = 'x';
+  con[1] = 'a';
+  con[2] = 'k';
+  con[3] = 's';
+  con[4] = 't';
+  con[5] = 'n';
+  con[6] = 'h';
+  con[7] = 'm';
+  con[8] = 'y';
+  con[9] = 'r';
+  
+  f[int('T')] = 'a';
+  f[int('L')] = 'i';
+  f[int('U')] = 'u';
+  f[int('R')] = 'e';
+  f[int('D')] = 'o';
+}
+
+void pchar(char ch, char fr) {
+  int a = ch-'0';
+  char get = con[a];
+  if(get == 'x') {
+    cout << "w" << fr;
+  }
+  else {
+    cout << get << fr;
+  }
+}
+
+int main() {
+  
+  init();
+  
+  string s; cin >> s;
+  
+  int const N = s.size();
+  char save = '-';
+  for(int pos=0; pos<N;) {
+    if(isdigit(s[pos])) {
+      save = s[pos++];
+    }
+    else {
+      char ch = s[pos++];
+      pchar(save, f[int(ch)]);
+    }
+  }
+  
+  cout << endl;
+
+  return 0;
+}

@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+bool valid(int h,int m,int)
+{
+	return h%5==m/12;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vvi ts(n);
+		rep(i,n){
+			vi a(3);
+			rep(j,3) cin>>a[j];
+			sort(all(a));
+			do{
+				int &h=a[0],&m=a[1],&s=a[2];
+				rep(j,60){
+					if(valid(h,m,s))
+						ts[i].push_back(h/5*3600+m*60+s);
+					rep(k,3) (++a[k])%=60;
+				}
+			}while(next_permutation(all(a)));
+			sort(all(ts[i]));
+		}
+		
+		int mn=0,mx=86400;
+		rep(i,n) rep(j,ts[i].size()){
+			int x=ts[i][j];
+			rep(k,n) if(k!=i){
+				auto it=lower_bound(all(ts[k]),ts[i][j]);
+				if(it==end(ts[k])){
+					x=INF;
+					break;
+				}
+				x=max(x,*it);
+			}
+			if(x-ts[i][j]<mx-mn || x-ts[i][j]==mx-mn && ts[i][j]<mn)
+				mn=ts[i][j],mx=x;
+		}
+		printf("%02d:%02d:%02d %02d:%02d:%02d\n",mn/3600,mn/60%60,mn%60,mx/3600,mx/60%60,mx%60);
+	}
+}

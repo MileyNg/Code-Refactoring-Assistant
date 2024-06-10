@@ -1,0 +1,39 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int number,*values;
+	
+	while(cin >> number)
+	{
+		if(number == 0) break;
+
+		values = new int[number];
+		int max = -100001;
+
+		for(int i = 0 ; i< number ;i++)
+		{
+			cin >> values[i];
+		}
+
+		for(int i = 0;i<number ; i++)
+		{
+			int sum = 0;
+			for( int j = i; j < number ;j++)
+			{
+				sum += values[j];
+				if(max < sum)
+				{
+					max = sum;
+				}
+			}
+		}
+
+		cout << max << endl;
+	}
+
+	delete [] values;
+
+	return 0;
+}

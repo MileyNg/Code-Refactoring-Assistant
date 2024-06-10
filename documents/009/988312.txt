@@ -1,0 +1,40 @@
+#include<stdio.h>
+main(){
+  double a=0;
+  int d=0;
+  int e=0;
+  char class[11][100]={"fly","fly","bantam","feather","light","welter","welter","middle","middle","heavy","heavy"};
+  while(scanf("%lf",&a)!=EOF){
+    a=a-45;
+    printf("%lf\n",a);
+    for(e=0;e<5;e++){
+      if(a>3){
+	a=a-3;
+	d++;
+      }
+    }
+    for(e=4;e<7;e++){
+      if(a>e){
+	a=a-e;
+	d++;
+      }
+    }
+    if(a>6){
+      a=a-7;
+      d++;
+    }
+    if(a>9){
+      a=a-10;
+      d++;
+    }
+    if(d==0||d==5||d==7||d==9){
+      printf("light %s\n",class[d]);
+    }
+    else{
+      printf("%s\n",class[d]);
+    }
+    d=0;
+    a=0;
+  }
+  return 0;
+}

@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+main(){
+  int i=0,m=0,h=0,j=0,k=0,x=0;
+  char tmp, moji[1111];
+  while(1){
+    scanf("%s",moji);
+    if(moji[0]=='_'){
+      break;
+    }
+    int j=strlen(moji);
+    scanf("%d",&m);
+    for(i=0;i<m;i++){
+      scanf("%d",&h);
+      int g=h-1;
+      int f=h-2;
+      for(x=h;x>0;x--){
+	for(k=j-h;k>0;k--){
+	  tmp=moji[g];
+	  moji[g]=moji[g+1];
+	  moji[g+1]=tmp;
+	  g=g+1;
+	}
+	g=f;
+	f=f-1;
+      }
+      g=0,f=0;
+    }
+    printf("%s\n",moji);
+  }
+  return 0;
+}

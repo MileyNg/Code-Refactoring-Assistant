@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node{
+    Node *left;
+    Node *right;
+    Node() { left = NULL, right = NULL; }
+};
+
+int findcc(string s) {
+    int dd = 0;
+    for(int i=0; i<s.length(); ++i) {
+        if(s[i] == '(') dd++;
+        else if(s[i] == ')') dd--;
+        else if(s[i] == ',' && dd == 1) return i;
+    }
+    return -1;
+}
+
+Node* parse(string s) {
+    Node *r = new Node();
+    int ff = findcc(s);
+    if(ff != 1) r->left = parse(s.substr(1,ff-1));
+    if(ff != s.length()-2) {
+        string tmp = s.substr(ff+1);
+        r->right = parse(tmp.substr(0,tmp.length()-1));
+    }
+    return r;
+}
+
+Node *intersect(Node *r1,Node *r2) {
+    Node *ret = new Node();
+    if(r1->left != NULL && r2->left != NULL)
+        ret->left = intersect(r1->left,r2->left);
+
+    if(r1->right != NULL && r2->right != NULL)
+        ret->right = intersect(r1->right,r2->right);
+
+    return ret;
+}
+
+Node* uni(Node *r1,Node *r2) {
+    if(r1 == NULL && r2 == NULL) return NULL;
+
+    Node *ret = new Node();
+    ret->left = uni(((r1 == NULL)?NULL:r1->left),(r2 == NULL)?NULL:r2->left);
+    ret->right = uni(((r1 == NULL)?NULL:r1->right),(r2 == NULL)?NULL:r2->right);
+    return ret;
+}
+
+string toStr(Node *tree) {
+    string res = "(";
+    if(tree->left != NULL) res += toStr(tree->left);
+    res += ",";
+    if(tree->right != NULL) res += toStr(tree->right);
+    res += ")";
+    return res;
+}
+
+void treedel(Node *node) {
+    if(node->left != NULL) treedel(node->left);
+    if(node->right != NULL) treedel(node->right);
+    delete node;
+    return;
+}
+
+int main() {
+    string op,t1,t2;
+    while(cin>>op>>t1>>t2) {
+        Node *r1 = parse(t1);
+        Node *r2 = parse(t2);
+        Node *ans;
+        if(op == "i") ans = intersect(r1,r2);
+        else if(op == "u") ans = uni(r1,r2);
+
+        cout<<toStr(ans)<<endl;
+        treedel(r1); treedel(r2); treedel(ans);
+    }
+}

@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+#define S 21
+#define N 100
+
+int main() {
+  int i, j;
+  int n;
+  unsigned long long int dp[N][S] = {{0}};
+
+  scanf("%d", &n);
+
+  dp[0][0] = 1;
+  for(i = 0; i < n - 1; i++) {
+    int v;
+    scanf("%d", &v);
+    for(j = 0; j < S; j++) {
+      if (j + v < S) dp[i + 1][j + v] += dp[i][j];
+      if (j - v >= 0) dp[i + 1][j - v] += dp[i][j];
+    }
+  }
+
+  int a;
+  scanf("%d", &a);
+  printf("%llu\n", dp[n - 1][a]);
+
+  return 0;
+}

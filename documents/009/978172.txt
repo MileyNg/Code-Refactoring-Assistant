@@ -1,0 +1,102 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+using namespace std;
+
+int main() {
+
+  int dx[4] = { -1,  0,  0,  1 };
+  int dy[4] = {  0, -1,  1,  0 };
+
+  string input;
+
+  long long int w, h;
+
+  while( true ) {
+
+    cin >> w >> h;
+
+    if ( w == 0 ) break;
+
+    vector<string> map;
+
+    for ( long long int y = 0; y < h; y++ ) {
+
+      cin >> input;
+
+      map.push_back( input );
+
+    }
+
+    long long int ans_b = 0;
+    long long int ans_w = 0;
+
+    for ( long long int y = 0; y < h; y++ ) {
+
+      for ( long long int x = 0; x < w; x++ ) {
+
+	if ( map[y][x] == '.' ) {
+
+	  map[y][x] = 'C';
+	  queue<int> qx, qy;
+	  qx.push( x );
+	  qy.push( y );
+
+	  long long int ans = 1;
+	  bool flag_b = false;
+	  bool flag_w = false;
+
+	  while( qx.size() > 0 ) {
+
+	    int mx = qx.front();
+	    int my = qy.front();
+	    qx.pop();
+	    qy.pop();
+
+	    for ( int i = 0; i < 4; i++ ) {
+
+	      mx += dx[i];
+	      my += dy[i];
+
+	      if ( mx >= 0 && mx < w && my >= 0 && my < h ) {
+
+		if ( map[my][mx] == '.' ) {
+		  map[my][mx] = 'C';
+		  qx.push(mx);
+		  qy.push(my);
+		  ans++;
+		}else if ( map[my][mx] == 'B' ) {
+		  flag_b = true;
+		}else if ( map[my][mx] == 'W' ) {
+		  flag_w = true;
+		}
+
+	      }
+
+	      mx -= dx[i];
+	      my -= dy[i];
+
+	    }
+
+	  }
+
+	  if ( flag_b == true && flag_w == false ) {
+	    ans_b += ans;
+	  }else if ( flag_b == false && flag_w == true ) {
+	    ans_w += ans;
+	  }
+
+	}
+
+      }
+
+    }
+
+    cout << ans_b << " " << ans_w << endl;
+
+  }
+
+  return 0;
+
+}

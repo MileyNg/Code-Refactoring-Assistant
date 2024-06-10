@@ -1,0 +1,109 @@
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <set>
+#include <vector>
+using namespace std;
+
+struct edge {
+	int to, cap, rev, ID;
+	bool is_rev;
+	edge(int t, int c, int r, int id, bool i):to(t), cap(c), rev(r), ID(id), is_rev(i){}
+};
+
+constexpr int INF = (1 << 29);
+vector<vector<edge>> G;
+vector<int> level;
+vector<int> iter;
+
+void init(int V) {
+	G.assign(V, vector<edge>());
+	level.resize(V);
+	iter.resize(V);
+}
+
+void add_edge(int from, int to, int ID) {
+	G[from].emplace_back(to, 1, G[to].size(), ID, false);
+	G[to].emplace_back(from, 1, G[from].size() - 1, ID, true);
+}
+
+void bfs(int s) {
+	fill(level.begin(), level.end(), -1);
+	queue<int> que;
+	level[s] = 0;
+	que.push(s);
+
+	while(!que.empty()) {
+		const int v = que.front();
+		que.pop();
+
+		for(const auto &e : G[v]) {
+			if(e.cap > 0 && level[e.to] < 0) {
+				level[e.to] = level[v] + 1;
+				que.push(e.to);
+			}
+		}
+	}
+}
+
+int dfs(int v, int t, int f) {
+	if(v == t) return f;
+	for(int &i = iter[v]; i < static_cast<int>(G[v].size()); ++i) {
+		edge &e = G[v][i];
+		if(e.cap > 0 && level[v] < level[e.to]) {
+			const int d = dfs(e.to, t, min(f, e.cap));
+			if(d > 0) {
+				e.cap -= d;
+				G[e.to][e.rev].cap += d;
+				return d;
+			}
+		}
+	}
+	return 0;
+}
+
+int max_flow(int s, int t) {
+	int flow = 0;
+	while(true) {
+		bfs(s);
+		if(level[t] < 0) return flow;
+		fill(iter.begin(), iter.end(), 0);
+		for(int f; (f = dfs(s, t, INF)) > 0; flow += f) ;
+	}
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int n, m;
+	cin >> n >> m;
+
+	init(n);
+	for(int i = 1; i <= m; ++i) {
+		int from, to;
+		cin >> from >> to;
+		--from; --to;
+		add_edge(from, to, i);
+	}
+
+	int S, T;
+	cin >> S >> T;
+	const int ans = max_flow(S - 1, T - 1);
+
+	set<int> reverse_edges;
+	for(const auto &edges : G) {
+		for(const auto &e : edges) {
+			if(e.cap == 0 && e.is_rev) reverse_edges.insert(e.ID);
+		}
+	}
+
+	cout << ans << endl;
+	cout << reverse_edges.size() << endl;
+	for(const auto &ID : reverse_edges) {
+		cout << ID << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

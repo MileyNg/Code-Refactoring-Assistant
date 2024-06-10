@@ -1,0 +1,209 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+typedef pair<vvi,int> parsed;
+
+string s;
+vector<vvi> ms;
+
+void normalize(int& x)
+{
+	x&=0x7fff;
+}
+
+parsed expr(int i);
+
+parsed inum(int i)
+{
+	int x=0;
+	for(;i<s.size() && isdigit(s[i]);i++)
+		x=x*10+s[i]-'0';
+	return mp(vvi(1,vi(1,x)),i);
+}
+
+parsed var(int i)
+{
+	return mp(ms[s[i]-'A'],i+1);
+}
+	
+parsed row(int i)
+{
+	vvi x;
+	tie(x,i)=expr(i);
+	while(i<s.size() && s[i]==' '){
+		vvi y;
+		tie(y,i)=expr(i+1);
+		int r=y.size(),c=y[0].size();
+		rep(i,r) rep(j,c) x[i].push_back(y[i][j]);
+	}
+	return mp(x,i);
+}
+
+parsed row_seq(int i)
+{
+	vvi x;
+	tie(x,i)=row(i);
+	while(i<s.size() && s[i]==';'){
+		vvi y;
+		tie(y,i)=row(i+1);
+		rep(i,y.size()) x.push_back(y[i]);
+	}
+	return mp(x,i);
+}
+
+parsed matrix(int i)
+{
+	vvi x;
+	tie(x,i)=row_seq(i+1);
+	return mp(x,i+1);
+}
+
+parsed primary(int i)
+{
+	vvi x;
+	if(isdigit(s[i]))
+		tie(x,i)=inum(i);
+	else if(isupper(s[i]))
+		tie(x,i)=var(i);
+	else if(s[i]=='[')
+		tie(x,i)=matrix(i);
+	else if(s[i]=='('){
+		tie(x,i)=expr(i+1);
+		i++;
+	}
+	
+	while(i<s.size() && (s[i]=='(' || s[i]=='\'')){
+		if(s[i]=='('){
+			vvi t; vi rs,cs;
+			tie(t,i)=expr(i+1),rs=t[0];
+			tie(t,i)=expr(i+1),cs=t[0];
+			int r=rs.size(),c=cs.size();
+			vvi y(r,vi(c));
+			rep(i,r) rep(j,c) y[i][j]=x[rs[i]-1][cs[j]-1];
+			swap(x,y);
+		}
+		else{
+			int r=x[0].size(),c=x.size();
+			vvi y(r,vi(c));
+			rep(i,r) rep(j,c) y[i][j]=x[j][i];
+			swap(x,y);
+		}
+		i++;
+	}
+	
+	return mp(x,i);
+}
+
+parsed factor(int i)
+{
+	if(s[i]=='-'){
+		vvi x;
+		tie(x,i)=factor(i+1);
+		int r=x.size(),c=x[0].size();
+		//rep(i,r) rep(j,c) normalize(x[i][j]*=-1);
+		rep(ii,r) rep(jj,c) normalize(x[ii][jj]*=-1);
+		return mp(x,i);
+	}
+	else{
+		return primary(i);
+	}
+}
+
+parsed term(int i)
+{
+	vvi x;
+	tie(x,i)=factor(i);
+	while(i<s.size() && s[i]=='*'){
+		vvi y; tie(y,i)=factor(i+1);
+		if(y.size()==1 && y[0].size()==1)
+			rep(i,x.size()) rep(j,x[i].size())
+				normalize(x[i][j]*=y[0][0]);
+		else if(x.size()==1 && x[0].size()==1){
+			rep(i,y.size()) rep(j,y[i].size())
+				normalize(y[i][j]*=x[0][0]);
+			swap(x,y);
+		}
+		else{
+			int a=x.size(),b=x[0].size(),c=y[0].size();
+			vvi z(a,vi(c));
+			rep(i,a) rep(k,b) rep(j,c)
+				normalize(z[i][j]+=x[i][k]*y[k][j]);
+			swap(x,z);
+		}
+	}
+	return mp(x,i);
+}
+
+parsed expr(int i)
+{
+	vvi x;
+	tie(x,i)=term(i);
+	while(i<s.size() && (s[i]=='+' || s[i]=='-')){
+		char op=s[i];
+		vvi y; tie(y,i)=term(i+1);
+		int r=x.size(),c=x[0].size();
+		if(op=='+')
+			rep(i,r) rep(j,c) normalize(x[i][j]+=y[i][j]);
+		else
+			rep(i,r) rep(j,c) normalize(x[i][j]-=y[i][j]);
+	}
+	return mp(x,i);
+}
+
+vvi assignment()
+{
+	char var=s[0];
+	vvi val=expr(2).first;
+	return ms[var-'A']=val;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		cin.ignore();
+		ms.assign(26,vvi());
+		rep(_,n){
+			getline(cin,s);
+			vvi a=assignment();
+			int r=a.size(),c=a[0].size();
+			rep(i,r) rep(j,c) cout<<a[i][j]<<(j<c-1?' ':'\n');
+		}
+		cout<<string(5,'-')<<endl;
+	}
+}

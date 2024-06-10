@@ -1,0 +1,39 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+
+char a[102][102];
+int dx[]={ 0,1,0,-1};
+int dy[]={-1,0,1,0};
+
+int main(){
+	bool fst=true;
+	int n;
+	cin>>n;
+	while(n--){
+		memset(a,' ',sizeof(a));
+		int m,y,x,dir;
+		cin>>m;
+		y=m;x=1;dir=0;
+		a[y][x]='#';
+		while(1){
+			for(int i=0;i<m-1;i++){
+				if(a[y+2*dy[dir]][x+2*dx[dir]]=='#')break;
+				y+=dy[dir];
+				x+=dx[dir];
+				a[y][x]='#';
+			}
+			dir=(dir+1)%4;
+			if(a[y+2*dy[dir]][x+2*dx[dir]]=='#')break;
+			if(a[y-1][x-1]=='#'||a[y-1][x+1]=='#'||a[y+1][x-1]=='#'||a[y+1][x+1]=='#')break;
+		}
+		for(int i=1;i<=m;i++){
+			for(int j=1;j<=m;j++)cout<<a[i][j];
+			cout<<endl;
+		}
+		if(!fst)cout<<endl;
+		fst=false;
+	}
+	return 0;
+}

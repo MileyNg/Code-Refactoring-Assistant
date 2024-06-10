@@ -1,0 +1,100 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  while( true ) {
+
+    int n, w, d;
+
+    cin >> n >> w >> d;
+
+    if ( n == 0 && w == 0 && d == 0 ) break;
+
+    int p, s;
+
+    vector< int > x;
+    vector< int > y;
+    x.push_back( w );
+    y.push_back( d );
+
+    int a, b;
+
+    for ( int i = 0; i < n; i++ ) {
+
+      cin >> p >> s;
+
+      p--;
+
+      s %= ( x[p] * 2 + y[p] * 2 );
+
+      if ( s < x[p] ) {
+	a = s;
+	b = x[p] - s;
+	if ( b < a ) swap( a, b );
+	x.push_back( a );
+	x.push_back( b );
+	y.push_back( y[p] );
+	y.push_back( y[p] );
+      }else if ( s < x[p] + y[p] ) {
+	s -= x[p];
+	a = s;
+	b = y[p] - s;
+	if ( b < a ) swap( a, b );
+	x.push_back( x[p] );
+	x.push_back( x[p] );
+	y.push_back( a );
+	y.push_back( b );
+      }else if ( s < x[p] * 2 + y[p] ) {
+	s -= ( x[p] + y[p] );
+	a = s;
+	b = x[p] - s;
+	if ( b < a ) swap( a, b );
+	x.push_back( a );
+	x.push_back( b );
+	y.push_back( y[p] );
+	y.push_back( y[p] );
+      }else {
+	s -= ( x[p] * 2 + y[p] );
+	a = s;
+	b = y[p] - s;
+	if ( b < a ) swap( a, b );
+	x.push_back( x[p] );
+	x.push_back( x[p] );
+	y.push_back( a );
+	y.push_back( b );
+      }
+
+      vector<int>::iterator it = x.begin() + p;
+      it = x.erase( it );
+      it = y.begin() + p;
+      it = y.erase( it );
+
+    }
+
+    vector< int > ans;
+
+    for ( int i = 0; i < x.size(); i++ ) {
+
+      ans.push_back( x[i] * y[i] );
+
+    }
+
+    stable_sort( ans.begin(), ans.end() );
+
+    for ( int i = 0; i < ans.size(); i++ ) {
+
+      if ( i != 0 ) cout << " ";
+      cout << ans[i];
+
+    }
+
+    cout << endl;
+
+  }
+
+  return 0;
+
+}

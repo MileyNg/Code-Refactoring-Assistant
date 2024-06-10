@@ -1,0 +1,26 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+int main()
+{
+	string mj;
+	int cnt[26] = {0};
+	int	i;
+
+	getline(cin,mj);
+
+	for(i = 0;i < mj.size();i++){
+		if(islower(mj[i]))
+			cnt[mj[i] - 'a']++;
+		else if(isupper(mj[i]))
+			cnt[mj[i] - 'A']++;
+	}
+
+	for(char i = 'a';i <= 'z';i++){
+		cout << i  << " " << ":" << " " << cnt[i - 'a'] << endl;
+	}
+	
+	return 0;
+}		

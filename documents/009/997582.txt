@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+double cut(double d){
+    d = floor(d * 1000);
+    d = d / 1000;
+    return d;
+}
+
+int main(int argc, const char * argv[]){
+    int a,b,c,d,e,f;
+    double x,y;
+    
+    while(scanf("%d %d %d %d %d %d",&a,&b,&c,&d,&e,&f) != EOF){
+        if((-1000 > a || a > 1000) ||
+           (-1000 > b || b > 1000) ||
+           (-1000 > c || c > 1000) ||
+           (-1000 > d || d > 1000) ||
+           (-1000 > e || e > 1000) ||
+           (-1000 > f || f > 1000)){
+            exit(0);
+        }
+        x = (c * e - b * f)/(a * e - b * d);
+        y = (c * d - a * f)/(b * d - a * e);
+    
+        printf("%.3f %.3f\n",cut(x),cut(y));
+    }
+    return 0;
+}

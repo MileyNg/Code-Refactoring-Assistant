@@ -1,0 +1,60 @@
+## constant
+
+ALL_ONE = [1] * 5
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  bds = []
+
+  n.times.each do
+    d, p, q = gets.strip.split(' ').map{|s| s.to_i}
+
+    if d == 1
+      w = p
+      h = 1
+    else
+      w = 1
+      h = p
+    end
+
+    x = q - 1
+    y = bds.length
+
+    while y > 0
+      hl = bds[y - 1]
+      tf = true
+
+      for i in (0...w)
+        if hl[x + i] == 1
+          tf = false
+          break
+        end
+      end
+
+      break if ! tf
+
+      y -= 1
+    end
+
+    for y0 in (y...(y + h))
+      if y0 >= bds.length
+        bds << ([0] * 5)
+      end
+
+      for x0 in (x...(x + w))
+        bds[y0][x0] = 1
+      end
+    end
+    #p bds
+    #p '---'
+
+    bds.delete(ALL_ONE)
+  end
+  #p bds
+
+  puts bds.flatten.select{|i| i == 1}.length
+end

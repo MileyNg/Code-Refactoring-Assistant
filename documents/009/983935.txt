@@ -1,0 +1,20 @@
+while num = gets()
+  if (num.nil? or num == "\n" or num == "\n\r") then break end
+  num = num.to_i
+  prime_count = 1
+  primes = Array.new()
+  primes.push(2)
+
+  (2..num).each do |n|
+    is_prime = true 
+    primes.each do |a|
+      if n % a == 0 then
+        is_prime = false
+        break
+      end
+    end
+    prime_count += 1 if is_prime
+    primes.push(n)
+  end
+  puts prime_count
+end

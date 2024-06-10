@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <memory.h>
+
+int main(void) {
+	int i, j, k, n, p, size;
+	char buff1[300];
+	char buff2[300];
+	while(1) {
+		fgets(buff1, sizeof(buff1), stdin);
+		if(buff1[0] == '-' && buff1[1] != '\n')
+			break;
+		
+		/* 改行消す */	
+		buff1[strlen(buff1)-1] = NULL;
+			
+		scanf("%d\n", &n);
+		for(i=0;i<n;i++) {
+			scanf("%d\n", &p);
+			memset(buff2, 0x00, sizeof(buff2));
+			for(j=0,size=strlen(buff1);j<size;j++) {
+				if(j+p<size) {
+					buff2[j] = buff1[j+p];
+					k=0;
+				} else {
+					buff2[j] = buff1[k];
+					k++;
+				}
+			}
+			strcpy(buff1, buff2);
+		}
+		printf("%s\n", buff1);
+	}
+	
+	return 0;
+}

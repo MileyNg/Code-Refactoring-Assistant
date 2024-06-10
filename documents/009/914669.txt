@@ -1,0 +1,27 @@
+#include<cstdio>
+using namespace std;
+
+int minCoin(int n, int m, int* d){
+	int cnt = 0;	
+	for(int i = m-1; i >= 0 || n != 0; i--){
+		int r = n % d[i];
+		if(r != n){
+			cnt += n / d[i];
+			n = r;
+		}
+	}
+	return cnt;
+}
+
+int main(){
+	int n; 
+	int m; 
+	scanf("%d", &n);
+	scanf("%d", &m);
+	
+	int d[m];
+	for(int i = 0; i < m; i++) scanf("%d", &d[i]);
+	printf("%d\n", minCoin(n, m, d) );
+	
+	return 0;
+}

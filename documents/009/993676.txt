@@ -1,0 +1,208 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef int  i32;
+typedef long long i64,ll;
+typedef vector<int> vi; typedef pair<int,int> pii; typedef vector<pair<int,int> > vpii;
+typedef long long ll; typedef vector<long long> vl; typedef pair<long long,long long> pll; typedef vector<pair<long long,long long> > vpll;
+typedef vector<string> vs; typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#undef NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T mod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+namespace Ps{
+	const double EPS=1e-10;
+	const double INF=1e12;
+	typedef complex<double> P;
+#define X real()
+#define Y imag()
+
+	double cross(const P& a,const P& b){
+		return imag(conj(a)*b);
+	}
+}
+using namespace Ps;
+namespace std{
+	bool operator < (const P& a,const P& b){
+		return a.X !=b.X?a.X<b.X:a.Y<b.Y;
+	}
+
+	bool operator == (const P& a,const P& b){
+		return hypot(a.X-b.X,a.Y-b.Y)<EPS;
+	}
+}
+
+
+namespace Ls{
+	using namespace Ps;
+	struct L: public vector<P>{
+		L(const P& a,const P &b){
+			push_back(a);push_back(b);
+		}
+	};
+
+	P crosspoint(const L&l,const L&m){
+		double A=cross(l[1]-l[0],m[1]-m[0]);
+		double B=cross(l[1]-l[0],l[1]-m[0]);
+		if(abs(A)<EPS && abs(B)<EPS)return m[0];
+		if(abs(A)<EPS) throw exception();
+		return m[0]+B/A*(m[1]-m[0]);
+	}
+}
+using namespace Ls;
+class Main{
+public:
+
+	void run(){
+		// ifstream cin("in");
+		// ofstream cout("out");
+		while(true){
+			int W,H,N;cin >> W >> H >> N;if(W==0 && H==0 && N==0)break;
+			vector<P> ps(2*N);
+			REP(i,2*N){
+				double x,y;cin >> x >> y;
+				ps[i]=P(x,y);
+			}
+
+			vector<P> lps;
+			lps.push_back(P(0,0));lps.push_back(P(0,H));
+			REP(i,2*N){
+				REP(j,2*N)if(i<j){
+					try{
+						lps.push_back(crosspoint(L(ps[i],ps[j]),L(P(0,0),P(0,H))));						
+					}catch(exception){}
+				}
+				try{
+					lps.push_back(crosspoint(L(ps[i],P(W,0)),L(P(0,0),P(0,H))));				
+				}catch(exception){}				
+				try{
+					lps.push_back(crosspoint(L(ps[i],P(W,H)),L(P(0,0),P(0,H))));
+				}catch(exception){}	
+			}
+			sort(ALL(lps));
+			lps.erase(unique(ALL(lps)),lps.end());
+			{
+				vector<P> tmp;
+				REP(i,lps.size())if(0-EPS<=lps[i].Y && lps[i].Y<= H+EPS){
+					tmp.push_back(lps[i]);
+				}
+				lps=tmp;
+			}
+			// y
+
+			double res=0;
+			REP(i,lps.size()-1){
+				P ld=lps[i],lu=lps[i+1];
+				P lm=(ld+lu)*0.5;
+				vector<pair<double,int>> rps;
+				REP(j,ps.size()){
+					rps.push_back(make_pair(arg(ps[j]-lm),j));
+				}
+				sort(ALL(rps));
+				P rd,ru;
+                try{
+                	rd=crosspoint(L(lm,ps[rps[N-1].second]),L(P(W,0),P(W,H)));
+                }catch(exception){
+                	rd=P(W,0);
+                }
+                try{
+                	ru=crosspoint(L(lm,ps[rps[N].second]),L(P(W,0),P(W,H)));
+                }catch(exception){
+                	ru=P(W,H);
+                }
+               	res+=abs((lu.Y-ld.Y)*(max(0.0,min(1.0*H,ru.Y))-max(0.0,min(1.0*H,rd.Y))));
+   		    }
+   		    cout << fixed << setprecision(18);
+			cout << res/H/H << endl;
+		}
+	}
+};
+
+ int main(){
+ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

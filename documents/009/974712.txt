@@ -1,0 +1,30 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+    int a, b, c, d, e, f;
+    /***
+    |a, b| |x| - |c|
+    |d, e| |y| - |f|
+     ***/
+    while (cin >> a >> b >> c >> d >> e >> f) {
+	int p, q, r, s;
+	double det = (a*e - b*d);
+	p = e;
+	q = -b;
+	r = -d;
+	s = a;
+
+	double x, y;
+	x = (p*c + q*f) / det;
+	y = (r*c + s*f) / det;
+	if (x == 0) {x = 0;}
+	if (y == 0) {y = 0;}
+	
+	printf("%.3lf %.3lf\n", x, y);
+    }
+
+    return 0;
+}

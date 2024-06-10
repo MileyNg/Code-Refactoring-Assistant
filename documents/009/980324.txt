@@ -1,0 +1,1 @@
+i[9];char*s=i+8;main(){for(;read(0,--s,1););s=!puts(s+2);}

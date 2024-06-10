@@ -1,0 +1,31 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+int main (int argc, char * const argv[]) {
+    // insert code here...
+    int n, N=1000000;
+	bool p[1000000]={0};
+
+	for(int i=2;i<N;i++){
+		if(!p[i]){
+			for(int j=i+i;j<N;j+=i){
+				p[j]=1;
+			}
+		}
+	}
+	
+	while(cin >> n){
+		int count =0;
+		for(int i=2;i<=n;i++){
+			if(!p[i])count++;
+		}
+		cout<<count<<endl;
+	}
+	
+	return 0;
+}

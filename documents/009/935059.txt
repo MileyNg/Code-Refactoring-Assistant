@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+main()
+{
+  int x, top = 0;
+  int stack[100];
+  char s[100];
+  
+  while(scanf("%s", s) != EOF)
+    {
+      if(s[0] == '+')
+	{
+	  stack[top - 2] = stack[top - 2] + stack[top - 1];
+	  top--;
+	}
+      else if(s[0] == '-')
+	{
+	  stack[top - 2] = stack[top - 2] - stack[top - 1];
+	  top--;
+	}
+      else if(s[0] == '*')
+	{
+	  stack[top - 2] = stack[top - 2] * stack[top - 1];
+	  top--;
+	}
+      else
+	{
+	  x = atoi(s);
+	  stack[top] = x;
+	  top++;
+	}
+    }
+  printf("%d\n", stack[top - 1]);
+  return 0;
+}

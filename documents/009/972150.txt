@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+ 
+int main(){
+	const int max_number = 20;
+	const int min_number = 0;
+	int N;
+	
+	while(std::cin >> N){
+		//dp[N][max_number + 1]
+		//dp[n][i]ならば、n個目の数字まで計算してその計算結果がiとなったものの数
+		std::vector<std::vector<unsigned long long> > dp(N, std::vector<unsigned long long>(max_number + 1, 0));
+		
+		//入力した数字N個分を格納するベクター
+		std::vector<int> num(N);
+		
+		for(int i = 0 ; i < N ; ++i){
+			std::cin >> num[i];
+		}
+		dp[0][num[0]] = 1;
+		
+		for(int i = 1 ; i < N - 1 ; ++i){
+			for(int j = 0 ; j <= max_number ; ++j){
+				//i-1個目まで計算してその計算結果がjとなるものの組み合わせが１つ以上あれば実行
+				if(dp[i - 1][j] > 0){
+					/*jにi個目の数字を足し引きして、
+					  範囲におさまっていればそれまでの組み合わせの数を引き継ぐ*/
+					if(j + num[i] <= max_number){
+						dp[i][j + num[i]] += dp[i - 1][j];
+					}
+					if(j - num[i] >= min_number){
+						dp[i][j - num[i]] += dp[i - 1][j];
+					}
+				}
+			}
+		}
+		std::cout << dp[N - 2][num[N - 1]] << std::endl;
+	}
+	
+    return 0;
+}

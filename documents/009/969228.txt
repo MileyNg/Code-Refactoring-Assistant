@@ -1,0 +1,53 @@
+direcs = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+dnames = %w(U R D L)
+
+### main
+
+pl = []
+horizontal = true
+ln = 0
+
+while (line =gets)
+  nums = line.chop.split("").map{|s| s.to_i}
+
+  if (horizontal)
+    if pl[ln].nil?
+      pl.push (nums.length + 1).times.map{[0, 0, 0, 0]}
+    end
+
+    for i in (0...nums.length)
+      pl[ln][i][1] = pl[ln][i + 1][3] = nums[i]
+    end
+  else
+    pl.push nums.length.times.map{[0, 0, 0, 0]}
+
+    for i in (0...nums.length)
+      pl[ln][i][2] = pl[ln + 1][i][0] = nums[i]
+    end
+
+    ln += 1
+  end
+
+  horizontal = ! horizontal
+end
+
+x = y = 0
+dir = 1
+rt = ""
+
+while true
+  dir = (dir + 3) % 4
+  while pl[y][x][dir] == 0
+    dir = (dir + 1) % 4
+  end
+
+  rt += dnames[dir]
+  x += direcs[dir][0]
+  y += direcs[dir][1]
+
+  if x == 0 && y == 0
+    break
+  end
+end
+
+puts rt

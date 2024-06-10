@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	int a[4], b[4];
+	int i, j, eat, bite;
+	
+	while (scanf("%d %d %d %d %d %d %d %d",
+		&a[0], &a[1], &a[2], &a[3], &b[0], &b[1], &b[2], &b[3]) != EOF){
+		
+		eat = 0;
+		bite = 0;
+		
+		for (i = 0; i < 4; i++){
+			for (j = 0; j < 4; j++){
+				if (i == j && a[i] == b[j]){
+					eat++;
+				}
+				else if (a[i] == b[j]){
+					bite++;
+				}
+				/*printf("%d %d\n", a[i], b[j]);
+				printf("%d %d\n\n", eat, bite);*/
+			}
+		}
+		
+		printf("%d %d\n", eat, bite);
+		
+	}
+	
+	return (0);
+}

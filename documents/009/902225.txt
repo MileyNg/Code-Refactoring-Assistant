@@ -1,0 +1,95 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <stack>
+#include <deque>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i < ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 0, n )
+
+typedef long long ll;
+typedef pair< int, int > P;
+
+#define MAX_S 8
+
+class cMCXI {
+public :
+	cMCXI() { mi = mx = mc = mm = 0; }
+	~cMCXI(){};
+	void SetStr( string );
+	void SetNum( int );
+	string GetStr();
+	int GetNum() { return mi + mx * 10 + mc * 100 + mm * 1000; }
+private :
+	int mi, mx, mc, mm;
+};
+
+bool IsNum( char );
+
+int main()
+{
+	int n;
+	cin >> n;
+	while( n-- ) {
+		string str1, str2;
+		cin >> str1 >> str2;
+		cMCXI mcxi1, mcxi2, summcxi;
+		mcxi1.SetStr( str1 );  mcxi2.SetStr( str2 );
+		int num1 = mcxi1.GetNum(), num2 = mcxi2.GetNum();
+		summcxi.SetNum( num1 + num2 );
+		cout << summcxi.GetStr() << endl;
+	}
+	return 0;
+}
+
+void cMCXI::SetStr( string str ) {
+	int num = -1;
+	REP( i, str.size() ) {
+		int ch = str[ i ];
+		if( IsNum( ch ) ) { 
+			num = ch - '0';
+			continue;
+		}
+		if( num == -1 ) num = 1;
+		switch( ch ) {
+		case 'm' : mm = num; break;
+		case 'c' : mc = num; break;
+		case 'x' : mx = num; break;
+		case 'i' : mi = num; break;
+		}
+		num = -1;
+	}
+}
+
+string cMCXI::GetStr() {
+	string res;
+	if( mm > 1 ) res += ( char )( mm + '0' );
+	if( mm > 0 ) res += 'm';
+	if( mc > 1 ) res += ( char )( mc + '0' );
+	if( mc > 0 ) res += 'c';
+	if( mx > 1 ) res += ( char )( mx + '0' );
+	if( mx > 0 ) res += 'x';
+	if( mi > 1 ) res += ( char )( mi + '0' );
+	if( mi > 0 ) res += 'i';
+	return res;
+}
+
+void cMCXI::SetNum( int num ) {
+	mi = num % 10;  num /= 10;
+	mx = num % 10;  num /= 10;
+	mc = num % 10;  num /= 10;
+	mm = num % 10;  num /= 10;
+}
+
+bool IsNum( char ch ) {
+	return ( '0' <= ch && ch <= '9' );
+}

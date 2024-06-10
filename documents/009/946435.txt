@@ -1,0 +1,28 @@
+#include<iostream>
+#include<vector>
+
+int main(){
+	int n;
+	std::cin >> n;
+	std::vector<int> A(n);
+	int ans = 0;
+	for (unsigned int i = 0; i < A.size(); ++i)std::cin >> A[i];
+	for (unsigned int i = 0; i < A.size(); ++i){
+		int mini = i;
+		for (unsigned int j = i; j < A.size(); ++j){
+			if (A[j] < A[mini]){
+				mini = j;
+				ans++;
+			}
+		}
+		std::swap(A[i], A[mini]);
+		
+	}
+	for (int i = 0; i < n; ++i){
+		std::cout << A[i];
+		if (i != n - 1)std::cout << ' ';
+	}
+	std::cout << std::endl;
+	std::cout << ans-2 << std::endl;
+	return 0;
+}

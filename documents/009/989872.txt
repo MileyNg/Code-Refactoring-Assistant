@@ -1,0 +1,112 @@
+#include <cassert>
+#include <cctype>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+
+#include <algorithm>
+#include <bitset>
+#include <deque>
+#include <functional>
+#include <iterator>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+#include <iomanip>
+
+using namespace std;
+
+typedef pair<int, int> pint;
+typedef vector<int> vint;
+typedef long long ll;
+
+#define ALL(c) (c).begin(),(c).end()
+#define RALL(c) (c).rbegin(),(c).rend()
+#define SORT(c) sort(ALL(c))
+
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n)  for(int i=0;i<(n);++i)
+
+#define NEXTP(c) next_permutation(ALL(c))
+#define SUM(c) accumulate(ALL(c),0)
+#define MP( a, b ) make_pair( ( a ), ( b ) )
+
+#define ANS(x)  cout << (x) << endl;
+#define DUMP(x)  cerr << #x << " = " << (x) << endl;
+
+#define INF 1000000000 // 10^9
+const double EPS = 1e-10;
+
+struct data{
+    vint board;
+    int cost;
+};
+
+int main(){
+    map<vint, int>ret;
+    data fd;
+    REP(i, 8)fd.board.push_back(i);
+    fd.cost=0;
+    
+    queue<data>que;
+    que.push(fd);
+    ret[fd.board]=0;
+    
+    int def[4] = {-4,-1,+1,+4};
+    
+    while (que.size()) {
+        data d = que.front();
+        que.pop();
+        //0の位置をさがす
+        int pos;
+        for (pos = 0; pos <= 7; pos++) {
+            if (d.board[pos]==0) break;
+        }
+        //交換
+        REP(i, 4){
+            int tar = pos + def[i];
+            //範囲チェック
+            if (!(0<=tar&&tar<=7)) continue;
+            if ((pos==3&&tar==4)||(pos==4&&tar==3)) continue;
+            
+            vint search = d.board;
+            search[pos]=d.board[tar];
+            search[tar]=d.board[pos];
+            
+            //被りチェック
+            map<vint, int>::iterator itr;
+            itr = ret.find(search);
+            if(itr!=ret.end()) continue;
+            
+            //キューに追加
+            data nd;
+            nd.board = search;
+            nd.cost=d.cost+1;
+            que.push(nd);
+            
+            ret[search]=nd.cost;
+        }
+    }
+    
+    vint b(8);
+    while (cin>>b[0]) {
+        FOR(i, 1, 8)cin>>b[i];
+        cout<<ret[b]<<endl;
+    }
+    
+    return 0;
+}

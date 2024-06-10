@@ -1,0 +1,30 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(void) {
+    int N, a, b, c;
+    cin >> N;
+    for (; N--; ) {
+        b = c = 0;
+        bool ok = true;
+        for (int i = 0; i < 10; i++) {
+            cin >> a;
+            if (a < b && a < c) {
+                ok = false;
+                break;
+            } else if (a < b) {
+                c = a;
+            } else if (a < c) {
+                b = a;
+            } else if (b > c) {
+                b = a;
+            } else {
+                c = a;
+            }
+        }
+        cout << (ok ? "YES" : "NO") << endl;
+    }
+    return 0;
+}

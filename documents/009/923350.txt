@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+struct Point{
+	int x,y;
+};
+
+int main(){
+	while(true){
+		int n;
+		cin >> n;
+		if(n==0){
+			break;
+		}
+		vector<Point> plist(n);
+		//宣言してしまえば普通の配列のように扱える。
+		plist[0] = (Point){0,0};
+		for(int i=0;i<n-1;i++){//[1,n)でもok
+			int idx;//基準となる正方形
+			int dir;//方向
+			//idxの長方形のdirの方向に長方形がある
+			cin >> idx >> dir;
+			Point now = plist[idx];//実体渡し
+			//数学でよく使う座標系に従う
+			if(dir==0){//左
+				now.x--;
+			}else if(dir==1){//下
+				now.y--;
+			}else if(dir==2){//右
+				now.x++;
+			}else if(dir==3){//上
+				now.y++;
+			}
+			plist[i+1] = now;
+		}
+		
+		int minx=0;
+		int maxx=0;
+		int miny=0;
+		int maxy=0;
+		for(int i=0;i<n;i++){//[1,n)でおｋ
+			minx = min(plist[i].x,minx);
+			maxx = max(plist[i].x,maxx);
+			miny = min(plist[i].y,miny);
+			maxy = max(plist[i].y,maxy);
+		}
+		int width = maxx-minx+1;
+		int height = maxy-miny+1;
+		cout << width << " " <<height << endl;
+	}
+	return 0;
+}

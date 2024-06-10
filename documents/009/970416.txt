@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Programminng
+{
+    class AOJ_Volume0022
+    {
+        public static void Main(string[] args)
+        {
+            while (true)
+            {
+                int number = int.Parse(Console.ReadLine());
+
+                if (number == 0) break;
+
+                int[] values = new int[number];
+                int max = -10001;
+
+                for (int i = 0; i < number; i++)
+                {
+                    values[i] = int.Parse(Console.ReadLine());
+                }
+
+                for (int i = 0; i < number; i++)
+                {
+                    int sum = 0;
+                    for (int j = i; j < number; j++)
+                    {
+                        sum += values[j];
+                        if (max < sum)
+                        {
+                            max = sum;
+                        }
+                    }
+                }
+
+                Console.WriteLine(max);
+
+            }
+        }
+    }
+}

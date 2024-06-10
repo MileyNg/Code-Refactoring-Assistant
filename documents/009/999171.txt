@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define DATA_LEN 80
+
+void clear_int(int num[], int length)
+{
+  int i;
+  for (i = 0; i < length; i++) {
+    num[i] = 0;
+  }
+}
+
+void clear_char(char str[], int length) {
+  int i;
+  for (i = 0; i < length; i++) {
+    str[i] = '\0';
+  }
+}
+
+int read_data(int num[], int length) {
+  char str[DATA_LEN + 2];
+  int i, j;
+  char tmp[3];
+
+  clear_int(num, length);
+
+  fgets(str, sizeof(str), stdin);
+  if (strchr(str, '\n') == NULL) {
+    while (getchar() != '\n')
+      ;
+    return 9;
+  }
+  if (str[strlen(str) - 1] == '\n') {
+    str[strlen(str) - 1] = '\0';
+  }
+
+  for (i = strlen(str) - 1, j = 0; i >= 0; i -= 2, j++) {
+    if (i == 0) {
+      strncpy(tmp, str, 1);
+    } else { 
+      strncpy(tmp, str + i - 1, 2);
+    }
+    tmp[2] = '\0';
+
+    num[j] = atoi(tmp);
+    clear_char(tmp, 3);
+  }
+  return 0;
+}
+
+void num2s(int num[], int num_length, char s[], int str_length)
+{
+  char tmp[3];
+  int i;
+  int isHead;
+
+  isHead = 1;
+
+  clear_char(s, str_length);
+
+  for (i = num_length - 1; i >= 0; i--) {
+    if (num[i] != 0) {
+      break;
+    }
+  }
+  if (i == num_length) {
+    s[0] = '0';
+    s[1] = '\0';
+  } else {
+    for ( ; i >= 0; i--) {
+      clear_char(tmp, 3);
+      if (isHead) {
+        sprintf(tmp, "%d", num[i]);
+        isHead = 0;
+      } else {
+        sprintf(tmp, "%02d", num[i]);
+      }
+      strcat(s, tmp);
+    }
+  }
+}
+
+int main(void)
+{
+  int n;
+  int num1[DATA_LEN / 2], num2[DATA_LEN / 2], answer[DATA_LEN / 2];
+  char str[DATA_LEN + 1];
+  int i, ret, j;
+  int num_len;
+  char buf[100];
+
+  num_len = DATA_LEN / 2;
+
+  fgets(buf, sizeof(buf), stdin);
+  n = atoi(buf);
+  for (j = 0; j < n; j++) {
+    ret = read_data(num1, num_len);
+    if (ret == 9) {
+      printf("overflow\n");
+      continue;
+    }
+    ret = read_data(num2, num_len);
+    if (ret == 9) {
+      printf("overflow\n");
+      continue;
+    }
+    clear_int(answer, num_len);
+
+    for (i = 0; i < num_len; i++) {
+      answer[i] = num1[i] + num2[i];
+      if ((i != 0) && (answer[i - 1] >= 100)) {
+        answer[i]++;
+        answer[i - 1] -= 100;
+      }
+    }
+    if (answer[i - 1] >= 100) {
+      printf("overflow\n");
+      continue;
+    }
+
+    num2s(answer, num_len, str, DATA_LEN + 1);
+
+    if (strlen(str) == 0) {
+      strcpy(str, "0");
+    }
+
+    printf("%s\n", str);
+  }
+
+  return 0;
+}

@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {-1, 0, 1, 0};
+
+int main()
+{
+  rep(i, in()){
+    int field[128][128] = {};
+    int n = in();
+    if (i != 0) puts("");
+    rep(i, n + 1){
+      field[0][i] = 1;
+      field[n + 1][i] = 1;
+      field[i][0] = 1;
+      field[i][n + 1] = 1;
+    }
+
+    int x, y, d;
+    x = 1;
+    y = n;
+    d = 0;
+    while (1){
+      field[y][x] = 2;
+      int ny, nx;
+      nx = x + dx[d];
+      ny = y + dy[d];
+      if (field[ny][nx] > 0){
+        d = (d + 1) % 4;
+        nx = x + dx[d];
+        ny = y + dy[d];
+        if (field[ny][nx] > 0){
+          break;
+        }
+      }
+      rep(i, 4){
+        int nnx, nny;
+        nnx = x + dx[i];
+        nny = y + dy[i];
+        if (nnx == nx && nny == ny) continue;
+        if (field[nny][nnx] != 0) continue;
+        field[nny][nnx] = 1;
+      }
+      x = nx;
+      y = ny;
+    }
+    lep(i, n){
+      lep(j, n){
+        printf("%c", " #"[field[i][j] == 2]);
+      }
+      puts("");
+    }
+  }
+  return 0;
+}

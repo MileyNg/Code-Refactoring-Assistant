@@ -1,0 +1,97 @@
+#include <algorithm>
+#include <array>
+#include <cstdlib>
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+using namespace std;
+
+const int N = 8;
+array<int, N> idx;
+string color[N];
+
+inline int encode(const array<int, N> &a) {
+	int res = 0;
+	for(const auto &e : a) res = (res * N) + e;
+	return res;
+}
+
+// a, b, c, d -> b, c, d, a
+void rotate(int &a, int &b, int &c, int &d) {
+	const int tmp = a;
+	a = b;
+	b = c;
+	c = d;
+	d = tmp;
+}
+
+void north(array<int, N> &a) {
+	rotate(a[0], a[1], a[3], a[2]);
+	rotate(a[4], a[6], a[7], a[5]);
+}
+
+void east(array<int, N> &a) {
+	rotate(a[0], a[6], a[7], a[1]);
+	rotate(a[4], a[5], a[3], a[2]);
+}
+
+void right(array<int, N> &a) {
+	rotate(a[0], a[2], a[4], a[6]);
+	rotate(a[1], a[3], a[5], a[7]);
+}
+
+bool exist(const unordered_set<int> &s, array<int, N> a) {
+	for(int i = 0; i < 4; ++i) {
+		for(int j = 0; j < 4; ++j) {
+			if(s.count(encode(a))) return true;
+			right(a);
+		}
+		north(a);
+	}
+
+	east(a);
+	for(int i = 0; i < 4; ++i) {
+		if(s.count(encode(a))) return true;
+		right(a);
+	}
+
+	east(a);
+	east(a);
+	for(int i = 0; i < 4; ++i) {
+		if(s.count(encode(a))) return true;
+		right(a);
+	}
+
+	return false;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	while(cin >> color[0]) {
+		for(int i = 1; i < N; ++i) {
+			cin >> color[i];
+		}
+
+		unordered_map<string, int> converter;
+		for(int i = 0; i < N; ++i) {
+			if(!converter.count(color[i])) {
+				converter.insert({color[i], converter.size()});
+			}
+			idx[i] = converter[color[i]];
+		}
+
+		sort(idx.begin(), idx.end());
+		unordered_set<int> ans;
+		do {
+			if(!exist(ans, idx)) {
+				ans.insert(encode(idx));
+			}
+		} while(next_permutation(idx.begin(), idx.end()));
+
+		cout << ans.size() << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

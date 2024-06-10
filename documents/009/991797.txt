@@ -1,0 +1,148 @@
+//suhan lee,saitama university
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <complex>
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define rep(i,a,b) for(int i=(a);i<(b);++i)
+#define repn(i,n) for(int i=0;i<n;i++)
+#define EACH(t,i,c) for(t::iterator i=(c).begin(); i!=(c).end(); ++i)
+#define pb push_back 
+#define pf push_front
+#define INF 500
+
+
+void tansaku(vvi& saitanmap,int ax,int ay,int h,int w){
+  saitanmap[ay][ax]=0;
+  stack<pii> haba;
+  int px,py;
+  haba.push(make_pair(ay,ax));
+  while(!haba.empty()){
+   
+    px=haba.top().first;
+    py=haba.top().second;
+    //   cout<<px<<" "<<py<<" "<<saitanmap[px][py]<<endl;
+    haba.pop();
+    if(px+1>=0&&px+1<h&&py>=0&&py<w )
+      if(saitanmap[px][py]+1<saitanmap[px+1][py]){
+
+      saitanmap[px+1][py]=saitanmap[px][py]+1;
+      haba.push(make_pair(px+1,py));
+    }
+    //	cout<<"haha\n";
+    if (px-1>=0&&px-1<h ) 
+      if(saitanmap[px][py]+1<saitanmap[px-1][py]
+      ){
+
+      saitanmap[px-1][py]=saitanmap[px][py]+1;
+      haba.push(make_pair(px-1,py));
+    }
+    //	cout<<"hahah\n";
+    if (py+1<w ) 
+      if(saitanmap[px][py]+1<saitanmap[px][py+1]
+      ){
+
+      saitanmap[px][py+1]=saitanmap[px][py]+1;
+      haba.push(make_pair(px,py+1));
+    }
+    // cout<<"hahaha\n";
+    if(py-1>=0&&py-1<w )
+      if(saitanmap[px][py]+1<saitanmap[px][py-1]
+        ){
+	//	cout<<"hahass\n";
+      saitanmap[px][py-1]=saitanmap[px][py]+1;
+      haba.push(make_pair(px,py-1));
+    }
+
+  }
+}
+void yuurei(vvi saitanmap,string pattern,int bx,int by,int h,int w){
+  int len=pattern.size();
+  repn(i,INF){
+    if(saitanmap[by][bx]<=i&&saitanmap[by][bx]>=0){
+      cout<<i<<" "<<by<<" "<<bx<<endl;
+      return;
+    }
+    else{
+      //   cout<<i<<"not answer  "<<bx<<" "<<by<<endl;
+      switch(pattern[i%len]){
+      case '5':
+	break;
+      case '2':
+	if(by<h-1)
+	  by+=1;
+	break;
+      case '4':
+	if(bx>0)
+	  bx-=1;
+	break;
+      case '6':
+	if(bx<w-1)
+	  bx+=1;
+	break;
+      case '8':
+	if(by>0)
+	  by-=1;
+	break;
+     
+      }
+    }
+  }
+  cout<<"impossible"<<endl;
+}
+int main(){
+  int h,w,ax,bx,ay,by;
+  string maptmp,pattern;
+  vvi saitanmap;
+  while(true){
+    cin>>h>>w;
+    if(h==0&&w==0) break;
+    saitanmap=vvi(h,vi(w,INF));
+    repn(i,h){
+      cin>>maptmp;
+      repn(j,w){
+	if(maptmp[j]=='A') {ax=j;ay=i;}
+	else if(maptmp[j]=='B') {bx=j;by=i;}
+	else if(maptmp[j]=='#') saitanmap[i][j]=-1;
+	else if(maptmp[j]=='.') saitanmap[i][j]=INF;
+	else {cout<<"error!"; return 0;}
+      }
+    }
+    
+    tansaku(saitanmap,ax,ay,h,w);
+    cin>>pattern;
+    yuurei(saitanmap,pattern,bx,by,h,w);
+  }
+
+  return 0;
+}

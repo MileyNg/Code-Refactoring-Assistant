@@ -1,0 +1,42 @@
+#include<iostream>
+#include<vector>
+
+void cut(std::vector<int>&v, int p, int c){
+
+	std::vector<int>vv(c);
+
+	for (int i = 0, j = p - 1; i < vv.size(); i++, j++){
+		vv[i] = v[j];
+	}
+
+	for (int i = p - 2; i >= 0; i--){
+		v[i + c] = v[i];
+	}
+
+	for (int i = 0; i < c; i++){
+		v[i] = vv[i];
+	}
+
+}
+
+int main(){
+
+	int n, r;
+
+	while (std::cin >> n >> r){
+		if (n == 0 && r == 0)break;
+		std::vector<int>v(n);
+
+		for (int i = v.size() - 1; i >= 0; i--)v[i] = v.size() - i;
+
+		for (int i = 0; i < r; i++){
+			int p, c;
+			std::cin >> p >> c;
+			cut(v, p, c);
+		}
+
+		std::cout << v[0] << std::endl;
+
+	}
+	return 0;
+}

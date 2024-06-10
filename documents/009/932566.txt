@@ -1,0 +1,34 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int x;
+  char s[100];
+  int stk[100];
+  int stk_ptr = 0;
+  int a, b;
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+    	b = stk[--stk_ptr];
+    	a = stk[--stk_ptr];
+    	stk[stk_ptr++] = a + b;
+    } else if ( s[0] == '-' ){
+    	b = stk[--stk_ptr];
+    	a = stk[--stk_ptr];
+    	stk[stk_ptr++] = a - b;
+    } else if ( s[0] == '*' ){
+    	b = stk[--stk_ptr];
+    	a = stk[--stk_ptr];
+    	stk[stk_ptr++] = a * b;
+    } else {
+      x = atoi(s);
+      stk[stk_ptr++] = x;
+    }
+  }
+  
+  printf("%d\n", stk[0]);
+
+  return 0;
+}

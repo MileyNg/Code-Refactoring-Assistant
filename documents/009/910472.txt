@@ -1,0 +1,37 @@
+/*素数の個数を表示*/
+#include<stdio.h>
+#include<math.h>
+int hantei (int );
+int main()
+{
+  int n,i,j;
+  int A[10000];
+  int num=0,ans=1; /*numは最終的な答え*/
+
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      scanf("%d",&A[i]);
+    }
+
+  for(i=0;i<n;i++)
+    {
+      ans = hantei(A[i]);
+      if(ans==1) 
+	{
+	  num++;
+	}
+    }
+  printf("%d\n",num);
+  return 0;
+}
+
+int hantei (int a)
+{
+  int i;
+  for(i=2;i<=sqrt((double)a);i++)
+    {
+      if(a%i == 0) return 0;
+    }
+  return 1;
+}

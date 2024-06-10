@@ -1,0 +1,89 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0126 : Puzzle **/
+int main()
+{
+	int board[9][9];
+	bool wrong[9][9];
+	int n;
+	
+	cin >> n;
+	rep(k, n) {
+		rep(y, 9) rep(x, 9)  {
+			cin >> board[x][y]; board[x][y]--;
+			wrong[x][y] = false;
+		}
+
+		int use[9];
+		
+		rep(i, 9) {
+			// 横
+			fill(use, use+9, -1);
+			rep(j, 9) {
+				int num = board[j][i];
+				if (use[num]>=0) {
+					wrong[j][i] = true;
+					wrong[use[num]][i] = true;
+				} else {
+					use[num] = j;
+				}
+			}
+			// 縦
+			fill(use, use+9, -1);
+			rep(j, 9) {
+				int num = board[i][j];
+				if (use[num]>=0) {
+					wrong[i][j] = true;
+					wrong[i][use[num]] = true;
+				} else {
+					use[num] = j;
+				}
+			}
+			// 斜め
+			fill(use, use+9, -1);
+			int sx = (i%3)*3, sy = (i/3)*3;
+			rep(ii, 3) {
+				rep(jj, 3) {
+					int num = board[sx+ii][sy+jj];
+					if (use[num]>=0) {
+						wrong[sx+ii][sy+jj] = true;
+						wrong[sx+use[num]%3][sy+use[num]/3] = true;
+					} else {
+						use[num] = ii*3+jj;
+					}
+				}
+			}
+		}
+		
+		rep(y, 9) {
+			rep(x,9) {
+				if (wrong[x][y]) {
+					cout << '*';
+				} else {
+					cout << ' ';
+				}
+				cout << ++board[x][y];
+			}
+			cout << endl;
+		}
+		if (k<n-1)
+			cout << endl;
+	}
+	return 0;
+}

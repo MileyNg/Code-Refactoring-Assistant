@@ -1,0 +1,26 @@
+#include<stdio.h>
+int main(void){
+    int n,n2;
+    while(scanf("%d",&n)!=EOF){
+        int g[10],j=0,i=512;
+        while(i>1){
+            n2=n;
+            if(n%i!=n2){
+                g[j]=i;
+                j++;
+                n%=i;
+            }
+            i/=2;
+        }
+        if(n==1){
+            g[j]=1;
+            j++;
+        }
+        for(i=j-1;i>=0;i--){
+            if(i==0)printf("%d\n",g[0]);
+            else printf("%d ",g[i]);
+        }
+
+    }
+
+}

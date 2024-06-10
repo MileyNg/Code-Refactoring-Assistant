@@ -1,0 +1,66 @@
+#include<iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+
+using namespace std;
+
+const int  MAXN=111;
+
+char str[MAXN][MAXN];
+long long vis[MAXN][MAXN][4];
+int dir[][2]= {0,-1,1,0,0,1,-1,0};
+int H, W, cnt;
+long long L;
+
+main()
+{
+    int i, j;
+    int x, y, z, tx, ty;
+    char p[5]="NESW";
+    while(scanf("%d%d%lld",&H,&W,&L),H||W||L)
+    {
+        memset(vis,0,sizeof(vis));
+        memset(str,0,sizeof(str));
+
+       for(i=1;i<=H;i++)
+        {
+            scanf("%s",str[i]+1);
+
+           for(j=1;j<=W;j++)
+            {
+                if(str[i][j]!='.'&&str[i][j]!='#')
+                {
+                    x=j;
+                    y=i;
+                    if(str[i][j]=='N') z=0;
+                    if(str[i][j]=='E') z=1;
+                    if(str[i][j]=='S') z=2;
+                    if(str[i][j]=='W') z=3;
+                    str[i][j]='.';
+                }
+            }
+        }
+        cnt=0;
+        for(; L>=1; L--,cnt++)
+        {
+            if(vis[y][x][z])
+            {
+                L=L%(cnt-vis[y][x][z]);
+                if(!L) break;
+            }
+            vis[y][x][z]=cnt;
+            while(1)
+            {
+                tx=x+dir[z][0];
+                ty=y+dir[z][1];
+                if(str[ty][tx]=='.') break;
+                z=(z+1)%4;
+            }
+            x=tx, y=ty;
+        }
+        printf("%d %d %c\n",y,x,p[z]);
+    }
+    return 0;
+}

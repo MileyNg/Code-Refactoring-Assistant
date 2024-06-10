@@ -1,0 +1,59 @@
+class QuickSort
+  def solve
+    n    = gets.chomp.to_i
+    a = Array.new
+    b = Array.new
+    n.times do
+      m, i = gets.split(/\s+/)
+      a << [m, i.to_i]
+      b << [m, i.to_i]
+    end
+
+    qsort(a, 0, n-1)
+
+    stable = true
+    (0..n-2).each do |i|
+      if (a[i][1] == a[i+1][1])
+        if b.index(a[i]) > b.index(a[i+1])
+          stable = false
+          break
+        end
+      end
+    end
+
+    if stable
+      puts("Stable")
+    else
+      puts("Not stable")
+    end
+
+    a.each do |x|
+      puts x.join(" ")
+    end
+  end
+
+  def qsort(a, p, r)
+    if p < r
+      q = partion(a, p, r)
+      qsort(a, p, q-1)
+      qsort(a, q+1, r)
+    end
+  end
+
+  def partion(a, p, r)
+    x = a[r][1]
+    i = p - 1
+    (p...r).each do |j|
+      if a[j][1] <= x
+        i += 1
+        a[i], a[j] = a[j], a[i]
+      end
+    end
+    a[i+1], a[r] = a[r] , a[i+1]
+    return i+1
+  end
+end
+
+if $0 == __FILE__
+  QuickSort.new.solve
+end

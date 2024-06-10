@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+char *upper(char *s)
+{
+  char *p;
+  for (p = s; *p; p++) {
+    *p = toupper((int)*p);
+  }
+  return s;
+}
+
+int main(void)
+{
+  int count;
+  int word_length;
+  char word[11];
+  char buf[1001];
+  char *p, *t;
+
+  count = 0;
+  scanf("%s", word);
+  upper(word);
+  for (word_length = 0; word[word_length] != '\0'; word_length++)
+    ; // 処理なし
+
+  while (1) {
+    scanf("%s", buf);
+    upper(buf);
+    if (!strcmp(buf, "END_OF_TEXT")) {
+      break;
+    }
+
+    t = buf;
+    while ((p = strstr(t, word)) != NULL) {
+      count++;
+      t = p + word_length;
+    }
+  }
+
+  printf("%d\n", count);
+
+  return 0;
+}

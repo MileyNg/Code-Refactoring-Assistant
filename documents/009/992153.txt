@@ -1,0 +1,74 @@
+#include<cstdio>
+#include<algorithm>
+#include<array>
+#include<vector>
+
+using namespace std;
+
+typedef array<int,3> Time;
+
+void print_time(Time t){
+  printf("%02d:%02d:%02d",t[0],t[1],t[2]);
+}
+
+int main(){
+  for(int n;scanf("%d",&n),n;){
+    vector<vector<Time> > v(n);
+    const Time HT{999,0,0};
+    for(auto &e:v){
+      int s,t,u;
+      scanf("%d%d%d",&s,&t,&u);
+      for(int i=0;i<60;i++){
+	Time ct{(s+i)%60,(t+i)%60,(u+i)%60};
+	sort(begin(ct),end(ct));
+	do{
+	  Time cct=ct;
+	  if(cct[0]%5==cct[1]/12){
+	    cct[0]/=5;
+	    e.push_back(cct);
+	  }
+	}while(next_permutation(begin(ct),end(ct)));
+      }
+      e.push_back(HT);
+      sort(begin(e),end(e));
+    }
+    Time start,end,p=HT;
+    for(int i=0;i<12;i++){
+      for(int j=0;j<60;j++){
+	for(int k=0;k<60;k++){
+	  Time q{i,j,k};
+	  Time cp{0,0,-1},ce;
+	  for(auto &e:v){
+	    //Time lb=*lower_bound(begin(e),end(e),q);
+	    Time lb=*lower_bound(e.begin(),e.end(),q);
+	    Time cd=lb;
+	    for(int l=0;l<3;l++){
+	      cd[l]-=q[l];
+	    }
+	    if(cd[2]<0){
+	      cd[2]+=60;
+	      cd[1]--;
+	    }
+	    if(cd[1]<0){
+	      cd[1]+=60;
+	      cd[0]--;
+	    }
+	    if(cp<cd){
+	      cp=cd;
+	      ce=lb;
+	    }
+	  }
+	  if(cp<p){
+	    start=q;
+	    end=ce;
+	    p=cp;
+	  }
+	}
+      }
+    }
+    print_time(start);
+    putchar(' ');
+    print_time(end);
+    putchar('\n');
+  }
+}

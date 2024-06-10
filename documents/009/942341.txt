@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int point_exists(int point[][2], int p, int x, int y) {
+	int i;
+	for(i=0;i<p;i++) {
+		if(point[i][0] == x && point[i][1] == y) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int main(void) {
+	int point[1000][2];
+	char table[105][105];
+	int i, p, row, col;
+	int x, y;
+	
+	LABEL: while(scanf("%d %d\n", &row, &col) == 2) {
+		if(row == 0 && col == 0) break;
+		
+		for(i=0;i<row;i++) {
+			scanf("%s\n", table[i]);
+		}
+		
+		p = 0;
+		point[p][0] = x = 0;
+		point[p][1] = y = 0;
+		p++;
+		
+		while(1) {
+			switch(table[y][x]) {
+				case '>': // (大なり記号): 東向きの矢印が書かれたタイル
+					x++;
+					break;
+				case '<': // (小なり記号): 西向きの矢印が書かれたタイル
+					x--;
+					break;
+				case '^': // (べき記号) : 北向きの矢印が書かれたタイル
+					y--;
+					break;
+				case 'v': // (小文字ブイ): 南向きの矢印が書かれたタイル
+					y++;
+					break;
+				case '.': // (ピリオド) : 何も書かれていないタイル
+					printf("%d %d\n", x, y);
+					goto LABEL;
+			}
+			
+			if(point_exists(point, p, x, y)) {
+				printf("LOOP\n");
+				break;
+			}
+			point[p][0] = x;
+			point[p][1] = y;
+			p++;
+		}
+	}
+	
+	return 0;
+}

@@ -1,0 +1,35 @@
+function koch(points, cnt) {
+	if (cnt == 0) {
+		return points;
+	}
+
+	var newPoints = [];
+	newPoints.push(points[0]);
+	for (var i = 0; i < points.length - 1; i++) {
+		var p1 = points[i];
+		var p2 = points[i + 1];
+
+		var dx = (p2.x - p1.x) / 3;
+		var dy = (p2.y - p1.y) / 3;
+
+		var s = {x: p1.x + dx, y: p1.y + dy};
+		var t = {x: p1.x + dx * 2, y: p1.y + dy * 2};
+		var u = {x: s.x + dx * Math.cos(Math.PI / 3) - dy * Math.sin(Math.PI / 3), y: s.y + dx * Math.sin(Math.PI / 3) + dy * Math.cos(Math.PI / 3)};
+
+		newPoints.push(s);
+		newPoints.push(u);
+		newPoints.push(t);
+		newPoints.push(p2);
+	}
+	return koch(newPoints, cnt - 1);
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var n = +input;
+
+var start = [{x: 0, y: 0}, {x: 100, y: 0}];
+var end = koch(start, n);
+
+for (var i = 0; i < end.length; i++) {
+	console.log(end[i].x.toFixed(5) + ' ' + end[i].y.toFixed(5));
+}

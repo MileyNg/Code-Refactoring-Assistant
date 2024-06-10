@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int a[128], i, j, k;
+
+int main(){
+  int W, Q;
+  while(scanf("%d%d", &W, &Q) && W+Q){
+    memset(a, -1, sizeof(a));
+    char c[2];
+    int id, w;
+    rep(i, Q){
+      scanf("%s", c);
+      if(c[0] == 's'){
+	scanf("%d%d", &id, &w);
+	rep(j, W-w+1){
+	  REP(k, j, j+w) if(a[k] != -1) break;
+	  if(k == j+w) break;
+	}
+	if(j == W-w+1){
+	  puts("impossible");
+	}else{
+	  printf("%d\n", j);
+	  REP(k, j, j+w) a[k] = id;
+	}
+      }else{
+	scanf("%d", &id);
+	rep(j, W) if(a[j] == id) a[j] = -1;
+      }
+    }
+    puts("END");
+  }
+  return 0;
+}

@@ -1,0 +1,43 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main(){
+
+  int n,k,i,j;
+
+  while(1){
+
+  int a[100003]={0};
+  int max=0,sum;
+
+    scanf("%d %d",&n,&k);
+
+    if(n==0 && k==0){
+      break;
+    }
+
+    for(i=0;i<n;i++){
+      scanf("%d",&a[i]);
+    }
+
+    for(i=0;i<n;i++){
+      if(i+k<=n){
+      for(j=i;j<i+k;j++){
+	sum+=a[j];
+      }
+      }
+      if(max<sum){
+	max=sum;
+	sum=0;
+      }
+      }
+  
+    printf("%d\n",max);
+
+  }
+
+  return 0;
+
+}

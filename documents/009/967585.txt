@@ -1,0 +1,41 @@
+#include<stdio.h>
+
+int A[2000],q,n;
+
+int solve(int a,int M){
+  if(M==0){
+    return 1;
+  }else if(M<0 || a>n){
+    return 0;
+  }
+
+  if(solve(a+1,M)){
+    return 1;
+  }
+  if(solve(a+1,M-A[a])){
+    return 1;
+  }
+}
+
+int main(){
+  int i,S[2000];
+
+  scanf("%d",&n);
+
+  for(i=0; i<n; i++){
+    scanf("%d",&A[i]);
+  }
+
+  scanf("%d",&q);
+  for(i=0; i<q; i++){
+    scanf("%d",&S[i]);
+  }
+
+  for(i=0; i<q; i++){
+    if(solve(0,S[i])==1 ){
+      printf("yes\n");
+    }else{
+      printf("no\n");
+    }
+  }
+}

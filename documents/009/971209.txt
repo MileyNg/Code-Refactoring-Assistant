@@ -1,0 +1,25 @@
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+int main(){
+  int n;scanf("%d",&n);
+  for(int i=0;i<n;i++){
+    int a=-1,b=0,j=0;
+    for(;j<10;j++){
+      int c;scanf("%d",&c);
+      if(a<b&&b<c){
+	b=c;
+      }else if(b<a&&a<c){
+	a=c;
+      }else if(a<c&&c<b){
+	a=c;
+      }else if(b<c&&c<a){
+	b=c;
+      }else{
+	break;
+      }
+    }
+    if(j==10) puts("YES");
+    else puts("NO");
+  }
+}

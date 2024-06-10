@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+using namespace std;
+
+#define all(c) (c).begin(), (c).end()
+
+int solve(string s){
+    vector<vector<int> > d(3333);
+    int k = 0, num = 0;
+    for(auto c: s){
+        if(c == '[')k++;
+        else if(c == ']'){
+            if(num){
+                d[k].push_back(num/2 + 1);
+                num = 0;
+            }
+            sort(all(d[k]));
+            int sum = accumulate(d[k].begin(), d[k].begin() + d[k].size()/2 + 1, 0);
+            d[k].clear();
+            d[--k].push_back(sum);
+        }
+        else (num *= 10) += c - '0';
+    }
+    return d[0][0];
+}
+
+int main(){
+    int n;
+    cin >> n;
+    while(n--){
+        string s;
+        cin >> s;
+        cout << solve(s) << '\n';
+    }
+    return 0;
+}

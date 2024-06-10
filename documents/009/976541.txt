@@ -1,0 +1,22 @@
+while true
+  a, b, c = gets.chomp.split(" ").map{|s| s.to_f}
+  break if a == 0 && b == 0 && c == 0
+
+  ha2 = a * a / 4
+  hb2 = b * b / 4
+  hc2 = c * c / 4
+
+  rab2 = ha2 + hb2
+  rbc2 = hb2 + hc2
+  rca2 = hc2 + ha2
+
+  min_r2 = [rab2, rbc2, rca2].min
+
+  n = gets.chomp.to_i
+
+  n.times do
+    r = gets.chomp.to_f
+
+    puts (r * r > min_r2) ? "OK" : "NA"
+  end
+end

@@ -1,0 +1,65 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+int N;
+
+bool check(set<int> &v, set<int> &k){
+  for(set<int>::iterator it = k.begin(); it != k.end(); ++it) if(v.find((*it)) == v.end()) return false;
+  return true;
+}
+
+int calc(vector< set<int> > &v, set<int> &k){
+  int ret = -1;
+  REP(i, N){
+    bool ans = check(v[i], k);
+    if(ans){
+      if(ret == -1) ret = i + 1;
+      else return -1;
+    }
+  }
+  return ret;
+}
+
+int main() {
+  while(cin >>N && N){
+    vector< set<int> > v(N);
+    set<int> k;
+    REP(i, N){
+      int M; cin >>M;
+      REP(j, M){
+        int tmp; cin >>tmp;
+        v[i].insert(tmp);
+      }
+    }
+    int M; cin >>M;
+    REP(i, M){
+      int tmp; cin >>tmp;
+      k.insert(tmp);
+    }
+    cout <<calc(v, k) <<endl;
+  }
+  return 0;
+}

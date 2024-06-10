@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+typedef long long lli;
+
+using namespace std;
+
+const int MAXN = 104;
+const lli INF = 1LL<<60;
+
+int n;
+lli a[MAXN], b[MAXN];
+lli dp[MAXN][MAXN];
+
+lli rec(int s, int t) {
+  lli &res = dp[s][t];
+  if(res != INF) return res;
+  if(t-s == 1) return res = 0;
+  for(int i = s+1; i < t; ++i) {
+    res = min(res, rec(s,i) + rec(i,t) + a[s]*b[i-1]*a[i]*b[t-1]);
+  }
+  return res;
+}
+
+int main() {
+  cin >> n;
+  for(int i = 0; i < n; ++i) {
+    cin >> a[i] >> b[i];
+  }
+  fill(dp[0], dp[MAXN], INF);
+  cout << rec(0,n) << endl;
+  return 0;
+}

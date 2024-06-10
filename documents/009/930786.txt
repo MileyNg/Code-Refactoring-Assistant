@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int const N = 1000000;
+
+int ps[N+1];
+int cnt[N+1]={};
+
+bool isp[N+1]={};
+
+int idx=0;
+inline void add(int n){
+    ps[idx++]=n;
+}
+
+void init(){
+    for(int i=0; i<=N; i++) isp[i]=true;
+    add(2);
+    for(int i=4; i<=N; i+=2) isp[i]=false;
+    for(int i=3; i<=N; i+=2){
+        if(!isp[i]) continue;
+        add(i);
+        for(int j=i+i; j<=N; j+=i) isp[j]=false;
+    }
+}
+
+int main(){
+    init();
+
+    int n;
+    while(cin>>n, n){
+        int ans = 0;
+        for(int i=0; i<idx; i++){
+            if(n-ps[i]<0 || ps[i] > n-ps[i]) break;
+            if(isp[n-ps[i]]) ans++;
+        }
+        cout << ans << endl;
+    }
+}

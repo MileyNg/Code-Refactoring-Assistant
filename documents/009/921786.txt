@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int judge(int n){
+  if(n/10000){
+    if((n/10000)==(n%10) && ((n/1000)%10) == ((n%100)/10)) return n;
+  }else if(n/1000){
+    if((n/1000)==(n%10) && ((n/100)%10) == ((n%100)/10)) return n;
+  }else if(n/100){
+    if((n/100) == (n%10)) return n;
+  }else if(n/10){
+    if((n/10) == (n%10)) return n;
+  }else{
+    return n;
+  }
+  return 0;
+}
+int main(){
+  int n, res, res1, res2;
+  scanf("%d", &n);
+  rep(i, 10000){
+    if(n - i >= 0) res1 = judge(n-i);
+    res2 = judge(n+i);
+    if(res1){ res = res1; break;}
+    else if(res2){ res = res2; break;}
+  }
+  printf("%d\n", res);
+  return 0;
+}

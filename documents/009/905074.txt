@@ -1,0 +1,48 @@
+#include<stdio.h>
+
+#define MAX 1000000
+
+main(){
+  int in_num;
+  int i, put, j, k = 0, l;
+  int count = 0;
+  int res;
+  int pres[MAX], flag = 0;
+
+  while(1){
+    res = scanf("%d", &in_num);
+
+    if(res == EOF) break;
+
+    /* initialization */
+    for(i = 0 ; i < in_num ; i++){
+      pres[i] = 1;
+    }
+
+    /* 0,1 -> 1 */
+    pres[0] = 0;
+    pres[1] = 0;
+
+    /* 2~ */
+    for(i = 2 ; i < in_num ; i++){
+      if(pres[i] == 1){
+        /* pres[i*2~] -> 0 */
+        for(j = 2 ; i * j <= in_num ; j++){
+          pres[i * j] = 0;
+        }
+      }
+    }
+
+    /* count */
+    for(i = 2 ; i <= in_num ; i++){
+      if(pres[i] == 1){
+        count++;
+	//printf("%d\n", i);
+      }
+    }
+
+    printf("%d\n", count);
+    count = 0;
+  }
+  return 0;
+}

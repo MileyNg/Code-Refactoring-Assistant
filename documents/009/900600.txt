@@ -1,0 +1,27 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int Q; readf("%d\n", &Q);
+    foreach (_; 0 .. Q) {
+        int c, a, n; readf("%d %d %d\n", &c, &a, &n);
+        int x = min(c, a, n);
+        c -= x; a -= x; n -= x;
+        int y = min(c / 2, a);
+        c -= y * 2; a -= y;
+        int z = c / 3;
+        writeln(x + y + z);
+    }
+}

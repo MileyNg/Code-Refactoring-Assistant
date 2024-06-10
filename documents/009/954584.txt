@@ -1,0 +1,85 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+
+/** Problem0263 : Beat Panel **/
+typedef struct State{int panel; int i; int sum; int push;} state;
+
+int count(int bits){
+	bits = (bits & 0x55555555) + (bits >> 1 & 0x55555555);
+	bits = (bits & 0x33333333) + (bits >> 2 & 0x33333333);
+	bits =(((bits >> 4) + bits) & 0x0f0f0f0f);
+	bits += bits >> 8;
+	return (bits + (bits >> 16)) & 0xff;
+}
+
+int main()
+{
+	int n, cn;
+	queue<state> Q;
+	
+	while (cin >> n >> cn, n||cn) {
+		vector<int> button, ptn;
+		int tmp, in;
+		rep(i, n) {
+			tmp=0;
+			rep(j, 16) {
+				cin >> in;
+				tmp = tmp<<1;
+				if (in)
+					tmp+=1;
+			}
+			button.push_back(tmp);
+		}
+		rep(i, cn) {
+			tmp=0;
+			rep(j, 16) {
+				cin >> in;
+				tmp = tmp<<1;
+				if (in)
+					tmp+=1;
+			}
+			ptn.push_back(tmp);
+		}
+		
+		rep(i, cn) {
+			State first = {0, 0, 0, i};
+			Q.push(first);
+		}
+		int max=0;
+		while (Q.size()) {
+			State s = Q.front(); Q.pop();
+			if (s.i >= n) continue;
+			s.panel = s.panel|button[s.i];
+			s.sum += count(s.panel&ptn[s.push]);
+			s.panel ^= s.panel&ptn[s.push];
+			if (max<s.sum) max = s.sum;
+
+			rep(j, cn) {
+				State next = {s.panel, s.i+1, s.sum, j};
+				Q.push(next);
+			}
+		}
+		cout << max << endl;
+	}
+	return 0;
+}

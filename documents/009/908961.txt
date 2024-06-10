@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+
+int main() {
+  
+  int N, M;
+  
+  while(cin >> N >> M && (N|M)) {
+    vector<vector<double> > p(N, vector<double>(N, 0));
+      
+    for(int i=0; i<N; i++) for(int j=0; j<N; j++) cin >> p[i][j];
+      
+    vector<vector<double> > dp(M, vector<double>(N, 0));
+    for(int i=0; i<N; i++) dp[0][i] = 1.0;
+	
+    for(int k=1; k<M; k++)
+      for(int i=0; i<N; i++)
+	for(int j=0; j<N; j++)
+	  dp[k][i] = max(dp[k][i], dp[k-1][j]*p[j][i]);
+    
+    double res = 0.0;
+    for(int i=0; i<N; i++) res = max(res, dp[M-1][i]);
+    
+    printf("%.2f\n", res);
+  }  
+  
+  return 0;
+}

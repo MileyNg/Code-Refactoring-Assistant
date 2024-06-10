@@ -1,0 +1,25 @@
+while 1:
+	n=input()
+	if n==0:break
+	games=[map(int,raw_input().split()) for i in range(n)]
+	ls=[]
+	for game in games:
+		score,flame,throw=0,1,1
+		while throw<len(game):
+			if flame<10:
+				if game[throw]==10:
+					score+=sum(game[throw:throw+3])
+					throw+=1
+				elif game[throw]+game[throw+1]==10:
+					score+=sum(game[throw:throw+3])
+					throw+=2
+				else:
+					score+=game[throw]+game[throw+1]
+					throw+=2
+				flame+=1
+			else:
+				score+=game[throw]
+				throw+=1
+		ls.append([game[0],score])
+	for k,s in sorted(ls,key=lambda x:x[1],reverse=True):
+		print k,s

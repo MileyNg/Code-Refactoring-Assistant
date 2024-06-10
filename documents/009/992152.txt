@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+int ans = 0;
+int  p,q,a,n;
+void dfs(int num,int seki,int deno,int nume,int value){
+  if(nume > 0){
+	int g = __gcd(deno,nume);
+	deno/=g;
+	nume/=g;
+  }
+  if(p*deno == q*nume){
+	ans++;
+  }
+  if(p*deno <= q*nume) {
+	return;
+  }
+  if(num == n)return;
+  for(int i = value;i*seki <= a;i++){
+	dfs(num+1,seki*i,deno*i,nume*i+deno,i);
+  }
+  
+}
+int main(){
+ 
+  while(cin >> p >> q >> a >> n && q&&p){
+	ans = 0;
+	dfs(0,1,1,0,1);
+	cout << ans << endl;
+	
+  }
+
+  return 0;
+}

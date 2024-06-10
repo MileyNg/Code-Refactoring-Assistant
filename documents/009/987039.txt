@@ -1,0 +1,64 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<map>
+
+using namespace std;
+
+int main(){
+  for(int c=1,N;cin>>N,N;c++){
+    if(c!=1){
+      cout<<endl;
+    }
+    typedef map<int,map<int,map<int,int> > > G;
+    G g[101];
+    for(int i=0;i<5;i++){
+      for(int j=0;j<5;j++){
+	for(int k=0;k<5;k++){
+	  char cl;
+	  cin>>cl;
+	  g[0][i][j][k]=cl-'0';
+	}
+      }
+    }
+    vector<int> ab[2];
+    for(int i=0;i<2;i++){
+      int M;
+      cin>>M;
+      ab[i].resize(M);
+      for(int j=0;j<M;j++){
+	cin>>ab[i][j];
+      }
+      sort(begin(ab[i]),end(ab[i]));
+    }
+    for(int i=0;i<N;i++){
+      for(int j=0;j<5;j++){
+	for(int k=0;k<5;k++){
+	  for(int l=0;l<5;l++){
+	    int s=-g[i][j][k][l];
+	    for(int m=-1;m<=1;m++){
+	      for(int n=-1;n<=1;n++){
+		for(int o=-1;o<=1;o++){
+		  s+=g[i][j+m][k+n][l+o];
+		}
+	      }
+	    }
+	    g[i+1][j][k][l]=binary_search(begin(ab[g[i][j][k][l]]),end(ab[g[i][j][k][l]]),s);
+	  }
+	}
+      }
+    }
+    cout<<"Case "<<c<<':'<<endl;
+    for(int i=0;i<5;i++){
+      for(int j=0;j<5;j++){
+	for(int k=0;k<5;k++){
+	  cout<<g[N][i][j][k];
+	}
+	cout<<endl;
+      }
+      if(i!=4){
+	cout<<endl;
+      }
+    }
+  }
+}

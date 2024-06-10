@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int num1[30];
+	int num2[30];
+	int k,kk,t;
+	int i = 0;
+	int s = 0;
+	
+	while(scanf("%d", &num1[i]) != EOF) {
+		i++;
+	}
+	
+	for(k = 0;k < i + 1;k++){
+		
+		if(num1[k] == 0){
+			kk = k - 1;
+			while(num1[kk] == 0){
+				kk--;
+			}
+			num2[s] = num1[kk];
+			num1[kk] = 0;
+			
+			s++;
+		}
+	}
+	
+	
+	for(t = 0;t < s;t++){
+		printf("%d\n",num2[t]);
+	}
+	
+	return 0;
+}

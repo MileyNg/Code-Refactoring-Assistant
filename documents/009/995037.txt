@@ -1,0 +1,100 @@
+
+#include<iostream>
+#include<iomanip>
+#include<vector>
+#include<queue>
+#include<map>
+#include<algorithm>
+#include<functional>
+using namespace std;
+
+const int NIL = -1;
+
+class Node {
+public:
+    int vertex;
+    int last;
+    double speed;
+    double cost;
+    Node(int v, int l, double s, double c) :vertex(v), last(l), speed(s), cost(c) {}
+    bool operator>(const Node& n) const {return cost > n.cost;}
+};
+
+class Key {
+public:
+    int vertex;
+    int last;
+    double speed;
+    Key(int v, int l, double s) :vertex(v), last(l), speed(s) {}
+    bool operator<(const Key& k) const {
+        if(vertex != k.vertex) return vertex < k.vertex;
+        if(last != k.last) return last < k.last;
+        return speed < k.speed;
+    }
+};
+
+int n, m;
+int s, g;
+vector<vector<double>> cost;
+vector<vector<double>> limit;
+
+double Dijkstra() {
+    map<Key, double> memo;
+    double result = NIL;
+
+    priority_queue<Node, vector<Node>, greater<Node>> q;
+    for(int j = 0; j < n; ++j) {
+        if(cost[s][j] == NIL) continue;
+        if(limit[s][j] < 1.0) continue;
+        q.push(Node(j, s, 1.0, cost[s][j]));
+    }
+
+    while(!q.empty()) {
+        Node current = q.top();
+        q.pop();
+        if(result != NIL && result <= current.cost) continue;
+        Key key(current.vertex, current.last, current.speed);
+        if(memo.count(key)) continue;
+        if(key.vertex == g && key.speed == 1.0) result = (result == NIL ? current.cost : min(result, current.cost));
+        memo[key] = current.cost;
+        for(int j = 0; j < n; ++j) {
+            if(cost[current.vertex][j] == NIL) continue;
+            if(current.last == j) continue;
+            for(double ds: {-1.0, 0.0, 1.0}) {
+                if(current.speed + ds <= 0.0) continue;
+                if(current.speed + ds > limit[current.vertex][j]) continue;
+                double next_speed = current.speed + ds;
+                double next_cost = current.cost + cost[current.vertex][j] / next_speed;
+                q.push(Node(j, current.vertex, next_speed, next_cost));
+            }
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    while(cin >> n >> m, n | m) {
+        cost.clear();
+        cost.resize(n);
+        for(auto& c: cost) c.resize(n, NIL);
+        limit.clear();
+        limit.resize(n);
+        for(auto& l: limit) l.resize(n, NIL);
+
+        cin >> s >> g;
+        --s; --g;
+
+        for(int i = 0; i < m; ++i) {
+            int x, y, d, c;
+            cin >> x >> y >> d >> c;
+            x--; --y;
+            cost[x][y] = cost[y][x] = d;
+            limit[x][y] = limit[y][x] = c;
+        }
+
+        double answer = Dijkstra();
+        if(answer == NIL) cout << "unreachable" << endl;
+        else cout << setprecision(5) << fixed << answer << endl;
+    }
+}

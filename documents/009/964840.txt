@@ -1,0 +1,60 @@
+// http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2180
+
+#include <iostream>
+#include <algorithm>
+#include <stdio.h>
+using namespace std;
+
+int N;
+double L;
+
+double X[86400];
+
+bool ok(double M) {
+  double hikaku[2];
+  double now = L;
+  for (int j=0;j<2;j++) {
+    for (int i=0;i<86400;i++) { // 単位時間ごとに愚直にたし引き。少しだけ簡単にできるから後で書き直す。
+      now = now - X[i] + M;
+      if (now > L) {
+	now = L;
+      } else if (now <= 0) {
+	return false;
+      }
+    }
+    hikaku[j] = now;
+  }
+  if (hikaku[0] <= hikaku[1]) { // 水かさが増えていくなら、
+    return true; // 繰り返すたびに溜まっていく。つまり安定。
+  } else { // ちょっとでも減っていくなら、
+    return false; // やがて枯渇する運命。
+  } // どうせ小数点第6位までしか関係ないから、この評価できっと大丈夫。
+}
+
+int main() {
+  while(scanf("%d%lf",&N,&L) && N) {
+    for (int i=0;i<86400;i++) {
+      X[i] = 0;
+    }
+    for (int i=0;i<N;i++) {
+      int s,t;
+      double u;
+      scanf("%d%d%lf",&s,&t,&u);
+      for (int i=s;i<t;i++) {
+	X[i] = u;
+      }
+    }
+    double lo = 0, hi = 1e6; // sumを求めていなかったから、0からにした。
+    while (hi - lo >1e-6) {
+      double m = (hi + lo)/2.0;
+      if (ok(m)) {
+	hi = m;
+      } else {
+	lo = m;
+      }
+    }
+    printf("%.10f\n",lo);
+  }
+}
+
+// とりあえずアクセプトされました。

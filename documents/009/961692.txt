@@ -1,0 +1,91 @@
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  int i,j,k;
+  int a;
+  int len;
+  unsigned char in[100]={0};
+  scanf("%d",&a);
+  
+  if(a/10!=0){
+    in[0]=a/10+'0';
+    in[1]=a%10+'0';
+  }else
+    in[0]=a+'0';
+  
+  for(i=a-1;i>1;i--){
+    int zure=0;
+
+    len=strlen(in);
+	
+	//for(j=0;j<len;j++)
+	printf("%s",in);
+	putchar('\n');
+	
+    for(j=0;j<len;j++)
+	  in[j]=(in[j]-'0')*i+'0';
+	  
+    printf("%d %d %d",in[2],i,len);
+    putchar('\n');
+	  
+	for(j=len-1;j>=0;j--){
+	  if(j>=2){
+	    in[j-2]+=(in[j]-'0')/100;
+		in[j-1]+=(in[j]-'0')/10;
+		in[j]=(in[j]-'0')%10+'0';
+	  }else if(j==1){
+	    if((in[j]-'0')/100!=0){
+		  zure=1;
+		  for(k=len-1;k>=0;k--)
+		    in[k+1]=in[k];
+		  in[0]=(in[2]-'0')/100+'0';
+		  in[1]+=((in[2]-'0')/10)%10;
+		  in[2]=(in[2]-'0')%10+'0';
+		}else{
+		  in[0]+=(in[1]-'0')/10;
+		  in[1]=(in[1]-'0')%10+'0';
+		}
+	  }else{
+		if(zure==1){
+		  if((in[1]-'0')/100!=0){
+		    for(k=len-1;k>=0;k--)
+		      in[k+1]=in[k];
+		    in[0]=(in[2]-'0')/100+'0';
+		    in[1]+=((in[2]-'0')/10)%10;
+		    in[2]=(in[2]-'0')%10+'0';
+	      }else{
+		    in[0]+=(in[1]-'0')/10;
+			in[1]=(in[1]-'0')%10+'0';
+		  }
+		}else{
+		  if((in[0]-'0')/100!=0){
+			for(k=len-1;k>=0;k--)
+		      in[k+2]=in[k];
+		    in[0]=(in[2]-'0')/100+'0';
+		    in[1]=((in[2]-'0')/10)%10+'0';
+     	    in[2]=(in[2]-'0')%10+'0';
+	      }else if((in[0]-'0')/10!=0){
+		    for(k=len-1;k>=0;k--)
+			  in[k+1]=in[k];
+			in[0]=(in[1]-'0')/10+'0';
+			in[1]=(in[1]-'0')%10+'0';
+			//printf("%d",in[0]);
+			//putchar('\n');
+	      }
+		}
+      }
+	}
+	//printf("%d %d",in[0],i);
+    //putchar('\n');
+  }
+  len=strlen(in);
+  
+  //for(i=0;i<len;i++)
+  //printf("%c\n",in[1]);
+  printf("%s\n",in);
+  //putchar('\n');
+
+  return 0;
+}

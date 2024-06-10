@@ -1,0 +1,74 @@
+#include <iostream> 
+#include <string> 
+#include <vector> 
+#include <cmath> 
+#include <algorithm> 
+#include <cstdlib> 
+#include <ctime> 
+#include <cstdio> 
+#include <functional> 
+#include <set> 
+#include <sstream> 
+
+
+using namespace std; 
+
+int main(){
+
+	int n;
+	const double eps=1e-8;
+	while(true){
+
+		cin>>n;
+
+		if(n==0) return 0;
+
+		int ans=0;
+		vector< double > x(n),y(n);
+
+		for(int i=0;i<n;i++) cin>>x[i]>>y[i];
+
+
+		for(int i=0;i<n;i++){
+			for(int j=i+1;j<n;j++){
+				const double d=hypot(x[i]-x[j],y[i]-y[j]);
+				if(d>2.0-eps) continue;
+
+				const double mx=(x[i]+x[j])/2.0;
+				const double my=(y[i]+y[j])/2.0;
+				const double dvx=(x[i]-x[j])/d;
+				const double dvy=(y[i]-y[j])/d;
+
+				const double cx1=mx+dvy*sqrt(1.0-d*d/4.0);
+				const double cy1=my-dvx*sqrt(1.0-d*d/4.0);
+
+				const double cx2=mx-dvy*sqrt(1.0-d*d/4.0);
+				const double cy2=my+dvx*sqrt(1.0-d*d/4.0);
+
+				int res=2;
+				for(int k=0;k<n;k++){
+					if(k==i || k==j) continue;
+//					if(hypot(x[k]-cx1,y[k]-cy1)<1.0+eps) res++;
+					if((x[k]-cx1)*(x[k]-cx1)+(y[k]-cy1)*(y[k]-cy1)<1.0+eps) res++;
+				}
+				
+				ans=max(ans,res);
+
+				res=2;
+				for(int k=0;k<n;k++){
+					if(k==i || k==j) continue;
+//					if(hypot(x[k]-cx2,y[k]-cy2)<1.0+eps) res++;
+					if((x[k]-cx2)*(x[k]-cx2)+(y[k]-cy2)*(y[k]-cy2)<1.0+eps) res++;
+				}
+
+				ans=max(ans,res);
+
+			}
+		}
+
+		cout<<ans<<endl;
+
+	}
+
+	return 0;
+}

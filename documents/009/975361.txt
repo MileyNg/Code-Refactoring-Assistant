@@ -1,0 +1,31 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int getCoin(int b,int r,int g,int c){
+  int sum=100;
+  sum+=b*5*13;
+  sum+=r*3*13;
+  sum+=g*7;
+  sum+=c*2;
+  sum+=b*15;
+  sum+=r*15;
+  return sum;
+}
+
+int getLostcoin(int b,int r,int s, int t){
+  int sum=0;
+  sum=(t-b*5-r*3-s)*3;
+  return sum;
+}
+int main(){
+  int b,r,g,c,s,t,gc,lc;
+  while(1){
+    cin>>b>>r>>g>>c>>s>>t;
+    if(b==0 && r==0 && g==0 && c==0 && s==0 && t==0) break;
+    gc=getCoin(b,r,g,c);
+    lc=getLostcoin(b,r,s,t);
+    cout<<gc-lc<<endl;
+  }
+  return 0;
+}

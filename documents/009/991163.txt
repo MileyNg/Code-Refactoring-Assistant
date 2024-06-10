@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+
+using namespace std;
+
+struct qu_data{
+    double l;
+    double last;
+    int rest_cake_num;
+    int rest_cake[15];
+};
+
+int main(){
+    string input;
+    while(getline(cin, input)){
+        //cout<<input;
+        if(input=="")break;
+        stringstream ss;
+        ss<<input;
+        double box;
+        ss>>box;
+        
+        double cake[15]={0};
+        int cake_count=0;
+        while(ss>>cake[cake_count]){
+            cake_count++;
+        }
+        
+        
+        qu_data data;
+        data.l=0.0;
+        data.last=0.0;
+        data.rest_cake_num=cake_count;
+        for(int i=0; i<15; i++){
+            data.rest_cake[i]=cake[i];
+        }
+        
+        stack<qu_data> qu;
+        qu.push(data);
+        
+        
+        bool output_flag=true;
+        while(!qu.empty()){
+            qu_data front_data = qu.top();
+            qu.pop();
+            if(front_data.rest_cake_num==0&&front_data.l<=box){
+                cout<<"OK"<<endl;
+                output_flag=false;
+                break;
+            }
+            
+            for(int i=0; i<front_data.rest_cake_num; i++){
+                qu_data push_data = front_data;
+                if(push_data.l == 0.0){
+                    push_data.l+=push_data.rest_cake[i];
+                    push_data.last=push_data.rest_cake[i];
+                    push_data.rest_cake_num--;
+                    swap(push_data.rest_cake[i], push_data.rest_cake[push_data.rest_cake_num]);
+                }else{
+                    double x = (push_data.last+push_data.rest_cake[i])*(push_data.last+push_data.rest_cake[i])-(push_data.last-push_data.rest_cake[i])*(push_data.last-push_data.rest_cake[i]);
+                    
+                    push_data.l+=sqrt(fabs(x));
+                    push_data.last=push_data.rest_cake[i];
+                    push_data.rest_cake_num--;
+                    swap(push_data.rest_cake[i], push_data.rest_cake[push_data.rest_cake_num]);
+                    
+                    if(push_data.rest_cake_num==0)push_data.l+=push_data.last;
+                    
+                }
+                
+                qu.push(push_data);
+            }
+            
+        }
+        if(output_flag)cout<<"NA"<<endl;
+
+        
+        
+    }
+}

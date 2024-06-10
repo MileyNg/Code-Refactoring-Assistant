@@ -1,0 +1,47 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+#define PAIR pair<int, int>
+
+int main() {
+	int w, h;
+	while (cin >> w >> h, w != 0 && h != 0) {
+		bool field[52][52] = {{false}};
+
+		for (int i = 1; i <= h; i++) {
+			for (int j = 1; j <= w; j++) {
+				cin >> field[i][j];
+			}
+		}
+
+		stack<PAIR> st;
+		int island = 0;
+		int dx[] = {0, 1, 1, 1, 0, -1, -1, -1};
+		int dy[] = { -1, -1, 0, 1, 1, 1, 0, -1};
+
+		for (int i = 1; i <= h; i++) {
+			for (int j = 1; j <= w; j++) {
+				if (field[i][j]) {
+					st.push(PAIR(i, j));
+					while (!st.empty()) {
+						int x = st.top().first;
+						int y = st.top().second;
+						st.pop();
+						field[x][y] = false;
+						for (int k = 0; k < 8; k++) {
+							int nextX = x + dx[k];
+							int nextY = y + dy[k];
+							if (field[nextX][nextY]) {
+								st.push(PAIR(nextX, nextY));
+							}
+						}
+					}
+					island++;
+				}
+			}
+		}
+		cout << island << endl;
+	}
+}

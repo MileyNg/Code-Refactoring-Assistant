@@ -1,0 +1,71 @@
+#include <cassert>
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+constexpr int dx[] = {0, 1, 0, -1};
+constexpr int dy[] = {1, 0, -1, 0};
+
+int correct(int pos, int limit) {
+	return pos > limit ? limit : pos < 1 ? 1 : pos;
+}
+
+void update(int &x, int &y, int dir, int amount, int w, int h) {
+	x = correct(x + dx[dir] * amount, w);
+	y = correct(y + dy[dir] * amount, h);
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int w, h; cin >> w >> h && w;) {
+		int x = 1, y = 1;
+		int dir = 0;
+
+		while(true) {
+			string instruction;
+			cin >> instruction;
+
+			switch(instruction[0]) {
+			case 'F': // forward
+			{
+				int k;
+				cin >> k;
+				update(x, y, dir, k, w, h);
+				break;
+			}
+			case 'B': // backward
+			{
+				int k;
+				cin >> k;
+				update(x, y, dir ^ 2, k, w, h);
+				break;
+			}
+			case 'R': // right
+			{
+				dir = (dir + 1) % 4;
+				break;
+			}
+			case 'L': // left
+			{
+				dir = (dir + 3) % 4;
+				break;
+			}
+			case 'S': // stop
+			{
+				goto finish;
+			}
+			default:
+			{
+				assert(false);
+			}
+			}
+		}
+
+	finish:;
+		cout << x << " " << y << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

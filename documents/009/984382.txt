@@ -1,0 +1,70 @@
+
+$edges = []
+$pathhash = {}
+
+### subroutines
+
+def check_path(src, bits, strs, w)
+  #p "check_path(#{src}, #{strs})"
+
+  return $pathhash[src][bits] if ! $pathhash[src][bits].nil?
+
+  n = strs.length
+  stsrc = strs[src]
+
+  bits0 = (bits | (1 << src))
+  w0 = w + stsrc[2]
+
+  min_time = Float::INFINITY
+  min_ids = []
+
+  for nxt in (0...n)
+    next if ((bits0 >> nxt) & 1) != 0
+
+    #p "(#{stsrc[0]})src=#{src}, stsrc[3]=#{stsrc[3]}"
+    #p "(#{strs[nxt][0]})nxt=#{nxt}, strs[nxt][3]=#{strs[nxt][3]}"
+
+    ntime, nids = check_path(nxt, bits0, strs, w0)
+    time = ntime + $edges[src][nxt] * (70 + w0) / 2000
+
+    if min_time > time
+      min_time = time
+      min_ids = [stsrc[0]] + nids
+    end
+  end
+
+  $pathhash[src][bits] = [min_time, min_ids]
+end
+
+### main
+
+n = gets.strip.to_i
+strs = (0...n).map{gets.strip.split(' ').map{|s| s.to_i}}
+strs.each{|st| st[2] *= 20}
+
+$edges = (0...n).map{(0...n).map{nil}}
+for i in (0...n)
+  for j in ((i + 1)...n)
+    $edges[i][j] = $edges[j][i] = (strs[i][1] - strs[j][1]).abs.to_f
+  end
+end
+
+$pathhash = (0...n).map{[]}
+nbits = (1 << n) - 1
+
+for i in (0...n)
+  $pathhash[i][nbits ^ (1 << i)] = [0.0, [strs[i][0]]]
+end
+
+min_time = Float::INFINITY
+min_ids = []
+
+for src in (0...n)
+  time, ids = check_path(src, 0, strs, 0)
+  if min_time > time
+    min_time = time
+    min_ids = ids
+  end
+end
+
+puts min_ids.join(' ')

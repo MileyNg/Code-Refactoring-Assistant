@@ -1,0 +1,85 @@
+#include<iostream>
+#include<map>
+#include<stack>
+
+using namespace std;
+ 
+#define NMAX 50
+
+typedef map<int,bool>::value_type VT;
+
+struct data{
+	int x,y,turn;
+};
+
+int main(void){
+	
+	int t,n;
+	int x,y;
+	map<int,bool> road,ok[31];
+	stack<data> no;
+	data tm,da;
+	int dx[]={1,1,0,-1,-1,0};
+	int dy[]={0,1,1,0,-1,-1};
+	int cnt;
+
+	for(int i=-31;i<=31;i++){
+		for(int j=-31;j<=31;j++){
+			road.insert(VT(i+j*100,true));
+			for(int k=0;k<31;k++){
+				ok[k].insert(VT(i+j*100,true));
+			}
+		}
+	}
+	while(1){
+		cin>>t>>n;
+		if(t==0&&n==0) break;
+		for(int i=-30;i<=30;i++){
+			for(int j=-30;j<=30;j++){
+				road[i+j*100]=true;
+				for(int k=0;k<31;k++){
+					ok[k][i+j*100]=true;
+				}
+			}
+		}
+		for(int i=-31;i<=31;i++){
+			road[-31+i*100]=false;
+			road[31+i*100]=false;
+			road[i+31*100]=false;
+			road[i-31*100]=false;
+		}
+
+		for(int i=0;i<n;i++){
+			cin>>x>>y;
+			road[y+x*100]=false;
+		}
+		cin>>x>>y;
+		tm.x=x,tm.y=y,tm.turn=0;
+		no.push(tm);
+		road[y+x*100]=false;
+		cnt=1;
+		while(!no.empty()){
+			tm=no.top();
+			no.pop();
+			if(tm.turn==t){
+				if(ok[tm.turn][tm.y+tm.x*100]==true){
+					ok[tm.turn][tm.y+tm.x*100]=false;
+					cnt++;
+				}
+				continue;
+			}
+			for(int i=0;i<6;i++){
+				if(road[(tm.y+dy[i])+(tm.x+dx[i])*100]==true&&ok[tm.turn][(tm.y+dy[i])+(tm.x+dx[i])*100]==true){
+					ok[tm.turn][(tm.y+dy[i])+(tm.x+dx[i])*100]=false;
+					da.x=tm.x+dx[i];
+					da.y=tm.y+dy[i];
+					da.turn=tm.turn+1;
+					no.push(da);
+				}
+			}
+		}
+		cout<<cnt<<endl;
+	}
+	
+	return 0;
+}

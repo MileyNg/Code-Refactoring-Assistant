@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+
+/** Problem0080 : Third Root **/
+int main()
+{
+	double x, oldX, in;
+	
+	while (cin >> in) {
+		if (in == -1) break;
+		
+		oldX = in/2.0;
+		for (;;) {
+			x = oldX - (oldX*oldX*oldX-in)/(3*oldX*oldX);
+			
+			if (x*x*x > in) {
+				if (x*x*x - in < 0.00001*in)
+					break;
+				else
+					oldX = x;
+			} else {
+				if (in - x*x*x < 0.00001*in)
+					break;
+				else
+					oldX = x;
+			}
+		}
+		printf("%.6lf\n", x);
+	}
+	
+	return 0;
+}

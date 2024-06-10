@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+int main()
+{
+  string n;
+  char type;
+  while (cin >> n >> type, type != 'X'){
+    rep(i, n.size()){
+      if (type == 'U'){
+        if (i == 0){
+          putchar(toupper(n[i]));
+        }
+        else if (n[i] == '_'){
+          putchar(toupper(n[i + 1]));
+          i++;
+        }
+        else {
+          putchar(n[i]);
+        }
+      }
+      if (type == 'L'){
+        if (i == 0){
+          putchar(tolower(n[i]));
+        }
+        else if (n[i] == '_'){
+          putchar(toupper(n[i + 1]));
+          i++;
+        }
+        else {
+          putchar(n[i]);
+        }
+      }
+      if (type == 'D'){
+        if (i == 0){
+          putchar(tolower(n[i]));
+        }
+        else if (isupper(n[i])){
+          putchar('_');
+          putchar(tolower(n[i]));
+        }
+        else {
+          putchar(n[i]);
+        }
+      }
+    }
+    puts("");
+  }
+  return 0;
+}

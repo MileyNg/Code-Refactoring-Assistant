@@ -1,0 +1,81 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+int n,a,b,c,p;
+vector <int> t[100][100];
+int u[100][100];
+int no[100],in[100];
+int in2[100][100];
+int INF = (1<<24);
+
+int change(int x){
+  for(int i=0;i<n;i++)if(no[i]==x)return i;
+}
+vector<int> x,z;
+
+
+int main(){
+  for(int i=0;i<100;i++)
+    for(int j=0;j<100;j++){
+      u[i][j]=(i==j?0: INF );
+      if(i==j)continue;
+      t[i][j].push_back(i);
+      t[i][j].push_back(j);
+    }
+  cin>>n;
+
+  for(int i=0;i<n;i++){
+    cin>>no[i];
+    cin>>in[i];
+    for(int j=0;j<in[i];j++){
+      cin>>in2[i][j];
+    }
+  }
+  
+  
+  for(int i=0;i<n;i++){
+    for(int j=0;j<in[i];j++){
+     u[i][change(in2[i][j])]=1;
+    }
+  }
+
+  
+
+
+  for(int k=0;k<n;k++){
+    for(int i=0;i<n;i++){
+      for(int j=0;j<n;j++){
+	if(u[i][k]+u[k][j]<u[i][j]){
+	  u[i][j]=u[i][k]+u[k][j];
+
+	  /*
+	  t[i][j].clear();
+	  x=t[i][k];
+	  z=t[k][j];
+	  for(int l=0;l<(int)x.size();l++)t[i][j].push_back(x[l]);
+	  t[i][j].push_back(no[j]);
+	  for(int l=0;l<(int)z.size();l++)t[i][j].push_back(z[l]);
+	  */
+	}
+      }
+    }
+  }
+  cin>>p;
+  while(p--){
+    cin>>a>>b>>c;
+    if(u[change(a)][change(b)]+1>c)cout<<"NA"<<endl;
+    else{
+      cout<<u[change(a)][change(b)]+1<<endl;
+      /*cout<<t[change(a)][change(b)].size()<<endl;
+      
+      for(int i=0;i<(int)t[change(a)][change(b)].size();i++){
+	if(i)cout<<' ';
+	cout<<t[change(a)][change(b)][i];
+      }
+      cout<<endl;
+      */
+    }
+  }
+  return 0;
+}

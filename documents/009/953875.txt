@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int sum[10000];
+
+int main(void)
+{
+	int i;
+	int n;
+	int tmp;
+	
+	scanf("%d", &n);
+	for (i = 0; i < n; i++){
+		scanf("%d", &tmp);
+		sum[tmp - 1]++;
+	}
+	
+	for (i = 0; i < n; i++){
+		if (sum[i] == 0){
+			puts("-");
+		}
+		else {
+			for (; sum[i] > 0; sum[i]--){
+				printf("*");
+			}
+			puts("");
+		}
+	}
+	
+	return (0);
+}

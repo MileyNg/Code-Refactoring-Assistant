@@ -1,0 +1,53 @@
+### constant
+
+MAX_BSW = 1500000
+
+### subroutines
+
+def shelf(m, bi)
+  return 0 if bi >= $bn
+
+  return $scache[m][bi] if ! $scache[m][bi].nil?
+
+  if m == 1
+    bsw = $books[bi...$bn].inject(0){|s, b| s + b}
+    return ($scache[m][bi] = bsw)
+  end
+
+  min_bsw = MAX_BSW
+  bsw0 = 0
+  max_bi = $bn - m + 1
+
+  for bi0 in (bi..max_bi)
+    bsw1 = shelf(m - 1, bi0)
+    bsw = [bsw0, bsw1].max
+    if min_bsw > bsw
+      min_bsw = bsw
+    end
+
+    bsw0 += $books[bi0]
+    break if min_bsw <= bsw0
+  end
+
+  $scache[m][bi] = min_bsw
+end
+
+### main
+
+while true
+  m, n = gets.strip.split(' ').map{|s| s.to_i}
+  break if m == 0 && n == 0
+
+  $bn = n
+  $books = []
+  n.times.each do
+    w = gets.strip.to_i
+    $books << w
+  end
+  #p $books
+
+  $scache = (m + 1).times.map{[]}
+
+  bsw = shelf(m, 0)
+  puts bsw
+end

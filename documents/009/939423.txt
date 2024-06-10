@@ -1,0 +1,26 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int box[3] = {0};
+	int i,j,num;
+	
+	scanf("%d %d %d",&box[0],&box[1],&box[2]);
+	
+	for(j=0;j<NUMBER;j++){
+		for(i=0;i<NUMBER-1;i++){
+			num = box[i];
+			if(box[i] > box[i+1]){
+				box[i] = box[i+1];
+				box[i+1] = num;
+			}
+		}
+	}
+	
+	for(i=0;i<NUMBER;i++){
+		printf("%d ",box[i]);
+	}
+	puts("");
+	
+	return 0;
+}

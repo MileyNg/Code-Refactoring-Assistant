@@ -1,0 +1,65 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+bool pairCompare(const std::pair<string, int>& firstElem, const std::pair<string, int>& secondElem) {
+    if(firstElem.second != secondElem.second){
+        return firstElem.second > secondElem.second;
+    }else{
+        if(firstElem.first.size() != secondElem.first.size()){
+            return firstElem.first.size() < secondElem.first.size();
+        }
+        else
+            return firstElem.first < secondElem.first;
+    }
+}
+
+int main(){
+    int n;
+    map<string, int> m;
+    int stringSize = 0;
+
+    cin >> n;
+    for(int i=0; i < n; i++){
+        string s; int p;
+        cin >> s >> p;
+        stringSize = max(stringSize, (int)s.size());
+        m[s] += p;
+    }
+
+    for(int i=0; i <= stringSize; i++){
+        map<string, int>::iterator it = m.begin();
+        while(it != m.end()){
+            if(i == (*it).first.size())
+                cout << (*it).first << " " << (*it).second << endl;
+            ++it;
+        }
+    }
+}

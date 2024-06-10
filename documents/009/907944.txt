@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+
+int main()
+{
+	int n,ans2,ans3,i,ans1,amr;
+	ans1 = 100000;
+	scanf("%d",&n);
+	
+	for(i=1;i<n+1;i++){
+		
+		ans1 += ans1 * 0.05;
+		amr = ans1 % 1000;
+		if(amr > 0)
+		{
+			ans2 = ans1 / 1000;
+			ans3 = ans2 * 1000 + 1000;
+		}else{
+			ans2 = ans1 / 1000;
+			ans3 = ans2 * 1000;
+		}
+		ans1 = ans3;
+	}
+	
+	printf("%d",ans3);
+	return 0;
+	
+}

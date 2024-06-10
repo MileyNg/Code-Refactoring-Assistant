@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_LEN (80)
+
+char num1[1000000];
+char num2[1000000];
+
+void zerofill(char *str, int size)
+{
+	char buf[83];
+	memset(buf, '0', sizeof(buf));
+	buf[82] = 0;
+	strcpy(buf + (MAX_LEN - size + 1), str);
+	strcpy(str, buf);
+}
+
+int main(void)
+{
+	int n, carry;
+	int i, j, len;
+	
+	scanf("%d", &n);
+	
+	for (i = 0; i < n; i++){
+		memset(num1, 0, sizeof(num1));
+		memset(num2, 0, sizeof(num2));
+		
+		scanf("%81s %81s", num1, num2);
+		if (strlen(num1) > MAX_LEN || strlen(num2) > MAX_LEN){
+			printf("overflow\n");
+			continue;
+		}
+		
+		zerofill(num1, strlen(num1));
+		zerofill(num2, strlen(num2));
+		
+		carry = 0;
+		for (j = MAX_LEN; j >= 0; j--){
+			int sum = (num1[j] - '0') + (num2[j] - '0') + carry;
+			num1[j] = (sum % 10) + '0';
+			carry = sum / 10;
+		}
+		
+		for (j = 0; j <= MAX_LEN; j++){
+			if (num1[j] != '0'){
+				break;
+			}
+		}
+		if (j == 0){
+			printf("overflow\n");
+		}
+		else {
+			printf("%s\n", num1 + j);
+		}
+	}
+	
+	return (0);
+}

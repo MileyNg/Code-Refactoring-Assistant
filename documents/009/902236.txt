@@ -1,0 +1,83 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+#define INF 1000000000
+#define EPS 0.000001
+
+int n;
+struct date{
+	int num;
+	ll total;
+	bool flag;
+}D[4000];
+ 
+bool kanri[4001];
+int kanri2[4001];
+int main(){
+ 
+	while(true){
+		fill(kanri, kanri+4001,false);
+		fill(kanri2,kanri2+4001, -1);
+		cin >> n;
+		if(n == 0)
+			break;
+		int count = 0;
+		bool flag = false;
+		for(int i = 0; i < n; i++){
+			int kari;
+			cin >> kari;
+			int kari1, kari2;
+			cin >> kari1 >> kari2;
+			if(!kanri[kari]){
+				if(kanri2[kari] != -1){
+						flag = true;
+						if(D[kanri2[kari]].total + kari1*kari2 >= 1000000){
+							D[kanri2[kari]].flag = true;
+							kanri[kari] = true;
+						}
+				}
+				if(!flag){
+					D[count].num = kari;
+					D[count].total = kari1*kari2;
+					D[count].flag = false;
+					if(D[count].total >= 1000000)
+						D[count].flag = true;
+					kanri2[kari] = count;
+					count++;
+				}
+			}
+		}
+
+		bool flag2 = false;
+		for(int i = 0; i < count; i++){
+			if(D[i].flag){
+				flag2 = true;
+				printf("%d\n", D[i].num);
+			}
+		}
+		if(!flag2){
+			printf("NA\n");
+		}
+
+	}
+
+	
+
+
+	return 0;
+ 
+}
+ 

@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int main(){
+    for(int n,r;cin>>n>>r,n;){
+        vi cur(n);
+        rep(i,n) cur[i] = n-i;
+        rep(i,r){
+            int p,c; cin >> p >> c;
+            p--;
+            vi next = cur;
+            rep(i,c+p){
+                next[i] = cur[(i+p)%(c+p)];
+            }
+            swap(cur,next);
+        }
+        cout << cur[0] << endl;
+    }
+}

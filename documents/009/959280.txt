@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cmath>
+
+struct Circle {
+    const double x, y, r;
+    Circle(const double x, const double y, const double r) :x(x), y(y), r(r) {};
+    ~Circle() = default;
+    bool include(const Circle& C) const;
+};
+
+inline double distance(const Circle& A, const Circle& B);
+int circles_intersection(const Circle& A, const Circle& B);
+
+int main(void) {
+    u_int n;
+    double xa, ya, ra, xb, yb, rb;
+
+    std::cin >> n;
+    for (u_int i = 0; i < n; ++i) {
+        std::cin >> xa >> ya >> ra >> xb >> yb >> rb;
+        Circle A(xa, ya, ra), B(xb, yb, rb);
+        std::cout << circles_intersection(A, B) << std::endl;
+    }
+
+    return 0;
+}
+
+bool Circle::include(const Circle& C) const {
+    const auto d = distance(*this, C);
+    return (d*d < (r - C.r)*(r - C.r) && r > C.r);
+}
+
+inline double distance(const Circle& A, const Circle& B) {
+    return std::sqrt((A.x - B.x)*(A.x - B.x) + (A.y - B.y)*(A.y - B.y));
+}
+
+int circles_intersection(const Circle& A, const Circle& B) {
+    if (distance(A, B) > A.r + B.r)
+        return 0;
+    else if (A.include(B))
+        return 2;
+    else if (B.include(A))
+        return -2;
+    else
+        return 1;
+}

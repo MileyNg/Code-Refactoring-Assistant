@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<(b)?(a=b,1):0)
+#define chmin(a,b) (a>(b)?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef pair<int,int> pii;
+typedef long long ll;
+
+vector<int> g[500];
+bool visited[500];
+int main() {
+  int n,m;
+  while(cin>>n>>m) {
+    REP(i,n)g[i].clear();
+    REP(i,m) {
+      int a, b;
+      cin >> a >> b;
+      a--;b--;
+      g[a].push_back(b);
+    }
+    memset(visited,0,sizeof(visited));
+    int cnt = 0;
+    REP(i,n) {
+      if (!visited[i]) {
+        cnt++;
+        visited[i] = 1;
+        queue<int> Q;
+        Q.push(i);
+        while(!Q.empty()) {
+          int a = Q.front(); Q.pop();
+          FOR(it, g[a]) {
+            if (!visited[*it]) {
+              visited[*it] = 1;
+              Q.push(*it);
+            }
+          }
+        }
+      }
+    }
+    cout << m-n+cnt << endl;
+  }
+}

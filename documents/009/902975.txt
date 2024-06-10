@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <string.h>
+
+enum IDX{
+	
+	A,
+	B,
+	C,
+	D,
+	E,
+	F,
+	G
+	
+};
+
+struct Point{
+	
+	int x;
+	int y;
+	
+};
+typedef struct Point Point;
+
+#define H 8
+#define W 8
+
+int main(void){
+	
+	const char characters[] = "ABCDEFG";
+	char field[H+2][W+2];
+	int i, k;
+	int pos;
+	char temp[10];
+	Point log[4];
+	enum IDX idx;
+	
+	
+	while(1){
+		
+		
+		pos = 0;
+		
+		for(i=0; i<H; i++){
+			
+			
+			fgets(field[i], sizeof(field[i]), stdin);
+			
+			for(k=0; k<W; k++){
+				
+				if(field[i][k] == '1'){
+					
+					log[pos].y = i;
+					log[pos].x = k;
+					
+					pos++;
+					
+				}
+				
+			}
+			
+			
+		}
+		
+		
+		//A, C, E, Gのいずれかに絞る
+		if(log[0].x < log[1].x){
+			
+			//C, Eのどちらかに絞る
+			if(log[0].x < log[2].x){
+				
+				//これはC
+				if(log[0].y == log[2].y){
+					
+					idx = C;
+					
+				}
+				
+				//違ったらE
+				else{
+					
+					idx = E;
+					
+				}
+				
+			}
+			
+			//残りはA, G
+			else{
+				
+				//これはA
+				if(log[0].x == log[2].x){
+					
+					idx = A;
+					
+				}
+				
+				//違ったらG
+				else{
+					
+					idx = G;
+					
+				}
+				
+			}
+			
+			
+		}
+		
+		//残りはB, D, F
+		else{
+			
+			//これはF
+			if(log[0].x < log[2].x){
+				
+				idx = F;
+				
+			}
+			
+			//これはB
+			else if(log[0].y == log[3].y){
+				
+				idx = B;
+				
+			}
+			
+			//残りはD
+			else{
+				
+				idx = D;
+				
+			}
+			
+		}
+		
+		printf("%c\n", characters[idx]);
+		
+		
+		if(fgets(temp, sizeof(temp), stdin) == NULL){
+			
+			break;
+			
+		}
+		
+	}
+		
+	return 0;
+	
+}

@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+bool solve() {
+    int N;
+    if(!(cin >> N)) return false;
+    if(!N) return false;
+    vector<string> v(N);
+    int maxlen = 0;
+    for(int i = 0; i < N; ++i) {
+        cin >> v[i];
+        maxlen = max(maxlen, (int)v[i].size());
+    }
+    map<char, int> dict;
+    for(int i = 0; i < maxlen; ++i) {
+        for(string &s : v) {
+            if(s.size() <= i) continue;
+            if(dict.count(s[i])) {
+                s[i] = dict[s[i]];
+            } else {
+                const int idx = dict.size();
+                s[i] = dict[s[i]] = idx + 'a';
+            }
+        }
+    }
+    /*
+    for(string s : v) {
+        cout << s << endl;
+    }
+    */
+    vector<string> tmp = v;
+    sort(tmp.begin(), tmp.end());
+    cout << (v == tmp ? "yes" : "no") << endl;
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

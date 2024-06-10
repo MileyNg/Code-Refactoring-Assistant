@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <sstream>
+#include <map>
+using namespace std;
+typedef pair<string, int> P;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+
+int p[8];
+int d[4] = {-1, 1, -4, 4};
+
+int return_pos(string s) {
+    for(int i = 0; i < 8; i++) {
+        if(s[i] == '0') return i;
+    }
+    return 0;
+}
+
+vector<int> change_place(vector<int> vec, int i, int j) {
+    int tmp = vec[i];
+    vec[i] = vec[j];
+    vec[j] = tmp;
+    return vec;
+}
+
+int solve() {
+    map<string, int> m;
+    stringstream ss;
+    for(int i = 0; i < 8; i++) {
+        ss << p[i];
+    }
+    string s = ss.str();
+    int count = 0;
+    int pos;
+
+    queue<P> q;
+    q.push(P(s, count));
+    m[s] = count;
+    while(q.size()) {
+        P p = q.front(); q.pop();
+        s = p.first;
+        count = p.second;
+        pos = return_pos(s);
+
+        if(s == "01234567") break;
+
+        for(int i = 0; i < 4; i++) {
+            if(0 <= pos+d[i] && pos+d[i] < 8) {
+                string s_next = s;
+                swap(s_next[pos], s_next[pos+d[i]]);
+                if(m.find(s_next) == m.end()) {
+                    q.push(P(s_next, count+1));
+                    m[s_next] = count+1;
+                }
+            }
+        }
+    }
+
+    cout << count << endl;
+    return 0;
+}
+
+int main() {
+    while(cin >> p[0]) {
+        for(int i = 1; i < 8; i++) {
+            cin >> p[i];
+        }
+        solve();
+    }
+    return 0;
+}

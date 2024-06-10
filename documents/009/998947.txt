@@ -1,0 +1,90 @@
+### main
+
+while true
+  n, m = gets.strip.split(' ').map{|s| s.to_i}
+  break if n == 0 && m == 0
+
+  seats = n.times.map{'#'}
+
+  m.times.each do
+    p = gets.strip
+
+    case p
+    when 'A'
+      for i in (0...n)
+        if seats[i] == '#'
+          seats[i] = 'A'
+          break
+        end
+      end
+
+    when 'B'
+      seated = false
+      blank = nil
+      (n - 1).downto(0).each do |i|
+        if seats[i] == '#'
+          blank = i
+          if (i <= 0 || seats[i - 1] != 'A') &&
+              (i >= n - 1 || seats[i + 1] != 'A')
+            seats[i] = 'B'
+            seated = true
+            break
+          end
+        end
+      end
+      if ! seated
+        seats[blank] = 'B'
+      end
+
+    when 'C'
+      seated = false
+      for i in (0...n)
+        next if seats[i] == '#'
+        if i < n - 1 && seats[i + 1] == '#'
+          seats[i + 1] = 'C'
+          seated = true
+          break
+        elsif i > 0 && seats[i - 1] == '#'
+          seats[i - 1] = 'C'
+          seated = true
+          break
+        end
+      end
+      if ! seated
+        seats[n / 2] = 'C'
+      end
+
+    when 'D'
+      max_dist = 0
+      max_i = 0
+      for i in (0...n)
+        next if seats[i] != '#'
+        min_dist = -1
+        (i - 1).downto(0).each do |j0|
+          if seats[j0] != '#'
+            min_dist = i - j0
+            break
+          end
+        end
+        for j1 in ((i + 1)...n)
+          if seats[j1] != '#'
+            if min_dist < 0 || min_dist > j1 - i
+              min_dist = j1 - i
+            end
+            break
+          end
+        end
+        if min_dist >= 0 && max_dist < min_dist
+          max_dist = min_dist
+          max_i = i
+        end
+      end
+      seats[max_i] = 'D'
+
+    else
+      puts "illegal passenger: #{p}"
+    end
+  end
+
+  puts seats.join('')
+end

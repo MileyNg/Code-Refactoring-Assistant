@@ -1,0 +1,44 @@
+#include<stdio.h>
+int i,j,EW,NS,L,W;
+char D,P[4][13][3]={0};
+
+int ch(char c)
+{
+	switch(c)
+	{
+	case 'T':return 10;
+	case 'J':return 11;
+	case 'Q':return 12;
+	case 'K':return 13;
+	case 'A':return 99;
+	default:return c-'0';
+	}
+}
+
+int main()
+{
+	for(;scanf("%c\n",&D),D!='#';)
+	{
+		for(i=EW=NS=0;i<4;i++)
+			for(j=0;j<13;j++)
+				scanf("%2s%*c",P[i][j]);
+		for(i=L=0;i<13;i++)
+		{
+			for(j=0,W=L;j<4;j++)
+			{
+				if(P[j][i][1]==P[W][i][1])
+				{
+					if(ch(P[j][i][0])>ch(P[W][i][0]))
+						W=j;
+				}
+				else if(P[j][i][1]==D)
+						W=j;
+			}
+			W%2?EW++:NS++;
+			L=W;
+		}
+		if(NS<EW){printf("EW %d\n",EW-6);}
+		else{printf("NS %d\n",NS-6);}
+	}
+	return 0;
+}

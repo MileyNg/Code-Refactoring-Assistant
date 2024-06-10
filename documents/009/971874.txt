@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct _fisher fisher_t;
+struct _fisher {
+    int id;
+    int catch_cnt;
+    int heap_pos;
+};
+
+typedef struct {
+    fisher_t **e;
+    fisher_t *fisher;
+    int count;
+} binheap;
+
+
+binheap *bh_new(int size, fisher_t **heap, fisher_t *fisher) {
+    binheap *bh;
+    bh = (binheap*)malloc(sizeof(binheap));
+    bh->e = heap;
+    bh->fisher = fisher;
+    bh->count = size;
+    return bh;
+}
+
+void bh_delete(binheap *bh) {
+    // free(bh->e);
+    free(bh);
+}
+
+fisher_t *bh_top(binheap *bh) {
+    return bh->e[1];
+}
+
+int bh_prior(fisher_t *f1, fisher_t *f2) {
+    return f1->catch_cnt > f2->catch_cnt;
+}
+
+int bh_priorchild(binheap *bh, int i) {
+    fisher_t *vl, *vr;
+    if (i * 2 + 1 > bh->count) {
+        return i * 2;
+    }
+    else {
+        vl = bh->e[i * 2];
+        vr = bh->e[i * 2 + 1];
+        if (bh_prior(vl, vr))
+            return i * 2;
+        else
+            return i * 2 + 1;
+    }
+}
+
+void bh_percup(binheap *bh, int i) {
+    fisher_t *vp, *vc, *tmp;
+    while (i / 2 > 0) {
+        vc = bh->e[i];
+        vp = bh->e[i/2];
+        if (bh_prior(vc, vp)) {
+            vc->heap_pos = i/2;
+            bh->e[i/2] = vc;
+            vp->heap_pos = i;
+            bh->e[i] = vp;
+        }
+        i = i / 2;
+    }
+}
+
+void bh_percdown(binheap *bh, int i) {
+    int ci;
+    fisher_t *vp, *vc, *tmp;
+    while (i*2 <= bh->count) {
+        ci = bh_priorchild(bh, i);
+        vp = bh->e[i];
+        vc = bh->e[ci];
+        if (bh_prior(vc, vp)) {
+            vc->heap_pos = i;
+            bh->e[i] = vc;
+            vp->heap_pos = ci;
+            bh->e[ci] = vp;
+        }
+        i = ci;
+    }
+}
+
+void bh_update(binheap *bh, int fisher_id, int value) {
+    fisher_t *f, *parent;
+    f = &(bh->fisher[fisher_id]);
+    f->catch_cnt += value;
+    parent = bh->e[f->heap_pos / 2];
+    if (bh_prior(f, parent)) {
+        bh_percup(bh, f->heap_pos);
+    }
+    else {
+        bh_percdown(bh, f->heap_pos);
+    }
+}
+
+
+
+int main() {
+    binheap *bh;
+    fisher_t *fisher, *f, **heap;
+    int i, n, q;
+
+    scanf("%d%d", &n, &q);
+    fisher = (fisher_t*)malloc(sizeof(fisher_t) * (n + 1));
+    heap = (fisher_t**)malloc(sizeof(fisher_t*) * (n + 1));
+
+    for (i = 1; i <= n; i++) {
+        f = &fisher[i];
+        f->id = i;
+        f->catch_cnt = 0;
+        f->heap_pos = i;
+        heap[i] = f;
+    }
+    bh = bh_new(n, heap, fisher);
+
+    for (i = 0; i < q; i++) {
+        int a, v;
+        scanf("%d%d", &a, &v);
+        bh_update(bh, a, v);
+        f = bh_top(bh);
+        printf("%d %d\n", f->id, f->catch_cnt);
+    }
+
+
+    bh_delete(bh);
+    free(fisher);
+    free(heap);
+
+    return 0;
+}

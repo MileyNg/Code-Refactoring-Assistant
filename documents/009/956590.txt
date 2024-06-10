@@ -1,0 +1,168 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Point{
+	double x,y,z;
+	Point(){}
+	Point(double x,double y,double z):x(x),y(y),z(z){}
+	Point& operator+=(Point p){
+		x+=p.x,y+=p.y,z+=p.z;
+		return *this;
+	}
+	Point& operator-=(Point p){
+		x-=p.x,y-=p.y,z-=p.z;
+		return *this;
+	}
+	Point& operator*=(double c){
+		x*=c,y*=c,z*=c;
+		return *this;
+	}
+	Point& operator/=(double c){
+		x/=c,y/=c,z/=c;
+		return *this;
+	}
+};
+Point operator+(Point a,Point b){
+	return a+=b;
+}
+Point operator-(Point a,Point& b){
+	return a-=b;
+}
+Point operator*(Point p,double c){
+	return p*=c;
+}
+Point operator*(double c,Point p){
+	return p*=c;
+}
+Point operator/(Point p,double c){
+	return p/=c;
+}
+bool operator==(Point a,Point b){
+	return abs(a.x-b.x)<EPS && abs(a.y-b.y)<EPS;
+}
+bool operator!=(Point a,Point b){
+	return !(a==b);
+}
+
+struct Line{
+	Point pos,dir;
+	Line(){}
+	Line(Point p,Point d):pos(p),dir(d){}
+	Line(double px,double py,double pz,double dx,double dy,double dz):pos(px,py,pz),dir(dx,dy,dz){}
+};
+typedef Line Segment;
+
+struct Circle{
+	Point pos;
+	double rad;
+	Circle(){}
+	Circle(Point p,double r):pos(p),rad(r){}
+	Circle(double x,double y,double z,double r):pos(x,y,z),rad(r){}
+};
+
+double Abs2(Point p){
+	return p.x*p.x+p.y*p.y+p.z*p.z;
+}
+double Abs(Point p){
+	return sqrt(Abs2(p));
+}
+double Dot(Point a,Point b){
+	return a.x*b.x+a.y*b.y+a.z*b.z;
+}
+Point Proj(Line l,Point p){
+	Point a=p-l.pos,b=l.dir;
+	return l.pos+Dot(a,b)/Abs2(b)*b;
+}
+
+double DistanceLP(Line l,Point p){
+	return Abs(Proj(l,p)-p);
+}
+double DistanceSP(Segment s,Point p){
+	Point a=p-s.pos,b=s.dir;
+	double c=Dot(a,b)/(Abs(a)*Abs(b)); // cos(t)
+	if(EPS<c && c<1-EPS)
+		return DistanceLP(s,p);
+	else
+		return min(Abs(s.pos-p),Abs(s.pos+s.dir-p));
+}
+
+bool IntersectCL(Circle c,Line l){
+	return DistanceLP(l,c.pos)<c.rad+EPS;
+}
+bool IntersectCS(Circle c,Segment s){
+	Point a=s.pos,b=s.pos+s.dir;
+	bool ain=Abs(a-c.pos)<c.rad-EPS,bin=Abs(b-c.pos)<c.rad-EPS;
+	if(ain && bin) return false;
+	if(ain+bin==1) return true;
+	return DistanceSP(s,c.pos)<c.rad+EPS;
+}
+
+int main()
+{
+	for(int n,m,r;cin>>n>>m>>r && n|m|r;){
+		vector<Circle> balloons(n);
+		rep(i,n){
+			double x,y,z,r; cin>>x>>y>>z>>r;
+			balloons[i]=Circle(x,y,z,r);
+		}
+		vector<Point> lights(m);
+		vector<double> brights(m);
+		rep(i,m) cin>>lights[i].x>>lights[i].y>>lights[i].z>>brights[i];
+		Point object; cin>>object.x>>object.y>>object.z;
+		
+		vvi intersect(n,vi(m)); // intersect[i][j]:balloons[i]がlights[j]を遮る
+		rep(i,n) rep(j,m){
+			Segment ray(lights[j],object-lights[j]);
+			intersect[i][j]=IntersectCS(balloons[i],ray);
+		}
+		
+		double res=0;
+		rep(i,1<<m){
+			vi remove(n); // balloons[i]を消す必要があるならtrue
+			rep(j,m) if(i>>j&1) rep(k,n)
+				remove[k]|=intersect[k][j];
+			if(count(all(remove),1)>r) continue;
+			double sum=0;
+			rep(j,m) if(i>>j&1)
+				sum+=brights[j]/Abs2(object-lights[j]);
+			res=max(res,sum);
+		}
+		printf("%.10f\n",res);
+	}
+}

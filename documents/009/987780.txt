@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+void swap(int n, int p, int c, int* card){
+  int *temp1 = new int[p-1];
+  int *temp2 = new int[c];
+  for(int i=0; i<p-1; i++){
+    temp1[p-1-1-i] = card[n-1-i];
+  }
+  for(int i=0; i<c; i++){
+    temp2[c-1-i] = card[n-p-i];
+  }
+  for(int i=0; i<c; i++){
+    card[n-1-i] = temp2[c-1-i];
+  }
+  for(int i=0; i<p-1; i++){
+    card[n-1-c-i] = temp1[p-1-1-i];
+  }
+  delete[] temp1;
+  delete[] temp2;
+}
+
+int main(void){
+  int n, r, p, c;
+  int i;
+  int card[50];
+
+  while(1){
+    for(i=0;i<50;i++){
+      card[i]=i+1;
+    }
+    scanf("%d%d", &n, &r);
+    if(n==0 && r==0){
+      break;
+    }
+    for(i=0;i<r;i++){
+      scanf("%d%d", &p, &c);
+      swap(n, p, c, card);
+    }
+    printf("%d\n", card[n-1]);
+  }
+}

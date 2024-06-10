@@ -1,0 +1,91 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/20 08:17:51 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <climits>
+#include <set>
+#include <bitset>
+
+#define MP(a, b) std::make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+// 幾何ライブ
+typedef long double LD;
+const LD INF = 1e100;
+const LD EPS = 1e-8;
+const LD PI = acos(-1);
+typedef std::pair<LD,LD> PLD;
+typedef std::vector<std::pair<LD,LD>> VPLD2;
+
+class Point{
+public:
+  LD x,y;
+  Point(LD x = 0,LD y = 0): x(x),y(y){ };
+  Point operator + (Point p) {return Point(x+p.x,y+p.y);};
+  Point operator - (Point p) {return Point(x-p.x,y-p.y);};
+  Point operator * (LD a) {return Point(x*a,y*a);};
+  Point operator / (LD a) {return Point(x/a,y/a);};
+  LD abs(){return std::sqrt(x*x+y*y);};
+  Point unit(){LD u = abs();return Point(x,y)/u; };
+};
+typedef Point Vector2D;
+LD dotProduct(const Vector2D a,const Vector2D b){
+  return a.x*b.x+a.y*b.y;
+}
+LD crossProduct(const Vector2D a, const Vector2D b){return a.x*b.y-a.y*b.x;}
+LD angle(Vector2D a,Vector2D b){
+  return acos(dotProduct(a,b)/(a.abs()*b.abs()));
+}
+LD norm(Vector2D a){return a.x*a.x+a.y*a.y;}
+Point projection(Point a1,Point a2,Point a3){
+  // 点a3にたいする線分a1-a2上への射影をもとめる。
+  LD d = dotProduct(a3-a1,a2-a1)/norm(a2-a1);
+  return (a1+(a2-a1)*d);
+}
+Point reflection(Point a1,Point a2,Point a3){
+  return (a3+(projection(a1,a2,a3)-a3)*2);
+}
+int ccw(Point a1,Point a2,Point a3){
+  Vector2D a = a2-a1;
+  Vector2D b = a3-a1;
+  if(crossProduct(a,b) > EPS) return 1; // a1,a2,a3が反時計まわり
+  if(crossProduct(a,b) < -EPS) return -1;//a1,a2,a3が時計まわり
+  if(dotProduct(a,b) < -EPS) return +2; //a3--a1--a2 で直線
+  if(norm(a)< norm(b)) return -2; // a1--a2--a3 の順で直線
+  return 0; // a1--a3--a2の順番
+}
+
+
+int main(int argc, char *argv[])
+{
+  Vector2D c,d;
+  int x0,x1,y0,y1;
+  std::cin>>x0>>y0>>x1>>y1;
+  c = Vector2D(x1-x0,y1-y0);
+  int t;
+  int a,b;
+  std::cin>>t;
+  while(t>0){
+    std::cin>>a>>b;
+    int e = ccw(Point(x0,y0),Point(x1,y1),Point(a,b));
+    if(e == 1) std::cout<<"COUNTER_CLOCKWISE"<<std::endl;
+    else if(e == -1) std::cout<<"CLOCKWISE"<<std::endl;
+    else if(e == 2) std::cout<<"ONLINE_BACK"<<std::endl;
+    else if(e == -2) std::cout<<"ONLINE_FRONT"<<std::endl;
+    else std::cout<<"ON_SEGMENT"<<std::endl;
+    t--;
+  }
+  return 0;
+}

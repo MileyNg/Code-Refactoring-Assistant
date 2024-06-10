@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+#define MAX_N   (1000000)
+
+typedef struct _av_t {
+  int id;
+  int a;
+  int v;
+} av_t;
+
+static av_t avs[MAX_N];
+static av_t *idx[MAX_N];
+
+int main() {
+  int a, i, id0, n, q, v, v0;
+  av_t *avp, *avp0, *avp1;
+
+  scanf("%d %d", &n, &q);
+
+  for (i = 0; i < n; i++) {
+    avp = idx[i] = &avs[i];
+    avp->id = i;
+    avp->a = i + 1;
+    avp->v = 0;
+  }
+
+  for (i = 0; i < q; i++) {
+    scanf("%d %d", &a, &v);
+
+    avp0 = &avs[a - 1];
+    id0 = avp0->id;
+    v0 = (avp0->v += v);
+
+    if (v > 0)
+      while (id0 > 0 &&
+             ((avp1 = idx[id0 - 1])->v < v0 ||
+              avp1->v == v0 && avp1->a > a)) {
+        idx[id0] = avp1;
+        idx[id0 - 1] = avp0;
+
+        avp0->id--;
+        avp1->id++;
+        id0--;
+      }
+    else
+      while (id0 < n - 1 &&
+             ((avp1 = idx[id0 + 1])->v > v0 ||
+              avp1->v == v0 && avp1->a < a)) {
+        idx[id0] = avp1;
+        idx[id0 + 1] = avp0;
+
+        avp0->id++;
+        avp1->id--;
+        id0++;
+      }
+
+    printf("%d %d\n", idx[0]->a, idx[0]->v);
+  }
+
+  return 0;
+}

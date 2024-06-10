@@ -1,0 +1,22 @@
+def solve(input)
+  a = 0
+  input.split("\n").each do |s|
+    is_palindrome = true
+    i1 = 0
+    i2 = s.size - 1
+    while i1 <= i2
+      unless s[i1] == s[i2]
+        is_palindrome = false
+        break
+      end
+      i1 += 1
+      i2 -= 1
+    end
+    if is_palindrome
+      a += 1
+    end
+  end
+  a
+end
+
+puts solve(gets(nil))

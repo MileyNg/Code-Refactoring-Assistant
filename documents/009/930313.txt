@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i,j,count=0;
+	char c[100];
+	scanf("%s ",&c);
+	while(1)
+	{
+		for(i=0;i<strlen(c);i++)
+		{
+			if(c[i]>='a' && c[i]<'z'){
+				c[i]++;
+			}else if(c[i]=='z')c[i]='a';
+		}
+		count++;
+		if(strcmp(c,"the") == 0 || strcmp(c,"this") == 0 || strcmp(c,"that") == 0)
+		{
+			break;
+		}
+	}
+	printf("%s ",c);
+
+	while(scanf("%s ",c) != EOF)
+	{
+		for(i=0;i<strlen(c);i++)
+		{
+			for(j=0;j<count;j++)
+			{
+				if(c[i]>='a' && c[i]<'z'){
+					c[i]++;
+				}else if(c[i]=='z')c[i]='a';
+			}
+		}
+		printf("%s ",c);
+	}
+	printf("\n");
+	return 0;
+}

@@ -1,0 +1,89 @@
+#include <stdio.h>
+
+typedef struct{
+  int team;
+  int ans[10];
+  int time[10];
+  int anum;
+  int tnum;
+}data_t;
+
+void InsSort(data_t data[], int n){
+  data_t temp;
+  for(int i=1; i<n; i++){
+    for(int j=i; j>0 && data[j-1].team<temp.team ;j--){
+      temp = data[j];
+      data[j] = data[j-1];
+      data[j] = temp;
+    }
+  }
+
+  for(int i=1; i<n; i++){
+    for(int j=i; j>0 && data[j-1].tnum>temp.tnum ;j--){
+      temp = data[j];
+      data[j] = data[j-1];
+      data[j] = temp;
+    }
+  }
+  
+  for(int i=1; i<n; i++){
+    for(int j=i; j>0 && data[j-1].anum<temp.anum ;j--){
+      temp = data[j];
+      data[j] = data[j-1];
+      data[j] = temp;
+    }
+  }
+}
+
+int main(void){
+  int M, T, P, R;
+  int m, t, p, j;
+  data_t data[50];
+  while(1){
+    scanf("%d%d%d%d", &M, &T, &P, &R);
+    if(M==0 && T==0 && P==0 && R==0){
+      break;
+    }
+
+    for(int i=0; i<T; i++){
+      data[i].team = i+1;
+      data[i].anum = 0;
+      data[i].tnum = 0;
+      for(int j=0; j<10; j++){
+	data[i].ans[j] = 1;
+	data[i].time[j] = 0;
+      }
+    }
+
+    for(int i=0; i<R; i++){
+      scanf("%d%d%d%d", &m, &t, &p, &j);
+      if(j == 0){
+	data[t-1].ans[p-1] = 0;
+	data[t-1].time[p-1] += m;
+      }else if(j == 1){
+	data[t-1].time[p-1] += 20;
+      }
+    }
+    for(int i=0; i<T; i++){
+      for(int j=0; j<P; j++){
+	if(data[i].ans[j] == 0){
+	  data[i].anum++;
+	  data[i].tnum += data[i].time[j];
+	}
+      }
+    }
+    InsSort(data, T);
+
+    printf("%d", data[0].team);
+    for(int i=1; i<T; i++){
+      if(data[i].anum==data[i-1].anum && data[i].tnum==data[i].tnum){
+	printf("=");
+      }else{
+	printf(",");
+      }
+      printf("%d", data[i].team);
+    }
+    printf("\n");
+  }
+  return 0;
+}

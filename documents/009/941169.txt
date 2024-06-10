@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void QuickSort(vector<int> &vec, int start, int end);
+int Partition(vector<int> &vec, int start, int end);
+bool IsExistNum(vector<int> &S, int start, int end, int t);
+
+int main(void)
+{
+    int i;
+    int n, q;
+    vector<int> S;
+    int C = 0;
+    
+    cin >> n;
+    S.resize(n);
+    for (i = 0; i < n; i++) {
+        cin >> S[i];
+    }
+    QuickSort(S, 0, n - 1);
+    
+    cin >> q;
+    for (i = 0; i < q; i++) {
+        int t;
+        
+        cin >> t;
+        if (IsExistNum(S, 0, n - 1, t)) {
+            C++;
+        }
+    }
+    cout << C << endl;
+    
+    return 0;
+}
+
+void QuickSort(vector<int> &vec, int start, int end)
+{
+    int border;
+    if (start < end) {
+        border = Partition(vec, start, end);
+        QuickSort(vec, start, border - 1);
+        QuickSort(vec, border + 1, end);
+    }
+}
+
+int Partition(vector<int> &vec, int start, int end)
+{
+    int i = start - 1;
+    int j;
+    int pivot = vec[end];
+    
+    for (j = start; j < end; j++) {
+        if (vec[j] < pivot) {
+            i++;
+            swap(vec[i], vec[j]);
+        }
+    }
+    swap(vec[i + 1], vec[end]);
+    
+    return i + 1;
+}
+
+bool IsExistNum(vector<int> &S, int start, int end, int t)
+{
+    int center = start + (end - start) / 2;
+    
+    if (t < S[center]) {
+        return IsExistNum(S, start, center - 1, t);
+    } else if (t == S[center]) {
+        return true;
+    } else if (t < S[end]) {
+        return IsExistNum(S, center + 1, end, t);
+    } else if (t == S[end]) {
+        return true;
+    } else {
+        return false;
+    }
+}

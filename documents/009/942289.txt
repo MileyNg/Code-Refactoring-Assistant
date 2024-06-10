@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <memory.h>
+
+int main(void) {
+	int i, j, n, t;
+	int A[20][20];
+	while(scanf("%d\n", &n)==1) {
+		if(n == 0) break;
+		
+		memset((char*)A, 0x00, sizeof(A));
+		
+		for(i=0;i<n;i++) {
+			for(j=0;j<n;j++) {
+				scanf("%d", &t);
+				A[i][j] = t;
+				A[i][n] += t;
+				A[n][j] += t;
+				A[n][n] += t;
+			}
+		}
+		
+		for(i=0;i<n+1;i++) {
+			for(j=0;j<n+1;j++) {
+				printf("%5d", A[i][j]);
+			}
+			printf("\n");
+		}
+	}
+	
+	return 0;
+}

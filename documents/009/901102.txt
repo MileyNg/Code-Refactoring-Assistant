@@ -1,0 +1,74 @@
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
+#include <iostream>
+#include <set>
+#include <utility>
+#include <vector>
+using namespace std;
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		vector<pair<int, int>> swimmers(n);
+		vector<int> t(n), c(n);
+
+		for(auto &e : swimmers) {
+			cin >> e.first >> e.second;
+		}
+
+		sort(swimmers.begin(), swimmers.end());
+		set<pair<int, int>> go, back;
+		for(int i = 0; i < n; ++i) {
+			go.insert({swimmers[i].first, i});
+		}
+
+		while(true) {
+			int time = INT_MAX;
+			bool go_turn;
+			set<int> S;
+
+			if(!go.empty()) {
+				time = go.begin()->first;
+				go_turn = true;
+			}
+			if(!back.empty() && time > back.begin()->first) {
+				time = back.begin()->first;
+				go_turn = false;
+			}
+
+			if(go_turn) {
+				while(!go.empty() && time == go.begin()->first) {
+					S.insert(go.begin()->second);
+					go.erase(go.begin());
+				}
+
+				const int arrival = (back.empty() ? 0 : back.rbegin()->first);
+				for(const auto &e : S) {
+					back.insert({max(arrival, time + swimmers[e].first), e});
+				}
+			}
+			else {
+				while(!back.empty() && time == back.begin()->first) {
+					S.insert(back.begin()->second);
+					back.erase(back.begin());
+				}
+
+				const int arrival = (go.empty() ? 0 : go.rbegin()->first);
+				for(const auto &e : S) {
+					if(--swimmers[e].second == 0) continue;
+					go.insert({max(arrival, time + swimmers[e].first), e});
+				}
+
+				if(go.empty() && back.empty()) {
+					cout << time << endl;
+					break;
+				}
+			}
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

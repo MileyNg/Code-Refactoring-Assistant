@@ -1,0 +1,40 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+ 
+int max_sum(int a[],int as,int b[],int bs,int m){
+    int j=bs-1;
+    int res=0;
+    for(int i=0;i<as;i++){
+        while(0<=j && m<a[i]+b[j])j--;
+        if(j==-1)break;
+        res=max(res,a[i]+b[j]);
+    }
+    return res;
+}
+ 
+int p[1000],p2[1000*1001/2];
+int main(){
+    int n,m;
+    while(cin>>n>>m,n||m){
+        int ans=0;
+        for(int i=0;i<n;i++){
+            cin>>p[i];
+            if(p[i]<=m)ans=max(ans,p[i]);
+        }
+        sort(p,p+n);
+        int n2=0;
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                int a=p[i]+p[j];
+                p2[n2++]=a;
+                if(a<=m)ans=max(ans,a);
+            }
+        }
+        sort(p2,p2+n2);
+        ans=max(ans,max_sum(p,n,p2,n2,m));
+        ans=max(ans,max_sum(p2,n2,p2,n2,m));
+        cout<<ans<<endl;
+    }
+    return 0;
+}

@@ -1,0 +1,121 @@
+
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+const int dx[]= {-1,0,1,0};
+const int dy[]= {0,1,0,-1};
+const int N = 110;
+char s[N][N];
+int n,m,cnt,num;
+int st,ed;
+struct road
+{
+    int x,y;
+}vc[N*N*N];
+
+struct eg
+{
+    int dir[4];
+    int step[4];
+} p[N][N];
+
+int check(char c)
+{
+    if(c=='N')  return 0;
+    if(c=='E')  return 1;
+    if(c=='S')  return 2;
+    if(c=='W')  return 3;
+    return -1;
+}
+
+void solve(int x,int y)
+{
+    int d=check(s[x][y]);
+    int xx,yy,flag;
+    while(1)
+    {
+        xx=x+dx[d];
+        yy=y+dy[d];
+        flag=0;
+        while(xx<0||xx>=n||yy<0||yy>=m||s[xx][yy]=='#')
+        {
+            d=(d+1)%4;
+            xx=x+dx[d];
+            yy=y+dy[d];
+            flag=1;
+        }
+        if(p[x][y].dir[d]&&flag)
+        {
+            st=p[x][y].step[d];
+            ed=cnt;
+            break;
+        }
+        x=xx,y=yy;
+        p[x][y].dir[d]=1;
+        p[x][y].step[d]=++cnt;
+        vc[num].x=x;
+        vc[num].y=y;
+        num++;
+    }
+}
+
+char sth(long long l,int tt)
+{
+    l+=tt;
+    int x=vc[l].x,y=vc[l].y;
+    int xx=vc[l-1].x,yy=vc[l-1].y;
+    if(xx+1==x&&yy==y)
+        return 'S';
+    if(xx-1==x&&yy==y)
+        return 'N';
+    if(xx==x&&yy+1==y)
+        return 'E';
+    if(xx==x&&yy-1==y)
+        return 'W';
+    return 'F';
+}
+
+int main()
+{
+    long long l;
+    while(cin>>n>>m>>l)
+    {
+        if(n==0&&m==0&&l==0)
+            break;
+        int x,y,flag=1;
+        memset(p,0,sizeof(p));
+        for(int i=0; i<n; i++)
+        {
+            scanf("%s",s[i]);
+            for(int j=0; j<m&&flag; j++)
+                if(s[i][j]!='.'&&s[i][j]!='#')
+                {
+                    x=i,y=j;
+                    flag=0;
+                }
+        }
+        cnt=num=0;
+        //vc.push_back(make_pair(x,y));
+        vc[num].x=x,vc[num].y=y;
+        num++;
+        p[x][y].dir[check(s[x][y])]=1;
+        solve(x,y);
+        if(l<ed)
+        {
+            printf("%d %d %c\n",vc[l].x+1,vc[l].y+1,sth(l,0));
+        }
+        else
+        {
+            l=l-st+1;
+            int r=ed-st;
+            l=l%r;
+            printf("%d %d %c\n",vc[st+l-1].x+1,vc[st+l-1].y+1,sth(l,st-1));
+        }
+
+    }
+    return 0;
+}

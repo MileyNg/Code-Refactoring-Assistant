@@ -1,0 +1,29 @@
+#!/bin/ruby
+n=gets.to_i
+s,l,p=n.times.map{gets.split.map(&:to_i)}.transpose
+mp=Array.new(444,0)
+n.times do |i|
+  (s[i]..l[i]).each do |j|
+    mp[j]=[mp[j],p[i]].max
+  end
+end
+m=gets.to_i
+puts m.times.map{
+  w=gets.to_i
+  dp=Array.new(w+1,-1e99)
+  dp[0]=0
+  mp.each_with_index do |e,i|
+    next if e==0
+    (i..w).each do |j|
+      u=dp[j-i]+e
+      if u>dp[j] then
+        dp[j]=u
+      end
+    end
+  end
+  if dp[w]<0 then
+    puts -1
+    exit
+  end
+  dp[w]
+}

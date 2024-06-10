@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+double get_degree(double ox, double oy, double ax, double ay, double bx, double by) {
+	double deg_oa;
+	double deg_ob;
+
+	if(fabs(ox-ax) < 0.000001) {
+		if(oy > ay) {
+			deg_oa = 270;
+		} else {
+			deg_oa = 90;
+		}
+	} else if(fabs(oy-ay) < 0.000001) {
+		if(ox > ax) {
+			deg_oa = 180;
+		} else {
+			deg_oa = 0;
+		}
+	} else if(ox<ax) {
+		deg_oa = atan((ay-oy)/(ax-ox)) * 180 / M_PI;
+	} else {
+		deg_oa = -(atan((ay-oy)/(ax-ox)) * 180 / M_PI);
+	}
+
+	if(fabs(ox-bx) < 0.000001) {
+		if(oy > by) {
+			deg_ob = 270;
+		} else {
+			deg_ob = 90;
+		}
+	} else if(fabs(oy-by) < 0.000001) {
+		if(ox > bx) {
+			deg_ob = 180;
+		} else {
+			deg_ob = 0;
+		}
+	} else if(ox<bx) {
+		deg_ob = atan((by-oy)/(bx-ox)) * 180 / M_PI;
+	} else {
+		deg_ob = -(atan((by-oy)/(bx-ox)) * 180 / M_PI);
+	}
+
+	return fmod(deg_ob - deg_oa + 720, 360);
+}
+
+int main(void) {
+	double xa,ya,xb,yb,xc,yc,xd,yd;
+	double deg[4];
+	
+	while(scanf("%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", &xa, &ya, &xb, &yb, &xc, &yc, &xd, &yd)==8) {
+		deg[0] = get_degree(xa, ya, xb, yb, xd, yd);
+		deg[1] = get_degree(xb, yb, xc, yc, xa, ya);
+		deg[2] = get_degree(xc, yc, xd, yd, xb, yb);
+		deg[3] = get_degree(xd, yd, xa, ya, xc, yc);
+		
+		if(deg[0] <= 180 && deg[1] <= 180 && deg[2] <= 180 && deg[3] <= 180) {
+			printf("Yes\n");
+		} else {
+			printf("No\n");
+		}
+	}
+	
+	return 0;
+}

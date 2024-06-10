@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> tonari(const string &s, int pos) {
+  vector<int> v;
+  for(int d = -1; d <= 1; d += 2) {
+    int npos = pos + d;
+    if(npos < 0 || npos >= s.size()) continue;
+    v.push_back(npos);
+  }
+  return v;
+}
+
+int A(const string &s) {
+  for(int i = 0; i < s.size(); ++i) {
+    if(s[i] == '#') return i;
+  }
+  return -1;
+}
+
+int B(const string &s) {
+  for(int i = s.size()-1; i >= 0; --i) {
+    vector<int> v = tonari(s, i);
+    bool flag = true;
+    for(int j = 0; j < v.size(); ++j) {
+      if(s[v[j]] == 'A') {
+        flag = false;
+        break;
+      }
+    }
+    if(flag) return i;
+  }
+  return A(s);
+}
+
+int C(const string &s) {
+  for(int i = 0; i+1 < s.size(); ++i) {
+    if(s[i] != '#') {
+      if(s[i+1] == '#') return i+1;
+      if(i && s[i-1] == '#') return i-1;
+    }
+  }
+  return s.size()/2;
+}
+
+int D(const string &s) {
+  int maxi = -1, pos = -1;
+  for(int i = 0, j = -1; i <= s.size(); ++i) {
+    if(i == s.size() || s[i] != '#') {
+      if(i-j-1 > maxi) {
+        maxi = i-j-1;
+        pos = j+1;
+      }
+      j = i;
+    }
+  }
+  if(maxi == s.size()) return A(s);
+  return pos + (maxi-1)/2;
+}
+
+int main() {
+  for(int n, m; cin >> n >> m && (n|m);) {
+    string s(n, '#');
+    while(m--) {
+      char c;
+      cin >> c;
+      int pos;
+      switch(c) {
+      case 'A': pos = A(s); break;
+      case 'B': pos = B(s); break;
+      case 'C': pos = C(s); break;
+      case 'D': pos = D(s); break;
+      }
+      s[pos] = c;
+    }
+    cout << s << endl;
+  }
+  return 0;
+}

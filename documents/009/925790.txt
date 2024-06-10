@@ -1,0 +1,39 @@
+#include <iostream>
+using namespace std;
+
+unsigned short nail[5004][5004]={};
+
+int main(){
+	int N,M;
+	cin >> N >> M;
+	for(int i=0; i<M; ++i){
+		int a,b,x;
+		cin >> a >> b >> x;
+		++a,++b;
+		nail[a+x-1][b-1]-=1;
+		nail[a+x][b]+=1;
+		nail[a+x][b+x+1]-=1;
+		nail[a+x-1][b+x+1]+=1;
+		nail[a-2][b-1]+=1; 
+		nail[a-2][b]-=1; 
+	}
+	for(int x=N+2; x>=0; --x ){
+		for(int y=N+2; y>=0; --y){
+			nail[x][y]+=nail[x+1][y+1];
+		}
+	}
+	for(int y=0; y<=N+2; ++y){
+		for(int x=N+2; x>=0; --x){
+			nail[x][y]+=nail[x+1][y];
+		}
+	}
+	long long int ans=0;
+	for(int x=0; x<=N+2; ++x){
+		for(int y=0; y<=N+2; ++y){
+			nail[x][y]+=nail[x][y-1];
+			if(nail[x][y]>=1) ++ans;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

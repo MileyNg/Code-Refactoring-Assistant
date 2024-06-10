@@ -1,0 +1,28 @@
+def mayCorrect(line)
+  words = line.split()
+  if words.include?("the") || words.include?("this") || words.include?("that")
+    return true
+  else
+    return false
+  end
+end
+
+def shiftLine(line, n)
+  alphabet = ('a'..'z').to_a.join
+  i = n % alphabet.size
+  encript = alphabet[i..-1] + alphabet[0...i]
+  return line.tr(alphabet, encript)
+end
+
+while line = gets
+  correct_line = line
+  i = 1
+  while true
+    if mayCorrect(correct_line)
+      break
+    end
+    correct_line = shiftLine(line, i)
+    i += 1
+  end
+  puts correct_line
+end

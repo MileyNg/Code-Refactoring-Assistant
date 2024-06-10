@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+short person[1000000];
+
+int main(void)
+{
+	int n, q;
+	int max;
+	int max_num = -1;
+	
+	scanf("%d %d", &n, &q);
+	while (q-- > 0){
+		int a;
+		short v;
+		int i;
+		
+		scanf("%d %hd", &a, &v);
+		person[a - 1] += v;
+		
+		if (max < person[a - 1]){
+			max = person[a - 1];
+			max_num = a;
+		}
+		else if (max_num != a - 1 || v < 0){
+			max = person[0];
+			max_num = 1;
+			for (i = 1; i < n; i++){
+				if (max < person[i]){
+					max = person[i];
+                    max_num = i + 1;
+				}
+			}
+		}
+		printf("%d %d\n", max_num, max);
+	}
+	
+	return 0;
+}

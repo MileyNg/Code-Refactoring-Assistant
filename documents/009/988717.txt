@@ -1,0 +1,81 @@
+#include <algorithm>
+#include <numeric>
+#include <map>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+typedef pair<int, int> P;
+P dp[33][33][33][33];
+bool used[33][33][33][33] = {};
+int h, w, s, di;
+int sum[34][34] = {};
+int d[33][33];
+
+P solve(int lx, int ly, int rx, int ry) {
+	if (used[lx][ly][rx][ry]) return dp[lx][ly][rx][ry];
+	used[lx][ly][rx][ry] = true;
+	int s = sum[rx][ry]-sum[lx][ry]-sum[rx][ly]+sum[lx][ly];
+	P res;
+	if (s-di < 0) {
+		res = P(-1000000, -1000000);
+	} else {
+		res = P(1, s-di);
+	}
+	for (int i = lx+1; i < rx; i++) {
+		P p1 = solve(lx, ly, i, ry);
+		P p2 = solve(i, ly, rx, ry);
+		P p = P(p1.first+p2.first, min(p1.second, p2.second));
+		if (p.second < 0) continue;
+		if (res.first < p.first) {
+			res = p;
+		} else if (res.first == p.first) {
+			res.second = max(res.second, p.second);
+		}
+	}
+	for (int j = ly+1; j < ry; j++) {
+		P p1 = solve(lx, ly, rx, j);
+		P p2 = solve(lx, j, rx, ry);
+		P p = P(p1.first+p2.first, min(p1.second, p2.second));
+		if (p.second < 0) continue;
+		if (res.first < p.first) {
+			res = p;
+		} else if (res.first == p.first) {
+			res.second = max(res.second, p.second);
+		}
+	}
+	dp[lx][ly][rx][ry] = res;
+	return res;
+}
+
+int main() {
+	while (true) {
+		cin >> h >> w >> s;
+		fill_n(used[0][0][0], 33*33*33*33, false);
+		fill_n(sum[0], 34*34, 0);
+		if (!h) break;
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				scanf("%d", &(d[i][j]));
+				sum[i+1][j+1] = d[i][j];
+			}
+		}
+		for (int i = 1; i <= h; i++) {
+			for (int j = 1; j <= w; j++) {
+				sum[i][j] += sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1];
+			}
+		}
+		//for (int i = 0; i <= h; i++) {
+		//	for (int j = 0; j <= w; j++) {
+		//		printf("%d ", sum[i][j]);
+		//	}
+		//	printf("\n");
+		//}
+		di = sum[h][w]-s;
+		//printf("%d\n", di);
+		P p = solve(0, 0, h, w);
+		//P p1 = solve(0, 1, 4)
+		printf("%d %d\n", p.first, p.second);
+		//printf("%d %d\n", solve());
+	}
+}

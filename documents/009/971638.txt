@@ -1,0 +1,16 @@
+ds = (0..9).map{|k| k}
+
+while (line = gets)
+  n, s = line.chomp.split(" ").map{|s| s.to_i}
+
+  count = 0
+
+  ds.permutation(n).each do |as|
+    s0 = 0
+    (0...n).each{|i| s0 += (i + 1) * as[i]}
+
+    count += 1 if s == s0
+  end
+
+  puts count
+end

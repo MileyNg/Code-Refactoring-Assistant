@@ -1,0 +1,64 @@
+#include<iostream>
+#include<map>
+#include<queue>
+#include<vector>
+using namespace std;
+
+#define N 104
+#define C 53
+#define INF 1000000007
+#define rep(i, n) for(int i=0; i<n; ++i)
+
+struct Edge {
+	int to, cost;
+};
+
+typedef pair<int, int> P;
+typedef pair<int, P> IP;
+
+typedef vector<Edge> Graph;
+
+Graph g[N];
+
+int dist[N][C];
+int n, c;
+int dijkstra(int s, int t) {
+	priority_queue<IP, vector<IP>, greater<IP> > q;
+	rep(i, n) rep(j, c+1) dist[i][j] = INF;
+	dist[s][0] = 0;
+	q.push(IP(0, P(s, 0)));
+	while(!q.empty()) {
+		int cost = q.top().first, u = q.top().second.first;
+		int p = q.top().second.second; q.pop();
+		if(dist[u][p] < cost) continue;
+		rep(i, g[u].size()) {
+			Edge &e = g[u][i];
+			if(dist[u][p] + e.cost < dist[e.to][p]) {
+				dist[e.to][p] = dist[u][p] + e.cost;
+				q.push(IP(dist[e.to][p], P(e.to, p)));
+			}
+			if(p < c && dist[u][p] + (e.cost / 2) < dist[e.to][p+1]) {
+				dist[e.to][p+1] = dist[u][p] + (e.cost / 2);
+				q.push(IP(dist[e.to][p+1], P(e.to, p+1)));
+			}
+		}
+	}
+	return dist[t][c];
+}
+
+
+int main() {
+	int m, s, d;
+	while(cin >> c >> n >> m >> s >> d && c && n && m && s && d) {
+		--s; --d;
+		rep(i, n) g[i].clear();
+		rep(i, m) {
+			int a, b, f;
+			cin >> a >> b >> f; --a; --b;
+			g[a].push_back((Edge){b, f});
+			g[b].push_back((Edge){a, f});
+		}
+		cout << dijkstra(s, d) << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,50 @@
+#include <cstdio>
+
+#define FOR( i, k, n ) for ( int i = ( k ); i < ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 0, n )
+
+#define MAX_S 12
+
+bool Try[ MAX_S + 1 ][ 5 ];  // トライ木っぽいもの（A, C, G, T, \0）
+
+int main() {
+	char ch[ MAX_S + 1 ];
+	int n;  scanf( "%d", &n );
+	while( n-- ) {
+		scanf( "%s", ch );
+		if( ch[ 0 ] == 'i' ) {  // insert
+			scanf( "%s", ch );
+			REP( i, MAX_S + 1 ) {
+				switch( ch[ i ] ) {
+				case 'A' : Try[ i ][ 0 ] = true; break;
+				case 'C' : Try[ i ][ 1 ] = true; break;
+				case 'G' : Try[ i ][ 2 ] = true; break;
+				case 'T' : Try[ i ][ 3 ] = true; break;
+				case '\0' : Try[ i ][ 4 ] = true; break;
+				};
+				if( ch[ i ] == '\0' ) break;
+			}
+		} else {  // find
+			bool find = true;
+			scanf( "%s", ch );
+			REP( i, MAX_S + 1 ) {
+				int index;
+				switch( ch[ i ] ) {
+				case 'A' : index = 0; break;
+				case 'C' : index = 1; break;
+				case 'G' : index = 2; break;
+				case 'T' : index = 3; break;
+				case '\0' : index = 4; break;
+				};
+				if( !Try[ i ][ index ] ) {
+					find = false;
+					break;
+				}
+				if( ch[ i ] == '\0' ) break;
+			}
+			if( find ) printf( "yes\n" );
+			else printf( "no\n" );
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,169 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T mod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+class Main{
+public:
+
+	bool isAnswer(){
+		REP(y,Y)REP(x,X) if(board[y][x]==0)return false;
+		return true;
+	}
+
+	bool canset(int yl,int xl,int h,int w){
+		FOR(y,yl,yl+h)FOR(x,xl,xl+w)if(board[y][x]!=0)return false; 
+		return true;
+	}
+	void set(int yl,int xl,int h,int w,int v){
+		FOR(y,yl,yl+h)FOR(x,xl,xl+w)board[y][x]=v;
+	}
+
+	int dfs(int i){
+		if(i==N){
+			if(isAnswer()){
+				res=board;
+				return 1;
+			}else{
+				return 0;
+			}
+		}
+
+		int res=0;
+		for(int w=1;w<=X;w++)if(as[i]%w==0){
+			int h=as[i]/w;
+
+			for(int y=ys[i]-h+1;y<=ys[i];y++)for(int x=xs[i]-w+1;x<=xs[i];x++)
+				if((0<=x && x+w<=X) && (0<=y && y+h<=Y)){
+					board[ys[i]][xs[i]]=0;	
+					if(canset(y,x,h,w)){
+						set(y,x,h,w,i+1);
+						res+=dfs(i+1);
+						set(y,x,h,w,0);
+					}
+					board[ys[i]][xs[i]]=i+1;
+			}
+		}
+		return res;
+	}
+
+	int X,Y,N;
+	vector<int> xs,ys;
+
+	vector<int> as;
+	vector<vector<int>> board;vector<vector<int>> res;
+	
+	void run(){
+		while(true){
+			cin >> X >> Y >> N;
+			if(X==0)break;	
+			as=vector<int>(N);
+			REP(i,N){
+				int j,v;cin >> j >> v;j--;
+				as[j]=v;
+			}
+			xs=vector<int>(N);ys=vector<int>(N);
+
+			board=vector<vector<int>>(Y,vector<int>(X));
+			REP(y,Y)REP(x,X){
+				cin >> board[y][x];
+				if(board[y][x]!=0){
+					xs[board[y][x]-1]=x;ys[board[y][x]-1]=y;
+				}
+			}
+			int resc=dfs(0);
+			if(resc==1){
+				cout << toString(res)<<endl;
+			}else{
+				cout <<"NA"<<endl;
+			}
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

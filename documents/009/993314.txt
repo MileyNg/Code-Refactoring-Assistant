@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+char decrypto(char c, int n) {
+    if (n == 0) {
+        return c;
+    }
+    if (c == 'a') {
+        return decrypto('Z', n-1);
+    }
+    if (c == 'A') {
+        return decrypto('z', n-1);
+    }
+    return decrypto(c-1, n-1);
+}
+
+int main() {
+    int n;
+    int k[100];
+    string s;
+    while (true) {
+        cin >> n;
+        if (n == 0) {
+            return 0;
+        }
+        for (int i=0; i<n; i++) {
+            cin >> k[i];
+        }
+        cin >> s;
+        for (int i=0; i<(int)s.length(); i++) {
+            cout << decrypto(s[i], k[i%n]);
+        }
+        cout << endl;
+    }
+}

@@ -1,0 +1,49 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int p, q, h, m, s, t, u, c;
+  int l = 17 * 60 + 30;
+  int r = 19 * 60 + 30;
+  bool b;
+  int a[7][7] = {
+    {0, 300, 500, 600, 700, 1350, 1650},
+    {6, 0, 350, 450, 600, 1150, 1500},
+    {13, 7, 0, 250, 400, 1000, 1350},
+    {18, 12, 5, 0, 250, 850, 1300},
+    {23, 17, 10, 5, 0, 600, 1150},
+    {43, 37, 30, 25, 20, 0, 500},
+    {58, 52, 45, 40, 35, 15, 0}
+  };
+
+  while (1) {
+    cin >> p;
+    if (!p) break;
+    --p;
+    cin >> h >> m;
+    s = 60 * h + m;
+    cin >> q;
+    --q;
+    cin >> h >> m;
+    t = 60 * h + m;
+    b = false;
+    if (s>=l && s<=r) b = true;
+    else if (t>=l && t<=r) b = true;
+    if (p > q) {
+      u = p;
+      p = q;
+      q = u;
+    }
+    if (a[q][p] > 40) b = false;
+    c = a[p][q];
+    if (b) {
+      c /= 2;
+      if (c % 50) {
+        c += 50 - (c % 50);
+      }
+    }
+    cout << c << endl;
+  }
+
+  return 0;
+}

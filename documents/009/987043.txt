@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int n, r;
+    std::cin >> n >> r;
+    if (n == 0 && r == 0) {
+      break;
+    }
+    std::vector<int> deck(n);
+    for (int i = 0; i < n; ++i) {
+      deck[i] = n - i;
+    }
+    for (int i = 0; i < r; ++i) {
+      int p, c;
+      std::cin >> p >> c;
+      std::vector<int> tmp(c);
+      for (int j = 0; j < c; ++j) {
+        int x = deck[p - 1];
+        deck.erase(deck.begin() + p - 1);
+        tmp[j] = x;
+      }
+      deck.insert(deck.begin(), tmp.begin(), tmp.end());
+    }
+    std::cout << deck[0] << std::endl;
+  }
+  return 0;
+}

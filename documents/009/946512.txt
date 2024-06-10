@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int table[8] = {0, 1, 2, 3, 5, 7, 8, 9};
+
+int main(void) {
+	int id;
+	int b[20];
+	int i,n;
+	while(scanf("%d\n", &id) == 1) {
+		if(!id) break;
+		
+		n = 0;
+		while(id > 0) {
+			b[n] = id % 8;
+			id = id / 8;
+			n++;
+		}
+		
+		if((id % 8) != 0) {
+			b[n] = id;
+			n++;
+		}
+		
+		for(i=n-1;i>=0;i--) {
+			printf("%d", table[b[i]]);
+		}
+		printf("\n");
+	}
+
+	return 0;
+}

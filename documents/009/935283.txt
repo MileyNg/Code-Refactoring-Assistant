@@ -1,0 +1,15 @@
+n, m = map(int, input().split())
+a = [int(input()) for i in range(n)]
+b = [int(input()) for i in range(m)]
+no = [114514] * 1919
+
+for i, t in enumerate(a):
+    no[t] = i + 1
+for i in range(1145):
+    no[i + 1] = min(no[i + 1], no[i])
+
+from collections import Counter
+c = Counter()
+for t in b:
+    c[no[t]] += 1
+print(c.most_common(1)[0][0])

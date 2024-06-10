@@ -1,0 +1,34 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+
+#define MAX_N 100
+
+int N, W;
+int v[MAX_N], w[MAX_N];
+int memo[MAX_N][MAX_N];
+
+int dlp(int i, int j)
+{
+	if(memo[i][j]>=0) return memo[i][j];
+
+	int ret = 0;
+
+	if(i==N){ ret=0; }
+	else if(j<w[i]){ ret = dlp(i+1, j); }
+	else{ ret = max(dlp(i+1, j), dlp(i+1, j-w[i])+v[i]); }
+
+	return memo[i][j] = ret;
+}
+		
+
+int main()
+{
+	cin >> N >> W;
+	for(int i=0; i<N; i++)cin>>v[i]>>w[i];
+	memset(memo, -1, sizeof(memo));
+	cout << dlp(0, 5) << endl;
+
+	return 0;
+}

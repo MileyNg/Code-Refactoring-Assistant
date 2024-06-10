@@ -1,0 +1,94 @@
+#include <iostream>
+#include <cfloat>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <unordered_map>
+ 
+using namespace std;
+ 
+#define fi first
+#define se second
+typedef pair<double,double> P;
+ 
+#define MAX (21)
+#define INF (DBL_MAX/4)
+ 
+double G[MAX][MAX];
+ 
+int n;
+vector<P> crys;
+P h, d;
+ 
+double dist(P p1, P p2){
+  return sqrt(pow(p1.fi-p2.fi, 2.) + pow(p1.se-p2.se, 2.));
+}
+ 
+void makeEdge() {
+  for(int i=0; i<n; i++) {
+    G[i][i] = 0;
+    for(int j=i+1; j<n; j++) {
+      G[i][j] = G[j][i] = dist(crys[i], crys[j]);
+    }
+  }
+}
+ 
+//map<ull, double> dp;
+unordered_map<int, double> dp;
+
+bool dfs(int S, int idx, double cost) {
+  
+  if(S==(1<<n)-1) {
+    return true;
+  }
+  
+  dp[S] = cost;
+  
+  for(int i=0; i<n; i++) {
+    if((S>>i)&1) continue;
+    if(cost + G[idx][i] >= dist(crys[i], d)) return false;
+  }
+  
+  for(int i=0; i<n; i++){
+    if((S>>i)&1) continue;
+    double ncost = cost + G[idx][i];
+    double nS = S|(1<<i);
+    if(ncost >= dist(crys[i], d)) return false;
+    else {
+      if(dp.count(nS) && dp[nS] < ncost) continue;
+      if(dfs(nS, i, ncost)) return true;
+    }
+  }
+  
+  return false;
+}
+ 
+bool solve() {
+   
+  makeEdge();
+  
+  dp.clear();
+  for(int i=0; i<n; i++) {
+    if(dist(h, crys[i]) >= dist(crys[i], d)) continue;
+    if(dfs(1<<i, i, dist(h, crys[i]))) {
+      return true;
+    }
+  }
+  return false;
+}
+ 
+int main(){
+  while(true){
+    crys.clear();
+    cin >> n >> h.fi >> h.se >> d.fi >> d.se;
+    if(!n && !h.fi && !h.se && !d.fi && !d.se){
+      break;
+    }
+    crys.resize(n);
+    for(int i=0; i<n; i++){
+      cin >> crys[i].fi >> crys[i].se;
+    }
+    cout << (solve() ? "YES" : "NO") << endl;
+  }
+  return 0;
+}

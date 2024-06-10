@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct syain {
+	int name;
+	long long int u;
+};
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		vector<syain> s;
+		for (int i = 0; i < n; i++) {
+			int a;
+			long long int b, c;
+			cin >> a >> b >> c;
+			bool hantei = true;
+			for (int j = 0; j < s.size(); j++) {
+				if (s[j].name == a) {
+					s[j].u += b * c;
+					hantei = false;
+					break;
+				}
+			}
+			if (hantei) {
+				syain d;
+				d.name = a;
+				d.u = b * c;
+				s.push_back(d);
+			}
+		}
+		bool hantei2 = true;
+		for (int i = 0; i < s.size(); i++) {
+			if (s[i].u >= 1000000) {
+				cout << s[i].name << endl;
+				hantei2 = false;
+			}
+		}
+		if (hantei2) {
+			cout << "NA" << endl;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct{
+    int m[3];
+}triangle;
+
+int main( void ){
+
+    triangle *tri;
+    int e;
+    scanf( "%d",&e );
+    if(( tri = ( triangle * ) malloc( sizeof( triangle ) * e )) == NULL ) return -1;
+    for( int i = 0;i < e;i++ )scanf( "%d %d %d",
+                                        &tri[i].m[0],&tri[i].m[1],&tri[i].m[2] );
+
+    for( int i = 0;i < e;i++ ){
+        for( int k = 0;k < 2;k++ ){
+            for( int j = 0;j < 2;j++ ){
+                if( tri[i].m[j] => tri[i].m[j+1] ){
+                    int buf = tri[i].m[j];
+                    tri[i].m[j] = tri[i].m[j+1];
+                    tri[i].m[j+1] = buf;
+                }
+            }
+        }
+        if( tri[i].m[0] * tri[i].m[0] + tri[i].m[1] * tri[i].m[1] == tri[i].m[2] * tri[i].m[2] ) printf( "YES\n" );   
+        else printf( "NO\n" );
+    }
+    return 0;
+}

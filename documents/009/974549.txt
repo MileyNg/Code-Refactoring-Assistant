@@ -1,0 +1,22 @@
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  max_l = 0
+  pl = (0..n).map{0}
+
+  n.times.each do
+    hl = gets.chomp.split("").map{|s| s == "."}
+
+    pl0 =[0]
+
+    for i in (0...n)
+      l = pl0[i + 1] = hl[i] ? [pl0[i], pl[i], pl[i + 1]].min + 1 : 0
+      max_l = l if max_l < l
+    end
+
+    pl = pl0
+  end
+
+  puts max_l
+end

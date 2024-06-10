@@ -1,0 +1,166 @@
+#include<iostream>
+#include<algorithm>
+#include<stdio.h>
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<int, P > PP;
+int n,ans[100];
+PP t[500];
+PP u[500];
+int ts,te,us,ue;
+int state[17];
+
+void t_in(PP x){
+  t[te]=x;
+  te++;
+}
+void u_in(PP x){
+  u[ue]=x;
+  ue++;
+}
+PP t_out(){
+  ts++;
+  return t[ts-1];
+}
+PP u_out(){
+  us++;
+  return u[us-1];
+}
+
+
+int u_check(){
+  int a = u[us].second.second;
+  int b = (a%5==1?5:2);
+  int cnt=0;
+  for(int i=0;i<17;i++){
+    if(state[i]==-1){
+      cnt++;
+      if(cnt==b){
+	return 1;
+      }
+    }else{
+      cnt=0;
+    }
+  }
+  return 0;
+}
+
+void u_ins(){
+  int a = u[us].second.second;
+  int b = (a%5==1?5:2);
+  int cnt=0;
+  for(int i=0;i<17;i++){
+    if(state[i]==-1){
+      cnt++;
+      if(cnt==b){
+	for(int j=i;j>i-b;j--){
+	  state[j]=a;
+	}
+	break;
+      }
+    }else{
+      cnt=0;
+    }
+  }
+  
+  
+  u_out();
+}
+int u_check2(PP x){
+  int a = x.second.second;
+  int b = (a%5==1?5:2);
+  int cnt=0;
+  for(int i=0;i<17;i++){
+    if(state[i]==-1){
+      cnt++;
+      if(cnt==b){
+	return 1;
+      }
+    }else{
+      cnt=0;
+    }
+  }
+  return 0;
+}
+void u_ins2(PP x){
+  int a = x.second.second;
+  int b = (a%5==1?5:2);
+  int cnt=0;
+  for(int i=0;i<17;i++){
+    if(state[i]==-1){
+      cnt++;
+      if(cnt==b){
+	for(int j=i;j>i-b;j--){
+	  state[j]=a;
+	}
+	break;
+      }
+    }else{
+      cnt=0;
+    }
+  }
+}
+
+int main(){
+  ts=us=te=ue=0;
+
+  for(int i=0;i<100;i++)ans[i]=0;
+  for(int i=0;i<17;i++)state[i]=-1;
+
+  for(int i=0;i<100;i++){
+    t_in(PP(5*i,P(1,i)));
+  }
+
+  sort(t+ts,t+te);
+
+  PP x,y;
+  int flg,z;
+  while(!(ts==te)){
+    /*
+    cout<<endl;
+    for(int i=0;i<17;i++)printf("%3d ",state[i]);
+    cout<<"u"<<endl;
+    for(int i=us;i<ue;i++)printf("%3d ",u[i].second.second);
+    cout<<endl;
+    cout<<endl;
+    */
+    sort(t+ts,t+te);
+    y=x;
+    x=t_out();
+
+    
+    for(int i=us;i<ue;i++)ans[u[i].second.second]+=(x.first-y.first);
+
+    if(x.second.first==0){
+      for(int i=0;i<17;i++)if(state[i]==x.second.second)state[i]=-1;
+      while(1){
+	if(us==ue)break;
+	flg=u_check();
+	if(flg==0)break;
+	u_ins();
+	z=x.second.second;
+	t_in(PP(x.first+(17*(z%2)+3*(z%3)+19),P(0,z)));
+      }
+            
+    }else if(x.second.first==1){
+      flg=u_check2(x);
+
+      if(flg==0||us!=ue){
+	u_in(x);
+      }else{
+	u_ins2(x);
+
+	z=x.second.second;
+	t_in(PP(x.first+(17*(z%2)+3*(z%3)+19),P(0,z)));
+      }
+    }//if
+  }
+
+  
+  
+  while(cin>>n){
+    for(int i=n;i<=n;i++)cout<<ans[i]<<' ';
+    cout<<endl;
+  }
+  return 0;
+}

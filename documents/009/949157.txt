@@ -1,0 +1,79 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+typedef long long ll;
+const ll MD = 1e9+7.1;
+
+int n;
+char s[2000030];
+
+ll expr(char **begin);
+
+ll numb(char **begin) {
+    ll r = 0;
+    while (isdigit(**begin)) {
+        r *= 10;
+        r += **begin - '0';
+        *begin += 1;
+    }
+    return r;
+}
+
+ll term(char **begin) {
+    if (**begin == 'S') {
+        *begin += 2;
+        ll r = expr(begin)%MD;
+        *begin += 1;
+        return (r*r)%MD;
+    } else {
+        return numb(begin);
+    }
+}
+
+bool ist(char c) {
+    return (isdigit(c) || c == 'S') ;
+}
+ll expr(char **begin) {
+    ll r = term(begin);
+    while (true) {
+        if (**begin == '>' && *(*begin + 1) == '>' && ist(*(*begin + 2))) {
+            *begin += 2;
+            r >>= min(60LL, term(begin));
+        } else {
+            break;
+        }
+    }
+    return r;
+}
+
+int main() {
+    while (true) {
+        string ss;
+        getline(cin, ss);
+        if (ss[0] == '#') break;
+        n = 0;
+        for (char c: ss) {
+            if (c != ' ') {
+                s[n] = c;
+                n++;
+            }
+        }
+        s[n] = '@';
+        char *beg = s;
+        ll ans = expr(&beg);
+        cout << ans << endl;
+    }
+    return 0;
+}

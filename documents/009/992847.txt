@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+#define MAX 20
+#define EPS 1e-9
+
+struct Point{
+  double x, y;
+}; 
+
+int N;
+Point h, d, crystal[MAX];
+ 
+double dist(Point a, Point b){
+  return sqrt(pow(a.x-b.x,2) + pow(a.y-b.y,2));
+}
+
+bool used[MAX];
+bool rec(int now, double total_dist, int depth){
+  if(depth == N){
+    return true;
+  }
+
+  for(int i = 0 ; i < N ; i++){
+    if(!used[i]){
+      if(total_dist + dist(crystal[now],crystal[i]) >= dist(d,crystal[i])){
+        return false;
+      }
+    }
+  }
+
+  for(int i = 0 ; i < N ; i++){
+    if(!used[i]){
+      used[i] = true;
+      if(rec(i, total_dist + dist(crystal[now],crystal[i]), depth+1)){
+        return true;
+      }
+      used[i] = false;
+    }
+  }
+  return false;
+}
+
+bool solve(){
+  for(int i = 0 ; i < N ; i++){
+    memset(used, false, sizeof(used));
+    if(rec(i, dist(h, crystal[i]), 0)){
+      return true;
+    }
+  }
+
+  return false;
+}
+ 
+int main(){
+  while(cin >> N >> h.x >> h.y >> d.x >> d.y, (N + h.x + h.y + d.x + d.y)){
+    for(int i = 0 ; i < N ; i++){
+      cin >> crystal[i].x >> crystal[i].y;
+    }
+    cout << (solve() ? "YES" : "NO") << endl;
+  }
+  
+  return 0;
+}

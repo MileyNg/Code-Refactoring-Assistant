@@ -1,0 +1,39 @@
+#include <stdio.h>
+ 
+#define N 21
+#define Q 200
+ 
+int A[N], M[Q];
+int n, q;
+ 
+int solve(int p, int t) {
+ 
+    if (t == 0)
+        return 1;
+   if (p == n)
+        return 0;
+    if (solve(p + 1, t - A[p]))
+        return 1;
+ 
+    return 0;
+}
+ 
+int main() {
+    int i;
+ 
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &A[i]);
+    scanf("%d", &q);
+    for (i = 0; i < q; i++)
+        scanf("%d", &M[i]);
+ 
+    for (i = 0; i < q; i++) {
+        if (solve(0, M[i]))
+            printf("yes\n");
+        else
+            printf("no\n");
+    }
+ 
+    return 0;
+}

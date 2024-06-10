@@ -1,0 +1,83 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <utility>
+using namespace std;
+
+#define EPS 1e-8
+#define sqr(x) ((x)*(x))
+#define fi first
+#define se second
+
+class circle {
+	public:
+		int x, y, r;
+		circle(int x, int y, int r) {
+			this->x = x;
+			this->y = y;
+			this->r = r;
+		}
+
+		bool is_cross(int x1, int y1, int x2, int y2) {
+			pair<int,int> range;
+			int x0 = x, y0 = y;
+			if(x1 == x2 && y1 == y2) {
+				return false;
+			}
+			if(x1 == x2) {
+				swap(x1, y1);
+				swap(x2, y2);
+				swap(x0, y0);
+			}
+
+			range.fi = min(x1, x2);
+			range.se = max(x1, x2);
+
+			double a, b;
+			a = (double)(y2 - y1) / (x2 - x1);
+			b = y1 - a * x1;
+
+			double d;
+			d = sqr(x0 - a * (b - y0)) - (1 + sqr(a)) * (sqr(x0) + sqr(b - y0) - sqr(r)) + EPS;
+
+			if(d < 0)
+				return false;
+
+			double z, zz;
+			z  = (x0 - a * (b - y0) - sqrt(d)) / (1 + sqr(a));
+			zz = (x0 - a * (b - y0) + sqrt(d)) / (1 + sqr(a));
+
+			if((range.fi <= z && z <= range.se) || (range.fi <= zz && zz <= range.se))
+				return true;
+			return false;
+		}
+};
+
+int main(void) {
+	int n, m;
+	vector<circle> v;
+
+	while(cin >> n, n) {
+		for(int i = 0; i < n; i++) {
+			int x, y, r;
+			cin >> x >> y >> r;
+			v.push_back(circle(x,y,r));
+		}
+		cin >> m;
+		for(int i = 0; i < m; i++) {
+			int x1, y1, x2, y2;
+			bool flag = false;
+			cin >> x1 >> y1 >> x2 >> y2;
+			for(int j = 0; j < v.size(); j++) {
+				if(v[j].is_cross(x1, y1, x2, y2))
+					flag = true;
+			}
+			if(flag)
+				cout << "Safe" << endl;
+			else
+				cout << "Danger" << endl;
+		}
+	}
+
+	return 0;
+}

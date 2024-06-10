@@ -1,0 +1,17 @@
+def f():
+  c=[0]*101
+  while 1:
+    a,b=map(int,raw_input().split())
+    if a==b==0:break
+    c[a]+=1
+    c[b]+=1
+  f=0
+  if c[1]%2==c[2]%2==1:
+    for e in c[3:]:
+      if e%2:break
+    else:f=1
+  print ["NG","OK"][f]
+  return
+while 1:
+  try:f()
+  except:break

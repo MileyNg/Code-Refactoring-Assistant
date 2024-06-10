@@ -1,0 +1,43 @@
+x_plus = 100000000
+
+def h_w_patterns(h, w)
+  arr = []
+  h1 = h
+  while h1 < w
+    h1= h1 + 1
+    w1 = w
+    while h1 < w1
+      arr.push [h1, w1]
+      w1 = w1 - 1
+    end
+  end
+  arr
+end
+
+while line = gets do
+  h, w = line.split(" ").map(&:to_i)
+  x = h*h + w*w
+  break if h == 0 && w == 0
+
+  success = false
+
+  h1 = h + 1
+  w1 = w
+  xx = 0
+  while xx < x_plus do
+    x1 = x + xx
+    if x1 > x
+      h1 = 0
+      w1 = Math.sqrt(x1).floor
+    end
+    h_w_patterns(h1, w1).sort{|a, b| a[0]<=> b[0]}.each do |h2, w2|
+      if x1 == h2 * h2 + w2 * w2 && !(h2 == h && w2 == w)
+        success = true
+        puts "#{h2} #{w2}\n"
+        break
+      end
+    end
+    break if success
+    xx = xx + 1
+  end
+end

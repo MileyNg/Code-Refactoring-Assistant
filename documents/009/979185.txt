@@ -1,0 +1,19 @@
+def get_i(i)
+  i = get_i($s[i]) if $s[i] != -1
+  i
+end
+
+n, q = gets.split.map(&:to_i)
+$s = Array.new(n) {-1}
+
+q.times do
+  com, x, y = gets.split.map(&:to_i)
+  xi = get_i(x)
+  yi = get_i(y)
+  case com
+  when 0
+    $s[xi] = yi if xi != yi
+  when 1
+    puts xi == yi ? '1' : '0'
+  end
+end

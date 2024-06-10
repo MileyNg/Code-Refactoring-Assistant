@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<math.h>
+
+#define FALSE 0
+#define CROSS 1
+#define A_IN_B -2
+#define B_IN_A 2
+
+#define compile 0
+
+struct circle
+{
+	double x; //中心のx座標
+	double y; //中心のy座標
+	double r; //円の半径
+};
+
+int func_judge(double ax, double ay, double ar, double bx, double by, double br);
+void func_output(int result);
+
+main()
+{
+	int n = 0, i = 0; //データセット代入変数, 制御変数
+	int result = 10; //-2,0,1,2以外なら何でも良い
+	scanf("%d", &n);
+	for(i = 0; i < n; i++)
+	{
+		struct circle a = {0, 0, 0}; //構造体変数の宣言(円a)
+		struct circle b = {0, 0, 0}; //構造体変数の宣言(円b)
+		
+		scanf("%lf %lf %lf %lf %lf %lf", &a.x, &a.y, &a.r, &b.x, &b.y, &b.r); //入力
+		result = func_judge(a.x, a.x, a.r, b.x, b.y, b.r); //結果の計算
+		func_output(result);
+		result = 10;
+	}
+	return 0;
+}
+
+int func_judge(double ax, double ay, double ar, double bx, double by, double br)
+{
+	double dis_a_to_b = 0; //円aと円bの距離を代入する変数
+	dis_a_to_b = sqrt(pow(ax - bx, 2) + pow(ay - by, 2)); //中心間の距離を計算
+	
+#if compile == 2
+		printf("dis_a_to_b = %lf ar = %lf br = %lf\n", dis_a_to_b, ar, br);
+#endif
+	
+	
+	if(ar > (br + dis_a_to_b)) //aの半径rがbの半径rと円aと円bの中心座標の距離の和よりも大きい場合
+	{
+		return B_IN_A;
+	}
+	else if(br > (ar + dis_a_to_b)) //bの半径rがaの半径rと円aと円bの中心座標の距離の和よりも大きい場合
+	{
+		return A_IN_B;
+	}
+	else if((ar + br) < dis_a_to_b) //aの半径rとbの半径rの和が2つの円の距離未満である場合
+	{
+		return FALSE;
+	}
+	else
+	{
+		return CROSS;
+	}
+}
+void func_output(int result)
+{
+	//printf("result = %d ", result);
+	switch(result)
+	{
+	case -2:
+		printf("%d\n", result);
+		break;
+	case 0:
+		printf("%d\n", result);
+		break;
+	case 1:
+		printf("%d\n", result);
+		break;
+	case 2:
+		printf("%d\n", result);
+		break;
+	}
+}

@@ -1,0 +1,33 @@
+#include<stdio.h>
+#include<string.h>
+int N,M[101][101][2],i,j,F[101][101],c,R;
+
+int dfs(int x,int y,int f)
+{
+	if(F[y][x]==f)return 1;
+	if(F[y][x]==0)
+	{
+		F[y][x]=f;
+		return dfs(M[y][x][0],M[y][x][1],f);
+	}
+	return 0;
+}
+
+int main()
+{
+	for(;scanf("%d",&N),N;)
+	{
+		memset(F,0,sizeof(F));
+		for(i=0;i<N;i++)
+			for(j=0;j<N;j++)
+				scanf("%d%d",&M[i][j][0],&M[i][j][1]);
+		for(i=R=0,c=1;i<N;i++)
+			for(j=0;j<N;j++)
+				if(F[i][j]==0)
+				{
+					R+=dfs(j,i,c++);
+				}
+		printf("%d\n",R);
+	}
+	return 0;
+}

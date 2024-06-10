@@ -1,0 +1,39 @@
+#include<iostream>
+
+int n;
+
+int ReShuffle(int x, int y, int m){
+	y -= x;
+	int z = n - (x + y);
+
+	if (m <= z)return x + y + m;
+	else if (m <= z + y)return x + (m - z);
+	else return (m - y - z);
+}
+
+int main(){
+
+	while (std::cin >> n, n){
+
+		int m, p, q, r, cnt = 0;
+
+		std::cin >> m >> p >> q >> r;
+
+		std::pair<int, int>Shuffle[5001];
+
+		for (int i = 0; i < m; i++)std::cin >> Shuffle[i].first >> Shuffle[i].second;
+
+		for (int i = p; i <= q; i++){
+
+			int card = i;
+			for (int j = 0; j < m; j++){
+				card = ReShuffle(Shuffle[j].first, Shuffle[j].second, card);
+			}
+			if (card <= r)cnt++;
+		}
+
+		std::cout << cnt << std::endl;
+	}
+
+	return 0;
+}

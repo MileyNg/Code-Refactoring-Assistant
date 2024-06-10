@@ -1,0 +1,219 @@
+#include <cstdio>
+#include <climits>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+int N, M, R;
+
+struct Node {
+	int id;
+	int d;
+};
+
+vector<Node> gl[201];
+vector<Node> gs[201];
+
+int dist_l[201][201];
+int dist_s[201][201];
+
+int dest[1001];
+
+int dp[201][201];
+
+void flood()
+{
+	int i, j, k;
+
+	for (i=1; i<=N; i++) {
+		dist_l[i][i] = 0;
+		for (j=i+1; j<=N; j++) {
+			dist_l[i][j] = dist_l[j][i] = INT_MAX;
+		}
+	}
+	for (i=1; i<=N; i++) {
+		for (j=0; j<gl[i].size(); j++) {
+			int t = gl[i][j].id;
+			int d = gl[i][j].d;
+			if (dist_l[i][t] > d)
+				dist_l[i][t] = dist_l[t][i] = d;
+		}
+	}
+
+	for (k=1; k<=N; k++) {
+		for (i=1; i<=N; i++) {
+			if (i==k || dist_l[i][k]==INT_MAX)
+				continue;
+			for (j=i+1; j<=N; j++) {
+				if (j==k || dist_l[k][j]==INT_MAX)
+					continue;
+				if (dist_l[i][j] > dist_l[i][k]+dist_l[k][j]) {
+					dist_l[i][j] = dist_l[j][i] = dist_l[i][k]+dist_l[k][j];
+				}
+			}
+		}
+
+	}
+
+	for (i=1; i<=N; i++) {
+		dist_s[i][i]=0;
+		for (j=i+1; j<=N; j++) {
+			dist_s[i][j] = dist_s[j][i] = INT_MAX;
+		}
+	}
+	for (i=1; i<=N; i++) {
+		for (j=0; j<gs[i].size(); j++) {
+			int id = gs[i][j].id;
+			int d = gs[i][j].d;
+			if (dist_s[i][id] > d) 
+				dist_s[i][id] = dist_s[id][i] = d;
+		}
+	}
+	for (k=1; k<=N; k++) {
+		for (i=1; i<=N; i++) {
+			if (k==i || dist_s[i][k]==INT_MAX) continue;
+			for (j=i+1; j<=N; j++) {
+				if (j==k || dist_s[k][j]==INT_MAX) continue;
+				if (dist_s[i][j] > dist_s[i][k] + dist_s[k][j]) {
+					dist_s[i][j] = dist_s[j][i] = dist_s[i][k] + dist_s[k][j];
+				}
+			}
+		}
+
+	}
+	/*
+	for (i=1; i<=N; i++) {
+		for (j=i; j<=N; j++) {
+			printf("dist_l[%d][%d]=%d\n", i, j, dist_l[i][j]);
+		}
+	}
+
+	for (i=1; i<=N; i++) {
+		for (j=i; j<=N; j++) {
+			printf("dist_s[%d][%d]=%d\n", i, j, dist_s[i][j]);
+		}
+	}
+	*/
+}
+
+
+
+void solve()
+{
+	flood();
+
+	int s_start[201];
+	int s_end[201];
+
+	int i, j;
+
+	for (i=1; i<=N; i++)
+		s_start[i] = INT_MAX;
+	s_start[1] = 0;
+
+	for (i=1; i<=R; i++) {
+
+		for (j=1; j<=N; j++)
+			s_end[j] = INT_MAX;
+
+		int start, end;
+		int total_land_cost;
+
+		start = dest[i-1]; end = dest[i];
+
+		total_land_cost = dist_l[start][end];
+
+		for (j=1; j<=N; j++) {
+			if (s_start[j]!=INT_MAX) {
+				if (total_land_cost!=INT_MAX) {
+					if (s_end[j] > s_start[j]+total_land_cost)
+						s_end[j] = s_start[j]+total_land_cost;
+				}
+				int k;
+
+				for (k=1; k<=N; k++) {
+					if (k==j) continue;
+					int c1, c2, c3;
+					c1 = dist_l[start][j];
+					c2 = dist_s[j][k];
+					c3 = dist_l[k][end];
+					//printf("c1=%d c2=%d c3=%d\n", c1, c2, c3);
+					if (c1==INT_MAX || c2==INT_MAX || c3==INT_MAX) continue;
+					if (s_end[k] > c1+c2+c3+s_start[j]) {
+						s_end[k] = c1+c2+c3+s_start[j];
+						//printf("s_end[%d] = %d\n", k, s_end[k]);
+					}
+				}
+			}
+		}
+
+		for (j=1; j<=N; j++)
+			s_start[j] = s_end[j];
+/*
+		printf("start=%d, end=%d\n", start, end);
+		printf("s_end[]= ");
+		for (j=1; j<=N; j++)
+			printf("%d ", s_end[j]);
+		printf("\n");
+*/
+	}
+
+	int min = INT_MAX;
+	for (i=1; i<=N; i++) {
+		if (min > s_start[i])
+			min = s_start[i];
+	}
+
+	printf("%d\n", min);
+
+}
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	while (scanf("%d%d", &N, &M)==2) {
+		if (N==0 && M==0) break;
+		Node node;
+		int i, j;
+
+		for (i=1; i<=N; i++) {
+			gl[i].clear();
+			gs[i].clear();
+		}
+
+		for (i=0; i<M; i++) {
+			int x, y, t;
+			char c;
+			scanf("%d%d%d", &x, &y, &t);
+			do { c=getchar();
+			} while (c!='S' && c!='L');
+
+			if (c=='S') {
+				node.d = t; node.id = y;
+				gs[x].push_back(node);
+				node.id = x;
+				gs[y].push_back(node);
+			}
+			else {
+				node.d = t; node.id = y;
+				gl[x].push_back(node);
+				node.id = x;
+				gl[y].push_back(node);
+			}
+		}
+
+		scanf("%d", &R);
+		dest[0] = 1;
+		for (i=1; i<=R; i++) {
+			scanf("%d", &dest[i]);
+		}
+
+		solve();
+
+	}
+
+	return 0;
+}

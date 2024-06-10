@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cmath>
+#include<vector>
+#include<cstdio>
+using namespace std;
+
+#define X 0
+#define Y 1
+#define PI 3.141592653589
+
+int main()
+{
+    vector<double> udv = {0,1}; // 単位方向ベクトル
+    vector<double> cur_position = {0, 0};
+
+    int step=0, angle=0;
+    while(1){
+        
+        scanf("%d,%d", &step, &angle);
+        if( !step && !angle )break;
+
+        cur_position.at(X) += udv.at(X)*step;
+        cur_position.at(Y) += udv.at(Y)*step;
+
+        // rotation
+        double x =  cos(angle*PI/180.0)*udv.at(X) + sin(angle*PI/180.0)*udv.at(Y);
+        double y = -sin(angle*PI/180.0)*udv.at(X) + cos(angle*PI/180.0)*udv.at(Y);
+        udv.at(X) = x;
+        udv.at(Y) = y;
+        udv.at(X) = udv.at(X)/sqrt(udv.at(X)*udv.at(X)+udv.at(Y)*udv.at(Y));
+        udv.at(Y) = udv.at(Y)/sqrt(udv.at(X)*udv.at(X)+udv.at(Y)*udv.at(Y));
+    }    
+    cout << static_cast<int>(cur_position.at(X)) << " " << static_cast<int>(cur_position.at(Y)) << endl;
+
+    return 0;
+}

@@ -1,0 +1,106 @@
+#include <cstdlib>
+#include <iostream>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+constexpr int MAX_N = 10;
+constexpr int MAX_M = 20;
+
+typedef tuple<int, int, int> edge; // to, distance, index
+#define to(e) get<0>(e)
+#define dist(e) get<1>(e)
+#define idx(e) get<2>(e)
+
+int n, m;
+vector<edge> E[MAX_N];
+unordered_map<int, int> memo;
+
+int dfs(int v, int used) {
+	const int h = used * 10 + v;
+	if(memo.count(h)) return memo.at(h);
+
+	int &res = memo[h];
+	for(const auto &e : E[v]) {
+		if(used & (1 << idx(e))) continue;
+		res = max(res, dfs(to(e), used | (1 << idx(e))) + dist(e));
+	}
+	return res;
+}
+
+void print_answer() {
+	int ans = -1;
+	int u = -1;
+	
+	for(int v = 0; v < n; ++v) {
+		if(memo.count(v) && ans < memo.at(v)) {
+			ans = memo.at(v);
+			u = v;
+		}
+	}
+
+	int rest = ans;
+	int used = 0;
+	vector<int> path;
+
+	while(true) {
+		path.emplace_back(u + 1);
+		int next = n;
+		int next_used = -1;
+		int next_rest = -1;
+
+		for(const auto &e : E[u]) {
+			if(used & (1 << idx(e))) continue;
+
+			const int v = to(e);
+			const int n_used = used | (1 << idx(e));
+			const int h = n_used * 10 + v;
+			if(!memo.count(h) || memo.at(h) + dist(e) != rest) continue;
+
+			if(next > v) {
+				next = v;
+				next_used = n_used;
+				next_rest = memo.at(h);
+			}
+		}
+
+		if(next == n) break;
+		u = next;
+		used = next_used;
+		rest = next_rest;
+	}
+
+	cout << ans << endl;
+	for(unsigned i = 0; i < path.size(); ++i) {
+		cout << path[i] << (i + 1 == path.size() ? "\n" : " ");
+	}
+}
+
+int main(){
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	while(cin >> n >> m && n) {
+		for(int i = 0; i < n; ++i) {
+			E[i].clear();
+		}
+
+		for(int i = 0; i < m; ++i) {
+			int a, b, d;
+			cin >> a >> b >> d;
+			--a; --b;
+			E[a].emplace_back(b, d, i);
+			E[b].emplace_back(a, d, i);
+		}
+
+		memo.clear();
+		for(int v = 0; v < n; ++v) {
+			dfs(v, 0);
+		}
+
+		print_answer();
+	}
+
+	return EXIT_SUCCESS;;
+}

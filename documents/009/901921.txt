@@ -1,0 +1,65 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <stack>
+#include <deque>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i <= ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 1, n )
+
+typedef long long ll;
+typedef pair< int, int > P;
+
+bool IsBig( int, int );
+int TotalDaysY( int );
+int TotalDaysM( int, int );
+int Days( int, int, int );
+
+int main()
+{
+	int mill = Days( 1000, 1, 1 );
+	int n;  cin >> n;
+	while( n-- ) {
+		int y, m, d;  cin >> y >> m >> d;
+		cout << mill - Days( y, m, d ) << endl;
+	}
+	return 0;
+}
+
+// 大の月か
+bool IsBig( int y, int m ) {
+	if( y % 3 == 0 ) { return true; }
+	return ( m % 2 == 1 );
+}
+
+// 1~y年の全日数
+int TotalDaysY( int y ) {
+	int res = 0;
+	REP( i, y ) res += TotalDaysM( i, 10 );
+	return res;
+}
+
+// y年における1~m月の全日数
+int TotalDaysM( int y, int m ) {
+	int res = 0;
+	REP( i, m ) res += ( IsBig( y, i ) ? 20 : 19 );
+	return res;
+}
+
+// 1 1 1からの日数
+int Days( int y, int m, int d ) {
+	int res = 0;
+	res += TotalDaysY( y - 1 );
+	res += TotalDaysM( y, m - 1 );
+	res += d - 1;
+	return res;
+}

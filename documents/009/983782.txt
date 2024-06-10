@@ -1,0 +1,80 @@
+#include <algorithm>
+#include <sstream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+Long FizzBuzzCount(Long N) {
+    return N / 3 + N / 5 - N / 15;
+}
+
+Long Count(Long N) {
+    Long Ret = (N / 3 + N / 5) * 4 + 1;
+    for (Long n = 1, i = 1; ; n *= 10, i++) {
+        Long n1 = n * 10;
+        if (n1 < N) {
+            Ret += ((n1 - n) - (FizzBuzzCount(n1) - FizzBuzzCount(n))) * i;
+        } else {
+            Ret += ((N - n) - (FizzBuzzCount(N) - FizzBuzzCount(n))) * i;
+            break;
+        }
+    }
+    return Ret;
+}
+
+#define INF Long(1e17)
+
+string to_s(Long n) {
+    ostringstream os;
+    os << n;
+    return os.str();
+}
+
+string toFizzBuzzString(Long n) {
+    if (n % 15 == 0) {
+        return "FizzBuzz";
+    } else if (n % 3 == 0) {
+        return "Fizz";
+    } else if (n % 5 == 0) {
+        return "Buzz";
+    } else {
+        return to_s(n);
+    }
+}
+
+char At(Long s) {
+    Long lb = 0, ub = INF;
+    while (lb + 1 < ub) {
+        Long mid = (lb + ub) / 2;
+        if (Count(mid) <= s) {
+            lb = mid;
+        } else {
+            ub = mid;
+        }
+    }
+    string x = toFizzBuzzString(lb + 1);
+    return x[s - Count(lb)];
+}
+
+int main() {
+    Long s; cin >> s;
+    for (Long i = s; i < s + 20; i++) {
+        cout << At(i - 1);
+    }
+    cout << endl;
+    return 0;
+}

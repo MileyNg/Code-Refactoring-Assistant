@@ -1,0 +1,52 @@
+#include <iostream>
+
+int month_consists_of(int year, int month);
+int year_consists_of(int year);
+
+int main(int argc, char const* argv[])
+{
+  int n;
+  std::cin >> n;
+  for (int i = 0; i < n; ++i) {
+    int year, month, day;
+    std::cin >> year >> month >> day;
+    int passed;
+    if (day == 1) {
+      passed = 0;
+    } else {
+      passed = 1 + month_consists_of(year, month) - day;
+      ++month;
+      if (month == 11) {
+        ++year;
+        month = 1;
+      }
+    }
+    if (month != 1) {
+      for (int m = month; m <= 10; ++m) {
+        passed += month_consists_of(year, m);
+      }
+      ++year;
+    }
+    for (int y = year; y <= 999; ++y) {
+      passed += year_consists_of(y);
+    }
+    std::cout << passed << std::endl;
+  }
+  return 0;
+}
+
+int month_consists_of(int year, int month) {
+  if (year % 3 == 0)
+    return 20;
+  else if (month % 2 == 0)
+    return 19;
+  else
+    return 20;
+}
+
+int year_consists_of(int year) {
+  if (year % 3 == 0)
+    return 20 * 10;
+  else
+    return (20 + 19) * 5;
+}

@@ -1,0 +1,132 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Mapping{
+	string key,value;
+	vector<Mapping> children;
+	Mapping(string k):key(k){}
+	Mapping(string k,string v):key(k),value(v){}
+};
+
+pair<Mapping,int> Parse(const vs& yaml,int i)
+{
+	int indent=yaml[i].find_first_not_of(' ');
+	
+	string key;
+	int j=indent;
+	for(;yaml[i][j]!=':';j++) key+=yaml[i][j];
+	j+=2;
+	
+	if(j<=yaml[i].size()){ // string
+		string value=yaml[i].substr(j);
+		return mp(Mapping(key,value),i+1);
+	}
+	else{
+		Mapping m(key);
+		for(i++;i<yaml.size() && yaml[i].find_first_not_of(' ')>indent;){
+			auto p=Parse(yaml,i);
+			m.children.push_back(p.first);
+			i=p.second;
+		}
+		return mp(m,i);
+	}
+}
+Mapping Parse(const vs& yaml)
+{
+	Mapping m("(root)");
+	for(int i=0;i<yaml.size();){
+		auto p=Parse(yaml,i);
+		m.children.push_back(p.first);
+		i=p.second;
+	}
+	return m;
+}
+
+void print(const Mapping& m,int i=0)
+{
+	if(i) cout<<string(i,' ');
+	cout<<m.key<<"("<<m.children.size()<<"): ";
+	if(m.children.empty())
+		cout<<m.value<<endl;
+	else{
+		cout<<endl;
+		for(const auto& c:m.children)
+			print(c,i+1);
+	}
+}
+
+string query(const Mapping& m,const string& q)
+{
+	vs keys;
+	for(int i=0;i<q.size();){
+		int j=q.find('.',i+1);
+		keys.push_back(q.substr(i+1,j-(i+1)));
+		i=j;
+	}
+	
+	const Mapping* x=&m;
+	string res="no such property";
+	for(int i=0;i<keys.size();i++){
+		bool found=false;
+		for(const auto& c:x->children)
+			if(c.key==keys[i]){
+				x=&c;
+				found=true;
+				break;
+			}
+		if(!found) return "no such property";
+	}
+	
+	if(x->children.empty())
+		return "string \""+x->value+"\"";
+	else
+		return "object";
+}
+
+int main()
+{
+	for(string q;getline(cin,q);){
+		vs yaml;
+		for(string s;getline(cin,s) && s!="";)
+			yaml.push_back(s);
+		
+		Mapping m=Parse(yaml);
+		cout<<query(m,q)<<endl;
+	}
+}

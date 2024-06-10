@@ -1,0 +1,19 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+  int n, a, b;
+  cin >> n;
+  for(int k=0; k<n; ++k){
+    int x=0, y=0, d=0, x_=0, y_=0, d_=0;
+    while(1){
+      cin >> a >> b;
+      if(!a && !b) break;
+      x_+=a, y_+=b, d_=x_*x_+y_*y_;
+      if(d_>d || (d_==d && x_>x)) x=x_, y=y_, d=d_;
+    }
+    cout << x << " " << y << endl;
+  }
+  return 0;
+}

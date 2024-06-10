@@ -1,0 +1,40 @@
+
+	line = gets
+	
+	for i in 1..line.to_i() do
+		amount = gets.to_i()
+		year = gets.to_i()
+		num = gets.to_i()
+		max = 0
+		for j in 1..num.to_i() do
+			line = gets
+			sp = line.split(nil)
+			r = sp[1].to_f()
+			c = sp[2].to_f()
+			if sp[0] == "1" then
+				last = amount
+				r = r +1.0
+				for k in 1..year do
+					last = last * r - c
+					last = last.to_i()
+				end
+				
+			else
+				last = amount
+				rishi = 0
+				for k in 1..year do
+					rishi  = rishi + last * r
+					last = last - c
+				end
+				last = last + rishi
+				last = last.to_i()
+
+			end
+			
+			if last > max then
+				max = last
+			end
+		end
+		print(max)
+		print("\n")
+	end

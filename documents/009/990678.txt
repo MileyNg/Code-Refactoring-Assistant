@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+struct some_cake{
+    int cake_flag[15];
+    double cake_length;
+    int last_cake;
+};
+
+some_cake init_some_cake(){
+    some_cake init;
+    for(int i=0; i<15; i++)init.cake_flag[i]=0;
+    init.cake_length=0.0;
+    init.last_cake=0;
+    
+    return init;
+}
+
+
+using namespace std;
+
+
+int main(){
+    string input;
+    while(getline(cin, input)){
+        stringstream ss;
+        ss<<input;
+        double box;
+        ss>>box;
+        //cout<<"box"<<box<<endl;
+        
+        double cake[15]={0};
+        int cake_count=0;
+        while(ss>>cake[cake_count]){
+            //cout<<cake[cake_count]<<endl;
+            cake_count++;
+        }
+        
+        
+        
+        /*
+        queue<some_cake> qu;
+        some_cake temp = init_some_cake();
+        qu.push(temp);
+        bool ans_flag=true;
+        while(!qu.empty()){
+            some_cake pop_temp;
+            pop_temp = qu.front();
+            qu.pop();
+            
+            some_cake push_temp;
+            bool last_flag=true;
+            for(int i=0; i<cake_count; i++){
+                if(pop_temp.cake_flag[i] == 0){
+                    last_flag=false;
+                    push_temp = pop_temp;
+                    push_temp.cake_flag[i]=1;
+                    if(push_temp.cake_length==0.0){
+                        push_temp.cake_length=cake[i];
+                    }else{
+                        double x = (cake[push_temp.last_cake]+cake[i])*(cake[push_temp.last_cake]+cake[i])-(cake[push_temp.last_cake]-cake[i])*(cake[push_temp.last_cake]-cake[i]);
+                        if(x<0)x=x*-1;
+                        push_temp.cake_length+=sqrt(x);
+                        
+                    }
+                    push_temp.last_cake=i;
+                    
+                    qu.push(push_temp);
+                }
+            }
+            if(last_flag){
+                pop_temp.cake_length+=cake[pop_temp.last_cake];
+                
+                
+                //cout<<pop_temp.cake_length<<endl;
+                if(pop_temp.cake_length<=box){
+                    ans_flag=false;
+                    cout<<"OK"<<endl;
+                    break;
+                }
+            }
+            
+            
+        }
+        
+        if(ans_flag)cout<<"NA"<<endl;
+         */
+        bool na_flag=true;
+        do{
+            double l=0.0;
+            l+=cake[0]+cake[cake_count-1];
+            for(int i=1; i<cake_count; i++){
+                double x = (cake[i-1]+cake[i])*(cake[i-1]+cake[i])-(cake[i-1]-cake[i])*(cake[i-1]-cake[i]);
+                l+=sqrt(x);
+            }
+            
+            if(l<=box){
+                na_flag=false;
+                cout<<"OK"<<endl;
+                break;
+            }
+            
+        }while(next_permutation(cake, cake+cake_count));
+        
+        if(na_flag)cout<<"NA"<<endl;
+        
+    }
+}

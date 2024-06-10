@@ -1,0 +1,104 @@
+#include <iostream>
+#include <stack>
+#include <complex>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,n) loop(i,0,n)
+#define all(c) (c).begin(), (c).end()
+typedef complex<int> P;
+
+const int MAX_M = 1.5e6+10;
+const int SIZE = 2000;
+int ps[MAX_M/2];
+bool isp[MAX_M];
+int grid[SIZE][SIZE]={};
+P itop[MAX_M];
+pair<int,int> dp[SIZE][SIZE];
+
+int cnt_p = 0;
+
+void make_es(){
+    fill(isp,isp+MAX_M,true);
+    isp[0]=isp[1]=false;
+    rep(i,MAX_M){
+        if(!isp[i]) continue;
+        ps[cnt_p++] = i;
+        for(int j=i<<1; j<MAX_M; j+=i){
+            isp[j] = false;
+        }
+    }
+}
+
+P const ii(0,1);
+
+int n,m;
+
+pair<int,int> rec(int y, int x){
+    // cout << x << " " << y << endl;
+    if(dp[y][x].first!=-1) return dp[y][x];
+
+    pair<int,int> res(0,0);
+    if(isp[grid[y][x]]){
+        res.first = 1;
+        res.second = grid[y][x];
+    }
+
+    pair<int,int> best(0,0);
+    loop(i,-1,2){
+        if(grid[y+1][x+i]<=m){
+            auto t = rec(y+1,x+i);
+            best = max(t,best);
+        }
+    }
+
+    if(best.first != 0){
+        res.first += best.first;
+        res.second = best.second;
+    }
+
+    dp[y][x] = res;
+    return res;
+
+    // if(grid[y][x] > m) return 0;
+    // int res = isp[grid[y][x]];
+    // int k = 0;
+    // loop(i,-1,2){
+    //     k = max(k, rec(y+1,x+i));
+    // }
+    // res += k;
+    // dp[y][x] = res;
+    // return res;
+}
+
+pair<int,int> solve(int k){
+    P p = itop[k];
+    return rec(p.real(), p.imag());
+}
+
+int main(){
+    make_es();
+
+    P p(SIZE/2,SIZE/2);
+    P dir(0,1);
+    for(int i=1; i<MAX_M; i++){
+        grid[p.real()][p.imag()] = i;
+        itop[i]=p;
+        p+=dir;
+        P q = p+dir*ii;
+        if(grid[q.real()][q.imag()] == 0){
+            dir*=ii;
+        }
+    }
+
+    while(cin>>m>>n, n+m){
+        auto t = make_pair(-1,-1);
+        rep(i,SIZE)rep(j,SIZE) dp[i][j] = t;
+        auto ans = solve(n);
+        cout << ans.first << " " << ans.second << endl;
+    }
+}

@@ -1,0 +1,21 @@
+#include <cstdio>
+
+int main(){
+  int n;
+  int R[200000];
+  int cur_min = 0;
+  int max = 0xffffffff;
+  scanf("%d", &n);
+
+  scanf("%d", &R[0]);
+  cur_min = R[0];
+
+  for(int i = 1; i < n; i++){
+    scanf("%d", &R[i]);
+    max = (R[i] - cur_min > max) ? R[i] - cur_min : max;
+    if(cur_min > R[i]){
+      cur_min = R[i];
+    }
+  }
+  printf("%d\n", max);
+}

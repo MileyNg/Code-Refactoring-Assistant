@@ -1,0 +1,17 @@
+while 1:
+	try:
+		raw_cakes=sorted(map(int,raw_input().split()))[::-1]
+		box=raw_cakes.pop(0)
+		cakes=[raw_cakes.pop(-1)]
+		while raw_cakes:
+			if raw_cakes: cakes.append(raw_cakes.pop( 0))
+			if raw_cakes: cakes.append(raw_cakes.pop(-1))
+			
+		size=cakes[0]+cakes[-1]
+		for i in range(len(cakes)-1):
+			r=cakes[i]+cakes[i+1]
+			cos=(1-(abs(cakes[i]-cakes[i+1])*1.0/r)**2)**0.5
+			size+=r*cos
+		print "OK" if size<=box else "NA"
+	except:
+		break

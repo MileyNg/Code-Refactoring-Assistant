@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+
+int main(){
+    int win[20], N, M, a, c;
+    cin >> N >> M;
+    a = 1;
+    while( M + N > 0 ){
+        for(int x = 1; x < 20; x++){
+            win[x] = 0;
+        }
+        win[0] = N;
+        c = 0;
+        while( !win[M] ){
+            int loser = 0;
+            for(int x = M-1; x >= 0; x--){
+                win[x+1] += win[x]/2;
+                loser += win[x]/2;
+                win[x] %= 2;
+            }
+            win[0] += loser;
+            c++;
+        }
+        cout << "Case " << a << ": " << c << endl;
+        cin >> N >> M;
+        a++;
+    }
+    return 0;
+}

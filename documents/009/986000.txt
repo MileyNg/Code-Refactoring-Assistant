@@ -1,0 +1,39 @@
+#include <iostream>
+using namespace std;
+
+int r, n;
+string girl, gg;
+
+int count(char c){ 
+    int r = 0;
+    for(int i = 0; i < gg.length(); i++){
+        if(gg[i] == c) r++;
+    }
+    return r;
+}
+
+int main(){
+    cin >> r;
+    while( r-- > 0 ){
+        cin >> n;
+        cin >> girl;
+        int max = 0;
+        for(int i = 1; i < girl.length(); i++){
+            gg = girl;
+            int j = 0, k = 0, m = n-1;
+            while( count('B') && count('G') ){
+                j = (j+m+(k==i))%gg.length();
+                gg.erase(j,1);
+                if(j == gg.length()) j = 0;
+                k++;
+            }
+            int c = count('B');
+            if( c > max ){
+                 max = c;
+            }
+            if(k < i) break;
+        }
+        cout << max << endl;
+    }
+    return 0;
+}

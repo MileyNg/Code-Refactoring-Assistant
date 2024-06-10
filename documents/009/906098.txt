@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void) {
+	int a, b, x, y, n, m, i;
+	while(scanf("%d %d", &a, &b) != EOF){
+		if(a < b){
+			n = a;
+			m = b;
+		}
+		else{
+			n = b;
+			m = a;
+		}
+		for(i = 1; i <= n; i++){
+			if(a % i == 0 && b % i == 0) x = i;
+		}
+		for(i = a*b; i >= m; i--){
+			if(i % a == 0 && i % b == 0) y = i;
+		}
+		printf("%d %d\n", x, y);
+	}
+	return 0;
+}

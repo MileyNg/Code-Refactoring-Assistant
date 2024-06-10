@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cstring>
+#include<set>
+
+using namespace std;
+
+string reverseStr(string str) {
+  string ans;
+  for(int i=str.length()-1; i>=0; i--) {
+    ans += str[i];
+  }
+  return ans;
+}
+
+int main() {
+  int m;
+  string tmp;
+
+  cin>>m;
+  getline(cin,tmp); // 改行文字を読ませる
+  
+  for(int i=0; i<m; i++) {
+    string trains;
+    set<string> answers;
+    getline(cin,trains);
+    
+    for(int j=1; j<trains.length(); j++) {
+      string front, back;
+      for(int k=0; k<j; k++) {
+	front += trains[k];
+      }
+      for(int k=j; k<trains.length(); k++) {
+	back += trains[k];
+      }
+      //cout<<front<<" "<<back<<endl;
+      answers.insert(front+back);
+      answers.insert(reverseStr(front)+back);
+      answers.insert(front+reverseStr(back));
+      answers.insert(reverseStr(front)+reverseStr(back));
+      answers.insert(back+front);
+      answers.insert(reverseStr(back)+front);
+      answers.insert(back+reverseStr(front));
+      answers.insert(reverseStr(back)+reverseStr(front));
+    }
+    
+    cout<<answers.size()<<endl;    
+  }
+}

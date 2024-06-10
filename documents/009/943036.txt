@@ -1,0 +1,48 @@
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+const int V_MAX = 15;
+const int INF = 10000000;
+
+int n, e;
+int g[V_MAX][V_MAX];
+int dp[1 << V_MAX][V_MAX];
+
+int tsp(int visited, int v)
+{
+    if (dp[visited][v] != -1)
+        return dp[visited][v];
+
+    if (visited == (1 << n) - 1 && v == 0)
+        return 0;
+
+    int res = INF;
+    for (int u = 0; u < n; ++u) {
+        if (!(visited & (1 << u))) {
+            res = min(res, tsp(visited | (1 << u), u) + g[v][u]);
+        }
+    }
+    return res;
+}
+
+int main()
+{
+    scanf("%d %d", &n, &e);
+    fill(&g[0][0], &g[n][0], INF);
+    for (int i = 0; i < e; ++i) {
+        int s, t, d;
+        scanf("%d %d %d", &s, &t, &d);
+        g[s][t] = d;
+    }
+
+    fill(&dp[0][0], &dp[1 << V_MAX][0], -1);
+    int d = tsp(0, 0);
+    if (d == INF)
+        printf("-1\n");
+    else
+        printf("%d\n", d);
+
+    return 0;
+}

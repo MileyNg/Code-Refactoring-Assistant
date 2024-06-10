@@ -1,0 +1,56 @@
+////   template  ///////////////////////////////////////////////////////
+#include <stdlib.h>
+#include <sys/time.h>
+#include <stdio.h>
+#include <sys/resource.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+class timer{
+	enum KIND{ REAL, CPU }; // real_time or cpu_time
+	double t0; // start
+	double t1; // end
+	KIND kind_of_time; // default is real_time
+	double get_realtime(){struct timeval tv; gettimeofday(&tv, NULL);
+		return tv.tv_sec + (double)tv.tv_usec*1e-6;}
+	double get_cputime(){struct rusage RU; getrusage(RUSAGE_SELF, &RU); 
+		return RU.ru_utime.tv_sec + (double)RU.ru_utime.tv_usec*1e-6;}
+public:
+	timer(){kind_of_time = REAL;}
+	void set(KIND k){kind_of_time = k;}
+	void start(){t0 = get_realtime();}
+	void stop(){t1 = get_realtime();}
+	void print(){printf("TotalTime : %.3fsec\n", t1-t0);}
+};
+////////////////////////////////////////////////////////////////////////
+
+int main()
+{
+	int n;
+	while(1){
+		cin >> n;
+		if(!n) break;
+
+		double sum=0;
+		vector<double> s;
+		for(int i=0; i<n; i++){
+			double tmp;
+			cin >> tmp;
+			sum += tmp;
+			s.push_back(tmp);
+		}
+		
+		double mean = sum/n;
+		double aa=0;
+		
+		for(int i=0; i<n; i++){
+			aa += (mean-s.at(i))*(mean-s.at(i));
+		}
+		aa /= n;
+		printf("%.8lf\n", sqrt(aa));
+	}
+		
+    return 0;
+}

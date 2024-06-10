@@ -1,0 +1,32 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+using namespace std;
+
+const int MAX = 2001;
+bool can[MAX];
+int A[20], n;
+
+void rec(int pos, int sum){
+  if(sum >= MAX) return;
+  can[sum] = true;
+  if(pos == n) return;
+  rec(pos+1, sum+A[pos]);
+  rec(pos+1, sum);
+}
+
+int main(){
+  memset(can, false, sizeof(can));
+  cin >> n;
+  for(int i = 0; i < n; i++) cin >> A[i];
+  rec(0,0);
+  int q;
+  cin >> q;
+  while(q--){
+    int num;
+    cin >> num;
+    cout << (can[num]?"yes":"no") << endl;
+  }
+  return 0;
+}

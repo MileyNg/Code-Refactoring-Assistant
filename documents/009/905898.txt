@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+# define max 1000000
+int a[max];
+int a1[max];
+int main()
+{
+    long m,n,i,j,k,l,c;
+    for(i=2; i<max; i++) a[i]=1;
+    k=2;
+    for(i=2; i*i<=max; i++)
+    {
+        for(j=k+k; j<max; j=j+k) a[j]=0;
+        k++;
+        for(; !a[k]; k++);
+    }
+    a1[1]=0;
+    c=1;
+    for(i=2; i<max; i++)
+    {
+        if(a[i])
+        {
+            a1[i]=c;
+            c++;
+        }
+        else a1[i]=c;
+    }
+    while(scanf("%ld",&n)==1)
+    {
+        if(n==1)
+        {
+            printf("0\n");
+            continue;
+        }
+        if(a[n]) printf("%d\n",a1[n]);
+        else printf("%d\n",a1[n]-1);
+    }
+    return 0;
+}

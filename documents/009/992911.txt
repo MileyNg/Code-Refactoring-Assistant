@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+
+static inline short Max(short a, short b)
+{
+  if (a < b) return b;
+  return a;
+}
+
+short memo[1001][1001][1001];
+short solve(int c, int a, int n, int depth)
+{
+  short r = 0;
+  if (memo[c][a][n] != -1) return memo[c][a][n];
+	if (c == 0) return memo[c][a][n] = depth;
+	if (a > 0 && n > 0) r = Max(r, solve(c - 1, a - 1, n - 1, depth + 1));
+	if (c > 1 && a > 0) r = Max(r, solve(c - 2, a - 1, n, depth + 1));
+	if (c > 2) r = Max(r, solve(c - 3, a, n, depth + 1));
+	return memo[c][a][n] = r;
+}
+
+int main(void)
+{
+	int q, i;
+  memset(memo, -1, sizeof(memo));
+	scanf("%d", &q);
+	for (i = 0; i < q; i++){
+		int c, a, n;
+		scanf("%d %d %d", &c, &a, &n);
+		printf("%hd\n", solve(c, a, n, 0));
+	}
+	return (0);
+}

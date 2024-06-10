@@ -1,0 +1,31 @@
+#include<iostream>
+#include<math.h>
+
+using namespace std;
+
+int calc_digit(int x)
+{
+	 int i;
+	 for(i = 1;;i++){
+		 if(int(x / pow(10,i)) == 0)
+			 return i;
+	 }
+}
+
+int main(){
+	int a[200],b[200];
+	int i,j;
+	i = 0;
+	while(cin >> a[i] >> b[i]){
+	    if(a[i] < 0 || 1000000 < a[i])
+			break;
+		if(b[i] < 0 || 1000000 < b[i])
+			break;
+		if(i >= 200)
+			break;
+		i++;
+	}
+	for(j = 0; j < i;j++)
+		cout << calc_digit(a[j] + b[j]) << endl;
+}
+	

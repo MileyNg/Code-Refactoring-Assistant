@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <string>
+#include <algorithm>
+#include <queue>
+#include <cstdio>
+
+using namespace std;
+
+typedef pair<int, int> pii;
+
+int n, m, ss;
+int a[34][34], s[35][35];
+pii v[34][34][34][34];
+int u[34][34][34][34], flag;
+
+const int inf = (int)1e9;
+
+inline pii combine(const pii &a, const pii &b) {
+	return make_pair(a.first + b.first, min(a.second, b.second));
+}
+
+pii dp(int l, int b, int r, int t) {
+	//cout << l << ' ' << r << ' ' << b << ' ' << t << ' ' << v[l][b][r][t]
+	if (u[l][b][r][t] == flag)
+		return v[l][b][r][t];
+	u[l][b][r][t] = flag;
+	int sum = s[l][b] + s[r][t] - s[l][t] - s[r][b];
+	if (ss - s[0][0] + sum < 0) return make_pair(-inf, -inf);
+	pair<int, int> res(1, ss - s[0][0] + sum);
+	for (int i = l + 1; i < r; i++)
+		res = max(res, combine(dp(l, b, i, t), dp(i, b, r, t)));
+	for (int i = b + 1; i < t; i++)
+		res = max(res, combine(dp(l, b, r, i), dp(l, i, r, t)));
+	v[l][b][r][t] = res;
+	return res;
+}
+
+int main() {
+	while (cin >> n >> m >> ss) {
+		if (!n && !m && !ss) break;
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			cin >> a[i][j];
+		memset(s, 0, sizeof(s));
+		memset(u, 0, sizeof(u));
+		memset(v, 0, sizeof(v));
+		for (int i = n - 1; i >= 0; i--)
+		for (int j = m - 1; j >= 0; j--)
+			s[i][j] = s[i + 1][j] + s[i][j + 1] + a[i][j] - s[i + 1][j + 1];
+		flag += 10;
+		pii res = dp(0, 0, n, m);
+		cout << res.first << ' ' << res.second << endl;
+	}
+	return 0;
+}

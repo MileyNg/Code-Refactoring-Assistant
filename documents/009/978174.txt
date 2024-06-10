@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main () {
+
+  long long int n, m, input;
+
+  while ( true ) {
+
+    cin >> n >> m;
+
+    if ( n == 0 ) break;
+
+    vector< long long int > t, h;
+
+    long long int ts = 0;
+    long long int hs = 0;
+
+    for ( long long int i = 0; i < n; i++ ) {
+
+      cin >> input;
+
+      t.push_back( input );
+
+      ts += input;
+
+    }
+
+    for ( long long int i = 0; i < m; i++ ) {
+
+      cin >> input;
+
+      h.push_back( input );
+
+      hs += input;
+
+    }
+
+    long long int ans_t = -1;
+    long long int ans_h = -1;
+
+    for ( long long int i = 0; i < n; i++ ) {
+
+      for ( long long int j = 0; j < m; j++ ) {
+
+	if ( ( t[i] - h[j] ) * 2 == ts - hs ) {
+
+	  if ( ans_t == -1 ) {
+	    ans_t = t[i];
+	    ans_h = h[j];
+	  }else if ( ans_t + ans_h > t[i] + h[j] ) {
+	    ans_t = t[i];
+	    ans_h = h[j];
+	  }
+
+	}
+
+      }
+
+    }
+
+    if ( ans_t == -1 ) {
+      cout << -1 << endl;
+    }else {
+      cout << ans_t << " " << ans_h << endl;
+    }
+
+  }
+
+  return 0;
+
+}

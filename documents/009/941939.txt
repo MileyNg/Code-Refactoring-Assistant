@@ -1,0 +1,7 @@
+while 1:
+	n,m = map(int,raw_input().split())
+	if n == 0: break
+	p = map(int,raw_input().split())
+	sp = set()
+	for pi in p: sp |= set([pi*j for j in range(1,n/pi+1)])
+	print (n*(n+1)/2-sum(sp))*1.0/(n-len(sp)) if n-len(sp) > 0 else 0

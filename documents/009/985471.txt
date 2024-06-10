@@ -1,0 +1,30 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,a) loop(i,0,a)
+#define all(in) in.begin(),in.end()
+#define pb(in,a) in.push_back(a)
+using namespace std;
+int main(){
+  vector<string>a;
+  vector<int>b,c;
+  string s;
+  while(cin>>s){
+    bool n=false;
+    rep(i,a.size())if(a[i]==s){b[i]++;n=true;}
+    if(!n){
+      pb(a,s);
+      pb(b,1);
+      pb(c,s.size());
+    }
+  }
+  int max=0;
+  int maxi=0;
+  rep(i,a.size())if(max<b[i]){max=b[i];maxi=i;}
+  cout<<a[maxi];
+
+  max=maxi=0;
+  rep(i,a.size())if(max<c[i]){max=c[i];maxi=i;}
+  cout<<" "<<a[maxi]<<endl;
+}

@@ -1,0 +1,59 @@
+#include<iostream>
+#include<map>
+#include<vector>
+#include<list>
+#include<algorithm>
+#include<cmath>
+#include<iomanip>
+#include<numeric>
+#include<climits>
+#include<ctime>
+#include<cstring>
+#define REP(i,p,n) for(int i=p;i<(int)(n);i++)
+#define rep(i,n) REP(i,0,n)
+#define rep_split(tok,a_str,re) for(char *tok = strtok((char *)a_str.c_str(),re); tok != NULL; tok = strtok(NULL,re))
+#define all(c) (c).begin(), (c).end()
+
+using namespace std;
+template<class T> inline void chmax(T& a, T b) { if(b > a) a = b; }
+template<class T> inline void chmin(T& a, T b) { if(b < a) a = b; }
+
+int main() {
+	int N;
+	float money = 100000;
+
+	cin >> N;
+	rep(i,N) {
+		money = (money + money * 0.05);
+	}
+	float m = money / 10000;
+	cout << ceil(m) * 10000 << endl;
+	
+/*
+	string a_str = to_string(money);
+	vector<char> strs;
+
+	for (int i = a_str.size()-1; i >= 0; i--) {
+		strs.push_back(a_str[i]);
+	}
+	rep(i,4) {
+		strs[i] = '0';
+	}
+
+	if (strs[4] > '9') {
+		strs[4]	= '0';
+		strs[5] = strs[5] + 1;
+	}
+	else {
+		strs[4] = strs[4] + 1;
+	}
+
+	vector<char> strs2;
+	for (int i = strs.size()-1; i >= 0; i--) {
+		cout << strs[i];
+	}
+	cout << endl;
+*/
+
+	return 0;
+}

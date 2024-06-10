@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		} 
+		string a, b;
+		cin >> a;
+		for (int i = 0; i < n; i++) {
+			int counter = 1;
+			char c = a[0];
+			string d;
+			b = "";
+			for (int j = 1; j <= a.size(); j++) {
+				if (j < a.size() && a[j] == c) {
+					counter++;
+				} else {
+					stringstream stm;
+					stm << counter;
+					stm >> d;
+					b += d;
+					b += c;
+					if (j < a.size()) {
+						c = a[j];
+						counter = 1;
+					}
+				}
+			}
+			a = b;
+		}
+		cout << a << endl;
+	}
+	return 0;
+}

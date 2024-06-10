@@ -1,0 +1,39 @@
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+int count=0;
+void isprime(int);
+
+int main(){
+  int N,i,array[10000];
+  scanf("%d",&N);
+  if(N<1||N>10000){
+    printf("N ha 1-10000 dene!\n");
+    exit(1);
+  }
+  for (i=0;i<N;i++){
+    scanf("%d",&array[i]);
+  }
+  for (i=0;i<N;i++){
+    if(array[i]<2 ||array[i]>100000000){
+      printf("2-100000000 de iretene.\n");
+      exit(2);
+    }
+  }
+  for (i=0;i<N;i++){
+    isprime(array[i]);
+  }
+  printf("%d\n",count);
+  return 0;
+}
+
+void isprime(int num){
+  int i;
+  for(i=2;i<=(int)sqrt(num);i++){
+    if (num%i==0){
+      return;
+    }
+  }
+  count++;
+  return;
+}

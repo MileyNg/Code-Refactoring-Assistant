@@ -1,0 +1,61 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/19 05:02:03 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <climits>
+#include <set>
+#include <bitset>
+#include <utility> // std::pair
+#define MP(a, b) std::make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+int main(int argc, char *argv[])
+{
+  int t,t0;
+  int N,W;
+  std::cin>>N>>W;
+  std::vector<std::pair<int,int>> o(N+1);
+  int mat[N+1][W+1];
+  rep(i,W+1){
+    rep(j,N+1){
+      
+      mat[j][i] = 0;
+    }
+  }
+
+  int a = 0;
+  rer(i,1,N){
+    std::cin>>t>>t0;
+    a+=t;
+    o[i] = MP(t,t0);
+  }
+  rer(i,1,N){
+    rer(j,1,W){
+      if( o[i].Y <= j){
+	mat[i][j] = std::max(mat[i-1][j],o[i].X+mat[i-1][j-o[i].Y]);
+      }else{
+	mat[i][j] = mat[i-1][j];
+      }
+    }
+  }
+  int ans = 0;
+  rer(i,0,N){
+    rer(j,0,W){
+      amax(ans,mat[i][j]);
+    }
+  }
+  std::cout<<ans<<std::endl;
+  return 0;
+}

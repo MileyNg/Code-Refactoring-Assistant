@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int fact(int n){
+	if (n == 0){
+		return 1;
+	}
+	else{
+		return n * (fact(n - 1));
+	}
+}
+
+int main()
+{
+	int n, s;
+	vector <int> v;
+	vector <int>::iterator vi;
+	for (int i = 0; i <= 9; i++){
+		v.push_back(i);
+	}
+	while (cin >> n >> s, n || s){
+		int repeat = fact(10 - n);
+		int counter = 0;
+		int anscounter = 0;
+		do{
+			counter++;
+			if (counter % repeat != 0){
+				continue;
+			}
+			int sum = 0;
+			vi = v.begin();
+			for (int i = 0; i < n; i++, vi++){
+				sum += *vi;
+			}
+			if (sum == s){
+				anscounter++;
+				vi = v.begin();
+			}
+		} while (next_permutation(v.begin(), v.end()));
+		cout << anscounter / fact(n)<< endl;
+	}
+	return 0;
+}

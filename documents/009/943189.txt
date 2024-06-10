@@ -1,0 +1,144 @@
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <map>
+#include <string>
+using namespace std;
+const int maxn = 6010;
+const int maxm = 20010;
+const int inf  = 0x3f3f3f3f;
+
+struct Edge {
+    int u, v, w, next;
+    Edge() {}
+    Edge(int t_u, int t_v, int t_w, int t_next) : u(t_u), v(t_v), w(t_w), next(t_next) {}
+}edges1[maxm], edges2[maxm];
+
+int head1[maxn], edge_sum1;
+int head2[maxn], edge_sum2;
+
+void init_graph() {
+    edge_sum1 = edge_sum2 = 0;
+    memset(head1, -1, sizeof(head1));
+    memset(head2, -1, sizeof(head2));
+}
+
+void addEdge1(int u, int v, int w) {
+    edges1[edge_sum1].u = u;
+    edges1[edge_sum1].v = v;
+    edges1[edge_sum1].w = w;
+    edges1[edge_sum1].next = head1[u];
+    head1[u] = edge_sum1++;
+}
+
+void addEdge2(int u, int v, int w) {
+    edges2[edge_sum2].u = u;
+    edges2[edge_sum2].v = v;
+    edges2[edge_sum2].w = w;
+    edges2[edge_sum2].next = head2[u];
+    head2[u] = edge_sum2++;
+}
+
+map<string, int> myMap;
+int n, m, cap, ncount;
+//string source, sink;
+//char source[110], sink[110];
+string source, sink;
+bool mark[maxn];
+int  dis[maxn];
+bool visit[maxn];
+
+void SPFA(int s, Edge edges[], int head[]) {
+    memset(dis, inf, sizeof(dis));
+    memset(visit, false, sizeof(visit));
+    queue<int> Q;
+    Q.push(s); visit[s] = true; dis[s] = 0;
+    while(!Q.empty()) {
+        int u = Q.front(); Q.pop(); visit[u] = false;
+        for(int i = head[u]; i != -1; i = edges[i].next) {
+            int v = edges[i].v;
+            if(dis[v] > dis[u] + edges[i].w) {
+                dis[v] = dis[u] + edges[i].w;
+                if(!visit[v]) {
+                    visit[v] = true;
+                    Q.push(v);
+                }
+            }
+        }
+    }
+    return ;
+}
+
+int main() {
+
+    //freopen("aa.in", "r", stdin);
+
+    char str1[110], str2[110];
+    string strr1, strr2;
+    int w;
+    while(scanf("%d %d %d", &n, &m, &cap) && n + m + cap) {
+        //cin >> source >> sink;
+        scanf("%s %s", str1, str2);
+        source = str1; sink = str2;
+        init_graph(); ncount = 0; myMap.clear();
+        if(myMap.count(source) == 0) {
+            myMap[source] = ++ncount;
+        }
+        if(myMap.count(sink) == 0) {
+            myMap[sink] = ++ncount;
+        }
+        for(int i = 0; i < n; ++i) {
+            scanf("%s %s %d", str1, str2, &w);
+            //cin >> str1 >> str2 >> w;
+            strr1 = str1; strr2 = str2;
+            if(myMap.count(strr1) == 0) {
+                myMap[strr1] = ++ncount;
+            }
+            if(myMap.count(strr2) == 0) {
+                myMap[strr2] = ++ncount;
+            }
+            addEdge1(myMap[strr1], myMap[strr2], w);
+            addEdge1(myMap[strr2], myMap[strr1], w);
+        }
+        memset(mark, false, sizeof(mark));
+        for(int i = 0; i < m; ++i) {
+            scanf("%s", str1);
+            strr1 = str1;
+            //cin >> str1;
+            if(myMap.count(strr1) == 0) {
+                myMap[strr1] = ++ncount;
+            }
+            mark[myMap[strr1]] = true;
+        }
+
+        SPFA(myMap[source], edges1, head1);
+        for(int i = 1; i <= ncount; ++i) {
+            if(dis[i] <= cap*10 && i != myMap[source]) {
+                addEdge2(myMap[source], i, dis[i]);
+            }
+        }
+
+        for(int i = 1; i <= ncount; ++i) {
+            if(mark[i] && i != myMap[source]) {
+                SPFA(i, edges1, head1);
+                for(int j = 1; j <= ncount; ++j) {
+                    if(dis[j] <= cap*10 && j != i) {
+                        addEdge2(i, j, dis[j]);
+                    }
+                }
+            }
+        }
+        SPFA(myMap[source], edges2, head2);
+        int ans = dis[myMap[sink]];
+        if(ans == inf) {
+            printf("-1\n");
+        } else {
+            printf("%d\n", ans);
+        }
+    }
+    return 0;
+}

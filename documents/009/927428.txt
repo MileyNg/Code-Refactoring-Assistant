@@ -1,0 +1,38 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main() {
+	int m;
+	cin >> m;
+	for(int t = 0; t < m; t++) {
+		string str;
+		cin >> str;
+
+		set<string> count;
+		count.insert(str);
+		for(int cut = 0; cut < str.size(); cut++) {
+			string rev_a(str.begin(), str.begin() + cut);
+			string rev_b(str.begin() + cut, str.end());
+
+			string a = rev_a;
+			string b = rev_b;
+
+			reverse(rev_a.begin(), rev_a.end());
+			reverse(rev_b.begin(), rev_b.end());
+
+			count.insert(a + rev_b);
+			count.insert(rev_a + b);
+			count.insert(rev_a + rev_b);
+			count.insert(b + a);
+			count.insert(b + rev_a);
+			count.insert(rev_b + a);
+			count.insert(rev_b + rev_a);
+		}
+
+		cout << count.size() << endl;
+	}
+}

@@ -1,0 +1,25 @@
+#include <stdio.h>
+main(){
+  int i,n,j,sum,big=-100000000,a[n];
+  while(1){
+    scanf("%d",&n);
+    if(n==0)break;
+    for(i=0;i<n;i++){
+      scanf("%d",&a[i]);
+    }
+    big=0;
+    for(i=0;i<n;i++){
+      sum=0;
+      for(j=i;j<n;j++){
+	sum+=a[j];
+	if(sum>big){
+	  big=sum;
+	}
+      }
+    }
+    printf("%d\n",big);
+  }
+  return 0;
+}
+	
+    

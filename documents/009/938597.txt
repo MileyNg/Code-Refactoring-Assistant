@@ -1,0 +1,74 @@
+#include <iostream>
+#include<cstdio>
+#include<cstring>
+
+using namespace std;
+char a[111][111];
+int dir[4][2]= {-1,0,   0,1, 1,0,  0,-1}; // n
+int ha_sh(char  ch)
+{
+    if(ch=='N')
+        return 0;
+    if(ch=='E')
+        return 1;
+    if(ch=='S')
+        return 2;
+    if(ch=='W')
+        return 3;
+}
+char  ha_sh2(int t)
+{
+    char d[]="NESW";
+
+    return  d[t];
+}
+int h,w;
+long long l;
+int main()
+{
+    while(scanf("%d%d%lld",&h,&w,&l))
+    {
+
+        if(h==0 && w==0 && l==0)
+            break;
+        memset(a,'\0',sizeof(a));
+        int i=0;
+        int j=0;
+        char ch;
+        int x;
+        int y;
+        for(i=0; i<h; i++)
+        {
+
+
+            scanf("%s",a[i]);
+
+            for(j=0; j<w; j++)
+            {
+                if(a[i][j]!='.' && a[i][j]!='#')
+                {
+                    ch=a[i][j];
+                    x=i;
+                    y=j;
+                    cout<<a[i][j]<<endl;
+                }
+            }
+
+        }
+        int t=ha_sh(ch);
+        long long k=0;
+        for(k=1; k<=l; k++)
+        {
+            while( (x+dir[t][0]<0 )
+                  || (x+dir[t][0]>h-1)||(y+dir[t][1]<0)
+                  ||(y+dir[t][1]>w-1 )|| a[x+dir[t][0]][y+dir[t][1]] =='#' )
+        {
+            t=(t+1)%4;
+            }
+            x=x+dir[t][0];
+            y=y+dir[t][1];
+        }
+          printf("%d %d %c\n",x+1,y+1,ha_sh2(t));
+    }
+    return 0;
+}

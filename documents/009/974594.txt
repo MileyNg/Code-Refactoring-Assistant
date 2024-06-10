@@ -1,0 +1,30 @@
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n, a, b; cin >> n >> a >> b && n;) {
+		if(a < b) swap(a, b);
+
+		int cnt = 0;
+		int i = 1;
+		vector<bool> ok(b, false);
+		ok[0] = true;
+		for(int x = 1; x <= n; ++x) {
+			if(i * a <= x) {
+				ok[(i * a) % b] = true;
+				++i;
+			}
+
+			cnt += ok[x % b];
+		}
+
+		cout << n - cnt << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

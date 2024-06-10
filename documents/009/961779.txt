@@ -1,0 +1,29 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<map>
+#include<queue>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+    string inWord, num;
+    map<string, string> word;
+    map<string, string>::iterator itr;
+    
+    while(cin >> inWord >> " " >> num){
+        if(!word[inWord].empty()){
+            word[inWord] = num;
+        }else{
+            word[inWord] += " " + num;
+        }
+    }
+    
+    sort(word.begin(), word.end());
+    
+    for(itr = word.begin(); itr != word.end(); itr++){
+        cout << itr -> first << endl;
+        cout << itr -> secound << endl;
+    }
+}

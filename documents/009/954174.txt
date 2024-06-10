@@ -1,0 +1,70 @@
+#include<stdio.h>
+
+#define MAX 50 //最大桁数
+
+void func_init(int array[]); //初期化関数
+void func_cal_fact(int array[], int n); //階乗を計算する関数
+void func_output(int array[]); //出力を行う関数
+
+main()
+{
+	int array[MAX]; //50桁まで表示可能
+	int n = 0; //コマンドラインからの入力
+	
+	scanf("%d", &n); //入力の取得
+	
+	func_init(array); //初期値を1にするために初期化
+	func_cal_fact(array, n); //階乗の計算
+	func_output(array);
+	
+	return 0;
+}
+void func_init(int array[]) //初期化関数
+{
+	int i = 0; //ループ制御変数
+	for(i = 0; i < MAX; i++)
+	{
+		if(i == 0) //最初の要素には0を代入
+		{
+			array[i] = 1;
+		}
+		else //それ以外の要素には1を代入
+		{
+			array[i] = 0;
+		}
+	}
+}
+void func_cal_fact(int array[], int n)
+{
+	int i = 1, j = 0; //ループ制御
+	int up = 0; //繰上げ桁変数
+	for(i = 1; i <= n; i++) //乗算する数を制御する
+	{
+		up = 0; //桁数は乗算する数が変化するごとにリセットする
+		for(j = 0; j < MAX; j++) //配列の要素番号を制御
+		{
+			array[j] = (array[j] * i) + up; //array[j]の要素を桁上げ等を無視してとりあえず代入
+			up = array[j] / 10; //繰上げする桁を変数upに代入
+			array[j] = array[j] % 10; //実際に代入されるべき値は1桁なので10で除算した余りを代入
+		}
+	}
+}
+void func_output(int array[]) //出力を行う関数
+{
+	int i = MAX - 1;
+	while(array[i] == 0) //0以外の要素が出るまでデクリメント
+	{
+		i--;
+	}
+	for(i; i >= 0; i--) //このループで表示
+	{
+		if(i == 0) //要素番号0は最後の要素なので改行
+		{
+			printf("%d\n", array[i]);
+		}
+		else //それ以外はそのまま出力
+		{
+			printf("%d", array[i]);
+		}
+	}
+}

@@ -1,0 +1,31 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+#define INF (1<<29)
+
+
+int main(){
+	int n;
+	while(cin>>n&&n){
+		vector<int> v(n-1),hist((n-1)/2,0);
+		for(int i=1;i<n;i++)v[i-1]=i*i%n;
+		sort(v.begin(),v.end());
+		v.erase(unique(v.begin(),v.end()),v.end());
+		for(int i=0;i<v.size();i++){
+			for(int j=0;j<v.size();j++){
+				if(i==j)continue;
+				int s=v[i]-v[j];
+				while(s<0||(n-1)/2<s){//cout<<s<<endl;
+					if(s<0)s+=n;
+					else s=n-s;
+				}
+				hist[s-1]++;
+			}
+		}
+		for(int i=1;i<=(n-1)/2;i++){
+			cout<<hist[i-1]<<endl;
+		}
+	}
+	return 0;
+}

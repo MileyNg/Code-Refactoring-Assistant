@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+typedef complex<double> Point;
+struct Line : public vector<Point> {
+    Line () {}
+    Line(Point a, Point b){
+        push_back(a);
+        push_back(b);
+    }
+    Point vector() const {
+        return back() - front();
+    }
+};
+double dot(Point a, Point b){
+    return real(conj(a) * b);
+}
+double cross(Point a, Point b){
+    return imag(conj(a) * b);
+}
+// (left, right)
+pair<Point, Point> lr_align(Point a, Point b){
+    if(cross(a, b) > 0) swap(a, b);
+    return make_pair(a, b);
+}
+// 点pから直線lに対する射影
+Point projection(Line l, Point p){
+    double t = dot(p - l[0], l.vector()) / norm(l.vector());
+    return l[0] + t * l.vector();
+}
+
+// 点pの直線lに関する反射
+Point reflection(Line l, Point p){
+    return 2.0 * projection(l, p) - p;
+}
+
+const double EPS = 1e-6;
+
+int main(){
+    int N;
+    while(cin >> N && N){
+        double sx, sy;
+        cin >> sx >> sy;
+        vector<Point> ps(N);
+        REP(i, N){
+            double x, y;
+            cin >> x >> y;
+            ps[i] = Point(x - sx, y - sy);
+        }
+        vector<Line> lv(N);
+        REP(i, N){
+            lv[i] = Line(ps[i], ps[(i + 1) % N]);
+        }
+        vector<int> perm(N);
+        REP(i, N) perm[i] = i;
+        int ans = 0;
+        do{
+            vector<Line> l(N);
+            REP(i, N){
+                l[i] = lv[ perm[i] ];
+            }
+
+            Point left;
+            Point right;
+
+            for(int i = 0; i < N; i++){
+                // cout << "i = " << i << endl;
+                for(int j = 0; j < i; j++){
+                    l[i][0] = reflection(l[j], l[i][0]);
+                    l[i][1] = reflection(l[j], l[i][1]);
+                }
+                Point vec = l[i].vector() / abs(l[i].vector());
+                // l[i][0] += EPS * vec;
+                // l[i][1] -= EPS * vec;
+                // cout << l[i][0] << " " << l[i][1] << endl;
+                pair<Point, Point> pp = lr_align(l[i][0], l[i][1]);
+                // cout << pp.first << " " << pp.second << endl;
+                if(i == 0) {
+                    left = pp.first, right = pp.second;
+                }else{
+                    left = lr_align(left, pp.first).second;
+                    right = lr_align(right, pp.second).first;
+                }
+                if(cross(right, left) < EPS){
+                    break;
+                }
+                if(i == N - 1) {
+                    ans++;
+                }
+                // cout << "left : " << left << " right : " << right << endl;
+            }
+        }while(next_permutation(perm.begin(), perm.end()));
+
+        cout << ans << endl;
+    }
+    return 0;
+}

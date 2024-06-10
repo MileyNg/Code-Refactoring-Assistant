@@ -1,0 +1,25 @@
+#pragma warning (disable:4996)
+#include <stdio.h>
+#include <string.h>
+void checkCards(int *taro, int *hanako){
+	int num, point;
+	char taroC[128], hanakoC[128];
+	scanf("%d", &num);
+	while (num--){
+		scanf(" %s %s", taroC, hanakoC);
+		point = strcmp(taroC, hanakoC);
+		if (point > 0)*taro += 3;
+		else if (point < 0)*hanako += 3;
+		else {
+			*taro += 1;
+			*hanako += 1;
+		}
+	}
+}
+
+int main(void){
+	int taro = 0, hanako = 0;
+	checkCards(&taro, &hanako);
+	printf("%d %d\n", taro, hanako);
+	return 0;
+}

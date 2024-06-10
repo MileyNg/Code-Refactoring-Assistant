@@ -1,0 +1,33 @@
+//MAXの制限が小さい。O( MAX/Q logN )
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#define rep(i,n) for(i = 0;i < n;i++)
+using namespace std;
+
+int N,Q;
+vector<int> num;
+vector<int>::iterator index;
+
+int main(){
+	int i;
+	cin >> N >> Q;
+	num.resize( N );
+	rep(i,N)
+		cin >> num[i];
+	sort( num.begin(),num.end() );
+	rep(i,Q)
+	{
+		int q,ans = 0;
+		cin >> q;
+		for( int j = q;j <= 300000;j+=q ){
+			index = lower_bound( num.begin(),num.end(),j );
+			if( index == num.begin() )
+				continue;
+			index--;
+			ans = max( ans,*index - (j-q) );
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

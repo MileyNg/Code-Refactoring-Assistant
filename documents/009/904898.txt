@@ -1,0 +1,63 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+class bipartite_matching{
+private:
+  int V;
+  vector< vector< int > > info;
+  vector< int > match;
+  vector< bool > used;
+public:
+  bipartite_matching(int V_size):V(V_size){
+    info.resize(V_size);
+    used.resize(V_size);
+    match.resize(V_size);
+  };
+  void add_edge( int u, int v){
+    info[u].push_back(v);
+    info[v].push_back(u);
+  }
+  bool dfs( int v){
+    used[v] = true;
+    for(int i = 0; i < info[v].size(); i++){
+      int u = info[v][i], w = match[u];
+      if(w < 0 || !used[w] && dfs(w)){
+        match[v] = u, match[u] = v;
+        return true;
+      }
+    }
+    return false;
+  }
+  int run(){
+    match.assign(V,-1);
+    int ret = 0;
+    for(int i = 0; i < V; i++){
+      if(match[i] < 0){
+        used.assign(V,false);
+        if(dfs(i)) ret++;
+      }
+    }
+    return ret;
+  }
+};
+
+int main(){
+  int m, n, b[500], r[500];
+  while(cin >> m >> n , m){
+    bipartite_matching bm(n + m);
+    for(int i = 0; i < m; i++){
+      cin >> b[i];
+    }
+    for(int i = 0; i < n; i++){
+      cin >> r[i];
+    }
+    for(int i = 0; i < m; i++){
+      for(int j = 0; j < n; j++){
+        if(__gcd(b[i],r[j]) > 1) bm.add_edge( i, m + j);
+      }
+    }
+    cout << bm.run() << endl;
+  }
+}

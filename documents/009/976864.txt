@@ -1,0 +1,24 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+	int i,w,n,a,b,temp;
+	int *amida;
+	char comma;
+	cin>>w>>n;
+	amida=new int[w];
+	for(i=0;i<w;i++){
+		amida[i]=i+1;
+	}
+	while(n--){
+		cin>>a>>comma>>b;
+		temp=amida[a-1];
+		amida[a-1]=amida[b-1];
+		amida[b-1]=temp;
+	}
+	for(i=0;i<w;i++){
+		cout<<amida[i]<<endl;
+	}
+	return 0;
+}

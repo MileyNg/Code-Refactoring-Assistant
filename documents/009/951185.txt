@@ -1,0 +1,45 @@
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+/** Problem0162 : Hamming Numbers **/
+int main()
+{
+	set<int> h;
+
+	rep(i, 20) {
+		rep(j, 20) {
+			rep(k, 20) {
+				h.insert(pow(2.0, i)*pow(3.0, j)*pow(5.0,k));
+			}
+		}
+	}
+	
+	int m, n, ans;
+	while (cin>>m>>n, m) {
+		ans=0;
+		set<int>::iterator it = h.begin();
+		for (; it!=h.end(); it++) {
+			if (m<=*it && *it<=n) {
+				ans++;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

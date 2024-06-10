@@ -1,0 +1,35 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main(){
+	int N;
+	cin>>N;
+	int ** kazu=new int*[N];
+	for(int i=0;i<N;i++)
+		kazu[i]=new int[3];
+	int *saidai=new int[N];
+	bool *hantei=new bool[N];
+	fill(hantei,hantei+N,false);
+
+	for(int j=0;j<N;j++){
+		cin>>kazu[j][0]>>kazu[j][1]>>kazu[j][2];
+		if(kazu[j][0]<kazu[j][1]){
+			swap(kazu[j][0],kazu[j][1]);
+			if(kazu[j][0]<kazu[j][2])
+				swap(kazu[j][0],kazu[j][2]);
+		}
+		else if(kazu[j][0]<kazu[j][2]){
+			swap(kazu[j][0],kazu[j][2]);
+			if(kazu[j][0]<kazu[j][1])
+				swap(kazu[j][0],kazu[j][1]);
+		}
+		
+		if((kazu[j][0]*kazu[j][0])==(kazu[j][1]*kazu[j][1]+kazu[j][2]*kazu[j][2]))
+			hantei[j]=true;
+	}
+	for(int k=0;k<N;k++)
+		cout<<((hantei[k])?"YES":"NO")<<endl;
+
+	return 0;
+}

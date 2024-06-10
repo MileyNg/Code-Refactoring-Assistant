@@ -1,0 +1,13 @@
+while 1:
+	N = input()
+	if N == 0: break
+	M = [map(int,raw_input().split()) for i in range(N)]
+	K = set(map(int,raw_input().split())[1:])
+	c,id = 0,0
+	for i in range(N):
+		if set(M[i][1:]) >= K:
+			c += 1
+			id = i + 1
+			if c > 1:
+				break
+	print id if c == 1 else -1

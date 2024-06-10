@@ -1,0 +1,91 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		Sol mySol =new Sol();
+		String s="";
+		while(true){
+			s=Console.ReadLine();
+			if(s==null||s=="")break;
+			mySol.Solve(s);
+		}
+	}
+}
+
+class Sol{
+	public void Solve(String s_){
+		var d=s_.Split(' ');
+		N=int.Parse(d[0]);
+		S=int.Parse(d[1]);
+		Console.WriteLine("{0}",memo[N][S]);
+	}
+	
+	
+	void dfs(int[] route_,int sum){
+		//if(sum>S)return;
+		int[] route=new int[10];
+		int[] used=new int[10];
+		for(int i=0;i<10;i++)used[i]=0;
+		int now=-1;
+		for(int i=0;i<10;i++){
+			route[i]=route_[i];
+			if(route[i]!=-1){
+				now=i;
+				used[route[i]]=1;
+			}
+		}
+		sum+=(now+1)*route[now];
+		memo[now+1][sum]+=1;
+		if(now==10-1){
+			//if(S==sum)Ans++;
+			return;
+		}
+	
+		for(int i=0;i<=9;i++){
+			if(used[i]==0){
+				route[now+1]=i;
+				dfs(route,sum);
+				route[now+1]=-1;
+			}
+		}
+		sum-=(now+1)*route[now];
+		return;
+	
+	}
+	
+	
+	int[][] memo;
+	int N;
+	int S;
+	public Sol(){
+		memo=new int[11][];
+		for(int i=0;i<=10;i++){
+			memo[i]=new int[400];
+			for(int j=0;j<400;j++)memo[i][j]=0;
+		}
+		
+		int[] route=new int[10];
+		for(int i=0;i<10;i++)route[i]=-1;
+		for(int i=0;i<=9;i++){
+			int sum=0;
+			route[0]=i;
+			dfs(route,sum);
+			route[0]=-1;
+		}
+
+	}
+
+
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}

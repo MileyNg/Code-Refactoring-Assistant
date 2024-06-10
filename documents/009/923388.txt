@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct State{
+  string s;
+  int c;
+  State(string s, int c) : s(s), c(c){}
+};
+
+bool check(string s){
+  for(int i = 0 ; i < (int)s.size()-1 ; i++){
+    if(s[i] != s[i+1]) return false;
+  }
+  return true;
+}
+
+string change(string s){
+  sort(s.begin(), s.end());
+  if(s[0] == 'b' && s[1] == 'g') return "rr";
+  if(s[0] == 'b' && s[1] == 'r') return "gg";
+  if(s[0] == 'g' && s[1] == 'r') return "bb";
+}
+
+int bfs(string s){
+  queue<State> que;
+  que.push(State(s, 0));
+  
+  set<string> S;
+  
+  while(!que.empty()){
+    State q = que.front(); que.pop();
+    if( check(q.s) ) return q.c;
+    
+    if(S.find(q.s) != S.end()) continue;
+    S.insert(q.s);
+    
+    for(int i = 0 ; i < (int)q.s.size()-1 ; i++){
+      string t = q.s.substr(i, 2);
+      if(t != "rr" && t != "gg" && t != "bb"){
+	que.push(State(q.s.substr(0, i) + change(t) + q.s.substr(i+2), q.c+1));
+      }
+    }   
+  }
+  return -1;
+}
+
+int main(){
+  string s;
+  while(cin >> s && s != "0"){
+    int ans = bfs(s);
+    if(ans == -1) cout << "NA" << endl;
+    else cout << ans << endl;
+  } 
+  return 0;
+}

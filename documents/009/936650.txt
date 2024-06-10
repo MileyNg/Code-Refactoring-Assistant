@@ -1,0 +1,114 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+class UnionFind{
+public:
+  vector<int> par, rank;
+
+  void init(int n){
+    par.resize(n);
+    rank.resize(n);
+    for(int i = 0; i < n; i++){
+      par[i] = i;
+      rank[i] = 0;
+    }
+  }
+
+  int find(int x){
+    if(par[x] == x) return x;
+    else return par[x] = find(par[x]);
+  }
+  
+  void unite(int x, int y){
+    x = find(x);
+    y = find(y);
+    if(x == y) return;
+    if(rank[x] < rank[y]) par[x] = par[y];
+    else{
+      par[y] = par[x];
+      if(rank[x] == rank[y]) rank[x]++;
+    }
+  }
+};
+
+typedef pair<int, int> P; // to, cost
+const int MAX = 1005;
+map<string, int> M;
+UnionFind uf;
+int cost[MAX],n;
+vector<P> E[MAX];
+bool used[MAX];
+
+int get_index(const string& s){
+  if(M.count(s)) return M[s];
+  else return M[s] = M.size()-1;
+}
+
+void init(){
+  uf.init(n);
+  M.clear();
+  for(int i = 0; i < MAX; i++) E[i].clear();
+}
+
+void input(){
+  for(int i = 0; i < n; i++){
+    string a,b;
+    int c,d;
+    cin >> a >> c >> b >> d;
+    cost[get_index(a)] = c;
+    get_index(b);
+    if(a == b) continue;
+    E[get_index(b)].push_back(P(get_index(a), d));
+    //    cout << b << " -> " << a << endl;
+    uf.unite(get_index(a), get_index(b));
+  }
+}
+
+void dfs(int pos, P& p){ // vertex cost
+  
+  if(used[pos]) return;
+  used[pos] = true;
+  p.first++;
+
+  for(int i = 0; i < (int)E[pos].size(); i++){
+    if(!used[E[pos][i].first]){
+      dfs(E[pos][i].first, p);
+      p.second += E[pos][i].second;
+    }
+  }
+}
+
+void solve(){
+  vector<int> v[MAX];
+  for(int i = 0; i < n; i++) v[uf.find(i)].push_back(i);
+ 
+  int ans = 0;
+
+  for(int i = 0; i < MAX; i++){
+    if(v[i].size() == 0) continue;
+    int tmp = -1;
+    for(int j = 0; j < (int)v[i].size(); j++){
+      memset(used, false, sizeof(used));
+      P p = P(0,0);
+      dfs(v[i][j],p);
+      p.second += cost[v[i][j]];
+/*******      if(v[i][j] == 0){
+        cout << p.first << " " << p.second << endl;
+        }*/
+      if((p.first == (int)v[i].size()) && (tmp == -1 || tmp > p.second)) tmp = p.second;
+    }
+    ans += tmp;
+  }
+  cout << ans << endl;
+}
+
+int main(){
+  
+  while(cin >> n && n){
+    init();
+    input();
+    solve();
+  }
+  return 0;
+}

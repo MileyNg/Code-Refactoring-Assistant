@@ -1,0 +1,66 @@
+#include<iostream>
+#include<stdio.h>
+#include<cstdio>
+using namespace std;
+struct node
+{
+	bool flag;
+	int num;
+};
+node ko[175][175];
+int main()
+{
+	int w,h,n,i,j,x,y,count=0;
+	while(scanf("%d%d%d",&w,&h,&n))
+	{
+		if(w==0&&h==0&&n==0)
+			break;
+		for(i=1;i<=w;i++)
+			for(j=1;j<=i;j++)
+			{
+				ko[i][j].flag=false;
+				ko[i][j].num=0;
+			}
+		for(i=1;i<=n;i++)
+		{
+			scanf("%d%d",&x,&y);
+			if(y>=h)
+				continue;
+			ko[x][y].num=-1;
+			ko[x][y].flag=false;
+		}
+		ko[1][1].flag=true;
+		ko[1][1].num=1;
+		if(h>w)
+			cout<<"Case "<<++count<<": "<<0<<endl;
+		else {
+			for(i=2;i<=w;i++)
+				for(j=1;j<=i;j++)
+				{
+					if(ko[i][j].num==-1)
+						continue;
+					else{
+						if(ko[i-1][j].flag==true)
+						{
+							ko[i][j].num=(ko[i][j].num+ko[i-1][j].num)%1000000009;
+							ko[i][j].flag=true;
+						}
+						if(j-1>=1&&ko[i-1][j-1].flag==true)
+						{
+							ko[i][j].num=(ko[i][j].num+ko[i-1][j-1].num)%1000000009;
+							ko[i][j].flag=true;
+						}
+						if(ko[i-1][j+1].flag==true&&j+1<=h)
+						{
+							ko[i][j].num=(ko[i][j].num+ko[i-1][j+1].num)%1000000009;
+							ko[i][j].flag=true;
+						}
+					}
+				}
+			if(ko[w][h].flag==true)
+				cout<<"Case "<<++count<<": "<<ko[w][h].num<<endl;
+			else cout<<"Case "<<++count<<": "<<0<<endl;
+		}
+	}
+	return 0;
+}

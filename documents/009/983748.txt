@@ -1,0 +1,59 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<utility>
+using namespace std;
+
+int main(){
+
+  int n;
+  cin>>n;
+  int array[n][3];
+  int sum[n];
+  typedef pair<int,int> P;
+  P p;
+  vector< P > v;
+  //init
+  for(int i=0;i<n;i++)
+    sum[i]=0;
+
+  for(int i=0;i<n;i++)
+    for(int j=0;j<3;j++)
+      cin>>array[i][j];
+
+  for(int l=0;l<3;l++)
+    for(int i=0;i<n-1;i++)
+      for(int j=i+1;j<n;j++)
+	if(array[i][l]==array[j][l]){ 
+	  p.first=i;
+	  p.second=l;
+	  v.push_back(p);
+	  p.first=j;
+	  p.second=l;
+	  v.push_back(p);
+	}
+
+  while(!v.empty()){
+    p=v.back();
+    array[p.first][p.second]=0;
+    v.pop_back();
+  }
+
+  for(int i=0;i<n;i++){
+    for(int j=0;j<3;j++){
+      cout<<array[i][j]<<" ";
+    }
+    cout<<endl;
+  }
+  
+
+
+  for(int i=0;i<n;i++)
+    for(int j=0;j<3;j++)
+      sum[i]+=array[i][j];
+  
+  for(int i=0;i<n;i++)
+    cout<<sum[i]<<endl;
+    
+  return 0;
+}

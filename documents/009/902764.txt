@@ -1,0 +1,103 @@
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <vector>
+using namespace std;
+
+template<class T> inline void chmin(T& a, const T& b) { if(b < a) a = b; }
+
+const long long INF = (1ll << 60);
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		if(n == 2) {
+			int p1, d1, p2, d2;
+			cin >> p1 >> d1 >> p2 >> d2;
+			cout << abs(p1 - p2) << endl;
+			continue;
+		}
+
+		vector<int> single;
+		vector<pair<int, int>> multiple;
+
+		single.reserve(n);
+		multiple.reserve(n);
+
+		for(int i = 0; i < n; ++i) {
+			int p, d;
+			cin >> p >> d;
+
+			if(d == 1) single.emplace_back(p);
+			else multiple.emplace_back(p, d);
+		}
+
+		sort(single.begin(), single.end());
+		sort(multiple.begin(), multiple.end());
+
+		long long cost = 0;
+		for(int i = 0; i < static_cast<int>(multiple.size()) - 1; ++i) {
+			--multiple[i].second;
+			--multiple[i + 1].second;
+			cost += abs(multiple[i].first - multiple[i + 1].first);
+		}
+
+		if(single.size() == 0) {
+			cout << cost << endl;
+			continue;
+		}
+
+		vector<int> m_pos;
+		m_pos.reserve(n * n);
+		for(const auto &m_island : multiple) {
+			for(int j = 0; j < m_island.second; ++j) {
+				m_pos.emplace_back(m_island.first);
+			}
+		}
+
+		const int s_size = single.size();
+		const int m_size = m_pos.size();
+
+		if(s_size > m_size) {
+			cout << -1 << endl;
+			continue;
+		}
+
+		vector<int> near(s_size);
+		for(int i = 0; i < s_size; ++i) {
+			near[i] = lower_bound(m_pos.begin(), m_pos.end(), single[i]) - m_pos.begin();
+		}
+
+		int prev_near = 0;
+		const int len = s_size + s_size + 1;
+		vector<long long> dp(len, cost);
+
+		for(int i = 0; i < s_size; ++i) {
+			const int diff = near[i] - prev_near;
+			for(int j = 0; j < len; ++j) {
+				dp[j] = dp[min(j + diff, len - 1)];
+			}
+
+			vector<long long> tmp(len, INF);
+			for(int j = 0; j < len - 1; ++j) {
+				const int k = near[i] - s_size + j;
+				if(k < 0) continue;
+				if(k >= m_size) break;
+				chmin(tmp[j + 1], dp[j] + abs(single[i] - m_pos[k]));
+			}
+
+			for(int j = 0; j < len - 1; ++j) {
+				chmin(tmp[j + 1], tmp[j]);
+			}
+
+			dp = move(tmp);
+			prev_near = near[i];
+		}
+
+		cout << dp.back() << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

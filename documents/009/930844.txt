@@ -1,0 +1,47 @@
+#include<iostream>
+using namespace std;
+string str;
+
+char key;
+int cnt;
+
+char t[10][10]={
+  { ' ' , ' ' , ' ' , ' ' , ' '},
+  {'\'' , ',' , '.' , '!' , '?'},
+  { 'a' , 'b' , 'c' , 'A' , 'B' , 'C'},
+  { 'd' , 'e' , 'f' , 'D' , 'E' , 'F'},
+  { 'g' , 'h' , 'i' , 'G' , 'H' , 'I'},
+  { 'j' , 'k' , 'l' , 'J' , 'K' , 'L'},
+  { 'm' , 'n' , 'o' , 'M' , 'N' , 'O'},
+  { 'p' , 'q' , 'r' , 's' , 'P' , 'Q' , 'R' , 'S'},
+  { 't' , 'u' , 'v' , 'T' , 'U' , 'V'},
+  { 'w' , 'x' , 'y' , 'z' , 'W' , 'X' , 'Y' , 'Z'}
+};
+
+int u[10]={1,5,6,6,6,6,6,8,6,8};
+
+
+int main(){
+  while(cin>>str){
+    key=str[0];
+    cnt=0;
+
+    for(int i=1;i<(int)str.size();i++){
+      if(key==str[i]){
+	cnt++;
+      }else{
+	if(key!='0'){
+	  cout<<t[key-'0'][cnt%u[key-'0']];
+	}else{
+	  for(int j=0;j<cnt;j++)cout<<' ';
+	}
+	key=str[i];
+	cnt=0;
+      }
+    }
+    
+    cout<<t[key-'0'][cnt%5]<<endl;
+    
+  }
+  return 0;
+}

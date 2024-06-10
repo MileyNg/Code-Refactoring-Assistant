@@ -1,0 +1,19 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main(void){
+	int e;
+	while(cin >> e,e){
+		int cmin=e;
+		for(int z=0;z*z*z<=e;z++){
+			for(int y=0;y*y<=e-z*z*z;y++){
+				int x=e-y*y-z*z*z;
+				int m=x+y+z;
+				cmin=min(cmin,m);
+			}
+		}
+		cout << cmin << endl;
+	}
+	return 0;
+}

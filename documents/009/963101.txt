@@ -1,0 +1,89 @@
+#include <iostream>
+#include <set>
+#define MAXNUM 10000
+using namespace std;
+
+int all[MAXNUM], odd[MAXNUM];
+set<int> allfour, oddfour;
+int max(int a, int b);
+int min(int a, int b);
+int getall(int n);
+int getodd(int n);
+
+int main()
+{
+	int n;
+	int counter = 0;
+
+	//1からMAXまでの中に存在する正四面体数をsetに入れる．
+	int now = 0, four;
+	while (1){
+		now++;
+		four = now  *(now + 1)*(now + 2) / 6;
+		if (four > MAXNUM)
+			break;
+		allfour.insert(four);
+		if (four % 2 == 1)
+			oddfour.insert(four);
+	}
+
+	//1からMAXNUMまで，配列を埋める.
+	for (int i = 1; i <= MAXNUM; i++){
+		all[i] = getall(i);
+		odd[i] = getodd(i);
+	}
+
+	//入力
+	while (cin >> n, n)
+		cout << all[n] << " " << odd[n] << endl;
+
+	return 0;
+
+}
+
+
+
+
+int max(int a, int b){
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+
+int min(int a, int b){
+	if (a > b)
+		return b;
+	else
+		return a;
+}
+
+int getall(int n){
+	set<int>::iterator it = allfour.find(n);
+	if (it != allfour.end())
+		return 1;
+	else{
+		int minnum = 1000;
+		for (int i = 1; i < n / 2 + 1; i++){
+			minnum = min(minnum, all[i] + all[n - i]);
+			if (minnum == 2)
+				break;
+		}
+		return minnum;
+	}
+}
+
+int getodd(int n){
+	set<int>::iterator it = oddfour.find(n);
+	if (it != oddfour.end())
+		return 1;
+	else{
+		int minnum = 1000;
+		for (int i = 1; i < n / 2 + 1; i++){
+			minnum = min(minnum, odd[i] + odd[n - i]);
+			if (minnum == 2)
+				break;
+		}
+		return minnum;
+	}
+}

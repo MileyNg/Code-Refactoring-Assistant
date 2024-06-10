@@ -1,0 +1,56 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+// bad knowhow
+#define REP(i,n) for(long long i=0;i<(long long)n;++i)
+
+#include <set>
+set<int> g_p[100];
+set<int> g_leak;
+
+int main() {
+	while (true) {
+		int n;
+		cin >> n;
+		REP(i, 100) g_p[i].clear();
+		g_leak.clear();
+		if (n==0) break;
+		REP(i, n) {
+			int m;
+			cin >> m;
+			REP(j, m) {
+				int p;
+				cin >> p; --p;
+				g_p[i].insert(p);
+			}
+		}
+		int k;
+		cin >> k;
+
+		REP(i, k) {
+			int l;
+			cin >> l;
+			--l;
+			g_leak.insert(l);
+		}
+
+		int suspect = -2;
+		for (int i = 0; i < n; ++i) {
+			auto it = g_leak.begin();
+			for (; it!=g_leak.end();++it) {
+				if(g_p[i].count(*it)==0) break;
+			}
+			if (it==g_leak.end()){
+				if (suspect == -2) suspect = i;
+				else{
+					suspect = -2;
+					break;
+				}
+			};
+		}
+
+		cout << suspect + 1 << endl;
+	}
+}

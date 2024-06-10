@@ -1,0 +1,44 @@
+#include<iostream>
+#include<list>
+#include <vector>
+#include <numeric>
+#include <algorithm> 
+using namespace std;
+
+int main(){
+	int N;
+	int r;
+	int j;
+	int count;
+	list<int> counter;
+	
+	while(!(cin>>N).eof()){
+		if(N==2 ){
+			counter.push_back(1);
+		}
+		else if(N==3){
+			counter.push_back(2);
+		}
+		else {
+			count=0;
+			for(int i=3; i<=N; i+=2){
+				j=3;
+				do{
+					r = i%j;
+					if(j!=3 && r == 0) break;
+					j+=2;
+				}while(j<=(i/2)+1);
+				if(i!=3 && r==0) continue;
+				count++;
+				
+			}
+			counter.push_back(count);
+		}	
+	}
+	list<int>::iterator it = counter.begin();
+	while(it != counter.end()){
+		cout << *it << endl;
+		it++;
+	}
+	return 0;
+}

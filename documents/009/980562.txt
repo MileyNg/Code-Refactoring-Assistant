@@ -1,0 +1,45 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Graph{
+private:
+ vector< vector<unsigned long> > graph;
+public:
+
+ Graph(unsigned long num) : graph(num+1, vector<unsigned long>(num+1, 0)){
+  for(unsigned long row_i = 0; row_i < num; ++row_i){
+   unsigned long nodeNum = 0; cin >> nodeNum;
+   unsigned long nodeMax = 0; cin >> nodeMax;
+
+   for(unsigned long node_i = 0; node_i < nodeMax; ++node_i){
+    unsigned long adjectNode = 0; cin >> adjectNode;
+
+    graph[nodeNum][adjectNode] = 1;
+   }
+  }
+
+ };
+
+ void display(){
+  for(unsigned long i = 1, num = graph.size(); i < num; ++i){
+   for(unsigned long j = 1; j < num; ++j){
+    cout << " " << graph[i][j];
+   }
+   cout << endl;
+  }
+ };
+
+protected:
+};
+
+int main(){
+
+ unsigned long num = 0; cin >> num;
+
+ Graph g(num);
+ g.display();
+
+ return 0;
+};

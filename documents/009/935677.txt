@@ -1,0 +1,37 @@
+def serch target, arr
+  result = []
+  arr.each{|x| result = x if x[0] == target}
+  return result
+end
+
+def recipe_search target, recipes, items
+  price = 0
+  recipe = []
+  recipe = serch(target, recipes)
+  if recipe.size > 0
+    recipe[2..-1].each do |x|
+      price += recipe_search(x, recipes, items)
+    end
+    item = []
+    item = serch(target, items)
+    if item.size > 0 and price > item[1].to_i
+      price = item[1].to_i 
+    end
+  else
+    price = serch(target, items)[1].to_i
+  end
+
+  return price.to_i
+end
+
+while 0 < n = gets.chomp.to_i
+  items=[]
+  n.times{items << gets.chomp.split(' ')}
+
+  recipes = []
+  gets.chomp.to_i.times {recipes << gets.chomp.split(' ')}
+
+  o = gets.chomp
+
+  puts recipe_search(o, recipes, items)
+end

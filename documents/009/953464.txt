@@ -1,0 +1,91 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+typedef string::iterator State;
+typedef long long ll;
+
+#define MOD 1000000007
+
+string s;
+
+ll expr(State &begin);
+
+ll fast_pow_limit(ll x, ll n, ll lim) {
+	ll ret = 1;
+	while(n>0) {
+		if(x > lim) return x;
+		if(n&1) {
+			ret *= x;
+			if(ret > lim) return ret;
+		}
+		x = x * x;
+		n >>= 1;
+	}
+	return ret;
+}
+
+ll number(State &begin) {
+	ll ret = 0; bool ok = false;
+	State bak = begin;
+	while(isdigit(*begin)){
+		ret = 10*ret + (*begin - '0');
+		++begin; ok = true;
+	}
+	return ok ? ret : -1;
+}
+
+void sp(State &begin) {
+	while(*begin==' ') ++begin;
+}
+
+ll term(State &begin) {
+	if(begin==s.end()) return -1;
+	ll ret = 0, r;
+	if(*begin=='S') {
+		++begin; // 'S'
+		sp(begin);
+		++begin; // '<'
+		sp(begin);
+		r = expr(begin);
+		ret = (r * r) % MOD;
+		sp(begin);
+		++begin;
+	}else {
+		ret = number(begin);
+	}
+	return ret;
+}
+
+ll expr(State &begin) {
+	ll ret = term(begin), r;
+	while(begin!=s.end()) {
+		State bak = begin;
+		sp(begin);
+		if(begin!=s.end() && begin+1!=s.end() && *begin=='>' && *(begin+1)=='>') {
+			begin += 2;
+			sp(begin);
+			r = term(begin);
+			if(r==-1) {
+				begin = bak;
+				break;
+			}
+			ret = ret / fast_pow_limit(2, r, ret);
+		}else {
+			begin = bak;
+			break;
+		}
+	}
+	return ret;
+}
+
+int main() {
+	while(1) {
+		getline(cin, s);
+		if(s[0]=='#') break;
+		State begin = s.begin();
+		cout << expr(begin) << endl;
+	}
+	return 0;
+}

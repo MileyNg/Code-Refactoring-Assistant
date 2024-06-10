@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int maxsum(const vector<int>& data){
+  int maxsumval=0,n=data.size();
+  for(int i=0;i<n;i++){
+    int sum=0;
+    for(int j=i;j<n;j++){
+      sum+=data[j];
+      if(sum>maxsumval)maxsumval=sum;
+    }
+  }
+  return maxsumval;
+
+}
+int main(){
+  int n;
+  vector<int> maxsumarray;
+  while(cin>>n&&n){
+    vector<int> data(n);
+    for(int i=0;i<n;i++){
+      cin>>data[i];
+    }
+    maxsumarray.push_back(maxsum(data));
+  }
+  for(int i=0;i<maxsumarray.size();i++){
+    cout<<maxsumarray[i]<<endl;
+  }
+
+}

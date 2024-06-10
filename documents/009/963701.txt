@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+#define MAX 10000000
+typedef long long ll;
+
+bool prime[MAX];
+
+void calcPrime(){
+	for( ll i = 2; i < MAX; i++ ) prime[i] = true;
+	for( ll i = 2; i < MAX; i++ ){
+		if( prime[i] ){
+			for( ll j = i+i; j < MAX; j += i ) prime[j] = false;
+		}
+	}
+}
+
+int main(){
+	calcPrime();
+	int n;
+	while( cin >> n, n ){
+		int cnt = 0;
+		for( int i = 2; i <= n/2 ; i++ ){
+			if( prime[i] && prime[n-i] ) cnt++;
+		}
+		cout << cnt << endl;
+	}
+}

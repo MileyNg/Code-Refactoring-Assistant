@@ -1,0 +1,156 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+namespace Fenwicks{
+	template<typename T> class Fenwick{
+	public:
+		int size;vector<T> bit;
+		Fenwick():Fenwick(0){}
+		Fenwick(int n):size(n){bit = vector<T>(n+1);}
+		T sum(int n){// [0,n)
+			T s=0;
+			while(n>0){
+				s+=bit[n];
+				n-=n&-n;//low
+			}
+			return s;
+		}
+		void add(int i,T x){//[0,...i...,n)
+			i++;
+			while(i<=size){
+				bit[i]+=x;
+				i+=i & -i;//next
+			}
+		}
+		
+		//lib
+		T sum(int a,int b){// [a,b)
+			return sum(b)-sum(a);
+		}
+	};
+}
+using namespace Fenwicks;
+
+ll MOD=1000000007;
+
+class Main{
+public:
+	
+	void run(){
+
+		vector<ll> fact(100050);fact[0]=1;
+		for(int i=1;i<100050;i++){
+			fact[i]=pmod(fact[i-1]*i,MOD);
+		}
+
+		while(true){
+			int N;scanf("%d",&N);if(N==0)break;
+			int R;scanf("%d",&R);
+			vector<int> as(N);
+			REP(i,N)as[i]=i;
+			REP(r,R){
+				int s,t;scanf("%d%d",&s,&t);s--;t--;
+				swap(as[s],as[t]);
+			}
+
+			ll res=0;
+			Fenwick<int> fen(N);
+			REP(i,N){
+				res+=(as[i]-fen.sum(as[i]))*fact[N-1-i];
+				res%=MOD;
+				fen.add(as[i],1);
+			}
+			cout << res<<endl;
+		}
+
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

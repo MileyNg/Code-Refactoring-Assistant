@@ -1,0 +1,26 @@
+while 1:
+	n,k = map(int,raw_input().split())
+	if n == 0: break
+	c = sorted([int(raw_input()) for i in range(k)])
+	use0 = -1
+	if c[0] == 0:
+		use0 = 1
+		k -= 1
+		c.pop(0)
+	d = [c[i]-c[i+1] for i in range(k-1)]
+	sp = L = ans = 1
+	for i in range(k-1):
+		print i,d[i],L
+		if d[i] == -1:
+			L += 1
+		elif d[i] == -2 and use0 == 1:
+			L += 2
+			sp = i
+			use0 = 0
+		else:
+			ans = max(ans,L+max(use0,0))
+			if d[i] < -2 or use0 != 0: sp = i+1
+			L = i-sp+2 if d[i] == -2 else 1
+			if use0 != -1: use0 = 1
+	ans = max(ans,L)
+	print ans

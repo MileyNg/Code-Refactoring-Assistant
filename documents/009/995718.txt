@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <set>
+#include <stack>
+#include <cassert>
+using namespace std;
+int cur = 0;
+struct node{
+  node *l,*r;
+  node(node *l = nullptr,node *r = nullptr):l(l),r(r){};
+};
+node* parse(string &f){
+  assert(f[cur] == '(');
+  cur++;
+  node *current = new node();
+  if(f[cur] == '('){
+	node *left = parse(f);
+	current->l = left;
+  }
+  assert(f[cur] == ',');
+  cur++;
+  if(f[cur] == '('){
+	node *right = parse(f);
+	current->r = right;
+  }
+  assert(f[cur] == ')');
+  cur++;
+  return current;
+}
+string dfs_i(node *f,node *s){
+  if(f == nullptr || s == nullptr)return "";
+  return "(" + dfs_i(f->l,s->l) + "," + dfs_i(f->r,s->r) + ")";
+  
+}
+string dfs_u(node *f,node *s){
+  if(f == nullptr && s == nullptr)return "";
+  if(f == nullptr) return "(" + dfs_u(nullptr,s->l) + "," + dfs_u(nullptr,s->r) + ")";
+  if(s == nullptr) return "(" + dfs_u(f->l,nullptr) + "," + dfs_u(f->r,nullptr) + ")";
+  return "(" + dfs_u(f->l,s->l) + "," + dfs_u(f->r,s->r) + ")";
+  
+}
+int main(){
+  string f,s;
+  char c;
+  while(cin >> c >> f >> s){
+	node *f_t,*s_t;
+	cur = 0;
+	f_t = parse(f);
+	cur = 0;
+	s_t = parse(s);
+	
+	if(c == 'i')cout << dfs_i(f_t,s_t) << endl;
+	if(c == 'u')cout << dfs_u(f_t,s_t) << endl;
+	
+	
+  }
+
+  return 0;
+}

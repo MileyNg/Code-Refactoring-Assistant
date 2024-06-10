@@ -1,0 +1,119 @@
+#include<iostream>
+#include<map>
+using namespace std;
+
+void print(pair<int,int> *data,int n)
+{
+  for(int i=0;i<n;i++)
+    cout<<"["<<data[i].first<<","<<data[i].second<<"] ";
+  cout<<endl;
+}
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      int m;
+      cin>>m;
+      pair<int,int> target[m];
+      int sx,sy;
+      cin>>sx>>sy;
+      target[0]=make_pair(0,0);
+      for(int i=1;i<m;i++)
+	{
+	  int tx,ty;
+	  cin>>tx>>ty;
+	  target[i]=make_pair(tx-sx,ty-sy);
+	}
+      // cout<<"target:";
+      //print(target,m);
+
+      for(int num=0;num<n;num++)
+	{
+	  //  cout<<"num,n="<<num<<" "<<n<<endl;
+	  int mm;
+	  cin>>mm;
+	  pair<int,int> data[mm];
+	  pair<int,int> noumal[mm];
+	  int sx,sy;
+	  cin>>sx>>sy;
+	  data[0]=make_pair(0,0);
+	  noumal[0]=make_pair(sx,sy);
+
+	  for(int j=1;j<mm;j++)
+	    {
+	      int tx,ty;
+	      cin>>tx>>ty;
+	      data[j]=make_pair(tx-sx,ty-sy);
+	      noumal[j]=make_pair(tx,ty);
+	    }
+	  pair<int,int> rev[mm];
+	  sx=noumal[mm-1].first;
+	  sy=noumal[mm-1].second;
+	  rev[0]=make_pair(0,0);
+	  int jj=1;
+	  for(int j=mm-2;j>=0;j--)
+	    {
+	      int tx=noumal[j].first;
+	      int ty=noumal[j].second;
+	      rev[jj]=make_pair(tx-sx,ty-sy);
+	      jj++;
+	    }
+
+
+	  //cout<<"data "<<num+1<<":";
+	  //print(data,mm);
+	  //cout<<"rev "<<num+1<<":";
+	  //print(rev,mm);
+
+	  if(mm!=m)
+	    continue;
+	  // int dx[]={1,-1,-1,1};
+	  //	  int dy[]={1,1,-1,-1};
+	  bool flag =false;
+	  for(int i=0;i<4&& !flag;i++)
+	    {
+	      for(int j=0;j<m&&!flag;j++)
+		{
+		  if(target[j].first!=data[j].first ||
+		     target[j].second!=data[j].second
+		     )
+		    break;
+		  if(j==m-1)
+		    flag=true;
+		}
+	      for(int j=0;j<m&&!flag;j++)
+		{
+		  if(target[j].first!=rev[j].first ||
+		     target[j].second!=rev[j].second
+		     )
+		    break;
+		  if(j==m-1)
+		    flag=true;
+		}
+
+	      for(int j=0;j<m&&!flag;j++)
+		{
+		  swap(data[j].first,data[j].second);
+		  data[j].first=-data[j].first;
+		}
+
+	      for(int j=0;j<m&&!flag;j++)
+		{
+		  swap(rev[j].first,rev[j].second);
+		  rev[j].first=-rev[j].first;
+		}
+	      //	      cout<<"swapdata "<<num+1<<":";
+	      //print(data,mm);
+
+	    }
+	  if(flag)
+	      cout<<num+1<<endl;
+	}
+
+
+      cout<<"+++++"<<endl;
+    }
+
+}

@@ -1,0 +1,91 @@
+#include <cstdio>
+#include <cctype>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+char s[1000][1000];
+
+char state[1000][1000];
+
+int H, W, N;
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	while (scanf("%d%d%d", &H, &W, &N)==3) {
+		if (H==0 && W==0) break;
+		int i, j;
+		char c;
+		int si, sj;
+
+		for (i=0; i<H; i++) {
+			for (j=0; j<W; j++) {
+				do { c=getchar();
+				} while (c!='.' && c!='S' && c!='X' && !isdigit(c));
+				s[i][j] = c;
+				if (c=='S') {
+					si = i; sj = j;
+				}
+			}
+		}
+
+		memset(state, 0, sizeof(state));
+		state[si][sj] = 1;
+		
+		int step=0;
+		int want=1;
+		queue<int> q1, q2, *q, *nq, *qtmp;
+
+		static int dx[4] = {1, -1, 0, 0};
+		static int dy[4] = {0, 0, -1, 1};
+
+		q = &q1; nq = &q2;
+		q1.push((si<<16)|sj);
+
+		while (want<=N) {
+			int old_want=want;
+			while (!nq->empty()) nq->pop();
+			step++;
+			while (!q->empty()) {
+				
+				int i, j, value;
+				value = q->front(); q->pop();
+				i = value>>16; j = value&0xffff;
+
+				int k;
+				for (k=0; k<4; k++) {
+					int ti, tj;
+					ti = i+dy[k]; tj = j+dx[k];
+					if (ti<0 || ti>=H || tj<0 || tj>=W || s[ti][tj]=='X') continue;
+					if (state[ti][tj]==want) continue;
+					if (s[ti][tj]==want+'0') {
+						want++; 
+					}
+					
+					state[ti][tj] = want;
+					nq->push((ti<<16)|tj);
+					if (want!=old_want) break;
+				}
+				if (want!=old_want) break;
+			}
+
+			if (want!=old_want) {
+				while (nq->size()>1) nq->pop();
+			}
+
+			qtmp = q; q = nq; nq = qtmp;
+
+
+
+		}
+
+		printf("%d\n", step);
+
+	}
+
+	return 0;
+}

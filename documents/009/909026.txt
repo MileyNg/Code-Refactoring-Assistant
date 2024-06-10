@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+int main(void)
+{
+int x,y;
+cin>>x;
+cin>>y;
+int num[x+1][y+1];
+for(int i=0;i<x;i++)
+{
+int sum1=0;
+	for(int j=0;j<y;j++)
+	{
+	cin>>num[i][j];
+	sum1+=num[i][j];
+	
+	}
+	
+	num[i][y]=sum1;
+}
+for(int i=0;i<y+1;i++)
+{
+int sum2=0;
+	for(int j=0;j<x;j++)
+	{
+	sum2+=num[j][i];
+	}
+	num[x][i]=sum2;
+}
+for(int i=0;i<x+1;i++)
+{
+	for(int j=0;j<y+1;j++)
+	{
+	cout<<num[i][j]<<" ";
+	}
+	cout<<endl;
+}
+return 0;

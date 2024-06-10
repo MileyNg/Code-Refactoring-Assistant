@@ -1,0 +1,115 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cmath>
+
+
+using namespace std;
+
+int fact(int n){
+	if (n == 0)
+		return 1;
+	else
+		return n * fact(n - 1);
+}
+
+int main()
+{
+	int len[13];
+	int * np[150];
+	char alphabet[150];
+	int n;
+	int num[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+	//入力
+	while (cin >> n, n){
+		int found = 0;
+
+		//STRINGの入力
+		int counter = 0;
+		for (int i = 0; i < n; i++){
+			string s;
+			cin >> s;
+			len[i] = s.size();
+			for (int j = 0; j < s.size(); j++){
+				alphabet[counter++] = s[j];
+			}
+		}
+
+		//同じ文字の処理
+		int numcounter = 0, variation = 0;
+		for (int i = 0; i < counter; i++){
+			bool flag = true;
+			for (int j = 0; j < i; j++){
+				if (alphabet[i] == alphabet[j]){
+					np[i] = np[j];
+					flag = false;
+				}
+			}
+			if (flag){
+				np[i] = num + numcounter++;
+				variation++;
+			}
+		}
+
+		int docounter = 0;
+		int t = fact(10 - variation);
+		//DWORD time1 = GetTickCount();
+
+		do{
+
+			//初期化
+			int lketa[8];
+			int rketa[8];
+			for (int i = 0; i < 8; i++)
+				lketa[i] = rketa[i] = 0;
+			numcounter = 0;
+
+			//重複の場合はスキップ
+			docounter++;
+			if (docounter % t != 0)
+				continue;
+
+			//dataの作成
+			bool flag = 0;
+			for (int i = 0; i < n; i++){
+				flag = false;
+				for (int j = 0; j < len[i]; j++){
+					if (j == 0 && *np[numcounter] == 0 && len[i] > 1){
+						flag = true;
+						break;
+					}
+					if (i < n - 1)
+						lketa[len[i] - j - 1] += *np[numcounter++];
+					else
+						rketa[len[i] - j - 1] = *np[numcounter++];
+				}
+				if (flag)
+					break;
+			}
+			if (flag)
+				continue;
+
+
+			//繰り上がりと判定
+			bool judge = true;
+			for (int i = 0; i < 7; i++){
+				lketa[i + 1] += lketa[i] / 10;
+				lketa[i] = lketa[i] % 10;
+				if (lketa[i] != rketa[i]){
+					judge = false;
+					break;
+				}
+			}
+
+			if (judge){
+				found++;
+			}
+
+		} while (next_permutation(num, num + 10));
+		//DWORD time2 = GetTickCount();
+		//cout << time2 - time1;
+		cout << found << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int x, y;
+	int x2, y2;
+	int i, j;
+	int n;
+	int gcd, lcm;
+	
+	while (scanf("%d %d", &x, &y) != EOF){
+		x2 = x; y2 = y;
+		i = 1;
+		while (i != 0){
+			i = x % y;
+			gcd = y;
+			x = y; y = i;
+		}
+		lcm = (x2 / gcd) * y2;
+		printf("%d %d\n", gcd, lcm);
+	}
+	
+	return (0);
+}

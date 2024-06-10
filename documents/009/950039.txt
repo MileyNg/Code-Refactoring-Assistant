@@ -1,0 +1,52 @@
+#include <array>
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+int judge(array<int, 30>& cards, int rem) {
+    if (rem == 0) return 1;
+    for (int i = 0; i < 30; i++) {
+        if (cards[i] >= 3) {
+            cards[i] -= 3;
+            int res = judge(cards, rem - 3);
+            if (res) return res;
+            cards[i] += 3;
+        }
+        if (i >= 2 && cards[i] > 0 && cards[i - 1] > 0 && cards[i - 2] > 0) {
+            for (int j = i - 2; j <= i; j++) cards[j]--;
+            int res = judge(cards, rem - 3);
+            if (res) return res;
+            for (int j = i - 2; j <= i; j++) cards[j]++;
+        }
+    }
+    return 0;
+}
+
+void solve() {
+    array<int, 9> n;
+    array<char, 9> c;
+    for (int& x : n) cin >> x;
+    for (char& x : c) cin >> x;
+
+    array<int, 30> cards;
+    cards.fill(0);
+    for (int i = 0; i < 9; i++) {
+        int m = 0;
+        switch (c[i]) {
+        case 'R': m = 0; break;
+        case 'G': m = 10; break;
+        case 'B': m = 20; break;
+        }
+        cards[n[i] + m]++;
+    }
+    cout << judge(cards, 9) << endl;
+}
+
+int main() {
+    int n;
+    for (cin >> n; n; n--) {
+        solve();
+    }
+    return 0;
+}

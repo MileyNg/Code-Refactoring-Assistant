@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main( ){
+    float a[20],b[20];
+    int nCount = 0;
+    while( scanf( "%f %f",&a[nCount],&b[nCount] ) != EOF ){
+        nCount++;
+    }
+
+    for( int k = 0;k < i;k++ ){
+         float buf_a = a[k],buf_b = b[k];
+
+        while( buf_a != buf_b ){
+            if( buf_a < buf_b ) buf_a += a[k];
+            else                      buf_b += b[k];
+        }
+        printf( "%d ",( int )buf_a );
+        int m,n;
+        if( a[k] < b[k] ) m = b[k],n = a[k];
+        else if( a[k] > b[k] ) n = b[k],m = a[k];
+        else {
+            printf( "%d\n",a[k] );
+            continue;
+        }
+        while( true ){
+            int buf = n;
+            n = m % n;
+            m = buf;
+            if( n == 0 ) {
+                printf( "%d\n",m );
+                break;
+            }
+        }
+    }
+    return 0;
+}

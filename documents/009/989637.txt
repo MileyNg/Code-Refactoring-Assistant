@@ -1,0 +1,106 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#define ull unsigned long long
+#define rep(i,a,b) for(ull (i)=(a);(i)<(b);(i)++)
+#define repn(i,a,b,n) for(ull (i)=(a);(i)<=(b);(i)+=(n))
+#define NUM 300000
+using namespace std;
+class Prime{
+private:
+	bool all[NUM];
+	bool range[NUM];
+	ull m;//nの平方根
+	ull st, ed;//始点、終点
+public:
+	Prime(ull s,ull e);
+	void e_solve();//nまでの素数の列挙
+	bool e_judge();//素数判定
+	void e_solve_se();//区間内素数列挙
+	void set_range(ull s, ull e);
+	void disp_all();
+	void disp_range();
+	ull get_NUM();
+};
+
+Prime::Prime(ull s,ull e){
+	set_range(s, e);
+	memset(all, 0, sizeof(all));
+	memset(range, 0, sizeof(range));
+}
+
+void Prime::set_range(ull s, ull e){
+	m = (ull)sqrt(e) + 1;
+	st = s;
+	ed = e;
+}
+
+void Prime::e_solve(){//nまでの素数の列挙
+	all[0] = all[1] = true;
+	repn(i, 4, ed, 2)all[i] = true;
+	repn(i, 3, ed, 2){
+		if (all[i])continue;
+		repn(j, 2 * i, ed, i)all[j] = true;
+		if (i >= m)break;
+	}
+}
+
+bool Prime::e_judge(){//素数判定
+	if (!(ed & 1) && ed != 2)return(false);
+	repn(i, 3, ed, 2){
+		if (ed%i==0)return(false);
+		if (i >= m)return(true);
+	}
+	return(0);
+}
+
+void Prime::e_solve_se(){//区間内素数列挙
+	all[0] = all[1] = true;
+	ull x = st & 1 ? 1 : 0;
+	repn(i, 4, m, 2){
+		all[i] = true;
+	}
+	repn(i, x, ed - st, 2)range[i] = true;
+	repn(i, 3, m, 2){
+		if (all[i])continue;
+		repn(j, 2 * i, m, i)all[j] = true;
+		ull temp = (st / i) + 1;
+		temp = temp*i - st;
+		repn(j, temp,ed-st, i)range[j] = true;
+		if (i >=m)break;
+	}
+}
+
+void Prime::disp_all(){
+	if (ed >= 2)cout << "2 ";
+	repn(i, 3, ed, 2)
+	if (!all[i])printf("%lld ", i);
+	cout << endl;
+}
+
+void Prime::disp_range(){
+	repn(i, 0, ed - st, 1)if (!range[i])printf("%lld ", i+st);
+	cout << endl;
+}
+ull Prime::get_NUM(){
+	ull end = ed - st;
+	ull sum = 0;
+	repn(i, 1, end, 1)if (!range[i])sum ++;
+	return(sum);
+}
+
+int main(void){
+	while (true){
+		ull st;
+		cin >> st;
+		if (st == 0)return(0);
+		Prime p(st, 2 * st);
+		//p.e_solve();
+		p.e_solve_se();
+		//p.disp_all();
+		//p.disp_range();
+		cout << p.get_NUM() << endl;
+	}
+	return(0);
+}

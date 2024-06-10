@@ -1,0 +1,42 @@
+### constant
+
+COLORS = [
+  ["black",     "00", "00", "00"],
+  ["blue",      "00", "00", "ff"],
+  ["lime",      "00", "ff", "00"],
+  ["aqua",      "00", "ff", "ff"],
+  ["red",       "ff", "00", "00"],
+  ["fuchsia",   "ff", "00", "ff"],
+  ["yellow",    "ff", "ff", "00"],
+  ["white",     "ff", "ff", "ff"]
+]
+
+### subroutines
+
+def get_color(r, g, b)
+  min_dd = 3 * 256 ** 3
+  min_col = ''
+
+  for col in COLORS
+    dd = (r - col[1].hex) ** 2 + (g - col[2].hex) ** 2 + (b - col[3].hex) ** 2
+    if min_dd > dd
+      min_dd = dd
+      min_col = col[0]
+    end
+  end
+
+  min_col
+end
+
+### main
+
+while true
+  line = gets.strip
+  break if line == '0'
+
+  r = line[1, 2].hex
+  g = line[3, 2].hex
+  b = line[5, 2].hex
+
+  puts get_color(r, g, b)
+end

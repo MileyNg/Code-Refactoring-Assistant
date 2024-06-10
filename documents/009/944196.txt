@@ -1,0 +1,29 @@
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0076 : Treasure Hunt II **/
+int main()
+{
+	int n;
+	while (cin>>n, n>0) {
+		double x, y;
+		x=1.0; y=0.0;
+		REP(i, 1, n) {
+			double nx = -y;
+			double ny = x;
+			double dx = nx/sqrt(nx*nx+ny*ny);
+			double dy = ny/sqrt(nx*nx+ny*ny);
+			x = x+dx; y = y+dy;
+		}
+		cout << fixed << setprecision(2) << x << "\n" << y << endl;
+	}
+	return 0;
+}

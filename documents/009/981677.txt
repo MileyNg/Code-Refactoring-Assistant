@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+int main() {
+	int n;
+	while (cin >> n) {
+		if (n == -1) {
+			break;
+		}
+		double x = 1.0;
+		double y = 0.0;
+		for (int i = 1; i < n; i++) {
+			if (fabs(x) <= 0.01) {
+				if (y >= 0) {
+					x += 1.0;
+				} else {
+					x -= 1.0;
+				}
+			} else {
+				double kaku = atan(y/x);
+				if (x < 0.0) {
+					kaku += acos(-1.0);
+				}
+				double x1, y1;
+				x1 = cos(-kaku)*x-sin(-kaku)*y;
+				y1 = sin(-kaku)*x+cos(-kaku)*y;
+				y1 += 1.0;
+				x = cos(kaku)*x1-sin(kaku)*y1;
+				y = sin(kaku)*x1+cos(kaku)*y1;
+			}
+		}
+		printf("%.2f\n%.2f\n", x, y);
+	}
+	return 0;
+}

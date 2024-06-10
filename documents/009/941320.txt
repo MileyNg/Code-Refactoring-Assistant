@@ -1,0 +1,126 @@
+#include <stdio.h>
+
+
+void s(int x, int y, int pap[][10])
+{
+	int i, j;
+	int x_dif, y_dif;
+	
+	for (j = 0; j < 3; j++){
+		for (i = 0; i < 3; i++){
+			x_dif = x + (i % 3) - 1;
+			y_dif = y + (j - 1);
+			
+			if (x_dif >= 0 && x_dif < 10){
+				if (y_dif >= 0 && y_dif < 10){
+					if ((i % 3) - 1 == 0 || (j - 1) == 0){
+						pap[y_dif][x_dif]++;
+					}
+				}
+			}
+		}
+	}
+	
+}
+
+void m(int x, int y, int pap[][10])
+{
+	int i, j;
+	int x_dif, y_dif;
+	
+	for (j = 0; j < 3; j++){
+		for (i = 0; i < 3; i++){
+			x_dif = x + (i % 3) - 1;
+			y_dif = y + (j - 1);
+			
+			if (x_dif >= 0 && x_dif < 10){
+				if (y_dif >= 0 && y_dif < 10){
+					pap[y_dif][x_dif]++;
+				}
+			}
+		}
+	}
+	
+}
+
+void l(int x, int y, int pap[][10])
+{
+	int i, j;
+	int x_dif, y_dif;
+	
+	for (j = 0; j < 3; j++){
+		for (i = 0; i < 3; i++){
+			x_dif = x + (i % 3) - 1;
+			y_dif = y + (j - 1);
+			
+			if (x_dif >= 0 && x_dif < 10){
+				if (y_dif >= 0 && y_dif < 10){
+					pap[y_dif][x_dif]++;
+				}
+			}
+		}
+	}
+	if (x - 2 >= 0){
+		pap[y - 2][x]++;
+	}
+	if (x + 2 < 10){
+		pap[y + 2][x]++;
+	}
+	
+	if (y - 2 >= 0){
+		pap[y][x - 2]++;
+	}
+	if (y + 2 < 10){
+		pap[y][x + 2]++;
+	}
+}
+
+int main(void)
+{
+	int pap[10][10] = {0};
+	int x, y , size, i, j;
+	int big, count;
+	
+	big = 0;
+	count = 0;
+	
+	while (scanf("%d,%d,%d", &x, &y, &size) != EOF){
+		switch (size){
+		  case 1:
+		  	s(x, y, pap);
+			break;
+		  case 2:
+		  	m(x, y, pap);
+		  	break;
+		  case 3:
+		  	l(x, y, pap);
+			break;
+			
+		}
+		
+		
+		/*グラフィカルー
+		for (i = 0; i < 10; i++){
+			for (j = 0; j < 10; j++){
+				printf("%d", pap[i][j]);
+			}
+			printf("\n");
+		}
+		*/
+	}
+	
+	for (i = 0; i < 10; i++){
+		for (j = 0; j < 10; j++){
+			if (pap[i][j] > big){
+				big = pap[i][j];
+			}
+			if (pap[i][j] == 0){
+				count++;
+			}
+		}
+	}
+	printf("%d\n%d\n", count, big);
+	
+	
+	return (0);
+}

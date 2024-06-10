@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std ;
+
+#define MAX_MURAI 102
+
+int main()
+{
+	int XX,YY ;
+
+	char map[MAX_MURAI][MAX_MURAI] ;
+	int memory[MAX_MURAI][MAX_MURAI] ;
+
+	int x,y ;
+
+
+	while( 1 )
+	{
+		cin >> YY >> XX ;		/* H * W */
+		if( YY == 0 && XX == 0 )		break ;
+
+		for( int i = 0 ; i < YY ; i ++ )
+		{
+			cin >> map[i] ;
+			for( int j = 0 ; j < XX ; j ++ ){ memory[i][j] = 0 ; }
+		}
+
+		x = 0 ;
+		y = 0 ;
+
+		while( 1 )
+		{
+			memory[x][y] = 100000 ;
+			if( map[x][y] == '.' )
+			{
+				cout << x << " " << y << endl ;
+				break ;
+			}
+			else if( map[x][y] == '>' ){ y ++ ; }
+			else if( map[x][y] == 'v' ){ x ++ ; }
+			else if( map[x][y] == '<' ){ y -- ; }
+			else if( map[x][y] == '^' ){ x -- ; }
+
+			if( memory[x][y] != 0 )
+			{
+				cout << "LOOP" << endl ;
+				break ;
+			}
+		}
+	}
+
+	return 0 ;
+}

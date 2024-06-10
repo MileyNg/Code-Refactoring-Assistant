@@ -1,0 +1,122 @@
+#include <iostream>
+#include <algorithm>
+#include <utility>
+using namespace std;
+
+struct Dice {
+  int f[6];
+  Dice() {
+    f[0] = 1; f[1] = 4; f[2] = 2;
+    f[3] = 3; f[4] = 5; f[5] = 6;
+  }
+  // a -> b, b -> c, c -> d, d -> a;
+  void rot(int a, int b, int c, int d) {
+    int tmp = f[d];
+    f[d] = f[c]; f[c] = f[b]; f[b] = f[a]; f[a] = tmp;
+  }
+  void rot1() {
+    rot(0, 1, 5, 3);
+  }
+  void rot2() {
+    rot(0, 2, 5, 4);
+  }
+  void rot3() {
+    rot(0, 3, 5, 1);
+  }
+  void rot4() {
+    rot(0, 4, 5, 2);
+  }
+  void rot_v() {
+    rot(1, 2, 3, 4);
+  }
+  void set(int top, int front) {
+    while(true) {
+      if(f[0] == top) break;
+      rot2();
+      if(f[0] == top) break;
+      rot1();
+      if(f[0] == top) break;
+      rot2();
+      if(f[0] == top) break;
+      rot1();
+      if(f[0] == top) break;
+      rot2();
+      if(f[0] == top) break;
+      rot1();
+    }
+    while(true) {
+      if(f[3] == front) break;
+      rot_v();
+    }
+  }
+};
+
+int level[201][201];
+int number[201][201];
+
+int main() {
+  while(true) {
+    int N; cin >> N;
+    if(N == 0) break;
+    for(int i = 0; i < 201; i++) {
+      for(int j = 0; j < 201; j++) {
+        level[i][j] = 0;
+        number[i][j] = 0;
+      }
+    }
+    while(N--) {
+      int top, front; cin >> top >> front;
+      Dice dice;
+      dice.set(top, front);
+      int Y = 100, X = 100;
+      while(true) {
+        int mov = -1;
+        for(int i = 0; i < 4; i++) {
+          bool ok_face = false;
+          for(int k = 4; k <= 6; k++) {
+            if(dice.f[i+1] == k) ok_face = true;
+          }
+          if(ok_face == false) continue;
+          const int dy[4] = { -1, 0, 1, 0 };
+          const int dx[4] = { 0, -1, 0, 1 };
+          int ny = Y + dy[i], nx = X + dx[i];
+          if(level[ny][nx] < level[Y][X] && (mov == -1 || dice.f[mov] < dice.f[i+1])) mov = i + 1;
+        }
+        if(mov == -1) break;
+        switch(mov) {
+          case 1:
+            dice.rot1();
+            Y -= 1;
+            break;
+          case 2:
+            X -= 1;
+            dice.rot2();
+            break;
+          case 3:
+            Y += 1;
+            dice.rot3();
+            break;
+          case 4:
+            X += 1;
+            dice.rot4();
+            break;
+        }
+      }
+      level[Y][X]++;
+      number[Y][X] = dice.f[0];
+      // cerr << "PUT: X = " << X << ", Y = " << Y << ", F = " << dice.f[0] << endl;
+    }
+
+    int count_[7] = { 0 };
+    for(int i = 0; i < 201; i++) {
+      for(int j = 0; j < 201; j++) {
+        count_[number[i][j]]++;
+      }
+    }
+    for(int i = 1; i <= 6; i++) {
+      if(i != 1) cout << " ";
+      cout << count_[i];
+    }
+    cout << endl;
+  }
+}

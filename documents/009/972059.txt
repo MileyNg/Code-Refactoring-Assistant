@@ -1,0 +1,34 @@
+#include<stdio.h>
+#include<string.h>
+
+int main(){
+  int a=0,i=0,b=0;
+  char c,d;
+  char tango[12],bun[1001];
+  scanf("%s",tango);
+  i=0;
+  while(tango[i] != '\0'){
+    if(tango[i] >= 'A' && tango[i] <= 'Z'){
+      c = 'a' - 'A';
+      tango[i] += c;
+      i++;
+    }
+  }
+  while(1){
+    scanf("%s",bun);
+    if(strcmp(bun,"END_OF_TEXT") == 0) break;
+    b=0;
+    while(bun[b] != '\0'){
+      if(bun[b] >= 'A' && bun[b] <= 'Z'){
+	d = 'a' - 'A';
+	bun[b] += d;
+	b++;
+      }
+    }
+    if(strcmp(tango,bun) == 0){
+      a++;
+    }
+  }
+  printf("%d\n",a);
+  return 0;
+}  

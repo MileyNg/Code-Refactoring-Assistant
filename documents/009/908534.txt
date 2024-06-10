@@ -1,0 +1,27 @@
+ #include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+
+int main(void)
+{
+  int a[5],i,j,max,tmp,k; 
+  for(i=0;i<5;i++)
+    scanf("%d",&a[i]);
+
+  for(i=0;i<4;i++){
+    max=a[i];
+    k=i;
+    for(j=i+1;j<5;j++)
+      if(max<a[j]){
+	max=a[j];
+	k=j;
+      }
+    tmp=a[i];a[i]=max;a[k]=tmp;
+  }
+
+  for(i=0;i<5;i++)
+    printf("%d ",a[i]);
+  //printf("\n");
+  return 0;
+}

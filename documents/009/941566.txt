@@ -1,0 +1,103 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+#include <numeric>
+#include <cstring>
+#include <cmath>
+
+using namespace std;
+
+int main(int argc, char *argv[]) {
+  int x, y, z;
+  // x ルーレットの出目の数                                                                                                                                                                                                                                                                                                                         
+  // y マスの数                                                                                                                                                                                                                                                                                                                                     
+  // z イベントマスの数                                                                                                                                                                                                                                                                                                                             
+  int roulette[4];
+  map<int, int> go_forward, get_money, pay_money;
+  vector<vector<pair<int, int> > > route(51, vector<pair<int, int> >());
+  while (true) {
+    cin >> x >> y >> z;
+    if (!(x || y || z))
+      break;
+    for (int i = 0; i < x; i++)
+      cin >> roulette[i];
+    for (int i = 0; i < z; i++) {
+      int a, b, c;
+      // a イベントの発生するマスの番号                                                                                                                                                                                                                                                                                                             
+      // b イベント番号 {                                                                                                                                                                                                                                                                                                                           
+      //   1 指定の数値だけ先へ進む 1~10,                                                                                                                                                                                                                                                                                                           
+      //   2 指定の数値の金額を得る 1~100,                                                                                                                                                                                                                                                                                                          
+      //   3 指定の数値の金額を支払う 1~100 }                                                                                                                                                                                                                                                                                                       
+      // c マス or 金額                                                                                                                                                                                                                                                                                                                             
+      cin >> a >> b >> c;
+      if (b == 1)
+        go_forward.insert(pair<int, int>(a, c));
+      else if (b == 2)
+        get_money.insert(pair<int, int>(a, c));
+      else
+        pay_money.insert(pair<int, int>(a, c));
+    }
+
+    route[0].push_back(pair<int, int>(0, 0));
+    for (int i = 1; i < y + x; i++) {
+      for (int j = 0; j < x; j++) {
+        if (0 <= i - roulette[j] && i - roulette[j] < y) {
+          if (go_forward.find(i) != go_forward.end()) {
+            for (int k = 0; k < route[i - roulette[j]].size(); k++) {
+              auto p = pair<int, int>(route[i - roulette[j]][k].first + 1, route[i - roulette[j]][k].second);
+              route[i + go_forward[i]].push_back(p);
+            }
+          } else if (get_money.find(i) != get_money.end()) {
+            for (int k = 0; k < route[i - roulette[j]].size(); k++) {
+              auto p = pair<int, int>(route[i - roulette[j]][k].first + 1, route[i - roulette[j]][k].second + get_money[i]);
+              route[i].push_back(p);
+            }
+          } else if (pay_money.find(i) != pay_money.end()) {
+            for (int k = 0; k < route[i - roulette[j]].size(); k++) {
+              int money = (route[i - roulette[j]][k].second - pay_money[i] < 0 ? 0 : route[i - roulette[j]][k].second - pay_money[i]);
+              auto p = pair<int, int>(route[i - roulette[j]][k].first + 1, money);
+              route[i].push_back(p);
+            }
+          } else {
+            for (int k = 0; k < route[i - roulette[j]].size(); k++) {
+              auto p = pair<int, int>(route[i - roulette[j]][k].first + 1, route[i - roulette[j]][k].second);
+              route[i].push_back(p);
+            }
+          }
+        }
+      }
+    }
+
+    /*                                                                                                                                                                                                                                                                                                                                              
+    for (int i = 0; i <= y; i++) {                                                                                                                                                                                                                                                                                                                  
+      cout << i << ':';                                                                                                                                                                                                                                                                                                                             
+      for (int j = 0; j < route[i].size(); j++) {                                                                                                                                                                                                                                                                                                   
+        cout << route[i][j].first << ' ';                                                                                                                                                                                                                                                                                                           
+      }                                                                                                                                                                                                                                                                                                                                             
+      cout << endl;                                                                                                                                                                                                                                                                                                                                 
+    }                                                                                                                                                                                                                                                                                                                                               
+    */
+    double res = 0;
+    for (int i = y; i < y + x; i++) {
+      for (int j = 0; j < route[y].size(); j++) {
+        /*                                                                                                                                                                                                                                                                                                                                          
+          cout << "number: " << route[i][j].first << endl;                                                                                                                                                                                                                                                                                          
+          cout << "money : " << route[i][j].second << endl;                                                                                                                                                                                                                                                                                         
+        */
+        res += route[i][j].second / pow(x, route[i][j].first);
+      }
+    }
+    cout << (int)res << endl;
+    go_forward.clear();
+    get_money.clear();
+    pay_money.clear();
+    for (int i = 0; i < 50; i++)
+      route[i].clear();
+  }
+  return 0;
+}

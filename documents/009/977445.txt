@@ -1,0 +1,87 @@
+#!/usr/bin/ruby
+#
+# 0109-1.rb: Smart Calculator
+#
+
+$str = ''
+$pos = 0
+
+def exp()
+  #puts "exp():#{$pos}"
+
+  ret = term();
+  while true
+    ch = $str[$pos]
+    $pos += 1
+
+    if ch == '+'
+      ret += term()
+    elsif ch == '-'
+      ret -= term()
+    else
+      break;
+    end
+  end
+
+  return ret
+end
+
+def term()
+  #puts "term():#{$pos}"
+
+  ret = elm()
+  while true
+    ch = $str[$pos]
+    $pos += 1
+
+    case ch
+    when '*'
+      ret *= elm()
+    when '/'
+      ret /= elm()
+    else
+      break
+    end
+  end
+  $pos -= 1
+
+  return ret
+end
+
+def elm()
+  #puts "elm():#{$pos}"
+
+  ch = $str[$pos]
+  $pos += 1
+
+  return exp() if ch == '('
+  return -elm() if ch == '-'
+  return elm() if ch == '+'
+
+  x = ch.ord - '0'.ord
+  while true
+    ch = $str[$pos]
+    $pos += 1
+
+    if /\d/ =~ ch
+      x = 10 * x + (ch.ord - '0'.ord)
+    else
+      break
+    end
+  end
+  $pos -= 1
+
+  return x
+end
+
+### main
+
+n = gets.chomp.to_i
+
+n.times.each do
+  $str = gets.chomp
+  $pos = 0
+  #p str
+  num = exp()
+  puts num
+end

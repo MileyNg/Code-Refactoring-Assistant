@@ -1,0 +1,22 @@
+import sys
+import itertools
+readline = sys.stdin.readline
+
+while True:
+    N = int(readline())
+    M = int(readline())
+    if N == 0 and M == 0:
+        break
+    pairs = set()
+    for _ in xrange(M):
+        t = tuple(int(x) for x in readline().split())
+        pairs.add(t)
+    friends = set()
+    for i in xrange(2, N + 1):
+        if (1, i) in pairs:
+            friends.add(i)
+        else:
+            for j in xrange(2, i):
+                if (1, j) in pairs and (j, i) in pairs:
+                    friends.add(i)
+    print len(friends)

@@ -1,0 +1,27 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+
+int main(){
+	std::stack<int> in;
+	std::queue<int> out;
+	int num;
+	
+	while(std::cin >> num){
+		if(num == 0){
+			out.push(in.top());
+			in.pop();
+		}else
+			in.push(num);
+		
+		//output
+		if(in.empty()){
+			while(!out.empty()){
+				std::cout << out.front() << std::endl;
+				out.pop();
+			}
+		}
+	}
+	
+    return 0;
+}

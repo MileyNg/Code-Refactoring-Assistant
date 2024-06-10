@@ -1,0 +1,52 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int n;
+int t[50];
+bool u[50];
+int v[50];
+
+bool dfs(int x){
+  bool flg=true;
+  for(int i=0;i<n;i++){
+    if(u[i])continue;
+    flg=false;
+    break;
+  }
+  if(flg)return true;
+
+
+  if(v[x]==0){
+    for(int i=0;i<n;i++){
+      if(v[i]==0)continue;
+      if(dfs(i))return true;
+      else return false;
+    }
+  }else{
+    for(int i=0;i<n;i++){
+      if(u[i])continue;
+      if(v[x]-t[i]<0)continue;
+      u[i]=true;
+      v[x]-=t[i];
+      v[i]+=t[i];
+      if(dfs(x))return true;
+      v[i]-=t[i];
+      v[x]+=t[i];
+      u[i]=false;
+    }
+  }
+  return false;
+}
+
+int main(){
+  while(cin>>n&&n){
+    for(int i=0;i<n;i++)cin>>t[i];
+    sort(t,t+n);reverse(t,t+n);
+    for(int i=0;i<n;i++)u[i]=false,v[i]=0;
+    u[0]=true;
+    v[0]=t[0];
+    cout<<(dfs(0)?"YES":"NO")<<endl;
+  }
+  return 0;
+}

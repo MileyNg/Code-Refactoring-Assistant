@@ -1,0 +1,99 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+std::vector<std::string> ss = {
+    "***",
+    "**+",
+    "**-",
+    "*++",
+    "*+-",
+    "*--",
+    "+++",
+    "++-",
+    "+--",
+    "---"
+};
+
+bool can(const std::string &s){
+    std::stack<int> stack;
+    for(auto c : s){
+        if(std::isdigit(c)){
+            stack.push(c - '0');
+        }else{
+            if(stack.size() < 2){return false;}
+            int a, b;
+            b = stack.top(); stack.pop();
+            a = stack.top(); stack.pop();
+            
+            if(c == '+'){
+                stack.push(a + b);
+            }else if(c == '-'){
+                stack.push(a - b);
+            }else if(c == '*'){
+                stack.push(a * b);
+            }
+        }
+    }
+
+    if(stack.size() > 1){return false;}
+    return stack.top() == 10;
+}
+
+std::string toInfix(const std::string& s){
+    std::stack<std::string> stack;
+    
+    for(auto c : s){
+        if(std::isdigit(c)){
+            stack.push({c});
+        }else{
+            std::string a, b;
+            b = stack.top(); stack.pop();
+            a = stack.top(); stack.pop();
+
+            stack.push('(' + a + ' ' + c + ' ' + b + ')');
+        }
+    }
+
+    return stack.top();
+}
+
+std::string search(char A, char B, char C, char D){
+    REP(i, 10){
+        std::string s = ss[i] + A + B + C + D;
+        std::sort(s.begin(), s.end());
+
+        REP(j, 5040){
+            if(can(s)){return toInfix(s);}
+            std::next_permutation(s.begin(), s.end());
+        }
+    }
+    return "0";
+}
+
+int main(){
+    char A, B, C, D;
+    while(std::cin >> A >> B >> C >> D, A != '0'){
+        std::cout << search(A, B, C, D) << std::endl;
+    }
+}

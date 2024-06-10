@@ -1,0 +1,11 @@
+table = []
+r, c = gets.split.map(&:to_i)
+sum_line = Array.new(c) {0}
+r.times do
+  table << gets.split.map(&:to_i)
+end
+table.each_with_index do |arr, i|
+  puts table[i].join(' ') + ' ' + table[i].inject(:+).to_s
+  sum_line.map!.with_index {|num, j| num + table[i][j]}
+end
+puts sum_line.join(' ') + ' ' + sum_line.inject(:+).to_s

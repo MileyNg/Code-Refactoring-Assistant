@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef long long ll;
+
+typedef pair<int,int> ii;
+int N;
+vector<ii> vec;
+bool used[100010];
+
+ll Dist(ll x,ll y) { return llabs(x) + llabs(y); }
+
+bool check(ll M){
+  rep(i,N) used[i] = false;
+  ll Lx,Rx,By,Ty;
+  int sp=-1;
+  Lx = Rx = vec[0].first, By = Ty = vec[0].second;
+  rep(i,N) {
+    ll x = vec[i].first, y = vec[i].second;
+    if( max(llabs(Lx-x),llabs(Rx-x)) + max(llabs(By-y),llabs(Ty-y)) <= M ) {
+      Lx = min(Lx,x);
+      Rx = max(Rx,x);
+      By = min(By,y);
+      Ty = max(Ty,y);
+      used[i] = true;
+    } else sp = i;
+  }
+
+  if( sp == -1 ) return true;
+  Lx = Rx = vec[sp].first, By = Ty = vec[sp].second;
+  rep(i,N){
+    if( used[i] ) continue;
+    ll x = vec[i].first, y = vec[i].second;
+    if( max(llabs(Lx-x),llabs(Rx-x)) + max(llabs(By-y),llabs(Ty-y)) <= M ) {
+      Lx = min(Lx,x);
+      Rx = max(Rx,x);
+      By = min(By,y);
+      Ty = max(Ty,y);
+    } else return false;
+  }
+  return true;
+}
+
+int main(){
+  scanf("%d",&N);
+  vec.resize(N);
+  rep(i,N) scanf("%d%d",&vec[i].first,&vec[i].second);
+  sort(vec.begin(),vec.end());
+
+  ll L=0,R=1000000000000LL;
+  while( L < R-1LL ){
+    ll M = ( L + R ) / 2LL;
+    if( check(M) ) R = M;
+    else           L = M;
+  }
+  cout << R << endl;
+  return 0;
+}

@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const double eps = 1e-8;
+
+bool equals(double a, double b) {
+  return abs(a-b) < eps;
+}
+
+int main() {
+  while(1) {
+    double sum[2];
+    for(int i = 0; i < 2; ++i) {
+      int m;
+      cin >> m;
+      if(!m) return 0;
+      sum[i] = 0;
+      double u = 0;
+      while(--m) {
+        double v;
+        cin >> v;
+        u += v;
+        sum[i] += sin(M_PI * v / 180.0);
+      }
+      sum[i] += sin(M_PI * (360-u) / 180.0);
+    }
+    if(equals(sum[0], sum[1])) {
+      cout << 0 << endl;
+    } else if(sum[0] > sum[1]) {
+      cout << 1 << endl;
+    } else {
+      cout << 2 << endl;
+    }
+  }
+  return 0;
+}

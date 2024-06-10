@@ -1,0 +1,52 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <deque>
+#include <iostream>
+#include <iterator>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+
+using namespace std;
+typedef vector<int> veci;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+
+#define foreach(i, n) for (typeof(n) i = 0; i < (n); ++i)
+#define foreach_eq(i, n) for (typeof(n) i = 0; i <= (n); ++i)
+#define foreach_from(i, m, n) for (typeof(n) i = m; i < (n); ++i)
+#define foreach_eq_from(i, m, n) for (typeof(n) i = m; i <= (n); ++i)
+
+int dirctions[4][2] = {{0,-1}, {0,1}, {-1,0}, {1,0}};
+
+#define BALL_NUM 10
+
+int N;
+int balls[BALL_NUM];
+
+bool recur(int ix, int left, int right) {
+    if (ix < 10) {
+        return (left  < balls[ix] && recur(ix + 1, balls[ix], right))
+            || (right < balls[ix] && recur(ix + 1, left, balls[ix]));
+    } else {
+        return true;
+    }
+}
+
+int main() {
+    cin >> N;
+    foreach (n, N) {
+        foreach (i, BALL_NUM) cin >> balls[i];
+        cout << (recur(0,0,0) ? "YES" : "NO") << endl;
+    }
+}

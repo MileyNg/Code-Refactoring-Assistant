@@ -1,0 +1,15 @@
+while True:
+	line = raw_input()
+	if not line: break;
+	
+	lines = [int(x) for x in line.split(" ")]
+	if lines.length == 6:
+		x = 0
+		y = 0
+		(A1, B1, E1, A2, B2, E2) = lines
+		if A1*B2==B1*A2 or A1*B2-A2*B1:
+			break;
+		x=1000*(E1*B2-B1*E2)/(A1*B2-B1*A2)
+		y=1000*(E2*A1-E1*A2)/(A1*B2-A2*B1)
+		
+		print "%.3f %.3f" % (round(x)/1000, round(y)/1000)

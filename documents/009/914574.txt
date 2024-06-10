@@ -1,0 +1,32 @@
+#include <math.h>
+#include <string.h>
+#include <iostream>
+
+using namespace std;
+// Problem:0023
+int main()
+{
+	int n; double ax, ay, ar, bx, by, br, d, rPlus, rMinus;
+	cin >> n;
+	
+	for (int i=0; i<n; i++) {
+		cin >> ax >> ay >> ar >> bx >> by >> br;
+		d = sqrt((ax - bx)*(ax - bx) + (ay - by)*(ay - by));
+		rPlus = ar + br;
+		rMinus = ar > br ? ar - br : br - ar;
+		
+		if (d > rPlus)
+			cout << "0" << endl;
+		else if (rPlus > d && d > rMinus)
+			cout << "1" << endl;
+		else if (d < rMinus) {
+			if (ar > br)
+				cout << "2" << endl;
+			else
+				cout << "-2" << endl;
+		}
+		
+	}
+	
+	return 0;
+}

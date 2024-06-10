@@ -1,0 +1,17 @@
+#include<stdio.h>
+int main(void){
+    int a=0,k;
+    while(scanf("%d",&a)!=EOF){
+        int g[20],i=512,j=0;
+        do{
+            if(a%i!=a){
+                g[j++]=i;
+                a-=i;
+            }
+            i/=2;
+        }while(a!=0);
+        for(k=j-1;k>0;k--)printf("%d ",g[k]);
+        printf("%d\n",g[0]);
+    }
+    return 0;
+}

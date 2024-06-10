@@ -1,0 +1,80 @@
+#include <cstdio>
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <string>
+#include <map>
+#define rep(i,n) for(int i=0; i<n; ++i)
+
+using namespace std;
+
+int N, n;
+int H,W;
+
+char m[50][50];
+bool used[26];
+int U[26],D[26],L[26],R[26];
+
+
+bool check(char ch){
+  int z = ch-'A';
+  for(int i=U[z]; i<=D[z]; ++i){
+    for(int j=L[z]; j<=R[z]; ++j){
+      if(m[i][j] != '.' && used[m[i][j]-'A'] == false) continue;
+      if(m[i][j]!=ch) return false;
+    }
+  }
+  return true;
+}
+void input(){
+  int x;
+  string str;
+  cin >> H >> W;
+  rep(i,H){
+    cin>>str;
+    rep(j,W){
+      m[i][j] = str[j];
+      if(m[i][j]=='.')continue;
+      x=m[i][j]-'A';
+      used[x] = true;
+      U[x]=min(U[x],i);
+      D[x]=max(D[x],i);
+      L[x]=min(L[x],j);
+      R[x]=max(R[x],j);
+    }
+  }
+}
+
+void init(){
+  rep(i,26){
+    U[i] = 50;
+    D[i] = 0;
+    L[i] = 50;
+    R[i] = 0;
+    used[i] = false;
+  }
+}
+int main(){
+  cin >> N;
+  while(N--){
+    init();
+    input();
+    while(1){
+      bool flag = false;
+      rep(i,26){
+        if(used[i]==false)continue;
+        if(check(i+'A')==true){
+          used[i] = false;
+          flag = true;
+          break;
+        }
+      }
+      if(flag == false) break;
+    }
+      bool flag = false;
+      rep(i,26) flag |= used[i];
+      cout << (flag ? "SUSPICIOUS" : "SAFE") << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,51 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+using namespace std;
+
+int main() {
+    int m, f, r;
+    while (cin >> m >> f >> r, !(m == -1 && f == -1 && r == -1)) {
+        if (m == -1 || f == -1) {
+            cout << "F" << endl;
+            continue;
+        }
+
+        int sum = m + f;
+        if (sum >= 80) {
+            cout << "A" << endl;
+        } else if (sum >= 65) {
+            cout << "B" << endl;
+        } else if (sum >= 50) {
+            cout << "C" << endl;
+        } else if (sum >= 30) {
+            if (r >= 50) {
+                cout << "C" << endl;
+            } else {
+                cout << "D" << endl;
+            }
+        } else {
+            cout << "F" << endl;
+        }
+    }
+}

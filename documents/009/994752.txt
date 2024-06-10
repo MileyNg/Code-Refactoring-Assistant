@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+//this file is not a C file but a C++ file
+
+int main(void){
+  char Com[4];//コマンドの記憶領域
+  int MtNum;
+  scanf("%d", &MtNum);
+
+  char Color[MtNum][1000];//[山の番号][高さ]
+  int Height[MtNum] = {};//[山の番号]
+
+  char ColNow;//入力された色の記憶領域
+  int NumNow;//入力された一番目の数字の記憶領域
+  int MvNumNowTo;//moveで入力される2番目の数字の記憶領域
+
+  while(1){
+
+    scanf(" %c", &Com);
+    if(com == "quit"){
+      break;
+    }else if(Com == "push"){
+      scanf(" %d %c", &NumNow, &ColNow);
+      Color[NumNow -1][Height[NumNow - 1]] = ColNow;
+      Height[NumNow - 1] += 1;
+    }else if(Com == "move"){
+      scanf(" %d %d", &NumNow, &MvNumNowTo);
+      ColNow = Color[NumNow - 1][Height[NumNow - 1]];
+      Color[NumNow - 1][Height[NumNow - 1]] = "";
+      Height[NumNow - 1] -= 1;
+     
+      Color[MvNumNowTo - 1][Height[MvNumNowTo - 1]] = ColNow;
+      Height[MvNumNowTo -1] += 1;
+    }else if(Com == "pop"){
+      scanf(" %d", &NumNow);
+      printf("%c\n", Color[NumNow - 1][Height[NumNow - 1]]);
+      Color[NumNow - 1][Height[NumNow - 1]] = "";
+      Height[NumNow - 1] -= 1;
+    }else{
+      break;
+    }
+
+  }
+
+}

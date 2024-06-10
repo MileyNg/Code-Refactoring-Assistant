@@ -1,0 +1,27 @@
+
+//カルノー図っぽいものをメモっていたら分かった
+#include<iostream>
+using namespace std;
+
+int pointer = 0;
+int Re[10000],I[10000],J[10000],K[10000];
+
+int main(){
+	int n;
+	int x1,y1,z1,w1,x2,y2,z2,w2;
+	
+	while( cin >> n ){
+		if(n == 0)
+			break;
+		for( int i = 0;i < n;i++ ){
+			cin >> x1 >> y1 >> z1 >> w1 >> x2 >> y2 >> z2 >> w2;
+			Re[ pointer ] = x1*x2 - y1*y2 -z1*z2 - w1*w2;
+			I[ pointer ] = x1*y2 + x2*y1 + z1*w2 - z2*w1;
+			J[ pointer ] = x1*z2 + x2*z1 -y1*w2 + y2*w1;
+			K[ pointer ] = x1*w2 + y1*z2 - y2*z1 + x2*w1;
+			cout << Re[pointer] << " "<< I[pointer] << " "<< J[pointer]<< " " << K[pointer] << endl;
+			pointer++;
+		}
+	}
+	return 0;
+}

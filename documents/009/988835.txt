@@ -1,0 +1,88 @@
+#include<stdio.h>
+#define MAX 100005
+#define NIL -1
+
+struct Node{ int p, l, r, nid;};
+struct Node T[MAX];
+
+void maketree(int id, int l, int r){
+  if( l != -1 ){
+    T[id].l = l;
+    T[l].p = id;
+  }
+  if( r != -1 ){
+    T[id].r = r;
+    T[r].p = id;
+  }
+  T[id].nid = id;
+}
+
+void pre_search(int i){
+  printf("%d",i);
+  if(T[i].l != -1){
+    printf(" ");
+    pre_search(T[i].l);
+  }
+  if(T[i].r != -1){
+    printf(" ");
+    pre_search(T[i].r);
+  }
+}
+
+void in_search(int i){
+  if(T[i].l != -1){
+    in_search(T[i].l);
+    printf(" ");
+  }
+  printf("%d", T[i].nid);
+  if(T[i].r != -1){
+    printf(" ");
+    in_search(T[i].r);
+  }
+}
+
+void pos_search(int i){
+  if(T[i].l != -1){
+    pos_search(T[i].l);
+    printf(" ");
+  }
+  if(T[i].r != -1){
+    pos_search(T[i].r);
+    printf(" ");
+  }
+  printf("%d", T[i].nid);
+}
+
+void print(){
+  int i = 0;
+  while(1){
+    if(T[i].p == -1)
+      break;
+    i++;
+  }
+  printf("Preorder\n");
+  pre_search(i);
+  printf("\n");
+  printf("Inorder\n");
+  in_search(i);
+  printf("\n");
+  printf("Postorder\n");
+  pos_search(i);
+  printf("\n");
+}
+
+int main(){
+  int n, l, r, id;
+  int i;
+
+  scanf("%d", &n);
+  for(i=0; i<n; i++){
+    T[i].r = T[i].l = T[i].p = NIL;
+  }
+  for(i=0; i<n; i++){
+    scanf("%d%d%d", &id, &l, &r);
+    maketree(id, l, r);
+  }
+  print();
+  return 0;
+}

@@ -1,0 +1,123 @@
+#include <cassert>
+#include <cctype>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+
+#include <algorithm>
+#include <bitset>
+#include <deque>
+#include <functional>
+#include <iterator>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+#include <iomanip>
+
+using namespace std;
+
+typedef pair<int, int> pint;
+typedef vector<int> vint;
+typedef long long ll;
+
+#define ALL(c) (c).begin(),(c).end()
+#define RALL(c) (c).rbegin(),(c).rend()
+#define SORT(c) sort(ALL(c))
+
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n)  for(int i=0;i<(n);++i)
+
+#define NEXTP(c) next_permutation(ALL(c))
+#define SUM(c) accumulate(ALL(c),0)
+#define MP( a, b ) make_pair( ( a ), ( b ) )
+
+#define ANS(x)  cout << (x) << endl;
+#define DUMP(x)  cerr << #x << " = " << (x) << endl;
+
+#define INF 1000000000 // 10^9
+const double EPS = 1e-10;
+
+//Template End
+class dat{
+public:
+    int x;
+    int y;
+    int t;
+};
+
+int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+
+int main(){
+    int H,W,N;
+    cin>>H>>W>>N;
+    vector<string> board(H);
+    REP(i, H)cin>>board[i];
+    
+    int time = 0;
+    
+    dat start;
+    
+    REP(i, H){
+        REP(j, W){
+            if(board[i][j]=='S'){
+                start.x=i;
+                start.y=j;
+                start.t=0;
+            }
+        }
+    }
+    
+    REP(i,N){
+        queue<dat> que;
+        que.push(start);
+        
+        bool visited[1000][1000]={};
+        visited[start.x][start.y]=true;
+        
+        while (que.size()) {
+            dat now = que.front();
+            que.pop();
+            if (board[now.x][now.y]=='1'+i) {
+                
+                time+=now.t;
+                start = now;
+                start.t=0;
+                break;
+            }
+            
+            REP(j, 4){
+                int nx = now.x+dx[j];
+                int ny = now.y+dy[j];
+                
+                if (0<=nx&&nx<H&&
+                    0<=ny&&ny<W&&
+                    board[nx][ny]!='X'&&
+                    !visited[nx][ny]) {
+                    visited[nx][ny]=true;
+                    dat next;
+                    next.x=nx;
+                    next.y=ny;
+                    next.t=now.t+1;
+                    que.push(next);
+                }
+            }
+            
+        }
+    }
+    cout<<time<<endl;
+    return 0;
+}

@@ -1,0 +1,59 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long long int ll;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x);i>=0;i--)
+#define RFOR(i,c) for(__typeof((c).rbegin())i=(c).rbegin();i!=(c).rend();++i)
+
+typedef pair<pii, int> ppiii;
+
+int n;
+vector<ppiii> dp[256001];
+main(){
+	while(cin >> n, n){
+		vector<int> data(n);
+		REP(i, n){
+			int x;
+			cin >> x;
+			data[i] = x;
+			dp[data[i]].push_back(ppiii(pii(i, i+1), 1));
+		}
+		int i;
+		int ans = 1;
+		for(int i=1;i<=256000;i++){
+			if(!dp[i].size()) continue;
+//			if(dp[i].size()) cout << i << ": " << dp[i].size() << endl;
+//			sort(dp[i].begin(), dp[i].end());
+//			dp[i].erase( unique(dp[i].begin(), dp[i].end()), dp[i].end() );
+			vector<ppiii> rev;
+			FOR(it1, dp[i]){
+				rev.push_back(ppiii(pii(-(it1->first.second), -(it1->first.first)), it1->second));
+				ans = max(ans, it1->second);
+				auto it2 = upper_bound(it1+1, dp[i].end(), ppiii(pii(it1->first.second, 0), 0));
+				if(it2!=dp[i].end()) dp[i*2].push_back(ppiii(pii(it1->first.first, it2->first.second), it1->second + it2->second));
+			}
+			sort(rev.begin(), rev.end());
+			FOR(it1, rev){
+				auto it2 = upper_bound(it1+1, rev.end(), ppiii(pii(it1->first.second-1, 0), 0));
+				if(it2!=rev.end()){
+//					printf("%d [%d %d] [%d %d]\n", i, it1->first.first, it1->first.second, it2->first.first, it2->first.second);
+					dp[i*2].push_back(ppiii(pii(-(it2->first.second), -(it1->first.first)), it1->second + it2->second));
+				}
+			}
+			dp[i].clear();
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+main(){
+
+  int i,j,n,A[10000],B[10000],C[10000];
+  int k=0;
+
+  scanf("%d",&n);
+
+  for(i=1 ; i<=n ; i++){
+    scanf("%d",&A[i]);
+  }
+  
+  for(i=1 ; i<=n ; i++){
+    if(k <= A[i]){
+      k=A[i]+1;
+    }
+  }
+
+  for(i=0 ; i<=k ; i++){
+    C[i]=0;
+  }
+  
+  for(j=1 ; j<n ; j++){
+    C[A[j]]++;
+  }
+  
+  for(i=1 ; i<=k ; i++){
+    C[i] = C[i] + C[i-1];
+  }
+  
+  for(j=n; 1<=j ; j--){
+    B[C[A[j]]]= A[j];
+    C[A[j]]--;
+  }
+  
+  for(i=1 ; i<n ; i++){
+    if(i == n-1){
+      printf("%d\n",B[i]);
+      break;
+    }
+    printf("%d ",B[i]);
+  }
+  return 0;
+}

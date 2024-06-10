@@ -1,0 +1,28 @@
+#include<stdio.h>
+
+int main(){
+  int coin[6]={500,100,50,10,5,1};
+  int price;
+  int ans;
+  int i;
+  int f=0;
+
+  while(f==0){
+    scanf("%d",&price);
+
+    if(price==0){
+      f=1;
+    }
+    else{
+      ans=0;
+      price=1000-price;
+      for(i=0;i<6;i++){
+	ans=ans+price/coin[i];
+	price=price%coin[i];
+      }
+      printf("%d\n",ans);
+    }
+  }
+
+  return 0;
+}

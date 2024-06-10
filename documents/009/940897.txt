@@ -1,0 +1,55 @@
+
+#include <string>
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#define rep(i,n) for(int i = 0;i<(n);i++)
+typedef unsigned long long ull;
+using namespace std;
+
+int main(){
+    int T;
+    cin >> T;
+    rep(_t,T){
+        int gx,gy;
+        cin >> gx >> gy;
+        int p;
+        cin >> p;
+        bool matatabi[25][25][2];
+        ull dp[25][25];
+        rep(i,20)rep(j,20)rep(k,2){
+            matatabi[i][j][k] = false;
+        }
+        rep(i,20)rep(j,20){
+            dp[i][j] = 0;
+        }
+        dp[0][0] = 1;
+        rep(_p,p){
+            int x1,x2,y1,y2;
+            cin >> x1 >> y1 >> x2 >> y2;
+            if(max(y1,y2) == min(y1,y2) + 1){
+                matatabi[x1][min(y1,y2)][0] = true;
+                //tate
+            }
+            if(max(x1,x2) == min(x1,x2) + 1){
+                matatabi[min(x1,x2)][y1][1] = true;
+                //yoko
+            }
+        }
+        rep(i,20)rep(j,20){
+            if(!matatabi[i][j][0]){
+                dp[i][j+1] += dp[i][j];
+            }
+            if(!matatabi[i][j][1]){
+                dp[i+1][j] += dp[i][j];
+            }
+        }
+        if(dp[gx][gy] == 0){
+            cout << "Miserable Hokusai!" << endl;
+        }else {
+            cout << dp[gx][gy] << endl;
+        }
+    }
+    return 0;
+}

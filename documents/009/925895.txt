@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+	int x,y;
+	char s[100];
+	int stack[1000000];
+	int num=0;
+
+	while (scanf("%s", s) != EOF){
+		if (s[0] == '+'){
+			x = stack[--num];
+			y = stack[--num];
+			stack[num] = x + y; 
+			num++;
+		}
+		else if (s[0] == '-'){
+			x = stack[--num];
+			y = stack[--num];
+			stack[num] = -x + y;
+			num++;
+
+		}
+		else if (s[0] == '*'){
+			x = stack[--num];
+			y = stack[--num];
+			stack[num] = x * y;
+			num++;
+
+		}
+		else {
+			x = atoi(s);
+			stack[num] = x;
+			num++;
+		}
+	}
+	printf("%d\n",stack[--num]);
+	return 0;
+}

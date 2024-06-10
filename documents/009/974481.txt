@@ -1,0 +1,57 @@
+#include<iostream>
+#include<set>
+
+using namespace std;
+
+#define NMAX 20000
+#define MMAX 20000
+
+struct S{
+	int t,s,d;
+};
+
+bool operator<(S a,S b){
+	return a.t<b.t;
+}
+
+int main(){
+
+	int N,M;
+	bool comp[NMAX+1];
+	int t,s,d;
+	set<S> p;
+	S pp;
+	int ans=0;
+
+	while(1){
+
+		cin>>N>>M;
+		if(N==0&&M==0) break;
+
+		comp[1]=true;
+		for(int i=2;i<=N;i++) comp[i]=false;
+
+		for(int i=0;i<M;i++){
+			cin>>t>>s>>d;
+			pp.t=t,pp.s=s,pp.d=d;
+			p.insert(pp);
+		}
+
+		set<S>::iterator it=p.begin();
+		while(it!=p.end()){
+			//cout<<(*it).t<<","<<(*it).s<<","<<(*it).d<<endl;
+			if(comp[(*it).s]==true) comp[(*it).d]=true;
+			it++;
+		}
+
+		ans=0;
+		for(int i=1;i<=N;i++){
+			if(comp[i]==true) ans++;
+		}
+
+		cout<<ans<<endl;
+		p.clear();
+	}
+
+	return 0;
+}

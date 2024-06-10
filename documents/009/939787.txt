@@ -1,0 +1,23 @@
+#include<cstdio>
+#include<iostream>
+
+using namespace std;
+
+int main(){
+	int dp[33]={0};
+	
+	dp[0]=1;
+	for(int i=0;i<33;i++){
+		if(i-1>=0)dp[i]+=dp[i-1];
+		if(i-2>=0)dp[i]+=dp[i-2];
+		if(i-3>=0)dp[i]+=dp[i-3];
+	}
+	
+	while(1){
+		int n;
+		cin>>n;
+		if(n==0)break;
+		
+		printf("%d\n",(dp[n]+3649)/3650);
+	}
+}

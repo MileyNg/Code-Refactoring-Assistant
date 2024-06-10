@@ -1,0 +1,59 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+char g[10][11];
+int nl;
+string ans;
+int H,W;
+
+bool dfs(int py,int px,int dir){
+  if(ans.size()==nl-1)return true;
+  g[py][px]='.';
+  for(int k=0;k<4;k++){
+    if(k==(dir^2))continue;
+    int y=py,x=px;
+    for(;;){
+      static const int dy[]={-1,0,1,0};
+      static const int dx[]={0,1,0,-1};
+      y+=dy[k];
+      x+=dx[k];
+      if(y<0||H<=y||x<0||W<=x){
+	break;
+      }else if(g[y][x]!='.'){
+	ans+="URDL"[k];
+	if(dfs(y,x,k))return true;
+	ans.resize(ans.size()-1);
+	break;
+      }
+    }
+  }
+  g[py][px]='o';
+  return false;
+}
+
+
+int main(){
+  cin>>H>>W;
+  for(int i=0;i<H;i++){
+    cin>>g[i];
+  }
+  int x,y,dir;
+  for(int i=0;i<H;i++){
+    for(int j=0;j<W;j++){
+      if(g[i][j]!='.'){
+	nl++;
+	if(g[i][j]!='o'){
+	  y=i;
+	  x=j;
+	  string D="URDL";
+	  dir=find(begin(D),end(D),g[i][j])-begin(D);
+	}
+      }
+    }
+  }
+  dfs(y,x,dir);
+  cout<<ans<<endl;
+}

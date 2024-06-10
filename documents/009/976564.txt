@@ -1,0 +1,23 @@
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  ci = gets.chomp.split(" ").map{|s| s.to_i}
+  k = 0
+
+  while true
+    prev_ci = ci
+    cmap = {}
+    cmap.default = 0
+
+    prev_ci.each{|i| cmap[i] = cmap[i] + 1}
+    ci = prev_ci.map{|i| cmap[i]}
+
+    break if prev_ci == ci
+
+    k += 1
+  end
+
+  puts k
+  puts ci.join(" ")
+end

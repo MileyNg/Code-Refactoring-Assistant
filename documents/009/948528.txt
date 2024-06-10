@@ -1,0 +1,122 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long double ld;
+
+const ld EPS = 1e-9;
+const ld INF = 1e10;
+const ld PI = M_PI;
+
+struct Point{
+  ld x, y;
+  Point(ld x, ld y):x(x), y(y){}
+  Point(){}
+};
+
+Point operator+(const Point &a, const Point &b){
+  return Point(a.x + b.x, a.y + b.y);
+}
+Point operator-(const Point &a, const Point &b){
+  return Point(a.x - b.x, a.y - b.y);
+}
+Point operator*(const Point &a, const ld b){
+  return Point(a.x * b, a.y * b);
+}
+Point operator*(const Point &a, const Point &b){
+  return Point(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);
+}
+Point operator/(const Point &a, const ld b){
+  return Point(a.x / b, a.y / b);
+}
+
+ld cross(const Point &a, const Point &b){
+  return a.x*b.y - a.y*b.x;
+}
+
+ld dot(const Point &a, const Point &b){
+  return a.x*b.x + a.y*b.y;
+}
+
+ld norm(const Point &a){
+  return dot(a, a);
+}
+
+struct Line:vector<Point>{
+  Line(Point a = Point(0, 0), Point b = Point(0, 0)){
+    this->push_back(a);
+    this->push_back(b);
+  }
+};
+
+typedef vector<Point> Polygon;
+
+int ccw(Point a, Point b, Point c){
+  b = b - a;
+  c = c - a;
+  if(cross(b, c) > EPS) return +1; // 反時計周り
+  if(cross(b, c) < -EPS) return -1; // 時計周り
+  if(dot(b, c) < 0) return +2; // c -- a -- b がこの順番に一直線上
+  if(norm(b) < norm(c)) return -2; // a -- b -- c がこの順番に一直線上
+  return 0; // a -- c -- b が一直線上
+}
+
+Point next(const Polygon &a, int x){
+  return a[(x+1)%a.size()];
+}
+
+Point prev(const Polygon &a, int x){
+  return a[(x-1+a.size()) % a.size()];
+}
+
+bool is_convex(const Polygon &poly){
+  for(int i = 0 ; i < (int)poly.size() ; i++){
+    if(ccw(prev(poly, i), poly[i], next(poly, i)) == -1) return false;
+  }
+  return true;
+}
+
+// 点が多角形に含まれる場合2, 辺上にある場合1, それ以外は0を返す
+int contain(const Polygon &poly, const Point &p){
+  bool in = false;
+  for(int i = 0 ; i < (int)poly.size() ; i++){
+    Point a = poly[i] - p;
+    Point b = next(poly, i) - p;
+    if(a.y > b.y) swap(a, b);
+    if(a.y <= 0 && 0 < b.y && cross(a, b) < 0) in = !in;
+    if(cross(a, b) == 0 && dot(a, b) <= 0) return 1;
+  }
+  return in ? 2 : 0;
+}
+
+
+Polygon convex_hull(Polygon ps){
+  int n = ps.size(), k = 0;
+  //sort(ps.begin(), ps.end());
+  vector<Point> ch(2*n);
+  for(int i = 0 ; i < n ; ch[k++] = ps[i++])
+    while(k >= 2 && ccw(ch[k-2], ch[k-1], ps[i]) <= 0) --k;
+  for(int i = n-2, t = k+1 ; i >= 0 ; ch[k++] = ps[i--])
+    while(k >= t && ccw(ch[k-2], ch[k-1], ps[i]) <= 0) --k;
+  ch.resize(k-1);
+  return ch;
+}
+
+
+int main(){  
+  int q;
+  cin >> q;
+  Polygon poly;
+  while(q--){
+    Point p;
+    cin >> p.x >> p.y;
+    poly.push_back(p);
+  }
+  
+  Polygon ans = convex_hull(poly);
+  cout << ans.size() << endl;
+  for(int i = 0 ; i < (int)ans.size() ; i++){
+    cout << ans[i].x << ' ' << ans[i].y << endl;
+  }
+  
+  return 0;
+}

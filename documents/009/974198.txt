@@ -1,0 +1,22 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int main(){
+	string cards,cards2;
+	int n,h;
+	while(1){
+		cin>>cards;
+		if(cards=="-")break;
+		cin>>n;
+		while(n--){
+			cin>>h;
+			cards2.replace(0,h,cards);
+			cards.replace(0,cards.size()-h,cards,h,cards.size()-h);
+			cards.replace(cards.size()-h,h,cards2,0,h);
+		}
+		cout<<cards<<endl;
+	}
+	return 0;
+}

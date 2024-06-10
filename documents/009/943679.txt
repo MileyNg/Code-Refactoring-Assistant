@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+struct Point {
+	double x, y;
+	Point(double x_=0, double y_=0):x(x_),y(y_) {}
+};
+
+Point makePoint(double x, double y) { Point p(x,y); return p; }
+
+struct Polygon {
+	vector<Point> pset;
+	Polygon(int size = 3) { pset.assign(size, Point(0, 0)); }
+};
+
+double areaOfPolygon(const Polygon& polygon) {
+	int n = (int)polygon.pset.size();
+	double S = 0;
+	
+	for (int i=0; i<n; i++) {
+		S += (polygon.pset[i].x - polygon.pset[(i+1)%n].x)*(polygon.pset[i].y + polygon.pset[(i+1)%n].y);
+	}
+	
+	S = fabs(S);
+	return S/2.;
+}
+
+int main() {
+	int n;
+	int prob = 0;
+	
+	while (1) {
+		cin >> n; if (n==0) break;
+		prob++;
+		
+		Polygon polygon(n);
+		for (int i = 0; i<n; i++) {
+			double x, y; cin >> x >> y;
+			polygon.pset[i] = makePoint(x, y);
+		}
+		
+		double ans = areaOfPolygon(polygon);
+		
+		printf("%d %.1lf\n", prob, ans);
+		
+		string s; getline(cin, s);
+	}
+	
+	
+	return 0;
+}

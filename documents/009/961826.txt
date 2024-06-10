@@ -1,0 +1,24 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    double a, b, c, d, e, f, x, y, det;
+    while (true) {
+        cin >> a >> b >> c >> d >> e >> f;
+        if (cin.eof()) {
+            return 0;
+        }
+        det = a*e-b*d;
+        x = (c*e-b*f)/det;
+        y = (a*f-c*d)/det;
+        if (x < 0.0005) {
+            x = 0;
+        }
+        if (y < 0.0005) {
+            y = 0;
+        }
+        cout << std::fixed << setprecision(3) << x << ' ' << y << endl;
+    }
+}

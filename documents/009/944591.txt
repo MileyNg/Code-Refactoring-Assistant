@@ -1,0 +1,40 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int a,n,sum=0,i=0,c=0;
+	int iNumber[10000] = {0};
+	char number[10000] = {0};
+
+	while(1)
+	{
+		scanf("%s",&number[i]);
+		if(number[i] == '0')
+		{
+			break;
+		}
+		
+		for(i = c;number[i] != 0;i++)
+		{
+			iNumber[i] = number[i] - '0';
+		}
+		iNumber[i] = 10;
+		i++;
+		c = i;
+	}
+	for(a = 0;a < i;a++)
+	{
+		if(iNumber[a] == 10)
+		{
+			printf("%d\n",sum);
+			sum = 0;
+		}
+		else
+		{
+			sum = sum + iNumber[a];
+		}
+	}
+	printf("\n");
+		
+	return 0;
+}

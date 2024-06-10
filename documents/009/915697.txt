@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+/** Problem0009 : Prime Number **/
+#define MAX 1000000
+
+int main()
+{
+	bool prime[MAX];
+	int  input, count;
+	
+	for (int i=0; i<MAX; i++)
+		prime[i] = true;
+	
+	prime[0] = false; prime[1] = false;
+	
+	
+	for (int i=2; i<MAX; i++) {
+		if (prime[i]) {
+			for (int j=2; i*j<MAX; j++) {
+				prime[i*j] = false;
+			}
+		}
+	}
+	
+	while (cin >> input) {
+		count = 0;
+		for (int i=0; i<=input; i++) {
+			if (prime[i]) count++;
+		}
+		cout << count << endl;
+	}
+}

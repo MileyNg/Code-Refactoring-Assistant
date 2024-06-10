@@ -1,0 +1,20 @@
+import sys
+patterns = [[1, 2, 1, 2, 1, 4, 1, 4],
+ [1, 2, 1, 4, 1, 4, 1, 2],
+ [1, 4, 1, 4, 1, 2, 1, 2],
+ [2, 1, 2, 1, 4, 1, 4, 1],
+ [2, 1, 4, 1, 4, 1, 2, 1],
+ [4, 1, 2, 1, 2, 1, 4, 1],
+ [4, 1, 4, 1, 2, 1, 2, 1],
+]
+
+for line in sys.stdin:
+	p = [int(x) for x in line.split()]
+	m = sum(p)
+	pt = None
+	for ptn in patterns:
+		rem = sum(max(0, v - x) for v, x in zip(ptn, p))
+		if rem < m:
+			m = rem
+			pt = ptn
+	print " ".join([str(x) for x in pt])

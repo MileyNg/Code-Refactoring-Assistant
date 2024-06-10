@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <math.h>
+
+double toRad(int deg)
+{
+	return ((deg / 180.0) * M_PI);
+}
+
+int main(void)
+{
+	int dir = 90;
+	int rotate, dist;
+	double x, y;
+	
+	x = y = 0;
+	while (scanf("%d,%d", &dist, &rotate), !(dist == 0 && rotate == 0)){
+		x += dist * cos(toRad(dir));
+		y += dist * sin(toRad(dir));
+		dir = (dir - rotate + 360) % 360;
+	}
+	
+	printf("%d\n%d\n", (int)x, (int)y);
+	
+	return (0);
+}

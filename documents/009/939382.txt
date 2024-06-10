@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<algorithm>
+#define inf 0x3f3f3f3f
+using namespace std;
+int ma[1010][1010];
+int cost[1010],a[1010]; 
+int n,m;
+void init(){
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<i;j++)
+			ma[i][j]=ma[j][i]=inf;
+		ma[i][i]=0;
+	}
+	memset(a,0,sizeof(a));
+}
+int prim(int s){
+	int i,j;
+	int k=0;
+	for(i=1;i<=n;i++)
+		cost[i]=ma[s][i];
+	int sum=0;
+	int mini;
+	for(i=1;i<n;i++){
+		mini=inf;
+		for(j=1;j<=n;j++)
+			if(cost[j]<mini&&cost[j]!=0){
+				s=j;
+				mini=cost[j];
+			}
+			sum+=mini;
+			cost[s]=0;
+			a[k++]=mini;
+			for(j=1;j<=n;j++)
+				if(cost[j]>ma[s][j]&&ma[s][j]!=0)
+					cost[j]=ma[s][j];
+	}
+	sort(a,a+k);
+	return a[k/2];
+}
+int main(){
+	int from,to,cost;
+	while(scanf("%d%d",&n,&m)&&(n+m)!=0){
+		init();
+		for(int i=1;i<=m;i++){
+			scanf("%d%d%d",&from,&to,&cost);
+			ma[from][to]=ma[to][from]=cost;
+		}
+		printf("%d\n",prim(1));
+	}
+	return 0;
+}

@@ -1,0 +1,87 @@
+#include <iostream>
+#include <complex>
+#include <cctype>
+using namespace std; 
+
+string ss;
+bool overflow;
+typedef long long ll;
+complex<ll> i(0,1);
+
+complex<ll> takeTerm(ll&);
+complex<ll> eval(ll, ll);
+
+complex<ll> takeTerm(ll &x){
+    complex<ll> res(1,0);
+    while( ss[x] != '+' && ss[x] != '-' && ss[x] != ')' &&
+            x < ss.length() ){
+        if( ss[x] == 'i' ) res *= i;
+        if( ss[x] == '(' ){
+            int count = 1, j = x;
+            while( count ){
+                j++;
+                if( ss[j] == '(' ) count++;
+                if( ss[j] == ')' ) count--;
+            }
+            res *= eval(x+1,j);
+            x = j;
+        }
+        if( isdigit(ss[x]) ){ 
+            int t = 0;
+            while( isdigit(ss[x]) ){
+                t *= 10;
+                t += ss[x] - '0';
+                x++;
+            }
+            if( t > 10000 || t < -10000 ){
+                overflow = true;
+                break;
+            }
+            x--;
+            res *= t;
+        }
+        x++;
+    }
+    return res;
+}
+
+complex<ll> eval(ll l, ll r){
+    complex<ll> res(0,0),a,b, m(1,0);
+    ll j = l;
+    while( !overflow && j < r ){
+        if( ss[j] == '-' ){
+            m = complex<ll>(-1,0);
+            j++;
+        }else if( ss[j] == '+' ){
+            m = complex<ll>(1,0);
+            j++;
+        }
+        res += takeTerm(j) * m;
+        if( res.real() > 10000 || res.real() < -10000 ||
+                res.imag() > 10000 || res.imag() < -10000 ){
+            overflow = true; 
+            break;
+        }
+    }
+    return res;
+}
+
+int main(void){
+    while( cin >> ss ){
+        overflow = false;
+        complex<ll> a = eval(0,ss.length());
+        if( overflow ){
+            cout << "overflow" << endl;
+            continue;
+        }
+        if( a.real() || a.imag() == 0 ){
+            cout << a.real();
+        }
+        if( a.imag() ){
+            if( a.real() && a.imag() > 0 ) cout << '+';
+            cout << a.imag() << 'i';
+        }
+        cout << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,45 @@
+#include<cstdio>
+#include<vector>
+#include<cmath>
+using namespace std;
+
+vector<vector<int> >hoge(int n, int width){
+  vector<vector<int> > result;
+  if(n == 0){
+    vector<int> v;
+    for(int i = 0; i < n; i++){
+      v.push_back(0);
+    }
+    result.push_back(v);
+    return result;
+  }
+  for(int i = 1, last = min(n,width); i <= last; i++){
+    vector<vector<int> > child = hoge(n-i,i);
+    for(vector<int> j : child){
+      while((int)j.size() < i){
+	j.push_back(0);
+      }
+      for(int k = 0; k < i; k++){
+	j[k]++;
+      }
+      result.push_back(j);
+    }
+  }
+  return result;
+}
+
+int main(){
+  for(;;){
+    int n;
+    scanf("%d", &n);
+    if(!n) break;
+
+    vector<vector<int> > result = hoge(n,n);
+    for(auto i : result){
+      for(auto j = i.begin(); j < i.end(); j++){
+	printf("%d", (*j));
+	printf(j+1 == i.end() ? "\n" : " ");
+      }
+    }
+  }
+}

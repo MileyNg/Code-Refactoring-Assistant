@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <bitset>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <tuple>
+#include <set>
+#include <functional> 
+#include <string.h>
+
+#define X first
+#define Y second
+#define MP make_pair
+#define MT make_tuple
+#define FOR(i, n) for(int (i) = 0; (i) < (n); (i)++)
+#define REP(i, a, n) for(int (i) = (a); (i) < (n); (i)++)
+typedef long long ll;
+typedef std::pair<int, int> pii;
+typedef std::pair<ll, ll > pll;
+using namespace std;
+const int MAX = 101;
+const double PI = 3.1415926535897932384;
+
+template<class T, class U>
+void convert(T &t, U &u){
+	stringstream ss;
+	ss << t;
+	ss >> u;
+}
+
+bool edge[31][11][11]; //[段数][from][to]
+
+bool isCorrect(int n, int m, int d, int target){
+	FOR(i, d){
+		bool f = false;
+		if (m > 0){
+			if (edge[i][m][m - 1]){
+				m = m - 1;
+				f = true;
+			}
+		}
+		if (m < n - 1){
+			if (edge[i][m][m + 1] && !f){
+				m = m + 1;
+			}
+		}
+	}
+
+	if (m == target){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+int main(){
+	int n; cin >> n;
+	int m; cin >> m;
+	int target; cin >> target;
+	int d; cin >> d;
+
+	FOR(i, d){
+		string t; cin >> t;
+		FOR(j, n - 1){
+			if (t[j] == '1'){
+				edge[i][j][j + 1] = true;
+				edge[i][j + 1][j] = true;
+			}
+		}
+	}
+
+	if (isCorrect(n, m - 1, d, target - 1)){
+		cout << 0 << endl;
+		return 0;
+	}
+
+	FOR(i, d){
+		FOR(j, n - 1){
+			if (!edge[i][j][j + 1]){
+				if (j > 0 && edge[i][j - 1][j]) continue;
+				if (j < n - 2 && edge[i][j + 1][j + 2]) continue;
+
+				edge[i][j][j + 1] = true;
+				
+				if (isCorrect(n, m - 1, d, target - 1)){
+					cout << i + 1 << " " << j + 1 << endl;
+					return 0;
+				}
+
+				edge[i][j][j + 1] = false;
+			}
+		}
+	}
+
+	cout << 1 << endl;
+	return 0;
+}

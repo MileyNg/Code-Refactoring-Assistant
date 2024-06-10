@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, i, j, array[1001], tmp;
+	
+	scanf("%d", &n);
+	
+	for (i = 0; i < n; i++){
+		scanf("%d", &array[i]);
+	}
+	
+	for (i = 0; i < n - 1; i++){
+		for (j = n - 1; j > i; j--){
+			if (array[i] > array[j]){
+				tmp = array[j - 1];
+				array[j - 1] = array[j];
+				array[j] = tmp;
+			}
+		}
+	}
+	
+	for (i = 0; i < n; i++){
+		printf("%d", array[i]);
+		if (i != n - 1){
+			printf(" ");
+		}
+	}
+//	puts("");
+	
+	return (0);
+}

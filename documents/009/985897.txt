@@ -1,0 +1,146 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n, m;
+bool u[15][1<<15];
+pair<int,int> prev[15][1<<15];
+vector<pair<int,int> > action;
+vector<int> a[15];
+vector<int> b[15];
+
+bool dfs(int p, int l, bool f) {
+  int ll, pp;
+  if (!f && p == n-1) return true;
+  for (int i=0; i<(1<<b[p].size()); i++) {
+    ll = l;
+    for (int j=0; j<(int)b[p].size(); j++) {
+      if (i & (1<<j)) {
+        ll ^= (1<<b[p][j]);
+      }
+    }
+    if (!(ll & (1<<p))) continue;
+    if (!u[p][ll]) {
+      prev[p][ll].first = p;
+      prev[p][ll].second = l;
+      u[p][ll] = true;
+    }
+    if (f && p == n-1 && (ll == 1<<n-1)) {
+      return true;
+    }
+  }
+  for (int i=0; i<(1<<b[p].size()); i++) {
+    ll = l;
+    for (int j=0; j<(int)b[p].size(); j++) {
+      if (i & (1<<j)) {
+        ll ^= (1<<b[p][j]);
+      }
+    }
+    if (!(ll & (1<<p))) continue;
+    for (int j=0; j<a[p].size(); j++) {
+      pp = a[p][j];
+      if (!(ll & (1<<pp))) continue;
+      if (u[pp][ll]) continue;
+      u[pp][ll] = true;
+      prev[pp][ll].first = p;
+      prev[pp][ll].second = ll;
+      if (dfs(pp, ll, f)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+void make_action(int s) {
+  int p, l, pp, ll;
+  action.clear();
+  p = n-1;
+  l = (1<<(n-1));
+  while (p!=0 || l!=s) {
+    pp = prev[p][l].first;
+    ll = prev[p][l].second;
+    if (p == pp) {
+      for (int i=n-1; i>=0; i--) {
+        if ((l&(1<<i)) && !(ll&(1<<i))) {
+          action.push_back(make_pair(1, i+1));
+        } else if (!(l&(1<<i)) && (ll&(1<<i))) {
+          action.push_back(make_pair(-1, i+1));
+        }
+      }
+    } else {
+      action.push_back(make_pair(0, p+1));
+    }
+    p = pp;
+    l = ll;
+  }
+  reverse(action.begin(), action.end());
+}
+
+void reset(int l) {
+  for (int i=0; i<n; i++) {
+    for (int j=0; j<(1<<n); j++) {
+      u[i][j] = false;
+    }
+  }
+  u[0][l] = true;
+}
+
+int main() {
+  int s, t, l;
+  while (1) {
+    cin >> n >> m;
+    if (!n && !m) break;
+    l = 0;
+    for (int i=0; i<n; i++) {
+      a[i].clear();
+      b[i].clear();
+    }
+    for (int i=0; i<m; i++) {
+      cin >> s >> t;
+      --s;
+      --t;
+      a[s].push_back(t);
+      a[t].push_back(s);
+    }
+    for (int i=0; i<n; i++) {
+      cin >> t;
+      if (t) {
+        l |= (1<<i);
+      }
+    }
+    for (int i=0; i<n; i++) {
+      cin >> s;
+      for (int j=0; j<s; j++) {
+        cin >> t;
+        --t;
+        b[i].push_back(t);
+      }
+    }
+
+    reset(l);
+    if (dfs(0, l, true)) {
+      make_action(l);
+      cout << "You can go home in " << action.size() << " steps." << endl;
+      for (int i=0; i<(int)action.size(); i++) {
+        if (action[i].first == 1) {
+          cout << "Switch on room " << action[i].second << "." << endl;
+        } else if (action[i].first == -1) {
+          cout << "Switch off room " << action[i].second << "." << endl;
+        } else {
+          cout << "Move to room " << action[i].second << "." << endl;
+        }
+      }
+    } else {
+      reset(l);
+      if (dfs(0, l, false)) {
+        cout << "You can not switch off all lights." << endl;
+      } else {
+        cout << "Help me!" << endl;
+      }
+    }
+  }
+
+  return 0;
+}

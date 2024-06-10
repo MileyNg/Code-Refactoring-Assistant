@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	int i, j;
+	int a[2] = {0, 0};
+	int in;
+	int flag;
+
+	scanf("%d", &n);
+
+	for (i = 0; i < n; i++){
+		flag = 0;
+		for (j = 0; j < 10; j++){
+			scanf("%d", &in);
+
+			if (in < a[0] && in < a[1]){
+				flag = 1;
+			}
+			else if (a[0] < in){
+				a[0] = in;
+			}
+			else {
+				a[1] = in;
+			}
+		}
+
+		if (flag){
+			printf("NO\n");
+		}
+		else {
+			printf("YES\n");
+		}
+	}
+
+	return (0);
+}

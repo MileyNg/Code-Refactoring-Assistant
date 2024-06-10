@@ -1,0 +1,46 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+const int MAX = 2*123500;
+
+/** Problem1172 : Chebyshev's Thorem **/
+int main()
+{
+	bool prime[MAX];
+	int num[MAX]={0};
+	
+	for (int i=0; i<MAX; i++)
+		prime[i] = true;
+	
+	prime[0] = false; prime[1] = false;
+	
+	for (int i=2; i<MAX; i++) {
+		if (prime[i]) {
+			for (int j=2; i*j<MAX; j++) {
+				prime[i*j] = false;
+			}
+		}
+	}
+	
+	for (int i=2; i<MAX; i++) {
+		if (prime[i])
+			num[i]=num[i-1]+1;
+		else
+			num[i] = num[i-1];
+	}
+	
+	int N;
+	while (cin>>N, N) {
+		cout << num[2*N] - num[N] << endl;
+	}
+	return 0;
+}

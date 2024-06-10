@@ -1,0 +1,54 @@
+#include <iostream>
+#include <tuple>
+#include <vector>
+#include <array>
+#include <algorithm>
+
+using namespace std;
+
+typedef tuple<string, int> P;
+
+int main(){
+	vector<P> vec;
+	int D, x, y;
+	cin >> D;
+	cin >> x;
+	for(int i=0;i<x;i++){
+		string a;
+		int b;
+		cin >> a >> b;
+		if(a == "D"){
+			vec.push_back(P(a, b));
+		}
+	}
+	cin >> y;
+	for(int i=0;i<y;i++){
+		string a;
+		int b;
+		cin >> a >> b;
+		if(a == "DD"){
+			vec.push_back(P(a, b));
+		}
+	}
+	array<int, 14> dp;
+	fill(dp.begin(), dp.end(), -1);
+	dp[0] = 0;
+	for(int k=0;k<vec.size();k++){
+		for(int i=D-get<0>(vec[k]).size();i>=0;i--){
+			if(dp[i] == -1) continue;
+			int a = get<0>(vec[k]).size();
+			int b = get<1>(vec[k]);
+			if(dp[i+a] == -1){
+				dp[i+a] = dp[i] + b;
+			}else{
+				dp[i+a] = max(dp[i+a], dp[i] + b);
+			}
+		}
+	}
+	int ans = 0;
+	for(int i=0;i<=D;i++){
+		ans = max(ans, dp[i]);
+	}
+	cout << ans << endl;
+	return 0;
+}

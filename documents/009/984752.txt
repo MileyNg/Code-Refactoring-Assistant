@@ -1,0 +1,47 @@
+### global variables
+
+$sum_cache = []
+
+### subroutines
+
+def count_sum(k, cards, sum)
+  return $sum_cache[k][sum] if ! $sum_cache[k][sum].nil?
+
+  if k >= cards.length
+    return ($sum_cache[k][sum] = (sum == 0) ? 1 : 0)
+  end
+
+  a, b = cards[k]
+  count = 0
+
+  for bn in (0..b)
+    sum0 = sum - a * bn
+    break if sum0 < 0
+    count += count_sum(k + 1, cards, sum0)
+  end
+
+  $sum_cache[k][sum] = count
+end
+
+### main
+
+while true
+  m = gets.strip.to_i
+  break if m == 0
+
+  cards = []
+  $sum_cache = Array.new(m + 1){[]}
+
+  m.times.each do
+    a, b = gets.strip.split(' ').map{|s| s.to_i}
+    cards << [a, b]
+  end
+
+  g = gets.strip.to_i
+  g.times.each do
+    gn = gets.strip.to_i
+
+    c = count_sum(0, cards, gn)
+    puts c
+  end
+end

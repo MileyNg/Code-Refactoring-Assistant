@@ -1,0 +1,19 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  double r1, r2;
+  double k1[] = {35.5, 37.5, 40., 43., 50., 55., 70.};
+  double k2[] = {71., 77., 83., 89., 105., 116., 148.};
+  const char *label[] = {"AAA", "AA", "A", "B", "C", "D", "E", "NA"};
+  double *p1, *p2;
+  
+  while (cin >> r1 >> r2) {
+    p1 = upper_bound(k1, k1+7, r1);
+    p2 = upper_bound(k2, k2+7, r2);
+    cout << label[max(p1-k1, p2-k2)] << endl;
+  }
+
+  return 0;
+}

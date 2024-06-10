@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <map>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <functional>
+#include <list>
+#include <stack>
+#include <queue>
+using namespace std;
+
+typedef list<int> L;
+typedef pair <int,int> P;
+typedef vector<int> V;
+typedef queue<int> Q;
+typedef stack<int> S;
+typedef map<string,int> M;
+
+int main()
+{
+    int n;
+    while (cin >> n, n) {
+        vector<P> v;
+        v.push_back(P(1,1));
+        int R = 1, L = 1, T = 1, B = 1;
+        for (int i = 1; i < n; i++) {
+            int t1, t2;
+            cin >> t1 >> t2;
+            int x = v[t1].first, y = v[t1].second;
+            if (t2 == 0) y--;
+            else if (t2 == 1) x--;
+            else if (t2 == 2) y++;
+            else if (t2 == 3) x++;
+            v.push_back(P(x, y));
+            if (x > T) T = x;
+            else if (x < B) B = x;
+            else if (y > R) R = y;
+            else if (y < L) L = y; 
+        }
+        cout << (R - L + 1) << " " << (T - B + 1) << endl;
+    }
+    
+    return 0;
+}

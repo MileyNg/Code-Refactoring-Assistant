@@ -1,0 +1,28 @@
+#include<map>
+#include <cstdio>
+#include<string>
+#include <complex>
+#include<iostream>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b);i++)
+#define rep(i,b) loop(i,0,b)
+
+complex<double> ps[1100];
+
+int main(){
+    complex<double> p(1,1);
+    loop(i,1,1100){
+        ps[i] = p;
+        double t = arg(p);
+        p += polar(1.0,t+acos(-1)/2);
+    }
+
+    while(1){
+        int x; cin >> x;
+        if(x==-1) break;
+        x--;
+        printf("%.20lf\n%.20lf\n", ps[x].real(), ps[x].imag());
+    }
+}

@@ -1,0 +1,23 @@
+#include<stdio.h>
+
+void judge(double max,double min,int f){
+  double h;
+
+  if(scanf("%lf",&h)!=EOF){
+    if(max<h){
+      max=h;
+    }
+    if((min>h)||(f==0)){
+      min=h;
+    }
+    judge(max,min,1);
+  }
+  else{
+    printf("%f\n",max-min);
+  }
+}
+
+int main(){
+  judge(0,0,0);
+  return 0;
+}

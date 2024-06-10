@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+ 
+int main(){
+	int a,b;
+   
+	while(std::cin >> a >> b){
+		if(a == 0 && b == 0){ 
+			break;
+		}
+		//問題文の形に合うように領域を確保する
+		std::vector<std::vector<int>> map(a + 1);
+		for(int i = 0 ; i <= a; ++i){
+			map[i].resize(b + 1, 0);
+		}
+    
+		int n;
+		std::cin >> n;
+		//工事中の場所は-1で表現する
+		for(int i = 0; i < n; ++i){
+			int x, y;
+			std::cin >> x >> y;
+			map[x][y] = -1;
+		}
+		//スタート地点を1にする
+		map[1][1]= 1;      
+ 
+		for(int x = 1; x <= a; ++x){
+			for(int y = 1; y <= b; ++y){
+				if(x == 1 && y == 1){
+					continue;
+				}
+				if(map[x][y] == -1){
+					map[x][y] = 0;
+					continue;
+				}
+				map[x][y] = map[x - 1][y] + map[x][y - 1];
+			}
+		}
+	
+		std::cout << map[a][b] << std::endl;
+	}
+	
+  return 0;
+}

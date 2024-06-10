@@ -1,0 +1,39 @@
+#include<stdio.h>
+int main(void){
+    int i,j;
+    char a[12][12]={0},ans;
+    while(scanf("%c",&a[2][2])!=EOF){
+        ans=0;
+        j=3;
+        i=2;
+        while(i<10){
+            while(j<10){
+                scanf(" %c",&a[i][j]);
+                j++;
+            }
+            j=2;
+            i++;
+        }
+        for(i=2;i<10;i++){
+            for(j=2;j<10;j++){
+                if(a[i][j]=='1'){
+                    if(a[i+1][j]=='1'){
+                        if(a[i+2][j-1]=='1')ans='D';
+                        else if(a[i+1][j-1]=='1')ans='G';
+                        else if(a[i][j+1]=='1')ans='A';
+                        else if(a[i+2][j]=='1')ans='B';
+                        else ans='F';
+                    }
+                    else{
+                        if(a[i][j+2]=='1')ans='C';
+                        else if(a[i+1][j+2]=='1')ans='E';
+                    }
+                    goto ANS;
+                }
+            }
+        }
+        ANS:
+        printf("%c\n",ans);
+    }
+    return 0;
+}

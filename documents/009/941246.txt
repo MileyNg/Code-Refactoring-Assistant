@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+map<string, vector<string> > wglist;
+map<string, int> price;
+map<string, int> memo;
+
+int get_price(const string& name)
+{
+    if (memo.find(name) != memo.end()){
+        return memo[name];
+    }
+
+    int base_price = price[name];
+    if (wglist.find(name) == wglist.end()){
+        return memo[name] = base_price;
+    }
+
+    vector<string> wg = wglist[name];
+    int total_price = 0;
+    rep(i, wg.size()){
+        total_price += get_price(wg[i]);
+    }
+    return memo[name] = min(total_price, base_price);
+}
+
+int main()
+{
+    int n;
+    while (n = in()){
+        wglist.clear();
+        price.clear();
+        memo.clear();
+        rep(i, n){
+            string name;
+            int p;
+            cin >> name >> p;
+            price[name] = p;
+        }
+        int wg = in();
+        rep(i, wg){
+            string name;
+            cin >> name;
+            int c;
+            c = in();
+            vector<string> lists;
+            rep(j, c){
+                string s;
+                cin >> s;
+                lists.push_back(s);
+            }
+            wglist[name] = lists;
+        }
+        string name;
+        cin >> name;
+        printf("%d\n", get_price(name));
+    }
+    return (0);
+}

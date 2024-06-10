@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+enum TriangleType {
+  ACUTE  = 0,
+  RIGHT  = 1,
+  OBTUSE = 2,
+};
+int main() {
+   int tri[ 3 ];
+   int tri_num[ 4 ] = { 0 };
+   bool has_error = false;
+   while( cin >> tri[ 0 ] ) {
+     cin >> tri[ 1 ] >> tri[ 2 ];
+     if( !has_error ) {
+       sort( tri, tri + 3 );
+       int absq = tri[ 0 ] * tri[ 0 ] + tri[ 1 ] * tri[ 1 ];
+       int csq = tri[ 2 ] * tri[ 2 ];
+       if( tri[ 0 ] + tri[ 1 ] <= tri[ 2 ] ) {
+         has_error = true;
+       } else if( absq > csq ) {
+         tri_num[ ACUTE ]++;
+       } else if( absq == csq ) {
+         tri_num[ RIGHT ]++;
+       } else {
+         tri_num[ OBTUSE ]++;
+       }
+     }
+   }
+  
+   cout
+     << tri_num[ ACUTE ] + tri_num[ RIGHT ] + tri_num[ OBTUSE ] << ' '
+     << tri_num[ RIGHT  ] << ' '
+     << tri_num[ ACUTE  ] << ' '
+     << tri_num[ OBTUSE ] << endl;
+
+  return EXIT_SUCCESS;
+}

@@ -1,0 +1,62 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <utility>
+using namespace std;
+
+// bad knowhow
+#define REP(i,n) for(long long i=0;i<(long long)n;++i)
+
+
+struct Score {
+	Score() {}
+	Score(int c, int p) : collects(c), penalty(p) {}
+	bool operator<(const Score & other) const {
+		if (collects == other.collects){
+			if (penalty == other.penalty) return id < other.id;
+			return penalty < other.penalty;
+		}
+		return collects > other.collects;
+	}
+	int collects;
+	long long penalty;
+	int id;
+};
+
+int wrong[50][10];
+bool collect[50][10];
+Score score[50];
+
+
+int main() {
+	while (true) {
+		int t, p, r;
+		cin >> t >> p >> r;
+		if (t == 0) break;
+
+		fill(score, score + 50, Score(0,0));
+		fill(*collect, *collect + 500, false);
+		fill(*wrong, *wrong + 500, 0);
+		REP(i, t) score[i].id = i;
+
+		REP(i, r) {
+			int tid, pid, time;
+			string message;
+			cin >> tid >> pid >> time >> message;
+			tid--; pid--;
+			if (collect[tid][pid]) continue;
+			if (message == "CORRECT") {
+				score[tid].collects++;
+				collect[tid][pid] = true;
+				score[tid].penalty += wrong[tid][pid] * 1200 + time;
+			} else {
+				wrong[tid][pid]++;
+			}
+		}
+
+		sort(score, score+t);
+		REP(i, t) {
+			cout << score[i].id + 1 << " " << score[i].collects << " " << score[i].penalty << endl;
+		}
+	}
+}

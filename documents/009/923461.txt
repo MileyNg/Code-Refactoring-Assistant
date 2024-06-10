@@ -1,0 +1,19 @@
+#include <stdio.h>
+double tarea(double x1, double y1,double x2, double y2,double x3, double y3);
+int main(void) {
+	double x1,x2,x3,y1,y2,y3,xp,yp,area,sarea;
+	while(scanf("%lf %lf %lf %lf %lf %lf %lf %lf", &x1, &y1, &x2, &y2, &x3, &y3, &xp, &yp)!=EOF){
+		area = tarea(x1,y1,x2,y2,x3,y3);
+		sarea = tarea(x1,y1,x2,y2,xp,yp) + tarea(x1,y1,x3,y3,xp,yp) + tarea(x2,y2,x3,y3,xp,yp);
+		if(area==sarea)
+			printf("YES\n");
+		else
+			printf("NO\n");
+	}
+	return 0;
+}
+double tarea(double x1, double y1,double x2, double y2,double x3, double y3){
+	double do_area;
+	do_area = ((x1*(y2-y3)+x2*(y3-y1)+x3*(y1-y2))*(0.5));
+	return do_area;
+}

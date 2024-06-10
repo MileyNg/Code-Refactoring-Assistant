@@ -1,0 +1,19 @@
+#include <cstdio>
+#include <cstring>
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+using namespace std;
+int main(){
+  bool l, n, b, s;
+  char str[512];
+  scanf("%s", str);
+  l = n = b = s = false;
+  if(strlen(str) >= 6) l = true;
+  rep(i, strlen(str)){
+    if(str[i] >= '0' && str[i] <= '9') n = true;
+    else if(str[i] >= 'A' && str[i] <= 'Z') b = true;
+    else if(str[i] >= 'a' && str[i] <= 'z') s = true;
+  }
+  puts(l&&n&&b&&s?"VALID":"INVALID");
+  return 0;
+}

@@ -1,0 +1,21 @@
+#include<stdio.h>
+#include<math.h>
+int main(void){
+    int n,i,a,ans,j,flag;
+    while(scanf("%d",&n) != EOF){
+        for(i = 2, ans = 0; i <= n; i++){
+            for(j = 2, a = sqrt(i),flag = 0; j <= a ; j++){
+                if(i%j==0){
+                    flag=1;
+                    break;
+                }
+            }
+            if( flag == 0){
+                ans++;
+            }
+        }
+        printf("%d\n",ans);
+    }
+
+    return 0;
+}

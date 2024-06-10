@@ -1,0 +1,38 @@
+#include <map>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+int
+main ()
+{
+  int n;
+  while (true)
+    {
+      map < char, char >dic;
+      vector < char >data;
+      cin >> n;
+      if (n == 0)
+	exit (0);
+      while (n-- > 0)
+	{
+	  char a, b;
+	  cin >> a >> b;
+	  dic[a] = b;
+	}
+      cin >> n;
+      while (n-- > 0)
+	{
+	  char a;
+
+	  cin >> a;
+	  auto buf = dic.find (a);
+	  if (buf == dic.end ())
+	    cout << a;
+	  else
+	    cout << buf->second;
+	}
+    }
+  cout << endl;
+}

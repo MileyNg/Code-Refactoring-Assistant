@@ -1,0 +1,29 @@
+class Deck
+
+  def initialize(n)
+    @cards = 1.upto(n).to_a
+  end 
+
+  def cut(r)
+    r.times do
+      p,c = gets.split(" ").map(&:to_i)
+      @cards.concat(fetch_cards(p,c))
+    end 
+    @cards
+  end 
+
+  def fetch_cards(p,c)
+    bundle = @cards[-p-c+1..-p]
+    @cards.slice!(-p-c+1..-p)
+    bundle
+  end 
+
+end
+
+loop do
+  input = gets.chomp
+  break if input == "0 0"
+  n,r = input.split(" ").map(&:to_i)
+  deck = Deck.new(n)
+  puts deck.cut(r).last
+end

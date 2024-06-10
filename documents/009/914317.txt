@@ -1,0 +1,19 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int main(int argc, char** argv){
+	string str, word;
+	int cnt = 0;
+	string::size_type index = (string::size_type)0;
+	cin >> word;
+	while (cin >> str, str != "END_OF_TEXT"){
+		index = (string::size_type)0;
+		transform(str.begin(), str.end(), str.begin(), ::tolower);
+		if (str == word) cnt++;
+	}
+	cout << cnt << endl;
+}

@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+typedef vector<vvd> vvvd;
+template<typename T> void chmin(T& a,const T& b){a=min(a,b);}
+template<typename T> void chmax(T& a,const T& b){a=max(a,b);}
+
+double solve(const vvd& p,int mask,int cur,vvd& memo)
+{
+	if(memo[mask][cur]!=-1) return memo[mask][cur];
+	int m=p.size(),n=p[0].size();
+	double res=0;
+	rep(i,m) if(mask>>i&1){
+		double cp=1;
+		double sum=0;
+		repi(j,cur,n){
+			sum+=cp*(1-p[i][j])*(solve(p,mask^1<<i,j,memo));
+			cp*=p[i][j];
+		}
+		chmax(res,sum+cp);
+	}
+	return memo[mask][cur]=res;
+}
+
+int main()
+{
+	for(int m,n;cin>>m>>n && m|n;){
+		vvd p(m,vd(n));
+		rep(i,m) rep(j,n) cin>>p[i][j];
+		vvd memo(1<<m,vd(n,-1));
+		printf("%.12f\n",solve(p,(1<<m)-1,0,memo));
+	}
+}

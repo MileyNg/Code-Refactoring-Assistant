@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void){
+
+	int num;
+	int cnt1 = 0, cnt2 = 0;
+	int i, j;
+
+	while(scanf("%d", &num) != EOF){
+		for(i = 2; i <= num; i++){
+			for(j = 2; j <= num; j++){
+				if(i % j == 0){
+					cnt1++;
+				}
+			}
+			if(cnt1 == 1) cnt2++;
+			cnt1 = 0;
+		}
+		printf("%d\n", cnt2);
+		cnt2 = 0;
+	}
+	return 0;
+}

@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define pb(a) push_back(a)
+#define mp(a,b) make_pair(a,b)
+#define ALL(a) (a).begin(),(a).end()
+#define SZ(a) ((int)(a).size())
+#define F first
+#define S second
+typedef pair<int,int> PI;
+
+int n;
+
+int x[100],y[100],l[100];
+
+pair<double,int> get(double cx,double cy){
+  double maxh = 500;
+  int idx=0;
+  
+  rep(i,n){
+    double dx=x[i]-cx;
+    double dy = y[i]-cy;
+    double dd=sqrt(dx*dx+dy*dy);
+    if(maxh > sqrt(max(0.,l[i]*l[i]-dd*dd))){
+      maxh=sqrt(max(0.,l[i]*l[i]-dd*dd));
+      idx=i;
+    }
+    
+  }
+  return mp(maxh,idx);
+}
+
+void solve(){
+  rep(i,n) cin >> x[i] >> y[i] >> l[i];
+
+  double cx=x[0];
+  double cy=y[0];
+
+  double len = 100;
+  double ans=1;
+  while(len > 1e-6){
+    pair<double,int> a=get(cx,cy);
+    ans=max(ans,a.F);
+    double dx=cx-x[a.S];
+    double dy=cy-y[a.S];
+    double dd=sqrt(dx*dx+dy*dy);
+    cx -= dx*len/dd;
+    cy -= dy*len/dd;
+    len *= 1-5e-4;
+  }
+
+  printf("%.8f\n",ans);
+}
+
+int main(){
+  while(cin >> n && n) solve();
+}

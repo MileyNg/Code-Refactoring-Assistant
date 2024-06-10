@@ -1,0 +1,82 @@
+#include<iostream>
+#include<algorithm>
+#include<map>
+using namespace std;
+struct B{
+  int t[50];
+  bool u[50];
+  int v[50];
+  bool operator < (const B &p)const {
+    for(int i=0;i<50;i++){
+      if(u[i]<p.u[i])return true;
+      if(u[i]==p.u[i]&&v[i]<p.v[i])return true;
+    }
+    return false;
+  }
+};
+
+int n;
+B p;
+
+map< B ,bool> vd;
+
+bool dfs(int x){
+  if(vd[p])return false;
+
+  bool flg=true;
+  for(int i=0;i<n;i++)if(p.u[i]==false)flg=false;
+  if(flg)return true;
+
+  if(p.v[x]==0){
+    int i;
+    for(i=0;i<n;i++)if(!p.u[i])break;
+    for(int j=0;j<i;j++){
+      if(p.v[j]-p.t[i]<0)continue;
+
+      p.u[i]=true;
+      p.v[i]=p.t[i];
+      p.v[j]-=p.t[i];
+
+
+      if( dfs(j) )return true;
+      p.v[j]+=p.t[i];
+      p.v[i]=0;
+      p.u[i]=false;
+    }
+
+
+  }else{
+    for(int i=0;i<n;i++){
+      if(p.u[i])continue;
+      if(p.v[x]-p.t[i]<0)continue;
+      p.u[i]=true;
+      p.v[x]-=p.t[i];
+      p.v[i]=p.t[i];
+      if(dfs(x))return true;
+      p.v[i]=0;
+      p.v[x]+=p.t[i];
+      p.u[i]=false;
+    }
+
+
+  }
+
+  vd[p]=true;
+
+
+
+  return false;
+}
+
+int main(){
+  while(cin>>n&&n){
+    vd.clear();
+    for(int i=0;i<n;i++)cin>>p.t[i];
+    sort(p.t,p.t+n);reverse(p.t,p.t+n);
+    for(int i=0;i<n;i++)p.u[i]=false,p.v[i]=0;
+    p.u[0]=true;
+    p.v[0]=p.t[0];
+    cout<<(dfs(0)?"YES":"NO")<<endl;
+  }
+  return 0;
+}

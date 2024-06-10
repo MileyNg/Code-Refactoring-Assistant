@@ -1,0 +1,43 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+
+	int hurui[200000]={0};
+	int sosuu[100000];
+	int cnt=0;
+	vector<int> retu;
+	int N,P;
+
+	for(int i=2;i<=200000;i++){
+		if(hurui[i]==0){
+			sosuu[cnt]=i;
+			cnt++;
+			for(int j=i;j<=200000;j+=i){
+				hurui[j]=1;
+			}
+		}
+	}
+
+	while(1){
+		cin>>N>>P;
+		if(N==-1&&P==1) break;
+		for(int i=0;;i++){
+			if(sosuu[i]>N){
+				for(int j=0;j<P;j++){
+					for(int k=j;k<P+1;k++){
+						retu.push_back(sosuu[i+j]+sosuu[i+k]);
+					}
+				}
+				break;
+			}
+		}
+		sort(retu.begin(),retu.end());
+		cout<<retu[P-1]<<endl;
+		retu.clear();
+	}
+}

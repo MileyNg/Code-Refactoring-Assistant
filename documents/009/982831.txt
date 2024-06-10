@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest8
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                //空白で分割する
+                var line_origin = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(line_origin))
+                {
+                    break;
+                }
+                int ans = int.Parse(line_origin);
+
+                int count = 0;
+
+                var choice = from a in Enumerable.Range(0, 10)
+                             from b in Enumerable.Range(0, 10)
+                             from c in Enumerable.Range(0, 10)
+                             from d in Enumerable.Range(0, 10)
+                             where a + b + c + d == ans
+                             select Tuple.Create(a,b,c,d);
+
+                foreach (Tuple<int,int,int,int> i in choice)
+                {
+                    count++;
+                }
+
+                Console.WriteLine(count.ToString());
+            }
+        }
+    }
+}

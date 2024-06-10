@@ -1,0 +1,74 @@
+#include <stdio.h>
+
+#define EXIST 1
+#define MISSING 0
+
+int main(void)
+{
+    int i, j;
+    int n;
+    int cards[4][14];
+    char suit[2];
+    int rank;
+    /*cards[suit][rank]
+        suit 0: Spade, 1: Heart, 2: Club, 3: Diamond
+        rank = 1, 2, ..., 13*/
+
+    /*initialize*/
+    for (i = 0; i < 4; i++){
+        cards[i][0] = EXIST;
+        for (j = 1; j < 14; j++){
+            cards[i][j] = MISSING;
+        }
+    }
+
+    /*input*/
+    scanf("%d", &n);
+    for (i = 1; i <= n; i++){
+        scanf("%s %d", suit, &rank);
+        switch (suit[0]){
+            case 'S':
+                cards[0][rank] = EXIST;
+                break;
+            case 'H':
+                cards[1][rank] = EXIST;
+                break;
+            case 'C':
+                cards[2][rank] = EXIST;
+                break;
+            case 'D':
+                cards[3][rank] = EXIST;
+                break;
+            default:
+                printf("ERROR!\n");
+                break;
+        }
+    }
+
+    /*output*/
+    for (j = 1; j < 14; j++){
+        if (cards[0][j] == MISSING){
+            printf("S %d\n", j);
+        }
+    }
+
+    for (j = 1; j < 14; j++){
+        if (cards[1][j] == MISSING){
+            printf("H %d\n", j);
+        }
+    }
+
+    for (j = 1; j < 14; j++){
+        if (cards[2][j] == MISSING){
+            printf("C %d\n", j);
+        }
+    }
+
+    for (j = 1; j < 14; j++){
+        if (cards[3][j] == MISSING){
+            printf("D %d\n", j);
+        }
+    }
+
+    return 0;
+}

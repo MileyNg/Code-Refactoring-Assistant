@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <stack>
+
+using namespace std;
+#define REP(i,a,b)for(int i=a;i<b;i++)
+
+struct POINT{
+	int x;
+	int y;
+	int c;
+	POINT(int X,int Y,int C){
+		x=X;y=Y;c=C;
+	}
+};
+
+stack<POINT> st;
+int ary[60][10][2]={0};
+int h,w;
+char tmp;
+double sum=0;
+int dep_c=1;
+
+void depth(POINT pt){
+	ary[pt.y][pt.x][1]=dep_c;
+	if(pt.y>0&&ary[pt.y-1][pt.x][0]==pt.c&&!ary[pt.y-1][pt.x][1])
+		st.push(POINT(pt.x,pt.y-1,pt.c));
+	if(pt.y<59&&ary[pt.y+1][pt.x][0]==pt.c&&!ary[pt.y+1][pt.x][1])
+		st.push(POINT(pt.x,pt.y+1,pt.c));
+	if(pt.x>0&&ary[pt.y][pt.x-1][0]==pt.c&&!ary[pt.y][pt.x-1][1])
+		st.push(POINT(pt.x-1,pt.y,pt.c));
+	if(pt.x<9&&ary[pt.y][pt.x+1][0]==pt.c&&!ary[pt.y][pt.x+1][1])
+		st.push(POINT(pt.x+1,pt.y,pt.c));
+	if(!st.empty()){
+		POINT t_pt=st.top();
+		st.pop();
+		depth(t_pt);
+	}
+}
+
+int main(void){
+
+	while(1){
+
+	cin>>w>>h;
+
+	if(!w&&!h)break;
+
+	REP(i,0,60)REP(j,0,10)REP(k,0,2)ary[i][j][k]=0;
+	sum=0;
+	dep_c=1;
+
+	REP(i,0,h){
+		REP(j,0,w){
+			cin >> tmp;
+			if(tmp=='.')ary[i][j][0]=0;
+			else ary[i][j][0]=(tmp-'0');
+		}
+	}
+
+	REP(i,0,h){
+		REP(j,0,w){
+			if(ary[i][j][0]&&!ary[i][j][1]){
+				depth(POINT(j,i,ary[i][j][0]));
+				dep_c++;
+			}
+		}
+	}
+
+	REP(k,1,dep_c){
+		int wei[4]={0};
+		int wei_p=0;
+		int x=-1;
+		REP(i,0,w){
+			REP(j,0,h){
+				if(ary[j][i][1]==k){
+					if(x<0)x=i;
+					wei[wei_p]++;
+				}
+			}
+			if(wei[wei_p])wei_p++;
+			if(wei_p==4)break;
+		}
+		double b_sum=sum;
+		if(wei[0]==4){
+			sum+=(0.5+x);
+		}else if(wei[0]==3){
+			sum+=(0.75+x);
+		}else if(wei[0]==2){
+			if(wei[1]==1) sum+=(1.25+x);
+			else sum+=(1+x);
+		}else if(wei[0]==1){
+			if(wei[1]==1){
+				if(wei[2]==1) sum+=(2+x);
+				else sum+=(1.75+x);
+			}else if(wei[1]==2){
+				sum+=(1.5+x);
+			}else{
+				sum+=(1.25+x);
+			}
+		}
+	}
+
+	int xl=-1,xr=-1;
+	REP(j,0,w){
+		if(xl<0&&ary[h-1][j][0])xl=j;
+		if(ary[h-1][j][0])xr=j+1;
+	}
+
+	cout << "-----"<<endl;
+	double gp=(sum/(dep_c-1));
+	if(xl<gp&&gp<xr) cout<<"STABLE"<<endl;
+	else cout<<"UNSTABLE"<<endl;
+
+	}
+
+	return 0;
+}

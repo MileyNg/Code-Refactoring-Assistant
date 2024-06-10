@@ -1,0 +1,71 @@
+## main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  ids = {}
+  prices = []
+
+  for id in (0...n)
+    i, pr = gets.strip.split(' ')
+    ids[i] = id
+    prices << pr.to_i
+  end
+
+  m = gets.strip.to_i
+
+  recipes = []
+  rlen = []
+  deps = n.times.map{[]}
+
+  m.times.each do
+    rs = gets.strip.split(' ')
+    id = ids[rs.shift]
+    k = rs.shift
+
+    recipes[id] = rs.map{|i| ids[i]}
+    rlen[id] = recipes[id].length
+
+    for id0 in recipes[id]
+      deps[id0] << id
+    end
+  end
+
+  target = ids[gets.strip]
+
+  resolved = n.times.map{0}
+  mcs = []
+  q = []
+
+  for id in (0...n)
+    if recipes[id].nil?
+      mcs[id] = prices[id]
+      for id0 in deps[id]
+        resolved[id0] += 1
+      end
+    else
+      q << id
+    end
+  end
+
+  cont = true
+
+  while cont && ! q.empty?
+    q0 = q.select{|id| rlen[id] == resolved[id]}
+
+    for id in q0
+      sum = recipes[id].inject(0){|s, id0| s + mcs[id0]}
+      mcs[id] = (prices[id] < sum) ? prices[id] : sum
+      if id == target
+        cont = false
+        break
+      end
+      for id0 in deps[id]
+        resolved[id0] += 1
+      end
+    end
+  end
+
+  puts mcs[target]
+end

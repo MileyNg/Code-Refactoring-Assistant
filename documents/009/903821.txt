@@ -1,0 +1,113 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+#define INF 999999999
+class Position
+{
+public:
+	int x, y;
+};
+
+void solve()
+{
+	int N;
+	while(cin >> N, N)
+	{
+		vector<Position> p(N);
+		for(int i = 0; i < N; ++i)
+		{
+			cin >> p[i].x >> p[i].y;
+		}
+		Position current;
+		current.x = 10;
+		current.y = 10;
+		int M;
+		cin >> M;
+		int count = 0;
+		for(int i = 0; i < M; ++i)
+		{
+			char c;
+			int move;
+			cin >> c >> move;
+			if(c == 'N')
+			{
+				for(int j = 0; j < move; ++j)
+				{
+					current.y += 1;
+					for(int k = 0; k < N; ++k)
+					{
+						if(current.x == p[k].x && current.y == p[k].y)
+						{
+							++count;
+							p[k].x = INF;
+							p[k].y = INF;
+						}
+					}
+				}
+			}
+			else if(c == 'E')
+			{
+				for(int j = 0; j < move; ++j)
+				{
+					current.x += 1;
+					for(int k = 0; k < N; ++k)
+					{
+						if(current.x == p[k].x && current.y == p[k].y)
+						{
+							++count;
+							p[k].x = INF;
+							p[k].y = INF;
+						}
+					}
+				}
+			}
+			else if(c == 'S')
+			{
+				for(int j = 0; j < move; ++j)
+				{
+					current.y -= 1;
+					for(int k = 0; k < N; ++k)
+					{
+						if(current.x == p[k].x && current.y == p[k].y)
+						{
+							++count;
+							p[k].x = INF;
+							p[k].y = INF;
+						}
+					}
+				}
+			}
+			else if(c == 'W')
+			{
+				for(int j = 0; j < move; ++j)
+				{
+					current.x -= 1;
+					for(int k = 0; k < N; ++k)
+					{
+						if(current.x == p[k].x && current.y == p[k].y)
+						{
+							++count;
+							p[k].x = INF;
+							p[k].y = INF;
+						}
+					}
+				}
+			}
+		}
+		if(count == N)
+		{
+			cout << "Yes" << endl;
+		}
+		else
+		{
+			cout << "No" << endl;
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

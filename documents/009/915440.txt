@@ -1,0 +1,70 @@
+//============================================================================
+// Name        : aoj0068.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <utility>
+using namespace std;
+
+class pri_x_y{
+public:
+	bool operator()(const pair<double,double>& l,const pair<double,double>& r){
+		if(l.first != r.first){
+			return l.first > r.first;
+		}
+		return l.second > r.second;
+	}
+};
+
+double outer(pair<double,double> a,pair<double,double> b,pair<double,double> c){
+	return (a.first - b.first) * (c.second - b.second) - (a.second - b.second) * (c.first - b.first);
+}
+
+int main() {
+	int n, k;
+	double x, y;
+	vector<pair<double,double> > v, s;
+	while(true){
+		cin >> n;
+		if(n == 0){
+			break;
+		}
+
+		for(int i = 0;i < n;i++){
+			cin >> x;
+			cin.get();
+			cin >> y;
+			v.push_back(make_pair(x,y));
+		}
+		sort(v.begin(),v.end(),pri_x_y());
+		k = 0;
+		for(int i = 0;i < n;i++){
+			while(1 < k && outer(s[k - 2],s[k - 1],v[i]) <= 0){
+				s.pop_back();
+				k--;
+			}
+			s.push_back(v[i]);
+			k++;
+		}
+		int t = k;
+		for(int i = n - 2;i >= 0;i--){
+			while(t < k && outer(s[k - 2],s[k - 1],v[i]) <= 0){
+				s.pop_back();
+				k--;
+			}
+			s.push_back(v[i]);
+			k++;
+		}
+		s.pop_back();
+		cout << n - s.size() << endl;
+		s.clear();
+		v.clear();
+	}
+	return 0;
+}

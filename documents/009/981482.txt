@@ -1,0 +1,124 @@
+#include <stdio.h>
+
+int main(void) {
+	static char isPrime[1000001];
+	static int caveInfo[3000][3000];
+	static int pcNum[3000][3000];
+	static int lastPc[3000][3000];
+	int i,j;
+	int m,n;
+	/* eratosutenesu no furui */
+	for(i=2;i<=1000000;i++)isPrime[i]=1;
+	for(i=2;i<=1000000;i++) {
+		if(isPrime[i]) {
+			for(j=i+i;j<=1000000;j+=i)isPrime[j]=0;
+		}
+	}
+	while(scanf("%d%d",&m,&n)==2 && (m|n)!=0) {
+		int x=1500,y=1500;
+		int minx=3000,miny=3000,maxx=0,maxy=0;
+		int sx,sy;
+		int cnt=1,nowNum=1;
+		int res=1,res_pc=0;
+		while(nowNum<=m) {
+			for(i=0;i<cnt;i++) {
+				if(nowNum==n){sx=x;sy=y;}
+				if(x<minx)minx=x;
+				if(y<miny)miny=y;
+				if(maxx<x)maxx=x;
+				if(maxy<y)maxy=y;
+				caveInfo[y][x]=nowNum;
+				pcNum[y][x]=lastPc[y][x]=0;
+				nowNum++;
+				x++;
+			}
+			for(i=0;i<cnt;i++) {
+				if(nowNum==n){sx=x;sy=y;}
+				if(x<minx)minx=x;
+				if(y<miny)miny=y;
+				if(maxx<x)maxx=x;
+				if(maxy<y)maxy=y;
+				caveInfo[y][x]=nowNum;
+				pcNum[y][x]=lastPc[y][x]=0;
+				nowNum++;
+				y--;
+			}
+			cnt++;
+			for(i=0;i<cnt;i++) {
+				if(nowNum==n){sx=x;sy=y;}
+				if(x<minx)minx=x;
+				if(y<miny)miny=y;
+				if(maxx<x)maxx=x;
+				if(maxy<y)maxy=y;
+				caveInfo[y][x]=nowNum;
+				pcNum[y][x]=lastPc[y][x]=0;
+				nowNum++;
+				x--;
+			}
+			for(i=0;i<cnt;i++) {
+				if(nowNum==n){sx=x;sy=y;}
+				if(x<minx)minx=x;
+				if(y<miny)miny=y;
+				if(maxx<x)maxx=x;
+				if(maxy<y)maxy=y;
+				caveInfo[y][x]=nowNum;
+				pcNum[y][x]=lastPc[y][x]=0;
+				nowNum++;
+				y++;
+			}
+			cnt++;
+		}
+		/* do search */
+		if(isPrime[caveInfo[sy][sx]]) {
+			res=pcNum[sy][sx]=2;
+			res_pc=lastPc[sy][sx]=caveInfo[sy][sx];
+		} else {
+			pcNum[sy][sx]=1;
+		}
+		for(y=sy+1;y<=maxy;y++) {
+			for(x=minx;x<=maxx;x++) {
+				int best=0;
+				int bestPc=0;
+				if(caveInfo[y][x]>0 && caveInfo[y][x]<=m) {
+					/* get data */
+					if(minx<x && caveInfo[y-1][x-1]>0 && caveInfo[y-1][x-1]<=m) {
+						if(pcNum[y-1][x-1]>best ||
+						(pcNum[y-1][x-1]==best && lastPc[y-1][x-1]>bestPc)) {
+							best=pcNum[y-1][x-1];
+							bestPc=lastPc[y-1][x-1];
+						}
+					}
+					if(caveInfo[y-1][x]>0 && caveInfo[y-1][x]<=m) {
+						if(pcNum[y-1][x]>best ||
+						(pcNum[y-1][x]==best && lastPc[y-1][x]>bestPc)) {
+							best=pcNum[y-1][x];
+							bestPc=lastPc[y-1][x];
+						}
+					}
+					if(x<maxx && caveInfo[y-1][x+1]>0 && caveInfo[y-1][x+1]<=m) {
+						if(pcNum[y-1][x+1]>best ||
+						(pcNum[y-1][x+1]==best && lastPc[y-1][x+1]>bestPc)) {
+							best=pcNum[y-1][x+1];
+							bestPc=lastPc[y-1][x+1];
+						}
+					}
+					/* is this cave prime? */
+					if(best>0 && isPrime[caveInfo[y][x]]) {
+						best++;
+						bestPc=caveInfo[y][x];
+					}
+				}
+				/* save the result */
+				pcNum[y][x]=best;
+				lastPc[y][x]=bestPc;
+				/* update global result */
+				if(best>0 && (best>res || (best==res && bestPc>res_pc))) {
+					res=best;
+					res_pc=bestPc;
+				}
+			}
+		}
+		printf("%d %d\n",res-1,res_pc);
+	}
+	return 0;
+}

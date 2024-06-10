@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <string.h>
+#define N 2000005 //命令の数の最大量
+int A[N],j=0;
+ 
+int Parent(int i){ //親のアドレス値
+  return i/2;
+}
+int Left(int i){ //左の子のアドレス値
+  return 2*i;
+}
+int Right(int i){ //右の子のアドレス値
+  return 2*i+1;
+}
+ 
+void heapIncreaseKey(int i,int key){
+	int tmp;
+  if(key<A[i])  return; //例外エラー処理
+  A[i]=key; //挿入
+  while(i>1 && A[Parent(i)]<A[i]){ //今回挿入した子が、その親より大きい場合は入れ替える、そして親＞子の関係になるまで繰り返す
+    tmp=A[i];
+    A[i]=A[Parent(i)];
+    A[Parent(i)]=tmp;
+    i=Parent(i);
+  }
+}
+ 
+void maxHeapInsert(int key){ //A[j]にkeyをインサートします
+  j++;
+  A[j]=-1; //小さい値を入れます（keyの最小値が０なので、ここではー１）
+  heapIncreaseKey(j,key); //ここで挿入
+}
+ 
+void maxHeapify(int i){ //最大値削除に伴う辻褄合わせ。末端の値が木の一番上に来たので、それ（i）を親＞子の関係が成立するまで下げていく
+  int tmp,l=Left(i),r=Right(i),largest;
+ 
+  if(l<=j && A[l]>A[i]) largest=l;
+  else largest=i;
+ 
+  if(r<=j && A[r]>A[largest])largest=r;
+ 
+  if(largest!=i){
+    tmp=A[i];
+    A[i]=A[largest];
+    A[largest]=tmp;
+    maxHeapify(largest);
+  }
+}
+ 
+int heapExtractMax(){ //最大値のリターン、削除
+  int max;
+  if (j<1) return 0; //例外エラー処理
+  max=A[1]; //maxに木の一番上の値を入れる
+  A[1]=A[j]; //木の一番上に木の末端の値を入れる
+  j--; //末端のアドレス値を一つ消す
+  maxHeapify(1);
+  return max;
+}
+ 
+main(){
+  char str[20];
+  int key;
+   
+  while(1){ //無限ループ回しましょうか
+    scanf("%s",str); //まずは文字の読み込み
+    if(strcmp(str,"end")==0) break; //文字列がendでループ抜ける
+ 
+    if(str[0]=='i') { //文字列がinsertでkeyをinsert
+      scanf("%d",&key);
+      maxHeapInsert(key);
+    }
+    else printf("%d\n",heapExtractMax()); //文字列がextractで最大値を出力、および木から最大値の削除
+  }
+  return 0;
+}

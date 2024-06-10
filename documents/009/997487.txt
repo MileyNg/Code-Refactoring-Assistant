@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main(int argc, const char * argv[])
+{
+    int i,j;
+    int first = 0, second = 0, third = 0;
+    for (j = 0; j < 10; j++) {
+        scanf("%d",&i);
+        if (third < i) {
+            if (second < i) {
+                if (first < i) {
+                    third = second;
+                    second = first;
+                    first = i;
+                } else {
+                    third = second;
+                    second = i;
+                }
+            } else {
+                third = i;
+            }
+        }
+    }
+    printf("%d\n%d\n%d\n",first ,second, third);
+    return 0;
+}

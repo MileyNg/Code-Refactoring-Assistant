@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <set>
+
+class Graph
+{
+ private:
+  std::vector<std::vector<long> > weight_;
+ public:
+  Graph(const unsigned long node_num){};
+
+
+  void insert_weight(const std::vector<long> weight){
+    weight_.push_back(weight);
+  };
+
+
+  void display()
+  {
+    for(unsigned long i = 0, imax = weight_.size(); i < imax; ++i)
+    {
+      for(unsigned long j = 0, jmax = weight_[i].size(); j < jmax; ++j)
+      {
+        std::cout << " " << weight_[i][j];
+      }
+      std::cout << std::endl;
+    }
+  };
+
+
+  unsigned long MinimumSpanningTree()
+  {
+    if(weight_.size() <= 1) return 0;
+
+    struct Edge
+    {
+      long value_;
+      long start_node_;
+      long end_node_;
+      Edge(long value = LONG_MAX, long sn = -1, long en = -1) : value_(value), start_node_(sn), end_node_(en){};
+      void change(long value, long sn, long en)
+      {
+        value_ = value; start_node_ = sn, end_node_ = en;
+      };
+      void display()
+      {
+        std::cout << value_ << " : " << start_node_ << " : " << end_node_ << std::endl;
+      };
+    };
+
+    unsigned long minimum_spanning_value = 0;
+
+    std::set<long> connect_node; connect_node.insert(0);
+    std::set<long> noconnect_node;
+
+    for(unsigned long node_i = 1, imax = weight_.size(); node_i < imax; ++node_i)
+      noconnect_node.insert(node_i);
+
+    while(!noconnect_node.empty())
+    {
+      Edge min_edge;
+      for(std::set<long>::iterator it = connect_node.begin(); it != connect_node.end(); ++it)
+      {
+        for(std::set<long>::iterator noit = noconnect_node.begin(); noit != noconnect_node.end(); ++noit)
+        {
+          if(weight_[*it][*noit] == -1) continue;
+          if(weight_[*it][*noit] < min_edge.value_)
+          {
+            min_edge.value_ = weight_[*it][*noit];
+            min_edge.change(weight_[*it][*noit], *it, *noit);
+          }
+        }
+      }
+      connect_node.insert(min_edge.end_node_);
+      noconnect_node.erase(min_edge.end_node_);
+      minimum_spanning_value += min_edge.value_;
+    }
+
+    return minimum_spanning_value;
+  };//   unsigned long MinimumSpanningTree()
+ protected:
+};//    class Graph
+
+int main()
+{
+
+  unsigned long node_num = 0;
+  std::cin >> node_num; std::cin.ignore();
+
+  Graph graph(node_num);
+
+  for(unsigned long node_i = 0; node_i < node_num; ++node_i)
+  {
+    std::vector<long> weight(node_num, -1);
+    for(unsigned long weight_i = 0, weight_num = node_num; weight_i < weight_num; ++weight_i)
+    {
+      std::cin >> weight[weight_i]; std::cin.ignore();
+    }
+    graph.insert_weight(weight);
+  }
+
+  std::cout << graph.MinimumSpanningTree() << std::endl;
+
+  return 0;
+};//    main()

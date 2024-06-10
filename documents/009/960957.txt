@@ -1,0 +1,51 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class DisjointSet {
+public:
+    vector<int> p;
+
+    DisjointSet(int n) {
+        p.resize(n, 0);
+        iota(p.begin(), p.end(), 0);
+    }
+
+    int findSet(int x) {
+        if (p[x] == x) return x;
+        return findSet(p[x]);
+    }
+
+    bool same(int x, int y) {
+        return (findSet(x) == findSet(y));
+    }
+
+    void unite(int x, int y) {
+        if (x % 2) {
+            p[findSet(x)] = findSet(y);
+        } else {
+            p[findSet(y)] = findSet(x);
+        }
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    int n, q;
+    cin >> n >> q;
+
+    DisjointSet obj(n);
+    int com, x, y;
+    while (q --) {
+        cin >> com >> x >> y;
+        if (com == 0) {
+            obj.unite(x, y);
+        } else {
+            cout << (int)obj.same(x, y) << endl;
+        }
+    }
+
+    return 0;
+}

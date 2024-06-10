@@ -1,0 +1,102 @@
+//suhan lee,saitama university
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <complex>
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define rep(i,a,b) for(int i=(a);i<(b);++i)
+#define repn(i,n) for(int i=0;i<n;i++)
+#define EACH(t,i,c) for(t::iterator i=(c).begin(); i!=(c).end(); ++i)
+#define pb push_back 
+#define pf push_front
+const int INF=10000000;
+bool checked(int chouten,int i){
+  if( ((1<<i)&chouten)){
+    return true;
+  }
+  else return false;
+}
+int pluscheck(int chouten,int i){
+  return (chouten|(1<<i));
+}
+
+int graph[16][16];
+int dynamic[((1<<16)-1)][16];
+int V,E;
+
+
+int roop(int chouten,int genzai){
+  //cout<<"hehe"<<chouten<<' '<<genzai<<' '<<len<<endl;;
+  if(dynamic[chouten][genzai]!=-1)
+    return dynamic[chouten][genzai];
+  if(chouten==(1<<(V))-1){
+    if(genzai==0)  
+      return 0;
+    else return INF;
+  }
+  else{
+    int newlen,out;
+    out=INF;
+    for(int i=0;i<16;i++){
+      if(checked(chouten,i)) continue;
+      if(graph[genzai][i]!=INF){
+	//	newlen=len+graph[genzai][i];
+	out=min(out,roop(pluscheck(chouten,i),i)+graph[genzai][i]);
+      }
+    }
+    return out;
+  }
+}
+int main(){
+  cin>>V>>E;
+  int s,t,d;
+  for(int i=0;i<16;i++){
+    for(int j=0;j<16;j++){
+      graph[i][j]=INF;
+    }
+  }
+  for(int i=0;i<E;i++){
+    cin>>s>>t>>d;
+    graph[s][t]=d;
+  }
+  for(int i=0;i<((1<<16)-1);i++){
+    for(int j=0;j<16;j++){
+      dynamic[i][j]=-1;
+    }
+  }
+  int rinzi=roop(0,0);
+  if (rinzi<INF)
+    cout<<rinzi<<endl;
+  else cout<<-1<<endl;
+  return 0;
+}

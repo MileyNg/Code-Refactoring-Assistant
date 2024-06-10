@@ -1,0 +1,55 @@
+#include "stdio.h"
+#include "math.h"
+
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0228 : Seven Segments **/
+int main()
+{
+	string list[10];
+	list[0] = "0111111";
+	list[1] = "0000110";
+	list[2] = "1011011";
+	list[3] = "1001111";
+	list[4] = "1100110";
+	list[5] = "1101101";
+	list[6] = "1111101";
+	list[7] = "0100111";
+	list[8] = "1111111";
+	list[9] = "1101111";
+	int n, in;
+
+	while (cin >> n, n>0) {
+		string now="0000000";
+		rep(k, n) {
+			cin >> in;
+			string signal;
+			rep(i, 7) {
+				if (list[in][i] != now[i])
+					signal+='1';
+				else
+					signal+='0';
+			}
+			now = list[in];
+			cout << signal << endl;
+		}
+	}
+	return 0;
+}

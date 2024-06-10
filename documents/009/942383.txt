@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main(){
+  char s[256]={'\0'};
+  int i;
+
+  while( fgets(s,256,stdin) !=NULL ){
+    for(i=0 ;s[i]!='\0'; i++){
+      if(s[i]>='A' && s[i]<='Z'){
+	s[i]+='a'-'A';
+      }
+      else if(s[i]>='a' && s[i]<='z'){
+	s[i]-='a'-'A';
+      }
+    }
+    printf("%s",s);
+  }
+
+return 0;
+}

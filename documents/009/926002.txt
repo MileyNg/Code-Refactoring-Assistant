@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int stack[100];
+int count=0;
+
+int pop()
+{
+  count--;
+  return stack[count];
+}
+
+void push(int n)
+{
+  stack[count]=n;
+  count++;
+}
+
+int main(void){
+  int x,n,m;
+  char s[100];
+  
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      n=pop();
+      m=pop();
+      push(n+m);
+    } else if ( s[0] == '-' ){
+      n=pop();
+      m=pop();
+      push(n-m);
+    } else if ( s[0] == '*' ){
+      n=pop();
+      m=pop();
+      push(n*m);
+    } else {
+      x = atoi(s);
+      push(x);
+    }
+  }
+  printf("%d\n",stack[count-1]);
+  return 0;
+}

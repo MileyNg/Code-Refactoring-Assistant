@@ -1,0 +1,87 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define EPS (1e-10)
+#define equals(a,b) (fabs((a)-(b))<EPS)
+
+using namespace std;
+
+typedef long double ld;
+
+const int MAX = 501,IINF = INT_MAX;
+const ld LDINF = 1e100;
+int H,W,sx,sy,gx,gy;
+ld mincost[MAX][MAX][2]; // mincost[][][0] => from start, [1] = > from star
+char c[MAX][MAX];
+bool ban[MAX][MAX];
+vector<int> star,plane;
+int dx[] = {0,1,0,-1};
+int dy[] = {1,0,-1,0};
+
+inline bool isValid(int x,int y) { return 0 <= x && x < W && 0 <= y && y < H; }
+
+inline void bfs(vector<int> sp,vector<int> Forbidden,int type){
+  rep(i,H)rep(j,W) mincost[i][j][type] = LDINF, ban[i][j] = false;
+  queue<int> que;
+  rep(i,(int)sp.size()) que.push(sp[i]), mincost[sp[i]/W][sp[i]%W][type] = 0;
+  rep(i,(int)Forbidden.size()) ban[Forbidden[i]/W][Forbidden[i]%W] = true;
+
+  while(!que.empty()){
+    int cur = que.front(); que.pop();
+    rep(i,4){
+      int nx = cur % W + dx[i], ny = cur / W + dy[i];
+      if( c[ny][nx] == '#' ) continue;
+      if( ban[ny][nx] ) continue;
+      if( mincost[ny][nx][type] == LDINF ) {
+        mincost[ny][nx][type] = mincost[cur/W][cur%W][type] + 1;
+        que.push(nx+ny*W);
+      }
+    }
+  }
+}
+
+bool check(ld E){
+  ld T = 0;
+
+  rep(i,(int)plane.size()){
+    int x = plane[i] % W, y = plane[i] / W;
+    T += min(mincost[y][x][0],mincost[y][x][1]+E);
+  }
+
+  ld len = plane.size();
+  return len * E > T;
+}
+
+int main(){
+  cin >> W >> H;
+  rep(i,H)rep(j,W){
+    cin >> c[i][j];
+    if( c[i][j] == 's' ) sx = j, sy = i, c[i][j] = '.';
+    if( c[i][j] == 'g' ) gx = j, gy = i;
+    if( c[i][j] == '*' ) star.push_back(j+i*W);
+    if( c[i][j] == '.' ) plane.push_back(j+i*W);
+  }
+
+  vector<int> sp,forbidden;
+  sp.push_back(gx+gy*W);
+  forbidden = star;
+  forbidden.push_back(gx+gy*W);
+  bfs(sp,forbidden,0);
+
+  sp = star;
+  forbidden.push_back(gx+gy*W);
+  //forbidden.clear();
+  bfs(sp,forbidden,1);
+
+  ld L = 0, R = 1e10, M = 0;
+  rep(i,60){
+    M = ( L + R ) * (ld)0.5;
+    if( check(M) ) R = M;
+    else           L = M;
+  }
+
+  cout << setiosflags(ios::fixed) << setprecision(20) << min((ld)mincost[sy][sx][0],(ld)mincost[sy][sx][1]+L) << endl;
+
+  return 0;
+}

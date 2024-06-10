@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int calory;
+    double cpd;
+} topping_t;
+
+int cmp_topping_dsc(const void *a, const void *b) {
+    return ((topping_t*)b)->cpd - ((topping_t*)a)->cpd;
+}
+
+int main(void) {
+    int N, A, B, C, c, d, i;
+    double cpd;
+    topping_t t[100];
+
+    scanf("%d", &N);
+    scanf("%d%d", &A, &B);
+    scanf("%d", &C);
+    for (i = 0; i < N; i++) {
+        scanf("%d", &(t[i].calory));
+        t[i].cpd = (double)t[i].calory / B;
+    }
+    qsort(t, N, sizeof(topping_t), cmp_topping_dsc);
+
+    c = C;
+    d = A;
+    cpd = (double)c / d;
+    for (i = 0; i < N; i++) {
+        if (cpd < t[i].cpd) {
+            c += t[i].calory;
+            d += B;
+            cpd = (double)c / d;
+        }
+        else {
+            break;
+        }
+    }
+    printf("%d\n", (int)cpd);
+    return 0;
+}

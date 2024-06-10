@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+void print(const vector<string> &page) {
+  for(const auto &line : page) {
+    cout << line << endl;
+  }
+  cout << "#" << endl;
+}
+
+int main(){
+  for(int plen, cnum, width, cspace; cin >> plen && plen;) {
+    cin >> cnum >> width >> cspace;
+    cin.ignore();
+
+    const int len = cnum * width + cspace * (cnum - 1);
+    vector<string> page(plen, string(len, '.'));
+
+    int r = 0, c = 0;
+    for(string line; getline(cin, line) && line != "?";) {
+      bool first = true;
+      while(line.size() || first) {
+	string word;
+	if(line.size() >= width) {
+	  word = line.substr(0, width);
+	  line = line.substr(width);
+	}
+	else {
+	  word = line;
+	  line = "";
+	}
+
+	const int offset = c * (width + cspace);
+	for(int i = 0; i < word.size(); ++i) {
+	  page[r][i + offset] = word[i];
+	}
+
+	if(++r == plen) {
+	  r = 0;
+	  if(++c == cnum) {
+	    c = 0;
+	    print(page);
+	    page = vector<string>(plen, string(len, '.'));
+	  }
+	}
+
+	first = false;
+      }
+    }
+
+    if(any_of(page[0].begin(), page[0].end(), [](char c) { return c != '.';})) {
+      print(page);
+    }
+    cout << "?" << endl;
+  }
+
+  return 0;
+}

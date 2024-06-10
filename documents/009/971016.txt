@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+string vl = "khtps";
+string vowels = "aiueo";
+
+int main(){
+	string s;
+	while( cin >> s, s != "#" ){
+		string ans = s.substr(0,1);
+		bool is_continued = false;
+		for( int i = 1; i < s.size(); i++ ){
+			int iuao= 0;
+			for( int j = 0; j < vowels.size(); j++ ){
+				if( s[i] == 'i' || s[i] == 'u' ) iuao = 1;
+				else if( s[i] == 'a' || s[i] == 'o' ) iuao = 2;
+				if( iuao ) break;
+			}
+			bool ok = false;
+			bool f = false;
+			if( !iuao ) goto end;	// 母音でなければ次へ
+			// 母音なら以下
+			for( int j = 0; j < vl.size(); j++ ){
+				if( s[i-1] == vl[j] ){
+					ok = true;
+					break;
+				}
+			}
+			if( !ok ) goto end;	// 直前が無声子音でないとき
+			if( iuao == 1 && s.size() == i+1 ) goto end;
+			for( int j = 0; j < vl.size(); j++ ){
+				if( s[i+1] == vl[j] ){
+					if( s[i+2] == s[i+1] && iuao == 2 ) f = false;
+					else f = true;
+					break;
+				}
+			}
+			if( !f ) ok = false;
+			end:
+			if( ok && !is_continued ){
+				ans += "(" + s.substr(i,1) + ")";
+				is_continued = true;
+			}else{
+				ans += s.substr(i,1);
+				if( iuao ) is_continued = false;
+			}
+		}
+		cout << ans << endl;
+	}
+}

@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  int dx[8] = { -1, -1, -1,  0,  0,  1,  1,  1 };
+  int dy[8] = { -1,  0,  1, -1,  1, -1,  0,  1 };
+
+  vector< string > map;
+
+  string input;
+
+  for ( int i = 0; i < 8; i++ ) {
+
+    cin >> input;
+
+    map.push_back( input );
+
+  }
+
+  while( true ) {
+
+    bool flag = false;
+
+    for ( int i = 0; i < 2; i++ ) {
+      char my, en;
+      if ( i == 0 ) {
+	my = 'o';
+	en = 'x';
+      }else {
+	my = 'x';
+	en = 'o';
+      }
+      int cnt = 0;
+      int cx, cy, dr = 0;
+      for ( int y = 0; y < 8; y++ ) {
+	for ( int x = 0; x < 8; x++ ) {
+	  if ( map[y][x] != '.' ) continue;
+
+	  int cc = 0;
+	  int cdr = 0;
+	  for ( int j = 0; j < 8; j++ ) {
+	    int c = 0;
+	    while( true ) {
+	      int hx = x+dx[j]*(c+1);
+	      int hy = y+dy[j]*(c+1);
+	      if ( hx < 0 || hx >= 8 || hy < 0 || hy >= 8 ) break;
+	      if ( map[hy][hx] == en ) {
+		c++;
+		continue;
+	      }else if ( map[hy][hx] == my ) {
+		cc += c;
+		cdr |= ( 1 << j );
+	      }
+	      break;
+	    }
+	  }
+	  if ( cc == 0 ) continue;
+	  if ( cc == cnt ) {
+	    if ( i == 0 ) {
+	      if ( y > cy ) continue;
+	      if ( y == cy && x > cx ) continue;
+	    }else {
+	      if ( y < cy ) continue;
+	      if ( y == cy && x < cx ) continue;
+	    }
+	  }else if ( cc < cnt ) {
+	    continue;
+	  }
+	  cx = x;
+	  cy = y;
+	  dr = cdr;
+	  cnt = cc;
+	}
+      }
+
+      if ( cnt > 0 ) {
+	flag = true;
+	map[cy][cx] = my;
+	for ( int j = 0; j < 8; j++ ) {
+	  if ( ( dr & ( 1 << j ) ) != 0 ) {
+	    for ( int k = 1; true; k++ ) {
+	      int hx = cx+dx[j]*k;
+	      int hy = cy+dy[j]*k;
+	      if ( map[hy][hx] == my ) break;
+	      map[hy][hx] = my;
+	    }
+	  }
+	}
+      }
+
+    }
+
+    if ( flag == false ) break;
+
+  }
+
+  for ( int i = 0; i < 8; i++ ) {
+    cout << map[i] << endl;
+  }
+
+  return 0;
+
+}

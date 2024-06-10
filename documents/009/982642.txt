@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+
+int main()
+{
+	string s;
+	map <string, int> m;
+	map <string, int> m2;
+	int maxlen = -1;
+
+	pair<string, int> max_pair;
+	pair<string, int> max2_pair;
+	while (cin >> s){
+		if (m.count(s) == 0){
+			m.insert(pair<string, int>(s, 0));
+			m2.insert(pair<string, int>(s, (int)s.length()));
+		}
+		else{
+			m[s]++;
+		}
+	}
+
+	for (auto pm = m.begin(); pm != m.end(); pm++){
+		if (pm->second > max_pair.second){
+			max_pair = *pm;
+		}
+	}
+	for (auto pm = m2.begin(); pm != m2.end(); pm++){
+		if (pm->second > max2_pair.second){
+			max2_pair = *pm;
+		}
+	}
+	cout << max_pair.first << endl<<max2_pair.first<<endl;
+	return 0;
+}

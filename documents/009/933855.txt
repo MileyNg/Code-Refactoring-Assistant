@@ -1,0 +1,18 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+int main(){
+	int length[11] = {0};
+	int v1, v2;
+	while( ~scanf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d", &length[1], &length[2], &length[3], &length[4], &length[5], &length[6], &length[7], &length[8], &length[9], &length[10], &v1, &v2) ){
+		for(int i=1; i<=10; i++) length[i] += length[i-1];
+		double t = (double)length[10] / (v1+v2);
+		for(int i=0; i<=10; i++){
+			if( t*v1 <= length[i] ){
+				cout << i << endl;
+				break;
+			}
+		}
+	}
+}

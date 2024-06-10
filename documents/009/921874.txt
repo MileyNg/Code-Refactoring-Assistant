@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n, x;
+  char p, tmp[512], in[4];
+  bool f = true;
+  scanf("%d", &n);
+  stack<int>st;
+  rep(i, n){
+    scanf("%s%d", in, &x);
+    p = in[0];
+
+    //    printf("%c %d\n", p, x);
+    if(p == '('){
+      rep(i, x) st.push(i);
+      //      printf("%d\n", (int)st.top());
+    }else{
+      rep(i, x){
+	if(!st.empty()) st.pop();
+	else f = false;
+	//	printf("%d\n", (int)st.size());
+      }
+    }
+  }
+  //  printf("%d\n", (int)st.size());
+  if(st.empty() && f) puts("YES");
+  else puts("NO");
+  return 0;
+}

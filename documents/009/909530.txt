@@ -1,0 +1,233 @@
+#include<bits/stdc++.h>
+
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define fs first
+#define sc second
+#define pb push_back
+#define sz size()
+#define all(a) (a).begin(),(a).end()
+
+using namespace std;
+typedef long double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+typedef vector<P> Poly;
+typedef pair<P,D> C;
+typedef pair<D,D> pdd;
+typedef pair<C,pdd> Fan;
+
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+typedef pair<D,int> pdi;
+
+const D EPS = 1e-8;
+const D PI = acos(-1);
+
+namespace std{
+  bool operator<(const P &a,const P &b){
+    return EQ(real(a),real(b))?imag(a)<imag(b):real(a)<real(b);
+  }
+  bool operator==(const P &a, const P &b){return EQ(a,b);}
+}
+
+//for vector
+inline P unit(P p){return p/abs(p);}
+
+inline pair<P,P> norm(P p){return make_pair(p*P(0,1),p*P(0,-1));}
+
+inline D dot(P x, P y){return real(conj(x)*y);}
+
+inline D cross(P x, P y){return imag(conj(x)*y);}
+
+//rotate a point counter-clockwise on the origin
+inline P rotate(P v, D s){
+  return P(real(v)*cos(s) - imag(v)*sin(s), real(v)*sin(s) + imag(v)*cos(s) );
+}
+
+//return seta A
+inline D arg(P a,P b,P c){return acos(dot(b-a,c-a)/(abs(b-a)*abs(c-a)));}
+inline D arg(D a,D b,D c){return acos( (b*b+c*c-a*a)/(2*b*c) );}
+
+//for line(segment)
+int ccw(P a,P b,P c){
+  b -= a;c -= a;
+  if (cross(b,c)>EPS) return 1;   //counter clockwise
+  if (cross(b,c)<-EPS) return -1; //clockwise
+  if (dot(b, c)<-EPS) return 2;   //c--a--b on line
+  if (abs(b)<abs(c)) return -2;   //a--b--c on line
+  return 0;                       //on segment
+}
+
+inline bool orth(L a,L b){return abs(dot(a.fs-a.sc,b.fs-b.sc))<EPS;}
+
+inline bool para(L a,L b){return abs(cross(a.fs-a.sc,b.fs-b.sc))<EPS;}
+
+inline D line_dis(L a,P x){return abs(cross(a.sc-a.fs,x-a.fs))/abs(a.sc-a.fs);}
+
+inline P line_cp(L a,L b){
+  return a.fs+(a.sc-a.fs)*cross(b.sc-b.fs,b.fs-a.fs)/cross(b.sc-b.fs,a.sc-a.fs);
+}
+
+inline D seg_p_dis(L a,P x){
+  if(dot(a.sc-a.fs,x-a.fs)<EPS)return abs(x-a.fs);
+  if(dot(a.fs-a.sc,x-a.sc)<EPS)return abs(x-a.sc);
+  return abs(cross(a.sc-a.fs,x-a.fs))/abs(a.sc-a.fs);
+}
+
+inline D seg_seg_dis(L a,L b){
+  D res = 1e10;
+  res = min(res,seg_p_dis(a,b.fs));
+  res = min(res,seg_p_dis(a,b.sc));
+  res = min(res,seg_p_dis(b,a.fs));
+  res = min(res,seg_p_dis(b,a.sc));
+  return res;
+}
+
+inline bool is_cp(L a,L b){
+  if(ccw(a.fs,a.sc,b.fs)*ccw(a.fs,a.sc,b.sc)<=0)
+    if(ccw(b.fs,b.sc,a.fs)*ccw(b.fs,b.sc,a.sc)<=0)return true;
+  return false;
+}
+
+//for circle
+inline D area_cir(C c){return PI * c.sc * c.sc;}
+
+inline bool in_cir(C c,P x){return (abs(x-c.fs) +EPS < c.sc);}
+inline bool on_cir(C c,P x){return EQ(abs(x-c.fs),c.sc);}
+
+//circle position relation
+inline int cpr(C a,C b){
+  D d = abs(a.fs-b.fs);
+  if(a.sc+b.sc + EPS < d)return -1;      //no cross point (outside)
+  if(b.sc+d + EPS < a.sc)return 1;       //no cross point (inside,B in A)
+  if(a.sc+d + EPS < b.sc)return 2;       //no cross point (inside,A in B)
+  //------------above verified----------------// 
+  if(abs(a.sc+b.sc - d) < EPS)return -3; //one cross point (outside)
+  if(abs(b.sc+d - a.sc) < EPS)return 3;  //one cross point (inside,B in A)
+  if(abs(a.sc+d - b.sc) < EPS)return 4;  //one cross point (inside,A in B)
+  return 0;                              //two cross point
+}
+
+inline vector<P> cp_cir_to_cir(C a, C b){
+  vector<P> v;
+  int pos = cpr(a,b);
+  if(pos==0){
+    D s = arg(b.sc,abs(b.fs-a.fs),a.sc);
+    P x = a.sc * unit(b.fs - a.fs);
+    v.pb(a.fs + rotate(x,s));
+    v.pb(a.fs + rotate(x,-s));
+  }else if(abs(pos) >= 3){
+    v.pb(a.fs + a.sc * unit(b.fs-a.fs));
+  }
+  return v;
+}
+
+inline vector<P> cp_cir_to_line(C a, L l){
+  vector<P> v;
+  P n = norm(l.fs-l.sc).fs;
+  P p = line_cp(l,L(a.fs,a.fs+n));
+
+  if(on_cir(a,p))v.pb(p);
+  else if(in_cir(a,p)){
+    D d = abs(a.fs-p);
+    D len = sqrt(a.sc*a.sc - d*d);
+    P cp_vec = len * unit(l.fs-l.sc);
+    v.pb(p + cp_vec);
+    v.pb(p - cp_vec);
+  }
+  return v;
+}
+
+inline bool is_cp_cir_seg(C c, L s){
+  D dis = seg_p_dis(s, c.fs);
+  return (dis+EPS<c.sc);
+}
+
+inline vector<P> cp_cir_to_seg(C a, L l){
+  vector<P> v,tmp = cp_cir_to_line(a,l);
+  rep(i,tmp.sz)if(!ccw(l.fs,l.sc,tmp[i]))v.pb(tmp[i]);
+  return v;
+}
+
+bool inter_fan(Fan f, P p){
+  if(!on_cir(f.fs,p) && !in_cir(f.fs,p))return false;
+  D d = arg(p-f.fs.fs);
+  if(d<-EPS)d += 2*PI;
+  D s = f.sc.fs, t = f.sc.sc;
+  if(s<t)return (s<d+EPS)&&(d<t+EPS);
+  return ((s<d+EPS)&&(d<2*PI+EPS)) || ((0.0<d+EPS)&&(d<t+EPS));
+}
+
+bool on_fan(Fan f,P p){
+  if(!ccw(f.fs.fs,rotate(P(f.fs.sc,0),f.sc.fs)+f.fs.fs,p)
+     || !ccw(f.fs.fs, rotate(P(f.fs.sc,0),f.sc.sc)+f.fs.fs,p))return true;
+  if(!on_cir(f.fs,p))return false;
+  D d = arg(p-f.fs.fs);
+  if(d<-EPS)d += 2*PI;
+  D s = f.sc.fs, t = f.sc.sc;
+  if(s<t)return (s<d+EPS)&&(d<t+EPS);
+  return ((s<d+EPS)&&(d<2*PI+EPS)) || ((0.0<d+EPS)&&(d<t+EPS));
+}
+
+vector<P> cp_fan_to_fan(Fan f1, Fan f2){
+  vector<P> can, tmp;
+  L l1[2] = {L(f1.fs.fs,rotate(P(f1.fs.sc,0),f1.sc.fs)+f1.fs.fs),
+	     L(f1.fs.fs,rotate(P(f1.fs.sc,0),f1.sc.sc)+f1.fs.fs) };
+  L l2[2] = {L(f2.fs.fs,rotate(P(f2.fs.sc,0),f2.sc.fs)+f2.fs.fs),
+	     L(f2.fs.fs,rotate(P(f2.fs.sc,0),f2.sc.sc)+f2.fs.fs) };
+  rep(i,2)rep(j,2){
+    if(is_cp(l1[i],l2[j]) && !para(l1[i],l2[j])){
+      can.pb(line_cp(l1[i],l2[j]));
+    }
+  }
+
+  rep(i,2){
+    tmp = cp_cir_to_seg(f1.fs,l2[i]);
+    rep(j,tmp.sz)can.pb(tmp[j]);
+  }
+
+  rep(i,2){
+    tmp = cp_cir_to_seg(f2.fs,l1[i]);
+    rep(j,tmp.sz)can.pb(tmp[j]);
+  }
+
+  tmp = cp_cir_to_cir(f1.fs,f2.fs);
+  rep(i,tmp.sz)can.pb(tmp[i]);
+
+  vector<P> res;
+  rep(i,can.sz){
+    if(on_fan(f1,can[i]) && on_fan(f2,can[i]))res.pb(can[i]);
+  }
+  return res;
+}
+
+int main(){
+  int n,m;
+  int x,y,r,s,t;
+  Fan f[100];
+
+  cin >> n;
+  while(n--){
+    cin >> m;
+    rep(i,m){
+      cin >> x >> y >> r >> s >> t;
+      f[i] = Fan(C(P(x,y),r),pdd(PI*s/180,PI*t/180));
+    }
+
+    vector<P> can;
+    rep(i,m)rep(j,i){
+      vector<P> tmp = cp_fan_to_fan(f[i],f[j]);
+      rep(k,tmp.sz)can.pb(tmp[k]);
+    }
+    rep(i,m)can.pb(f[i].fs.fs);
+
+    int res = 0;
+    rep(i,can.sz){
+      int num = 0;
+      rep(j,m)if(inter_fan(f[j],can[i]))num++;
+      res = max(res,num);
+    }
+    cout << res << endl;
+  }
+}

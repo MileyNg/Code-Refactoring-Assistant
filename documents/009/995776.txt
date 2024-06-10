@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int months[] = {31,29,31,30,31,30,31,31,30,31,30,31};
+string days[] = {"Thursday","Friday","Saturday","Sunday","Monday","Tuesday","Wndnessday"};
+
+int main()
+{
+	int month,day,sum = 0;
+    
+    while(cin >> month >> day,month || day)
+	{
+		for(int i=0;i<month;i++)
+		{
+	        sum += months[i-1];
+		}
+        sum += day -1;
+		cout << days[sum%7] <<endl;
+    }
+	return 0;
+}

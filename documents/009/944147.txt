@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+#define __2012_12_21__ 735224
+#define MAX_YEAR 10000000
+
+unsigned days[MAX_YEAR + 1];
+int month[2][13] = {
+  { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365},
+  { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366}
+};
+
+bool urudosi(int year){
+  return year % 400 == 0 || (year % 100 != 0 && year % 4 == 0);
+}
+void init_set() {
+  for(int i = 1; i <= MAX_YEAR; i++) {
+    days[i] = days[i - 1] + 365 + urudosi(i - 1);
+  }
+}
+
+int main(){
+  char buff[256];
+  int y, m, d; //西暦
+  int b, ka, t, w, ki; //マヤ長期歴
+
+  init_set();
+  while(strcmp(fgets( buff, sizeof(buff), stdin),"#\n") != 0){
+    if(sscanf( buff, "%d.%d.%d.%d.%d", &b, &ka, &t, &w, &ki) == 5){
+      unsigned allday = b * 144000 + ka * 7200 + t * 360 + w * 20 + ki + __2012_12_21__;
+      y = std::lower_bound( days, days + MAX_YEAR, allday) - days - 1;
+      allday -= days[y];
+      bool uru = urudosi(y);
+      m = std::lower_bound( month[uru], month[uru] + 13, allday) - month[uru];
+      d = allday - month[uru][m - 1];
+      printf("%d.%d.%d\n", y, m, d);
+    }else{
+      unsigned allday = days[b] + month[urudosi(b)][ka - 1] + t - __2012_12_21__;
+      ki = allday % 20;
+      w = allday / 20 % 18;
+      t = allday / 360 % 20;
+      ka = allday / 7200 % 20;
+      b = allday / 144000 % 13;
+      printf("%d.%d.%d.%d.%d\n", b, ka, t, w, ki);
+    }
+  }
+}

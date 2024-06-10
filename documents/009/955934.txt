@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int N, ds = 1;
+  while(scanf("%d", &N) && N){
+    int c = 2, board[10][10] = {};
+    board[0][0] = 1; board[0][1] = 2;
+    int x = 1, y = 0;
+    while(c <= N*N){
+      c++;
+      if(y == N-1){
+	if(!board[y-1][x+1]) y--;
+	  x++;
+	  board[y][x] = c;
+	  //	  printf("%d %d\n", y, x);
+      }else if(x == N-1){
+	if(!board[y+1][x-1]) x--;
+	y++;
+	board[y][x] = c;
+	//	printf("%d %d\n", y, x);
+      }else if(y == 0){
+	if(!board[y+1][x-1]){
+	  y++; x--;
+	}else{
+	  x++;
+	}
+	board[y][x] = c;
+	//	printf("%d %d\n", y, x);
+      }else if(x == 0){
+	if(!board[y-1][x+1]){
+	  y--; x++;
+	}else{
+	  y++;
+	}
+	board[y][x] = c;
+	//	printf("%d %d\n", y, x);
+      }else{
+	if(!board[y-1][x+1]){
+	  y--;
+	  x++;
+	  board[y][x] = c;
+	  //	  printf("%d %d\n", y, x);
+	}else if(!board[y+1][x-1]){
+	  y++;
+	  x--;
+	  board[y][x] = c;
+	  //	  printf("%d %d\n", y, x);
+	}
+      }
+    }
+
+    printf("Case %d:\n", ds);
+    rep(i, N){
+      rep(j, N) printf("%3d", board[i][j]);
+      puts("");
+    }
+    ds++;
+  }
+  return 0;
+}

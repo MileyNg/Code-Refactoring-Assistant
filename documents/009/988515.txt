@@ -1,0 +1,24 @@
+#include<stdio.h>
+long int k(long int a,long int b){
+  if(b==0){
+    return a;
+  }
+  else{
+    long int r=a%b;
+   return k(b,r);
+  }
+}
+int main(){
+
+  long int a,b,s,d;
+
+  while(scanf("%d %d",&a,&b)!=EOF){
+    // printf("%d %d\n",a,b);
+    if(a<b)k(a,b);
+    else s=k(b,a);
+    d=a*(b/s);
+ 
+    printf("%d %d\n",s,d);
+  }
+  return 0;
+}

@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int f(int a, int b, int y) {
+	return (a*y + b) % 26;
+}
+
+int main() {
+	int n;
+	string abc = "abcdefghijklmnopqrstuvwxyz";
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		string s;
+		getline(cin, s);
+		int a, b;
+		a = b = 0;
+		while (true) {
+			string::size_type index = s.find("this");
+			string::size_type index2 = s.find("that");
+			if (index != string::npos || index2 != string::npos) {
+				break;
+			}
+			for (int i = 0; i < s.size(); i++) {
+				for (int j = 0; j < 26; j++) {
+					if (s[i] == abc[j]) {
+						s[i] = f(a, b, j);
+					}
+				}
+			}
+			a++;
+			b++;
+		}
+		cout << s << endl;
+	}
+	return 0;
+}

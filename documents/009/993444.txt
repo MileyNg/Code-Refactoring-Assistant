@@ -1,0 +1,17 @@
+n = gets.to_i
+arr = gets.split(' ').map(&:to_i)
+
+dp = n.times.map { [0]*21 }
+dp[0][0] = 1
+0.upto(n-2) do |i|
+  0.upto(20) do |j|
+    next if dp[i][j] <= 0
+    cp = j + arr[i]
+    cm = j - arr[i]
+
+    dp[i+1][cp] += dp[i][j] if cp <= 20
+    dp[i+1][cm] += dp[i][j] if cm >= 0
+  end
+end
+
+puts dp[n-1][arr[n-1]]

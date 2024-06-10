@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+
+#define XMAX 5000
+#define YMAX 5000
+
+char p[5001][5001];
+int x[3000];
+int y[3000];
+
+int main(void) {
+    int n, i, j, gx, gy, max_area, area, x2, y2, x3, y3, k;
+
+    while (scanf("%d", &n) != EOF && n) {
+        memset(p, 0, sizeof(p));
+        for (i = 0; i < n; i++) {
+            scanf("%d%d", &x[i], &y[i]);
+            p[y[i]][x[i]] = 1;
+        }
+        for (i = 0, max_area = 0; i < n - 1; i++) {
+            for (j = i + 1; j < n; j++) {
+                gx = x[j] - x[i];
+                gy = y[j] - y[i];
+                for (k = -1; k <= 1; k += 2) {
+                    x2 = x[i]+ k * gy;
+                    y2 = y[i]- k * gx;
+                    x3 = x[i]+gx+ k * gy;
+                    y3 = y[i]+gy- k * gx;
+                    if (0 <= x2 && x2 <= XMAX && 0 <= y2 && y2 <= YMAX &&
+                        0 <= x3 && x3 <= XMAX && 0 <= y3 && y3 <= YMAX &&
+                        p[y2][x2] && p[y3][x3]) {
+                        area = gx * gx + gy * gy;
+                        if (max_area < area) max_area = area;
+                    }
+                }
+            }
+        }
+        printf("%d\n", max_area);
+    }
+    return 0;
+}

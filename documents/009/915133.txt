@@ -1,0 +1,181 @@
+#include <stdio.h>
+#include<string>
+#include<string.h>
+#include <math.h>
+#include<iostream>
+#include <algorithm>
+#include <map>
+#include <vector>
+#include <queue>
+using namespace  std;
+
+
+/*
+//my header
+#include "define.h"
+#include "geometry.h"*/
+
+#define MyAbs(a) ((a)>0?(a):-(a))
+#define MyEqualDoule(a,b) (MyAbs(a-b)<1e-6)
+
+#define foreach(i,n) for(i=0;i<n;++i)
+#define foreachd(i,n) for(int i=0;i<n;++i)
+#define printfInt1(n) printf("%d\n",n)
+#define scanfInt1(n) scanf("%d",&n)
+#define scanfInt2(a,b) scanf("%d%d", &a, &b)
+#define scanfInt3(a,b,c) scanf("%d%d%d", &a, &b, &c)
+#define scanfFloat2(a,b) scanf("%f%f", &a,&b)
+
+
+void init()
+{
+#ifdef _WIN32
+	freopen("1.txt", "r", stdin);
+#endif
+}
+
+void func();
+
+int main()
+{
+	init();
+	func();
+
+	return 0;
+}
+
+class CNumberTheory
+{
+public:
+	//譛?、ァ蜈ャ郤ヲ謨ー
+	static int gcd(int a, int b)
+	{
+		int t;
+		while (b) {
+			t = a % b;
+			a = b;
+			b = t;
+		}
+		return a;
+	}
+	//譛?ー丞?蛟肴焚
+	static int lcm(int a,int b)
+	{
+		return a / gcd(a,b) * b;
+	}
+	//郤ソ諤ァ逕滓?蟆丈コ守ュ我コ始逧?エ?焚,螯よ棡a譏ッ邏?焚?碁ぅ荵?ns[a] = true
+	static void GenePrimeJudge(int n, bool* ans)
+	{
+		memset(ans, true, sizeof(bool) * (n+1));
+		ans[0] = false;
+		ans[1] = false;
+		int i;
+		for(i = 2; i <= n; ++ i)
+		{
+			if(ans[i])
+			{
+				int j = 2;
+				int k;
+				while((k = i * j++) <= n)
+					ans[k] = false;
+			}
+		}
+	}
+	//郤ソ諤ァ逕滓?蟆丈コ守ュ我コ始逧?エ?焚,螯Ｑrime[size = p]荳ュ蟄俶叛蟆丈コ始逧?エ?焚
+	static void GenePrimeList(int n, int *prime, int& p)
+	{
+		bool* ans = new bool[n+1];
+		memset(ans, true, sizeof(bool) * (n+1));
+		ans[0] = false;
+		ans[1] = false;
+		p = 0;
+		int i;
+		for(i = 2; i <= n; ++ i)
+		{
+			if(ans[i])
+			{
+				prime[p++] = i;
+				int j = 2;
+				int k;
+				while((k = i * j++) <= n)
+					ans[k] = false;
+			}
+		}
+	}
+
+	//郤ソ諤ァ逕滓?蟆丈コ守ュ我コ始逧?エ?焚,螯よ棡a譏ッ邏?焚?碁ぅ荵?ns[a] = true,蟷カ荳廃rime[size = p]荳ュ蟄俶叛蟆丈コ始逧?エ?焚
+	static void GenePrimeJudgeAndList(int n, bool* ans, int *prime, int& p)
+	{
+		memset(ans, true, sizeof(bool) * (n+1));
+		ans[0] = false;
+		ans[1] = false;
+		p = 0;
+		int i;
+		for(i = 2; i <= n; ++ i)
+		{
+			if(ans[i])
+			{
+				prime[p++] = i;
+				int j = 2;
+				int k;
+				while((k = i * j++) <= n)
+					ans[k] = false;
+			}
+		}
+	}
+};
+
+class CSearch
+{
+public:
+	//扈吝ョ壻ク?クェ譛牙コ擾シ磯撼髯榊コ擾シ画焚扈Б?梧アゆササ諢丈ク?クェi菴ソ蠕輸[i]遲我コ嗣ey?御ク榊ュ伜惠蛻呵ソ泌屓-1
+	static int BinarySearch(int key, int* arr, int n)
+	{
+		int l = 0, r = n - 1;
+		while(l <= r)
+		{
+			int mid = (r + l)>>1;
+			if(arr[mid] == key)
+				return mid;
+			if(arr[mid] < key)
+				l = mid + 1;
+			else
+				r = mid + 1;
+		}
+		return -1;
+	}
+
+	//扈吝ョ壻ク?クェ譛牙コ擾シ磯撼髯榊コ擾シ画焚扈Б?悟庄蜷ォ譛蛾?螟榊?邏?シ梧アよ怙蟆冗噪i菴ソ蠕輸[i]螟ァ莠嗣ey?御ク榊ュ伜惠蛻呵ソ泌屓-1
+	static int BinarySearch_FirstPos_Greater(int key, int* arr, int n)
+	{
+		int l = 0, r = n - 1;
+		while(l < r)
+		{
+			int mid = (r + l)>>1;
+			if(arr[mid] > key)
+				r = mid;
+			else
+				l = mid + 1;
+		}
+		return arr[r] > key ? r: -1;
+	}
+};
+
+bool ans[1000000];
+int prime[100000];
+
+void func()
+{
+	int p;
+	CNumberTheory::GenePrimeJudgeAndList(999999, ans, prime, p);
+
+	int n;
+	while(~scanf("%d", &n))
+	{
+		int ret;;
+		ret = CSearch::BinarySearch_FirstPos_Greater(n,prime,p);
+		if(ret == -1)
+			ret = p;
+		printfInt1(ret);
+	}
+}

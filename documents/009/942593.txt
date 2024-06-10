@@ -1,0 +1,116 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<cstdio>
+#include<cstring>
+
+using namespace std;
+
+struct P{int c,r;};
+struct State{int t,pos, remain;};
+
+/*--------heap begin---------*/
+#define SIZE 10000
+#define ELEMENT State
+ELEMENT heap[SIZE];
+int heap_size = 0;
+
+/*
+  push(x)  (up_heap)
+  O(logN)
+  verified: yes
+*/
+void push(ELEMENT x){
+  heap[heap_size] = x;
+  int pos = heap_size++;
+  while(1){
+    int par = ((pos-1)>>1);
+    if(heap[pos].t >= heap[par].t || pos == 0) break;
+    swap(heap[pos], heap[par]);
+    pos = par;
+  }
+}
+
+/*
+  pop() (down_heap)
+  O(logN)
+  verified: yes
+*/
+void pop(){
+  swap(heap[0], heap[--heap_size]);
+  int pos = 0;
+  while(2*pos + 1 < heap_size){
+    int nex = (2*pos+2>=heap_size?2*pos+1: (heap[2*pos+2].t<heap[2*pos+1].t?2*pos+2:2*pos+1) );
+    if(heap[nex].t >= heap[pos].t) break; // for maximum heap
+    swap(heap[pos], heap[nex]);
+    pos = nex;
+  }
+}
+
+/*
+  return root (maximum value in the tree)
+  verified: yes
+*/
+ELEMENT top(){return heap[0];}
+
+/*-------heap end----------*/
+
+const int MAX = 5001;
+const int INF = (1<<25);
+int T[MAX][MAX];
+vector<int> Edge[MAX];
+P price[MAX];
+int N,K;
+
+void input(){
+  scanf("%d %d",&N,&K);
+  for(int i = 0; i < N; i++) scanf("%d %d",&price[i].c, &price[i].r);
+  for(int i = 0; i < K; i++){
+    int a,b;
+    scanf("%d %d",&a, &b);
+    a--;b--;
+    Edge[a].push_back(b);
+    Edge[b].push_back(a);
+  }
+}
+
+void solve(){
+  memset(T, -1, sizeof(T));
+  T[0][0] = 0;
+  push((State){0,0,0});
+  while(heap_size){
+    const State now = top();
+    pop();
+    
+    if(now.t > T[now.pos][now.remain]) continue;
+    
+    if(now.remain > 0){
+      for(int i = 0; i < (int)Edge[now.pos].size(); i++){
+        State nex = now;
+        nex.pos = Edge[now.pos][i];
+        nex.remain--;
+        
+        if(T[nex.pos][nex.remain] == -1 || T[nex.pos][nex.remain] > nex.t){
+          T[nex.pos][nex.remain] = nex.t;
+          push(nex);
+        }
+      }
+    }
+    
+    if(T[now.pos][price[now.pos].r] == -1 || T[now.pos][price[now.pos].r] > now.t+price[now.pos].c){
+      T[now.pos][price[now.pos].r] = now.t+price[now.pos].c;
+      push((State){now.t+price[now.pos].c, now.pos, price[now.pos].r});
+    }
+  }
+  
+  int ans = INF;
+  for(int i = 0; i < MAX; i++) 
+    if(T[N-1][i] >= 0) ans = min(ans,T[N-1][i]);
+  printf("%d\n",ans);
+}
+
+int main(){
+  input();
+  solve();
+  return 0;
+}

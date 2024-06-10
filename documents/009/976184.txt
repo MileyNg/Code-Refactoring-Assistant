@@ -1,0 +1,56 @@
+#include <algorithm>
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+#define fst first
+#define snd second
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+typedef pair<int,int> pii;
+
+
+int dp[1010][1010];
+
+int w[1010];
+int c[1010];
+
+int W;
+int n;
+
+int loop=1;
+
+int main(void){
+	while(cin >> W,W){
+		rep(i,1010)rep(j,1010) dp[i][j]=0;
+
+		cin >> n;
+		rep(i,n){
+			char tmp;
+			cin >> c[i] >> tmp >> w[i];
+		}
+
+
+		rep(i,n)rep(j,W+1){
+			dp[i+1][j]=max(dp[i+1][j],dp[i][j]);
+			if(j+w[i]<=W)
+				dp[i+1][j+w[i]]=max(dp[i+1][j+w[i]],dp[i][j]+c[i]);
+		}
+
+		int cans=0;
+		int wans=-1;
+
+		rep(j,W+1){
+			if(dp[n][j] > cans){
+				cans=dp[n][j];
+				wans=j;
+			}
+		}
+
+		cout << "Case " << loop++ << ":" << endl;
+		cout << cans << endl;
+		cout << wans << endl;
+		//cout << dp[1][10] << endl;
+	}
+	return 0;
+}

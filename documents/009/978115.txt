@@ -1,0 +1,40 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <array>
+#include <vector>
+
+using namespace std;
+
+void printState( int val ) {
+  for ( int i = 6; i >= 0; i-- ){
+	if ( val & ( 1 << i ) ) {
+	  cout << 1;
+	} else {
+	  cout << 0;
+	}
+  }
+  cout << endl;
+}
+
+int main() {
+
+  array<int, 10> table = {{
+	  0b111111, 0b110, 0b1011011, 0b1001111, 0b1100110,
+	  0b1101101, 0b1111101, 0b100111, 0b1111111, 0b1101111
+	}};
+  
+  while ( true ){
+	int n;
+	cin >> n;
+	if ( n <= 0 ) break;
+	
+	int state = 0;
+	for ( int i = 0; i < n; i++ ) {
+	  int nval;
+	  cin >> nval;
+	  printState( state ^ table[ nval ] );
+	  state = table[ nval ];
+	}	
+  }
+}

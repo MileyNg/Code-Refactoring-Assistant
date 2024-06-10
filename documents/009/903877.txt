@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void solve()
+{
+	int e;
+	while(cin >> e, e)
+	{
+		int min_val = 999999999;
+		for(int z = 0; z <= 100; ++z)
+		{
+			if(e < z * z * z)
+			{
+				break;
+			}
+			for(int y = 0; y <= 1000; ++y)
+			{
+				int temp = z * z * z + y * y;
+				if(e < temp)
+				{
+					break;
+				}
+				int x = e - temp;
+				min_val = min(min_val, x + y + z);
+			}
+		}
+		cout << min_val << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

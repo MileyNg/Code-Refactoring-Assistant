@@ -1,0 +1,157 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+double pfmod(double v,double MOD){
+	return fmod(fmod(v,MOD)+MOD,MOD);
+}
+
+class Comp{
+public:
+	bool operator () (const pair<int,int>& l,const pair<int,int>& r){
+		if(l.first!=r.first)return l.first>r.first;
+		return l.second<r.second;
+	}
+};
+
+namespace Ps{
+	const double EPS = 1e-8;
+	const double INF = 1e12;
+
+	typedef complex<double> P;
+	#define X(a) (real(a))
+	#define Y(a) (imag(a))
+	
+	// a×b
+	double cross(const P& a,const P& b){
+		return imag(conj(a)*b);
+	}
+	// a・b
+	double dot(const P&a,const P& b) {
+		return real(conj(a)*b);
+	}
+
+	 int ccw(const P& a,P b,P c){
+		b -= a; c -= a;
+		  if (cross(b,c) > 0)   return +1;       // counter clockwise
+		  if (cross(b,c) < 0)   return -1;       // clockwise
+		  if (dot(b,c) < 0)     return +2;       // c--a--b on line
+		  if (norm(b) < norm(c)) return -2;       // a--b--c on line
+		  return 0;
+	  }
+}
+using namespace Ps;
+
+class Main{
+public:
+	
+	bool canReach(int x,int y,int w,int a,int d){
+		if((ll)x*x+(ll)y*y<=(ll)a*a)
+		if(pfmod(abs(w*M_PI/180-atan2(y,x)),2*M_PI)<=d*M_PI/180/2)return true;
+		return false;
+	}
+
+	void run(){
+		int N,Q;scanf("%d%d",&N,&Q);
+		vector<int> cs(N);REP(i,N)scanf("%d",&cs[i]);
+		sort(ALL(cs));
+		vector<int> qs(Q);REP(q,Q)scanf("%d",&qs[q]);
+		
+		REP(q,Q){
+			int res=0;
+			for(int v=0;v<=300000;v+=qs[q]){
+				int i=lower_bound(ALL(cs),v)-cs.begin()-1; // [ →○ )[v..)
+				if(i<0)continue;
+				res=max(res,cs[i]%qs[q]);
+			}
+			cout << res<<endl;
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

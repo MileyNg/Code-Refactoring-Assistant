@@ -1,0 +1,100 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_Y = 11;
+const int MAX_X = 11;
+const int INF = 1e9 + 7;
+
+int Y, X, ans;
+int my[] = {0, 1, 0, -1};
+int mx[] = {1, 0, -1, 0};
+
+void change_color(int y, int x, int color, int bef_color, int v[MAX_Y][MAX_X]){
+  //cout <<y <<", " <<x <<endl;
+  v[y][x] = color;
+  REP(i, 4){
+    int ny = y + my[i], nx = x + mx[i];
+    if(ny >= 0 && nx >= 0 && ny < Y && nx < X && v[ny][nx] == bef_color) change_color(ny, nx, color, bef_color, v);
+  }
+}
+
+bool isOK(int v[MAX_Y][MAX_X]){
+  REP(i, Y) REP(j, X) if(v[i][j] != v[0][0]) return false;
+  return true;
+}
+
+int cntColor(int y, int x, int v[MAX_Y][MAX_X], int visited[MAX_Y][MAX_X]){
+  int ret = 1;
+  visited[y][x] = true;
+  REP(i, 2){
+    int ny = y + my[i], nx = x + mx[i];
+    if(ny >= 0 && nx >= 0 && ny < Y && nx < X && v[ny][nx] == v[0][0] && !visited[ny][nx]) ret += cntColor(ny, nx, v, visited);
+  }
+  return ret;
+}
+
+void dfs(int cnt, int all_cnt, int v[MAX_Y][MAX_X]){
+  //cout <<"--------" <<endl;
+  //cout <<cnt <<", " <<isOK(v) <<endl;
+  //REP(i, Y){
+  //  REP(j, X) cout <<v[i][j] <<" ";
+  //  cout <<endl;
+  //}
+  if(isOK(v)) ans = cnt;
+  if(cnt >= ans) return ;
+  REP(i, 3){
+    if(v[0][0] == i) continue;
+    //cout <<i <<"->" <<endl;
+    int tmp[MAX_Y][MAX_X];
+    REP(i, Y) memcpy(tmp[i], v[i], sizeof(v[i]));
+    change_color(0, 0, i, v[0][0], tmp);
+    int tmptmp[MAX_X][MAX_Y] = {0};
+    int c = cntColor(0, 0, tmp, tmptmp);
+    //REP(i, Y){
+    //  REP(j, X) cout <<tmp[i][j] <<" ";
+    //  cout <<endl;
+    //}
+    if(c > all_cnt) dfs(cnt + 1, c, tmp);
+  }
+}
+
+int main(){
+  int v[MAX_Y][MAX_X];
+  while(cin >>X >>Y && Y){
+    ans = INF;
+    REP(i, Y){
+      REP(j, X){
+        char tmp; cin >>tmp;
+        if(tmp == 'R') v[i][j] = 0;
+        if(tmp == 'G') v[i][j] = 1;
+        if(tmp == 'B') v[i][j] = 2;
+      }
+    }
+    int tmp[MAX_X][MAX_Y] = {0};
+    REP(i, 3) dfs(0, cntColor(0, 0, v, tmp), v);
+    cout <<ans <<endl;
+  }
+  return 0;
+}

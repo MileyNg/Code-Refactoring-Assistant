@@ -1,0 +1,21 @@
+dp = Array.new(100001,0.0)
+dp[1] = 1
+for i in 2...100
+    p = 1.0
+    w = 0.5
+    k = 1
+    while k<i && p>0.000001
+        dp[i] += (p*(1-w))*(k+dp[[0,i-k-1].max])
+        p *= w
+        w /= 2
+        k += 1
+    end
+    dp[i] += i*p
+end
+while true
+    n = gets.to_i
+    if n == 0
+        break
+    end
+    puts dp[n]
+end

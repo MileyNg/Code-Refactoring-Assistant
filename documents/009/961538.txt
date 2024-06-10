@@ -1,0 +1,86 @@
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <tuple>
+#include <vector>
+using namespace std;
+
+typedef tuple<int, int, int> point;
+#define x(p) get<0>(p)
+#define y(p) get<1>(p)
+#define z(p) get<2>(p)
+
+int r(int &a, int &b) {
+  static constexpr int C = ~(1 << 31);
+  static constexpr int M = (1 << 16) - 1;
+
+  a = 36969 * (a & M) + (a >> 16);
+  b = 18000 * (b & M) + (b >> 16);
+  return (C & ((a << 16) + b)) % 1000000;
+}
+
+bool check(int y, int z, const map<int, int> &contour) {
+  const auto it = contour.upper_bound(y);
+  return it != contour.end() && it->second < z;
+}
+
+int solve(vector<point> &points) {
+  const int n = points.size();
+  sort(points.begin(), points.end());
+
+  int max_count = 0;
+  vector<map<int, int>> dp(n + 1);
+  dp[0].insert({1, -1});
+
+  for(const auto &p : points) {
+    const int y = -y(p);
+    const int z = z(p);
+
+    int low = 0;
+    int high = max_count + 1;
+
+    while(low + 1 < high) {
+      const int mid = (low + high) / 2;
+      if(check(y, z, dp[mid])) {
+	low = mid;
+      }
+      else {
+	high = mid;
+      }
+    }
+
+    if(!dp[high].count(y)) dp[high].insert({y, INT_MAX});
+    dp[high][y] = min(dp[high][y], z);
+    if(low == max_count) ++max_count;
+  }
+  
+  return max_count;
+}
+
+int main() {
+  cin.tie(nullptr);
+  ios::sync_with_stdio(false);
+  for(int m, n, a, b; cin >> m >> n >> a >> b && (m | n);) {
+    vector<point> points;
+    points.reserve(n + m);
+
+    for(int i = 0; i < m; ++i) {
+      int x, y, z;
+      cin >> x >> y >> z;
+      points.emplace_back(x, y, z);
+    }
+
+    for(int i = 0; i < n; ++i) {
+      const int x = r(a, b);
+      const int y = r(a, b);
+      const int z = r(a, b);
+      points.emplace_back(x, y, z);
+    }
+
+    cout << solve(points) << endl;
+  }
+
+  return EXIT_SUCCESS;
+}

@@ -1,0 +1,25 @@
+#include<stdio.h>
+#define DETA 1000
+int main(void)
+{
+  int x[1000] = {0}; 
+  int y[1000] = {0};
+  int z[1000] = {0};
+  int i,j;
+
+  scanf("%d", &i);
+
+  for(j=0; j<i; j++){
+  scanf("%d %d %d", &x[j], &y[j], &z[j]);
+  }
+
+  for(j=0; j<i; j++){
+    if(x[j]*x[j] == y[j]*y[j] + z[j]*z[j] || y[j]*y[j] == x[j]*x[j] + z[j]*z[j] || z[j]*z[j] == x[j]*x[j] + y[j]*y[j]){
+      printf("YES\n");
+    }else{
+      printf("NO\n");
+    }
+  }
+
+  return 0;
+}

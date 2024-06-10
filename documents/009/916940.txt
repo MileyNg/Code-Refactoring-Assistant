@@ -1,0 +1,27 @@
+#include<iostream>
+#include<set>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int n, a, b, x, y;
+  set<int> data;
+  while(1){
+    cin >> n >> a >> b;
+    if(!n && !a && !b) break;
+    data.clear();
+    for(int i=0; ; ++i){
+      x = a*i;
+      if(x>n) break;
+      for(int j=0; ; ++j){
+	if(i==0 && j==0) continue;
+	y = b*j;
+	if(x+y>n) break;
+	data.insert(x+y);
+      }
+    }
+    cout << n-data.size() << endl;
+  }
+  return 0;
+}

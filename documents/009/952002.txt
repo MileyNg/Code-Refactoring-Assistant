@@ -1,0 +1,42 @@
+#define _USE_MATH_DEFINES
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <cstring>
+#include <math.h>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+using namespace std;
+
+
+int main(){
+	long int min=0, curmin=0, moke = -99999999, curmoke = -99999999;
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		int r;
+		cin >> r;
+		if (i == 0){
+			min = r;
+			curmin = r;
+		}
+
+		if (r<curmin)
+			curmin = r;
+		if (i > 0){
+			if (r - curmin > curmoke)
+				curmoke = r - curmin;
+			if (r - min > moke)
+				moke = r - min;
+			if (curmoke > moke){
+				moke = curmoke;
+				min = curmin;
+			}
+		}
+	}
+	cout << moke << endl;
+
+	return 0;
+}

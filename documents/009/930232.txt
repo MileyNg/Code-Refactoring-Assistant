@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<vector<int> > seg;
+int wbin, hbin;
+
+void update(int y, int x, int v)
+{
+	y += hbin - 1;
+	x += wbin - 1;
+	
+	seg[y][x] = v;
+	
+	while (y >= 0){
+		int _x = x;
+		while (_x){
+			_x = (_x - 1) / 2;
+			seg[y][_x] = min(seg[y][_x * 2 + 1], seg[y][_x * 2 + 2]);
+		}
+		if (y == 0) break;
+		y = (y - 1) / 2;
+		seg[y][x] = min(seg[y * 2 + 1][x], seg[y * 2 + 2][x]);
+	}
+}
+
+int _query(int G, int x1, int x2, int k = 0, int l = 0, int r = wbin)
+{
+	if (x2 <= l || r <= x1) return (INT_MAX);
+	if (x1 <= l && r <= x2) return (seg[G][k]);
+	
+	int lval = _query(G, x1, x2, k * 2 + 1, l, (l + r) / 2);
+	int rval = _query(G, x1, x2, k * 2 + 2, (l + r) / 2, r);
+	
+	return (min(lval, rval));
+}
+
+int query(int y1, int x1, int y2, int x2, int k = 0, int l = 0, int r = hbin)
+{
+	if (y2 <= l || r <= y1) return (INT_MAX);
+	if (y1 <= l && r <= y2) return (_query(k, x1, x2));
+	
+	int lval = query(y1, x1, y2, x2, k * 2 + 1, l, (l + r) / 2);
+	int rval = query(y1, x1, y2, x2, k * 2 + 2, (l + r) / 2, r);
+	
+	return (min(lval, rval));
+}
+
+int main()
+{
+	int w, h, q;
+	
+	while (scanf("%d %d %d", &h, &w, &q) && w){
+		wbin = hbin = 1;
+		while (wbin < w) wbin *= 2;
+		while (hbin < h) hbin *= 2;
+		
+		seg.resize(hbin * 2 - 1);
+		for (int i = 0; i < seg.size(); i++) seg[i].resize(wbin * 2 - 1);
+		
+		printf("%d %d\n", seg.size(), seg[0].size());
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++){
+				int a;
+				scanf("%d", &a);
+				update(i, j, a);
+			}
+		}
+		
+		for (int i = 0; i < q; i++){
+			int x1, y1, x2, y2;
+			scanf("%d %d %d %d", &y1, &x1, &y2, &x2);
+			printf("%d\n", query(y1, x1, y2 + 1, x2 + 1));
+		}
+	}
+	
+	return (0);
+}

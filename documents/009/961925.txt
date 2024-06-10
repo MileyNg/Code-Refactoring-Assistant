@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+inline int min(int a, int b, int c) {
+    return a<b ? (a<c ? a: c) : (b<c ? b: c);
+}
+
+int main () {
+    char s1[1001], s2[1001];
+    int **dist, *_dist, l1, l2, i, j;
+
+    scanf("%s", s1);
+    scanf("%s", s2);
+    l1 = strlen(s1);
+    l2 = strlen(s2);
+
+    _dist = (int*)malloc(sizeof(int) * (l1+1) * (l2+1));
+    dist = (int**)malloc(sizeof(int*) * (l1+1));
+    for (i = 0; i <= l1; i++) {
+        dist[i] = _dist + (l2+1) * i;
+    }
+
+    for (i = 0; i <= l1; i++) {
+        dist[i][0] = i;
+    }
+    for (j = 0; j <= l2; j++) {
+        dist[0][j] = j;
+    }
+    for (i = 1; i <= l1; i++) {
+        for (j = 1; j <= l2; j++) {
+            dist[i][j] = min(
+                             dist[i-1][j] + 1,
+                             dist[i][j-1] + 1,
+                             dist[i-1][j-1] + (s1[i-1]!=s2[j-1]));
+        }
+    }
+    printf("%d\n", dist[l1][l2]);
+
+    free(dist);
+    free(_dist);
+
+    return 0;
+}

@@ -1,0 +1,33 @@
+#include<iostream>
+
+bool cards[4][13];
+
+int main(){
+	int n;
+	std::cin >> n;
+
+	for (int i = 0; i < n; i++){
+		char a;
+		int b;
+		std::cin >> a >> b;
+		b--;
+
+		if (a == 'S')cards[0][b] = true;
+		if (a == 'H')cards[1][b] = true;
+		if (a == 'C')cards[2][b] = true;
+		if (a == 'D')cards[3][b] = true;
+	}
+
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 13; j++){
+			if (!cards[i][j]){
+				if (i == 0)std::cout << "S " << j + 1 << std::endl;
+				if (i == 1)std::cout << "H " << j + 1 << std::endl;
+				if (i == 2)std::cout << "C " << j + 1 << std::endl;
+				if (i == 3)std::cout << "D " << j + 1 << std::endl;
+			}
+		}
+	}
+
+	return 0;
+}

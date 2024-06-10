@@ -1,0 +1,149 @@
+//
+//  main.cpp
+//  AOJ
+//
+//  Created by user on 2014/06/01.
+//  Copyright (c) 2014年 user. All rights reserved.
+//
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <set>
+#include <algorithm>
+#include <cstring>
+#include <map>
+using namespace std;
+
+const int SIZE = 3628810;
+typedef pair< vector<int>, int > Pack;
+
+int getPermId(const vector<int>& v){
+    const int N = (int)v.size();
+    
+    int fact = 1;
+    int res = 0;
+    
+    for(int i=N-1;i>=0;i--){
+        for(int j=i+1;j<N;j++){
+            if(v[j] < v[i]){
+                res += fact;
+            }
+        }
+        fact *= (N - i);
+    }
+    
+    return res;
+}
+
+int dist[2][SIZE];
+vector<Pack> Queue[2];
+
+int bfs(const vector<int>& start, const vector<int>& goal){
+    memset(dist, -1, sizeof(dist));
+    
+    const int N = (int)start.size();
+    const int startId = getPermId(start);
+    const int goalId  = getPermId(goal);
+    
+    if(startId == goalId){
+        return 0;
+    }
+    
+    int curr = 0, next = 1;
+    
+    dist[curr][startId] = 0;
+    dist[next][goalId]  = 0;
+    
+    Queue[curr].push_back(make_pair(start, startId));
+    Queue[next].push_back(make_pair(goal,  goalId));
+    
+    for(;;){
+        vector<Pack> nextQueue;
+        for(int i=0;i<Queue[curr].size();i++){
+            Pack &pack = Queue[curr][i];
+            
+            vector<int> &perm_ = pack.first;
+            int permId = pack.second;
+            int nowCost = dist[curr][permId];
+            
+            /*for(int s=0;s<N;s++)for(int t=s+1;t<N;t++){
+                reverse(perm.begin() + s, perm.begin() + t + 1);
+            
+                int nextPermId = getPermId(perm);
+                if(dist[curr][nextPermId] == -1){
+                    dist[curr][nextPermId] = nowCost + 1;
+                
+                    if(dist[next][nextPermId] != -1){
+                        return dist[curr][nextPermId] + dist[next][nextPermId];
+                    } else {
+                        nextQueue.push_back(make_pair(perm, nextPermId));
+                    }
+                }
+                
+                reverse(perm.begin() + s, perm.begin() + t + 1);
+            }*/
+            
+            for(int s=0;s<N;s++){
+                for(int d=1;d<=2;d++){
+                    vector<int> perm = perm_;
+                    
+                    int S = s;
+                    int T = s + d;
+                    
+                    while(S >= 0 && T < N){
+                        swap(perm[S], perm[T]);
+                        
+                        int nextPermId = getPermId(perm);
+                        if(dist[curr][nextPermId] == -1){
+                            dist[curr][nextPermId] = nowCost + 1;
+                            
+                            if(dist[next][nextPermId] != -1){
+                                return dist[curr][nextPermId] + dist[next][nextPermId];
+                            } else {
+                                nextQueue.push_back(make_pair(perm, nextPermId));
+                            }
+                        }
+                        
+                        --S;
+                        ++T;
+                    }
+                    
+                    S = s;
+                    T = s + d;
+                    
+                    while(S >= 0 && T < N){
+                        swap(perm[S], perm[T]);
+                        
+                        --S;
+                        ++T;
+                    }
+                }
+            }
+        }
+        Queue[curr].swap(nextQueue);
+        
+        swap(curr, next);
+    }
+    
+    return 1;
+}
+
+int main(){
+    int N;
+    cin >> N;
+    
+    vector<int> start(N);
+    for(int i=0;i<N;i++){
+        cin >> start[i];
+        --start[i];
+    }
+    
+    vector<int> goal = start;
+    sort(goal.begin(), goal.end());
+    
+    int res = bfs(start, goal);
+    cout << res << endl;
+    
+    return 0;
+}

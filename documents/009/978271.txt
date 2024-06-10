@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 1000
+
+char stack[MAX];
+int i = 0;
+
+void push(char ch)
+{
+  stack[i++] = ch;
+}
+
+void pop()
+{
+  char ch;
+  if (i > 0) {
+    ch = stack[--i];
+    printf("%c\n", ch);
+  }
+}
+
+int main(void)
+{
+  char order[10];
+  char ch;
+
+  while (1) {
+    //scanf("%s", order);
+    //gets(order);
+    //printf("order=%s\n", order);
+    //scanf("%s", &ch);
+    fgets(order, sizeof(order), stdin);
+    order[strlen(order) - 1] = '\0';
+
+    if (!strcmp("quit", order)) {
+      break;
+    } else if (!strcmp("pop", order)) {
+      pop();
+    } else if (!strncmp("push ", order, 5)) {
+      push(order[5]);
+    }
+  }
+
+  return 0;
+}

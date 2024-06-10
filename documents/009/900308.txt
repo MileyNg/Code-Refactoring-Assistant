@@ -1,0 +1,51 @@
+class Vector
+  attr_accessor :x, :y
+  
+  def initialize(x = 0, y = 0)
+    @x = x
+    @y = y
+  end
+
+  def cross(v)
+    return (@x * v.y - @y * v.x)
+  end
+
+  def -(v)
+    return Vector.new(@x - v.x, @y - v.y)
+  end
+end
+
+class Line
+  attr_accessor :a, :b
+
+  def initialize(a, b)
+    @a = a
+    @b = b
+  end
+
+  def intersect?(l)
+    if (b - a).cross(l.a - a) * (b - a).cross(l.b - a) < 0 &&
+      (l.b - l.a).cross(a - l.a) * (l.b - l.a).cross(b - l.a) < 0
+      return true
+    end
+  end
+end
+
+if __FILE__ == $0
+  while line = gets
+    xa, ya, xb, yb, xc, yc, xd, yd = line.split(',').map{|i| i.to_f}
+    a = Vector.new(xa, ya)
+    b = Vector.new(xb, yb)
+    c = Vector.new(xc, yc)
+    d = Vector.new(xd, yd)
+
+    ac = Line.new(a, c)
+    bd = Line.new(b, d)
+
+    if ac.intersect?(bd)
+      puts "YES"
+    else
+      puts "NO"
+    end
+  end
+end

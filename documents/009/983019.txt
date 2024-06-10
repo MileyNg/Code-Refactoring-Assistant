@@ -1,0 +1,34 @@
+class Die
+  attr_reader :top, :bottom, :front, :back, :left, :right
+  def initialize(list)
+    @top, @front, @right, @left, @back, @bottom = list
+    roll(:clockwise) if @left == "Red" || @right == "Red"
+    until @top == "Red"
+      roll(:front)
+    end
+    front = (@bottom != "Cyan") ? "Cyan" : "Green"
+    4.times do
+      break if @front == front
+      roll(:clockwise)
+    end
+  end
+  def roll(direction)
+    case direction
+      when :front
+        @front, @top, @back, @bottom = [@front, @top, @back, @bottom].rotate(1)
+      when :clockwise
+        @front, @right, @back, @left = [@front, @right, @back, @left].rotate(1)
+    end
+  end
+  def eql?(other)
+    [@top, @bottom, @front, @back, @left, @right] == [other.top, other.bottom, other.front, other.back, other.left, other.right]
+  end
+  def hash
+    [@top, @bottom, @front, @back, @left, @right].hash
+  end
+end
+
+until (n = gets.to_i).zero?
+  dice = n.times.map{Die.new(gets.split)}
+  p n - dice.uniq.size
+end

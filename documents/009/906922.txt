@@ -1,0 +1,28 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+	string abc = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
+	string s;
+	getline(cin, s);
+	while (true) {
+		string::size_type index = s.find("the");
+		string::size_type index2 = s.find("this");
+		string::size_type index3 = s.find("that");
+		if (index != string::npos || index2 != string::npos || index3 != string::npos) {
+			break;
+		}
+		for (int i = 0; i < s.size(); i++) {
+			for (int j = 0; j < 26; j++) {
+				if (s[i] == abc[j]) {
+					s[i] = abc[j+1];
+					break;
+				}
+			}
+		}
+	}
+	cout << s << endl;
+	return 0;
+}

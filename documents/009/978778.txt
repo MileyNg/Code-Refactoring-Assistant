@@ -1,0 +1,636 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "limits.h"
+#include <queue>
+#include <map>
+#include <functional>
+
+using namespace std;
+
+namespace mempool
+{
+	queue<void*> q[32];
+	map<void*,int> m;
+
+	int log2(int a)
+	{
+		int now = 0;
+		while(a > 0)
+		{
+			a /= 2;
+			now++;
+		}
+		return now;
+	}
+
+	int pow2(int a)
+	{
+		int now = 1;
+		for(int i = 0; i < a; i++)
+		{
+			now *= 2;
+		}
+		return now;
+	}
+
+	void* getmfp(int size)
+	{
+		/*int w = log2(size);
+		if(q[w].empty())
+		{
+			void* p = malloc(pow2(w));
+			m[p] = w;
+			return p;
+		}
+		else
+		{
+			void* p = q[w].front();
+			q[w].pop();
+			return p;
+		}*/
+		return malloc(size);
+	}
+
+	void setmtp(void* a)
+	{
+		//int w = m[a];
+		//q[w].push(a);
+		free(a);
+	}
+
+
+	queue<int*> qms;
+	queue<int*> qw;
+	int* flgm;
+	int fs;
+
+	int* getflgm()
+	{
+		static int ww = 0;
+		if(ww == 0)
+		{
+			fs = 0;
+			ww = 1;
+		}/*
+		if(qw.empty() == false)
+		{
+			int* w = qw.front();
+			qw.pop();
+			return w;
+		}*/
+		if(fs == 0)
+		{
+			flgm = (int*)getmfp(sizeof(int) * 1);
+			return flgm;
+			//qms.push(flgm);
+			//fs = 256;
+		}
+		//fs--;
+		//int* w = flgm;
+		//flgm++;
+		//return w;
+	}
+
+	void setflgm(int* a)
+	{
+		//qw.push(a);
+	}
+}
+
+template<class T> class cont
+{
+private:
+	int* flg;
+public:
+	int ns;
+	T* d;
+
+	cont()
+	{
+		ns = 0;
+		flg = mempool::getflgm();
+		(*flg) = 0;
+	}
+
+	cont(int a)
+	{
+		d = (T*)mempool::getmfp(sizeof(T) * a);
+		ns = a;
+		flg = mempool::getflgm();
+		(*flg) = 0;
+	}
+
+	cont& operator=(const cont& a)
+	{
+		if((*a.flg) < 0)
+		{
+			throw 0;
+		}
+
+		if(ns > 0 && (*flg) >= 0)
+		{
+			mempool::setmtp(d);
+		}
+
+		if((*a.flg) == 0)
+		{
+			d = (T*)mempool::getmfp(sizeof(T) * a.ns);
+			for(int i = 0; i < a.ns; i++)
+			{
+				d[i] = a.d[i];
+			}
+			flg = mempool::getflgm();
+			(*flg) = 0;
+		}
+		else
+		{
+			d = a.d;
+			flg = mempool::getflgm();
+			(*flg) = (*a.flg) - 1;
+			(*a.flg) = -1;
+		}
+		ns = a.ns;
+
+		return *this;
+	}
+
+	cont(const cont& rhs)
+	{
+		operator=(rhs);
+	}
+
+	cont& rget(int a)
+	{
+		T* w = (T*)mempool::getmfp(sizeof(T) * a);
+		for(int i = 0; i < a && i < ns; i++)
+		{
+			w[i] = d[i];
+		}
+		if(ns != 0)
+		{
+			mempool::setmtp(d);
+		}
+		(*flg) = 0;
+		d = w;
+		ns = a;
+		return *this;
+	}
+
+	cont& mov()
+	{
+		(*flg) = 1;
+		return *this;
+	}
+
+	cont& allmov()
+	{
+		(*flg) = INT_MAX;
+		return *this;
+	}
+
+	cont& canmov()
+	{
+		(*flg) = 0;
+		return *this;
+	}
+
+	~cont()
+	{
+		if((*flg) >= 0 && ns > 0)
+		{
+			mempool::setmtp(d);
+			mempool::setflgm(flg);
+		}
+	}
+
+	int getflg()const
+	{
+		return (*flg);
+	}
+};
+
+template<class T> class dset
+{
+protected:
+	cont<T> d;
+
+	int opw(const dset& a)const
+	{
+		for(int i = 0; i < d.ns && i < a.d.ns; i++)
+		{
+			if(d.d[i] < a.d.d[i])
+			{
+				return -1;
+			}
+			if(d.d[i] > a.d.d[i])
+			{
+				return 1;
+			}
+		}
+		if(d.ns < a.d.ns)
+		{
+			return -1;
+		}
+		if(d.ns > a.d.ns)
+		{
+			return 1;
+		}
+		return 0;
+	}
+public:
+	dset(){}
+
+	dset(int a)
+	{
+		d.rget(a);
+	}
+
+	dset& mov()
+	{
+		d.mov();
+		return *this;
+	}
+
+	dset& allmov()
+	{
+		d.allmov();
+		return *this;
+	}
+
+	dset& canmov()
+	{
+		d.canmov();
+		return *this;
+	}
+
+	dset& rget(int size)
+	{
+		d.rget(size);
+		return *this;
+	}
+	
+	void operator++()
+	{
+		for(int i = 0; i < d.ns; i++)
+		{
+			d.d[i]++;
+		}
+	}
+
+	void operator--()
+	{
+		for(int i = 0; i < d.ns; i++)
+		{
+			d.d[i]--;
+		}
+	}
+
+	dset operator+(const dset& a)const
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+		}
+
+		dset w(size);
+		for(int i = 0; i < size; i++)
+		{
+			w.d.d[i] = d.d[i] + a.d.d[i];
+		}
+
+		w.mov();
+		return w;
+	}
+
+	dset operator-(const dset& a)const
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+		}
+
+		dset w(size);
+		for(int i = 0; i < size; i++)
+		{
+			w.d.d[i] = d.d[i] - a.d.d[i];
+		}
+
+		w.mov();
+		return w;
+	}
+
+	dset operator*(const dset& a)const
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+		}
+
+		dset w(size);
+		for(int i = 0; i < size; i++)
+		{
+			w.d.d[i] = d.d[i] * a.d.d[i];
+		}
+
+		w.mov();
+		return w;
+	}
+
+	dset operator/(const dset& a)const
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+		}
+
+		dset w(size);
+		for(int i = 0; i < size; i++)
+		{
+			w.d.d[i] = d.d[i] / a.d.d[i];
+		}
+
+		w.mov();
+		return w;
+	}
+
+	dset operator%(const dset& a)const
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+		}
+
+		dset w(size);
+		for(int i = 0; i < size; i++)
+		{
+			w.d.d[i] = d.d[i] % a.d.d[i];
+		}
+
+		w.mov();
+		return w;
+	}
+	
+	dset& operator+=(const dset& a)
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+			d.rget(size);
+		}
+
+		for(int i = 0; i < size; i++)
+		{
+			d.d[i] += a.d.d[i];
+		}
+
+		return *this;
+	}
+
+	dset& operator-=(const dset& a)
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+			d.rget(size);
+		}
+
+		for(int i = 0; i < size; i++)
+		{
+			d.d[i] -= a.d.d[i];
+		}
+
+		return *this;
+	}
+
+	dset& operator*=(const dset& a)
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+			d.rget(size);
+		}
+
+		for(int i = 0; i < size; i++)
+		{
+			d.d[i] *= a.d.d[i];
+		}
+
+		return *this;
+	}
+
+	dset& operator/=(const dset& a)
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+			d.rget(size);
+		}
+
+		for(int i = 0; i < size; i++)
+		{
+			d.d[i] /= a.d.d[i];
+		}
+
+		return *this;
+	}
+
+	dset& operator%=(const dset& a)
+	{
+		int size;
+		if(d.ns < a.d.ns)
+		{
+			size = d.ns;
+		}
+		else
+		{
+			size = a.d.ns;
+			d.rget(size);
+		}
+
+		for(int i = 0; i < size; i++)
+		{
+			d.d[i] %= a.d.d[i];
+		}
+
+		return *this;
+	}
+
+	bool operator==(const dset& a)const
+	{
+		return (opw(a) == 0);
+	}
+
+	bool operator!=(const dset& a)const
+	{
+		return (opw(a) != 0);
+	}
+
+	bool operator<(const dset& a)const
+	{
+		return (opw(a) < 0);
+	}
+
+	bool operator<=(const dset& a)const
+	{
+		return (opw(a) <= 0);
+	}
+
+	bool operator>(const dset& a)const
+	{
+		return (opw(a) > 0);
+	}
+
+	bool operator>=(const dset& a)const
+	{
+		return (opw(a) >= 0);
+	}
+
+	T& operator[](int a)const
+	{
+		if(d.getflg() != 0)
+		{
+			throw 1;
+		}
+		return d.d[a];
+	}
+};
+
+class stw
+{
+private:
+	cont<char> cw;
+public:
+	dset<char> d;
+	void in(char* a)
+	{
+		int w = strlen(a);
+		d.rget(w);
+		cw.rget(w + 1);
+		for(int i = 0; i < w; i++)
+		{
+			d[i] = a[i];
+			cw.d[i] = a[i];
+		}
+		cw.d[w] = '\0';
+	}
+
+	char* out()const
+	{
+		return cw.d;
+	}
+
+	stw& mov()
+	{
+		d.mov();
+		cw.mov();
+		return *this;
+	}
+
+	stw& allmov()
+	{
+		d.allmov();
+		cw.allmov();
+		return *this;
+	}
+
+	stw& canmov()
+	{
+		d.canmov();
+		cw.canmov();
+		return *this;
+	}
+
+	bool operator==(const stw& a)const
+	{
+		return (d == a.d);
+	}
+
+	bool operator!=(const stw& a)const
+	{
+		return (d != a.d);
+	}
+
+	bool operator<(const stw& a)const
+	{
+		return (d < a.d);
+	}
+
+	bool operator<=(const stw& a)const
+	{
+		return (d <= a.d);
+	}
+
+	bool operator>(const stw& a)const
+	{
+		return (d > a.d);
+	}
+
+	bool operator>=(const stw& a)const
+	{
+		return (d >= a.d);
+	}
+};
+
+int main()
+{
+	priority_queue<dset<char>,vector<dset<char> >,greater<dset<char> > > q;
+	int n;
+	scanf("%d",&n);
+	for(int i = 0; i < n; i++)
+	{
+		char a[1000];
+		scanf("%s",a);
+		stw w;
+		w.in(a);
+		q.push(w.d);
+		return 0;
+	}
+	printf("%s\n",q.top().out());
+	return 0;
+}

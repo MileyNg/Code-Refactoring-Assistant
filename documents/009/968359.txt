@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main() {
+  int i, n;
+  float x1, y1, x2, y2, x3, y3, x4, y4;
+  float d, dxa, dya, dxb, dyb;
+
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%f%f%f%f%f%f%f%f", &x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4);
+    dxa = x2 - x1;
+    dya = y2 - y1;
+    dxb = x4 - x3;
+    dyb = y4 - y3;
+
+    d = dxb * dya - dyb * dxa;
+    if (d >= -0.00001 && d <= 0.00001)
+      puts("YES");
+    else
+      puts("NO");
+  }
+
+  return 0;
+}

@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+  int n;
+  for(cin>>n;n--;)
+    {
+      string s;
+      cin>>s;
+      string ans="NA";
+
+	if(s.substr(0,2)==">'" &&s[s.size()-1]=='~')
+	  {
+	    string tmp=s.substr(2,s.size()-3);
+	    //	  cout<<tmp<<endl;
+	    if(tmp.size()%2!=0
+	       && tmp[tmp.size()/2]=='#'
+	       && tmp.substr(0,tmp.size()/2)==tmp.substr(tmp.size()/2+1,tmp.size()/2)
+	       && tmp.substr(0,tmp.size()/2)==*(new string(tmp.size()/2,'=')))
+		ans="A";
+	  }
+	else if(s.substr(0,2)==">^" && s.substr(s.size()-2,2)=="~~")
+	  {
+	    string tmp=s.substr(2,s.size()-4);
+	    //	      cout<<tmp<<endl;
+	    while(tmp.size()>0)
+	      {
+		if(tmp.substr(0,2)=="Q=")
+		  tmp=tmp.substr(2,tmp.size()-2);
+		else
+		  break;
+	      }
+	    if(tmp.size()==0)
+	      ans="B";	    
+	    }
+	  cout<<ans<<endl;
+    }
+}

@@ -1,0 +1,55 @@
+class Button
+  attr_accessor :lx, :ly, :rx, :ry, :link
+  def initialize(a, b, c, d, l)
+    @lx, @ly, @rx, @ry, @link = a.to_i, b.to_i, c.to_i, d.to_i, l.to_s
+  end
+  def clicked?(x, y)
+    x, y = x.to_i, y.to_i
+    return false if x < lx || rx < x
+    return false if y < ly || ry < y
+    true
+  end
+end
+
+class Page
+  attr_accessor :button
+  def initialize(b = Array.new)
+    @button = b
+  end
+  def add(b)
+    @button.push(b)
+  end
+end
+
+until (n = gets.to_i).zero? do
+  w, h = gets.split.map(&:to_i)
+
+  buffer = Array.new
+  pointer = 0
+  page = Hash.new
+  n.times do
+    name, b = gets.split
+    buffer.push(name) if buffer.empty?
+    page[name] = Page.new
+    b.to_i.times do
+      page[name].add(Button.new(*gets.split))
+    end
+  end
+
+  m = gets.to_i
+  m.times do
+    command, x, y = gets.split
+    case command
+      when "click"
+        b = page[buffer[pointer]].button.find{|b| b.clicked?(x, y)}
+        pointer += 1
+        buffer = buffer.first(pointer).push(b.link)
+      when "back"
+        pointer -= 1 if pointer > 0
+      when "forward"
+        pointer += 1 if pointer < buffer.size - 1
+      when "show"
+        puts buffer[pointer]
+    end
+  end
+end

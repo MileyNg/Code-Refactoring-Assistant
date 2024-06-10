@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+void swap(int array[], int a, int b)
+{
+  int tmp = array[a];
+  array[a] = array[b];
+  array[b] = tmp;
+}
+
+int main(void)
+{
+  int w, n;
+  char buf[6 + 1];
+  char *num;
+  int a, b, i, tmp;
+  int lots[30];
+
+  for (i = 0; i < 30; i++) {
+    lots[i] = i + 1;
+  }
+
+  fgets(buf, sizeof(buf), stdin);
+  w = atoi(buf);
+  fgets(buf, sizeof(buf), stdin);
+  n = atoi(buf);
+  for (i = 0; i < n; i++) {
+    fgets(buf, sizeof(buf), stdin);
+    a = atoi(strtok(buf, ","));
+    b = atoi(strtok(NULL, ","));
+
+    swap(lots, a - 1, b - 1);
+  }
+
+  for (i = 0; i < w; i++) {
+    printf("%d\n", lots[i]);
+  }
+
+  return 0;
+}

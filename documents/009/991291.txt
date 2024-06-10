@@ -1,0 +1,61 @@
+#include<cstdio>
+
+class pair{
+  public:
+  bool b;
+  int i;
+  int j;
+  void init(int i){
+    b = i ? true : false;
+    i = j = 0;
+  }
+};
+
+using namespace std;
+int main(){
+  int s[8][8];
+  pair x;
+  while(scanf("%1d",&s[0][0])!=EOF){
+    x.init(s[0][0]);
+    for(int i=0;i<8;i++){
+      for(int j=0;j<8;j++){
+        if(i==0&&j==0)j++;
+        scanf("%1d",&s[i][j]);
+        if(!x.b&&s[i][j]){
+          x.i=i;
+          x.j=j;
+          x.b=true;
+        }
+      }
+    }
+    
+    for(int i=0;i<8;i++){for(int j=0;j<8;j++)printf("%d",s[i][j]);printf("\n");}
+    printf("%d %d\n",x.i,x.j);
+
+    if(x.j!=7){
+      if(s[x.i][x.j+1]){
+        if(x.i!=7){
+          if(s[x.i+1][x.j]){
+            if(s[x.i+1][x.j+1])printf("A\n");
+            else printf("G\n");
+          }
+          else if(s[x.i+1][x.j+1])printf("E\n");
+          else printf("C\n");
+          }
+        else printf("C\n");
+      }
+      else if(s[x.i+1][x.j+1])printf("F\n");
+      else if(x.j!=0){
+        if(s[x.i+1][x.j-1])printf("D\n");
+        else printf("B\n");
+      }
+      else printf("B\n");
+    }
+    else if(x.j!=0){
+      if(s[x.i+1][x.j-1])printf("D\n");
+      else printf("B\n");
+    }
+    else printf("B\n");
+  }
+  return 0;
+}

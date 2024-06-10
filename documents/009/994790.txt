@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <sstream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  vector< long long int > a;
+  
+  long long int n = 0;
+  while( !cin.eof() ) {
+    
+    string s;
+    getline( cin, s );
+    replace(s.begin(), s.end(), ',', ' ');
+    stringstream ss(s);
+
+    long long int in = 0;
+    while( ss >> in ) {
+      a.push_back( in );
+      //cout << in << endl;
+    }
+    
+    
+    n++;
+  }
+  n = (n + 1) / 2;
+  //cout << n << endl;
+
+  long long int cnt[100][100] = {0};
+  long long int k = 0;
+  for ( long long int i = 0; i < n; i++ ) {
+    for ( long long int j = 0; j <= i; j++ ) {
+      if(i == 0){
+	cnt[i][j] = a[k];
+      }else{
+	cnt[i][j] = max(j == 0 ? 0 : cnt[i-1][j-1], cnt[i - 1][j]) + a[k];
+      }
+      //ut << a[k] << "(" << k <<  ")" << ",";
+      k++;
+    }
+    //ut << endl;
+  }
+  for ( long long int i = n-1; i >= 1; i-- ) {
+    const int h = 2 * n - i - 1;
+    
+    for ( long long int j = 0; j < i; j++ ) {
+      cnt[h][j] = max( cnt[h-1][j], cnt[h-1][j+1] ) + a[k];
+      //cout << a[k] << "(" << k <<  ")" << ",";
+      k++;
+    }
+    // cout << endl;
+  }
+  cout << cnt[2*n - 2][0] << endl;
+
+  return 0;
+
+}

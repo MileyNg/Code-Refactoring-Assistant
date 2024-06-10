@@ -1,0 +1,68 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+using namespace std;
+typedef long long int lli;
+typedef pair<int,int> P;
+const int INF=100000000;
+const long long int INF_=1000000000000000000;
+ 
+int N,ANS=INF;
+vector<int> T[20];
+int Cost[20][20];
+int Count[20];
+bool Done[20][20];
+ 
+void dfs(int v,int cost,int count){
+    if(ANS<=cost) return;
+    if(count==N-1){
+        ANS=cost;
+        return;
+    }
+    for(int i=0; i<T[v].size(); ++i){
+        if(Cost[v][T[v][i]]!=INF){
+			int tmp=Cost[v][T[v][i]];
+            Cost[v][T[v][i]]=Cost[T[v][i]][v]=INF;
+            dfs(v,cost,count+1);
+            Cost[v][T[v][i]]=Cost[T[v][i]][v]=tmp;
+			if(!Done[v][T[v][i]]){
+                Done[v][T[v][i]]=true;
+                dfs(T[v][i],cost+Cost[v][T[v][i]],count);
+                Done[v][T[v][i]]=false;
+            }
+        }
+    }
+    return;
+}
+ 
+int main(){
+    while(cin >> N&&N){
+		ANS=INF;
+		for(int i=0; i<N; ++i) T[i].clear();
+        memset(Done,0,sizeof(Done));
+        memset(Count,0,sizeof(Count));
+        fill_n((int*)Cost,20*20,INF);
+        for(int i=0; i<N-1; ++i){
+            int a,b,t;
+            cin >> a >> b >> t;
+            --a; --b;
+            T[a].push_back(b);
+            T[b].push_back(a);
+            Cost[a][b]=Cost[b][a]=t;
+            ++Count[a];
+            ++Count[b];
+        }
+        for(int i=1; i<N; ++i){
+			if(Count[i]<=1){
+				for(int j=0; j<T[i].size(); ++j){
+					Done[i][T[i][j]]=Done[T[i][j]][i]=false;
+				}
+			}
+		}
+        dfs(0,0,0);
+        cout << ANS << endl;
+    }
+    return 0;
+}

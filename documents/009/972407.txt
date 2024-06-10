@@ -1,0 +1,37 @@
+#include<stdio.h>
+
+int count(int n){
+  if(n==0){
+    return 0;
+  }
+  else{
+    int m;
+    scanf("%d",&m);
+    if(m>=2){
+      return 1+count(n-1);
+    }
+    else{
+      return count(n-1);
+    }
+  }
+}
+
+void doit(){
+  int n;
+  scanf("%d",&n);
+  if(n!=0){
+    int ans=count(n);
+    if(ans==0){
+      printf("NA\n");
+    }
+    else{
+      printf("%d\n",ans+1);
+    }
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

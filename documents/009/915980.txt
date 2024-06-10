@@ -1,0 +1,147 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+
+class Main{
+	public:
+	void run(){
+	//	ifstream cin("in");
+	//	ofstream cout( "out" );
+		int N,K;cin >>N >> K;
+		
+		map<int,int> dmap;
+		REP(i,K){
+			int a,b;cin >> a >> b;
+			dmap[a]=b;
+		}
+
+		vector<vector<vector<int> >> dp(N+1,vector<vector<int> >(4,vector<int>(4)));
+		for(int c=1;c<=3;c++){
+			if((dmap.count(1) > 0 && dmap[1]==c) || dmap.count(1)==0)
+				dp[1][c][0]=1;
+		}
+		for(int i=2;i<=N;i++){
+			for(int c=1;c<=3;c++){
+				if( (dmap.count(i) > 0 && dmap[i]==c) || dmap.count(i)==0){
+					for(int pc1=1;pc1<=3;pc1++)for(int pc2=0;pc2<=3;pc2++){
+						if(!(c==pc1 && pc1 ==pc2)){
+							dp[i][c][pc1]+=dp[i-1][pc1][pc2];
+							dp[i][c][pc1]%=10000;
+						}
+					}
+				}
+			}
+		}
+	
+		ll res=0;
+		for(int c=1;c<=3;c++)for(int p=1;p<=3;p++){
+			res+=dp[N][c][p];
+			res%=10000;
+		}
+
+		cout << res<<endl;
+	}
+};
+int main(){
+	cout <<fixed<<setprecision(3);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

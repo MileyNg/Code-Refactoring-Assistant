@@ -1,0 +1,12 @@
+import itertools
+m = input()
+exp = "True"
+for i in range(input()):
+	x,y = map(int,raw_input().split())
+	exp += " and N[" + str(x-1) + "] < N[" + str(y-1) + "]"
+for N in itertools.permutations(range(m),m):
+	if eval(exp):
+		ans = sorted([[N[i],i+1] for i in range(m)])
+		for n,i in ans:
+			print i
+		break

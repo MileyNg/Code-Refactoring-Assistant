@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+  while( true ) {
+
+    int cnt[100] = {0};
+    int n = 0;
+    int in0, in1;
+
+    bool flag = true;
+
+    while( cin >> in0 >> in1 ) {
+
+      flag = false;
+      if ( in0 == 0 && in1 == 0 ) {
+	int k = 0;
+	if ( ( cnt[0] % 2 ) == 0 ) k++;
+	if ( ( cnt[1] % 2 ) == 0 ) k++;
+	for ( int i = 2; i < n; i++ ) {
+	  if ( ( cnt[i] % 2 ) != 0 ) k++;
+	}
+	if ( k >= 1 ) {
+	  cout << "NG" << endl;
+	}else {
+	  cout << "OK" << endl;
+	}
+	break;
+      }
+      cnt[in0-1]++;
+      cnt[in1-1]++;
+      n = max( n, max( in0, in1 ) );
+
+    }
+    if ( flag ) break;
+
+  }
+
+  return 0;
+
+}

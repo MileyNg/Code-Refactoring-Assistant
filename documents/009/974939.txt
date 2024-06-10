@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+int main(){
+  int r,c,m,n,data[101][101];
+
+  cin>>r>>c;
+
+  for(m=0; m<101; m++)for(n=0; n<101; n++)data[m][n]=0;
+
+  for(m=0; m<r; m++)for(n=0; n<c; n++)cin>>data[m][n];
+
+  for(m=0; m<r; m++){
+
+    for(n=0; n<c; n++)cout<<data[m][n]<<" ";
+
+    for(n=0; n<c; n++)data[m][c]+=data[m][n];
+    cout<<data[m][c];
+
+    cout<<"\n";
+
+  }
+
+  for(n=0; n<c+1; n++){
+
+    for(m=0; m<r; m++)data[c][n]+=data[m][n];
+
+    cout<<data[r+1][n];
+    if(n==c)break;
+    else cout<<" ";
+
+      }
+
+  cout<<"\n";
+
+}

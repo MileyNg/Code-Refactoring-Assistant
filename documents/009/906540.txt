@@ -1,0 +1,186 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define all(a) a.begin(), a.end()
+#define For(i, n) for (i = 0; i < n; ++i)
+//#define For(i, start, n) for (i = start; i < n; ++i)
+//#define For(i, start, n, step) for (i = start; i < n; i += step)
+#define rFor(i, n) for (i = n; i >= 0; --i)
+//#define rFor(i, end, n) for (i = n; i >= end; --i)
+//#define rFor(i, end, n, step) for (i = n; i >= end; i -= step)
+#define loop(a) for (it = a.begin(); it != a.end(); ++it)
+typedef long long ll;
+const double eps = 1e-10;
+
+struct P
+{
+	double x, y;
+
+	P(double x = 0.0, double y = 0.0): x(x), y(y){}
+	void read(int i)
+	{
+		scanf("%lf%lf", &x, &y);
+		//id = i;
+	}
+	void output()
+	{
+	    printf("%10f%10f\n",x,y);
+	}
+	P operator + (P p)
+	{
+		return P(x + p.x, y + p.y);
+	}
+	P operator - (P p)
+	{
+		return P(x - p.x, y - p.y);
+	}
+	P operator * (double d)
+	{
+		return P(x * d, y * d);
+	}
+	P operator / (double d)
+	{
+		return P(x / d, y / d);
+	}
+	double dot(P p)
+	{
+		return x * p.x + y * p.y;
+	}
+	double det(P p)
+	{
+		return x * p.y - y * p.x;
+	}
+} p[15], pp;
+
+int n, ans;
+double w, h, r, vx, vy, dis;
+double tmpx, tmpy;
+
+void transx()
+{
+   // cout<<"asd";
+	if (vx < 0) vx = -vx;
+	for (int i = 1; i <= n; ++i) p[i].x = w - p[i].x;
+}
+
+void transy()
+{
+   //  cout<<"asd";
+	if (vy < 0) vy = -vy;
+	for (int i = 1; i <= n; ++i) p[i].y = h - p[i].y;
+}
+
+void trans()
+{
+	if (vx < 0) transx();
+	if (vy < 0) transy();
+}
+
+inline bool onseg(P p1, P p2, P q)
+{
+	return (p1 - q).dot(p2 - q) < eps;
+}
+
+inline P intersection(P p1, P p2, P q1, P q2)
+{
+
+   // cout<<"  __  "<<((q2 - q1).det(q1 - p1) / (q2 - q1).det(p2 - p1))<<endl;
+//(p2 - p1).output();
+	return p1 + (p2 - p1) * ((q2 - q1).det(q1 - p1) / (q2 - q1).det(p2 - p1));
+}
+
+double dd(P p1, P p2, P m)
+{
+	///螯ゆス墓桷騾?ク?擅蝙らコソ?嗄, m + P(p1.y - p2.y, p2.x - p1.x)
+	pp = intersection(p1, p2, m, m + P(p1.y - p2.y, p2.x - p1.x));
+
+
+//	pp.output();
+
+	if (!onseg(p1, p2, pp))
+	{
+		if ((p2 - p1).dot(pp - p1) > eps) pp = p2;
+		else pp = p1;
+	}
+	return (m - pp).dot(m - pp);
+}
+
+bool solve()
+{
+	tmpx = p[1].x + (h - r - p[1].y) * vx / vy;
+
+	//cout<<tmpx<<"  __ "<<endl;
+
+	if (tmpx > w - r + eps)
+	{
+		tmpx = w - r;
+		tmpy = p[1].y + (w - r - p[1].x) * vy / vx;
+	}
+	else tmpy = h - r;
+	if (dis + hypot(tmpx - p[1].x, tmpy - p[1].y) > 10000.0 + eps)
+	{
+	    dis=10000.0;
+		tmpx = p[1].x + (10000.0 - dis) / hypot(vx, vy) * vx;
+		tmpy = p[1].y + (10000.0 - dis) / hypot(vx, vy) * vy;
+	}
+
+
+
+
+
+	else dis += hypot(tmpx - p[1].x, tmpy - p[1].y);
+
+
+	//cout<<tmpx<<"  "<<tmpy<<endl;
+
+	bool ok = false;
+	double mind=10000,tmpd=0;
+	for (int i = 2; i <= n; ++i)
+	{
+
+		if((tmpd = dd(p[1], P(tmpx,tmpy), p[i]))+eps<2*r)
+		{
+            ok=true;
+		    if(tmpd<mind)
+            {
+                ans=i;
+                mind=tmpd;
+            }
+		}
+		//cout<<tmpd<<endl;
+	}
+	p[1]=P(tmpx,tmpy);
+	if(fabs(tmpx-(w-r))<eps)
+    {
+        transx();
+       // puts("xxx");
+    }
+	if(fabs(tmpy-(h-r))<eps)
+    {
+        transy();
+       // puts("yyy");
+       // p[1].output();
+    }
+	return ok;
+}
+
+int main()
+{
+	int i;
+	while (scanf("%d", &n), n)
+	{
+		scanf("%lf%lf%lf%lf%lf", &w, &h, &r, &vx, &vy);
+		//r=10;
+		for (i = 1; i <= n; ++i) p[i].read(i);
+		trans();
+		ans = -1, dis = 0.0;
+		while (dis + eps < 10000.0)
+        {
+            if (solve()) break;
+           // cout<<dis<<endl;
+
+
+        }
+		printf("%d\n", ans);
+	}
+	return 0;
+}

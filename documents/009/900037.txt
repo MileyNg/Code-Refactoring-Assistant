@@ -1,0 +1,26 @@
+def countPrime(n)
+  if n >= 2
+    nums = (2..n).to_a
+    i = 0
+    prime = nums[i]
+    while prime**2 <= n
+      target = prime
+      j = 2
+      while target*j <= n
+        nums.delete target*j
+        j += 1
+      end
+      i += 1
+      prime = nums[i]
+    end
+
+    return nums.count()
+  else
+    return 0
+  end
+end
+
+while n = gets()
+  n = n.to_i
+  print countPrime(n)
+end

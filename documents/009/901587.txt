@@ -1,0 +1,56 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    const int L = 394,
+              W = 394;
+    int n; readf("%d\n", &n);
+    int[] P = new int[L];
+    foreach (i; 0 .. n) {
+        int s, l, p; readf("%d %d %d\n", &s, &l, &p);
+        for (int j = s; j <= l; j++) {
+            P[j] = max(P[j], p);
+        }
+    }
+
+    int cache[L][W]; memset(cast(void*)cache, -1, cache.sizeof);
+    int solve(int i, int w) {
+        if (w == 0) return 0;
+        if (i == L) return -1;
+        if (cache[i][w] >= 0) return cache[i][w];
+        if (P[i] == 0) return solve(i + 1, w);
+        int ret = -1;
+        for (int x = 0; x * i <= w; x++) {
+            int r = solve(i + 1, w - x * i);
+            if (r == -1) continue;
+            ret = max(ret, r + x * P[i]);
+        }
+        return cache[i][w] = ret;
+    }
+
+    int m; readf("%d\n", &m);
+    int[] ans;
+    foreach (i; 0 .. m) {
+        int w; readf("%d\n", &w);
+        ans ~= solve(0, w);
+        if (ans.back == -1) {
+            writeln(-1);
+            return;
+        }
+    }
+    foreach (a; ans) {
+        a.writeln;
+    }
+}

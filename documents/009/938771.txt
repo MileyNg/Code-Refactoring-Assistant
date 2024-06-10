@@ -1,0 +1,75 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+// F
+string arr[801];
+
+bool startwith(const string &a, const string &b)
+{
+    if (a.size()>b.size()) return false;
+
+    for (int i=0; i<min(a.size(),b.size()); i++)
+    {
+        if (a[i]!=b[i]) return false;
+    }
+
+    return true;
+}
+
+bool cmp1(const string &a, const string &b)
+{
+    if (a==b) return true;
+    if (startwith(a,b)) return true;
+    if (startwith(b,a)) return false;
+    return a<b;
+}
+
+bool cmp2(const string &a, const string &b)
+{
+    if (a==b) return true;
+    if (startwith(a,b)) return true;
+    if (startwith(b,a)) return false;
+    return a>b;
+}
+
+int main()
+{
+    int n;
+//freopen("fuck.in","r",stdin);
+
+    //ios::sync_with_stdio(false);
+    while (cin>>n and n!=0)
+    {
+        bool right1=true, right2=true;
+
+        for (int i=0; i<n; i++) cin>>arr[i];
+
+        for (int i=0; i<n-1; i++)
+        {
+            if (cmp1(arr[i],arr[i+1])==false)
+            {
+                right1=false;
+                break;
+            }
+        }
+
+        for (int i=0; i<n-1; i++)
+        {
+            if (cmp2(arr[i],arr[i+1])==false)
+            {
+                right2=false;
+                break;
+            }
+        }
+
+        if (right1 or right2) cout<<"yes\n"; else cout<<"no\n";
+    }
+    return 0;
+}

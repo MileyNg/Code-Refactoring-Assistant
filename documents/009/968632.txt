@@ -1,0 +1,100 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstring>
+#include <cstdlib>
+#include <set>
+using namespace std;
+
+char memo[16][16];
+set<int> dp[16][16];
+vector<int> op, ol;
+const char *exp;
+
+set<int> &dfs(int s, int e, int sp, int ep, int lv){
+	set<int> &res = dp[s][e];
+	if(memo[s][e]){
+		return res;
+	}
+	res.clear();
+
+	memo[s][e] = 1;
+
+	for(bool need = true; need; ){
+		need = (exp[sp] == '(' && exp[ep - 1] == ')');
+		for(int i = s + 1; i < e; ++i){
+			if(ol[i] == lv){
+				need = false;
+			}
+		}
+		if(need){
+			++sp;
+			--ep;
+			++lv;
+		}
+	}
+
+	if(s + 1 == e){
+		res.insert(strtol(exp + sp, 0, 10));
+	}
+	else{
+		for(int i = s + 1; i < e; ++i){
+			if(ol[i] == lv){
+				char c = exp[op[i]];
+				set<int> &t = dfs(s, i, sp, op[i], lv);
+				set<int> &u = dfs(i, e, op[i] + 1, ep, lv);
+				set<int>::iterator it1, it2;
+				for(it1 = t.begin(); it1 != t.end(); ++it1)
+				for(it2 = u.begin(); it2 != u.end(); ++it2){
+					switch(c){
+					case '+':
+						res.insert(*it1 + *it2);
+						break;
+					case '-':
+						res.insert(*it1 - *it2);
+						break;
+					case '*':
+						res.insert(*it1 * *it2);
+						break;
+					case '/':
+						if(*it2){
+							res.insert(*it1 / *it2);
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	return res;
+}
+
+int main(){
+	string s;
+	while(getline(cin, s), s[0] != '#'){
+		memset(memo, 0, sizeof memo);
+		op.assign(1, -1);
+		ol.assign(1, 0);
+		int lv = 1;
+		int len = s.size();
+		
+		exp = s.c_str();
+		for(int i = 0; i < len; ++i){
+			if(s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/'){
+				op.push_back(i);
+				ol.push_back(lv);
+			}
+			else if(s[i] == '('){
+				++lv;
+			}
+			else if(s[i] == ')'){
+				--lv;
+			}
+		}
+		op.push_back(len);
+		ol.push_back(0);
+		int ans = dfs(0, op.size() - 1, 0, len, 1).size();
+		cout << ans << '\n';
+	}
+}

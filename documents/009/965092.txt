@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+const int MAX  = 5; 
+int field[5][5];
+bool check(int fx,int fy,int lx,int ly){
+  int flag = 1;
+  for(int i = fx;i <= lx;i++){
+    for(int j = fy;j <= ly;j++){
+      if(field[j][i] != 1){
+	return false;
+      }
+    }
+  }
+  return true;
+}
+int solve(){
+  int ans = 0;
+  for(int i = 0;i < MAX;i++){
+    for(int j = 0;j < MAX;j++){
+      cin >> field[i][j];
+    }
+  }
+  for(int i = 0;i < MAX;i++){
+    for(int j = 0;j < MAX;j++){
+      for(int k = i;k < MAX;k++){
+	for(int l = j;l < MAX;l++){
+	  if(check(i,j,k,l)){
+	    ans = max(ans,(k-i+1)*(l-j+1));
+	  }
+	}
+      }
+    }
+  }
+  return ans;
+  
+}
+int main(){ 
+  int m;
+  cin >> m;
+  while(m--)cout << solve() << endl;
+  
+  return 0;
+}

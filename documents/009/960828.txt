@@ -1,0 +1,60 @@
+#include<cstdio>
+char tile[101][101];
+int stat[101][101];
+int main(void)
+{
+	int x,y;
+	
+	while(scanf("%d %d",&y,&x)!=EOF)
+	{
+		if(x==0||y==0)break;
+		int now_x=0,now_y=0;
+		fflush(stdin);
+		for(int f1=0;f1<y;f1++)
+		{
+			scanf("%s",tile[f1]);
+		}
+		while(1){
+			switch(tile[now_y][now_x])
+			{
+			case '>':
+				now_x++;
+				break;
+			case '<':
+				now_x--;
+				break;
+			case '^':
+				now_y--;
+				break;
+			case 'v':
+				now_y++;
+				break;
+			case '.':
+				printf("%d %d\n",now_x,now_y);
+				goto G;
+			}
+		//	printf("now->%d %d\n",now_x,now_y);
+			if(stat[now_y][now_x])
+			{
+				printf("LOOP\n");
+				goto G;
+			}
+			stat[now_y][now_x]=1;
+		}
+		G:;
+		for(int f1=0;f1<101;f1++)
+		{
+			for(int f2=0;f2<101;f2++)
+			{
+				tile[f1][f2]='\0';
+				stat[f1][f2]=0;
+			}
+		}
+		now_x=0;now_y=0;
+	}
+	/*
+	fflush(stdin);
+	getchar();
+	*/
+	return 0;
+}

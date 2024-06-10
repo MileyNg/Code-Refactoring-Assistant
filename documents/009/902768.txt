@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int T, P, R;
+	while (cin >> T >> P >> R) {
+		if (T == 0 && P == 0 && R == 0) {
+			break;
+		}
+		int team[50][10] = {0};
+		int pena[50][2] = {0};
+		for (int i = 0; i < R; i++) {
+			int tid, pid, time;
+			string message;
+			cin >> tid >> pid >> time >> message;
+			if (message == "CORRECT") {
+				pena[tid-1][0]++;
+				pena[tid-1][1] += team[tid-1][pid-1] * 1200 + time;
+			} else {
+				team[tid-1][pid-1]++;
+			}
+		}
+		int juni[50];
+		for (int i = 0; i < T; i++) {
+			juni[i] = i+1;
+		}
+		for (int i = 0; i < T; i++) {
+			for (int j = T-1; j > i; j--) {
+				if (pena[j][0] > pena[j-1][0]) {
+					swap(pena[j][0], pena[j-1][0]);
+					swap(pena[j][1], pena[j-1][1]);
+					swap(juni[j], juni[j-1]);
+				} else if (pena[j][0] == pena[j-1][0]) {
+					if (pena[j][1] < pena[j-1][1]) {
+						swap(pena[j][0], pena[j-1][0]);
+						swap(pena[j][1], pena[j-1][1]);
+						swap(juni[j], juni[j-1]);
+					}
+				} 
+			}
+		}
+		for (int i = 0; i < T; i++) {
+			cout << juni[i] << ' ' << pena[i][0] << ' ' << pena[i][1] << endl;
+		}
+	}
+	return 0;
+}

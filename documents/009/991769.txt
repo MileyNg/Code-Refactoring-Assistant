@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+const int INF = 1 << 25;
+const int M_LIMIT = 100;
+
+int main()
+{
+	int n, m, k;
+	int cost[ M_LIMIT + 1 ][ M_LIMIT + 1 ];
+	int time[ M_LIMIT + 1 ][ M_LIMIT + 1 ];
+	while( cin >> n >> m && ( n || m ) ){
+		for( int i = 0; i < M_LIMIT + 1; ++i ){
+			for( int j = 0; j < M_LIMIT + 1; ++j ){
+				cost[ i ][ j ] = time[ i ][ j ] = INF;
+			}
+		}
+		for( int i = 0; i < M_LIMIT + 1; ++i ){
+			cost[ i ][ i ] = time[ i ][ i ] = 0;
+		}
+		for( int i = 0; i < n; ++i ){
+			int a, b, c, t;
+			cin >> a >> b >> c >> t;
+			cost[ a ][ b ] = cost[ b ][ a ] = c;
+			time[ a ][ b ] = time[ b ][ a ] = t;
+		}
+		for( int p = 1; p <= m; ++p ){
+			for( int i = 1; i <= m; ++i ){
+				for( int j = 1; j <= m; ++j ){
+					cost[ i ][ j ] = min( cost[ i ][ j ], cost[ i ][ p ] + cost[ p ][ j ] );
+					time[ i ][ j ] = min( time[ i ][ j ], time[ i ][ p ] + time[ p ][ j ] );
+				}
+			}
+		}
+		cin >> k;
+		for( int i = 0; i < k; ++i ){
+			int p, q, r;
+			cin >> p >> q >> r;
+			cout << ( r == 0 ? cost[ p ][ q ] : time[ p ][ q ] ) << endl;
+		}
+	}
+	return 0;
+}

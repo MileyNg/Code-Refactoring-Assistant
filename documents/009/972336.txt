@@ -1,0 +1,104 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 101;
+const int INF = 1e9 + 7;
+
+
+class C{
+  public:
+    int now, cost, m;
+    C(int _n, int _c, int _m){ now = _n; cost = _c; m = _m; };
+    C(){}
+    bool operator > (const C &c) const{ return cost > c.cost; }
+};
+
+//町、制限、冷凍の町、道路、首都、病院
+int N, M, L, K, A, H, F[MAX_N][MAX_N];
+bool is_L[MAX_N];
+vector<P> v[MAX_N];
+
+void make_v(int s){
+  priority_queue<P> open;
+  REP(i, N) if(F[s][i] != INF) open.push( P(F[s][i], i) );
+  vector<int> closed(N, INF);
+  while(!open.empty()){
+    P tmp = open.top(); open.pop();
+    int cost = tmp.first, now = tmp.second;
+    if(is_L[now]) closed[now] = min(closed[now], cost);
+    else REP(i, N) if(F[now][i] != INF) open.push( P(cost + F[now][i], i) );
+  }
+  vector<P> ans;
+  REP(i, N) if(closed[i] != INF && is_L[i] && i != s && closed[i] <= M) ans.push_back( P(closed[i], i) );
+  v[s] = ans;
+}
+
+int calc(){
+  priority_queue<C, vector<C>, greater<C> > open;
+  open.push( C(A, 0, M) );
+  vector<int> closed(N, INF);
+  while(!open.empty()){
+    C tmp = open.top(); open.pop();
+    int now = tmp.now, cost = tmp.cost, m = tmp.m;
+    if(closed[now] <= cost) continue;
+    closed[now] = cost;
+    REP(i, v[now].size()){
+      int next = v[now][i].second, next_cost = v[now][i].first;
+      if(next_cost <= m) open.push( C(next, cost + next_cost, m - next_cost) );
+      else open.push( C(next, cost + next_cost + (next_cost - m), 0) );
+    }
+  }
+  return closed[H];
+}
+
+int main() {
+  while(cin >>N >>M >>L >>K >>A >>H && N){
+    REP(i, N) is_L[i] = false;
+    REP(i, L){
+      int tmp; cin >>tmp;
+      is_L[tmp] = true;
+    }
+    is_L[A] = true;
+    is_L[H] = true;
+    REP(i, N) REP(j, N) F[i][j] = INF;
+    REP(i, K){
+      int from, to, c; cin >>from >>to >>c;
+      F[to][from] = c;
+      F[from][to] = c;
+    }
+    REP(i, N) if(is_L[i] == true) make_v(i);
+    //cout <<"------" <<endl;
+    //REP(i, N) cout <<is_L[i] <<", "; cout <<endl;
+    //REP(i, N){
+    //  cout <<i <<" : (" <<v[i].size() <<") ";
+    //  REP(j, v[i].size()) cout <<"P(" <<v[i][j].first <<", " <<v[i][j].second <<"), ";
+    //  cout <<endl;
+    //}
+    int ans = calc();
+    if(ans == INF) cout <<"Help!" <<endl;
+    else cout <<ans <<endl;
+  }
+  return 0;
+}

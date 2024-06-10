@@ -1,0 +1,16 @@
+while 1:
+	n,k = map(int,raw_input().split())
+	if n == 0: break
+	c = [int(raw_input()) for i in range(n)]
+	Ck1 = 1
+	for i in range(k):
+		Ck1 *= c[i]
+	Ck = Ck1*max(c[k:])/min(c[:k])
+	cur1 = Ck1
+	for i in range(k,n):
+		cur1 = cur1*c[i]/c[i-k]
+		cur2 = cur1*max(c[:i-k]+c[i+1:])/min(c[i-k+1:i+1])
+		Ck1 = max(Ck1,cur1)
+		CK = max(Ck,cur2)
+	if n-k >= 2: Ck = max(Ck1,Ck)
+	print Ck-Ck1 if Ck-Ck1 >= 0 else "NO GAME"	

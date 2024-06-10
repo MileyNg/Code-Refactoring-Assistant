@@ -1,0 +1,25 @@
+#include<iostream>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int dp[60][60][60];
+
+int main() {
+  int n, m;
+  cin >> n >> m;
+  int a[n], b[n], c[n];
+  rep (i, n) cin >> a[i] >> b[i] >> c[i];
+  rep (i, 60) rep (j, 60) rep (k, 60) dp[i][j][k] = -1e9;
+  dp[0][m][0] = 0;
+  rep (i, n) rep (j, m + 1) rep (k, m + 1) rep (l, min(j + 1, 9)) {
+    if (l + k <= 8) dp[i + 1][j - l][l] = max(dp[i + 1][j - l][l], dp[i][j][k] + a[i] * l + b[i] * k);
+    dp[i + 1][j - l][l] = max(dp[i + 1][j - l][l], dp[i][j][k] + a[i] * l);
+    dp[i + 1][j - l][l] = max(dp[i + 1][j - l][l], dp[i][j][k] + b[i] * k);
+    dp[i + 1][j - l][l] = max(dp[i + 1][j - l][l], dp[i][j][k] + c[i]);
+  }
+  int res = -1e9;
+  rep (i, m + 1) rep (j, m + 1) res = max(res, dp[n][i][j]);
+  cout << res << endl;
+}

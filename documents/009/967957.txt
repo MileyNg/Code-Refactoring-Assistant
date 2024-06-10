@@ -1,0 +1,85 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	char ch;
+	string input_str = "";
+	while(cin.get(ch)){
+		switch(ch){
+		case ' ' :input_str += "101"	    ;break;
+//		case '\n':input_str += "101"		;break;
+		case '\'':input_str += "000000"		;break;
+		case ',' :input_str += "000011"		;break;
+		case '-' :input_str += "10010001"	;break;
+		case '.' :input_str += "010001"		;break;
+		case '?' :input_str += "000001"	    ;break;
+		case 'A' :input_str += "100101"		;break;
+		case 'B' :input_str += "10011010"	;break;
+		case 'C' :input_str += "0101"		;break;
+		case 'D' :input_str += "0001"		;break;
+		case 'E' :input_str += "110"		;break;
+		case 'F' :input_str += "01001"		;break;
+		case 'G' :input_str += "10011011"	;break;
+		case 'H' :input_str += "010000"		;break;
+		case 'I' :input_str += "0111"		;break;
+		case 'J' :input_str += "10011000"	;break;
+		case 'K' :input_str += "0110"		;break;
+		case 'L' :input_str += "00100"		;break;
+		case 'M' :input_str += "10011001"	;break;
+		case 'N' :input_str += "10011110"	;break;
+		case 'O' :input_str += "00101"		;break;
+		case 'P' :input_str += "111"		;break;
+		case 'Q' :input_str += "10011111"	;break;
+		case 'R' :input_str += "1000"		;break;
+		case 'S' :input_str += "00110"		;break;
+		case 'T' :input_str += "00111"		;break;
+		case 'U' :input_str += "10011100"	;break;
+		case 'V' :input_str += "10011101"	;break;
+		case 'W' :input_str += "000010"		;break;
+		case 'X' :input_str += "10010010"	;break;
+		case 'Y' :input_str += "10010011"	;break;
+		case 'Z' :input_str += "10010000"	;break;
+		}
+	}
+	int pad = 5 - input_str.size()%5;
+	for(int i=0; i<pad; i++)input_str += "0";
+	for(int i=0; i<input_str.size(); i+=5){
+		string output_str = input_str.substr(i, 5);
+		if(output_str== "00000"){ cout << "A"; }
+		else if( output_str=="00001") { cout << "B";}	
+		else if( output_str=="00010") { cout << "C";}	
+		else if( output_str=="00011") { cout << "D";}	
+		else if( output_str=="00100") { cout << "E";}	
+		else if( output_str=="00101") { cout << "F";}	
+		else if( output_str=="00110") { cout << "G";}	
+		else if( output_str=="00111") { cout << "H";}	
+		else if( output_str=="01000") { cout << "I";}	
+		else if( output_str=="01001") { cout << "J";}	
+		else if( output_str=="01010") { cout << "K";}	
+		else if( output_str=="01011") { cout << "L";}	
+		else if( output_str=="01100") { cout << "M";}	
+		else if( output_str=="01101") { cout << "N";}	
+		else if( output_str=="01110") { cout << "O";}	
+		else if( output_str=="01111") { cout << "P";}	
+		else if( output_str=="10000") { cout << "Q";}	
+		else if( output_str=="10001") { cout << "R";}	
+		else if( output_str=="10010") { cout << "S";}	
+		else if( output_str=="10011") { cout << "T";}	
+		else if( output_str=="10100") { cout << "U";}	
+		else if( output_str=="10101") { cout << "V";}	
+		else if( output_str=="10110") { cout << "W";}	
+		else if( output_str=="10111") { cout << "X";}	
+		else if( output_str=="11000") { cout << "Y";}	
+		else if( output_str=="11001") { cout << "Z";}	
+		else if( output_str=="11010") { cout << " ";}	
+		else if( output_str=="11011") { cout << ".";}	
+		else if( output_str=="11100") { cout << ",";}	
+		else if( output_str=="11101") { cout << "-";}	
+		else if( output_str=="11110") { cout << "'";} 
+		else if( output_str=="11111") { cout << "?";}
+	}
+	cout << endl;
+	return 0;
+}

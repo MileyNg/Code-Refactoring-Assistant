@@ -1,0 +1,53 @@
+//============================================================================
+// Name        : aoj0108.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	int n, s[12], tmp[12], pre[12];
+	while(cin >> n){
+		for(int i = 0 ;i < n;i++){
+			cin >> s[i];
+		}
+		memset(pre,-1,sizeof(pre));
+		while(true){
+			int i;
+			for(i = 0;i < n;i++){
+				pre[i] = s[i];
+				tmp[i] = s[i];
+			}
+			for(i = 0;i < n;i++){
+				int cnt = 0;
+				for(int j = 0;j < n;j++){
+					if(tmp[i] == tmp[j]){
+						cnt++;
+					}
+				}
+				s[i] = cnt;
+			}
+			for(i = 0;i < n;i++){
+				if(pre[i] != s[i]){
+					break;
+				}
+			}
+			if(i == n){
+				break;
+			}
+		}
+		for(int i = 0;i < n;i++){
+			cout << s[i];
+			if(i != n - 1){
+				cout << " ";
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}

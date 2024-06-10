@@ -1,0 +1,194 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+#include <ctime>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+class Treap{
+	struct node{
+		int val, Min;
+		int pri, cnt;
+		node *lch, *rch;
+		node(int val, int p) :val(val), Min(val), pri(p), cnt(1){
+			lch = rch = nullptr;
+		}
+	};
+	node *update(node *t){
+		t->cnt = count(t->lch) + count(t->rch) + 1;
+		t->Min = min({ t->val, min_elem(t->lch), min_elem(t->rch) });
+		return t;
+	}
+
+	const int INF = 1<<30;
+public:
+	node *root;
+	Treap() :root(nullptr){}
+	int count(node *t){ return t ? t->cnt : 0; };
+	int min_elem(node *t){ return t ? t->Min : INF; };
+
+	node *merge(node *l, node *r){
+		if (l == nullptr) return r;
+		if (r == nullptr) return l;
+
+		if (l->pri > r->pri){
+			l->rch = merge(l->rch, r);
+			return update(l);
+		}
+		else{
+			r->lch = merge(l, r->lch);
+			return update(r);
+		}
+	}
+
+	pair<node*, node*> split(node *t, int k){
+		if (t == nullptr) return make_pair(nullptr, nullptr);
+
+		if (k <= count(t->lch)){
+			auto s = split(t->lch, k);
+			t->lch = s.second;
+			return make_pair(s.first, update(t));
+		}
+		else{
+			auto s = split(t->rch, k - count(t->lch) - 1);
+			t->rch = s.first;
+			return make_pair(update(t), s.second);
+		}
+	}
+
+	node *insert(node *t, int k, int val, int p){
+		if (t == nullptr) return t = new node(val, p);
+
+		node *l, *r;
+		tie(l, r) = split(t, k);
+		return t = merge(merge(l, new node(val, p)), r);
+	}
+
+	node *erase(node *t, int k){
+		if (t == nullptr) return nullptr;
+
+		node *l, *r, *m;
+		tie(l, r) = split(t, k + 1);
+		tie(l, m) = split(l, k);
+
+		return t = merge(l, r);
+	}
+
+	node *get(node *t, int k){
+		if (t == nullptr) return nullptr;
+		int lcnt = count(t->lch);
+		if (lcnt > k) return get(t->lch, k);
+		if (lcnt < k) return get(t->rch, k - lcnt - 1);
+		return t;
+	}
+
+	node *upd(node *t, int k, int val, int pri){		
+		return insert(erase(t, k), k, val, pri);
+	}
+
+	int min_query(node *t, int l, int r){ // min{[l, r)}
+		// tの範囲は[0, count(t))
+		int a = 0, b = count(t);
+
+		if (a >= b || r <= a || b <= l) return INF;
+		if (l <= a && b <= r) return min_elem(t);
+
+		int lcnt = count(t->lch);
+		int lmin = min_query(t->lch, l, r);
+		int rmin = min_query(t->rch, l - lcnt - 1, r - lcnt - 1);
+
+		int res = l <= lcnt && lcnt < r ? t->val : INF;
+
+		return min({ res, lmin, rmin });
+	}
+
+	node *right_shift(node *t, int l, int r, int p){
+		int val = get(t, r - 1)->val;
+		return insert(erase(t, r - 1), l, val, p);
+	}
+
+	void print(){
+		_print(root);
+		cout << endl;
+	}
+	void _print(node *t){
+		if (t == nullptr) return;
+		_print(t->lch);
+		cout << t->val << endl;
+		_print(t->rch);
+	}
+};
+
+Treap t;
+int main(){
+	srand(time(NULL));
+
+	int n, q;
+	cin >> n >> q;
+	rep(i, n){
+		int x;
+		cin >> x;
+		t.root = t.insert(t.root, i, x, rand());
+	}
+
+	rep(i, q){
+		int type, l, r;
+		cin >> type >> l >> r;
+		switch (type){
+		case 0:
+			t.root = t.right_shift(t.root, l, r + 1, rand());
+			break;
+		case 1:
+			//cout << "***";
+			cout << t.min_query(t.root, l, r + 1) << '\n';
+			break;
+		case 2:
+			t.root = t.upd(t.root, l, r, rand());
+			break;
+		}
+
+		//t.print();
+		//cout << endl;
+	}
+
+	return 0;
+}

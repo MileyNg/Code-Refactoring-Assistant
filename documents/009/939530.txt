@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<map>
+#include<cmath>
+#define F first
+#define S second
+#define INF 1<<28
+using namespace std;
+
+int w, h;
+char c;
+int sx, sy, gx, gy;
+typedef pair < int, int > P;
+vector < P > d[9];
+map < P, map < int, int > > mp;
+int memo[9][1111][9];
+
+int cost(P now, P will, int cnt){
+
+  if(!cnt) now.F = sx, now.S = sy;
+  else if(cnt == 4) will.F = gx, will.S = gy;
+  
+  return abs(will.F - now.F) + abs(will.S - now.S);
+}
+
+int solve(P p, int cnt){
+
+  if(memo[p.F][p.S][cnt]) return memo[p.F][p.S][cnt];
+  if(mp[p][cnt]) return mp[p][cnt];
+  if(cnt == 5) return 0;
+  
+  int ret = INF, k = (p.F+1)%5;
+  for(int i=0;i<d[k].size();i++) ret = min(solve(P(k,i),cnt+1)+cost(d[p.F][p.S],d[k][i],cnt), ret);
+
+  return memo[p.F][p.S][cnt] = mp[p][cnt] = ret;
+}
+
+int main(){
+
+  while(true){
+    cin >> w >> h;
+    if(!w && !h) break;
+
+    for(int i=0;i<9;i++) d[i].clear();
+
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++){
+	cin >> c;
+	if(c == 'S') sx = j, sy = i;
+	else if(c == 'G') gx = j, gy = i;
+	else if(c != '.') d[c-'1'].push_back(P(j, i));
+      }
+    }
+    
+    mp.clear();
+    memset(memo, 0, sizeof(memo));
+
+    P p(INF, INF);
+    for(int i=0;i<5;i++) if(p.S > solve(P(i,0), 0)) p.F = i+1, p.S = solve(P(i,0), 0);
+
+    if(p.F == INF) cout << "NA" << endl;
+    else cout << p.F << " " << p.S << endl;
+  }
+}

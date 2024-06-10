@@ -1,0 +1,34 @@
+#include <stdio.h>
+#define MAX 20
+#define N 2001
+
+int a[MAX], n;
+int solve(int, int);
+
+int main() {
+
+    int i, m;
+    int q[N];
+
+    scanf("%d", &n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &a[i]);
+    }
+
+    scanf("%d", &m);
+    for (i = 0; i < m; i++) {
+        scanf("%d", &q[i]);
+        if(solve(0, q[i])) printf("yes\n");
+        else printf("no\n");
+    }
+    return 0;
+
+}
+
+int solve(int p, int t) {
+    if(t == 0) return 1;
+    if(p == n) return 0;
+    if(solve(p+1, t)) return 1;
+    if(solve(p+1, t-a[p])) return 1;
+    return 0;
+}

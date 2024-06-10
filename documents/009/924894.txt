@@ -1,0 +1,62 @@
+def main
+  tables = []
+
+  loop do
+    table_number = gets.chomp.to_i
+    break if table_number == 0
+
+    tables << Table.new.create_table(table_number)
+  end
+
+  tables.each do |table|
+     table.print_table
+  end
+end
+
+class Table
+  def initialize
+    @table = []
+    @total_table = []
+  end
+
+  def create_table table_number
+    table_number.times do
+      @table << gets.chomp.split(' ').map(&:to_i)
+    end
+   self
+  end
+
+  def print_table
+    @total_table = @table
+
+    total_row
+    total_line
+    print_right_justification(5)
+  end
+
+  private
+  def total_row
+    @total_table.each do |line|
+      line.push(line.inject(0) {|sum, i| sum + i.to_i})
+    end
+  end
+
+  def total_line
+    total_line = []
+    @total_table.transpose.each do |row|
+      total_line << row.inject(:+)
+    end
+
+    @total_table.push(total_line)
+  end
+
+  def print_right_justification number
+    @total_table.each do |line|
+      print_line = []
+      line.each{|item| print_line << item.to_s.rjust(number)}
+      puts print_line.join()
+    end
+  end
+end
+
+main

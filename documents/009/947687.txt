@@ -1,0 +1,52 @@
+#include<cstdio>
+#include<algorithm>
+#include<iostream>
+#include<cstring>
+#define INF 1 << 28
+using namespace std;
+
+int w, h, m, f;
+int data[11][11];
+int memo[11][11][55];
+int ans = INF;
+
+void solve(int x, int y, int o, int c, int bit){
+
+  if(y == h){ ans = min(c, ans); return; }
+  if(x < 0 || x == w || !o || c > f) return;
+  //if(memo[x][y][o]) return;
+
+  int a = 0, b = o-1;
+  if(!(bit & (1 << x))){
+    if(data[y][x] < 0) a = -data[y][x];
+    else b = min(o+data[y][x], m)-1;
+    bit |= 1 << x;
+  }
+
+  solve(x+1, y, b, c+a, bit);
+  solve(x-1, y, b, c+a, bit);
+  solve(x, y+1, b, c+a, 0);
+
+  memo[x][y][o] = min(memo[x][y][o], c);
+
+  return;
+}
+
+int main(){
+
+  int o;
+
+  while(scanf("%d %d", &w, &h), w+h){
+
+    scanf("%d %d %d", &f, &m, &o);
+    for(int i=0;i<h;i++) for(int j=0;j<w;j++) scanf("%d", &data[i][j]);
+    //for(int i=0;i<11;i++) for(int j=0;j<11;j++) for(int k=0;k<55;k++) memo[i][j][k] = INF;
+      //memset(memo, 0, sizeof(memo));
+
+    ans = INF;
+    for(int i=0;i<w;i++) solve(i, 0, o-1, 0, 0);  
+    
+    if(ans == INF) printf("NA\n");
+    else printf("%d\n", ans);
+  }
+}

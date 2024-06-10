@@ -1,0 +1,33 @@
+#include<stdio.h>
+
+int A[20], n, j;
+void solve(int, int);
+
+main(){
+  int i, q, M[200];
+  scanf("%d", &n);
+  for(i = 0;i < n;i++){
+    scanf("%d", &A[i]);
+  }
+  scanf("%d", &q);
+  for(i = 0;i < q;i++){
+    j = 0;
+    scanf("%d", &M[i]);
+    solve(0,M[i]);
+    if(j == 0){
+      printf("no\n");
+    }
+  }
+}
+
+void solve(int p, int t){
+  if(p < n && j == 0 && t > 0){
+    if(t == A[p]){
+      printf("yes\n");
+      j++;
+      return;
+    }
+    solve(p+1, t-A[p]);
+    solve(p+1, t);
+  }
+}

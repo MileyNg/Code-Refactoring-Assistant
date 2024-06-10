@@ -1,0 +1,38 @@
+#include<stdio.h>
+int parent(int);
+int left(int);
+int right(int);
+int parent(int i){
+  int x= i/2;
+  return x;
+}
+
+int left(int i){
+  int x = 2*i;
+  return x;
+}
+
+int right(int i){
+  int x = (2*i)+1;
+  return x;
+}
+main(){
+  int heap[251],i,size,l,r;
+
+  scanf("%d",&size);
+  for(i=1; i <= size ; i++)
+    scanf("%d",&heap[i]);
+  for(i=1; i <= size ; i++){
+    printf("node %d: key = %d, ",i,heap[i]);
+    if(i >=2)
+      printf("parent key = %d, ",i,heap[parent(i)]);
+    l=left(i);
+    r=right(i);
+    if(l <= size)
+      printf("left key = %d, ",heap[l]);
+    if(r <= size)
+      printf("right key = %d, ",heap[r]);
+    printf("\n");
+  }
+  return 0;
+}

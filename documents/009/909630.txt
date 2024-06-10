@@ -1,0 +1,68 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<map>
+using namespace std;
+struct data{
+  int id;
+  int team;
+  int ans;
+  int pena;
+  data(int i,int t,int a,int p):id(i),team(t),ans(a),pena(p){}
+  bool operator >(const data &e)const{
+    if(ans!=e.ans)      
+      return ans<e.ans;
+    if(pena!=e.pena)
+      return pena>e.pena;
+    return id>e.id;
+  }  
+};
+
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      priority_queue<data,vector<data>,greater<data> >qu;
+      for(int i=0;i<n;i++)
+	{
+	  int l,u,a,p;
+	  cin>>l>>u>>a>>p;
+	  qu.push(data(l,u,a,p));
+	}
+      int cnt=0;
+      map<int,int> teamcnt;
+      for(;!qu.empty();)
+	{
+	  data tmp=qu.top();
+	  qu.pop();
+	  if(cnt<10)
+	    {
+	      if(teamcnt[tmp.team]<3)
+		{
+		  cout<<tmp.id<<endl;
+		  cnt++;
+		  teamcnt[tmp.team]++;
+		}
+	    }
+	  else if(cnt<20)
+	    {
+	      if(teamcnt[tmp.team]<2)
+		{
+		  cout<<tmp.id<<endl;
+		  cnt++;
+		  teamcnt[tmp.team]++;
+		}
+	    }
+	  else if(cnt<26)
+	    {
+	      if(teamcnt[tmp.team]<1)
+		{
+		  cout<<tmp.id<<endl;
+		  cnt++;
+		  teamcnt[tmp.team]++;
+		}
+	    }	  
+	}
+    }
+}

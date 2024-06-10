@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+int main()
+{
+	string cards;
+	int m, n;
+
+	while (cin >> cards)
+	{
+		if (cards == "-") break;
+
+		cin >> m;
+		for (int i = 0; i < m; ++i)
+		{
+			cin >> n;
+			cards = cards.substr(n) + cards.substr(0, n);
+		}
+		cout << cards << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,47 @@
+#include<iostream>
+using namespace std;
+
+int quick(int a[],int left,int right)
+{
+	int i=left,j=right,mid;
+	mid=(a[i]+a[j])/2;
+	while(i<=j)
+	{
+		while(a[i]<mid)
+			i++;
+		while(a[j]>mid)
+			j--;
+		if(i<=j)
+		{
+			int temp;
+			temp=a[i];
+			a[i]=a[j];
+			a[j]=temp;
+			i++;
+			j--;
+		}
+	}
+	if(left<j)
+		quick(a,left,j);
+	if(i<right)
+		quick(a,i,right);
+}
+
+int main()
+{
+	int data[5],i,j;
+	for(i=0;(cin>>data[i++]>>data[i++]>>data[i++]>>data[i++]>>data[i++]);){
+        quick(data,0,4);
+        for(j=0;j<5;j++){
+            if(j==4)
+                cout<<data[j]<<" \n";
+            else cout<<data[j]<<" ";
+        }
+	}
+
+	return 0;
+}
+/*
+3 6 9 7 5
+
+*/

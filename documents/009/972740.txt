@@ -1,0 +1,66 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define Y first
+#define X second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int dy[] = {-2,-2,-2,-1,0,1,2,2,2,1,0,-1}, dx[] = {-1,0,1,2,2,2,1,0,-1,-2,-2,-2};
+
+int main(){
+  int x, y;
+  while(scanf("%d%d", &x, &y) && x+y){
+    int n, sx, sy;
+    scanf("%d", &n);
+    vector<pi>s(n);
+    rep(i, n){
+      scanf("%d%d", &sx, &sy);
+      s[i] = make_pair(sy, sx);
+    }
+    queue<pi>q;
+    q.push(make_pair(y, x));
+    int c = 0;
+    while(!q.empty() && c < n){
+      int qsize = (int)q.size();
+      rep(i, qsize){
+	pi now = q.front(); q.pop();
+	//	printf("%d %d %d %d\n", now.Y, now.X, s[c].Y, s[c].X);
+	rep(d, 12){
+	  int ny = now.Y + dy[d], nx = now.X + dx[d];
+	  if(ny < 0 || ny >= 10 || nx < 0 || ny >= 10) continue;
+	  //	  printf("%d %d\n", ny, nx);
+	  if(ny >= s[c].Y-1 && ny <= s[c].Y + 1 && nx >= s[c].X-1 && nx <= s[c].X+1){
+	    //	    printf("%d %d\n", ny, nx);
+	    q.push(make_pair(ny, nx));
+	  }
+	}
+      }
+      c++;
+    }
+    //    printf("%d\n", c);
+    if(c >= n && !q.empty()) puts("OK");
+    else puts("NA");
+  }
+  return 0;
+}

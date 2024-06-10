@@ -1,0 +1,82 @@
+require "pp"
+
+def cop(obj)
+  Marshal.load(Marshal.dump obj)
+end
+
+def search(set, count)
+  #pp set
+  #pp count
+  return 11 if set == [] || count > 10
+  return count if set == nil
+  return [
+    (search(move(cop(set), :left), count + 1)),
+    (search(move(cop(set), :right), count + 1)),
+    (search(move(cop(set), :up), count + 1)),
+    (search(move(cop(set), :down), count + 1))].min
+end
+
+def move(set, pos)
+  #pp set
+  #pp pos
+  #sleep 1
+  row = set.find{|a| a.include? 2}
+  y = set.find_index row
+  x = row.find_index 2
+  col = set.map{|i| i[x]}
+  #p col
+  #pp "#{x},#{y}"
+  case pos
+  when :left
+    block = row.each_with_index.select{|i,n| i == 1}.map{|i,n| n}.select{|n| n < x}.last
+    return nil if block.nil? && (row[0..(x)].include? 3)
+    return [] if block.nil? || row[x-1] == 1
+    row[block] = 0
+    row[block+1] = 2
+    row[x] = 0
+    return set
+  when :right
+    block = row.each_with_index.select{|i,n| i == 1}.map{|i,n| n}.select{|n| n > x}.first
+    #pp block
+    return nil if block.nil? && (row[(x)..-1].include? 3)
+    return [] if block.nil? || row[x+1] == 1
+    row[block] = 0
+    row[block-1] = 2
+    row[x] = 0
+    return set
+  when :up
+    block = col.each_with_index.select{|i,n| i == 1}.map{|i,n| n}.select{|n| n < y}.last
+    return nil if block.nil? && (col[0..y].include? 3)
+    return [] if block.nil? || col[y-1] == 1
+    set[block][x] = 0
+    set[block+1][x] = 2
+    set[y][x] = 0
+    return set
+  when :down
+    block = col.each_with_index.select{|i,n| i == 1}.map{|i,n| n}.select{|n| n > y}.first
+    return nil if block.nil? && (col[y..-1].include? 3)
+    return [] if block.nil? || col[y+1] == 1
+    set[block][x] = 0
+    set[block-1][x] = 2
+    set[y][x] = 0
+    return set
+  end
+end
+
+
+ary = []
+
+loop do
+  w, h = gets.chomp.split(" ").map(&:to_i)
+  break if (w == 0) && (h == 0)
+  set = []
+  h.times do
+    set << gets.chomp.split(" ").map(&:to_i)
+  end
+  ary << set
+end
+
+ary.each do |set|
+  result = search set, 0
+  puts (result == 11 ? -1 : result)
+end

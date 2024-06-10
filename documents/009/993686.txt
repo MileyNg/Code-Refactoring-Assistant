@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void) {
+	int n, i, j;
+	double a, rr;
+	int t[3];
+	
+	while(scanf("%d %d %d\n", &t[0], &t[1], &t[2]) == 3) {
+		if(!t[0] && !t[1] && !t[2]) break;
+
+		for(i=0;i<2;i++) {
+			for(j=i+1;j<3;j++) {
+				if(t[i] > t[j]) {
+					int p = t[i];
+					t[i] = t[j];
+					t[j] = p;
+				}	
+			}
+		}
+		
+		rr = sqrt(t[0]*t[0] + t[1]*t[1])/2;
+
+		scanf("%d\n", &n);
+		for(i=0;i<n;i++) {
+			scanf("%lf\n", &a);
+			if(a > rr) {
+				printf("OK\n");
+			} else {
+				printf("NA\n");
+			}
+		}
+	}
+	
+	return 0;
+}

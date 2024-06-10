@@ -1,0 +1,50 @@
+#include<iostream>
+#include<map>
+#include<vector>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+  int ans[10001][10000/2];
+int main()
+{
+  int n;
+
+  memset(ans,0,sizeof(ans));
+  map<int,bool>closed;
+  for(;cin>>n,n;)
+    {
+
+      map<int,bool>hash;
+      vector<int> data;
+      for(int i=1;i<n;i++)
+	{
+	  if(hash.count(i*i%n)==0)
+	    {
+	      hash[i*i%n]=true;
+	      data.push_back(i*i%n);
+	    }
+	}
+      if(closed.count(n)==0)
+	{
+	  for(int i=0;i<data.size()-1;i++)
+	    for(int j=i+1;j<data.size();j++)
+	      {
+		int tmp=data[i]-data[j];
+		if(tmp<0)
+		  tmp+=n;
+		if(tmp>(n-1)/2)
+		  tmp=n-tmp;
+		ans[n][tmp]++;
+
+	    tmp=data[j]-data[i];
+	    if(tmp<0)
+	      tmp+=n;
+	    if(tmp>(n-1)/2)
+	      tmp=n-tmp;
+	    ans[n][tmp]++;
+	  }
+	}
+      for(int i=1;i<=(n-1)/2;i++)
+	cout<<ans[n][i]<<endl;
+    }
+}

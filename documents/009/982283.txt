@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+inline long long int gcd(long long int a,long long int b){
+	while(b!=0){
+		long long int tmp=a%b;
+		a=b;
+		b=tmp;
+	}
+	return a;
+}
+
+inline vector<long long int>* divisor(long long int x){
+	static vector<long long int> result;
+	result.clear();
+	for(long long int i=1; i*i<=x; ++i){
+		if(x%i==0){
+			result.push_back(i);
+			long long int tmp=x/i;
+			if(i!=tmp) result.push_back(tmp);
+		}
+	}
+	sort(result.begin(),result.end());
+	return &result;
+}
+
+inline int solve(long long int l){
+	int ans=0;
+	vector<long long int> v=(*divisor(l));
+	for(auto it=v.begin(); it!=v.end(); ++it){
+		for(auto it_=v.begin(); (*it_)<=(*it)&&it_!=v.end(); ++it_){
+			if((*it)*(*it_)/gcd((*it),(*it_))==l) ++ans;
+		}
+	}
+	return ans;
+}
+
+int main(){
+	long long int L;
+	while(cin >> L&&L){
+		cout << solve(L) << endl;
+	}
+	return 0;
+}

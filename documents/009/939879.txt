@@ -1,0 +1,23 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(){
+  int n;
+  cin>>n;
+  vector<int> dist(6);
+  for(int i=0;i<n;i++){
+    double data;cin>>data;
+    for(int j=0;j<dist.size();j++){
+      if((j==dist.size()-1)?1:data<(165+5*j)){
+        dist[j]++;break;
+      }
+    }
+  }
+  for(int i=0;i<dist.size();i++){
+    cout<<i+1<<":";
+    for(int j=0;j<dist[i];j++) cout<<'*';
+    cout<<endl;
+  }
+}

@@ -1,0 +1,40 @@
+#include <stdio.h>
+int main(void) {
+    int i,j;
+    char board[8][8];
+    while (scanf(" %s\n",board[0])!=EOF) {
+        for (i=1; i<8; i++) scanf(" %s",board[i]);
+        for (i=0; ; i++) {
+            for (j=0; j<8; j++) {
+            	if (board[i][j]=='1') break;
+            }
+            if (board[i][j]=='1') break;
+        }
+        if (j<7&&board[i][j+1]=='1') {
+            if (i<7&&board[i+1][j]=='1') {
+                if (board[i+1][j+1]=='1') {
+                    printf("A\n");
+                } else {
+                    printf("G\n");
+                }
+            } else {
+                if (board[i][j+2]=='1') {
+                    printf("C\n");
+                } else {
+                    printf("E\n");
+                }
+            }
+        } else {
+            if (board[i+2][j]=='1') {
+                printf("B\n");
+            } else {
+                if (j<7&&board[i+1][j+1]=='1') {
+                    printf("F\n");
+                } else {
+                    printf("D\n");
+                }
+            }
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,49 @@
+#include <iostream>
+
+using namespace std;
+int full( int height_max, int space, int water );
+
+int main(){
+  int N, B[100], H[100];  // the number of boards , x position, the height of the board
+  int M, F[100], A[100];  // the number of faucets , x position, the amount of water flow
+  int L, P[100], T[10];  // the number of observation time, x position, the observation time in seconds
+  int block_height[100] = {0};
+  int space, water, f;
+
+  //recieve*******************/
+  cin >> N;
+  for ( int i = 0; i < N; i++ ){
+    cin >> B[i] >> H[i];
+  }
+  cin >> M;
+  for ( int j = 0; j < M; j++ ){
+    cin >> F[j] >> A[j];
+  }
+  cin >> L;
+  for ( int k = 0; k < L; k++ ){
+    cin >> P[k] >> T[k];
+  }
+  /***************************/
+  for ( k = 0; k < L; k++ ){
+    for ( j = 0; j < M; j++ ){
+      for ( i = 0; B[i] < F[j]; i++ ){
+      }
+      space = 30 * B[i] - B[i-1];
+      if ( H[i] < H[i-1] ){
+	height_max = H[i];
+      }
+      water = T[k] * A[j];
+      f = block_height[i-1] = full( height_max, space, water );
+      if ( f = 0 ){
+	space += 30 * B[i] - B[i+1];
+  }
+
+}
+
+int full( int height_max, int space, int water){
+  if ( water <= height_max * space ){
+    return height_max * space - water;
+  }else{
+    return 0;
+  }
+}

@@ -1,0 +1,46 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+int N, acnt, bcnt;
+int x[10], A[10], B[10];
+
+bool dfs(int cnt) {
+    if (cnt == 10) return true;
+    // Aに入れる
+    if (A[acnt] < x[cnt]) {
+        A[++acnt] = x[cnt];
+        return dfs(cnt+1);
+    }
+    // Bに入れる
+    else if (B[bcnt] < x[cnt]) {
+        B[++bcnt] = x[cnt];
+        return dfs(cnt+1);
+    }
+    return false;
+}
+
+int main(void) {
+    cin >> N;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < 10; j++) {
+            A[j] = 0; B[j] = 0;
+        }
+        acnt = 0; bcnt = 0;
+        for (int j = 0; j < 10; j++) cin >> x[j];
+        if (dfs(0)) cout << "YES" << endl;
+        else cout << "NO" << endl;
+    }
+    return 0;
+}

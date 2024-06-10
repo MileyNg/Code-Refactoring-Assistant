@@ -1,0 +1,171 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+typedef pair<int,int> pii;
+
+const int N = 222;
+const int M = N*2;
+const int R = 1111;
+
+int n,m;
+vector<pii> sea[N];
+vector<pii> land[N];
+
+vector<int> move;
+
+void clear(){
+	move.clear();
+	rep(i,N){
+		sea[i].clear();
+		land[i].clear();
+	}
+}
+bool init(){
+	clear();
+	cin>>n>>m;
+	if(n==0)return false;
+	rep(i,m){
+		int a,b,c;
+		string d;
+		cin>>a>>b>>c>>d;
+		if(d=="L"){
+			land[a].push_back(pii(b,c));
+			land[b].push_back(pii(a,c));
+		}
+		if(d=="S"){
+			sea[a].push_back(pii(b,c));
+			sea[b].push_back(pii(a,c));
+		}
+	}
+	int r;
+	cin>>r;
+	rep(i,r){
+		int a;
+		cin>>a;
+		move.push_back(a);
+	}
+	return true;
+}
+
+
+const int INF = 100000000;
+
+int edge[M][M];
+
+void setEdgeSelf(){
+	rep(i,N){
+		edge[i*2][i*2]=0;
+		edge[i*2+1][i*2+1]=0;
+		//edge[i*2][i*2+1]=0;
+	}
+}
+void setEdgeSeaLand(){
+	rep(i,n){
+		rep(j,sea[i].size()){
+			pii e = sea[i][j];
+			int a = e.first*2;
+			int b = i*2;
+			edge[a][b] = min(edge[a][b], e.second);
+			edge[b][a] = min(edge[b][a], e.second);
+		}
+		rep(j,land[i].size()){
+			pii e = land[i][j];
+			int a = e.first*2+1;
+			int b = i*2+1;
+			edge[a][b] = min(edge[a][b], e.second);
+			edge[b][a] = min(edge[b][a], e.second);
+		}
+	}
+}
+
+void setEdge(){
+	rep(i,M)rep(j,M)edge[i][j] = INF;
+	
+	setEdgeSelf();
+	setEdgeSeaLand();
+}
+
+void printEdge(){
+	reps(i,2,n*2+2){
+		reps(j,2,n*2+2){
+			int e = edge[i][j];
+			if(e==INF)printf("oo  ");
+			else printf("%3d ",e);
+		}puts("");
+	}puts("");
+}
+
+void wf(){
+	rep(k,n*2+2){
+		rep(i,n*2+2){
+			rep(j,n*2+2){
+				edge[i][j] = min(edge[i][j], edge[i][k]+edge[k][j]);
+			}
+		}
+	}
+}
+
+int solvedp(){
+	int dp[R][N];
+	rep(i,R)rep(j,N)dp[i][j]=INF;
+	
+	dp[0][move[0]]=0;
+	reps(i,1,move.size()){
+		int prev = move[i-1];
+		int now = move[i];
+		
+		rep(j,n+1){
+			rep(k,n+1){
+				dp[i][k] = min(dp[i][k], dp[i-1][j]+edge[prev*2+1][j*2+1]+edge[j*2][k*2]+edge[k*2+1][now*2+1]);
+			}
+		}
+	}
+	int ans = INF;
+	rep(i,n+1)ans = min(ans, dp[move.size()-1][i]);
+	
+	if(ans==INF)return -1;
+	return ans;
+}
+
+int solve(){
+	setEdge();
+	wf();
+	
+	//printEdge();
+	
+	return solvedp();
+}
+
+int main(){
+	while(init())printf("%d\n",solve());
+}
+
+
+/*
+3 3
+1 2 5 L
+1 2 7 S
+2 3 11 S
+3
+1 2 3
+0 0
+
+5 5
+1 2 15 L
+2 3 10 L
+4 5 7 L
+1 3 30 S
+3 4 100 S
+5
+1 3 5 4 1
+0 0
+
+*/

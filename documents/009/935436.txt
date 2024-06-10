@@ -1,0 +1,31 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int x,count=0,j;
+  int stack[100];
+  char s[100];
+
+  while( scanf("%s", s) != EOF ){
+    
+    if ( s[0] == '+' ){
+      stack[count-2]=stack[count-2]+stack[count-1];
+      count=count-2;
+    } else if ( s[0] == '-' ){
+      stack[count-2]=stack[count-2]-stack[count-1];
+      count=count-2;
+    } else if ( s[0] == '*' ){
+      stack[count-2]=stack[count-2]*stack[count-1];
+      count=count-2;
+    } else {
+      x = atoi(s);
+      stack[count]=x;
+    }
+    printf("%d",stack[count]);
+    count++;
+ }
+  printf("%d\n",stack[0]);
+
+  return 0;
+}

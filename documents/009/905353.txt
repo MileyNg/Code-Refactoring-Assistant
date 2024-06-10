@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+typedef struct FARM{
+	string l;
+	int p;
+	int a;
+	int b;
+	int c;
+	int d;
+	int e;
+	int f;
+	int s;
+	int m;
+	int sumt;
+	int money;
+	int ratio;
+
+	bool operator < (const FARM& oth)const{
+		if(ratio == oth.ratio) return l < oth.l;
+		return ratio > oth.ratio;
+	}
+} FARM_t;
+
+int main(int argc, char const *argv[])
+{
+	int n;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		vector<FARM_t> v(n);
+		for(int i1=0;i1<n;i1++){
+			cin>>v[i1].l>>v[i1].p>>v[i1].a>>v[i1].b>>v[i1].c>>v[i1].d>>v[i1].e>>v[i1].f>>v[i1].s>>v[i1].m;
+			v[i1].sumt=v[i1].a+v[i1].b+v[i1].c+v[i1].m*(v[i1].d+v[i1].e);
+			v[i1].money=v[i1].f*v[i1].s*v[i1].m-v[i1].p;
+			v[i1].ratio=(int)10000*((double)v[i1].money/(double)v[i1].sumt);
+		}
+
+		sort(v.begin(), v.end());
+
+		for(int i1=0;i1<n;i1++){
+			cout<<v[i1].l<<endl;
+		}
+		cout<<"#"<<endl;
+
+
+	}
+	return 0;
+}

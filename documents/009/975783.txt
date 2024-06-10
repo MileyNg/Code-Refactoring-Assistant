@@ -1,0 +1,27 @@
+thd = 1000000
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  totals = {}
+  ids = []
+
+  n.times do
+    i, p, q = gets.chomp.split(" ").map{|s| s.to_i}
+
+    s = p * q
+    totals[i] = totals[i].nil? ? s : totals[i] + s
+    if totals[i] >= thd
+      ids.push i
+    end
+  end
+
+  ids.uniq!
+
+  if ids.length > 0
+    ids.sort.each{|id| puts id}
+  else
+    puts "NA"
+  end
+end

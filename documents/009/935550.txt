@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+#define rep(i,b) for(int i=0; i<b; i++)
+
+int v[30];
+int w[30];
+
+int dp[1000]={};
+
+int main(){
+    int d;
+    while(cin>>d){
+        int n=0;
+        int x; cin>>x;
+        rep(i,x){
+            char c; int p;
+            cin>>c>>p;
+            if(c!='D') continue;
+            v[n++] = p;
+            w[n-1]=1;
+        }
+
+        int y; cin>>y;
+        rep(i,y){
+            char c[3]; int p;
+            cin>>c>>p;
+            if(c[0]!='D'||c[1]!='D') continue;
+            v[n++]=p;
+            w[n-1]=2;
+        }
+
+        rep(i,d+1) dp[i]=0;
+        rep(i,n){
+            for(int j=d; j>=0; j--){
+                if(j-w[i]>=0) dp[j] = max(dp[j-w[i]]+v[i], dp[j]);
+            }
+        }
+
+        cout << dp[d] << endl;
+    }
+}

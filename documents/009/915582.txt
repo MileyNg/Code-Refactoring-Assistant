@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<math.h>
+
+static const int N = 1000;
+int isprime(int);
+int main(){
+
+  int x,i,j,t,n,m;
+  int A[N];
+  scanf("%d",&t);
+    
+  for(j = 0 ; j < t ; j++){
+    scanf("%d",&n);
+    A[j] = n;
+   
+    if(isprime(A[j]) == 1) {
+	m = m + 1;
+      }
+  
+}
+  printf("%d\n",m);
+  return 0;
+}
+
+int isprime(int x)
+{
+  int i;
+  if(x == 2) return 1;
+   
+if(x < 2 || x % 2 == 0) return 2;
+
+    i = 3;
+      
+    while(i <= sqrt(x) ){
+    if(x % i == 0) return 2;
+	  
+	i = i + 2;
+ }
+  
+	 return 1;
+  
+	       }

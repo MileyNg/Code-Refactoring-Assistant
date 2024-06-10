@@ -1,0 +1,43 @@
+tops = []
+s = []
+v = 0
+h = 0
+
+gets.chomp.each_char do |c|
+  case c
+  when '\\'
+    tops << {h: h, v: v}
+    v += 1
+    h -= 1
+    s << 0 if s[s.size-1] != 0
+  when '/'
+    v += 1
+    h += 1
+
+    hit = false
+    i = tops.size - 1
+    top = {}
+    merge = 0
+    while 0 <= i
+      top = tops[i]
+      if h <= top[:h]
+        hit = true
+        break
+      elsif (h - 1) == top[:h]
+        merge += 1
+      end
+      i -= 1
+    end
+    if hit
+      s[s.size-1] += (v - top[:v]) - 1
+      s << s.pop(merge).inject(:+) if 2 <= merge
+    end
+  when '_'
+    v += 1
+  end
+end
+
+s.pop if s[s.size-1] == 0
+puts s.inject(:+)
+print "#{s.size} "
+puts s * ' '

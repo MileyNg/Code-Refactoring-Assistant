@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+	int max = -1;
+	int max_num = -1;
+	
+	scanf("%d", &n);
+	while (n-- > 0){
+		int a, v;
+		scanf("%d %d", &a, &v);
+		
+		if (max == -1 || max < v){
+			max = v;
+			max_num = a;
+		}
+		else if (max == v && max_num > a){
+			max_num = a;
+		}
+	}
+	printf("%d %d\n", max_num, max);
+	
+	return 0;
+}

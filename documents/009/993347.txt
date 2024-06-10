@@ -1,0 +1,68 @@
+#include <iostream>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+void init_minutes(int h, int w, int minutes[1000][1000]) {
+    for (int y=0; y<h; y++) {
+        for (int x=0; x<w; x++) {
+            minutes[x][y] = -1;
+        }
+    }
+}
+
+int main() {
+    int h, w, n;
+    int dx[] = {0, 1, 0, -1};
+    int dy[] = {1, 0, -1, 0};
+    int minutes[1000][1000];
+    char area[1000][1000];
+    P start;
+
+    cin >> h >> w >> n;
+    for (int y=0; y<h; y++) {
+        for (int x=0; x<w; x++) {
+            cin >> area[x][y];
+            if (area[x][y] == 'S') {
+                start.first = x;
+                start.second = y;
+            }
+        }
+        cin.ignore();
+    }
+    minutes[start.first][start.second] = 0;
+    for (int m=1; m<=9; m++) {
+        queue<P> q;
+        q.push(start);
+        int min = minutes[start.first][start.second];
+        init_minutes(h, w, minutes);
+        minutes[start.first][start.second] = min;
+        while (q.size() > 0) {
+            int x = q.front().first;
+            int y = q.front().second;
+            q.pop();
+            for (int i=0; i<4; i++) {
+                int nx = x+dx[i];
+                int ny = y+dy[i];
+                if (nx < 0 || w <= nx || ny < 0 || h <= ny) {
+                    continue;
+                }
+                if (minutes[nx][ny] >= 0 || area[nx][ny] == 'X') {
+                    continue;
+                }
+                minutes[nx][ny] = minutes[x][y]+1;
+                if (area[nx][ny] == '0'+m) {
+                    start.first = nx;
+                    start.second = ny;
+                    break;
+                }
+                q.push(P(nx, ny));
+            }
+        }
+    }
+    cout << minutes[start.first][start.second] << endl;
+    return 0;
+}

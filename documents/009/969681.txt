@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int W, H;
+char table[72][72][72];
+char matrix[72][72];
+
+char maximum[72];
+
+char *greater(char *s1, char *s2)
+{
+  int i;
+  int nan1 = !strcmp(s1, "NaN");
+  int nan2 = !strcmp(s2, "NaN");
+  int len1, len2;
+  if (nan1) { return s2; }
+  if (nan2) { return s1; }
+
+  len1 = strlen(s1);
+  len2 = strlen(s2);
+  if (len1 > len2) { return s1; }
+  if (len1 < len2) { return s2; }
+  for (i = 0; i < len1; i++) {
+    if (s1[i] < s2[i]) { return s2; }
+    if (s1[i] > s2[i]) { return s1; }
+  }
+  return s1;
+}
+
+void concatenate(char s[], char d[], char c)
+{
+  int len = strlen(s);
+  if (isdigit(c)) {
+    if (c == '0') {
+      if (strcmp(s, "NaN") == 0) { strcpy(d, "NaN"); }
+      else {
+        strcpy(d, s);
+        d[len] = c;
+        d[len+1] = '\0';
+        if (d == greater(maximum, d)) { strcpy(maximum, d); }
+      }
+    }
+    else {
+      if (strcmp(s, "NaN") == 0) {
+        d[0] = c; d[1] = '\0';
+        if (d == greater(maximum, d)) { strcpy(maximum, d); }
+      }
+      else {
+        strcpy(d, s);
+        d[len] = c;
+        d[len+1] = '\0';
+        if (d == greater(maximum, d)) { strcpy(maximum, d); }
+      }
+    }
+  } else {
+    strcpy(d, "NaN");
+  }
+}
+
+int main()
+{
+  int i, j;
+  char s[1024], greater_s[72];
+
+  while (1) {
+    if (NULL == gets(s)) { break; }
+    sscanf(s, "%d%d", &W, &H); if (W == 0 && H == 0) { break; }
+    for (i = 0; i < H; i++) {
+      gets(matrix[i]);
+    }
+
+    strcpy(maximum, "0");
+
+    concatenate("NaN", table[0][0], matrix[0][0]);
+    /*printf("%d,%d - %s\n", 0, 0, table[0][0]);*/
+    for (j = 1; j < W; j++) {
+      concatenate(table[0][j-1], table[0][j], matrix[0][j]);
+      /*printf("%d,%d - %s\n", 0, j, table[0][j]);*/
+    }
+    for (i = 1; i < H; i++) {
+      concatenate(table[i-1][0], table[i][0], matrix[i][0]);
+      /*printf("%d,%d - %s\n", i, 0, table[i][0]);*/
+      for (j = 1; j < W; j++) {
+        strcpy(greater_s, greater(table[i-1][j], table[i][j-1]));
+        concatenate(greater_s, table[i][j], matrix[i][j]);
+        /*printf("%d,%d - %s\n", i, j, table[i][j]);*/
+      }
+    }
+    printf("%s\n", maximum);
+  }
+  return 0;
+}

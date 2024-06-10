@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+  int N, M;
+
+  cin >> N >> M;
+  bool arr[N][M];
+  for(int i = 0 ; i < N ; i++){
+    for(int j = 0 ; j < M ; j++){
+      cin >> arr[i][j];
+      if(i) arr[i][j] = !arr[i][j];
+    }
+  }
+
+  int res = 0;
+  for(int i = 0 ; i < N ; i++){
+    int l = 0, r = M-1;
+    while(l <= r){
+      if(arr[i][l] && l < M-1){
+        res++; l++;
+        arr[i][l] = !arr[i][l];
+      }else if(arr[i][r] && r > 0){
+        res++; r--;
+        arr[i][r] = !arr[i][r];
+      }else{
+        l++;
+        arr[i][l] = !arr[i][l];
+      }
+    }
+  }
+  cout << res << endl;
+
+  return 0;
+}

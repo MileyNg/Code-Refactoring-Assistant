@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<string.h>
+typedef struct dic{
+  char coma[10],mozi[12];
+  int t;
+}D;
+
+D Dic2[100000];
+int j=0;
+
+unsigned hash(char *v){
+  int h;
+  for(h=0;*v!='\n';v++)
+    h=(64*h+*v)%101;
+  return h; 
+}
+void insert(D d)
+{
+  strcpy(Dic2[j].mozi,d.mozi);
+  Dic2[j].t=hash(d.mozi);
+  j++;
+}
+
+int search(D d){
+  int k;
+  for(k=0;k<j;k++){
+    if(Dic2[k].t==hash(d.mozi))
+      return 0;
+  }
+  return 1;  
+}
+main(){
+  D Dic[100000];
+  int n,i;
+  
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    scanf("%s %s",Dic[i].coma,Dic[i].mozi);
+  for(i=0;i<n;i++)
+    if(Dic[i].coma[0]=='i')
+      insert(Dic[i]);
+    else 
+      if(search(Dic[i])==0)
+	printf("yes\n");
+      else
+	printf("no\n");
+  return 0;
+}

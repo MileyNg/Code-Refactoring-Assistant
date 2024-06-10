@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n, k;
+int cost[5000], r[5000];
+bool dp[5000][5010];
+
+vector<vector<int> > e;
+
+int main(){
+	
+	cin >> n >> k;
+	e.resize(n);
+	
+	for(int i = 0; i < n; i++) cin >> cost[i] >> r[i];
+	for(int i = 0; i < n; i++){
+		int a, b; cin >> a >> b;
+		a--; b--;
+		e[a].push_back(b);
+		e[b].push_back(a);
+	}
+	
+	priority_queue<pair<int, pair<int, int> > > q;
+	
+	q.push(make_pair(0, make_pair(0, 0)));
+	
+	while(!q.empty()){
+		
+		int co = q.top().first;
+		int re = q.top().second.first;
+		int cu = q.top().second.second;
+		q.pop();
+		
+		//cerr<<"co: "<<co<<" re: "<<re<<" cu: "<<cu<<endl;
+		
+		if(dp[cu][-re]) continue;
+		dp[cu][-re] = 1;
+		
+		if(cu == n - 1){
+			cout << -co << endl;
+			return 0;
+		}
+		
+		if(!dp[cu][r[cu]]) q.push(make_pair(co - cost[cu], make_pair(-r[cu], cu)));
+		
+		if(++re <= 0) for(int i = 0; i < e[cu].size(); i++){
+			
+			if(dp[e[cu][i]][-re]) continue;
+			q.push(make_pair(co, make_pair(re, e[cu][i])));
+		}
+	}
+	
+	return 0;
+}

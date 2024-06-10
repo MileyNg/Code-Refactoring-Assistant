@@ -1,0 +1,58 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n, m, d;
+  char name[256];
+  while(scanf("%d", &n) && n){
+    vector< pair<int, string> >res(n);
+    vector< vector<int> >in(n, vector<int>(30));
+    rep(i, n){
+      scanf("%s%d", name, &m);
+      res[i] = make_pair(0, name);
+      rep(j, m){
+	in[i].resize(m);
+	scanf("%d", &d);
+	in[i][j] = d;
+      }
+    }
+    /*    rep(i, n){
+      printf("%s", res[i].second.c_str());
+      for(int j = 0; in[i][j] != 0; ++j) printf(" %d", in[i][j]);
+      puts("");
+      } */
+    //   rep(i, n) printf("%d %s\n", res[i].first, res[i].second.c_str());
+    rep(i, n){
+      rep(j, in[i].size()){
+	int cnt = 0;
+	rep(k, n) rep(l, in[k].size()){
+	  if(i == k) break;
+	  if(in[i][j] == in[k][l]){
+	    cnt++;
+	    break;
+	  }
+	}
+	res[i].first += n - cnt;
+      }
+    }
+    //    rep(i, n) printf("%d %s\n", res[i].first, res[i].second.c_str());
+    sort(res.begin(), res.end());
+    //    rep(i, n) printf("%d %s\n", res[i].first, res[i].second.c_str());
+    printf("%d %s\n", res[0].first, res[0].second.c_str());
+  }
+  return 0;
+}

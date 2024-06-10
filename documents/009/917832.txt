@@ -1,0 +1,29 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+
+	double x1,y1,x2,y2,xq,yq;
+	double a,b,a2,b2;
+	char gav;
+	double ansx,ansy;
+
+	while(cin>>x1>>gav>>y1>>gav>>x2>>gav>>y2>>gav>>xq>>gav>>yq){
+		if(x1==x2) printf("%.6f %.6f\n",xq+(x1-xq)*2,yq);
+		else if(y1==y2) printf("%.6f %.6f\n",xq,yq+(y1-yq)*2);
+		else{
+			a=(y1-y2)/(x1-x2);
+			b=(x1*y2-y1*x2)/(x1-x2);
+			a2=-1*(1/a);
+			b2=yq+xq/a;
+			ansx=(b-b2)/(a2-a);
+			ansy=(a2*b-a*b2)/(a2-a);
+
+			printf("%.6f %.6f\n",xq+(ansx-xq)*2,yq+(ansy-yq)*2);
+
+		}
+	}
+}

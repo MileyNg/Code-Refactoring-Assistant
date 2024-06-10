@@ -1,0 +1,242 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <bitset>
+#include <algorithm>
+#include <utility>
+using namespace std;
+
+class piece {
+	private:
+		int width, height;
+		int space;
+		vector<vector<string> > p;
+	public:
+// constructor {{{
+		piece() {}
+		piece(int w, int h, vector<string> s) {
+			p.resize(4);
+			width = w; height = h; p[0] = s;
+			space = 0;
+			for(int i = 1; i < 4; i++) {
+				p[i].resize(i % 2 ? width : height);
+				for(int j = 0; j < p[i].size(); j++) {
+					p[i][j].resize(i % 2 ? height : width);
+				}
+			}
+			for(int i = 0; i < height; i++) {
+				for(int j = 0; j < width; j++) {
+					if(p[0][i][j] == '#')
+						space++;
+					p[1][j][i] = s[height - 1 - i][j];
+					p[2][i][j] = s[height - 1 - i][width - 1 - j];
+					p[3][j][i] = s[i][width - 1 - j];
+				}
+			}
+		}
+// }}}
+
+	public:
+		int get_width(int n) { return p.at(n)[0].size(); }
+		int get_height(int n) { return p.at(n).size(); }
+		int get_space() { return space; }
+		vector<string> get_piece(int n) { return p.at(n); }
+};
+
+vector<string> frame;
+vector<piece> pieces;
+const int median = 20;
+
+int frame_space = 0;
+
+// size interfere[piece_a][piece_b][vertical_bias][horizontal_bias]
+vector<vector<vector<bitset<42> > > > interfere(42, vector<vector<bitset<42> > >(42, vector<bitset<42> >(42, bitset<42>(~0UL))));
+// board[piece][vertival_bias][horizonal_bias]
+vector<vector<bitset<42> > > board(42, vector<bitset<42> >(42, bitset<42>(0UL)));
+
+bool puzzle_input() {
+	// puzzle input {{{
+	int n = 12345;
+	for(int i = -1; i < n; i++) {
+		int H, W;
+		vector<string> tmp;
+		cin >> H >> W;
+		if(H == 0 && W == 0)
+			return false;
+		for(int j = 0; j < H; j++) {
+			string str = "";
+			for(int k = 0; k < W; k++) {
+				char c;
+				cin >> c;
+				str += c;
+				if(c == '.' && n == 12345)
+					frame_space++;
+			}
+			tmp.push_back(str);
+		}
+		if(n == 12345) {
+			cin >> n;
+			frame = tmp;
+		}
+		else {
+			pieces.push_back(piece(W,H,tmp));
+		}
+	}
+	// }}}
+	return true;
+}
+
+void make_table() {
+	// make interfere table {{{
+	for(int piece_a = 0; piece_a < pieces.size(); piece_a++) {
+		for(int piece_b = 0; piece_b < pieces.size(); piece_b++) {
+			if(piece_a == piece_b)
+				continue;
+
+			for(int angle_a = 0; angle_a < 4; angle_a++) {
+				for(int angle_b = 0; angle_b < 4; angle_b++) {
+					vector<string> a, b;
+					a = pieces[piece_a].get_piece(angle_a);
+					b = pieces[piece_b].get_piece(angle_b);
+
+					int wa, wb;
+					int ha, hb;
+					wa = pieces[piece_a].get_width(angle_a);
+					ha = pieces[piece_a].get_height(angle_a);
+					wb = pieces[piece_b].get_width(angle_b);
+					hb = pieces[piece_b].get_height(angle_b);
+
+					for(int vertical_bias = 0; vertical_bias < ha + hb - 1; vertical_bias++) {
+						for(int horizontal_bias = 0; horizontal_bias < wa + wb - 1; horizontal_bias++) {
+							for(int i = max(-ha + 1 + vertical_bias, 0); i < min(vertical_bias + 1, hb); i++) {
+								for(int j = max(-wa + 1 + horizontal_bias, 0); j < min(horizontal_bias + 1, wb); j++) {
+									if(a[ha - 1 - vertical_bias + i][wa - 1 - horizontal_bias + j] == '#' && b[i][j] == '#') {
+										interfere[piece_a * 4 + angle_a][piece_b * 4 + angle_b][median - ha + 1 + vertical_bias][median - wa + 1 + horizontal_bias] = false;
+										goto LABEL_COLLIDE0;
+									}
+								}
+							}
+						LABEL_COLLIDE0:;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// }}}
+	// make board table {{{
+	for(int piece_num = 0; piece_num < pieces.size(); piece_num++) {
+		for(int angle = 0; angle < 4; angle++) {
+			vector<string> p;
+			int w, h;
+			p = pieces[piece_num].get_piece(angle);
+			w = pieces[piece_num].get_width(angle);
+			h = pieces[piece_num].get_height(angle);
+			for(int vertical_bias = 0; vertical_bias < frame.size() - h + 1; vertical_bias++) {
+				for(int horizontal_bias = 0; horizontal_bias < frame[0].size() - w + 1; horizontal_bias++) {
+					for(int i = 0; i < h; i++) {
+						for(int j = 0; j < w; j++) {
+							if(frame[vertical_bias + i][horizontal_bias + j] == '#' && p[i][j] == '#')
+								goto LABEL_COLLIDE1;
+						}
+					}
+					board[piece_num * 4 + angle][vertical_bias][horizontal_bias] = true;
+					LABEL_COLLIDE1:;
+				}
+			}
+		}
+	}
+	// }}}
+}
+
+class tag {
+	public:
+		int vertical, horizontal;
+		int piece_id, angle;
+		int encoded_id;
+		tag(int i, int j, int id, int ang) {
+			vertical = i; horizontal = j;
+			piece_id = id; angle = ang;
+			encoded_id = piece_id * 4 + ang;
+		}
+		bool operator<(const tag & a) const {
+			return pieces[piece_id].get_space() < pieces[a.piece_id].get_space();
+		}
+};
+
+vector<tag> history;
+
+bool can_put(tag push) { // {{{
+	bool ret = true;
+
+	ret &= board[push.encoded_id][push.vertical][push.horizontal];
+	for(int i = 0; i < history.size(); i++) {
+		ret &= interfere[push.encoded_id][history[i].encoded_id][push.vertical - history[i].vertical + median][push.horizontal - history[i].horizontal + median];
+	}
+
+	return ret; // }}}
+}
+
+bool solve_query(vector<int> selected, int indx) { // {{{
+	if(indx >= selected.size())
+		return true;
+	for(int ang = 0; ang < 4; ang++) {
+		int w, h;
+		h = pieces[selected[indx]].get_height(ang);
+		w = pieces[selected[indx]].get_width(ang);
+		for(int i = 0; i < frame.size() - h; i++) {
+			for(int j = 0; j < frame[0].size() - w; j++) {
+				if(can_put(tag(i, j, selected[indx], ang))) {
+					history.push_back(tag(i, j, selected[indx], ang));
+					if(solve_query(selected, indx + 1))
+						return true;
+					history.pop_back();
+				}
+			}
+		}
+	}
+	return false; // }}}
+}
+
+void solve_query_set() { // {{{
+	int player;
+	cin >> player;
+	
+	for(int i = 0; i < player; i++) {
+		vector<int> selected;
+		int loop;
+		int pieces_space = 0;
+		cin >> loop;
+		for(int j = 0; j < loop; j++) {
+			int tmp;
+			cin >> tmp;
+			pieces_space += pieces[tmp - 1].get_space();
+			selected.push_back(tmp - 1);
+		}
+		
+		sort(selected.rbegin(), selected.rend());
+
+		history.clear();
+		if(pieces_space == frame_space && solve_query(selected, 0))
+			cout << "YES" << endl;
+		else
+			cout << "NO" << endl;
+	} // }}}
+}
+
+void init() {
+	frame.clear();
+	pieces.clear();
+	interfere = vector<vector<vector<bitset<42> > > >(42, vector<vector<bitset<42> > >(42, vector<bitset<42> >(42, bitset<42>(~0UL))));
+	board = vector<vector<bitset<42> > >(42, vector<bitset<42> >(42, bitset<42>(0UL)));
+	frame_space = 0;
+}
+
+int main() {
+	while(puzzle_input()) {
+		make_table();
+		solve_query_set();
+		init();
+	}
+}

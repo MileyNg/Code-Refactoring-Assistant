@@ -1,0 +1,52 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  string str;
+  char type;
+  for(;cin>>str>>type,type!='X';)
+    {      
+      if(type=='U')
+	{
+	  for(int i=0;i<str.size();i++)
+	    {
+	      bool up=false;
+	      if(i==0 || str[i]=='_')
+		up=true;
+	      if( str[i]=='_')
+		i++;
+	      if(up)
+		cout<<(char)toupper(str[i]);
+	      else
+		cout<<str[i];
+	    }
+	}
+      else if(type=='L')
+	{
+	  for(int i=0;i<str.size();i++)
+	    {
+	      if(str[i]=='_')
+		{
+		  i++;
+		  cout<<(char)toupper(str[i]);
+		}
+	      else if(i==0)
+		cout<<(char)tolower(str[i]);
+	      else
+		cout<<str[i];
+	    }
+	}
+      else
+	{
+	  for(int i=0;i<str.size();i++)
+	    {
+	      if(i!=0 && isupper(str[i]))
+		  cout<<"_";	      
+	      cout<<(char)tolower(str[i]);	      
+	    }
+	}
+      cout<<endl;
+    }
+
+}

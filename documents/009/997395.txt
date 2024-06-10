@@ -1,0 +1,139 @@
+#include <iostream>
+#include <stack>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int dx[] = { 0, 0, 1, 0, 0, -1 };
+int dy[] = { 0, -1, 0, 0, 1, 0 };
+
+enum { U, F, R, D, B, L };
+struct dice {
+    int face[6];
+    dice(const dice& d){
+        rep(i, 6) this->face[i] = d.face[i];
+    }
+    dice(){
+        face[F] = 1;
+        face[R] = 2;
+        face[U] = 3;
+        face[B] = 6;
+        face[L] = 5;
+        face[D] = 4;
+    }
+
+    int find_face(int f){
+        rep(i, 6){
+            if (face[i] == f) return i;
+        }
+        return -1;
+    }
+
+    void turn(int dir){
+        switch (dir){
+        case R:
+            rotate(U, R, D, L); break;
+        case B:
+            rotate(U, B, D, F); break;
+        case L:
+            rotate(U, L, D, R); break;
+        case F:
+            rotate(U, F, D, B); break;
+        case U:  // 上から見て反時計回り
+            rotate(F, R, B, L); break;
+        case D: // 下から見て反時計回り
+            rotate(F, L, B, R); break;
+        default: throw "";
+        }
+    }
+    int& operator[](int n){
+        return face[n];
+    }
+
+    vector<dice> all() {
+        vector<dice> res(24);
+        rep(k,6){
+            rep(i,4){
+                res.push_back(*this);
+                turn(R);
+            }
+            (k & 1 ? turn(U) : turn(F));
+        }
+
+        return res;
+    }
+
+    void rotate(int a, int b, int c, int d){
+        int t = face[d];
+        face[d] = face[c];
+        face[c] = face[b];
+        face[b] = face[a];
+        face[a] = t;
+    }
+};
+
+int main(){
+    int n;
+    vector<dice> ds = dice().all();
+    while (cin >> n && n){
+        stack<dice> g[120][120];
+        rep(i, n){
+            // cout << "dice " << i << endl;
+            int t, f; cin >> t >> f;
+            dice d;
+            bool found = false;
+            rep(i, ds.size()){
+                if (ds[i][U] == t && ds[i][F] == f) {
+                    d = ds[i];
+                    found = true;
+                }
+            }
+            if (!found) throw "";
+            g[60][60].push(d);
+            int x = 60;
+            int y = 60;
+
+            while (1){
+                // cout << x << " " << y << endl;
+                bool end = true;
+
+                for (int i = 6; i >= 4; i--){
+                    int fd = d.find_face(i);
+                    if (fd == U || fd == D) continue;
+                    int nx = x + dx[fd];
+                    int ny = y + dy[fd];
+                    if (g[y][x].size()-1 > g[ny][nx].size()){
+                        g[y][x].pop();
+                        d.turn(fd);
+                        g[ny][nx].push(d);
+                        x = nx, y = ny;
+                        end = false;
+                        break;
+                    }
+                }
+                if (end) break;
+            }
+            // cout << "end" << endl;
+        }
+
+        int ans[7] = {};
+        rep(i, 120)rep(j, 120){
+            if (g[i][j].size()){
+                dice& d = g[i][j].top();
+                ans[d[U]]++;
+            }
+        }
+
+        loop(i, 1, 6){
+            cout << ans[i] << " ";
+        }
+        cout << ans[6] << endl;
+    }
+}

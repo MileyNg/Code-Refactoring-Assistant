@@ -1,0 +1,62 @@
+#include<iostream>
+using namespace std;
+#define N 1048573
+//1048573
+
+int t[N];
+string a,str;
+
+int hash2(int x){
+  return 1 + x%(N-1);
+}
+
+int hash(){
+  int x=0;
+  for(int i=0;i<(int)str.size();i++){
+    x*=4;
+    if(str[i]=='A')x++;
+    else if(str[i]=='T')x+=2;
+    else if(str[i]=='G')x+=3;
+    else x+=4;
+  }
+  return x;
+}
+
+bool find(){
+  int x=hash();
+  int y=hash2(x);
+  int i=x%N;
+  while(1){
+    if(t[i]==-1)return false;
+    else if(t[i]==x)return true;
+    i=(i+y)%N;
+  }
+}
+
+void insert(){
+  int x=hash();
+  int y=hash2(x);
+  int i=x%N;
+  while(1){
+    if(t[i]==x)return;
+    if(t[i]==-1){
+      t[i]=x;
+      return;
+    }
+    i=(i+y)%N;
+  }
+}
+int main(){
+  for(int i=0;i<N;i++)t[i]=-1;
+  int Tc;
+  cin>>Tc;
+  while(Tc--){
+    cin>>a>>str;
+    if(a=="insert"){
+      insert();
+    }else{
+      cout<<(find()?"yes":"no")<<endl;
+    }
+  }
+  return 0;
+}

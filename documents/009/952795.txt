@@ -1,0 +1,18 @@
+while 1:
+	q,lim = map(int,raw_input().split())
+	if q == 0: break
+	que = []
+	sp = 0
+	for i in range(q):
+		query,x = map(int,raw_input().split())
+		if   query == 0:
+			que.append(x)
+			if len(que[sp:]) > lim:
+				sp += 1
+		elif query == 1:
+			sp += 1
+		elif query == 2:
+			print que[sp+x-1]
+		elif query == 3:
+			del que[que.index(x)]
+	print "end"

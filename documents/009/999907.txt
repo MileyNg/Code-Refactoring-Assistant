@@ -1,0 +1,73 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+struct dat{
+	int gr, mn;
+	bool operator <(const dat &r) const{
+		if (gr != r.gr) return gr < r.gr;
+		return mn < r.mn;
+	}
+};
+
+const int N = 33;
+
+bool ok[N][N][N][N];
+dat dp[N][N][N][N];
+int v[N][N];
+int sum[N][N];
+int Min;
+
+inline int rect(int t, int l, int b, int r){
+	return sum[b][r] - sum[b][l] - sum[t][r] + sum[t][l];
+}
+
+dat rec(int t, int l, int b, int r){
+	dat &res = dp[t][l][b][r];
+	if (ok[t][l][b][r]) return res;
+	ok[t][l][b][r] = true;
+	res = {1, rect(t, l, b, r)};
+
+	// tate
+	for (int i = t + 1; i < b; ++i){
+		if (rect(t, l, i, r) < Min) continue;
+		if (rect(i, l, b, r) < Min) continue;
+		dat r1 = rec(t, l, i, r);
+		dat r2 = rec(i, l, b, r);
+		dat tmp = { r1.gr + r2.gr, min(r1.mn, r2.mn) };
+		res = max(res, tmp);
+	}
+
+	// yoko
+	for (int j = l + 1; j < r; ++j){
+		if (rect(t, l, b, j) < Min) continue;
+		if (rect(t, j, b, r) < Min) continue;
+		dat r1 = rec(t, l, b, j);
+		dat r2 = rec(t, j, b, r);
+		dat tmp = { r1.gr + r2.gr, min(r1.mn, r2.mn) };
+		res = max(res, tmp);
+	}
+
+	return res;
+}
+
+int main(){
+	int h, w, sup;
+	while (cin >> h >> w >> sup, h){
+		for (int i = 0; i < h; ++i)
+			for (int j = 0; j < w; ++j)
+				cin >> v[i][j];
+		for (int i = 1; i <= h; ++i)
+			for (int j = 1; j <= w; ++j)
+				sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + v[i - 1][j - 1];
+
+		Min = sum[h][w] - sup;
+		memset(ok, 0, sizeof(ok));
+		auto res = rec(0, 0, h, w);
+		cout << res.gr << ' ' << res.mn - Min << '\n';
+	}
+
+	return 0;
+}

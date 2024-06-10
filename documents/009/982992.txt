@@ -1,0 +1,38 @@
+n = gets.strip.to_i
+
+rtmap = {}
+
+n.times.each do
+  eis = gets.strip.split(' ').map{|s| s.to_i}
+  r = eis.shift
+  k = eis.shift
+
+  rtmap[r] = { :id => r, :nbrs => eis }
+end
+
+pn = gets.strip.to_i
+
+pn.times.each do
+  src, dst, ttl = gets.strip.split(' ').map{|s| s.to_i}
+
+  rtmap.values.each{|nd| nd[:dist] = nil}
+
+  rtmap[src][:dist] = 1
+  queue = [src]
+
+  while ! queue.empty?
+    id = queue.shift
+    dist0 = rtmap[id][:dist]
+
+    for nid in rtmap[id][:nbrs]
+      node = rtmap[nid]
+      if node[:dist].nil?
+        node[:dist] = dist0 + 1
+        queue.push nid
+      end
+    end
+  end
+
+  ddist = rtmap[dst][:dist]
+  puts (! ddist.nil? && ddist <= ttl) ? ddist : "NA"
+end

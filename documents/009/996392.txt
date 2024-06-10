@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+int ans,now,n,x[100],y[100],c[100],r[100];
+int bo[100];
+int chonghe[100][100];
+bool judge(int p){
+  for (int i=1;i<p;i++)
+    if (bo[i] && chonghe[i][p]) return false;
+  return true;
+}
+void try1(int k){
+  if (k>n)
+  {
+    if (now>ans) ans=now;
+  } else
+  {
+  if (bo[k] && judge(k))
+	{
+      for (int i=k+1;i<=n;i++)
+	    if (bo[i] && c[i]==c[k] && judge(i))
+	    {bo[i]=false;bo[k]=false;now+=2;try1(k+1);now-=2;bo[i]=true;bo[k]=true;}
+	}	
+    try1(k+1);
+  }
+}
+int main(){
+  scanf("%d",&n);
+  while (n!=0){
+    for (int i=1;i<=90;i++) bo[i]=true;
+	ans=0;now=0;
+    for (int i=1;i<=n;i++) scanf("%d%d%d%d",&x[i],&y[i],&r[i],&c[i]);
+	 for (int i=1;i<=n;i++)
+	  for (int j=1;j<=n;j++)
+	   if ((x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j])<(r[i]+r[j])*(r[i]+r[j]))
+	   chonghe[i][j]=true; else chonghe[i][j]=false;
+	/*for (int i=1;i<=n;i++)
+	{  for (int j=1;j<=n;j++)
+	   printf("%d",chonghe[i][j]);
+	  printf("\n");
+	}*/
+	try1(1);
+    printf("%d\n",ans);
+    scanf("%d",&n);
+  }
+}

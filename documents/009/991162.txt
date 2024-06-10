@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+struct Edge {
+  int from, to, w;
+  Edge(int from, int to, int w) : from(from), to(to), w(w) {}
+  Edge(){}
+  bool operator<(const Edge& x) const {
+    return w != x.w ? w > x.w : from != x.from ? from < x.from : to < x.to;
+  }
+};
+
+typedef vector<Edge> Edges;
+typedef vector<Edges> Graph;
+
+int prim(const Graph& g, int r=0){
+  int n = g.size();
+  int total = 0;
+  vector<bool> visited(n);
+  priority_queue<Edge> Q;
+  Q.push(Edge(-1, r, 0));
+  while (!Q.empty()){
+    Edge e = Q.top();
+    Q.pop();
+    if (visited[e.to]) continue;
+    total += e.w;
+    visited[e.to] = true;
+    for (Edges::const_iterator f = g[e.to].begin(); f != g[e.to].end(); f++){
+      if (!visited[f->to]) Q.push(*f);
+    }
+  }
+  return total;
+}
+
+int main()
+{
+  int n, m;
+  while (n = in(), m = in(), n){
+    Graph g(n);
+    rep(i, m){
+      int from, to, w;
+      from = in();
+      to = in();
+      w = in();
+      g[from].push_back(Edge(from, to, w));
+      g[to].push_back(Edge(to, from, w));
+    }
+    printf("%d\n", prim(g));
+  }
+  return 0;
+}

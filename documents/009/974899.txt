@@ -1,0 +1,82 @@
+#include<stdio.h>
+
+int whriswrng(int *p,int m){
+  int a=p[0]+p[1];
+  int b=p[1]+p[2];
+  int c=p[2]+p[3];
+
+  if(p[0]!=p[1]){
+    if(a!=p[2]){
+      if(b!=p[0]){
+	return 0;
+      }
+      else{
+	if(b!=c){
+	  return 2;
+	}
+	else{
+	  return 0;
+	}
+      }
+    }
+    else{
+      return 1;
+    }
+  }
+  else{
+    if(a==p[2]){
+      if(c!=p[0]){
+	return 1;
+      }
+      else{
+	return 3;
+      }
+    }
+    else{
+      int i=2;
+      while(i!=m){
+	if(p[i]!=p[0]){
+	  return i+1;
+	}
+	i++;
+      }
+    }
+  }
+
+  return m;
+}
+
+int judge(int *p,int n){
+  int m=n-1;
+  int d[m];
+  int i;
+
+  for(i=0;i<m;i++){
+    d[i]=p[i+1]-p[i];
+  }
+
+  return whriswrng(d,m);
+}
+
+void doit(int n){
+  int a[n];
+  int i;
+
+  for(i=0;i<n;i++){
+    scanf("%d",&a[i]);
+  }
+
+  printf("%d\n",a[judge(a,n)]);
+}
+
+int main(){
+  int n;
+  scanf("%d",&n);
+  if(n!=0){
+    doit(n+1);
+    return main();
+  }
+  else{
+    return 0;
+  }
+}

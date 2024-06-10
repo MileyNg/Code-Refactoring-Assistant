@@ -1,0 +1,68 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#include <string>
+#include<algorithm>
+#include<iostream>
+#include<queue>
+#include<stack>
+#include<vector>
+#include<map>
+#include<set>
+#include<cmath>
+#define INF 0xfffffff
+#define CL(x,v); memset(x,v,sizeof(x));
+#define LL long long
+#define REP(i,r,n) for(int i=r;i<=n;i++)
+#define RREP(i,n,r) for(int i=n;i>=r;i--)
+#define max(x,y) x>y?x:y
+#define min(x,y) x<y?x:y
+#define EPS 1e-8
+using namespace std;
+int sx,sy,ex,ey;
+int ok=0;
+int d[4][2]={-1,0,0,1,1,0,0,-1};//蟾ヲ霓ャ譏ッ-1?悟承霓ャ+1
+char Map[1001][1001];
+int vis[1001][1001];
+char oper[1000001];
+int h,w,n;
+void dfs(int cur,int x,int y,int dir)
+{
+    if(x==ex&&y==ey)ok=1;
+    if(cur>n)return ;
+    for(int i=0;;i++){
+        int newx=x+d[dir][0]*i;
+        int newy=y+d[dir][1]*i;
+        if(newx<0||newx>=h||newy<0||newy>=w||Map[newx][newy]=='#'||vis[newx][newy])break;
+        int newDir=(dir+oper[cur]+4)%4;
+        vis[newx][newy]=1;
+        dfs(cur+1,newx,newy,newDir);
+        vis[newx][newy]=0;
+    }
+}
+int main()
+{
+    while(scanf("%d%d%d",&h,&w,&n)!=EOF)
+    {
+        if(h==0&&w==0&&n==0)return 0;
+        memset(vis,0,sizeof(vis));
+        scanf("%s",oper);
+        for(int i=0;i<strlen(oper);i++){
+            if(oper[i]=='L')oper[i]=-1;
+            else oper[i]=1;
+        }
+        for(int i=0;i<h;i++)
+        {
+            scanf("%s",Map[i]);
+            for(int j=0;j<w;j++){
+                if(Map[i][j]=='S'){sx=i;sy=j;}
+                else if(Map[i][j]=='G'){ex=i;ey=j;}
+            }
+        }
+        ok=0;
+        dfs(0,sx,sy,0);
+        if(ok)printf("Yes\n");
+        else printf("No\n");
+    }
+    return 0;
+}

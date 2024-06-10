@@ -1,0 +1,60 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+
+
+int main(int argc, const char * argv[])
+{
+    int n, r, c;
+    int na, nb;
+    while(cin >> n >> r){
+        if(n % 2 == 0){
+            na = n / 2;
+            nb = n / 2;
+        }else{
+            na = (n + 1) / 2;
+            nb = (n - 1) / 2;
+        }
+        
+        // カード置き場初期化
+        int cards[n], acards[n], bcards[n];
+        for(int i = 0; i < n; i++){
+            cards[i] = i;
+        }
+        
+        for(int i = 0; i < r; i++){
+            cin >> c; // cを読む
+            // カード分割
+            for(int j = 0; j < nb; j++){
+                bcards[j] = cards[j];
+            }
+            for(int j = 0; j < na; j++){
+                acards[j] = cards[nb + j];
+            }
+            
+            int p = 0, pa = 0, pb = 0;
+            while(p < n){
+                for(int j = 0; j < c; j++){
+                    if(pa < na){
+                        cards[p] = acards[pa];
+                        p++;
+                        pa++;
+                    }
+                }
+                
+                for(int j = 0; j < c; j++){
+                    if(pb < nb){
+                        cards[p] = bcards[pb];
+                        p++;
+                        pb++;
+                    }
+                }
+            }
+        }
+        cout << cards[n-1] << "\n";
+    }
+    return 0;
+}

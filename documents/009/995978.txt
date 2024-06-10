@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define MP(a, b) make_pair((a), (b))
+#define Y first
+#define X second
+#define C first
+#define W second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int w, h;
+int d[7][7];
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+map<pi, bool>wm;
+
+int check(int ay, int ax, int by, int bx, int cy, int cx){
+  //  printf("%d %d %d %d\n", ay, ax, by, bx);
+  if(ay == by && ax == bx) return 1;
+  //  printf("%d %d %d %d\n", ay, ax, by, bx);
+  int res = 0;
+  rep(i, 4){
+    int ny = ay+dy[i], nx = ax+dx[i];
+    if(ny < 0 || nx < 0 || ny >= h || nx >= w || d[ny][nx] == 1 ||  wm.count(MP(ny, nx)) ||
+       (ny == cy && nx == cx)) continue;
+    wm[MP(ny, nx)] = 1;
+    res += check(ny, nx, by, bx, cy, cx);
+    //     wm.erase(MP(ny, nx));
+  }
+  return res;
+}
+
+int main(){
+  while(scanf("%d%d", &w, &h) && w+h){
+    int y, x, wy, wx;
+    rep(i, h) rep(j, w){
+      scanf("%d", &d[i][j]);
+      if(d[i][j] == 2){ y = i, x = j; d[i][j] = 0;}
+      if(d[i][j] == 4){ wy = i, wx = j; d[i][j] = 0;}
+    }
+
+    queue<pair<pi, pi> >q;
+    map<pair<pi, pi>, bool>m;
+    q.push(MP(MP(y, x), MP(wy, wx)));
+    m[MP(MP(y, x), MP(wy, wx))] = 1;
+
+    int res = 1;
+    while(!q.empty()){
+      //  printf("%d\n", res);
+      int qsize = (int)q.size();
+      rep(i, qsize){
+	pair<pi, pi> now = q.front(); q.pop();
+	rep(j, 4){
+	  //	  printf("j %d\n", j);
+	  int ny = now.C.Y + dy[j], nx = now.C.X + dx[j];
+	  int nwy = now.C.Y + dy[(j+2)%4], nwx = now.C.X + dx[(j+2)%4];
+	  //  printf("next %d %d %d %d\n", ny, nx, nwy, nwx);
+	  wm.clear();
+	  wm[MP(now.W.Y, now.W.X)] = 1;
+	  if(ny < 0 || nx < 0 || ny >= h || nx >= w ||
+	     nwy < 0 || nwx < 0 || nwy >= h || nwx >= w ||
+	     d[ny][nx] == 1 || d[nwy][nwx] == 1 || 
+	     m.count(MP(MP(ny, nx), MP(nwy, nwx))) || !check(now.W.Y, now.W.X, nwy, nwx, now.C.Y, now.C.X)) continue;
+
+	  if(d[ny][nx] == 3){
+	    printf("%d\n", res);
+	    goto e;
+	  }
+	  //	  printf("%d %d %d %d\n", ny, nx, nwy, nwx);
+	  q.push(MP(MP(ny, nx), MP(nwy, nwx)));
+	  m[MP(MP(ny, nx), MP(nwy, nwx))] = 1;
+	}
+      }
+      res++;
+    }
+    puts("-1");
+  e:;
+  }
+  return 0;
+}

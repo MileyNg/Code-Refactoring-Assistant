@@ -1,0 +1,74 @@
+#include <map>
+#include <set>
+#include <list>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <complex>
+#include <cstdlib>
+#include <cstring>
+#include <numeric>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+
+#define mp       make_pair
+#define pb       push_back
+#define all(x)   (x).begin(),(x).end()
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+
+typedef    long long          ll;
+typedef    unsigned long long ull;
+typedef    vector<bool>       vb;
+typedef    vector<int>        vi;
+typedef    vector<vb>         vvb;
+typedef    vector<vi>         vvi;
+typedef    pair<int,int>      pii;
+
+const int INF=1<<29;
+const double EPS=1e-9;
+
+const int dx[]={1,0,-1,0},dy[]={0,-1,0,1};
+int n;
+string word ="abcdefghijklmnopqrstuvwxyz";
+int main(){
+	map<char,int> data;
+	int pos = 0;
+	for(char i = 'a';i <= 'z';i++){
+		data[i] = pos++;
+	}
+	// cout <<"pos = "<<pos<<endl;
+	while(cin>>n,n){
+		string str;
+		cin>>str;
+		vector<pii> d;
+		for(int i = 0;i < n;i++){
+			int a,b;
+			cin>>a>>b;
+			a--,b--;
+			d.push_back(mp(a,b));
+		}
+		reverse(d.begin(), d.end());
+		for(int i = 0;i < n;i++){
+			int a,b;
+			a = d[i].first;
+			b = d[i].second;
+			int dist =abs(a - b);
+			char tmp1,tmp2;
+			tmp1 = word[(data[str[a]] + dist)%pos];
+			tmp2 = word[(data[str[b]] + dist)%pos];
+			// cout <<tmp1<<" "<<tmp2<<endl;
+			str[a] = tmp2;
+			str[b] = tmp1;
+			// cout <<tmp1<<" "<<tmp2<<endl;
+		}
+		cout <<str<<endl;
+	}
+	return 0;
+}

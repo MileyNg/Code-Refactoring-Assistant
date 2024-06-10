@@ -1,0 +1,77 @@
+class Record
+  def initialize login_time, logout_time
+    @login_time = login_time
+    @logout_time = logout_time
+  end
+  attr_accessor :student, :login_time, :logout_time
+end
+
+def main
+  loop do
+    pc_num,student_num = gets.chomp.split(' ').map(&:to_i)
+    break if (pc_num|student_num) == 0
+
+    log_num = gets.chomp.to_i
+
+    tmp = {}
+    log_list = Array.new(student_num).map{Array.new(0)}
+    log_num.times do
+      time,pc,student,action = gets.chomp.split(' ').map(&:to_i)
+      case action
+      when 1
+        tmp["#{pc} #{student}"] = time
+      when 0
+        if log_list[student][-1].logout_time > tmp["#{pc} #{student}"]
+          log_list[student][-1].logout_time = time
+          if log_list[student][-1].login_time > tmp["#{pc} #{student}"]
+            log_list[student][-1].login_time = tmp["#{pc} #{student}"]
+            mark = []
+            log_list[student][-2].reverse_each.with_index do |record, i|
+              if record.logout_time < log_list[student][-1].login_time
+                break
+              end
+              if record.login_time < log_list[student][-1].login_time
+                log_list[student][-1].login_time = record.login_time
+              end
+              mark << i
+            end
+            mark.each do |i|
+              log_list[student].delete_at(i)
+            end
+          end
+        else
+          log_list[student] << Record.new(tmp["#{pc} #{student}"], time)
+          break
+        end
+        log_list[student].reverse_each do |record|
+        end
+      end
+    end
+
+    question_num = gets.chomp.to_i
+    question_num.times do
+      start_time,end_time,student = gets.chomp.split(' ').map(&:to_i)
+
+      total = 0
+      log_list[student].each do |record|
+        if record.logout_time < start_time or record.login_time > end_time
+          next
+        end
+
+        tmp_start = record.login_time
+        if record.login_time < start_time
+          tmp_start = start_time
+        end
+
+        tmp_end = record.logout_time
+        if record.logout_time > end_time
+          tmp_end = end_time
+        end
+        total += tmp_end - tmp_start
+      end
+      puts total
+    end
+  end
+end
+
+main

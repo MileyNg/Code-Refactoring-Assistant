@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+#define PLAYERS 5
+
+int main (void) {
+    int p[PLAYERS];
+    int hands, i;
+    int winner[] = {0,0,0,1,0,3,2};
+
+    while (scanf("%d", &p[0]) != EOF && p[0]) {
+        hands = 1 << (p[0]-1);
+        for (i = 1; i < PLAYERS; i++) {
+            scanf("%d", &p[i]);
+            hands |= 1 << (p[i]-1);
+        }
+        switch (hands) {
+            case 3:
+            case 5:
+            case 6:
+                for (i = 0; i < PLAYERS; i++) {
+                    printf("%d\n", p[i]==winner[hands] ? 1: 2);
+                }
+                break;
+            default:
+                for (i = 0; i < PLAYERS; i++) {
+                    printf("3\n");
+                }
+                break;
+        }
+    }
+    return 0;
+}

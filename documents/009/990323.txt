@@ -1,0 +1,32 @@
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main(){
+  string AIZU = "AIZUNYAN";
+  map<char, int> AIZU_CNT;
+  for(int i = 0; i < AIZU.size(); i++){
+    AIZU_CNT[AIZU[i]]++;
+  }
+
+  string s;
+
+  while(cin >> s){
+    for(int i = 0; i <= (int)s.size() - (int)AIZU.size(); i++){
+      map<char, int> cnt;
+
+      for(int j = i; j < s.size() && j < i + AIZU.size(); j++){
+	cnt[s[j]]++;
+      }
+
+      if(AIZU_CNT == cnt){
+	for(int j = i; j < s.size() && j < i + AIZU.size(); j++){
+	  s[j] = AIZU[j - i];
+	}
+	break;
+      }
+    }
+
+    cout << s << endl;
+  }
+}

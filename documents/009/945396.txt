@@ -1,0 +1,45 @@
+#include<stdio.h>
+int input(int*[]);
+int isMatch(int*[], int*[], int, int);
+
+main(){
+  int n, q;
+  int *S[10000], *T[500];
+
+  n = input(S);
+  q = input(T);
+ 
+  printf("%d\n", isMatch(S, T, n, q));
+  return 0;
+}
+
+int input(int* array[]){
+  int i, e;
+  scanf("%d", &e);
+  for(i = 0; i < e; i++){
+    scanf("%d", &array[i]);
+  } 
+  return e;
+}
+
+int isMatch(int* S[], int* T[], int n, int q){
+  int count = 0, left, right, mid, i;
+
+  for(i = 0; i < q; i++){
+    left = 0;
+    right = n;
+
+    while(left < right){
+      mid = (right + left) / 2;
+      if(T[i] == S[mid]){
+	count++;
+	break;
+      }else if(T[i] > S[mid]){
+	left = mid + 1;
+      } else {
+	right = mid;
+      }
+    }
+  }
+  return count;
+}

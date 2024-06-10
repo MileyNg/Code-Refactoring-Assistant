@@ -1,0 +1,50 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+#define T 53
+#define P 11
+
+struct Team {
+	int n, solve, penal;
+	int prob[P];
+	Team() : n(0), solve(0), penal(0) {
+		for(int i=0; i<P; ++i) prob[i] = 0;
+	}
+	Team(int pn) : n(pn), solve(0), penal(0) {
+		for(int i=0; i<P; ++i) prob[i] = 0;
+	}
+	bool operator<(const Team &t) const {
+		if(solve != t.solve) return !(solve < t.solve);
+		if(penal != t.penal) return penal < t.penal;
+		return n < t.n;
+	}
+};
+
+int main() {
+	int t, p, r, tID, pID, time; string message;
+	while(cin >> t >> p >> r && t && p && r) {
+		vector<Team> teams;
+		for(int i=1; i<=t; ++i) teams.push_back(Team(i));
+		for(int i=0; i<r; ++i) {
+			cin >> tID >> pID >> time >> message;
+			--tID; --pID;
+			if(teams[tID].prob[pID]>=0) {
+				if(message=="WRONG") {
+					teams[tID].prob[pID] += 1;
+				}else {
+					teams[tID].solve += 1;
+					teams[tID].penal += teams[tID].prob[pID]*1200 + time;
+					teams[tID].prob[pID] = -1;
+				}
+			}
+		}
+		sort(teams.begin(), teams.end());
+		for(int i=0; i<teams.size(); ++i) {
+			cout << teams[i].n << " " << teams[i].solve << " " << teams[i].penal << endl;
+		}
+	}
+	return 0;
+}

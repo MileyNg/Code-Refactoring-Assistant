@@ -1,0 +1,32 @@
+#include<iostream>
+using namespace std;
+int main(){
+        int r,c;
+        scanf("%d %d",&r,&c);
+        int sh[r+1][c+1];
+        for(int i=0;i<r;i++){
+                int t=0;
+                for(int j=0;j<c;j++){
+                        scanf("%d",&sh[i][j]);
+                        t+=sh[i][j];
+                }
+                sh[i][c]=t;
+        }
+        for(int i=0;i<c+1;i++){
+                int t=0;
+                for(int j=0;j<r;j++){
+                        t+=sh[j][i];
+                }
+                sh[r][i]=t;
+        }
+        for(int i=0;i<r+1;i++){
+                for(int j=0;j<c+1;j++){
+                        if(j!=c){
+                                printf("%d ",sh[i][j]);
+                        }else{
+                                printf("%d\n",sh[i][j]);
+                        }
+                }
+        }
+        return 0;
+}

@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+	string a;
+	const string b = "()[]";
+	while (getline(cin, a)) {
+		if (a.size() == 1 && a[0] == '.') {
+			break;
+		}
+		int count[4] = {0};
+		bool hantei = true;
+		for (int i = 0; i < a.size(); i++) {
+			for (int j = 0; j < 4; j++) {
+				if (a[i] == b[j]) {
+					count[j]++;
+					break;
+				}
+			}
+			if (count[0] < count[1]) {
+				hantei = false;
+				break;
+			} else if (count[2] < count[3]) {
+				hantei = false;
+				break;
+			}
+		}
+
+		if (hantei && (count[0] == count[1] && count[2] == count[3])) {
+			cout << "yes" << endl;
+		} else {
+			cout << "no" << endl;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,15 @@
+#include<stdio.h>
+int main(){
+	int a[10001],n,i,goukei=0,saidai=-1000000,saisyou=1000000;
+	scanf("%d",&n);
+	for(i=0;i<n;i++){
+		scanf("%d",&a[i]);
+	}
+	for(i=0;i<n;i++){
+		if(saidai<a[i]){saidai=a[i];}
+		if(saisyou>a[i]){saisyou=a[i];}
+		goukei+=a[i];
+	}
+	printf("%d %d %d\n",saisyou,saidai,goukei);
+	return 0;
+}

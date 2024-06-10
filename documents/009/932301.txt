@@ -1,0 +1,20 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+var calc = {
+	'+': function(a, b) { return a + b; },
+	'-': function(a, b) { return a - b; },
+	'*': function(a, b) { return a * b; },
+	'/': function(a, b) { return ~~(a / b); }
+};
+
+stdin().every(function(line) {
+	var tmp = line.split(' '),
+		A = +tmp[0],
+		OP = tmp[1],
+		B = +tmp[2];
+	
+	return OP !== '?' ? !console.log(calc[OP](A, B)) : false;
+});

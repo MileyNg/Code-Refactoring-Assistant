@@ -1,0 +1,58 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+int r;
+int i;
+int sd(char *s, int m){
+    int n = 0, d = 0;
+    for(;s[i] != '\0';){
+        switch(s[i]){
+        case '=':
+            return n;
+        case '+':
+            if(m == 1)
+                return n;
+            i++;
+            return n + sd(s, 2);
+        case '-':
+            if(m == 1)
+                return n;
+            i++;
+            return n - sd(s, 2);
+        case '*':
+            i++;
+            return n * sd(s, 1);
+        case '/':
+            i++;
+            return n / sd(s, 1);
+        case '(':
+            i++;
+            return sd(s, 0);
+        case ')':
+            i++;
+            return n;
+        default:
+            n = n * 10 + s[i] - '0';
+            i++;
+            break;
+        }
+    }
+}
+
+int main(void)
+{
+    int N;
+
+    char str[1024];
+
+    cin >> N;
+
+    for(int k = 0; k < N; k++){
+        r = 0;
+        i = 0;
+        cin >> str;
+        printf("%d", sd(str, 0));
+    }
+}

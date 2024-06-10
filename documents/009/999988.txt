@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef pair<int, int> pii;
+
+typedef vector< pii > L;
+
+int dist(pii p1, pii p2) {
+  return (p1.first - p2.first)*(p1.first-p2.first)
+    + (p1.second - p2.second)*(p1.second - p2.second);
+}
+
+void RotateL(L& ls) {
+  int len = (int)ls.size();
+  for (int i=0; i<len; i++) {
+    pii p = ls[i];
+    ls[i] = make_pair(p.second, -p.first);
+  }
+}
+
+bool isSame(L l1, L l2) {
+  for (int rep = 0; rep < 4; rep++) {
+    RotateL(l2);
+    int len = (int)l2.size();
+    if (len != (int)l1.size()) return false;
+
+    int dist1 = dist(l1[0], l2[0]);
+    int dist2 = dist(l1[len-1], l2[0]);
+    
+    bool same1 = true, same2 = true;
+    for (int i=0; i<len; i++) {
+      if (dist(l1[i], l2[i]) != dist1) same1 = false;
+      if (dist(l1[len - 1 - i], l2[i])) same2 = false;
+    }
+
+    if (same1 || same2) return true;
+  }
+  return false;
+}
+
+int main() {
+  while (1) {
+    int n; cin >> n; if (n==0) break;
+
+    L l0;
+    int len; cin >> len;
+    for (int i=0; i<len; i++) {
+      int ix, iy; cin >> ix >> iy;
+      l0.push_back( make_pair(ix, iy) );
+    }
+
+    for (int i=0; i<n; i++) {
+      L li;
+      cin >> len;
+      for (int j=0; j<len; j++) {
+	int ix, iy; cin >> ix >> iy;
+	li.push_back( make_pair(ix, iy) );
+      }
+      if (isSame(l0, li)) cout << i+1 << endl;
+    }
+    cout << "+++++" << endl;
+  }
+  return 0;
+}

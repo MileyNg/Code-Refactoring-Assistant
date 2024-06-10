@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int count;
+void solve(int depth, int card[][2], int n, int total, int goal) {
+	int i;
+	if(total > goal)
+		return;
+	
+	if(depth == n) {
+		if(total == goal)
+			count++;
+		return;
+	}
+	
+	for(i=card[depth][1]-1;i<=0;i--) {
+		solve(depth+1, card, n, total + card[depth][0] * i, goal);
+	}
+}
+
+int main(void) {
+	int n, g;
+	int i;
+	int goal;
+	int j[1001];
+	int card[1001][2];
+	while(1) {
+		count = 0;
+		scanf("%d\n", &n);
+		if(n==0) break;
+		for(i=0;i<n;i++) {
+			scanf("%d %d\n", &card[n-i-1][0], &card[n-i-1][1]);
+		}
+		scanf("%d\n", &g);
+		for(i-0;i<g;i++) {
+			scanf("%d\n", &goal);
+			solve(0, card, n, 0, goal);	
+			printf("%d\n", count);
+		}
+	}
+	return 0;
+}

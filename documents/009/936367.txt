@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long lli;
+
+const int MAXN = 31;
+
+lli dp[MAXN];
+
+int main() {
+  dp[0] = 1;
+  for(int i = 0; i < MAXN; ++i) {
+    for(int j = 1; j <= 3 && i+j < MAXN; ++j) {
+      dp[i+j] += dp[i];
+    }
+  }
+  for(lli n; cin >> n, n;) {
+    cout << ( (dp[n]+9)/10 + 364 ) / 365 << endl;
+  }
+  return 0;
+}

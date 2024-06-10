@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+
+#define SEA     ( 0)
+#define LAND    ( 1)
+#define VISITED (-1)
+
+int dx[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+int dy[] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+
+int dfs(std::vector<std::vector<int> >& field, const int width, const int height, const int x, const int y) {
+  if (field[y][x] == VISITED || field[y][x] == SEA)
+    return 0;
+  field[y][x] = VISITED;
+  for (int i = 0; i < 8; ++i) {
+    int cx = x + dx[i], cy = y + dy[i];
+    if (cx < 0 || cy < 0 || width <= cx || height <= cy)
+      continue;
+    dfs(field, width, height, cx, cy);
+  }
+  return 1;
+}
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int w, h;
+    std::cin >> w >> h;
+    if (w == 0 && h == 0)
+      break;
+    std::vector<std::pair<int, int> > lands;
+    int n_lands = 0;
+    std::vector<std::vector<int> > field(h, std::vector<int>(w, 0));
+    for (int y = 0; y < h; ++y) {
+      for (int x = 0; x < w; ++x) {
+        std::cin >> field[y][x];
+        if (field[y][x] == LAND) {
+          lands.push_back(std::make_pair<int, int>(x, y));
+          ++n_lands;
+        }
+      }
+    }
+    int ans = 0;
+    for (int i = 0; i < n_lands; ++i) {
+      ans += dfs(field, w, h, lands[i].first, lands[i].second);
+    }
+    std::cout << ans << std::endl;
+  }
+  return 0;
+}

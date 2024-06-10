@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int main() {
+	int n;
+	while(cin >> n, n) {
+		vector<pair<vector<int>,vector<bool> > > v;
+		for(int t = 0; t < n + 1; t++) {
+			vector<int> len;
+			vector<bool> g;
+			int x, y;
+			int m;
+			cin >> m;
+			cin >> x >> y;
+			pair<int,int> prev0, prev1;
+			prev0.first = x; prev0.second = y;
+			for(int i = 1; i < m; i++) {
+				cin >> x >> y;
+				len.push_back(fabs(x - prev0.first + y - prev0.second));
+				if(i > 1) {
+					int x_, y_;
+					x_ = x - prev0.first;
+					y_ = y - prev0.second;
+					bool push;
+					push = prev1.first * y_ - prev1.second * x_ > 0;
+					g.push_back(push);
+							
+				}
+				prev1.first = x - prev0.first;
+				prev1.second = y - prev0.second;
+				prev0.first = x;
+				prev0.second = y;
+			}
+			v.push_back(pair<vector<int>, vector<bool> >(len, g));
+		}
+		
+		for(int i = 1; i < v.size(); i++) {
+			if(v[i].first.size() != v[0].first.size())
+				continue;
+			bool flag0, flag1;
+			flag0 = flag1 = true;
+			for(int j = 0; j < v[i].first.size(); j++) {
+				if(v[0].first[j] != v[i].first[j])
+					flag0 = false;
+				if(v[0].first[j] != v[i].first[v[i].first.size() - 1 - j])
+					flag1 = false;
+			}
+
+			if(!(flag0 | flag1))
+				continue;
+			bool flag00, flag01;
+			bool flag10, flag11;
+
+			/*
+			flag00 = v[0].second[0];
+			flag10 = v[0].second[v[0].second.size() - 1];
+
+			flag01 = !flag00;
+			flag11 = !flag10;
+			*/
+			flag00 = flag11 = true;
+			flag01 = flag10 = false;
+
+			for(int j = 0; j < v[0].second.size(); j++) {
+				if(flag0) {
+					flag00 &= !(v[0].second[j] ^ v[i].second[j]);
+					flag01 &= !(!v[0].second[j] ^ v[i].second[j]);
+				}
+				if(flag1) {
+					flag10 &= !(v[0].second[j] ^ v[i].second[v[0].second.size() - 1 - j]);
+					flag11 &= !(!v[0].second[j] ^ v[i].second[v[0].second.size() - 1 - j]);
+				}
+			}
+
+			if((flag0 && flag00) || (flag0 && flag01) || (flag1 && flag10) || (flag1 && flag11)) {
+				cout << i << endl;
+			}
+		}
+		cout << "+++++" << endl;
+	}
+}

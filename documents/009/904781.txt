@@ -1,0 +1,31 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+#define INF 1 << 16
+using namespace std;
+
+int main(){
+  int cost[20][20]; fill(&cost[0][0], &cost[0][0]+20*20, INF);
+  int n, m, a, b, c, d;
+  scanf("%d%d", &n, &m);
+  rep(i, m){
+    scanf("%d,%d,%d,%d", &a, &b, &c, &d);--a;--b;
+    cost[a][b] = c;
+    cost[b][a] = d;
+  }
+
+  rep(i, n) rep(j, n) rep(k, n)
+    cost[j][k] = min(cost[j][k], cost[j][i] + cost[i][k]);
+  int s, g, weges, value;
+  scanf("%d,%d,%d,%d", &s, &g, &weges, &value);--s;--g;
+  printf("%d\n", weges - value - cost[s][g] - cost[g][s]);
+  return 0;
+}

@@ -1,0 +1,26 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	double n;
+	double heavy[10] = { 48.0, 51.0, 54.0, 57.0, 60.0, 64.0, 69.0, 75.0, 81.0, 91.0};
+	string grade[10] = {"light fly", "fly", "bantam", "feather", "light", "light welter", "welter", "light middle", "middle", "light heavy"};
+
+	while (cin >> n){
+		bool flag = true;
+
+		for (int i = 0; i < 10; ++i){
+			if (n <= heavy[i] && flag){
+				cout << grade[i] << endl;
+				flag = false;
+			}
+		}
+
+		if (flag)
+			cout << "heavy" << endl;
+	}
+
+	return 0;
+}

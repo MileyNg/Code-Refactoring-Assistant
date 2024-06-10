@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+
+
+int main(){
+    int m,n;
+    while(cin>>m>>n){
+        int order[21]={0};
+        for(int i=1; i<=m; i++){
+            order[i]=1;
+        }
+        
+        for(int i=0; i<n; i++){
+            int x,y;
+            cin>>x>>y;
+            order[y]=max(order[y],order[x]*10);
+        }
+        /*
+        for(int i=1; i<=m; i++){
+            cout<<i<<" "<<order[i]<<endl;
+        }
+         */
+        int count = 0;
+        int serch_num=1;
+        while(count!=m){
+            for(int i=1; i<=m; i++){
+                if(serch_num==order[i]){
+                    cout<<i<<endl;
+                    count++;
+                }
+            }
+            serch_num*=10;
+        }
+        
+        
+    }
+    
+    
+
+}

@@ -1,0 +1,13 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+
+void main() {
+  foreach (char[] line; stdin.lines) {
+    if (line == "0\n") break;
+
+    writeln(line.chomp.split("").map!(to!int).reduce!("a+b"));
+  }
+}

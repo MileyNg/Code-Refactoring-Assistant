@@ -1,0 +1,167 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define EPS (1e-10)
+#define COUNTER_CLOCKWISE 1
+#define CLOCKWISE -1 
+#define ONLINE_BACK 2
+#define ONLINE_FRONT -2
+#define ON_SEGMENT 0
+#define equals(a,b) (fabs((a)-(b)) < EPS)
+
+using namespace std;
+
+const int MAX = 20,LIMIT = 20000,IINF = INT_MAX;
+
+// Library - template - begin
+
+class Point{
+public:
+  double x,y;
+
+  Point(double x = -IINF,double y = -IINF): x(x),y(y){}
+
+  Point operator + (Point p){return Point(x+p.x,y+p.y);}
+  Point operator - (Point p){return Point(x-p.x,y-p.y);}
+  Point operator * (double a){return Point(a*x,a*y);}
+  Point operator / (double a){return Point(x/a,y/a);}
+  Point operator * (Point a){ return Point(x * a.x - y * a.y, x * a.y + y * a.x); }
+
+  bool operator < (const Point& p) const{ return !equals(x,p.x)?x<p.x:y<p.y; }
+
+  bool operator == (const Point& p)const{ return fabs(x-p.x) < EPS && fabs(y-p.y) < EPS; }
+
+};
+
+struct Segment{
+  Point p1,p2;
+  Segment(Point p1 = Point(),Point p2 = Point()):p1(p1),p2(p2){}
+  bool operator == (const Segment& p)const { return p.p1 == p1 && p.p2 == p2; }
+};
+
+typedef Point Vector;
+typedef Segment Line;
+typedef vector<Point> Polygon;
+
+ostream& operator << (ostream& os,const Point& a){ os << "(" << a.x << "," << a.y << ")"; }
+
+ostream& operator << (ostream& os,const Segment& a){ os << "( " << a.p1 << " , " << a.p2 << " )"; }
+
+double dot(Point a,Point b){ return a.x*b.x + a.y*b.y; }
+
+double cross(Point a,Point b){ return a.x*b.y - a.y*b.x; }
+
+double norm(Point a){ return a.x*a.x+a.y*a.y; }
+
+double abs(Point a){ return sqrt(norm(a)); }
+
+//rad は角度をラジアンで持たせること
+Point rotate(Point a,double rad){ return Point(cos(rad)*a.x - sin(rad)*a.y,sin(rad)*a.x + cos(rad)*a.y); }
+
+// 度をラジアンに変換
+double toRad(double agl){ return agl*M_PI/180.0; }
+
+// Library - template - end
+
+double getArg(Point a,Point b,Point c){
+  double arg1 = atan2(b.y-a.y,b.x-a.x);
+  double arg2 = atan2(c.y-b.y,c.x-b.x);
+  double arg = fabs( arg1 - arg2 );
+  while( arg > M_PI ) arg -= 2.0 * M_PI;
+  return fabs(arg);
+}
+
+struct Edge{
+  int to;
+  double weight;
+  Edge(int to=0,double weight=0):to(to),weight(weight){}
+};
+
+struct Data{
+  int prev,cur,carrot;
+  double dist;
+  Data(int prev=0,int cur=0,int carrot=0,double dist=0):prev(prev),cur(cur),carrot(carrot),dist(dist){}
+  bool operator < (const Data& data) const{ return dist > data.dist; }
+};
+
+int n;
+double r,theta,mindist[MAX][MAX][LIMIT]; // mindist[cur][prev][the number of carrot]
+Point ps[MAX];
+vector<Edge> edge[MAX][MAX]; // edge[cur][prev]
+
+inline void dijkstra(){
+  rep(i,n)rep(j,n)rep(k,LIMIT) mindist[i][j][k] = IINF;
+  priority_queue<Data> Q;
+
+  REP(i,1,n) {
+    double dist = abs(ps[0]-ps[i]);
+    if( !equals(dist,r) && dist > r ) continue;
+    Q.push(Data(0,i,1,dist));
+    mindist[i][0][1] = dist;
+  }
+  int ans = (Q.empty()?0:1);
+
+  while( !Q.empty() ){
+    Data data = Q.top(); Q.pop();
+    int prev = data.prev, cur = data.cur, carrot = data.carrot;
+    double dist = data.dist;
+
+    if( !equals(mindist[cur][prev][carrot],dist) && mindist[cur][prev][carrot] < dist ) continue;
+
+    rep(i,edge[cur][prev].size()) {
+      int next = edge[cur][prev][i].to;
+      double weight = edge[cur][prev][i].weight;
+      if( !equals(r,dist+weight) && r < dist+weight ) continue;
+      if( mindist[next][cur][carrot+1] > dist + weight ){
+        mindist[next][cur][carrot+1] = dist + weight;
+        ans = max(ans,carrot+1);
+        Q.push(Data(cur,next,carrot+1,dist+weight));
+      }
+    }
+
+  }
+  cout << ans << endl;
+}
+
+inline void makeEdge(){
+  rep(prev,n){
+    rep(cur,n){
+      if( cur == prev ) continue;
+      rep(next,n){
+        if( next == cur || next == prev ) continue;
+        double dist = abs(ps[cur]-ps[next]);
+        if( !equals(dist,r) && dist > r ) continue;
+        Vector v1 = ps[next] - ps[cur];
+        Vector v2 = ps[cur]  - ps[prev];
+        if( equals(cross(v1,v2),0.0) ) continue;
+        double arg = getArg(ps[prev],ps[cur],ps[next]);
+        if( equals(arg,theta) || arg < theta ) edge[cur][prev].push_back(Edge(next,dist));
+      }
+    }
+  }
+}
+
+int main(){
+
+  /*
+  int next = 2, cur = 1, prev = 0;
+  ps[0] = Point(0,0);
+  ps[1] = Point(10,0);
+  ps[2] = Point(0,1);
+  double arg =  getArg(ps[prev],ps[cur],ps[next]);
+  cout << "arg = " << arg * 180.0 / M_PI << endl;
+  */
+
+  cin >> n;
+  cin >> r >> theta;
+  theta = toRad(theta);
+  rep(i,n) cin >> ps[i].x >> ps[i].y;
+
+
+  makeEdge();
+
+  dijkstra();
+
+  return 0;
+}

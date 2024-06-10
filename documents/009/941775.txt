@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<string.h>
+#define LEN 100005
+int min(int a, int b){return a < b? a:b;}
+typedef struct pp{
+  char name[100];
+  int t;
+}P;
+
+P Q[LEN+1];
+int head, tail, n;
+void eneque(P);
+P deque(void);
+
+void enque(P x){
+  Q[tail]=x;
+  if(tail==LEN)tail=1;
+  else tail++; 
+}
+
+P deque(){
+  P X = Q[head];
+  if(head==LEN)head=1;
+  else head++;
+  return X;
+}
+
+
+int main(){
+  int elaps = 0;
+  int i, q,k=0;
+  P u;
+  scanf("%d %d", &n, &q);
+  for ( i = 1; i <= n; i++){
+    scanf("%s", Q[i].name);
+    scanf("%d", &Q[i].t);
+  }
+  head =1;
+  tail=n+1;
+  while(head != tail){
+    u = deque();
+    k = min(q,u.t);
+    u.t = u.t - k;
+    elaps = elaps + k;
+    if(u.t > 0 )enque(u);
+    else{
+      printf("%s %d\n",u.name,elaps);
+    }
+  }
+  return 0;
+}

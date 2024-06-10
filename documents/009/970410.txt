@@ -1,0 +1,37 @@
+#include<cstdio>
+#include<queue>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+struct Process{
+  string name;
+  int time;
+};
+
+int main(){
+
+  int n,qtime,ttime=0;
+  Process ps;
+  queue<Process> qu;
+  scanf("%d%d",&n,&qtime);
+  for(int i=0;i<n;i++){
+    cin>>ps.name>>ps.time;
+    qu.push(ps);
+  }
+ 
+  while(!qu.empty()){
+    ps=qu.front();
+    if(ps.time<=qtime){
+      ttime+=ps.time;
+      cout<<ps.name<<" "<<ttime<<endl;
+      qu.pop();
+    }else{
+      ttime+=qtime;
+      ps.time-=qtime;
+      qu.pop();
+      qu.push(ps);
+    }
+  }
+  return 0;
+}

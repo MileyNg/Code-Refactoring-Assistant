@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+int paper[10][10];
+
+void drop(int paper[][10], int x, int y, int size)
+{
+	if (x + size < 10){
+		paper[x + size][y]++;
+	}
+	if (x - size >= 0){
+		paper[x - size][y]++;
+	}
+	if (y + size < 10){
+		paper[x][y + size]++;
+	}
+	if (y - size >= 0){
+		paper[x][y - size]++;
+	}
+}
+
+int main(void)
+{
+	int x, y, size;
+	int i, j;
+	int count = 0;
+	int max = 0;
+	
+	while (scanf("%d,%d,%d", &x, &y, &size) != EOF){
+		paper[x][y]++;
+		drop(paper, x, y, 1);
+		if (size > 1){
+			if (x + 1 < 10 && y + 1 < 10){
+				paper[x + 1][y + 1]++;
+			}
+			if (x - 1 >= 0 && y + 1 < 10){
+				paper[x - 1][y + 1]++;
+			}
+			if (x + 1 < 10 && y - 1 >= 0){
+				paper[x + 1][y - 1]++;
+			}
+			if (x - 1 >= 0 && y - 1 >= 0){
+				paper[x - 1][y - 1]++;
+			}
+		}
+		if (size > 2){
+			drop(paper, x, y, 2);
+		}
+	}
+	for (i = 0; i < 10; i++){
+		for (j = 0; j < 10; j++){
+			if (paper[i][j] == 0){
+				count++;
+			}
+			if (max < paper[i][j]){
+				max = paper[i][j];
+			}
+		}
+	}
+	printf("%d\n", count);
+	printf("%d\n", max);
+	
+	return 0;
+}

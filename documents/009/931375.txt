@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void){
+	
+	int s[1000], n, i, sum;
+    double a, m;
+    
+    m = 0;
+    
+    while (1) {
+        
+        sum = 0;
+        a = 0;
+        scanf("%d", &n);
+        if (n == 0) {
+            break;
+        }
+        
+        for (i = 0; i < n; i++) {
+            scanf("%d", &s[i]);
+            sum += s[i];
+        }
+        
+        m = (double)sum / (double)n;
+        
+        
+        for (i = 0; i < n; i++) {
+            a += ((double)s[i] - m) * ((double)s[i] - m);
+        }
+        
+        a /= n;
+        printf("%.8lf\n", sqrt(a));
+    }
+    
+    
+	
+	return 0;
+    
+}

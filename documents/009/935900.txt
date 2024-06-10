@@ -1,0 +1,17 @@
+while 1:
+	n,m = map(int,raw_input().split())
+	if n == 0: break
+	E,B,Y = [],[],[]
+	for i in range(n):
+		era,base,year = raw_input().split()
+		E.append(era)
+		B.append(int(base))
+		Y.append(int(year))
+	for i in range(m):
+		year = int(raw_input())
+		for j in range(n):
+			if Y[j]-B[j] < year <= Y[j]:
+				print E[i], year-Y[j]+B[j]
+				break
+		else:
+			print "Unknown"

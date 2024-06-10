@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct data{
+  int x;
+  int y;
+  struct data *next;
+}DATA;
+
+void inputXY(DATA *p);
+void soatXY(DATA *p);
+void printXY(DATA *p);
+
+int main(void)
+{
+  DATA *p;
+  p = (DATA*)malloc(sizeof(DATA));
+
+  inputXY(p);
+  soatXY(p);
+  printXY(p);
+
+  return 0;
+}
+
+void inputXY(DATA *p)
+{
+  scanf("%d %d", &p->x, &p->y);
+
+  if(p->x != 0 || p->y != 0){
+    p->next = (DATA*)malloc(sizeof(DATA));
+    inputXY(p->next);
+  }
+}
+
+void soatXY(DATA *p)
+{
+  int tmp;
+
+  if(p->x > p->y){
+    tmp = p->x;
+    p->x = p->y;
+    p->y = tmp;
+  }
+
+  if(p->next->x != 0 || p->next->y  != 0) soatXY(p->next);
+}
+
+void printXY(DATA *p){
+  printf("%d %d\n", p->x, p->y);
+
+  if(p->next->x != 0 || p->next->y != 0) printXY(p->next);
+}

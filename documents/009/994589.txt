@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool p[1010000];
+
+void prime() {
+  fill(p, p+1010000, true);
+  p[0] = false;
+  p[1] = false;
+  for(int i = 2; i < 1010000; i++) {
+    if(p[i]) {
+      for(int j = 2; i*j < 1010000; j++) {
+	p[i*j] = false;
+      }
+    }
+  }
+}
+
+int search(int n, int m) {
+  vector<int> a;
+  int cnt = 0;
+  for(int i = n+1; ; i++) {
+    if(p[i]) {
+      a.push_back(i+i);
+      cnt++;
+      if(cnt == m+10000) {
+	sort(a.begin(), a.end());
+	return a[m-1];
+      }
+      if(p[i]) {
+	for(int j = n+1; j < i; j++) {
+	  if(p[j]) {
+	    a.push_back(i+j);
+	    cnt++;
+	    if(cnt == m+10000) {
+	      sort(a.begin(), a.end());
+	      return a[m-1];
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+int main() {
+  int n, m;
+  prime();
+
+  while(cin >> n >> m, n+m != -2) {
+    int ans = search(n, m);
+    cout << ans << endl;
+  }
+}

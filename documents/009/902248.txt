@@ -1,0 +1,48 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <stack>
+#include <deque>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i < ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 0, n )
+
+typedef long long ll;
+typedef pair< int, int > P;
+
+#define MAX_S 8
+
+const int value[ 4 ] = { 10, 50, 100, 500 };
+
+int main()
+{
+	bool first = true;
+	while( 1 ) {
+		int coins[ 4 ];
+		int price;
+		cin >> price;
+		if( !price ) break;
+		if( !first ) cout << endl;
+		first = false;
+		REP( i, 4 ) cin >> coins[ i ];
+		int sum = 0;
+		REP( i, 4 ) sum += coins[ i ] * value[ i ];
+		sum -= price;
+		for( int i = 3; i >= 0; --i ) {
+			int n = sum / value[ i ];
+			sum -= n * value[ i ];
+			coins[ i ] -= n;
+		}
+		REP( i, 4 ) if( coins[ i ] > 0 ) cout << value[ i ] << " " << coins[ i ] << endl;
+	}
+	return 0;
+}

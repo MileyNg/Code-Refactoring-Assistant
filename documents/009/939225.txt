@@ -1,0 +1,15 @@
+r = 10000001
+s = int(r**0.5)
+p = [1]*r
+p[0] = p[1] = 0
+for i in range(2,s):
+	if p[i]:
+		p[2*i::i] = [0 for x in range(2*i,r,i)]
+
+while 1:
+	n = input()
+	if n == 0: break
+	for i in range(n-(1-n%2),12,-4):
+		if p[i] and p[i-2] and p[i-6] and p[i-8]:
+			print i
+			break

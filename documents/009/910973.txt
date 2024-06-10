@@ -1,0 +1,51 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int win(int ,int);
+
+int main(){
+	int n;//候補数
+	int p;//はじめの石の数
+
+	while(1){
+		cin>>n>>p;
+
+		if(n==0&&p==0)
+			break;
+		cout<<win(n,p)<<endl;
+	}
+	return 0;
+}
+
+int win(int n,int p){
+	int hito=0;
+	int owan=p;
+	int moti_isi[50]={0,};
+	while(1){
+		if(owan!=0){
+			moti_isi[hito]++;
+			owan--;
+		}
+		else{
+			owan=moti_isi[hito];
+			moti_isi[hito]=0;
+		}
+		
+		if(owan==0){
+			int hantei=0;
+			for(int i=0;i<n;i++){
+				if(moti_isi[i]>=p)
+					hantei++;
+			}
+			if(hantei==1)
+				break;
+		}
+
+		hito++;
+		if(hito>n-1)
+			hito=0;
+	}
+	return hito;
+}

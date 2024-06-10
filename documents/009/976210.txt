@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+using namespace std;
+void isl(int in[50][50],int x,int y){
+in[x][y]=0;
+loop(i,-1,2){
+loop(j,-1,2){
+if(x-i>=0&&y-j>=0&&in[x-i][y-j])isl(in,x-i,y-j);
+}
+}
+}
+int main(){
+int n,m;
+while(cin>>n>>m,n||m){
+int in[50][50]={0};
+int co=0;
+rep(i,m)
+rep(j,n)
+cin>>in[i][j];
+
+rep(i,m){
+rep(j,n){
+if(in[i][j]){co++;isl(in,i,j);}
+}
+}
+cout<<co<<endl;
+}
+}

@@ -1,0 +1,96 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+#define fee first
+#define time second
+#define ALL(T) T.begin(),T.end()
+
+const int INF = 1<<24;
+
+int main(){
+	int n, m;
+	while (cin >> n >> m, n, m) {
+		vector< vector<pair<int, int> > > lines(m, vector<pair<int, int> >(m));
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < m; j++)
+				lines[i][j].fee = lines[i][j].time = INF;
+		for (int i = 0; i < n; i++) {
+			int a, b; cin >> a >> b;
+			cin >> lines[a-1][b-1].fee >> lines[a-1][b-1].time;
+			lines[b-1][a-1].fee = lines[a-1][b-1].fee;
+			lines[b-1][a-1].time = lines[a-1][b-1].time;
+		}
+
+		for (int k = 0; k < m; k++)
+			for (int i = 0; i < m; i++)
+				for (int j = 0; j < m; j++) {
+					lines[i][j].fee = min(lines[i][j].fee, lines[i][k].fee+lines[k][j].fee);
+					lines[i][j].time = min(lines[i][j].time, lines[i][k].time+lines[k][j].time);
+				}
+
+		int k; cin >> k;
+		for (int i = 0; i < k; i++) {
+			int p, q, r; cin >> p >> q >> r;
+			if (r == 0) { cout << lines[p-1][q-1].fee << endl; }
+			else { cout << lines[p-1][q-1].time << endl; }
+
+			// if (r == 0) { // minimum fee
+			// 	int cur = q;
+			// 	vector<int> cost(m);
+			// 	for (int i = 0; i < m; i++) { cost[i] = -1; }
+			// 	vector<int> visited(m);
+			// 	vector<vector<int> > graph(m);
+
+			// 	while (count(ALL(visited), 0)) {
+			// 		vector<int> list;
+			// 		for (int i = 0; i < m; i++) {
+			// 			if (lines[cur][i].fee != -1) {
+			// 				list.push_back(i);
+			// 			}
+			// 		}
+			// 		int I;
+			// 		for (int i = 0; i < list.size(); i++) {
+			// 			if (cost[list[i]] > cost[cur] + lines[cur][i].fee) {
+			// 				cost[list[i]] = cost[cur] + lines[cur][i].fee;
+			// 				I = list[i];
+			// 			}
+			// 		}
+			// 		visited[cur] = 1;
+			// 		cur = I;
+			// 	}
+			// 	cout << cost[p] << endl;
+			// } else if (r == 1) { // minimum time
+			// 	int cur = q;
+			// 	vector<int> cost(m);
+			// 	for (int i = 0; i < m; i++) { cost[i] = -1; }
+			// 	vector<int> visited(m);
+			// 	vector<vector<int> > graph(m);
+
+			// 	while (count(ALL(visited), 0)) {
+			// 		vector<int> list;
+			// 		for (int i = 0; i < m; i++) {
+			// 			if (lines[cur][i].time != -1) {
+			// 				list.push_back(i);
+			// 			}
+			// 		}
+			// 		int I;
+			// 		for (int i = 0; i < list.size(); i++) {
+			// 			if (cost[list[i]] > cost[cur] + lines[cur][i].time) {
+			// 				cost[list[i]] = cost[cur] + lines[cur][i].time;
+			// 				I = list[i];
+			// 			}
+			// 		}
+			// 		visited[cur] = 1;
+			// 		cur = I;
+			// 	}
+			// 	cout << cost[p] << endl;
+			// }
+
+		}
+	}
+
+	return 0;
+}

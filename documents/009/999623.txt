@@ -1,0 +1,62 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define INF (1<<29)
+#define EPS (1e-10)
+#define mp make_pair
+#define pb push_back
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef pair<int,int> pii;
+
+int dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+
+int main(){
+	int n;
+	while( cin >> n, n ){
+		int d;
+		cin >> d;
+		vector<string> data(n);
+		for( int i = 0; i < n; i++ ){
+			cin >> data[i];
+		}
+		int cnt = 0;
+		sort(data.begin(), data.end());
+		//vii dists(n, vi(n,INF));
+		for( int i = 0; i < n; i++ ){
+			for( int j = i+1; j < n; j++ ){
+				vii dp(n+1, vi(n+1, 0));
+				for( int k = 1; k <= n; k++ ){
+					for( int l = 1; l <= n; l++ ){
+						if( data[i][k-1] == data[j][l-1] ){
+							dp[k][l] = dp[k-1][l-1];
+						}else{
+							dp[k][l] = min(dp[k-1][l]+1, min(dp[k][l-1]+1, dp[k-1][l-1]+1));
+							//if( k < n && data[i][k] == data[j][l-1] ) dp[k][l] = min(dp[k][l], data[k-1][l]+1);
+							if( 1 < k && 1 < l && data[i][k-2] == data[j][l-1] && data[i][k-1] == data[j][l-2] ) dp[k][l] = min(dp[k][l], data[k-2][l-2]+1);
+						}
+					}
+				}
+				//dists[i][j] = dists[j][i] = dp[n][n];
+				if( dp[n][n] <= d ){
+					cout << data[i] << "," << data[j] << endl;
+					cnt++;
+				}
+			}
+		}
+		cout << cnt << endl;
+	}
+}

@@ -1,0 +1,38 @@
+/*
+	Carry a Cheese
+*/
+#include	<iostream>
+#include	<cmath>
+
+using namespace std;
+
+int main(void) {
+	while(1){
+		int lx, ly, lz, n;
+		double dxy, dyz, dzx;
+		
+		cin >> lx >> ly >> lz;
+		
+		if(lx == 0 && ly == 0 && lz == 0) { break; }
+		
+		dxy = sqrt(lx * lx + ly * ly);
+		dyz = sqrt(ly * ly + lz * lz);
+		dzx = sqrt(lz * lz + lx * lx);
+		
+		cin >> n;
+		
+		for(int i = 0; i < n; i++) {
+			int r;
+			
+			cin >> r;
+			r *= 2;
+			if(r > dxy || r > dyz || r > dzx) {
+				cout << "OK" << endl;
+			} else {
+				cout << "NA" << endl;
+			}
+		}
+	}
+	
+	return 0;
+}

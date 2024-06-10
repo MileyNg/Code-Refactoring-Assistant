@@ -1,0 +1,19 @@
+#include<cstdio>
+#include<map>
+using namespace std;
+int main(){
+  int n;
+  map<int,int> m;
+  while(scanf("%d",&n)>0){
+    int &i = m[n];
+    if(i == 0) i=1;
+    else i++;
+  }
+  int max=0;
+  for(auto i:m)
+    if(max < i.second)
+      max=i.second;
+  for(auto i:m)
+    if(max==i.second)
+      printf("%d\n",i.first);
+}

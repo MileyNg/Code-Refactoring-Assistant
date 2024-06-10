@@ -1,0 +1,62 @@
+#include<cstdio>
+#define MAX_N 200
+
+int max (int a,int b){
+	if(a>b) return a;
+	else return b;
+}
+
+int min (int a,int b){
+	if(a<b) return a;
+	else return b;
+}
+
+int abs(int i){
+	if(i<0) return i*-1;
+	else return i;
+}
+
+//maxxxxxxxxxxxzzzzzz dpppppp!!!!!!!!
+
+int D,N;
+int dp[MAX_N+1][MAX_N+1];
+int T[200];
+int C[200][3];
+
+
+
+int main(){
+	scanf("%d%d",&D,&N);
+	for(int i=0;i<=D;i++){
+		for(int ii=0;ii<=N;ii++){
+			dp[i][ii]=-1;
+		}
+	}
+	for(int i=0;i<D;i++)
+		scanf("%d",&T[i]);
+	for(int i=0;i<N;i++)
+		scanf("%d%d%d",&C[i][0],&C[i][1],&C[i][2]);
+	for (int j = 0; j < N; j++) if (C[j][0] <= T[0] && T[0] <= C[j][1]) 
+		dp[0][j] = 0;
+	
+	for(int d=0;d<D-1;d++){
+		for(int c=0;c<N;c++){
+			if(dp[d][c]>=0){
+				for(int i=0;i<N;i++){
+					if (C[i][0] <= T[d+1] && T[d+1] <= C[i][1]) 
+						dp[d+1][i]=max(dp[d+1][i],dp[d][c]+abs(C[c][2]-C[i][2]));
+				}
+			}
+		}
+	}
+
+	int ans = -1;
+	for (int j = 0; j < N; j++) {
+		if (ans < dp[D-1][j]) {
+			ans = dp[D-1][j];
+		}
+	}
+	printf("%d\n", ans);
+	return 0;
+}
+		

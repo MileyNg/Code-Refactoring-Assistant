@@ -1,0 +1,43 @@
+#include <iostream>
+#include <set>
+#include <string>
+using namespace std;
+
+
+int main()
+{
+	int n;
+	cin >> n;
+	for (int dataset = 0; dataset < n; dataset++){
+		set<string> train;
+		string s,left,right,lreverse,rreverse;
+		cin >> s;
+		for (int i = 1; i < s.length(); i++){
+			left = right = lreverse = rreverse = "";
+			for (int j = 0; j < i; j++)
+				left += s[j];
+			for (int j = 0; j < s.length() - i; j++)
+				right += s[i + j];
+			for (int j = 0; j < left.length(); j++)
+				lreverse += left[left.length() - j - 1];
+			for (int j = 0; j < right.length(); j++)
+				rreverse += right[right.length() - j - 1];
+			train.insert(left + right);
+			train.insert(right + left);
+			train.insert(lreverse + right);
+			train.insert(right + lreverse);
+			train.insert(left + rreverse);
+			train.insert(rreverse + left);
+			train.insert(lreverse + rreverse);
+			train.insert(rreverse + lreverse);
+		}
+		cout << train.size() << endl;
+
+
+
+
+
+	}
+	return 0;
+
+}

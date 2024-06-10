@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+using namespace std;
+int dp[5][50][50][1 << 12];
+int H, W, K;
+char mas[50][50];
+int dy[] = { 0, 1, 0, -1}, dx[] = { 1, 0, -1, 0};
+int mask;
+
+int getdir(int bit, int i){
+  return bit >> (i << 1) & 3;
+}
+
+int main()
+{
+  cin >> H >> W >> K;
+  mask = (1 << (K * 2 * 2)) - 1;
+  for(int i = 0; i < H; i++){
+    for(int j = 0; j < W; j++){
+      cin >> mas[i][j];
+    }
+  }
+  for(int mul = K ; mul >= 0; mul--){
+    for(int bit = 0; bit < 1 << (K * 2 * 2) ; bit++){ // 前の街
+      for(int y = 0; y < H; y++){
+        for(int x = 0; x < W; x++){
+
+          int my = y, mx = x, cost = 0;
+          bool flag = false;
+          if(mas[y][x] != '.'){
+            for(int i = 0; i < 2 * K; i++){
+              my -= dy[getdir( bit, i)];
+              mx -= dx[getdir( bit, i)];
+              if(my == y && mx == x){
+                flag = true;
+                break;
+              }
+            }
+            if(!flag) cost = mas[y][x] - '0';
+          }
+          
+          for(int i = 0; i < 4; i++){
+            int ny = y + dy[i], nx = x + dx[i];
+            if(ny < 0 || ny >= H || nx < 0 || nx >= W || mas[ny][nx] == '#') continue;
+            if(mul == 0 && i >= 2) break;
+
+            int& next = dp[mul - (i >= 2)][ny][nx][(bit << 2 | i) & mask];
+
+            next = max( next, dp[mul][y][x][bit] + cost);
+          }
+        }
+      }
+    }
+  }
+  int ret = 0;
+  for(int i = 0; i < 1 << (4 * K) ; i++){
+    ret = max( ret, dp[0][H - 1][W - 1][i]);
+  }
+  cout << ret << endl;
+  return 0;
+}

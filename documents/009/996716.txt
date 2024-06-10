@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+int N,D;
+int data[52][52];
+
+
+int search(int i_,int &cost) {
+    int mini=100000000;
+    int ret=0;
+    rep(i,N) {
+        if(data[i][i_] < mini) {
+            mini = data[i][i_];
+            ret = i;
+
+        }
+    }
+    cost=mini;
+    return ret;
+}
+
+int main() {
+    cin>>N>>D;
+    rep(i,N) rep(j,D) cin>>data[i][j];
+    int stay=0;
+    int ans=0;
+    int cnt=0;
+    vector<int> vec;
+
+    rep(i,D) {
+        int cost;
+        int t=search(i,cost)+1;
+
+        ans+=cost;
+        if(t!=stay) cnt++;
+        stay=t;
+        vec.push_back(stay);
+    }
+    cout<<ans<<" "<<cnt-1<<endl;;
+    rep(i,vec.size()) cout<<vec[i]<<endl;
+
+
+
+    return 0;
+}

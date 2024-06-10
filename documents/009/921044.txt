@@ -1,0 +1,21 @@
+#include <iomanip>
+#include <iostream>
+using namespace std;
+
+/** Problem0010 : CIrcumscribed Circle of a Triangle **/
+int main()
+{
+	int n;
+	double X1, Y1, X2, Y2, X3, Y3;
+	double a, b, c, d, e, f, l, m;
+	cin >> n;
+	for (int i=0; i<n; i++) {
+		cin >> X1 >> Y1 >> X2 >> Y2 >> X3 >> Y3;
+		a = X1-X2; b = Y1-Y2; c = -(X1*X1+Y1*Y1)+(X2*X2+Y2*Y2);
+		d = X2-X3; e = Y2-Y3; f = -(X2*X2+Y2*Y2)+(X3*X3+Y3*Y3);
+		l = (c*e - b*f)/(e*a - b*d); m = (c*d - a*f)/(b*d - a*e);
+		cout << setprecision(3) << setiosflags(ios::fixed);
+		cout << -l/2 << " " << -m/2 << " " << sqrt(l*l+m*m-4*n)/2 << endl;
+	}
+	return 0;
+}

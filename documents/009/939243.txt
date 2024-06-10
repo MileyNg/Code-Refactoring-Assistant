@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	char inte[80],
+		inte2[80],
+		tmp[80],
+		ans[80];
+	int len, len2, intmp;
+	int sum, sum2, ten;
+	int n, i, j, k;
+	
+	scanf("%d", &n);
+	for (i = 0; i < n; i++){
+		scanf("%s %s", inte, inte2);
+		
+		len = strlen(inte);
+		len2 = strlen(inte2);
+		
+		if (len < len2){
+			strcpy(tmp, inte);
+			strcpy(inte, inte2);
+			strcpy(inte2, tmp);
+			intmp = len;
+			len = len2;
+			len2 = intmp;
+		}
+		
+		ten = 0;
+		k = len2 - 1;
+		for (j = len - 1; j >= 0; j--){
+			if (k >= 0){
+				sum = (inte[j] - '0') + (inte2[k] - '0') + ten;
+				if (sum >= 10){
+					sum = sum % 10;
+					ten = 1;
+				}
+				else {
+					ten = 0;
+				}
+				ans[j] = sum + '0';
+				k--;
+			}
+			else {
+				sum = (inte[j] - '0') + ten;
+				if (sum >= 10){
+					sum = sum % 10;
+					ten = 1;
+				}
+				else {
+					ten = 0;
+				}
+				ans[j] = sum + '0';
+			}
+		}
+		
+		if (ten == 1 && len < 80){
+			strcpy(tmp, ans);
+			
+			for (j = 0; j < len; j++){
+				ans[j + 1] = tmp[j];
+			}
+			ans[0] = '1';
+			ans[len + 1] = '\0';
+		}
+		else if (len >= 80){
+			strcpy(ans, "overflow");
+		}
+		else {
+			ans[len] = '\0';
+		}
+		
+		printf("%s\n", ans);
+	}
+	
+	return (0);
+}

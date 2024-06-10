@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int x;
+  char s[100];
+  int stack[100];
+  int i=0;
+  /* 逆ポーランドの計算 */
+
+  while( scanf("%s", s) != EOF ){
+
+    if ( s[0] == '+' ){
+      stack[i-2]=stack[i-1]+stack[i-2];
+      i--;
+
+    } else if ( s[0] == '-' ){
+      stack[i-2]=stack[i-2]-stack[i-1];
+      i--;
+      
+    } else if ( s[0] == '*' ){
+      stack[i-2]=stack[i-1]*stack[i-2];
+      i--;
+
+    } else {
+      x = atoi(s);
+      stack[i]=x;
+      i++;
+  }
+
+
+
+  }
+  /* ----------- out put ----------- */
+  printf("%d \n",stack[i-1]);
+  /* ------------------------------- */
+  return 0;
+}

@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int *hanahuda, n, r, p, c;
+
+void initHanahuda(){
+	int i;
+	hanahuda = (int *)malloc(sizeof(int) * n+1);
+	for(i = 1; i <= n; i++){
+		hanahuda[i] = n-i+1;
+	}
+}
+
+void shuffle(int p, int c){
+	int i;
+	int *tmparray = (int *)malloc(sizeof(int) * c+1);
+	//取り出した札をtmparrayに保管
+	for(i = 1; i <= c; i++){
+		tmparray[i] = hanahuda[p+i-1];
+	}
+	//上の札を下に下ろす
+	for(i = 1; i <= p-1; i++){
+		hanahuda[p-i+c] = hanahuda[p-i];
+	}
+	//一時的に保管した札を山の上に載せる
+	for(i = 1; i <= c; i++){
+		hanahuda[i] = tmparray[i];
+	}
+}
+
+int main(void){
+	while(1){
+		scanf("%d%d", &n, &r);
+		if(n==0 && r==0)	break;
+		initHanahuda();
+		int i;
+		for(i = 0; i < r; i++){
+			scanf("%d%d", &p, &c);
+			shuffle(p, c);
+		}
+		printf("%d\n", hanahuda[1]);
+		free(hanahuda);
+	}
+
+	return 0;
+}

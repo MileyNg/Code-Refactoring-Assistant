@@ -1,0 +1,43 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		while(true){
+			String S="";
+			if((S=Console.ReadLine())==null)break;
+			Sol mySol =new Sol(int.Parse(S));
+			mySol.Solve();
+		}
+	}
+}
+
+class Sol{
+	public void Solve(){
+		List<int> L=new List<int>();
+		for(int i=0;i<32;i++){
+			if((N&(0x1<<i))!=0)L.Add(0x1<<i);
+		}
+		for(int i=0;i<L.Count;i++){
+				Console.Write(i==0?"{0}":" {0}",L[i]);
+		}
+		Console.WriteLine("");
+	}
+	int N;
+	public Sol(int i){
+		N=i;
+	}
+
+
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}

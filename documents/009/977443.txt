@@ -1,0 +1,13 @@
+while (n, r = gets.split(" ").map!{|i| i = i.to_i}) != [0, 0] do
+  yama = []
+  r.times {yama.unshift gets.split(" ").map{|i| i.to_i}}
+  top = 0
+  yama.each do |p, c|
+    if top < c
+      top += p - 1
+    elsif top < p + c - 1
+      top -= c
+    end
+  end
+  puts n - top
+end

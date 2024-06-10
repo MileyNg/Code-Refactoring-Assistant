@@ -1,0 +1,35 @@
+// AOJ 1004
+#include<algorithm>
+#include<cstdio>
+
+bool isprime[10001];
+
+void sieve()
+{
+	std::fill( isprime, isprime+10001, true );
+	isprime[0] = isprime[1] = false;
+	for( int i = 2; i <= 10000; ++i )
+		if( isprime[i] )
+			for( int j = i*2; j <= 10000; j += i )
+				isprime[j] = false;
+
+	return;
+}
+
+int main()
+{
+	sieve();
+
+	int n;
+	while( scanf( "%d", &n ) != EOF )
+	{
+		int ans = 0;
+		for( int i = 0; i != n; ++i )
+			if( isprime[i+1] && isprime[n-i] )
+				++ans;
+
+		printf( "%d\n", ans );
+	}
+
+	return 0;
+}

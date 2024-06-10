@@ -1,0 +1,89 @@
+#include <iostream>
+#include <queue>
+#include <map>
+#include <string>
+#include <vector>
+#include <string.h>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++) 
+#define ascent(i,a,b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+
+using namespace std;
+
+int search[1010][1010];
+int W, H, N;
+vector<string> m;
+
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, -1, 0, 1};
+
+int cheese = 1;
+int ans = 0;
+
+void BFS(int x, int y) {
+  memset(search, 0, sizeof(search));
+  search[x][y] = 1;
+
+  queue<pair<int, pair<int, int> > > q;
+  q.push(make_pair(0, make_pair(x, y)));
+
+  while(!q.empty()) {
+    pair<int, pair<int, int> > xy = q.front();
+    q.pop();
+
+    int cnt = xy.first;
+    int _x = xy.second.first;
+    int _y = xy.second.second;
+
+    //   cout << " " << cnt << " " << _x << " " << _y << endl;
+    ascent(i, 0, 4) {
+      int xx = _x + dx[i];
+      int yy = _y + dy[i];
+      
+      //cout << search[1][0] << endl;
+      if(0 <= xx && xx < W && 0 <= yy && yy < H && search[xx][yy] == 0) {
+	if(m[yy][xx] - '0' == cheese) {
+	  ans += cnt+1;
+	  cheese ++;
+	  
+	  if(cheese <= N) {
+	    BFS(xx, yy);
+	  }
+	  else { return; }
+	}
+	else if(m[yy][xx] != 'X') {
+	  
+	  q.push(make_pair(cnt+1, make_pair(xx, yy)));
+	}
+      }
+    }
+  }
+}
+
+int main() {
+  cin >> W >> H >> N;
+  
+  loop(H) {
+    string tmp;
+    cin >> tmp;
+    m.pb(tmp);
+  }
+
+  int i, j;
+  bool flg = false;
+  for(i = 0; i < W; i ++) {
+    for(j = 0; j < H; j ++) {
+      if(m[j][i] == 'S') {
+	//	cout << i << " " << j << endl;
+	BFS(i, j);
+	flg = true;
+      }
+    }
+    if(flg) break;
+  }
+  //  cout << i << " " << j << endl;
+  cout << ans << endl;
+  return 0;
+}

@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+int main(void){
+    int n,m,ans;
+    int x,y,r;
+    char d;
+    int gemx,gemy;
+    int stage[21][21];
+    int i,j;
+    while(scanf("%d",&n)!=EOF && n!=0){
+        x=10,y=10,ans=0;
+        //initialising
+        for(i=0;i<=20;i++){
+            for(j=0;j<=20;j++)stage[i][j]=0;
+        }
+        //gems mapping
+        for(i=0;i<n;i++){
+            scanf("%d %d",&gemx,&gemy);
+            stage[gemx][gemy]=1;
+        }
+        //robot
+        scanf("%d",&m);
+        for(i=0;i<m;i++){
+            scanf("%s %d",&d,&r);
+            switch(d){
+                case 'N':
+                    for(j=0;j<r;j++){
+                        y++;
+                        if(stage[x][y]==1)stage[x][y]=0;
+                    }
+                    break;
+                case 'S':
+                    for(j=0;j<r;j++){
+                        y--;
+                        if(stage[x][y]==1)stage[x][y]=0;
+                    }
+                    break;
+                case 'E':
+                    for(j=0;j<r;j++){
+                        x++;
+                        if(stage[x][y]==1)stage[x][y]=0;
+                    }
+                    break;
+                case 'W':
+                    for(j=0;j<r;j++){
+                        x--;
+                        if(stage[x][y]==1)stage[x][y]=0;
+                    }
+                    break;
+            }
+        }
+        //map checking
+        for(i=0;i<=20;i++){
+            for(j=0;j<=20;j++)if(stage[i][j]!=0)ans++;
+        }
+        if(ans==0)printf("Yes\n");
+        else printf("No\n");
+    }
+    return 0;
+}

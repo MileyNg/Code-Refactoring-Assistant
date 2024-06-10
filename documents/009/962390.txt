@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+  long long int n, input_h, input_a, input_d, input_s;
+
+  cin >> n;
+
+  vector< long long int > h, a, d, s, t, dm;
+
+  for ( long long int i = 0; i < n + 1; i++ ) {
+
+    cin >> input_h >> input_a >> input_d >> input_s;
+
+    h.push_back( input_h );
+    a.push_back( input_a );
+    d.push_back( input_d );
+    s.push_back( input_s );
+
+  }
+
+  t.push_back( 0 );
+  dm.push_back( 0 );
+
+  for ( long long int i = 1;i <= n; i++ ) {
+
+    if ( a[0] - d[i] <= 0 ) {
+      cout << -1 << endl;
+      return 0;
+    }
+
+    a[i] = max( a[i] - d[0], 0LL );
+
+    t.push_back( h[i] / ( a[0] - d[i] ) );
+    if ( ( h[i] % ( a[0] - d[i] ) ) != 0 ) t[i]++;
+    if ( a[i] <= 0 ) {
+      dm.push_back( 0 );
+    }else {
+      dm.push_back( t[i] * a[i] );
+      if ( s[0] > s[i] ) dm[i] -= a[i];
+    }
+
+  }
+
+  long long int att = 0;
+
+  vector< long long int > o;
+
+  long long int ans = 0;
+
+  for ( long long int i = 1; i <= n; i++ ) {
+
+    long long int cnt = 0;
+
+    long long int suma = att;
+
+    long long int tur = 0;
+
+    long long int dam = h[0];
+
+    long long int k = tur * a[i] + suma * t[i] + dm[i];
+
+    for ( long long int j = 0; j < o.size() + 1; j++ ) {
+
+      if ( k < dam ) {
+
+	dam = k;
+	cnt = j;
+
+      }
+
+      if ( j == o.size() ) break;
+
+      k += t[ o[j] ] * a[i] - a[ o[j] ] * t[i];
+
+    }
+
+    if ( dam == h[0] ) {
+      cout << -1 << endl;
+      return 0;
+    }
+
+    vector< long long int >:: iterator it = o.begin() + cnt;
+    it = o.insert( it, i );
+    att += a[i];
+    ans += dam;
+
+    if ( ans >= h[0] ) {
+      cout << -1 << endl;
+      return 0;
+    }
+
+  }
+
+  cout << ans << endl;
+
+  return 0;
+
+}

@@ -1,0 +1,26 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+int main(void)
+{
+  int i,j,tmp,n,a[10],top,k;
+  for(i=0;i<10;i++)
+    scanf("%d",&a[i]);
+
+  for(i=0;i<10;i++){
+    top=a[i];
+    k=i;
+    for(j=i+1;j<10;j++)
+      if(a[j]>top){
+	top=a[j];
+	k=j;
+      }
+    tmp=a[i];a[i]=top;a[k]=tmp;
+  }
+
+  for(i=0;i<3;i++)
+    printf("%d\n",a[i]);
+
+  return 0;
+}

@@ -1,0 +1,85 @@
+//include----------------------------------------------------------------------------------------------------------------------
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <cctype>
+#include <vector>
+#include <stack>
+#include <list>
+#include <queue>
+#include <deque>
+#include <bitset>
+#include <map>
+#include <algorithm>
+#include <memory>
+#include <sstream>
+#include <functional>
+#include <iostream>
+#include <fstream>
+#include <set>
+
+//using namespace--------------------------------------------------------------------------------------------------------------
+using namespace std;
+
+//define-----------------------------------------------------------------------------------------------------------------------
+#define rep(i, n) for(int i = 0; i < n; i++)
+#define FOR(i, s, n) for(int i = s; i < n; i++)
+#define per(i, n) for(int i = n; i >= 0; i--)
+#define ROF(i, s, n) for(int i = s; i >= n; i--)
+#define FORIT(i, A) for (auto i : A)
+#define PRINT(x) cout << (x) << "\n"
+#define ALL(a)  (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(), (a).rend()
+#define PB push_back
+#define MP make_pair
+#define FOREACH(i, n) for (__typeof((n).begin()) i = (n).begin(); i != (n).end(); ++i)
+#define SZ(a) int((a).size())
+#define EACH(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define SORT(c) sort((c).begin(),(c).end())
+#define INF 1 << 25;
+#define CLR(a) memset((a), 0 ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+//typedef----------------------------------------------------------------------------------------------------------------------
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef vector<string> VS;
+typedef pair<int, int> PII;
+typedef long long LL;
+typedef unsigned int uint;
+typedef unsigned long long ull;
+
+//const------------------------------------------------------------------------------------------------------------------------
+const double EPS = 1e-10;
+const double PI = acos(-1.0);
+
+//global-----------------------------------------------------------------------------------------------------------------------
+int n, m, repeet;
+int ans;
+char before[100000000];
+char after[100000000];
+char code[1000000000];
+//function---------------------------------------------------------------------------------------------------------------------
+int main(){
+	while(scanf("%d", &n)){
+		if (n == 0) return 0;
+		rep(i, n)
+			scanf("%s %s", &before[i], &after[i]);
+		scanf("%d", &m);
+		rep(i, m){
+			scanf("%s", &code[i]);
+			rep(j, n){
+				if (code[i] == before[j]){
+					code[i] = after[j];
+					break;
+				}
+			}
+		}
+		printf("%s\n", code);
+	}
+	return 0;
+}

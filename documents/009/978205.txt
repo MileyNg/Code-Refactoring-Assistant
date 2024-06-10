@@ -1,0 +1,43 @@
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  walls = []
+  n.times.each do
+    x, y, r = gets.strip.split(" ").map{|s| s.to_i}
+    walls.push [x, y, r]
+  end
+
+  m = gets.strip.to_i
+
+  m.times.each do
+    tx, ty, sx, sy = gets.strip.split(" ").map{|s| s.to_i}
+    danger = true
+
+    for w in walls
+      td2 = (w[0] - tx) ** 2 + (w[1] - ty) ** 2
+      sd2 = (w[0] - sx) ** 2 + (w[1] - sy) ** 2
+      r2 = w[2] ** 2
+
+      if td2 < r2 && sd2 > r2 || td2 > r2 && sd2 < r2
+        danger = false
+        break
+      end
+
+      if td2 > r2 && sd2 > r2
+        vx = tx - sx
+        vy = ty - sy
+        v2 = vx ** 2 + vy ** 2
+        t = ((w[0] - sx) * vx + (w[1] - sy) * vy).to_f / v2
+        px = t * vx + sx
+        py = t * vy + sy
+        if t > 0 && t < 1 && (px - w[0]) ** 2 + (py - w[1]) ** 2 <= r2
+          danger = false
+          break
+        end
+      end
+    end
+
+    puts danger ? "Danger" : "Safe"
+  end
+end

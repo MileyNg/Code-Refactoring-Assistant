@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<string.h>
+
+typedef struct DIC{
+  char coma[10];
+  char key[12];
+}D;
+
+D Dicin1[10000],Dicin2[10000];
+static int k=0,l=0;
+unsigned hash(char *v){
+  int h;
+  for(h=0;*v!='\0';v++)
+    h=(64*h + *v)%2;
+  return h; 
+}
+
+void insert(D d){
+  if(hash(d.key)==0){
+    strcpy(Dicin1[k].key,d.key);
+    k++;
+  }
+  else{
+    strcpy(Dicin2[l].key,d.key);
+    l++;
+  }
+}
+
+int search(D d){
+  int i;
+  if(hash(d.key)==0){
+    for(i=0;i<k;i++){
+      if(strcmp(Dicin1[i].key,d.key)==0)
+	return 0;
+    }
+    return 1;
+  }
+  else{
+    for(i=0;i<l;i++){ 
+      if(strcmp(Dicin2[i].key,d.key)==0)
+	return 0;
+    }
+    return 1;
+  }
+}
+
+main(){
+  D Dic[100000];
+  int n,i;
+  
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    scanf("%s %s",Dic[i].coma,Dic[i].key);
+  for(i=0;i<n;i++)
+    if(Dic[i].coma[0]=='i')
+      insert(Dic[i]);
+    else
+      if(search(Dic[i])==0)
+	printf("yes\n");
+      else
+	printf("no\n");
+  return 0;
+}

@@ -1,0 +1,131 @@
+#include<iostream>
+#include<cstdio>
+#include<stack>
+
+using namespace std;
+
+#define MAX 50
+#define WALL 0
+#define BLANK 1
+#define BLACK 2
+#define WHITE 3
+#define JUDGE 4
+#define NOT 5
+#define BLFIE 6
+#define WHFIE 7
+
+struct S{
+	int x,y;
+};
+
+int main(){
+
+	int h,w;
+	int field[MAX+5][MAX+5];
+	char inp;
+	S tmp,no;
+	stack<S> po;
+	int rean=0;
+	int dy[]={0,0,1,-1};
+	int dx[]={1,-1,0,0};
+	int bcn,wcn;
+
+	while(1){
+
+		cin>>w>>h;
+		if(w==0&&h==0) break;
+
+		for(int i=0;i<=h+1;i++){
+			for(int j=0;j<=w+1;j++){
+				field[i][j]=WALL;
+			}
+		}
+
+		for(int i=1;i<=h;i++){
+			getchar();
+			for(int j=1;j<=w;j++){
+				inp=getchar();
+				switch(inp){
+					case '.':
+						field[i][j]=BLANK;
+						break;
+					case 'W':
+						field[i][j]=WHITE;
+						break;
+					case 'B':
+						field[i][j]=BLACK;
+						break;
+				}
+			}
+		}
+
+		for(int i=1;i<=h;i++){
+			for(int j=1;j<=w;j++){
+				if(field[i][j]!=BLANK) continue;
+				tmp.x=j,tmp.y=i;
+				po.push(tmp);
+				rean=0;
+				while(!po.empty()){
+					no=po.top();
+					po.pop();
+					field[no.y][no.x]=JUDGE;
+					for(int k=0;k<4;k++){
+						switch(field[no.y+dy[k]][no.x+dx[k]]){
+							case WALL:
+								break;
+							case BLACK:
+								if(rean/10==0) rean+=10;
+								break;
+							case WHITE:
+								if(rean%10==0) rean+=1;
+								break;
+							case BLANK:
+								tmp.x=no.x+dx[k];
+								tmp.y=no.y+dy[k];
+								po.push(tmp);
+								break;
+							default:
+								break;
+						}
+					}
+				}
+				for(int k=1;k<=h;k++){
+					for(int l=1;l<=w;l++){
+						if(field[k][l]!=JUDGE) continue;
+						switch(rean){
+							case 1:
+								field[k][l]=WHFIE;
+								break;
+							case 10:
+								field[k][l]=BLFIE;
+								break;
+							default:
+								field[k][l]=NOT;
+								break;
+						}
+					}
+				}
+			}
+
+		}
+
+		bcn=0,wcn=0;
+		for(int i=1;i<=h;i++){
+			for(int j=1;j<=w;j++){
+				switch(field[i][j]){
+				case WHFIE:
+					wcn++;
+					break;
+				case BLFIE:
+					bcn++;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		cout<<bcn<<" "<<wcn<<endl;
+	}
+
+	return 0;
+}

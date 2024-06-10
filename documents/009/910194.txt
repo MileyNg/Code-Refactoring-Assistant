@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int a, b;
+  cin >> a >> b;
+  if(max(a,b) % min(a,b) == 0) {
+    cout << min(a,b) << endl;
+    return 0;
+  }
+
+  int ans = 0;
+  for(int i = min(a,b); i >= 1; --i) {
+    if(a % i == 0 && b % i == 0) {
+      ans = i;
+      break;
+    }
+  }
+  cout << ans << endl;
+  return 0;
+}

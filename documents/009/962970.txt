@@ -1,0 +1,23 @@
+#include<iostream>
+#include<string>
+
+int main(){
+
+	int cnt = 0;
+	std::string w, t;
+	std::cin >> w;
+	while (std::getline(std::cin, t)){
+		if (t == "END_OF_TEXT")break;
+
+		int x = t.find(w);
+		while (x != -1){
+			cnt++;
+			t[x] = ' ';
+			x = t.find(w);
+		}
+	}
+
+	std::cout << cnt << std::endl;
+
+	return 0;
+}

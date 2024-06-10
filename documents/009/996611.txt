@@ -1,0 +1,100 @@
+#include<stdio.h>
+#define MAX 2000010
+
+int Tree[MAX]; // Tree
+int n;
+
+void maxHeapify(int i){
+  int largest ,exchange, l, r;
+  l = getLeft(i);
+  r = getRight(i);
+  
+  if( ( n >= l ) && ( Tree[l] > Tree[i] ) )largest = l;
+
+  else largest = i;
+  
+  if( ( n >= r ) && ( Tree[r] > Tree[largest] ) )largest = r;
+
+  if (largest != i){
+
+    exchange =  Tree[i];
+    Tree[i] = Tree[largest];
+    Tree[largest] = exchange;
+    maxHeapify(largest);
+
+  }  
+}
+
+void buildMaxHeap(){
+  int i;
+  for (i = (n/2); i >= 1; i--){
+    maxHeapify(i);
+  }
+}
+
+void heapIncrease(int i, int key){
+  int exchange;
+  if(key < Tree[i])printf("new key is smallar than current key\n");
+  
+  Tree[i] = key;
+
+  while(( i > 1 ) && ( Tree[getParent(i)] <  Tree[i] )){
+    exchange = Tree[i];
+    Tree[i] = Tree[getParent(i)];
+    Tree[getParent(i)] = exchange;
+    i = getParent(i);
+  }
+
+}
+void maxHeapInsert( key ){
+  n = n + 1;
+  Tree[n] = -2000000;
+ heapIncrease(n, key);
+}
+
+
+
+int heapExtractMax(){
+  int max;
+  if( n < 1 )return -1;
+  max = Tree[1];
+  Tree[1] = Tree[n];
+  --n;
+  maxHeapify(1);
+  return max;
+}
+
+int getParent( int i ){
+  return i/2;
+}
+
+int getLeft(int i){
+  return (2*i);
+}
+
+int getRight(int i){
+  return (2*i + 1);
+}
+
+
+main()
+{
+  int n, i, x;
+  char com[20];
+  scanf("%d", &n);
+
+  while(1){
+    scanf("%s", com);
+    if ( com[0] == 'i' ){
+      scanf("%d", &x);
+      maxHeapInsert(x);
+    } else if ( com[0] == 'e' && com[1] == 'x'){
+      scanf("%d", &x);
+      printf("%d\n",heapExtractMax());
+    } else if ( com[0] == 'e' && com[1] == 'n'){
+      break;
+    }
+  }
+
+  return 0;
+}

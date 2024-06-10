@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int n, j, i;
+	int mat[15][15];
+	
+	while(1){
+		scanf("%d", &n);
+		
+		if (n == 0) break;
+		
+		
+		for (i = 0; i <= 14; i++){
+			for (j = 0; j <= 14; j++){
+				mat[i][j] = 0;
+			}
+		}
+		
+		for (i = 0; i < n; i++){
+			for (j = 0; j < n; j++){
+				scanf("%d", &mat[i][j]);
+				mat[i][n] += mat[i][j];
+			}
+		}
+		
+		for (i = 0; i <= n; i++){
+			for (j = 0; j < n; j++){
+				mat[n][i] += mat[i][j];
+			}
+		}
+		
+		for (i = 0; i <= n; i++){
+			for (j = 0; j <= n; j++){
+				printf("%5d", mat[i][j]);
+			}
+			puts("");
+		}
+	}
+	return (0);
+}

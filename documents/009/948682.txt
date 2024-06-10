@@ -1,0 +1,26 @@
+loop{
+	n,r = gets.split(nil)
+	n = n.to_i()
+	r = r.to_i()
+	if ((n==0) and (r==0)) then
+		break
+	end
+	
+	arr = [*1..n]
+	arr.reverse!
+	
+	for i in 1..r do
+		p,c =gets.split.map(&:to_i)
+		
+		arr2 = arr[p-1..p+c-2]
+		if (p == 1) then
+			arr3 =[]
+		else
+			arr3 = arr[0..p-2]
+		end
+		
+		arr = arr2+arr3+arr[p+c-1..n-1]
+		p arr
+	end
+	p arr[0]
+}

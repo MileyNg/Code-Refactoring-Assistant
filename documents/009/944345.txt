@@ -1,0 +1,57 @@
+#include<iostream>
+#include<queue>
+#include<cstdio>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+struct Edge {int to, dis, c;};
+
+struct Status{
+  double cost;
+  int pos, pre, v;
+  bool operator<(const Status &s) const {return cost > s.cost;}
+};
+
+int main() {
+  while (true) {
+    int n, m;
+    cin >> n >> m;
+    if (n == 0 && m == 0) break;
+    int s, g;
+    cin >> s >> g;
+    --s, --g;
+    vector<Edge> edge[n];
+    rep (i, m) {
+      int x, y, d, c;
+      cin >> x >> y >> d >> c;
+      --x, --y;
+      edge[x].push_back((Edge){y, d, c});
+      edge[y].push_back((Edge){x, d, c});
+    }
+    priority_queue<Status> que;
+    que.push((Status){0, s, 39, 0});
+    double dis[40][40][40];
+    rep (i, 40) rep (j, 40) rep (k, 40) dis[i][j][k] = 1e99;
+    while (!que.empty()) {
+      Status now = que.top();
+      que.pop();
+      if (dis[now.pos][now.pre][now.v] < now.cost + 1e-8) continue;
+      dis[now.pos][now.pre][now.v] = now.cost;
+      if (now.pos == g && now.v == 1) break;
+      rep (i, edge[now.pos].size()) {
+	int to = edge[now.pos][i].to;
+	double dis = edge[now.pos][i].dis;
+	if (to == now.pre) continue;
+	if (now.v > 0) que.push((Status){now.cost + dis / now.v, to, now.pos, now.v});
+	if (now.v > 1) que.push((Status){now.cost + dis / (now.v - 1), to, now.pos, now.v - 1});
+	if (now.v < edge[now.pos][i].c) que.push((Status){now.cost + dis / (now.v + 1), to, now.pos, now.v + 1});
+      }
+    }
+    double res = 1e99;
+    rep (i, 40) res = min(res, dis[g][i][1]);
+    if (res == 1e99) puts("unreachable");
+    else printf("%.12lf\n", res);
+  }
+}

@@ -1,0 +1,85 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+
+int[int] C(int[] X) {
+    int[] Y = X.sort.uniq.array;
+    int[int] ret;
+    foreach (i; 0 .. cast(int)Y.length) {
+        ret[Y[i]] = i;
+    }
+    return ret;
+}
+
+void main() {
+    int n, m; readf("%d %d\n", &n, &m);
+    int[] X, Y;
+    foreach (i; 0 .. n) {
+        int x, y; readf("%d %d\n", &x, &y);
+        X ~= x;
+        Y ~= y;
+    }
+    int[] _X = X ~ [int.min, int.max],
+          _Y = Y ~ [int.min, int.max];
+    foreach (i; 0 .. n) {
+        _X ~= X[i] - 1;
+        _Y ~= Y[i] - 1;
+    }
+    int[int] xM = C(_X.dup);
+    int[int] yM = C(_Y.dup);
+    int[] sX = _X.dup.sort;
+    int[] sY = _Y.dup.sort;
+    auto nx = _X.length, ny = _Y.length;
+    auto F = new short[][](ny, nx);
+    auto G = new short[][](ny + 1, nx + 1);
+    foreach (i; 0 .. n) {
+        F[ yM[ Y[i] ] ][ xM[ X[i] ] ] += 1;
+    }
+    foreach (i; 1 .. ny + 1) {
+        short x = 0;
+        foreach (j; 1 .. nx + 1) {
+            x += F[i - 1][j - 1];
+            G[i][j] = cast(short)(G[i - 1][j] + x);
+        }
+    }
+
+    short f(int sy, int sx, int gy, int gx) {
+        return cast(short)(G[gy][gx] - G[sy][gx] - G[gy][sx] + G[sy][sx]);
+    }
+    
+    int g(int[] r, int[int] map, int v) {
+        //writeln("r: ", r, "map: ", map, " v: ", v);
+        auto ub = r.assumeSorted.upperBound(v);
+        if (ub.empty) return map[r.back];
+        else return map[ub.front];
+    }
+
+    //[sY, sX].writeln;
+    foreach (i; 0 .. m) {
+        int sx, sy, gx, gy; readf("%d %d %d %d\n", &sx, &sy, &gx, &gy);
+        //write([sy, sx, gy, gx], " -> ");
+        sx = g(sX, xM, sx - 1);
+        sy = g(sY, yM, sy - 1);
+        gx = g(sX, xM, gx - 1) + 1;
+        gy = g(sY, yM, gy - 1) + 1;
+        //writeln([sy, sx, gy, gx]);
+        writeln(f(sy, sx, gy, gx));
+    }
+
+    /*
+    foreach (_; F) _.writeln;
+    writeln;
+    foreach (_; G) _.writeln;
+    */
+}

@@ -1,0 +1,26 @@
+while true
+  h, w = gets.chomp.split(" ").map{|s| s.to_i}
+  break if h == 0 && w == 0
+
+  max_a = 0
+  mat = (0...h).map{[]}
+
+  for y in (0...h)
+    hl = gets.chomp.split("").map{|s| s == '.'}
+
+    prev_w = 0
+    for x in (0...w)
+      min_w = prev_w = mat[y][x] = hl[x] ? prev_w + 1 : 0
+      h0 = 0
+      y.downto(0).each do |y0|
+        min_w = mat[y0][x] if min_w > mat[y0][x]
+        break if min_w == 0
+        h0 += 1
+        a = h0 * min_w
+        max_a = a if max_a < a
+      end
+    end
+  end
+
+  puts max_a
+end

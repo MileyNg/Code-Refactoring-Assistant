@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+#define DATA_NUM 10
+
+void swap(int &a, int &b)
+{
+        int tmp;
+        tmp = a;
+        a = b;
+        b = tmp;
+}
+
+int main()
+{
+        int height[DATA_NUM];
+        int max, tmp;
+
+        for(int i=0; scanf("%d\n",&height[i])!=EOF; i++){;}
+
+        for(int i=0; i<DATA_NUM; i++){
+                for(int j=i+1; j<DATA_NUM; j++){
+                        if(height[i]<height[j]){
+                                swap(height[i], height[j]);
+                         }
+                }
+        }
+        
+        for(int i=0; i<3; i++){
+                cout << height[i] << endl;
+        }
+
+        return 0;
+}

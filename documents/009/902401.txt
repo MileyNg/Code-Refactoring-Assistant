@@ -1,0 +1,97 @@
+#include<sstream>
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<string>
+#include<vector>
+#include<set>
+#include<map>
+#include<queue>
+#include<numeric>
+#include<functional>
+#include<algorithm>
+using namespace std;
+#define INF (1<<29)
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define all(v) v.begin(),v.end()
+#define uniq(v) v.erase(unique(all(v)),v.end())
+#define indexOf(v,x) (find(all(v),x)-v.begin())
+
+
+using namespace std;
+
+
+int h,w,d,n;
+char t[50][50];
+int r[10+1];
+int x[50],y[50],s[50];
+
+
+int c[50][50];
+
+bool in(int y,int x){return 0<=x&&x<w&&0<=y&&y<h;}
+bool in(int cy,int cx,int r,int y,int x){return abs(cy-y)<=r&&abs(cx-x)<=r;}
+
+
+
+bool v[50][50];
+void bfs(){
+	int dy[]={0,1,0,-1};
+	int dx[]={1,0,-1,0};
+	pair<int,int> p;
+	rep(i,h)rep(j,w)if(t[i][j]=='D'){
+		p=make_pair(i,j);
+	}
+	v[p.first][p.second]=true;
+	queue<pair<int,int> > q;
+	q.push(p);
+	while(!q.empty()){
+		p=q.front();
+		q.pop();
+		rep(i,4){
+			int ny=p.first+dy[i],nx=p.second+dx[i];
+			if(in(ny,nx)&&t[ny][nx]!='#'&&!v[ny][nx]){
+				q.push(make_pair(ny,nx));
+				v[ny][nx]=true;
+			}
+		}
+	}
+}
+
+string solve(){
+	r[d]=50;
+	rep(i,n){
+		rep(j,h)rep(k,w){
+			if(t[j][k]!='#' && in(y[i],x[i],r[s[i]],j,k) && !in(y[i],x[i],s[i]==0?-1:r[s[i]-1],j,k)){
+				c[j][k]++;
+			}
+		}
+	}
+	bool f=false;
+	rep(i,h)rep(j,w)if(c[i][j]==n)f=true;
+	if(!f)return "Broken";
+	bfs();
+	bool a=false,b=false;
+	rep(i,h){
+		rep(j,w){
+			if(c[i][j]<n)continue;
+			if(v[i][j])a=true;
+			else b=true;
+		}
+	}
+	if(a&&b)return "Unknown";
+	if(a)return "Yes";
+	return "No";
+}
+
+int main(){
+	cin>>h>>w>>d>>n;
+	rep(i,h)rep(j,w)cin>>t[i][j];
+	rep(i,d)cin>>r[i];
+	rep(i,n)cin>>x[i]>>y[i]>>s[i];
+	cout<<solve()<<endl;
+
+	return 0;
+}

@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+extern "C" {
+#include "quadmath.h"
+}
+ 
+using namespace std;
+ 
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+ 
+typedef __float128 D;
+ 
+const D PI = acosq(-1);
+ 
+int n;
+D x[100], y[100];
+ 
+D solve(D theta) {
+  vector<D> xx;
+  rep (i, n) xx.push_back(x[i] * sinq(theta) + y[i] * cosq(theta));
+  sort(xx.begin(), xx.end());
+  D res = 2;
+  rep (i, xx.size() - 1) res += min((D)2, xx[i + 1] - xx[i]);
+  return res;
+}
+ 
+int main() {
+  while (true) {
+    cin >> n;
+    if (n == 0) break;
+    rep (i, n) {
+      //char xs[80], ys[80];
+      string xs, ys;
+      cin >> xs >> ys;
+      x[i] = strtoflt128(xs.c_str(), NULL);
+      y[i] = strtoflt128(ys.c_str(), NULL);
+    }
+    vector<D> t;
+    t.push_back(PI);
+    t.push_back(0);
+    rep (i, n) rep (j, i) {
+      D t1 = -atan2q(y[i] - y[j], x[i] - y[j]);
+      D dt = asinq((D)2 / sqrtq(powq(x[i] - x[j], 2) + powq(y[i] - y[j], 2)));
+      t.push_back(t1);
+      t.push_back(t1 + dt);
+      t.push_back(t1 - dt);
+    }
+    rep (i, t.size()) while (t[i] < 0) t[i] += PI;
+    rep (i, t.size()) while (t[i] > PI) t[i] -= PI;
+    sort(t.begin(), t.end());
+    //rep (i, t.size()) cerr << t[i] << endl;
+    D ans = 0, r = 1e9;
+    rep (i, t.size() - 1) {
+      D lower = t[i];
+      D upper = t[i + 1];
+      rep (_, 100) {
+    D mid1 = lower * 2 / 3 + upper / 3;
+    D mid2 = lower / 3 + upper * 2 / 3;
+    D s1 = solve(mid1);
+    D s2 = solve(mid2);
+    if (s1 > s2) lower = mid1;
+    else upper = mid2;
+    if (r > s1) {
+      ans = mid1;
+      r = s1;
+    }
+    if (r > s2) {
+      ans = mid2;
+      r = s2;
+    }
+      }
+    }
+    char c[256];
+    quadmath_snprintf(c, 256, "%.15Qf", ans);
+    puts(c);
+    ans = 0, r = 0;
+    rep (i, t.size() - 1) {
+      D lower = t[i];
+      D upper = t[i + 1];
+      rep (_, 100) {
+    D mid1 = lower * 2 / 3 + upper / 3;
+    D mid2 = lower / 3 + upper * 2 / 3;
+    D s1 = solve(mid1);
+    D s2 = solve(mid2);
+    if (s1 > s2) upper = mid2;
+    else lower = mid1;
+    if (r < s1) {
+      ans = mid1;
+      r = s1;
+    }
+    if (r < s2) {
+      ans = mid2;
+      r = s2;
+    }
+      }
+    }
+    quadmath_snprintf(c, 256, "%.15Qf", ans);
+    puts(c);
+  }
+}

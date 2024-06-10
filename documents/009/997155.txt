@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct Book {
+    int r, w;
+};
+
+int main()
+{
+    int N;
+
+    while (cin >> N, N) {
+        vector<Book> book(N);
+
+        int max_idx = 0, max_r = -1, sum_r = 0, sum_w = 0;
+        for (int i = 0; i < N; ++i) {
+            cin >> book[i].r >> book[i].w;
+
+            if (book[i].r > max_r) {
+                max_idx = i;
+                max_r = book[i].r;
+            }
+            sum_r += book[i].r;
+            sum_w += book[i].w;
+        }
+
+        sum_r -= max_r;
+
+        if (sum_r >= max_r) {
+            cout << sum_r + max_r + sum_w << '\n';
+        }
+        else {
+            int wait_time = max_r - sum_r;
+            vector<vector<bool>> dp(N + 1, vector<bool>(wait_time + 1, false));
+
+            dp[0][0] = true;
+
+            if (max_idx != N - 1)
+                swap(book[max_idx], book[N - 1]);
+            --N;
+
+            for (int i = 0; i < N; ++i) {
+                for (int j = 0; j <= wait_time; ++j) {
+                    if (!dp[i][j])
+                        continue;
+                    dp[i + 1][j] = true;
+                    if (j + book[i].w <= wait_time)
+                        dp[i + 1][j + book[i].w] = true;
+                }
+            }
+
+            int max_write = 0;
+            for (int i = 0; i <= wait_time; ++i)
+                if (dp[N][i])
+                    max_write = i;
+
+            cout << 2 * max_r + (sum_w - max_write) << '\n';
+        }
+    }
+
+    return 0;
+}

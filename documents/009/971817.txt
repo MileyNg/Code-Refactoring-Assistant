@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(x,b) (0<=(x)&&(x)<(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+vi p(8);
+int dx[] = {0,-1,0,1}, dy[] = {-1,0,1,0};
+
+vi goal(8);
+map<vi, int>m;
+
+void bfs(){
+  int res = 0;
+  rep(i, 8) goal[i] = i;
+  queue<vi>q;
+  q.push(goal);
+  m[goal] = res;
+  while(!q.empty()){
+    int qsize = (int)q.size();
+    rep(i, qsize){
+      vi now  = q.front(); q.pop();
+      rep(j, 8){
+	if(now[j] != 0) continue;
+	int ny = j/4, nx = j%4;
+	rep(d, 4){
+	  int nexty = ny + dy[d], nextx = nx + dx[d];
+	  if(nexty < 0 || nexty >= 2 || nextx < 0 || nextx >= 4) continue;
+	  vi next = now;
+	  int t = next[nexty*4+nextx];
+	  next[nexty*4+nextx] = next[j];
+	  next[j] = t;
+
+	  if(m.count(next) == 0){
+	    q.push(next);
+	    m[next] = res+1;
+	  }
+	}
+      }
+    }
+    res++;
+  }
+  return;
+}
+
+
+int main(){
+  bfs();
+  while(~scanf("%d", &p[0])){
+    REP(i, 1, 8) scanf("%d", &p[i]);
+    
+    printf("%d\n", m[p]);
+  }
+  return 0;
+}

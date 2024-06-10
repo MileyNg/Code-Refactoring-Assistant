@@ -1,0 +1,64 @@
+#include <string>
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+
+void solve(){
+    string t;
+    getline(cin,t);
+    list<char> s(t.begin(), t.end());
+
+    auto it = s.begin();
+    int n; cin>>n; cin.get();
+    while(n--){
+        string cmd; getline(cin,cmd);
+
+        if(cmd=="forward char"){
+            if(it!=s.end()) ++it;
+        } else if(cmd=="forward word"){
+            while(it!=s.end() && *it==' ') ++it;
+            while(it!=s.end() && *it!=' ') ++it;
+        } else if(cmd=="backward char"){
+            if(it!=s.begin()) --it;
+        } else if(cmd=="backward word"){
+            while(it!=s.begin() && *--it==' ') continue;
+            while(it!=s.begin()){
+                --it;
+                if(*it==' '){
+                    ++it;
+                    break;
+                }
+            }
+        } else if(cmd.substr(0,6)=="insert"){
+            int i = cmd.find('"') + 1;
+            int j = cmd.find('"',i);
+            s.insert(it,cmd.begin()+i,cmd.begin()+j);
+        } else if(cmd=="delete char"){
+            if(it!=s.end()) it = s.erase(it);
+        } else if(cmd=="delete word"){
+            auto it2 = it;
+            while(it2!=s.end() && *it2==' ') ++it2;
+            if(it2==s.end()) continue;
+            while(it2!=s.end() && *it2!=' ') ++it2;
+            it=s.erase(it,it2);
+        }
+    }
+
+    for(auto i=s.begin();;++i){
+        if(i==it)
+            cout<<'^';
+        if(i==s.end())
+            break;
+        cout<<*i;
+    }
+    cout<<endl;
+}
+
+int main(){
+    int t; cin>>t;
+    cin.get();
+    rep(i,t) solve();
+}

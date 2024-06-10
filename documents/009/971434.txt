@@ -1,0 +1,68 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+#define M 255
+
+int main() {
+  int n, c, t, ans;
+  char buf[M+2];
+  char a[M][M];
+  while (1) {
+    scanf("%d\n", &n);
+    if (!n) break;
+
+    for (int i=0; i<n; i++) {
+      fgets(buf, sizeof(buf), stdin);
+      for (int j=0; j<n; j++) {
+        a[i][j] = (buf[j]=='0') ? 0 : 1;
+      }
+    }
+
+    ans = 0;
+    for (int i=0; i<n; i++) {
+      c = 0;
+      for (int j=0; j<n; j++) {
+        if (a[i][j]) {
+          ans = max(ans, ++c);
+        } else {
+          c = 0;
+        }
+      }
+    }
+    for (int i=0; i<n; i++) {
+      c = 0;
+      for (int j=0; j<n; j++) {
+        if (a[j][i]) {
+          ans = max(ans, ++c);
+        } else {
+          c = 0;
+        }
+      }
+    }
+    for (int s=0; s<2*n-1; s++) {
+      c = 0;
+      for (int i=0; i<n; i++) {
+        t = s-i;
+        if (t>=0 && t<n && a[i][t]) {
+          ans = max(ans, ++c);
+        } else {
+          c = 0;
+        }
+      }
+    }
+    for (int d=-n+1; d<n; d++) {
+      c = 0;
+      for (int i=0; i<n; i++) {
+        t = i+d;
+        if (t>=0 && t<n && a[i][t]) {
+          ans = max(ans, ++c);
+        } else {
+          c = 0;
+        }
+      }
+    }
+    printf("%d\n", ans);
+  }
+  return 0;
+}

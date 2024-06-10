@@ -1,0 +1,33 @@
+#include<cstdio>
+#include<iostream>
+
+int max(int a, int b){
+	return (a>b)? a: b;
+}
+
+using namespace std;
+
+int main(){
+	int N;
+	int W;
+	cin >> N >> W;
+	int v[N+1];
+	int w[N+1];
+
+	for(int i = 1; i < N+1; i++) cin>> v[i] >> w[i];
+	
+
+	int dp[N+1][W+1];
+	for(int i = 0; i < W+1; i++) dp[0][i] = 0;
+	for(int i = 0; i < N+1; i++) dp[i][0] = 0;
+
+	for(int ni = 1; ni < N+1; ni++){
+		for(int wi = 1; wi < W+1; wi++){
+			dp[ni][wi] = (wi >= w[ni])? max(v[ni]+dp[ni-1][wi-w[ni]], dp[ni-1][wi]): dp[ni-1][wi];
+		}
+	}
+
+	cout << dp[N][W] << endl;
+
+	return 0;
+}

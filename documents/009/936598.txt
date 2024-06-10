@@ -1,0 +1,38 @@
+#include<stdio.h>
+int main(void)
+{
+  int a, b, d = 0;
+  char string[1200], c;
+
+  while(1)
+    {    
+      scanf("%c", &c);
+      if ( c == '\n')
+	{
+	  string[d] = '\0';
+	  break;
+	}
+      string[d] = c;
+      d++;
+    }
+
+  for(a=0; a<=d; a++)
+    {
+      if(string[a] >= 'A' && string[a] <= 'Z')
+	{
+	  string[a] += 'a'-'A';
+	}
+      else if(string[a] >= 'a' && string[a] <= 'z')
+	{
+	  string[a] -= 'a'-'A';
+	}
+    }
+
+  for(a=0; a<=d; a++)
+    {
+      printf("%c", string[a]);
+    }  
+   printf("\n");
+
+   return 0;
+}

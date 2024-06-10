@@ -1,0 +1,64 @@
+#include<iostream>
+#include<algorithm>
+#include<map>
+using namespace std;
+
+
+struct State{
+  bool u[50];
+  int v[50];
+  bool operator < (const State &p)const {
+    for(int i=0;i<50;i++){
+      if(u[i]==p.u[i]&&v[i]==p.v[i])continue;
+      return (u[i]<p.u[i])||(u[i]==p.u[i]&&v[i]<p.v[i]);
+    }
+    return false;
+  }
+};
+
+int t[50],n;
+map<State,bool> vd;
+
+State s;
+bool dfs(){
+
+  int x=-1,cnt=0;
+  for(int i=0;i<n;i++){
+    if(s.u[i]==false&&x==-1)x=i;
+    if(0<s.v[i]&&s.v[i]<t[i])cnt++;
+  }
+
+  if(cnt==0&&x==-1)return true;
+  if(cnt>n-x)return false;
+  /*
+  for(int i=0;i<n;i++)cout<<s.u[i]<<' ';cout<<endl;
+  for(int i=0;i<n;i++)cout<<s.v[i]<<' ';cout<<endl;
+  cout<<"cnt "<<cnt<<";  x"<<x<<endl;
+  */
+
+  s.v[x]=t[x];
+  s.u[x]=true;
+  for(int i=0;i<x;i++){
+    if(s.v[i]<t[x])continue;
+    s.v[i]-=t[x];
+    if(dfs())return true;
+    s.v[i]+=t[x];
+  }
+  s.v[x]=0;
+  s.u[x]=false;
+  return false;
+}
+
+int main(){
+  while(cin>>n&&n){
+    vd.clear();
+    for(int i=0;i<n;i++)cin>>t[i];
+    sort(t,t+n);
+    reverse(t,t+n);
+    for(int i=0;i<n;i++)s.u[i]=false,s.v[i]=0;
+    s.u[0]=true;
+    s.v[0]=t[0];
+    cout<<(dfs()?"YES":"NO")<<endl;
+  }
+  return 0;
+}

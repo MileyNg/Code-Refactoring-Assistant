@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <math.h>
+
+
+typedef struct kohho{
+  double x;
+  double y;
+}kohho; 
+
+int cohho(kohho, kohho, int);
+
+
+main()
+{
+
+  kohho p1,p2;
+  int n;
+
+  p1.x = 0.0;
+  p1.y = 0.0;
+  p2.x = 100.0;
+  p2.y = 0.0;
+
+  scanf("%d",&n); 
+
+ printf("%f %f\n",p1.x,p1.y);
+
+ cohho(p1,p2,n);
+
+  printf("%f %f\n",p2.x,p2.y);
+
+
+  return 0;
+
+}
+
+ 
+int cohho(kohho p1, kohho p2, int n)
+{
+
+  kohho s,t,u;
+
+  if(n == 0){
+  return 0;
+  }
+
+  s.x = (p2.x - p1.x)/3.0 + p1.x;
+  s.y = (p2.y - p1.y)/3.0 + p1.y;
+  t.x = 2.0*(p2.x - p1.x)/3.0 + p1.x;
+  t.y = 2.0*(p2.y - p1.y)/3.0 + p1.y;
+  u.x = (1.0/2.0)*(t.x - s.x)-(sqrt(3.0)/2.0)*(t.y - s.y) + s.x;
+  u.y = (sqrt(3.0)/2.0)*(t.x - s.x)+(1.0/2.0)*(t.y - s.y) + s.y;
+  
+  cohho(p1,s,n-1);
+  printf("%f %f\n",s.x,s.y);
+  cohho(s,u,n-1);
+  printf("%f %f\n",u.x,u.y);
+  cohho(u,t,n-1);
+  printf("%f %f\n",t.x,t.y);
+  cohho(t,p2,n-1);
+}

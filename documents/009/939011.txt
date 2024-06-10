@@ -1,0 +1,176 @@
+#include<cstdio>
+#include<cstdlib>
+#include<ctime>
+#include<cmath>
+#include<cstring>
+#include<cctype>
+#include<complex>
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<functional>
+#include<vector>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+#include<set>
+#include<bitset>
+#include<numeric>
+using namespace std;
+const int dx[]={1,0,-1,0,1,-1,-1,1,2,0,-2,0};
+const int dy[]={0,1,0,-1,1,1,-1,-1,0,2,0,-2};
+#define INF 1e+8
+#define EPS 1e-7
+#define PB push_back
+#define fi first
+#define se second
+#define ll long long
+#define reps(i,j,k) for(int i = (j); i < (k); i++)
+#define rep(i,j) reps(i,0,j)
+typedef pair<int,int> Pii;
+typedef pair<Pii,int> Ppi;
+typedef vector<int> vi;
+int n;
+bool F;
+int ans[10][10];
+bool check(int stage[10][10]){
+    if(F)return false;
+    rep(i,10){
+        rep(j,10){
+            if(stage[i][j])return false;
+        }
+    }
+    F = true;
+    return true;
+}
+void solve(int index,int dep,int stage[10][10],int D[10][10]){
+    int y = index/10;
+    int x = index%10;
+    if(y == 10){
+        if(check(stage) && dep == n){
+            rep(i,10){
+                rep(j,10){
+                    ans[i][j] = D[i][j];
+                }
+            }
+        }
+        return ;
+    }
+    if(stage[y][x]){
+        bool f = false;
+        rep(i,4){
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if(nx < 0 || nx > 9 || ny < 0 || ny > 9){
+                f = true;
+                break;
+            }
+            if(stage[ny][nx]==0){
+                f = true;
+                break;
+            }
+        }
+        if(!f){
+            stage[y][x]--;
+            D[y][x] = 1;
+            rep(i,4){
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                stage[ny][nx]--;
+            }
+            solve(index+1,dep+1,stage,D);
+            D[y][x] = 0;
+            stage[y][x]++;
+            rep(i,4){
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                stage[ny][nx]++;
+            }
+
+            reps(i,4,8){
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if(nx < 0 || nx > 9 || ny < 0 || ny > 9){
+                    f = true;
+                    break;
+                }
+                if(stage[ny][nx]==0){
+                    f = true;
+                    break;
+                }
+            }
+            if(!f){
+                stage[y][x]--;
+                D[y][x] = 2;
+                rep(i,8){
+                    int nx = x + dx[i];
+                    int ny = y + dy[i];
+                    stage[ny][nx]--;
+                }
+                solve(index+1,dep+1,stage,D);
+                D[y][x] = 0;
+                stage[y][x]++;
+                rep(i,8){
+                    int nx = x + dx[i];
+                    int ny = y + dy[i];
+                    stage[ny][nx]++;
+                }
+                reps(i,8,12){
+                    int nx = x + dx[i];
+                    int ny = y + dy[i];
+                    if(nx < 0 || nx > 9 || ny < 0 || ny > 9){
+                        f = true;
+                        break;
+                    }
+                    if(stage[ny][nx]==0){
+                        f = true;
+                        break;
+                    }
+                }
+                if(!f){
+                    stage[y][x]--;
+                    D[y][x] = 3;
+                    rep(i,12){
+                        int nx = x + dx[i];
+                        int ny = y + dy[i];
+                        stage[ny][nx]--;
+                    }
+                    solve(index+1,dep+1,stage,D);
+                    D[y][x] = 0;
+                    stage[y][x]++;
+                    rep(i,12){
+                        int nx = x + dx[i];
+                        int ny = y + dy[i];
+                        stage[ny][nx]++;
+                    }
+                }
+            }
+        }
+    }
+    solve(index+1,dep,stage,D);
+    return ;
+}
+int main(){
+    int stage[10][10]={{0}};
+    scanf("%d",&n);
+    rep(i,10){
+        rep(j,10){
+            scanf("%d",&stage[i][j]);
+        }
+    }
+    int D[10][10]={{0}};
+    F = false;
+    solve(0,0,stage,D);
+    if(!F){
+        puts("NA");
+    }
+    rep(i,10){
+        rep(j,10){
+            if(ans[i][j]){
+                printf("%d %d %d\n",j,i,ans[i][j]);
+            }
+        }
+    }
+    return 0;
+}

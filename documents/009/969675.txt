@@ -1,0 +1,22 @@
+#include<stdio.h>
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+int a[30];
+
+void f(int d, int b, int n)
+{
+    int i;
+    if(!n){
+        for(i = 0; i != d; i++) printf("%d ", a[i]);
+        printf("\n");
+    }
+    for(i = MIN(b, n); i; i--) a[d] = i, f(d + 1, i, n - i);
+}
+
+int main(void)
+{
+    int n;
+    scanf("%d", &n);
+    f(0, n, n);
+    return 0;
+}

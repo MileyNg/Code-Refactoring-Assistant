@@ -1,0 +1,67 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <climits>
+#include <cfloat>
+#include <functional>
+using namespace std;
+
+const int INF = INT_MAX / 2;
+
+int main()
+{
+    int s, t, u, n, o, d;
+    cin >> s >> t >> u >> n >> o >> d;
+
+    vector<vector<int> > trainingDp(u+1, vector<int>(s+1, -INF));
+    trainingDp[0][0] = 0;
+    while(--t >= 0){
+        int e, c;
+        cin >> e >> c;
+        for(int i=u-1; i>=0; --i){
+            for(int j=0; j+e<=s; ++j){
+                trainingDp[i+1][j+e] = max(trainingDp[i+1][j+e], trainingDp[i][j] + c);
+            }
+        }
+    }
+
+    vector<int> donutDp(10000+1, 0);
+    while(--n >= 0){
+        int h, a;
+        cin >> h >> a;
+        for(int i=0; i+a<=10000; ++i){
+            donutDp[i+a] = max(donutDp[i+a], donutDp[i] + h);
+        }
+    }
+
+    vector<int> dp(s+1, -INF);
+    dp[s] = 0;
+    while(--d >= 0){
+        vector<int> nextDp(s+1, -INF);
+        for(int i=0; i<=s; ++i){
+            for(int j=0; j<=i; ++j){
+                if(trainingDp[u][j] >= 0)
+                    nextDp[min(s, i-j+o)] = max(nextDp[min(s, i-j+o)], dp[i] + donutDp[trainingDp[u][j]]);
+            }
+        }
+        dp.swap(nextDp);
+    }
+
+    int ret = *max_element(dp.begin(), dp.end());
+    cout << max(ret, -1) << endl;
+
+    return 0;
+}

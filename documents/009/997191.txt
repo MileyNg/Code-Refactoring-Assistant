@@ -1,0 +1,66 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+#include <limits.h>
+
+int A[500001], n;
+int parent(int i){
+	return i / 2;
+}
+
+int left(int i){
+	return 2 * i;
+}
+
+int right(int i){
+	return 2 * i + 1;
+}
+
+void maxHeapify(int i){
+	int largest,tmp;
+	int l = left(i);
+	int r = right(i);
+	if (l <= n && A[l] > A[i])
+		largest = l;
+	else{
+		largest = i;
+	}
+	if (r <= n && A[r] > A[largest])
+		largest = r;
+	if (largest != i){
+		tmp = A[i];
+		A[i] = A[largest];
+		A[largest] = tmp;
+		maxHeapify(largest);
+
+	}
+}
+
+void buildMaxHeap(){
+	int i;
+	for (i = n / 2; i >= 1; i--)
+		maxHeapify(i);
+}
+
+int main(){
+	
+	int i,max=INT_MIN;
+	
+	for (i = 0; i < 500000; i++){
+		A[i]= INT_MAX;
+	}
+
+	scanf("%d",&n);
+	for (i = 1; i <= n; i++){
+		scanf("%d",&A[i]);
+		if (max < A[i]){ max = A[i]; }
+	}
+
+	maxHeapify(max);
+	buildMaxHeap();
+	for (i = 1; i <= n; i++){
+		printf(" %d",A[i]);
+	}
+	printf("\n");
+	return 0;
+}

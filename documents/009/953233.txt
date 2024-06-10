@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int count;
+int solve(int i, int c, int n, int s, int sum) {
+	if(c == n) {
+		if(s == sum) {
+			count++;
+		}
+		return;
+	}
+	
+	if(i > 9) return;
+	solve(i+1, c+1, n, s, sum+i);
+	solve(i+1, c, n, s, sum);
+}
+
+int main(void) {
+	int n, s;
+	while(scanf("%d %d\n", &n, &s)==2) {
+		if(n == 0 && s == 0) break;
+		
+		count = 0;
+		solve(0, 0, n, s, 0);
+		printf("%d\n", count);
+	}
+	return 0;
+}

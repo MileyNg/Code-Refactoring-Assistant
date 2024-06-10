@@ -1,0 +1,110 @@
+#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int w, h;
+constexpr int dx[] = {1, -1, 0, 0};
+constexpr int dy[] = {0, 0, 1, -1};
+
+inline bool out(int x, int y) {
+	return x < 0 || y < 0 || x >= w || y >= h;
+}
+
+int count_panel(const vector<vector<int>> &field) {
+	int res = 0;
+
+	queue<pair<int, int>> que;
+	que.push({0, 0});
+
+	vector<vector<bool>> visited(h, vector<bool>(w, false));
+	visited[0][0] = true;
+
+	while(!que.empty()) {
+		int x, y;
+		tie(x, y) = que.front();
+		que.pop();
+
+		++res;
+
+		for(int d = 0; d < 4; ++d) {
+			const int nx = x + dx[d];
+			const int ny = y + dy[d];
+
+			if(out(nx, ny)) continue;
+			if(field[y][x] != field[ny][nx]) continue;
+			if(visited[ny][nx]) continue;
+
+			que.push({nx, ny});
+			visited[ny][nx] = true;
+		}
+	}
+
+	return res;
+}
+
+void change(vector<vector<int>> &field, int to, int x = 0, int y = 0) {
+	const int from = field[y][x];
+	field[y][x] = to;
+
+	for(int d = 0; d < 4; ++d) {
+		const int nx = x + dx[d];
+		const int ny = y + dy[d];
+
+		if(out(nx, ny) || field[ny][nx] != from) continue;
+		change(field, to, nx, ny);
+	}
+}
+
+bool dfs(int rest, int cnt, const vector<vector<int>> &field) {
+	if(rest == 0) return false;
+
+	for(int color = 0; color < 3; ++color) {
+		if(color == field[0][0]) continue;
+		auto next_field = field;
+		change(next_field, color);
+		const int next_cnt = count_panel(next_field);
+		if(next_cnt == w * h) return true;
+		if(next_cnt == cnt) continue;
+		if(dfs(rest - 1, next_cnt, next_field)) return true;
+	}
+	return false;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int convert[256];
+	convert['R'] = 0;
+	convert['G'] = 1;
+	convert['B'] = 2;
+
+	while(cin >> w >> h && w) {
+		vector<vector<int>> field(h, vector<int>(w));
+
+		for(int i = 0; i < h; ++i) {
+			for(int j = 0; j < w; ++j) {
+				char c;
+				cin >> c;
+				field[i][j] = convert[c];
+			}
+		}
+
+		const int cnt = count_panel(field);
+		if(cnt == h * w) {
+			cout << 0 << endl;
+			continue;
+		}
+
+		for(int ans = 1;; ++ans) {
+			if(dfs(ans, cnt, field)) {
+				cout << ans << endl;
+				break;
+			}
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

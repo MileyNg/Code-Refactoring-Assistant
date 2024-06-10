@@ -1,0 +1,45 @@
+//
+//  main.cpp
+//  AOJ0118
+//
+//  Created by aki33524 on 2014/04/27.
+//  Copyright (c) 2014年 aki33524. All rights reserved.
+//
+
+#include <iostream>
+using namespace std;
+
+int H, W;
+char fields[100][101];
+int dh[] = {0, 0, 1, -1};
+int dw[] = {1, -1, 0, 0};
+
+void dfs(int h, int w){
+    char c = fields[h][w];
+    fields[h][w] = '.';
+    for(int i=0; i<4; i++){
+        int nh = h + dh[i];
+        int nw = w + dw[i];
+        if(0<=nh && nh<H && 0<=nw && nw<W && fields[nh][nw] == c)
+            dfs(nh, nw);
+    }
+}
+
+int main(int argc, const char * argv[])
+{
+    while(cin >> H >> W, H|W){
+        int ans = 0;
+        for(int i=0; i<H; i++)
+            cin >> fields[i];
+        for(int i=0; i<H; i++){
+            for(int j=0; j<W; j++){
+                if(fields[i][j] != '.'){
+                    dfs(i, j);
+                    ans ++;
+                }
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

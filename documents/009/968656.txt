@@ -1,0 +1,41 @@
+#include<stdio.h>
+
+#define N 100000
+int count=0;
+
+void change(int *n, int *m){
+  int x;
+  x = *n;
+  *n = *m;
+  *m = x;
+}
+
+int partition(int A[], int p, int r){
+  int i, j, x, n;
+  x = A[r];
+  i = p-1;
+  for(j=p; j<r; j++){
+    if(A[j] <= x){
+      i++;
+      change(&A[i], &A[j]);
+    }
+  }
+  change(&A[i+1], &A[r]);
+  return i+1;
+}
+
+int main(){
+  int n,i,x;
+  int A[N],p,r;
+  scanf("%d",&n);
+  for(i=1; i<=n; i++){
+    scanf("%d",&A[i]);
+  }
+  x=partition(A, 1, n);
+  for(i=1; i<n; i++) {
+    if(i==x) printf("[%d] ",A[i]);
+    else printf("%d ",A[i]);
+  }
+  printf("%d\n",A[i]);
+  return 0;
+}

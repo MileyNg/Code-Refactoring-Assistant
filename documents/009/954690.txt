@@ -1,0 +1,29 @@
+#include <iostream>
+
+int get_GCD(u_int a, u_int b)
+{
+    while(a != 0 && b != 0){
+        if(a >= b)
+            a %= b;
+        else
+            b %= a;
+    }
+    return a != 0 ? a : b ;
+}
+
+int get_LCM(const u_int a, const u_int b, const u_int GCD)
+{
+    int LCM = a / GCD;
+    return b * LCM;
+}
+
+int main()
+{
+    u_int a, b, GCD;
+    while(std::cin >> a >> b){
+            GCD = get_GCD(a, b);
+            std::cout << GCD << " " << get_LCM(a, b, GCD) << std::endl;
+    }    
+
+    return 0;
+}

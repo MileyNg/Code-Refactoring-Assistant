@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+int main(){
+	int n;
+	int ans[10] = {};
+	while(cin >> n){
+		while(n >= 512){
+			n -= 512;
+			ans[9]++;
+		}
+		while(n >= 256){
+			n -= 256;
+			ans[8]++;
+		}
+		while(n >= 128){
+			n -= 128;
+			ans[7]++;
+		}
+		while(n >= 64){
+			n -= 64;
+			ans[6]++;
+		}
+		while(n >= 32){
+			n -= 32;
+			ans[5]++;
+		}
+		while(n >= 16){
+			n -= 16;
+			ans[4]++;
+		}
+		while(n >= 8){
+			n -= 8;
+			ans[3]++;
+		}
+		while(n >= 4){
+			n -= 4;
+			ans[2]++;
+		}
+		while(n >= 2){
+			n -= 2;
+			ans[1]++;
+		}
+		while(n >= 1){
+			n -= 1;
+			ans[0]++;
+		}
+
+		for(int i = 0; i < 10; i++){
+			if(ans[i] == 0) continue;
+			cout << pow(2, i);
+			if(i < 9) cout << " ";
+		}
+		cout << endl;
+
+
+	}
+
+
+}

@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+using namespace std;
+int dp[1010][8];
+int main()
+{
+    const int mod=10007;
+    int n;
+    string s; 
+    cin>>n>>s;
+    int a[128]; a['J']=1, a['O']=2, a['I']=4;
+    dp[0][1]=1;
+    for(int i=0;i<n;++i) {
+        for(int j=0;j<8;++j) if (a[s[i]]&j)
+            for(int k=0;k<8;++k) if (j&k)
+                (dp[i+1][j]+=dp[i][k])%=mod;
+    }
+    int res=0;
+    for(int i=0;i<8;++i) (res+=dp[n][i])%=mod;
+    cout<<res<<endl;
+}

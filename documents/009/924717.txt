@@ -1,0 +1,58 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+using namespace std;
+const double eps=1e-6;
+int x[1010],y[1010];
+double count(double t,int i,int j,int X)
+{
+    double t1=(double(X)-x[i]*t)/x[j];
+    double Y=t*x[i]+t1*x[j]-4.9*(t+t1)*(t+t1);
+    return Y;
+}
+double cnt(int i,int j,int X)
+{
+    double l=0,r=double(X)/x[i];
+    if(l>r) swap(l,r);
+    while(l+eps<r)
+    {
+        double mid=(l+r)/2,midmid=(mid+r)/2;
+        double t1=count(mid,i,j,X),t2=count(midmid,i,j,X);
+        if(t1>=t2)
+            r=midmid;
+        else
+            l=mid;
+    }
+    return count(l,i,j,X);
+}
+int main()
+{
+    int n,i,X,Y,j;
+    while(scanf("%d",&n)&&n)
+    {
+        double lll,rrr;
+        for(i=0;i<n;i++)
+            scanf("%d%d",&x[i],&y[i]);
+        scanf("%d%d",&X,&Y);
+        double t=(double(X)/x[0]);
+        lll=t*y[0]-4.9*t*t; rrr=lll;
+        for(i=1;i<n;i++)
+        {
+            t=(double(X))/x[i];
+            rrr=min(rrr,t*y[i]-4.9*t*t);
+        }
+        for(i=0;i<n;i++)
+            for(j=i+1;j<n;j++)
+            {
+                double now=cnt(i,j,X);
+                lll=max(lll,now);
+                rrr=min(rrr,now);
+            }
+       // printf("%.5f %.5f\n",lll,rrr);
+        if(Y<=lll+eps&&Y>=rrr-eps)
+            printf("Yes\n");
+        else
+            printf("No\n");
+    }
+    return 0;
+}

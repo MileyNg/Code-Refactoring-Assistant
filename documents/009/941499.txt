@@ -1,0 +1,79 @@
+#include<stdio.h>
+#define compile 0
+void init(int array[], int num) //配列初期化関数
+{
+	int i = 0;
+	for(i = 0; i < num; i++)
+	{
+		array[i] = 0;
+	}
+}
+
+void output(int array[], int num) //出力関数
+{
+	int i = 0;
+	for(i = 0; i < num; i++)
+	{
+		if(i < num - 1)
+		{
+			printf("%d ", array[i]);
+		}
+		else
+		{
+			printf("%d\n", array[i]);
+		}
+	}
+}
+
+void sorting(int array[], int left, int right)
+{
+	int pivot = (left + right) / 2;
+	int i = left, j = right;
+	for(i = 0; i < pivot; i++)
+	{
+		if(array[i] > array[pivot])
+		{
+			for(j = right; j >= pivot; j--)
+			{
+				if(array[j] <= array[pivot])
+				{
+					int temp = array[i];
+					array[i] = array[j];
+					array[j] = temp;
+				}
+			}
+		}
+	}
+	#if compile == 1
+	output(array, right);
+	#endif
+	if(left < i - 1)
+	{
+		sorting(array, left, i - 1);
+	}
+	if(j + 1 < right)
+	{
+		sorting(array, j + 1, right);
+	}
+}
+
+main()
+{
+	int length = 0, i = 0;
+	scanf("%d", &length);
+	
+	int number[length];
+	init(number, length);
+	
+	for(i = 0; i < length; i++)
+	{
+		scanf("%d", &number[i]);
+	}
+	
+	sorting(number, 0, length);
+	#if compile == 1
+	printf("result\n");
+	#endif
+	output(number, length);
+	return 0;
+}

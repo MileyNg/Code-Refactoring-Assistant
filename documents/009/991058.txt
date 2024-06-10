@@ -1,0 +1,201 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Node{
+    public:
+        Node():nc(0),id(-1){}
+        int nc;
+        Node* l;
+        Node* r;
+        Node* p;
+        int id;
+};
+
+Node* root;
+
+Node* find(Node* node,int id){
+    if(node->id==-1)
+        return nullptr;
+    if(node->id==id)
+        return node;
+    if(node->id>id){
+        if(node->l==nullptr)
+            return nullptr;
+        return find(node->l,id);
+    }else{
+        if(node->r==nullptr)
+            return nullptr;
+        return find(node->r,id);
+    }
+}
+Node* Max(Node* node){
+    if(node->id==-1)
+        return node;
+    if(node->r==nullptr)
+        return node;
+    return Max(node->r);
+}
+Node* Min(Node* node){
+    if(node->id==-1)
+        return node;
+    if(node->l==nullptr)
+        return node;
+    return Min(node->l);
+}
+Node* suc(Node* node){
+    if(node->r!=nullptr)
+        return Min(node->r);
+    Node* y;
+    if(node->p!=nullptr)
+        y = node->p;
+    while(node->id==y->r->id){
+        y=y->p;
+        if(node->p!=nullptr)
+            y = node->p;
+    }
+    return y;
+}
+void del(int id){
+    Node* x;
+    Node* y;
+    Node* z = find(root,id);
+    if(z->nc!=2){
+        y=z;
+    }else{
+        y=suc(z);
+    }
+    if(y->l!=nullptr)
+        x=y->l;
+    else
+        x=y->r;
+
+    if(x!=nullptr)
+        x->p = y->p;
+    if(y->p==nullptr){
+        
+    }else if(y->id==y->p->l->id){
+        y->p->l=x;
+    }else{
+        y->p->r=x;
+    }
+    if(y->id!=z->id)
+        z = y;
+}
+
+
+Node* dfs(Node* node,int id){
+     // cout<<"dfs id:"<<node->id<<" nc:"<<node->nc<<endl;
+     if(node->id==-1)
+        return node;
+     
+     //cout<<"node-id:"<<node->id<<" id"<<id<<endl;
+     if(node->id>id){
+       if(node->l==nullptr){
+            node->l = new Node();
+            node->l->p = node;
+     //      cout<<"node-p:"<<node->id<<endl;
+            node->nc++;
+            return node->l;
+        }else{
+            return dfs(node->l, id);
+        }
+      }else{
+        if(node->r==nullptr){
+           node->r = new Node();
+           node->r->p = node;
+           node->nc++;
+           return node->r;
+        }
+        return dfs(node->r, id);
+      }
+}
+
+void insert(int id){
+//     cout<<"ins"<<endl;
+     Node* leaf = dfs(root,id);
+     //cout<<"leaf"<<leaf->id<<" p:"<<leaf->p->id<<endl;
+     leaf->id = id;      
+     
+}
+
+bool pf=true;
+void pro(Node* n){
+    if(n->id!=-1){
+        if(pf||n->id!=root->id)
+            cout<<" "<<n->id;
+        if(n->id==root->id)
+            pf=false;
+        if(n->l!=nullptr)
+            if(n->l->id!=-1)
+                pro(n->l);
+        if(n->r!=nullptr){
+            if(n->r->id!=-1)
+            pro(n->r);
+        }
+    }
+}
+
+bool ifr=true;
+void ino(Node* n){
+    if(n->id!=-1){
+        //cout<<"id:"<<n->id<<endl;
+        if(n->l!=nullptr){
+            if(n->l->id!=-1)
+                ino(n->l);
+        }
+        if(ifr||n->id!=root->id)
+            cout<<" "<<n->id;
+        if(n->id==root->id)
+            ifr=false;
+        if(n->r!=nullptr){
+            if(n->r->id!=-1)
+                ino(n->r);
+        }
+    }
+}
+
+void print(){
+    //cout<<"ino"<<endl;
+    ino(root);
+    cout<<endl;
+    ifr=true;
+    //cout<<"pro"<<endl;
+    pro(root);
+    pf=true;
+    cout<<endl;
+}
+
+int main(){
+    int n, id;
+    string cmd;
+    bool flag=true;
+    root = new Node();
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>cmd;
+        if(cmd=="insert"){
+            cin>>id;
+            if(flag){
+                root->id=id;
+                root->p = new Node();
+                flag=false;
+            }
+            insert(id);
+        }else if(cmd=="find"){
+            cin>>id;
+            if(find(root,id)!=nullptr)
+                cout<<"yes"<<endl;
+            else
+                cout<<"no"<<endl;
+        }else if(cmd=="delete"){
+            cin>>id;
+            del(id);
+        }else{
+            print();
+        }
+    }
+    delete root;
+    return 0;
+}

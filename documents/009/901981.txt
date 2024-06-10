@@ -1,0 +1,176 @@
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <utility>
+#include <vector>
+using namespace std;
+
+constexpr int MAX_SIZE = 10;
+constexpr int MAX_N = 10;
+
+int h, w;
+string puzzle[MAX_SIZE];
+
+int n;
+char in[MAX_N];
+
+char letters[128];
+
+int parse(const string &s, int l, int r) {
+	for(int i = r - 1; i >= l; --i) {
+		if(s[i] == '+') return parse(s, l, i) + parse(s, i + 1, r);
+		if(s[i] == '-') return parse(s, l, i) - parse(s, i + 1, r);
+	}
+
+	for(int i = r - 1; i >= l; --i) {
+		if(s[i] == '*') return parse(s, l, i) * parse(s, i + 1, r);
+		if(s[i] == '/') {
+			const int left = parse(s, l, i);
+			const int right = parse(s, i + 1, r);
+
+			if(right == 0) throw "division by zero";
+			if(left % right) throw "division leaving a remainder";
+
+			return left / right;
+		}
+	}
+
+	if(r <= l || !isdigit(s[l]) || (s[l] == '0' && r - l > 1)) throw "parse error";
+	return stoi(s.substr(l, r - l));
+}
+
+bool valid(const vector<int> &expression) {
+	const int n = expression.size();
+	string left = "", right = "";
+	int i;
+
+	for(i = 0; i < n; ++i) {
+		if(expression[i] == '=') break;
+		left += letters[expression[i]];
+	}
+
+	for(++i; i < n; ++i) {
+		right += letters[expression[i]];
+	}
+
+	try {
+		if(parse(left, 0, left.size()) != parse(right, 0, right.size())) {
+			return false;
+		}
+	}
+	catch(const char *c) {
+		return false;
+	}
+	return true;
+}
+
+bool calc(int &x, int &y, int dx, int dy) {
+	while(0 <= x && x < w && 0 <= y && y < h) {
+		if(puzzle[y][x] == '=') return false;
+		if(puzzle[y][x] == '#') {
+			x -= dx;
+			y -= dy;
+			return true;
+		}
+		x += dx;
+		y += dy;
+	}
+	x -= dx;
+	y -= dy;
+	return true;
+}
+
+vector<pair<int, vector<int>>> construct() {
+	vector<vector<int>> idx(h, vector<int>(w));
+	int next = 0;
+	for(int i = 0; i < h; ++i) {
+		for(int j = 0; j < w; ++j) {
+			if(puzzle[i][j] == '.') idx[i][j] = next++;
+		}
+	}
+
+	vector<pair<int, vector<int>>> expressions;
+	for(int i = 0; i < h; ++i) {
+		for(int j = 0; j < w; ++j) {
+			if(puzzle[i][j] == '=') {
+				// vertical
+				int s = i - 1, g = i + 1;
+				if(calc(j, s, 0, -1) && calc(j, g, 0, 1) && s != i && g != i) {
+					vector<int> tmp;
+					int max_index = -1;
+					for(int k = s; k <= g; ++k) {
+						if(puzzle[k][j] == '.') {
+							tmp.emplace_back(idx[k][j]);
+							max_index = max(max_index, idx[k][j]);
+						}
+						else {
+							tmp.emplace_back(puzzle[k][j]);
+						}
+					}
+
+					expressions.emplace_back(max_index, tmp);
+				}
+
+				// horizontal
+				s = j - 1; g = j + 1;
+				if(calc(s, i, -1, 0) && calc(g, i, 1, 0) && s != j && g != j) {
+					vector<int> tmp;
+					int max_index = -1;
+					for(int k = s; k <= g; ++k) {
+						if(puzzle[i][k] == '.') {
+							tmp.emplace_back(idx[i][k]);
+							max_index = max(max_index, idx[i][k]);
+						}
+						else {
+							tmp.emplace_back(puzzle[i][k]);
+						}
+					}
+
+					expressions.emplace_back(max_index, tmp);
+				}
+			}
+		}
+	}
+
+	sort(expressions.begin(), expressions.end());
+	return expressions;
+}
+
+bool dfs(const vector<pair<int, vector<int>>> &expressions, int next, int idx, int used) {
+	while(next < expressions.size() && expressions[next].first < idx) {
+		if(!valid(expressions[next].second)) return false;
+		++next;
+	}
+	if(next == expressions.size()) return true;
+
+	for(int i = 0; i < n; ++i) {
+		if(used & (1 << i)) continue;
+		letters[idx] = in[i];
+		if(dfs(expressions, next, idx + 1, used | (1 << i))) return true;
+	}
+	return false;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	iota(begin(letters), end(letters), 0);
+
+	while(cin >> h >> w && h) {
+		for(int i = 0; i < h; ++i) {
+			cin >> puzzle[i];
+		}
+
+		cin >> n;
+		for(int i = 0; i < n; ++i) {
+			cin >> in[i];
+		}
+
+		const auto expressions = construct();
+		cout << (dfs(expressions, 0, 0, 0) ? "Yes" : "No") << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

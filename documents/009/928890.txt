@@ -1,0 +1,77 @@
+/*
+	0026:Dropping Ink
+*/
+#include	<iostream>
+#include	<algorithm>
+#include	<cstdio>
+
+using namespace std;
+
+int map[10][10] = { 0 };
+const int vxL[13] = { 0, -1, 0, 1, -2, -1, 0, 1, 2, -1, 0, 1, 0 };
+const int vyL[13] = { 2, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 2 };
+const int vxM[9]  = { 1, 0, -1, 1, 0, -1, 1, 0, -1 };
+const int vyM[9]  = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
+const int vxS[5]  = { 0, 1, 0, -1, 0 };
+const int vyS[5]  = { 1, 0, 0, 0, -1 };
+
+bool IsField(int x, int y);
+void draw(int mx, int my, int size);
+
+int main(void) {
+	while(1) {
+		int x, y, size;
+		
+		if( scanf("%d,%d,%d", &x, &y, &size) == EOF ) { break; }
+		
+		draw(x, y, size);
+	}
+	int count = 0, maxInk = 0;
+	for(int i = 0; i < 10; i++) {
+		for(int j = 0; j < 10; j++) {
+			if(map[i][j] == 0) {
+				count++;
+			} else {
+				maxInk = max(map[i][j], maxInk);
+			}
+		}
+	}
+	cout << count << endl << maxInk << endl;
+	return 0;
+}
+
+bool IsField(int x, int y) {
+	if( (0 <= x && x < 10) && (0 <= y && y < 10) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void draw(int mx, int my, int size) {
+	if(size == 1) {
+		for(int i = 0; i < 5; i++) {
+			int px = mx + vxS[i];
+			int py = my + vyS[i];
+			if(IsField(px, py)) {
+				map[px][py]++;
+			}
+		}
+	} else if(size == 2) {
+		for(int i = 0; i < 9; i++) {
+			int px = mx + vxM[i];
+			int py = my + vyM[i];
+			if(IsField(px, py)) {
+				map[px][py]++;
+			}
+		}
+	} else {
+		for(int i = 0; i < 13; i++) {
+			int px = mx + vxL[i];
+			int py = my + vyL[i];
+			if(IsField(px, py)) {
+				map[px][py]++;
+			}
+		}
+	}
+}

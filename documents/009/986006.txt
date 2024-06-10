@@ -1,0 +1,103 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+using namespace std;
+long long int ans;
+long long int cnt[11][11];
+
+void check( long long int bit, long long int num, long long int m, long long int l ) {
+  if ( bit == ( 1 << m ) - 1 ) {
+    ans = min( ans, l );
+    return;
+  }
+  for ( long long int i = 0; i < m; i++ ) {
+    if ( ( bit & ( 1 << i ) ) == 0 ) {
+      check( bit + ( 1 << i ), i, m, l + cnt[num][i] );
+    }
+  }
+  return;
+}
+
+int main() {
+
+  int dx[4] = { -1,  0,  0,  1 };
+  int dy[4] = {  0, -1,  1,  0 };
+
+  long long int w, h;
+
+  string input;
+
+  while( cin >> w >> h, w ) {
+
+    vector< long long int > x, y;
+    vector< string > map;
+    map.push_back( "xxxxxxxxxxxxxxxxxxxxxx" );
+    for ( long long int i = 0; i < h; i++ ) {
+      cin >> input;
+      map.push_back( "x" + input + "x" );
+      for ( long long int j = 0; j < w; j++ ) {
+	if ( map[i+1][j+1] == 'o' ) {
+	  x.push_back( j+1 );
+	  y.push_back( i+1 );
+	  map[i+1][j+1] = 'a';
+	}
+      }
+    }
+    map.push_back( "xxxxxxxxxxxxxxxxxxxxxx" );
+    for ( long long int i = 0; i < h+2; i++ ) {
+      for ( long long int j = 0; j < w+2; j++ ) {
+	if ( map[i][j] == '*' ) {
+	  map[i][j] = 'a' + x.size();
+	  x.push_back( j );
+	  y.push_back( i );
+	}
+      }
+    }
+    for ( long long int i = 0; i < x.size(); i++ ) {
+      for ( long long int j = 0; j < x.size(); j++ ) { 
+	cnt[i][j] = -1;
+      }
+    }
+    for ( long long int i = 0; i < x.size(); i++ ) {
+      int flag[22][22] = {0};
+      queue<int> qx, qy;
+      qx.push( x[i] );
+      qy.push( y[i] );
+      flag[x[i]][y[i]] = 1;
+      while( qx.size() > 0 ) {
+	int k = flag[qx.front()][qy.front()];
+	for ( long long int j = 0; j < 4; j++ ) {
+	  int lx = qx.front() + dx[j];
+	  int ly = qy.front() + dy[j];
+	  if ( map[ly][lx] != 'x' && flag[lx][ly] == 0 ) {
+	    flag[lx][ly] = k + 1;
+	    qx.push(lx);
+	    qy.push(ly);
+	    if ( map[ly][lx] != '.' ) {
+	      cnt[i][ map[ly][lx] - 'a' ] = k;
+	    }
+	  }
+	}
+	qx.pop();
+	qy.pop();
+      }
+    }
+    bool f = false;
+    for ( long long int i = 1; i < x.size(); i++ ) {
+      if ( cnt[0][i] == -1 ) {
+	cout << "-1" << endl;
+	f = true;
+	break;
+      }
+    }
+    if ( f ) continue;
+    ans = 40*11;
+    check( 1, 0, x.size(), 0 );
+    cout << ans << endl;
+
+  }
+
+  return 0;
+
+}

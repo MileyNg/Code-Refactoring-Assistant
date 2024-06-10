@@ -1,0 +1,130 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  int n;
+  bool bf=false;
+  for(;cin>>n;)
+    {
+      if(bf)
+	cout<<endl;
+      bf=true;
+      int point[4][13];
+      for(int i=0;i<4;i++)
+	for(int j=0;j<13;j++)
+	  cin>>point[i][j];
+      /*
+      for(int i=0;i<4;i++,cout<<endl)
+	for(int j=0;j<13;j++)
+	  cout<<point[i][j];
+      */
+      int power[9];
+      for(int j=0;j<9;j++)
+	cin>>power[j];      
+      
+      //s=0,c=1,h=2,d=3
+      for(;n--;)
+	{
+	  int card[5];
+	  int ans=0;
+	  bool mark=true;
+	  //  cout<<mark<<endl;
+	  char buf;
+	  for(int i=0;i<5;i++)
+	    {
+	      char a,b;
+	      int aa,bb;
+	      cin>>a>>b;
+
+	      if(i!=0&&buf!=b)
+		mark=false;
+	      buf=b;
+
+	      aa=a-'0';
+	      if(a=='A')
+		aa=1;
+	      if(a=='T')
+		aa=10;
+	      if(a=='J')
+		aa=11;
+	      if(a=='Q')
+		aa=12;
+	      if(a=='K')
+		aa=13;	      
+	      //s=0,c=1,h=2,d=3
+	      if(b=='S')
+		bb=0;
+	      if(b=='C')
+		bb=1;
+	      if(b=='H')
+		bb=2;
+	      if(b=='D')
+		bb=3;	      
+	      card[i]=aa;
+	      //   cout<<a<<b<<endl;
+	      // cout<<bb<<" "<<aa<<endl;
+	      //cout<<point[bb][aa-1]<<endl;;
+	      ans+=point[bb][aa-1];
+	      
+	    }
+	  sort(card,card+5);
+	  //  cout<<mark<<endl;
+	  if(mark&&
+	     card[0]==1&&card[1]==10&&card[2]==11 &&card[3]==12 &&card[4]==13)
+	    //royal straight
+	    ans*=power[8];
+	  else if(mark &&
+		  card[0]==card[1]-1&&card[1]==card[2]-1&&
+		  card[2]==card[3]-1&&card[3]==card[4]-1)
+	    ans*=power[7];
+	  else if((card[0]==card[1]&&card[1]==card[2]&&
+		   card[2]==card[3])
+		  ||(card[1]==card[2]&&card[2]==card[3]&&
+		     card[3]==card[4]))
+	    ans*=power[6];
+	  else if((card[0]==card[1]&&card[1]==card[2]&&
+		   card[3]==card[4])
+		  ||(card[0]==card[1]
+		     &&card[2]==card[3]&&card[3]==card[4]))
+	    ans*=power[5];
+	  else if(mark)
+	    ans*=power[4];
+	  else if((card[0]==1&&card[1]==10&&card[2]==11 &&card[3]==12 &&card[4]==13)||
+		  (card[0]==card[1]-1&&card[1]==card[2]-1&&
+		   card[2]==card[3]-1&&card[3]==card[4]-1))	    
+	    //straight
+	    ans*=power[3];
+	  else if((card[0]==card[1]&&card[1]==card[2])||
+		  (card[1]==card[2]&&card[2]==card[3])||
+		  (card[2]==card[3]&&card[3]==card[4])
+		  )
+	    //スリーカード
+	    ans*=power[2];
+	  else
+	    {
+	      int cnt=0;
+	      for(int i=0;i<4;i++)
+		{
+		  //		  cout<<card[i]<<" "<<card[i+1]<<endl;
+		  if(card[i]==card[i+1])
+		    cnt++;
+		  
+		}
+		  if(cnt>1)
+		ans*=power[1];
+	      else if(cnt>0)
+		ans*=power[0];
+	      else
+		ans=0;
+
+		  //  cout<<cnt<<endl;
+	    }
+	  
+	  cout<<ans<<endl;	  
+	}
+
+
+    }
+
+}

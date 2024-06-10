@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <utility>
+using namespace std;
+
+#define INF 10000000
+
+struct pa {
+	int first, second;
+	pa(int a, int b) {
+		first = a; second = b;
+	}
+};
+
+bool operator<(pa a, pa b) {
+	if(a.first != b.first)
+		return a.first > b.first;
+	else
+		return a.second > b.second;
+}
+
+int main() {
+	int w, h;
+
+	while(cin >> w >> h, w || h) {
+		cin.ignore();
+		vector<string> v;
+		for(int i = 0; i < h * 2 - 1; i++) {
+			string str;
+			getline(cin, str);
+			str += "   ";
+			v.push_back(str);
+		}
+		/* table */
+		int table[32 * 32][32 * 32];
+		bool visited[32 * 32];
+		for(int i = 0; i < 32 * 32; i++) {
+			for(int j = 0; j < 32 * 32; j++) {
+				table[i][j] = INF;
+			}
+			table[i][i] = 0;
+			visited[i] = false;
+		}
+		for(int i = 0; i < h; i++) {
+			for(int j = 0; j < w; j++) {
+				if(i > 0)
+					table[w * i + j][w * (i - 1) + j] = table[w * (i - 1) + j][w * i + j] = v[i * 2 - 1][j * 2] == '1' ? INF : 1;
+				if(i < h - 1)
+					table[w * i + j][w * (i + 1) + j] = table[w * (i + 1) + j][w * i + j] = v[i * 2 + 1][j * 2] == '1' ? INF : 1;
+				if(j > 0)
+					table[w * i + j][w * i + j - 1] = table[w * i + j - 1][w * i + j] = v[i * 2][j * 2 - 1] == '1' ? INF : 1;
+				if(j < w - 1)
+					table[w * i + j][w * i + j + 1] = table[w * i + j + 1][w * i + j] = v[i * 2][j * 2 + 1] == '1' ? INF : 1;
+			}
+		}
+
+		priority_queue<pa> q;
+		q.push(pa(0, 0));
+		bool flag = true;
+		while(!q.empty()) {
+			pa tmp(0,0);
+			tmp = q.top(); q.pop();
+			if(visited[tmp.second])
+				continue;
+			visited[tmp.second] = true;
+
+			if(tmp.second == h * w - 1) {
+				if(tmp.first >= INF) {
+					break;
+				}
+				flag = false;
+				cout << tmp.first + 1 << endl;
+			}
+			if(tmp.second / w > 0) q.push(pa(tmp.first + table[tmp.second][tmp.second - w], tmp.second - w));
+			if(tmp.second / w < h - 1) q.push(pa(tmp.first + table[tmp.second][tmp.second + w], tmp.second + w));
+			if(tmp.second % w > 0) q.push(pa(tmp.first + table[tmp.second][tmp.second - 1], tmp.second - 1));
+			if(tmp.second % w < w - 1) q.push(pa(tmp.first + table[tmp.second][tmp.second + 1], tmp.second + 1));
+		}
+
+		if(flag) {
+			cout << 0 << endl;
+		}
+	}
+}

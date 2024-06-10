@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <cstdio>
+
+using namespace std;
+
+#define N 20
+#define DELTA 0.000001
+#define Lab 3
+
+double cl[N][Lab];
+int slct[N];
+int n,m;
+double mx;
+
+void combi(int,int);
+
+int main(int argc, char const *argv[])
+{
+	cin>>n>>m;
+		
+	for(int i1=0;i1<n;i1++){
+		cin>>cl[i1][0]>>cl[i1][1]>>cl[i1][2];
+	}
+	mx=0.0;
+	combi(0,0);
+	printf("%lf\n",mx);
+	return 0;
+}
+
+void combi(int s,int r)
+{	
+	if(r==(m-1)) {
+		double sum=0.0;
+		for(int i1=0;i1<m-1;i1++){
+			for(int i2=i1+1;i2<m;i2++){
+				for(int i3=0;i3<Lab;i3++){
+					sum+=((cl[slct[i1]][i3]-cl[slct[i2]][i3])*(cl[slct[i1]][i3]-cl[slct[i2]][i3]));
+				}
+			}
+		}
+		if(sum>mx+DELTA) mx=sum;
+	}
+	else {
+		for(int i1=s;i1<n;i1++){
+			slct[r]=i1;
+			combi(i1+1,r+1);
+		}
+	}
+}

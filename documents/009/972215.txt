@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+int X[100000],Y[100000];
+int main() {
+	int W,H,N;
+	long long int sumX=0,sumY=0;
+	scanf("%d %d",&W,&H);
+	scanf("%d",&N);
+	for(int i=0;i<N;i++) {
+		scanf("%d %d",&X[i],&Y[i]);
+		sumX+=X[i]*2,sumY+=Y[i]*2;
+	}
+	long long int ans=1LL<<62;
+	int ansX=1<<30,ansY=1<<30;
+	for(int i=0;i<N;i++) {
+		int x=(sumX-X[i])/(2*N-1);
+		int y=(sumY-Y[i])/(2*N-1);
+		long long int maxd=0;
+		for(int dx=-1;dx<=1;dx++)
+	    for(int dy=-1;dy<=1;dy++) {
+			long long int d=0;
+			if(1>(x+dx)||(x+dx)>W||1>(y+dy)||(y+dy)>H) continue;
+			for(int j=0;j<N;j++) {
+				d+=(abs(x+dx-X[j])+abs(y+dy-Y[j]))*2;
+			}
+			d-=(abs(x+dx-X[i])+abs(y+dy-Y[i]));
+			if(ans==d) {
+				if(ansX>(x+dx)) {
+					ansX=(x+dx),ansY=(y+dy);
+				}else if (ansX==(x+dx)) {
+					if(ansY>(y+dy)) ansY=(y+dy);
+				}
+			}else if(ans>d) {
+				ansX=(x+dx),ansY=(y+dy),ans=d;
+			}
+		}
+	}
+	printf("%lld\n",ans);
+	printf("%d %d\n",ansX,ansY);
+}

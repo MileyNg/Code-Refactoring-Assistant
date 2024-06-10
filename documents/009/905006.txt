@@ -1,0 +1,52 @@
+#!/bin/ruby
+class Team
+  def initialize(t,p)
+    @t=t
+    @f=Array.new(p){0}
+    @ac=Array.new(p){false}
+    @time=0
+  end
+  attr_reader :t
+  attr_accessor :f
+  attr_accessor :time
+  attr_accessor :ac
+  def penalty
+    p=0
+    (0...f.size).each do |e|
+      p+=20*f[e] if ac[e]
+    end
+    return time+p
+  end
+  def <(t)
+    if @ac.count(true)!=t.ac.count(true) then
+      return @ac.count(true)>t.ac.count(true)
+    else
+      return penalty<t.penalty
+    end
+  end
+  def <=>(t)
+    return -1 if self<t
+    return 1 if t<self
+    return 0
+  end
+end
+                
+loop do
+  m,t,p,r=gets.split.map(&:to_i)
+  break if m==0&&t==0&&r==0&&p==0
+  teams=(0...t).map{|e|Team.new(e,p)}
+  r.times do
+    mk,tk,pk,jk=gets.split.map(&:to_i)
+    if jk==0 then
+      teams[tk-1].time+=mk;
+      teams[tk-1].ac[pk-1]=true
+    else
+      teams[tk-1].f[pk-1]+=1
+    end
+  end
+  teams.sort!{|a,b|((a<=>b)!=0)?a<=>b : -(a.t-b.t)}
+  (0...teams.size-1).each do |e|
+    print "#{teams[e].t+1}#{((teams[e]<=>teams[e+1])==0)? '=':','}"
+  end
+  puts teams[-1].t+1
+end

@@ -1,0 +1,41 @@
+until (w, h = gets.split.map(&:to_i)).all?(&:zero?)
+  floor = Array.new
+  floor << (w + 2).times.map{0}
+  floor += h.times.map{[0] + gets.split.map(&:to_i) + [0]}
+  floor << (w + 2).times.map{0}
+
+  dp = Array.new(h + 2){Array.new(w + 2){0}}
+  h.downto(1) do |i|
+    w.downto(1) do |j|
+      next if floor[i][j].zero?
+      dp[i][j] = [dp[i + 1][j], dp[i][j + 1], dp[i + 1][j + 1]].min + 1
+    end
+  end
+
+  answer = 0
+  h.downto(1) do |i|
+    w.downto(1) do |j|
+      next if floor[i][j].zero?
+      answer += 1
+      start = [i, j, dp[i][j]]
+      q = Array.new
+      q << [i, j]
+      until q.empty?
+        y, x = q.shift
+        next if floor[y][x].zero?
+        next if dp[y][x] <= [i - y, j - x].max
+        start = [y, x, dp[y][x]] if start.last <= dp[y][x]
+        q << [y - 1, x] if dp[y][x] <= dp[y - 1][x]
+        q << [y, x - 1] if dp[y][x] <= dp[y][x - 1]
+        q << [y - 1, x - 1] if dp[y][x] <= dp[y - 1][x - 1]
+      end
+      si, sj, size = start
+      si.upto(si + size - 1) do |y|
+        sj.upto(sj + size - 1) do |x|
+          floor[y][x] = 0
+        end
+      end
+    end
+  end
+  p answer
+end

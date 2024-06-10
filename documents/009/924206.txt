@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct node{
+  int key;
+  struct node *next;
+  struct node *prev;
+};
+
+typedef struct node * NodePointer;
+
+NodePointer nil;
+
+NodePointer listSearch(int);
+void init(void);
+void printList(void);
+void deleteFirst(void);
+void deleteLast(void);
+void delete(int);
+void insert(int);
+
+int main(){
+  int n,i,num,np,nd,size;
+  char order[11];
+
+  init();
+  size = np = nd = 0;
+
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%s %d" ,order ,&num);
+
+    if(order[0] == 'i'){
+      insert(num);
+      np++; 
+      size++;
+    }else if(order[0] == 'd'){
+      if(strlen(order) > 6){
+	if(order[6] == 'F'){
+	  deleteFirst();
+	}else if(order[6] == 'L'){
+	  deleteLast();
+	}
+      }else{
+	delete(num);
+	nd++;
+      }
+      size--;
+    }
+  }
+  printList();
+
+  return 0;
+}
+
+NodePointer listSearch(int key){
+  NodePointer x,y;
+
+  y = nil;
+  x = y->next;
+
+  while(x != nil){
+    if(x->key == key){
+      return y;
+    }
+    y = x;
+    x = y->next;
+  }
+  return NULL;
+}
+
+void init(){
+  nil = malloc(sizeof(struct node));
+  nil->next = nil;
+  nil->prev = nil;
+}
+
+void printList(){
+  NodePointer cur = nil->next;
+  int isf = 1;
+
+  while(1){
+    if(cur == nil) break;
+    if(isf == 0) printf(" ");
+    printf("%d" ,cur->key);
+    cur = cur->next;
+    isf = 0;
+  }
+  printf("\n");
+}
+
+void deleteFirst(){
+  delete(nil->next->key);
+}
+
+void deleteLast(){
+  NodePointer x,y;
+
+  x = nil->prev;
+  y = x->prev;
+  y->next = nil;
+  nil->prev = x->prev;
+  free(x);
+}
+
+void delete(int key){
+  NodePointer x,y,z;
+
+  x = listSearch(key);
+  y = x->next;
+  x->next = y->next;
+  z = x->prev;
+  x->prev = z->prev;
+
+  free(y);
+}
+
+void insert(int key){
+  NodePointer x,y;
+  x = malloc(sizeof(struct node));
+  x->key = key;
+
+  y = nil->next;
+  nil->next = x;
+  x->next = y;
+  x->prev = nil;
+  y->prev = x;
+}

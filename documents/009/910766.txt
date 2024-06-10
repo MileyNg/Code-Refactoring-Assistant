@@ -1,0 +1,93 @@
+#include<stdio.h>
+#include<string.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+void field(void);
+void move(void);
+void clear(void);
+
+  int w,h;
+  char mass[103][103]={'\0'};
+char now;
+
+int main(){
+
+  while(1){
+
+    scanf("%d %d",&h,&w);
+
+    if(w==h && h==0){
+      break;
+    }
+
+    field();
+    move();
+    clear();
+
+  }
+
+  return 0;
+}
+
+void field(){
+
+  int i,j;
+  
+  for(i=0;i<h;i++){
+    scanf("%s",mass[i]);
+  }
+
+}
+
+void move(){
+
+  now=mass[0][0];
+  int end=1,fw=0,fh=0,cnt=0;
+
+  while(end){
+
+    if(cnt==w*h){
+      printf("LOOP\n");
+      end=0;
+    }
+
+    else if(now=='.'){
+      printf("%d %d\n",fw,fh);
+      end=0;
+    }
+
+    else if(now=='>'){
+      fw++;
+    }
+
+    else if(now=='v'){
+      fh++;
+    }
+
+    else if(now=='^'){
+      fh--;
+    }
+
+    else if(now=='<'){
+      fw--;
+    }
+
+    now=mass[fh][fw];
+    cnt++;
+
+  }
+
+}
+
+void clear(){
+
+  int i,j;
+
+  for(i=0;i<h;i++){
+    for(j=0;j<w;j++){
+      mass[i][j]='\0';
+    }
+  }
+
+}

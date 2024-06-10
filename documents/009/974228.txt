@@ -1,0 +1,35 @@
+#include <iostream>
+#include <set>
+using namespace std;
+multiset<int,greater<int> >::iterator i;
+bool isGraphic(multiset<int,greater<int> > s)
+{
+	if (s.empty()) return true;
+	multiset<int,greater<int> > r;
+	int tmp=*(s.begin());
+	s.erase(s.begin());		
+	if (s.size()<tmp) return false;
+	i=s.begin();
+	while(i!=s.end())
+	{
+		if(tmp>0&&*i>1) r.insert((*i)-1);
+		else if (tmp<=0) r.insert(*i);
+		i++;
+		tmp--;
+	}
+	return isGraphic(r);
+}
+
+int main()
+{
+	int n;
+	cin>>n;
+	multiset<int,greater<int> > s;
+	int x;
+	while(n--)
+	{
+		cin>>x;
+		s.insert(x);
+	}
+	cout<<isGraphic(s)<<endl;
+}

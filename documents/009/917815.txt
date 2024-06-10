@@ -1,0 +1,29 @@
+#include <iostream>
+#include <utility>
+using namespace std;
+
+typedef pair<double, double> pdd;
+
+int main(void) {
+  pdd zahyo[4];
+  int n;
+  cin >> n;
+
+  while (n--) {
+    for (int i = 0; i < 4; i++) {
+      cin >> zahyo[i].first >> zahyo[i].second;
+    }
+    
+    double angle1, angle2;
+    angle1 = (zahyo[1].second - zahyo[0].second) / (zahyo[1].first - zahyo[0].first);
+    angle2 = (zahyo[3].second - zahyo[2].second) / (zahyo[3].first - zahyo[2].first);
+
+    if (angle1 == angle2) {
+      cout << "YES" << endl;
+    } else {
+      cout << "NO" << endl;
+    }
+  }
+
+  return 0;
+}

@@ -1,0 +1,75 @@
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+constexpr int MAX_ROOM = 100;
+
+vector<int> sequence;
+
+int next_v;
+int degree[MAX_ROOM];
+int dist[MAX_ROOM];
+vector<int> G[MAX_ROOM];
+
+void dfs(int v, int &idx) {
+	if(idx == sequence.size()) return;
+
+	degree[v] = sequence[idx++] - (v ? 1 : 0);
+
+	while(degree[v]) {
+		if(sequence[idx] > 0) {
+			G[v].emplace_back(next_v);
+			G[next_v].emplace_back(v);
+			--degree[v];
+			dist[next_v] = dist[v] + 1;
+			dfs(next_v++, idx);
+		}
+		else {
+			for(int u = 0; u < v; ++u) {
+				if(dist[u] - dist[v] == sequence[idx] && degree[u]) {
+					G[v].emplace_back(u);
+					G[u].emplace_back(v);
+					--degree[v];
+					--degree[u];
+					++idx;
+					break;
+				}
+			}
+		}
+	}
+}
+
+void init() {
+	sequence.clear();
+	next_v = 1;
+	memset(dist, -1, sizeof(dist));
+	dist[0] = 0;
+	for(auto &vec : G) vec.clear();
+}
+
+void solve() {
+	init();
+	for(int number; cin >> number && number;) {
+		sequence.emplace_back(number);
+	}
+
+	int idx = 0;
+	dfs(0, idx);
+
+	for(int v = 0; v < next_v; ++v) {
+		sort(G[v].begin(), G[v].end());
+		cout << v + 1;
+		for(const auto &to : G[v]) cout << " " << to + 1;
+		cout << "\n";
+	}
+}
+
+int main() {
+	int t;
+	cin >> t;
+
+	while(t--) solve();
+}

@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX 1000
+#define MAX_D 10001
+
+int main(){
+  int N, arr[MAX], _arr[MAX], dest[MAX_D];
+  bool used[MAX];
+
+  cin >> N;
+  for(int i = 0 ; i < N ; i++){
+    cin >> arr[i];
+    used[i] = false;
+    _arr[i] = arr[i];
+  }
+  sort(_arr, _arr+N);
+
+  for(int i = 0 ; i < N ; i++){
+    dest[_arr[i]] = i;
+  }
+
+  int ans = 0;
+  for(int i = 0 ; i < N ; i++){
+    if(dest[arr[i]] == i || used[i]){
+      used[i] = true;
+      continue;
+    }
+
+    int cnt = -1, sum = 0, min = arr[i], next = i;
+    for( ; !used[next] ; ){
+      sum += arr[next]; cnt++;
+      min = std::min(min, arr[next]);
+      used[next] = true;
+      next = dest[arr[next]];
+    }
+    sum -= min;
+    ans += sum + min*cnt;
+
+    if(2*(min+_arr[0]) < (min-_arr[0])*cnt){
+      ans -= (min-_arr[0])*cnt - 2*(min+_arr[0]);
+    }
+  }
+
+  cout << ans << endl;
+
+  return 0;
+}

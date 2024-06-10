@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+
+
+
+char lastchar[26][2000];
+int charidx[26];
+int used[26][2000];
+char firstchar;
+
+int shiritori(char next, int count) {
+    int i, r;
+    if (count == 0) {
+        if (next == firstchar) return 1;
+        else return 0;
+    }
+
+    r = next - 'a';
+    for (i = 0; i < charidx[r]; i++) {
+        if (!used[r][i]) {
+            used[r][i] = 1;
+            if (shiritori(lastchar[r][i], count - 1)) {
+                return 1;
+            }
+            else {
+                used[r][i] = 0;
+            }
+        }
+    }
+    return 0;
+}
+
+int main(void) {
+    int n, i, j, len;
+    char buf[33];
+
+    while (scanf("%d\n", &n) != EOF && n) {
+        int r, result;
+        int startchar = 0;
+        firstchar = 0;
+        for (i = 0; i < 26; i++) {
+            charidx[i] = 0;
+            for (j = 0; j < 2000; j++) {
+                used[i][j] = 0;
+            }
+        }
+        for (i = 0; i < n; i++) {
+            gets(buf);
+            len = strlen(buf);
+            r = buf[0] - 'a';
+            if (!firstchar) {
+                firstchar = buf[0];
+                startchar = buf[len-1];
+            }
+            else {
+                lastchar[r][charidx[r]++] = buf[len-1];
+            }
+        }
+
+        result = shiritori(startchar, n - 1);
+        if (result) printf("OK\n");
+        else printf("NG\n");
+    }
+    return 0;
+}

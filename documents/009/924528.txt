@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n, m, v, res;
+  char str[16];
+  while(scanf("%d%d", &n, &m) && n){
+    vector< pair< string, int> >elect(n);
+    vector<string>b(m);
+    rep(i, n){
+      scanf("%s %d", str, &v);
+      elect[i] = make_pair(string(str), v);
+    }
+    rep(i, m){
+      scanf("%s", str);
+      b[i] = string(str);
+    }
+    res = 0;
+    rep(i, n) rep(j, m){
+      bool f = true;
+      rep(k, 8){
+	if(elect[i].first[k] == '*') continue;
+	if(elect[i].first[k] != b[j][k]) f = false;
+      }
+      if(f) res += elect[i].second;
+      //      if(f) printf("%s %s\n", elect[i].first.c_str(), b[j].c_str());
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

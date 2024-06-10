@@ -1,0 +1,31 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int n,x,i,j,k,num=0;
+	scanf("%d %d",&n,&x);
+	while(1)
+	{
+		for(i = 1;i <= n;i++)
+		{
+			for(j = i + 1;j <= n;j++)
+			{
+				for(k = j + 1;k <= n;k++)
+				{
+					if(i + j + k == x)
+					{
+						num = num + 1;
+					}
+				}
+			}
+		}
+		printf("%d\n",num);
+		num = 0;
+		scanf("%d %d",&n,&x);
+		if(n == 0 || x == 0)
+		{
+			break;
+		}
+	}
+	return 0;
+}

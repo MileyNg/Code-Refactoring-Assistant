@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define equal(a, b, c) ((a) == (b) && (b) == (c) && (a) == (c))
+using namespace std;
+
+int main(){
+  int n[9], t;
+  char mark[10], tmp[512];
+  scanf("%d", &t);
+  while(t--){
+    vector< pair<char, int> >c(9);
+    rep(i, 9) scanf("%d", n+i);
+    //    puts("1");
+    fgets(tmp, sizeof(tmp), stdin);
+    //    puts("2");
+    rep(i, 9) scanf("%s", mark+i);
+    //    puts("in");
+    rep(i, 9) c[i] = make_pair(mark[i], n[i]);
+    int res = 1;
+    sort(c.begin(), c.end());
+    //    rep(i, 9) printf("%c %d\n", c[i].first, c[i].second);
+    for(int i = 0; i < 9; i+=3){
+      if(equal(c[i].first,c[i+1].first,c[i+2].first)){
+	  if(equal(c[i].second,c[i+1].second,c[i+2].second)) continue;
+	  if(equal(c[i].second,c[i+1].second-1,c[i+2].second-2)) continue;
+      }
+      res = 0;
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

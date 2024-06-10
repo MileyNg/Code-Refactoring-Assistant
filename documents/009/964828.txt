@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void) {
+	int n,i;
+	scanf("%d", &n);
+	
+	for(i=0; i<n; i++) {
+		int j, check;
+		double circ[6];
+		double dist, center;
+		
+		for(j=0; j<6; j++)
+			scanf("%lf", &circ[j]);
+		
+		center = circ[2] + circ[5];
+		dist = sqrt( pow(circ[0]-circ[3], 2.0) + pow(circ[1]-circ[4], 2.0) );
+		
+		if(center>dist) check = 0;
+		if(center == dist) check = 1;
+		else{
+			if(circ[2] > circ[5]) check = 2;
+			else check = -2;
+		}
+		
+		printf("%d\n", check);
+		
+	}
+			
+	return 0;
+}		

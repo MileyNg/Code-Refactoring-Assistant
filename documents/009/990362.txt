@@ -1,0 +1,78 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <deque>
+#include <vector>
+#include <numeric>
+#include <iterator>
+#include <array>
+#include <utility>
+
+using namespace std;
+typedef long long ll;
+
+
+#define FF first
+#define SS second
+#define ALL(c) begin((c)), end((c))
+#define REP(i,n) for(ll i=0;i<(ll)n;++i)
+inline int getInt() { int s; scanf("%d", &s); return s; }
+
+struct circle{
+	ll id,x,y,r,c;
+	bool operator==(const circle & o) {
+		return id==o.id;
+	}
+};
+
+vector<circle> g_table;
+
+
+int main() {
+	while (true) {
+		ll n;
+		cin >> n;
+		if (n==0) break;
+		
+		g_table.clear();
+		REP(i, n){
+			int x,y,r,c;
+			cin >> x >> y >> r >> c;
+			g_table.push_back(circle{i,x,y,r,c});
+		}
+
+		int size = g_table.size();
+
+		while (true) {
+			vector<circle> tops[4];
+
+			REP(i, g_table.size()) {
+				bool top = true;
+				REP(j, g_table.size()) {
+					if (i==j) continue;
+					ll xx = g_table[i].x - g_table[j].x;
+					ll yy = g_table[i].y - g_table[j].y;
+					ll rr = g_table[i].r + g_table[j].r;
+					if (xx*xx + yy*yy < rr*rr && i>j) {
+						top = false; break;
+					}
+				}
+
+				if (top) tops[g_table[i].c].push_back(g_table[i]);
+			}
+
+			bool done = false;
+			REP(c, 4) while (tops[c].size() >= 2) {
+				done = true;
+				g_table.erase(remove(ALL(g_table), tops[c].back()), g_table.end());
+				tops[c].pop_back();
+				g_table.erase(remove(ALL(g_table), tops[c].back()), g_table.end());
+				tops[c].pop_back();
+			}
+
+			if (!done) break;
+		}
+
+		cout << size - g_table.size() << endl;
+	}
+}

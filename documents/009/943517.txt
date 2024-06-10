@@ -1,0 +1,39 @@
+#include<stdio.h>
+
+int main (void){
+	int n,a,s[100],n2,b,box,data,heikin,d[20];
+	n2=0;
+	data=0;
+	while(data!=20){
+		scanf_s("%d",&n);
+		if(n==0)
+			break;
+		for(a=1;a<=n;a++){
+			scanf_s("%d",&s[a]);
+		}
+		for(a=1;a<=n;a++){
+			for(b=1;b<=n;b++){
+				if(s[a]>=s[b]){
+					box=s[a];
+					s[a]=s[b];
+					s[b]=box;
+				}
+			}
+		}
+		for(a=1;a<=n;a++){
+			printf("%d ",s[a]);
+		}
+		printf("\n");
+		heikin=0;
+		for(a=2;a<=n-1;a++){
+			heikin=s[a]+heikin;
+		}
+		heikin=heikin/(n-2);
+		data++;
+		d[data]=heikin;
+	}
+	for(a=1;a<=data;a++){
+		printf("%d\n",d[a]);
+	}
+
+}

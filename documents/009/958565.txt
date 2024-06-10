@@ -1,0 +1,22 @@
+#include<stdio.h>
+
+#define LENGTH 10
+
+int main(){
+	int i,j,temp;
+	int data[LENGTH];
+	for(i=0;i<LENGTH;i++){
+        scanf("%d",&data[i]);
+	}
+	for(i=0; i < LENGTH-1;i++){
+		for(j=0;j<LENGTH-i-1;j++){
+			if(data[i]>data[i+1]){
+				temp=data[i+1];
+				data[i+1]=data[i];
+				data[i]=temp;
+			}
+		}
+	}
+	printf("%d\n%d\n%d\n",data[LENGTH-1],data[LENGTH-2],data[LENGTH-3]);
+	return 0;
+}

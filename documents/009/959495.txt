@@ -1,0 +1,91 @@
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+int s[100001];
+int N, Q;
+int p[100001];
+int operation[100001];
+
+int find_root(int i);
+
+int find_p_root(int i)
+{
+	if (s[i]==0) {
+		s[i] = find_p_root(p[i]);
+		return s[i];
+	}
+	else if (s[i]!=-i) {
+		s[i] = find_root(s[i]);
+		return s[i];
+	}
+	else
+		return i;
+
+}
+
+int find_root(int i)
+{
+	if (s[i]!=-i) {
+		s[i] = find_root(s[i]);
+		return s[i];
+	}
+	else
+		return i;
+}
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	while (scanf("%d%d", &N, &Q)==2) {
+		if (N==0 && Q==0) break;
+		int i;
+		p[1] = 1;
+		for (i=2; i<=N; i++) {
+			scanf("%d", &p[i]);
+		}
+		char c;
+		for (i=0; i<Q; i++) {
+			do { c = getchar();
+			} while (c!='M' && c!='Q');
+			scanf("%d", &operation[i]);
+			if (c=='Q')
+				operation[i] = -operation[i];
+		}
+
+		for (i=1; i<=N; i++) {
+			s[i] = 0;
+		}
+		s[1] = -1;
+		for (i=0; i<Q; i++) {
+			if (operation[i]>0) {
+				s[operation[i]] = -operation[i];
+			}
+		}
+
+		for (i=1; i<=N; i++) {
+			if (s[i]==0) {
+				int root = find_p_root(i);
+				s[i] = root;
+			}
+		}
+
+		long long sum = 0;
+		for (i=Q-1; i>=0; i--) {
+			if (operation[i]<0) {
+				int root = find_root(-operation[i]);
+				sum += root;
+			}
+			else if (operation[i]>0) {
+				int parent = p[operation[i]];
+				s[operation[i]] = parent;
+			}
+		}
+		printf("%lld\n", sum);
+
+	}
+
+	return 0;
+}

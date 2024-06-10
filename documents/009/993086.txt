@@ -1,0 +1,27 @@
+#define _USE_MATH_DEFINES
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+
+int main(){
+	double x=0, y=0, r=90;//初期設定
+	double d, rd;//入力値　更新部分
+	char c;//ごみ
+	
+	while(cin>> d >> c >> rd){
+		if(d==0 && rd==0) break;
+
+		x+=d*cos(r/180*M_PI);
+		y+=d*sin(r/180*M_PI);
+		r-=rd;
+	}
+
+	cout<< (int)x <<endl;
+	cout<< (int)y <<endl;
+    
+	return 0;
+}

@@ -1,0 +1,39 @@
+#include <iostream>
+#include <sstream>
+#include <stack>
+#include <string>
+using namespace std;
+
+stack<double>X;
+double s2d(string a){
+	stringstream ss;
+	double d;
+	ss << a;
+	ss >> d;
+	return d;
+}
+double f(char c){
+	double a, b, x;
+	b = X.top(); X.pop();
+	a = X.top(); X.pop();
+	if (c == '+')x=a + b;
+	else if(c == '-')x=a - b;
+	else if (c == '*')x=a*b;
+	else x=a / b;
+	return x;
+}
+int main(){
+	string s;
+	while(getline(cin,s)){
+		stringstream ss(s);
+		while(ss>>s){
+			if (s[0] < '0')
+				X.push(f(s[0]));
+			else{
+				X.push(s2d(s));
+			}
+		}
+		cout << X.top() << endl;
+		X.pop();
+	}
+}

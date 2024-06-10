@@ -1,0 +1,80 @@
+#include<stdio.h>
+#define NIL -1
+
+typedef struct{
+  int parent,left,right;
+}Node;
+
+Node tree[100001];
+int count=0; //再帰関数、子供表示用
+
+int retdepth(int id){ //再帰で根っこまでの長さを計る
+  if (tree[id].parent==NIL){
+    return count;
+  } else {
+    count++;
+    return retdepth(tree[id].parent);
+  }
+}
+
+
+void dispdegree(int id){
+  if (id!=NIL){
+    if (count!=0){
+      printf(", ");
+    }
+    printf("%d",id);
+    count++;
+    dispdegree(tree[id].right);
+  }
+}
+
+int main(){
+  int i,j,n,nownode,deg,gaki,left,right;
+
+  scanf("%d",&n);
+  for (i=0;i<n;i++){
+    tree[i].parent=tree[i].left=tree[i].right=NIL;
+    //NILで初期化を行う
+  }
+
+  for (i=0; i<n; i++){
+    scanf("%d%d",&nownode,&deg);
+    for (j=0; j<deg; j++){
+      scanf("%d",&gaki);
+      tree[gaki].parent=nownode;
+      if (j!=0){ //左端ならnownodeのleftを子供に
+	tree[left].right = gaki;
+      } else {
+	tree[nownode].left = gaki;
+      }
+      left = gaki;
+    }
+      /*                           |
+		       親          |
+		     | | |       ->|  親1->2->3 のイメージ 横並ばせで
+		    1  2  3        |
+		    
+        親のleftは1,1のrightは2,2のrightは3,3のrightはNIL。
+      */
+  }
+  //---------------------
+  //表示部分
+
+  for(i=0; i<n; i++){
+    count=0;
+    printf("node %d: parent = %d, depth = %d, ",i,tree[i].parent,retdepth(i));
+    if(tree[i].parent == NIL){
+      printf("root, [");
+    } else if(tree[i].left == NIL){
+      printf("leaf, [");
+    } else {
+      printf("internal node, [");
+    }
+    count=0;
+    dispdegree(tree[i].left);
+    printf("]\n");
+  }
+
+  return 0;
+}

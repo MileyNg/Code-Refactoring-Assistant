@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+typedef struct{
+	int no;
+	double w;
+	double h;
+	int flag;
+}stu;
+
+int main(void) {
+	stu a[500];
+	int i=0;
+	
+	while( scanf("%d,%lf,%lf", &a[i].no, &a[i].w, &a[i].h) != EOF) {
+		double bmi=a[i].w/a[i].h/a[i].h;
+		a[i].flag=0;
+		
+		if(bmi>=25.0) a[i].flag=1;
+		
+		i++;
+	}
+	
+	int j;
+	for(j=0; j<i; j++) {
+		if(a[j].flag==1) printf("%d\n", a[j].no);
+	}
+	
+	return 0;
+}

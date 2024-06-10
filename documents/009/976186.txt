@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+using namespace std;
+int main(){
+int n,m;
+while(cin>>n>>m,n||m){
+vector<int>a,b;
+int tmp;
+int suma=0,sumb=0;
+rep(i,n){
+cin>>tmp;
+pb(a,tmp);
+suma+=tmp;
+}
+rep(i,m){
+cin>>tmp;
+pb(b,tmp);
+sumb+=tmp;
+}
+
+int min=9999,mini[2]={0};
+rep(i,n){
+rep(j,m){
+if(suma-a[i]+b[j]==sumb+a[i]-b[j]&&min>suma-a[i]+b[j]){
+min=suma-a[i]+b[j];
+mini[0]=a[i];
+mini[1]=b[j];
+}
+}
+}
+if(min!=9999)cout<<mini[0]<<" "<<mini[1]<<endl;
+else cout<<-1<<endl;
+}
+}

@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+#define MAX 10000000
+
+int s[MAX];
+
+int main(void)
+{
+  int n;
+  int i, buf, cnt;
+
+  for (i = 0; i < MAX; i++) {
+    s[i] = 0;
+  }
+  cnt = 0;
+
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%d", &buf);
+    s[buf] = 1;
+  }
+
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%d", &buf);
+    if (s[buf]) {
+      cnt++;
+    }
+  }
+
+  printf("%d\n", cnt);
+
+  return 0;
+}

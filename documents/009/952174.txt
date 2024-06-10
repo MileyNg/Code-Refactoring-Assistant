@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+
+def main
+  params = gets.chomp.split('.')
+  params.shift
+  current_lv = 0
+  result_value = nil
+  params.each do |param|
+    loop do
+      line = gets.chomp
+      if line.size == 0
+        puts 'no such property'
+        return
+      end
+
+      lv = obj_level(line)
+      if lv < current_lv
+        puts 'no such property'
+        return
+      elsif lv > current_lv
+        next
+      end
+
+      key,value = parse_line(line)
+      unless key.eql?(param)
+        next
+      end
+
+      if value.nil?
+        result_value = 'object'
+      else
+        result_value = "string \"#{value}\""
+      end
+      current_lv = lv + 1
+      break
+    end
+  end
+  puts result_value
+end
+
+def parse_line str
+  key,value = str.split(':')
+  key.strip!
+  value.sub!(/^ /, '') unless value.nil?
+  [key, value]
+end
+
+def obj_level str
+  str.index(/[a-z0-9]/)
+end
+
+main

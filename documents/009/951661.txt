@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+
+const int inf = 999999;
+const int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+
+int w, h;
+vector<vector<int> > s;
+vector<int> c;
+
+inline bool inrect(int x, int y){
+    return 0 <= x && x < h && 0 <= y && y < w;
+}
+
+int solve(){
+    vector<vector<vector<int> > > mem(h, vector<vector<int> >(w, vector<int>(4, inf)));
+    mem[0][0][1] = 0;
+    auto comp = [&](const int a, const int b){
+        int ad = a / 10000, ax = a % 10000 / 100, ay = a % 100,
+            bd = b / 10000, bx = b % 10000 / 100, by = b % 100;
+        return mem[bx][by][bd] < mem[ax][ay][ad];
+    };
+    priority_queue<int, vector<int>, decltype(comp)> q(comp);
+    for(q.push(10000 + 0 * 100 + 0); !q.empty();){
+        int t = q.top(); q.pop();
+        int d = t / 10000, x = t % 10000 / 100, y = t % 100;
+        if(x == h-1 && y == w-1)continue;
+        rep(k, 4){
+            int nd = (d + k) % 4;
+            int nx = x + dx[nd], ny = y + dy[nd];
+            if(inrect(nx, ny)){
+                int cost = mem[x][y][d] + (s[x][y] == k? 0: c[k]);
+                if(mem[nx][ny][nd] <= cost)continue;
+                mem[nx][ny][nd] = cost;
+                q.push(nd * 10000 + nx * 100 + ny);
+            }
+        }
+    }
+    return min(mem[h-1][w-1][1], mem[h-1][w-1][2]);
+}
+
+int main(){
+    while(cin >> w >> h, w|h){
+        s.assign(h, vector<int>(w));
+        rep(i, h)rep(j, w)cin >> s[i][j];
+        c.resize(4);
+        rep(i, 4)cin >> c[i];
+        cout << solve() << '\n';
+    }
+    return 0;
+}

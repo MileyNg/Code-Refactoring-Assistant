@@ -1,0 +1,18 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var n = lines.shift();
+
+var dic = {};
+for (var i = 0; i < n; i++) {
+	var command = lines[i].split(' ');
+	if (command[0] == 'insert')
+		dic[command[1]] = true;
+	else {
+		if (dic[command[1]]) {
+			console.log('yes');
+		} else {
+			console.log('no');
+		}
+	}
+}

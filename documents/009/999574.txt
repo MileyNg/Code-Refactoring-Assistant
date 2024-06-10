@@ -1,0 +1,37 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int N,M,L;
+  cin>>N>>M>>L;
+  int K[2000];
+  for(int i=0;i<N;i++){
+    cin>>K[i];
+  }
+  sort(begin(K),begin(K)+N);
+  int S[100001];
+  long long as[100001]={};
+  for(int i=1;i<=M;i++){
+    cin>>S[i];
+    as[i]=as[i-1]+S[i];
+  }
+  static long long dp[2000][2000];
+  fill(dp[0],dp[2000],1LL<<62);
+  dp[0][0]=0;
+  auto f=[&](int a,int b){
+    return (as[K[b]]-as[K[a]-1])/L;
+  };
+  for(int i=0;i<N-1;i++){
+    for(int j=0;j<N;j++){
+      dp[i+1][j]=min(dp[i+1][j],dp[i][j]+f(i,i+1));
+      dp[i+1][i]=min(dp[i+1][i],dp[i][j]+f(j,i+1));
+    }
+  }
+  long long m=1LL<<62;
+  for(int i=0;i<N;i++){
+    m=min(m,dp[N-1][i]+f(i,N-1));
+  }
+  cout<<m<<endl;
+}

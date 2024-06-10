@@ -1,0 +1,18 @@
+while line = gets do
+	a, b = 0, 0							# 多項代入
+	exit if line.to_i == 0	# 一行IF
+
+	line.to_i.times do
+		tmp_a, tmp_b = gets.split().map(&:to_i)
+
+		if tmp_a > tmp_b
+			a += tmp_a + tmp_b
+		elsif tmp_a < tmp_b
+			b += tmp_a + tmp_b
+		else
+			a += tmp_a
+			b += tmp_b
+		end
+	end
+	puts "#{a} #{b}"
+end

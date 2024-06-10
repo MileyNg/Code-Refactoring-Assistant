@@ -1,0 +1,129 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+
+using namespace std;
+
+struct node {
+    int x,y,r,c;
+}c[30];
+int d[30][30];
+int r[30][30];
+bool cover[30];
+bool use[30];
+int ans,n;
+bool get[18000000*2];
+int mi[25];
+
+int getting()
+{
+    int sum = 0;
+    for (int i = 1; i <= n; ++i)
+	sum += mi[i] * (!use[i]);
+    return sum;
+    
+}
+
+void cover_check()
+{
+    memset(cover,false,sizeof(cover));
+    for (int i = 1; i <= n; ++i) 
+	if (!use[i]) {
+	    for (int j = 1; j < i; ++j) 
+		if (!use[j]) {
+		    if (r[i][j] > d[i][j]) {
+			cover[i] = true;
+			break;
+		    }
+		}
+	}
+}
+
+void search(int now)
+{
+    int w = getting();
+    if (get[w]) return;
+    else get[w] = true;
+    
+    bool tmp[100];
+    for (int i = 1; i <= n; ++i)
+	tmp[i] = cover[i];
+
+    for (int i = 1; i <= n; ++i)
+	if (!use[i] && !cover[i]) {
+	    for (int j = i + 1; j <= n; ++j) 
+		if (!use[j] && !cover[j] && c[i].c == c[j].c) {
+		    use[i] = true;
+		    use[j] = true;
+		    ans = max(ans,now);
+		    cover_check();
+		    search(now+1);
+		    use[i] = false;
+		    use[j] = false;
+		    if (ans * 2 == n) return;
+		}
+	}
+    for (int i = 1; i <= n; ++i)
+	cover[i] = tmp[i];
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    
+    cin >> n;
+    mi[1] = 1;
+    for (int i = 2; i <= 24; ++i)
+	mi[i] = mi[i-1] * 2;
+    while (n) {
+	memset(get,false,sizeof(get));
+	ans = 0;
+	for (int i = 1; i <= n; ++i) {
+	    cin >> c[i].x >> c[i].y >> c[i].r >> c[i].c;
+	}
+	for (int i = 1; i <= n; ++i)
+	    for (int j = 1; j <= n; ++j) {
+		d[i][j] = (c[i].x - c[j].x) * (c[i].x - c[j].x) + (c[i].y - c[j].y) * (c[i].y - c[j].y);
+		r[i][j] = (c[i].r + c[j].r) * (c[i].r + c[j].r);
+	    }
+	memset(use,false,sizeof(use));
+	memset(cover,false,sizeof(cover));
+	cover_check();
+
+	search(1);
+	
+	cout << ans * 2 << endl;
+	
+	cin >> n;
+    }
+    
+    return 0;
+}
+
+
+
+
+
+    /*
+    for (int col = 1; col <= 4; ++col) {
+	for (int i = 1; i <= n; ++i) 
+	    if (!use[i] && c[i].c == col && !cover[i]) {
+		for (int j = i + 1; j <= n; ++j)
+		    if (!use[j] && c[j].c == col && !cover[j]) {
+			//cout << i << " " << j << " " << now << endl;
+			use[i] = true;
+			use[j] = true;
+			ans = max(ans,now);
+			cover_check();
+
+			search(now+1);
+			use[i] = false;
+			use[j] = false;
+		    }
+	    }
+    }
+    */

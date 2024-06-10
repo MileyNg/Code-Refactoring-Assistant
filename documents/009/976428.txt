@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <tuple>
+#include <queue>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  while(1){
+    int w,h;
+    cin >> w >> h;
+    if(!w) break;
+    vector<vector<int>> s(h,vector<int>(w));
+    for(int i = 0; i < h; ++i) {
+      for (int j = 0; j < w; ++j) {
+        cin >> s[i][j];
+      }
+    }
+    int c[4];
+    for(int i = 0; i < 4; ++i) {
+      cin >> c[i];
+    }
+    using edge = vector<tuple<int,int,int>>;
+    vector<vector<vector<edge>>> to(h,vector<vector<edge>>(w,vector<edge>(4)));
+    vector<vector<vector<vector<int>>>> cost(h,vector<vector<vector<int>>>(w,vector<vector<int>>(4)));
+    for (int i = 0; i < h; ++i) {
+      for (int j = 0; j < w; ++j) {
+        int di[] = {1,0,-1,0};
+        int dj[] = {0,1,0,-1};
+        for (int k = 0; k < 4; ++k) {
+          int ni=i+di[k];
+          int nj=j+dj[k];
+          if(ni<0||nj<0||ni>=h||nj>=w)continue;
+          for (int l = 0; l < 4; ++l) {
+            to[i][j][l].push_back(make_tuple(ni,nj,k));
+            if ((l - k + 4) % 4 == s[i][j]) {
+              cost[i][j][l].push_back(0);
+            } else {
+              cost[i][j][l].push_back(c[(l - k + 4) % 4]);
+            }
+          }
+        }
+      }
+    }
+    priority_queue<tuple<int,int,int,int>, vector<tuple<int,int,int,int>>, greater<tuple<int,int,int,int>>> q;
+    q.push(make_tuple(0,0,0,1));
+    vector<vector<vector<int>>> d(h,vector<vector<int>>(w,vector<int>(4,1000000000)));
+    d[0][0][1] = 0;
+    while(!q.empty()) {
+      auto p = q.top(); q.pop();
+      int c,i,j,k;
+      tie(c,i,j,k) = p;
+      if (c > d[i][j][k]) continue;
+      for (int l = 0; l < to[i][j][k].size(); ++l) {
+        int ni,nj,nk;
+        tie(ni,nj,nk) = to[i][j][k][l];
+        if (d[ni][nj][nk] > d[i][j][k] + cost[i][j][k][l]) {
+          d[ni][nj][nk] = d[i][j][k] + cost[i][j][k][l];
+          q.push(make_tuple(d[ni][nj][nk],ni,nj,nk));
+        }
+      }
+    }
+    int minc = 1000000000;
+    for (int i = 0; i < 4; ++i) {
+      minc = min(minc,d[h-1][w-1][i]);
+    }
+    cout << minc << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+  bool card[4][13] = {{}};
+  string temp = "SHCD";
+  int n, num;
+  char mark;
+
+  cin >> n;
+  while(n--){
+    cin >> mark >> num;
+    card[temp.find(mark)][--num] = true;
+  }
+  for(int i = 0; i < 4; i++){
+    for(int j = 0; j < 13; j++){
+      if(!card[i][j]) cout << temp[i] << " " << j + 1 << endl;
+    }
+  }
+}

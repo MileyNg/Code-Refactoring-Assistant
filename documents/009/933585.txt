@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<math.h>
+
+int fun(int n);
+
+int main()
+{
+    int n;
+    int result;
+
+    while(scanf("%d",&n)!=EOF)
+    {
+        result = n - fun(n) - 1;
+        printf("%d\n",result);
+    }
+    return 0;
+}
+
+int fun(n)
+{
+    int i,j;
+    int count = 0;
+    int tmp;
+    for(i=1;i<=n;i=i+2)
+    {
+        tmp = sqrt(i);
+        for(j=2;j<=tmp;j++)
+        {
+            if(i%j == 0)
+            {
+                count++;
+                break;
+            }
+
+        }
+    }
+    return count;
+}

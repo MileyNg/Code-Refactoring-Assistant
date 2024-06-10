@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <math.h>
+
+double get_angle(double x1, double x2, double y1, double y2) {
+	if(fabs(x1-x2)<0.000001) {
+		return 180;
+	} else if(fabs(y1-y2)<0.000001) {
+		return 0;	
+	} else {
+		return tan((y2-y1)/(x2-x1))*180/M_PI;
+	}
+}
+
+int main(void) {
+	int i, n;
+	double x1, y1, x2, y2, x3, y3, x4, y4;
+	double a1, a2;
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%lf %lf %lf %lf %lf %lf %lf %lf\n", &x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4);
+		a1 = get_angle(x1, x2, y1, y2);
+		a2 = get_angle(x3, x4, y3, y4);
+
+		if(fabs(a1-a2)<0.00001) {
+			printf("YES\n");
+		} else {
+			printf("NO\n");
+		}
+	}
+	
+	return 0;
+}

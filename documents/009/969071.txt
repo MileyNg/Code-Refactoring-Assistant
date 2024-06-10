@@ -1,0 +1,74 @@
+#include <iostream>
+#include <algorithm>
+#define R 1001
+using namespace std;
+
+int main()
+{
+	int N, M;
+	while (cin >> N >> M, N || M){
+
+		//rの入力
+		int r, t[R], n[R], m[R], s[R], q, ts, te, qm;
+		fill(t, t + R, 0);
+		fill(n, n + R, 0);
+		fill(m, m + R, 0);
+		fill(s, s + R, 0);
+
+		cin >> r;
+		for (int i = 0; i < r; i++){
+			cin >> t[i] >> n[i] >> m[i] >> s[i];
+		}
+		cin >> q;
+
+		//qの入力と計算
+		for (int c = 0; c < q; c++){
+			cin >> ts >> te >> qm;
+
+			//記録
+			int tm[1300];
+			int pc[1300];
+			fill(tm, tm + 1300, 0);
+			fill(pc, pc + 1300, 0);
+			for (int i = 0; i < r; i++){
+				if (m[i] == qm){
+					if (s[i] == 1){
+						pc[n[i]] = t[i];
+					}
+					if (s[i] == 0){
+						for (int j = pc[n[i]]; j < t[i]; j++){
+							tm[j] = 1;
+						}
+					}
+				}
+			}
+
+			//カウント
+			//bool login = false;
+			int counter = 0;
+			//int temp;
+			for (int i = ts; i < te; i++){
+				counter += tm[i];
+				
+				/*
+				if (tm[i] == 1 && login == false){
+					temp = i;
+					login = true;
+				} 
+				if (tm[i] == 0 && login == true){
+					counter += i - 1 - temp;
+					login = false;
+				}
+				*/
+			//	cout << "i:" << i << " tm[i]:" << tm[i] << " login:" << login << " temp:" << temp << endl;
+			}
+			/*
+			if (login == true){
+				counter += te - temp;
+			}
+			*/
+			cout << counter << endl;
+		}
+	}
+	return 0;
+}

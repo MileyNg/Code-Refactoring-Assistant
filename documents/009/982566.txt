@@ -1,0 +1,96 @@
+#include<stdio.h>
+struct Node {int p,l,r;};
+struct Node T[100000];
+main()
+{
+  int n,id,k,i,j,c,tmp,sum=0;
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      T[i].p=T[i].l=T[i].r=-1;
+    }
+  for(i=0;i<n;i++)
+    {
+      scanf("%d%d",&id,&k);
+      for(j=0;j<k;j++)
+	{
+	  scanf("%d",&c);
+	  if(j==0)
+	    {
+	      tmp=c;
+	      T[id].l=tmp;
+	      T[c].p=id;
+	    }
+	  else 
+	    {
+	      T[tmp].r=c;
+	      T[c].p=id;
+	      tmp=c;
+	    }
+	}
+    }
+  
+  for(i=0;i<n;i++)
+    {
+      if(T[i].p==-1)
+	{
+	  sum=0;
+	  printf("node %d: parent = %d, depth = ",i,T[i].p);
+	  tmp=T[i].p;	 
+	  while(tmp!=-1)
+	    {
+	      sum++;
+	      tmp=T[tmp].p;
+	    }
+	  printf("%d, root, [",sum);
+	  tmp=T[i].l;
+	  while(tmp!=-1)
+	    {
+	      printf("%d",tmp);
+	      tmp=T[tmp].r;
+	      if(tmp!=-1)
+		{
+		  printf(", ");
+		}
+	    }
+	  printf("]\n");
+	}
+      else if(T[i].l==-1)
+	{
+	  sum=0;
+	  printf("node %d: parent = %d, depth = ",i,T[i].p);
+	  tmp=T[i].p;	 
+	  while(tmp!=-1)
+	    {
+	      sum++;
+	      tmp=T[tmp].p;
+	    }
+	  printf("%d, leaf, []\n",sum);
+	}
+      else 
+	{
+	  sum=0;
+	  printf("node %d: parent = %d, depth = ",i,T[i].p);
+	  tmp=T[i].p;	 
+	  while(tmp!=-1)
+	    {
+	      sum++;
+	      tmp=T[tmp].p;
+	    }
+	  printf("%d, internal node, [",sum);
+	  tmp=T[i].l;
+	  while(tmp!=-1)
+	    {
+	      printf("%d",tmp);
+	      tmp=T[tmp].r;
+	      if(tmp!=-1)
+		{
+		  printf(", ");
+		}
+	    }
+	  printf("]\n");
+	}
+
+    }
+  return 0;
+}

@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int n, half;
+  scanf("%d", &n);
+  string l, r, h, ts;
+  while(n--){
+    string key, res;
+    cin >> key >> res;
+    char tmp;
+    for(int i = key.size()-1; i >= 0; i--){ //    rep(i, key.size()){
+      switch(key[i]){
+      case 'C': //      case 'J':
+	tmp = res[0];
+	res.erase(res.begin());
+	res += tmp;
+	break;
+      case 'J': //      case 'C':
+	tmp = res[res.size()-1];
+	res.erase(res.begin()+res.size()-1);
+	res.insert(res.begin(), 1, tmp);
+	break;
+      case 'E':
+        half = (int)res.size()/2;
+	l = res.substr(0, half);
+	r = res.substr(res.size()-half, half);
+	h = "";
+	if((int)res.size()%2) h = res[half];
+	res = r + h + l;
+	break;
+      case 'A':
+	ts = "";
+	for(int i = res.size()-1; i >= 0; i--) ts += res[i];
+	res = ts;
+	break;
+      case 'M': //	case 'P':
+	rep(i, res.size()) if(isdigit(res[i])) res[i] = (res[i]=='9')?'0':res[i]+1;
+	break;
+      case 'P': //      case 'M':
+	rep(i, res.size()) if(isdigit(res[i])) res[i] = (res[i]=='0')?'9':res[i]-1;
+	break;
+      }
+    }
+
+    cout << res << endl;
+  }
+  return 0;
+}

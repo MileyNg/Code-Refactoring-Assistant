@@ -1,0 +1,16 @@
+while True:
+	n = int(raw_input())
+	if n == 0: break
+	data = {}
+	for i in range(n):
+		id,price,quant = map(int, raw_input().split())
+		if id in data:
+			data[id] += price*quant
+		else:
+			data[id] = price*quant
+	if max(data.values()) < 1000000:
+		print "NA"
+	else:
+		for k,v in sorted(data.items()):
+			if v >= 1000000: print k
+	

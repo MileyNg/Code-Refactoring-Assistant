@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    int n, m;
+    while(cin >> n >> m, n || m){
+        bool p[1000];
+        fill(p, p+1000, true);
+        int count = 0;
+        int l = 0;
+        for(int i=0;; i++){
+            if(p[i%n]) l++;
+            if(p[i%n] && l == m && count == n-1){
+                cout << i%n+1 << endl;
+                break;
+            }
+            else if(p[i%n] && l == m){
+                p[i%n] = false;
+                count++;
+                l = 0;
+            }
+        }
+    }
+}

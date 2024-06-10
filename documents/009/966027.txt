@@ -1,0 +1,65 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+int n;
+int m[100],a[100],b[100];
+vector<int> t;	//時刻の成分(座標圧縮)
+vector<int>::iterator it;
+int data[200];	//各時刻t[i]における重量の総和をdata[ i ]で表す。
+
+int main(){
+	int i;
+	while( cin >> n )
+	{
+		if( n == 0 )
+			break;
+		for( i = 0;i < n;i++ ){
+			cin >> m[i] >> a[i] >> b[i];
+			t.push_back( a[i] );
+			t.push_back( b[i] );
+		}
+		sort( t.begin(),t.end() );
+
+		for( i = 1;i < t.size(); ){
+			it = lower_bound( t.begin(),t.end(),t[i] );
+			it--;
+			if( *it == t[i] ){
+				it = t.erase( it );
+			}
+			else{
+				i++;
+			}
+		}
+
+		for( i = 0;i < n;i++ )
+		{
+			it = lower_bound( t.begin(),t.end(),a[i] );
+			data[ it - t.begin() ] += m[i];
+			it = lower_bound( t.begin(),t.end(),b[i] );
+			data[ it - t.begin() ] -= m[i];
+		}
+
+		bool FLAG = true;
+		if( data[0] > 150 )
+			FLAG = false;
+		for( i = 0;i < t.size()-1;i++ ){
+			data[i+1] += data[i];
+			if( data[i+1] > 150 )
+				FLAG = false;
+		}
+		if( FLAG ){
+			cout << "OK\n";
+		}
+		else{
+			cout << "NG\n";
+		}
+
+		for( i = 0;i < t.size();i++ ){
+			data[i] = 0;
+		}
+		t.clear();
+	}
+	return 0;
+}

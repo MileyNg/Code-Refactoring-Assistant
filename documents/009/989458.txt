@@ -1,0 +1,64 @@
+#include<stdio.h>
+#define NIL -1
+
+int getDepth(int);
+
+typedef struct{
+  int p; //親  
+  int l; //一番左の子
+  int r; //右の兄弟  
+}Tree;
+
+Tree T[10001];
+
+int getDepth(int p){
+  if(T[p].p==NIL) return 0;
+  return getDepth(T[p].p)+1;
+}
+
+
+int main(){
+  int i,j;
+  int n,id; //接点の個数,番号
+  int k;    //次数(葉は次数0)
+  int c;    //一番左の子の接点番号
+  int d[10001];    //深さ
+  int u;
+  
+  scanf("%d",&n);
+
+  for(i=0 ; i<n ; i++) {
+    scanf("%d %d",&id,&k);
+    for(j=0 ; j<k ; j++){
+      scanf("%d",&c);
+
+      if(j==0) T[id].l = c;
+      else {
+	T[u].r = c;
+	T[c].p = id;
+	u = c;
+      }
+    }
+  }
+  for(i=0 ; i<n ; i++) d[i] = getDepth(i);
+  
+  for(i=0 ; i<n ; i++){
+    printf("node %d: parent = %d, depth = %d, ",i,T[i].p,d[i]);
+    if(T[i].p==NIL) printf("root,[");
+    else if(T[i].l==NIL) printf("leaf,[");
+    else printf("internal node,[");
+
+    if(T[i].l != NIL){
+      printf("%d",T[i].l);
+      u = T[i].l;
+      while(1){
+	if(T[u].r == NIL) break;
+	printf(", %d",T[u].r);
+	u = T[u].r;
+      }
+    }
+    printf("]\n",u);
+  }
+  return 0;
+
+}

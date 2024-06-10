@@ -1,0 +1,31 @@
+#include <stdio.h>
+  
+main(){
+  int count;
+  int i;
+  int R[200000];
+  int max=0;
+  
+  scanf("%d",&count);
+  if(count<2)return 0;
+
+
+  for(i=0;i<count;i++){
+    scanf("%d",&R[i]);
+  }
+
+  i=count-2;
+  while(1){
+    if(count == 0)break;
+    if(max<R[count-1]-R[i])max=R[count-1]-R[i];
+    if(i==0){
+      count=-1;
+      i=count-2;
+    }
+    i--;
+}
+
+  printf("%d\n",max);
+  return 0;
+  
+}

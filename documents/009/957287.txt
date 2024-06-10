@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int T,N,K,X[100000+10],A[100000+10];
+
+int main() {
+  cin >> T;
+  for (int t=0; t<T; t++) {
+    cin >> N >> K;
+    for (int i=0; i<N; i++) {
+      cin >> X[i];
+    }
+    for (int i=0; i+1<N; i++) {
+      A[i] = X[i+1] - X[i];
+    }
+    sort(A,A+N-1);
+    int sum=0;
+    int I = max(0,N-1-(K-1));
+    for (int i=0; i<I; i++) {
+      sum += A[i];
+    }
+    cout << sum << endl;
+  }
+}

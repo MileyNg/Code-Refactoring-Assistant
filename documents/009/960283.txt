@@ -1,0 +1,35 @@
+#include <utility>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int N,M;
+pair<int,int> PD[10010];
+int main() {
+   while(cin >> N >> M){
+	if(N==0 && M==0)break;
+        int d,p;
+	for(int i=0;i<N;i++){
+	  cin >> d >> p;
+	  PD[i] = make_pair(p,d);
+        }
+	sort(PD,PD+N-1);
+
+	int S=0;
+	for(int i=0; i<N;i++){
+	  S += PD[i].first * PD[i].second;
+	}
+	int G=0;
+	for(int i=0; i<N;i++){
+	  if(M<=0) break;
+          if(M<PD[i].second){
+          S -= M*PD[i].first;
+          break;
+          }
+          else G=PD[i].second;
+          S -= G*PD[i].first;
+          M -= G;
+	}
+	cout << S << endl;
+}        
+	return 0;
+}

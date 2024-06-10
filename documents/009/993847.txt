@@ -1,0 +1,66 @@
+#include<stdio.h> 
+#define M 200000
+int heap_size=0,n;
+void heapIncreasekey(int *A,int i,int key){
+  int temp;
+  A[i]=key;
+  while(i>1 && A[i/2]<A[i]){
+    temp=A[i];
+    A[i]=A[i/2];
+    A[i/2]=temp;
+    i=i/2;
+  }
+}
+void maxHeapInsert(int *A,int key){
+  heap_size++;
+  A[heap_size]=-10000;
+  heapIncreasekey(A,heap_size,key);
+}
+void maxHeapify(int *A,int i){
+  int l,r,largest,temp;
+  l = 2*i;
+  r = 2*i+1;
+  if(l<=n && A[l]>A[i])
+    largest = l;
+  else
+    largest = i;
+  if(r<=n && A[r]>A[largest])
+    largest = r;
+  if(largest != i){
+    temp=A[i];
+    A[i]=A[largest];
+    A[largest]=temp;
+    maxHeapify(A,largest);
+  }
+}
+int heapExtractMax(int *A){
+  int max;
+  max=A[1];
+  A[1]=A[heap_size];
+  heap_size--;
+  maxHeapify(A,1);
+  return max;
+}
+int main(void){
+  char com[8];
+  int i=0,j=0,x,A[M],O[M];
+  while(1){
+    scanf("%s",com);
+    if(com[0]=='e'){
+      if(com[1]=='n')
+	break;
+      else{
+	O[j]=heapExtractMax(A);
+	j++;
+      }
+    }
+    else{
+      scanf("%d",&x);
+      maxHeapInsert(A,x);
+    }
+    i++;
+  }
+  for(i=0;i<j;i++)
+    printf("%d\n",O[i]);
+  return 0;
+}

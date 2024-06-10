@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+const int DIV = 1000000;
+
+int m, n;
+double x1[100], y[100], x2[100], z[100];
+double mnx, mxx;
+
+double solve(double x) {
+  double y1 = 0, y2 = 0, z1 = 0, z2 = 0;
+  rep (i, m) if (x1[i] != x1[(i + 1) % m] && x1[i] <= x && x <= x1[(i + 1) % m]) {
+    y1 = y[i] + (y[(i + 1) % m] - y[i]) / (x1[(i + 1) % m] - x1[i]) * (x - x1[i]);
+  }
+  rep (i, m) if (x1[i] != x1[(i + 1) % m] && x1[(i + 1) % m] <= x && x <= x1[i]) {
+    y2 = y[i] + (y[(i + 1) % m] - y[i]) / (x1[(i + 1) % m] - x1[i]) * (x - x1[i]);
+  }
+  rep (i, n) if (x2[i] != x2[(i + 1) % n] && x2[i] <= x && x <= x2[(i + 1) % n]) {
+    z1 = z[i] + (z[(i + 1) % n] - z[i]) / (x2[(i + 1) % n] - x2[i]) * (x - x2[i]);
+  }
+  rep (i, n) if (x2[i] != x2[(i + 1) % n] && x2[(i + 1) % n] <= x && x <= x2[i]) {
+    z2 = z[i] + (z[(i + 1) % n] - z[i]) / (x2[(i + 1) % n] - x2[i]) * (x - x2[i]);
+  }
+  return (y2 - y1) * (z2 - z1);
+}
+
+double simpson(double l, double r, double f(double), int k = 1){
+  double h = (r - l) / (2 * k);
+  double fo = 0, fe = 0;
+  for(int i = 1; i <= 2 * k - 3; i += 2){
+    fo += f(l + h * i);
+    fe += f(l + h * (i + 1));
+  }
+  return (f(l) + f(r) + 4 * (fo + f(r - h)) + 2 * fe) * h / 3;
+}
+
+int main() {
+  while (true) {
+    cin >> m >> n;
+    if (m == 0 && n == 0) break;
+    rep (i, m) cin >> x1[i] >> y[i];
+    rep (i, n) cin >> x2[i] >> z[i];
+    double mnx = max(*min_element(x1, x1 + m), *min_element(x2, x2 + n));
+    double mxx = min(*max_element(x1, x1 + m), *max_element(x2, x2 + n));
+    printf("%.12lf\n", simpson(mnx, mxx, solve, DIV));
+  }
+}

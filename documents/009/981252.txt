@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+int main()
+{
+	string s, line[81];
+	int counter = 0;
+	getline(std::cin, s);
+	s += "\n";
+
+	//入力内容を配列にとる．
+	string word = "";
+	for (int i = 0; i < (signed)s.length(); i++){
+		if (s[i] == ' ' || s[i] == '\n'){
+			line[counter++] = word;
+			word = "";
+		}
+		else{
+			word += s[i];
+		}
+	}
+
+	
+
+	//ずらす数を探す
+	int slide;
+	for (int i = 0; i < 26; i++){
+		for (int j = 0; j < counter; j++){
+			string word = "";
+			for (int k = 0; k < (signed)line[j].length(); k++){
+				if (line[j][k] != '.' && line[j][k] != ' '&& line[j][k] != '\n'){
+					word += 'a' + (line[j][k] + i - 'a') % 26;
+				}
+				else{
+					word += line[j][k];
+				}
+			}
+			if (word == "the" || word == "this" || word == "that"){
+				slide = i;
+				goto jump;
+			}
+
+		}
+	}
+
+jump:
+
+	//ずらすべき数だけずらす
+	for (int i = 0; i < counter; i++){
+		for (int j = 0; j <(signed)line[i].length(); j++){
+			if (line[i][j] != '.' && line[i][j] != ' '&& line[i][j] != '\n'){
+				line[i][j] = 'a' + (line[i][j] + slide - 'a') % 26;
+			}
+		}
+	}
+
+	//出力
+	for (int i = 0; i < counter - 1; i++){
+		cout << line[i] << " ";
+	}
+	cout << line[counter - 1] << endl;
+
+
+	return 0;
+}

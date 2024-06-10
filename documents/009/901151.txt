@@ -1,0 +1,52 @@
+#include<stdio.h>//ラウンドロビンスケジューリング
+#include<string.h>
+
+typedef struct process{
+	char name[10];
+	int time;
+}PROC;
+
+PROC list[100000];
+
+int main(void){
+	int i,j,n,quan,total=0,max=0,temp;
+	char tem[10];
+	
+	scanf("%d %d",&n,&quan);
+
+	for(i = 0;i < n;i++){
+		scanf("%s %d",list[i].name,&list[i].time);
+	}
+	for(i = 0;i < n;i++){
+		if(list[i].time >= max){
+			max = list[i].time;
+		}
+	}
+
+	for(i = 0;;i++){
+		if(i == n){
+			i = 0;
+		}
+		if(list[i].time <= quan && list[i].time != 0){
+			total += list[i].time;
+			list[i].time = 0;
+			printf("%s %d\n",list[i].name,total);
+			temp = list[i].time;
+			strcmp(tem,list[i].name);
+			list[i] = list[n - 1];
+			list[n - 1].time = temp;
+			strcmp(list[n - 1].name,tem);
+			n--;
+			i--;
+		}else if(list[i].time > quan){
+			list[i].time -= quan;
+			total += quan;
+		}
+		if(n == 0){
+			break;
+		}
+	}
+	
+
+	return 0;
+}

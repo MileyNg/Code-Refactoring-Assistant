@@ -1,0 +1,38 @@
+#include <iostream>
+
+//2つの円の状態を調べる関数
+int check_two_circles(const double xa, const double ya, const double ra,
+					  const double xb, const double yb, const double rb);
+
+int main(){
+	
+	int count;
+	std::cin >> count;
+	
+	for(int i = 0; i < count; ++i){
+		double xa, ya, ra, xb, yb, rb;
+		std::cin >> xa >> ya >> ra
+				 >> xb >> yb >> rb;
+		
+		std::cout << check_two_circles(xa, ya, ra, xb, yb, rb) << std::endl;
+	}
+	
+	return 0;
+}
+
+int check_two_circles(const double xa, const double ya, const double ra,
+					  const double xb, const double yb, const double rb){
+	
+	const double square_dist = (xa-xb)*(xa-xb)+(ya-yb)*(ya-yb);
+	
+	//(xa-xb)^2 + (ya-yb)^2 > (ra+rb)^2 ならば2つの円は重ならず離れている
+	if(square_dist > (ra+rb)*(ra+rb)) return 0;
+	//(xa-xb)^2 + (ya-yb)^2 < (ra-rb)^2 ならば片方の円がもう片方の中にある
+	else if(square_dist < (ra-rb)*(ra-rb)){
+		if(ra > rb) return 2;
+		else return -2;
+	}
+	//いずれでもない場合，AとBは交わっている
+	else return 1;
+	
+}

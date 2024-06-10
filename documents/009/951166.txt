@@ -1,0 +1,55 @@
+#include<iostream>
+#include<algorithm>
+#include<functional>
+#include<vector>
+
+using namespace std;
+
+#define TMAX 50
+#define PMAX 10
+
+struct S{
+	int ok,ti,no,wa[PMAX+1],swa;
+};
+
+bool operator<(S a,S b){
+	return a.ok>b.ok||a.ok==b.ok&&a.ti<b.ti||a.ok==b.ok&&a.ti==b.ti&&a.no>b.no;
+}
+
+int main(){
+	int M,T,P,R;
+	int m,t,p,j;
+	vector<S> dia;
+	S s;
+
+
+	while(1){
+		cin>>M>>T>>P>>R;
+		if(M==0&&T==0&&P==0&&R==0) break;
+
+		for(int i=0;i<=T;i++){
+			s.no=i,s.ok=0,s.ti=0,s.swa=0;
+			for(int j=1;j<=P;j++) s.wa[j]=0;
+			dia.push_back(s);
+		}
+		dia[0].ok=-1;
+
+		for(int i=0;i<R;i++){
+			cin>>m>>t>>p>>j;
+			if(j!=0) dia[t].wa[p]++;
+			else dia[t].ti+=m,dia[t].swa+=dia[t].wa[p],dia[t].ok++;
+		}
+		for(int i=1;i<=T;i++){
+			dia[i].ti+=dia[i].swa*20;
+		}
+
+		sort(dia.begin(),dia.end());
+
+		for(int i=0;i<T-1;i++){
+			if(dia[i].ti==dia[i+1].ti&&dia[i].ok==dia[i+1].ok) cout<<dia[i].no<<"=";
+			else cout<<dia[i].no<<",";
+		}
+		cout<<dia[T-1].no<<endl;
+		dia.clear();
+	}
+}

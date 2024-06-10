@@ -1,0 +1,36 @@
+<?php
+/*
+	AOJ 0240
+	title:Interest Rates
+	@kankichi573
+*/
+	function expt($x,$n)
+	{
+		if($n==0)
+			return(1.0);
+		return($x*expt($x,$n-1));
+	}
+	$max=0;
+	$maxbank=0;
+	while(fscanf(STDIN,"%d",$n) && $n)
+	{
+		fscanf(STDIN,"%d",$y);
+		for($i=0;$i<$n;$i++)
+		{
+			fscanf(STDIN,"%d %d %d",$b,$r,$t);	
+			if($t==1)
+				$amount = 1 + ($r/100)*$y;
+			else	
+				$amount = expt(1+$r/100,$y);
+				
+				//echo $b.":".$amount."\n";
+			if($amount>$max)
+			{
+				$max=$amount;		
+				$maxbank=$b;
+			}
+		}
+		fprintf(STDOUT,"%d\n",$maxbank);
+	}
+	return(0);
+?>

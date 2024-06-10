@@ -1,0 +1,66 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+string lev[11] = {"light fly", "fly", "bantam", "feather", "light", "light welter", "welter",
+		 			"light middle", "middle", "light heavy", "heavy"};
+D w[11] = {48, 51, 54, 57, 60, 64, 69, 75, 81, 91};
+
+
+int main() {
+	D in;
+	while (cin>>in) {
+		if (w[0] >= in) cout << lev[0] << endl;
+		else if (w[9] < in) cout << lev[10] << endl;
+		else { 
+			for_(i, 1, 10) {
+				if (w[i-1]<in && in<=w[i]) {
+					cout << lev[i] << endl;
+					break;
+				}
+			}
+		}
+	}
+	return 0;
+}

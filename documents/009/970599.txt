@@ -1,0 +1,32 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int N;
+
+int main(){
+  while(cin>>N&&N){
+
+    int a=1,b=2,sum=1,ans=0;
+
+    while(1){
+
+      if(a==b)break;
+
+      if(sum==N){
+	if(a+1!=b)ans++;
+	sum-=a;
+	a++;
+      }else if(sum<N){
+	sum+=b;
+	b++;
+      }else if(sum>N){
+	sum-=a;
+	a++;
+      }
+      
+    }
+    cout<<ans<<endl;
+  }
+  return 0;
+}

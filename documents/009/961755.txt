@@ -1,0 +1,21 @@
+#include<stdio.h>
+
+int main(){
+        int n,m = 0;
+        while( scanf("%d",&n)!=EOF){
+                for(int i = 0; i < 10;i++){
+                        for(int j = 0; j < 10; j++){
+                                for(int k = 0; k < 10;k++){
+                                        for(int l = 0; l < 10;l++){
+                                                if(i + j + k + l == n){
+                                                        m += 1;
+                                                }
+                                        }
+                                }
+                        }
+                }
+                printf("%d\n",m);
+                m = 0;
+        }
+        return 0;
+}

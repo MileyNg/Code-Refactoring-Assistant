@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+#define max(a,b)(a<b?a:b)
+
+int main(){
+
+	int fi[100][2]={0};
+	int fiPos=0;
+ 
+	while(1){
+
+	int ans[100][2]={0};
+	int ansPos=0;
+
+	int n,m;
+	int tr[100]={0};
+	int hnk[100]={0};
+	int trSum=0,hnkSum=0;
+
+	cin >> n>>m;
+
+	if(!n&&!m)
+		break;
+
+	for(int i=0;i<n+m;i++){
+		if(i<n){
+			cin >> tr[i];
+			trSum+=tr[i];
+		}
+		else{
+			cin >> hnk[i-n];
+			hnkSum+=hnk[i-n];
+		}
+	}
+
+	for(int i=0;i<n;i++){
+		for(int j=0;j<m;j++){
+			if(trSum==hnkSum+(tr[i]*2)-(hnk[j]*2)){
+				ans[ansPos][0]=tr[i];
+				ans[ansPos++][1]=hnk[j];
+			}
+		}
+	}
+
+	if(ansPos==0){
+		fi[fiPos++][0]=-1;
+	}else{
+	int ANS=0;
+	if(ansPos>1){
+		int max=1000;
+		for(int i=0;i<ansPos;i++){
+			int tMax=max;
+			max=max(max,ans[i][0]+ans[i][1]);
+			if(max!=tMax){
+				ANS=i;
+			}
+		}
+	}
+	
+	fi[fiPos][0]=ans[ANS][0];
+	fi[fiPos++][1]=ans[ANS][1];
+
+	}
+}
+
+	for(int i=0;i<fiPos;i++){
+		if(fi[i][0]==-1)
+			cout << -1<<endl;
+		else
+			cout << fi[i][0] << " " << fi[i][1]<<endl;
+	}
+
+	return 0;
+}

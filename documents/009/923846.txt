@@ -1,0 +1,89 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) : x(a), y(b) {}
+};
+
+double dist2D(const Point2D& a, const Point2D& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) ); }
+
+
+// 四角形 頂点座標表記
+struct Rectangle {
+	Point2D lt, rt, lb, rb;
+	Point2D cent;
+};
+
+void rectCent(Rectangle& r) {
+	r.cent.x = (r.rt.x + r.lt.x)/2.;
+	r.cent.y = (r.rt.y + r.rb.y)/2.;
+}
+
+bool rect_collision(Rectangle& a, Rectangle& b) {
+	rectCent(a); rectCent(b);
+	D x_dist = fabs(a.cent.x - b.cent.x), y_dist = fabs(a.cent.y - b.cent.y);
+	if (x_dist <= (a.cent.x - a.lt.x) + (b.cent.x - b.lt.x)
+		&& y_dist <= (a.lt.y - a.cent.y) + (b.lt.y - b.cent.y)) return true;
+	return false;
+}
+
+
+int main() {
+	Rectangle a, b;
+	
+	while (cin>>a.lb.x>>a.lb.y>>a.rt.x>>a.rt.y>>b.lb.x>>b.lb.y>>b.rt.x>>b.rt.y) {
+		a.lt.x = a.lb.x; a.lt.y = a.rt.y;
+		a.rb.x = a.rt.x; a.rb.y = a.lb.y;
+		
+		b.lt.x = b.lb.x; b.lt.y = b.rt.y;
+		b.rb.x = b.rt.x; b.rb.y = b.lb.y;
+		
+		if (rect_collision(a, b)) cout << "YES" << endl;
+		else cout << "NO" << endl;
+	}
+	
+	return 0;
+}

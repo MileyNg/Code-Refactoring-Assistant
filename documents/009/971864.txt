@@ -1,0 +1,30 @@
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  msq = n.times.map{n.times.map{0}}
+
+  x = (n - 1) / 2
+  y = (n + 1) / 2
+  k = 1
+  msq[y][x] = k
+
+  while k < n * n
+    x += 1
+    x = 0 if x >= n
+    y += 1
+    y = 0 if y >= n
+
+    while msq[y][x] > 0
+      x -= 1
+      x = n - 1 if x < 0
+      y += 1
+      y = 0 if y >= n
+    end
+
+    k += 1
+    msq[y][x] = k
+  end
+
+  puts msq.map{|hl| hl.map{|k| sprintf("%4d", k)}.join("")}.join("\n")
+end

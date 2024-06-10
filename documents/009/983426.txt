@@ -1,0 +1,33 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+int main(){
+int n;
+cin>>n;
+rep(i,n){
+double a,b,c,d,e,f;
+cin>>a>>b>>c>>d>>e>>f;
+double x,y,r;
+double p,q,s,t;
+p=a*a+b*b;
+q=c*c+d*d;
+s=e*e+f*f;
+t=2*(a-e)*(b-d)-2*(b-f)*(a-c);
+
+x=((b-d)*(p-s)-(b-f)*(p-q))/t;
+y=((a-e)*(p-q)-(a-c)*(p-s))/t;
+r=hypot(x-a,y-b);
+
+printf("%.3f %.3f %.3f\n",x,y,r);
+}
+}

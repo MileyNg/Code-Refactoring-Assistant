@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cstdio>
+#include <vector>
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,n) loop(i,0,n)
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+typedef string String;
+
+String lcs(const String& a, const String& b) {
+    const int n = a.size(), m = b.size();
+    vvi X(n+1, vi(m+1));
+    vvi Y(n+1, vi(m+1));
+    rep(i,n)rep(j,m){
+        if (a[i] == b[j]) {
+            X[i+1][j+1] = X[i][j] + 1;
+            Y[i+1][j+1] = 0;
+        } else if (X[i+1][j] < X[i][j+1]) {
+            X[i+1][j+1] = X[i][j+1];
+            Y[i+1][j+1] = +1;
+        } else {
+            X[i+1][j+1] = X[i+1][j];
+            Y[i+1][j+1] = -1;
+        }
+    }
+    String c;
+    for (int i = n, j = m; i > 0 && j > 0; ) {
+        if      (Y[i][j] > 0) --i;
+        else if (Y[i][j] < 0) --j;
+        else { c.push_back(a[i-1]); --i; --j; }
+    }
+    reverse(c.begin(), c.end());
+    return c;
+}
+
+int solve(string const& s){
+    string a=s.substr(0,s.find("iwi"));
+    string b=s.substr(s.find("iwi")+3);
+    rep(i,b.size()){
+        if(b[i]=='(')b[i]=')';
+        else if(b[i]==')')b[i]='(';
+        else if(b[i]=='{')b[i]='}';
+        else if(b[i]=='}')b[i]='{';
+        else if(b[i]=='[')b[i]=']';
+        else if(b[i]==']')b[i]='[';
+    }
+    reverse(b.begin(),b.end());
+    return 2*lcs(a,b).size()+3;
+}
+
+int main(){
+    string s;
+    while(cin>>s){
+        cout << solve(s) << endl;
+    }
+}

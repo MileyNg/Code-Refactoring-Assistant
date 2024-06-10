@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+using namespace std;
+#define INF	100000000
+#define MOD 1000000007
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define sec second
+#define lb lower_bound
+#define ub upper_bound
+#define SS stringstream
+#define rep(i,n) for(int i = 0; i < n; i++)
+#define sz(x) ((int)(x).size())
+#define SORT(x) sort((x).begin(), (x).end())
+#define RSORT(x) sort((x).begin(), (x).end(), greater<int>() )
+#define clr(a,b) memset((a),(b),sizeof(a))
+typedef pair<int, int> P;
+typedef long long int ll;
+typedef vector<int> Vi;
+typedef vector<ll> Vll;
+typedef vector<P> Vp;
+typedef priority_queue<P, vector<P>, greater<P> > PQ;
+
+string s[12];
+int dx[4] = {1,0,-1,0},dy[4] = {0,1,0,-1};
+int ans;
+
+int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	while(cin >> s[0]){
+		rep(i,11) cin >> s[i+1];
+		bool check[12][12];
+		queue<P> que;
+		clr(check,0);
+		ans = 0;
+		rep(i,12){
+			rep(j,12){
+				if(s[i][j]=='0'||check[i][j]==true) continue;
+				check[i][j] = true;
+				ans++;
+				que.push(P(i,j));
+				while(que.size()){
+					P q = que.front(); que.pop();
+					rep(k,4){
+						P p;
+						p.fi = q.fi+dx[k]; p.sec = q.sec+dy[k];
+						if(0<=p.fi&&p.fi<12&&0<=p.sec&&p.sec<12){
+							if(check[p.fi][p.sec]==false&&s[p.fi][p.sec]=='1'){
+								check[p.fi][p.sec]=true;
+								que.push(P(p.fi,p.sec));
+							}
+						}
+					}
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+}

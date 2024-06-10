@@ -1,0 +1,71 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+typedef struct {
+   short cost, x, y;
+}Point;//螳壻ケ我ク?クェ扈捺桷菴鍋畑譚・蟄伜お豈丈クェ蟾・蜴ら噪蝮先?菴咲スョ蜥悟・カ驟ェ逧??
+int H, W, N;
+vector<Point> factory;
+char map[1000][1002];
+short dx[4] = {-1, 1, 0, 0}, dy[4] = {0, 0, -1, 1};
+bool myfunction(Point a, Point b)
+{
+    return a.cost < b.cost;
+}
+
+int bfs(int sx, int sy, int ex, int ey);
+int main()
+{
+    cin>>H>>W>>N;
+    int sx, sy;
+    for(int i = 0; i < H; i++){
+        cin>>map[i];
+        for(int j = 0; j < W; j++){
+            if( 1 <= (map[i][j]-'0') && (map[i][j]-'0') <= N){
+                Point p;
+                p.x = i, p.y = j, p.cost = map[i][j] - '0';
+                factory.push_back(p);//謚雁キ・蜴ら噪陦ィ遉コ謾セ蛻ー蜿ッ蜿俶焚扈?クュ
+            }
+            if(map[i][j] == 'S')
+               sx = i, sy = j; //隶ー蠖戊オキ蟋倶ス咲スョ逧?攝譬?        }
+    }
+
+    sort(factory.begin(), factory.end(), myfunction);
+
+    int ans = 0;
+    int start_x = sx, start_y = sy;
+    for(int i = 0; i < factory.size(); i++){
+        ans += bfs(start_x, start_y, factory[i].x, factory[i].y);
+        start_x = factory[i].x;  start_y = factory[i].y;
+    }
+
+    cout<<ans<<endl;
+
+    return 0;
+}
+
+
+int bfs(int sx, int sy, int ex, int ey)
+{
+   queue<Point> q;
+   Point s;
+   s.x = sx; s.y = sy; s.cost = 0;//蛻晏ァ句喧蠑?ァ狗噪豁・謨ー荳コ0
+   q.push(s);//謚願オキ蟋狗せ謾セ蛻ー髦溷?荳ュ
+   while(!q.empty()){
+     s = q.front();
+     q.pop();
+     for(int i = 0; i < 4; i++){
+       int xx,yy;
+       xx = s.x + dx[i]; yy = s.y + dy[i];
+       if(xx == ex && yy == ey) return s.cost+1;//螯よ棡蟾イ扈丞芦莠?サ育せ蛻呵ソ泌屓螳?噪豁・謨ー
+       if(xx >= 0 && xx < H && yy >= 0 && yy < W && map[xx][yy] != 'X'){
+           Point now;
+           now.x = xx; now.y = yy; now.cost = s.cost + 1;
+           cout<<now.x<<'\t'<<now.y<<'\t'<<now.cost<<endl;
+           q.push(now);
+       }
+     }//for()
+   }//while()
+}//bfs()

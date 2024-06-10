@@ -1,0 +1,114 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+int H,W;
+char c[17][65];
+int dy[] = {0,1,0,-1};
+int dx[] = {1,0,-1,0};
+
+pi nx[17][65][4];
+vector<pi> from[17][65][4];
+bool used[17][65][4][17][65][4];
+int gy,gx,gd,ans;
+int gy2,gx2;
+
+void f(int y0,int x0,int d0,int y1,int x1,int d1){
+	if(ans == 2 || used[y0][x0][d0][y1][x1][d1])return;
+	used[y0][x0][d0][y1][x1][d1] = 1;
+	if(y0 == gy && x0 == gx && y1 == gy2 && x1 == gx2 && d1 == gd){
+		ans = 2;
+		return;
+	}
+	if(y0 == gy && x0 == gx) ans = 1;
+	rep(i,sz(from[y1][x1][d1])+1)for(int dd=1;dd<=3;dd+=2){
+		int nd0 = (d0 + dd) % 4;
+		int nd1 = (d1 + dd) % 4;
+		pi &p = nx[y0][x0][nd0];
+		if(i == sz(from[y1][x1][d1])){
+			f(p.fir,p.sec,nd0,H+1,0,0);
+			continue;
+		}
+		pi &q = from[y1][x1][d1][i];
+		if(c[q.fir + dy[nd1]][q.sec + dx[nd1]] == '#'){
+			f(p.fir,p.sec,nd0,q.fir,q.sec,nd1);
+		}
+	}
+}
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	while(cin>>W>>H && W){
+		rep(i,H+1)rep(j,W)rep(d,4)from[i][j][d].clear();
+		int sy=-1,sx=-1,sd=-1;
+		gy = gx = gd = -1;
+		rep(i,H)rep(j,W){
+			cin>>c[i][j];
+		}
+		rep(i,H)rep(j,W){
+			if(c[i][j] == 'K'){
+				sy = i, sx = j;
+				rep(d,4){
+					if(c[i+dy[d]][j+dx[d]] == '.'){
+						sd = d;
+					}
+				}
+				c[i][j] = '.';
+			}
+			if(c[i][j] == 'M'){
+				gy = i, gx = j;
+				rep(d,4){
+					if(c[i+dy[d]][j+dx[d]] == '.'){
+						gd = d;
+					}
+				}
+				c[i][j] = '.';
+			}
+		}
+		rep(i,H)rep(j,W)if(c[i][j] == '.')rep(d,4){
+			int y = i, x = j;
+			while(c[y+dy[d]][x+dx[d]] == '.'){
+				y += dy[d], x += dx[d];
+			}
+			nx[i][j][d] = mp(y,x);
+			from[y][x][d].pb(mp(i,j));
+		}
+		memset(used,0,sizeof(used));
+		ans = 0;
+		pi s2 = nx[sy][sx][sd];
+		if(s2.fir == gy && s2.sec == gx){
+			cout<<"He can accomplish his mission."<<endl;
+			continue;
+		}
+		pi g2 = nx[gy][gx][gd];
+		gy2 = g2.fir, gx2 = g2.sec;
+		rep(d,4)f(s2.fir,s2.sec,sd,sy,sx,d);
+		if(ans==2)cout<<"He can accomplish his mission."<<endl;
+		else if(ans==1)cout<<"He cannot return to the kitchen."<<endl;
+		else cout<<"He cannot bring tea to his master."<<endl;
+	}
+}

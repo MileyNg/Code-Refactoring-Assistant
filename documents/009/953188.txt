@@ -1,0 +1,30 @@
+def R(xyzr1,xyzr2):
+	x1,y1,z1,r1 = xyzr1
+	x2,y2,z2,r2 = xyzr2
+	return max(0,((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)**0.5 - r1 - r2)
+while 1:
+	n = input()
+	if n == 0: break
+	xyzr = [map(float,raw_input().split()) for i in range(n)]
+	if n == 1:
+		print 0.0
+		continue
+	ans = 1e10
+	for i in range(n):
+		for j in range(i+1,n):
+			L = R(xyzr[i],xyzr[j])
+			if L < ans:
+				ans = L
+				s = [i,j]
+	chain = [xyzr.pop(s[1]),xyzr.pop(s[0])]
+	while xyzr:
+		pipe = 1e10
+		for i in range(len(xyzr)):
+			for j in range(len(chain)):
+				L = R(xyzr[i],chain[j])
+				if L < pipe:
+					pipe = L
+					p = i
+		ans += pipe
+		chain.append(xyzr.pop(p))
+	print ans

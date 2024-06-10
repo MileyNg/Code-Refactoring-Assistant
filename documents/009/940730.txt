@@ -1,0 +1,117 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+int dx[4] = {0, 1, 0, -1};
+int dy[4] = {1, 0, -1, 0};
+
+class Point
+{
+public:
+	int x, y;
+};
+
+void solve()
+{
+	int n, m;
+	while(cin >> n >> m, n || m)
+	{
+		string s;
+		Point current;
+		current.x = 1;
+		current.y = 1;
+		vector< vector<char> > field(m + 1, vector<char>(n + 1));
+		int direction = 0;
+		while(cin >> s)
+		{
+			if(s == "FORWARD" || s == "BACKWARD")
+			{
+				int size;
+				cin >> size;
+				if(s == "FORWARD")
+				{
+					if(current.x + dx[direction] * size <= 0)
+					{
+						current.x = 1;
+					}
+					else if(current.x + dx[direction] * size > n)
+					{
+						current.x = n;
+					}
+					else
+					{
+						current.x += dx[direction] * size;
+					}
+
+					if(current.y + dy[direction] * size <= 0)
+					{
+						current.y = 1;
+					}
+					else if(current.y + dy[direction] * size > m)
+					{
+						current.y = m;
+					}
+					else
+					{
+						current.y += dy[direction] * size;
+					}
+				}
+				else
+				{
+					if(current.x + dx[(direction + 2) % 4] * size <= 0)
+					{
+						current.x = 1;
+					}
+					else if(current.x + dx[(direction + 2) % 4] * size > n)
+					{
+						current.x = n;
+					}
+					else
+					{
+						current.x += dx[(direction + 2) % 4] * size;
+					}
+
+					if(current.y + dy[(direction + 2) % 4] * size <= 0)
+					{
+						current.y = 1;
+					}
+					else if(current.y + dy[(direction + 2) % 4] * size > m)
+					{
+						current.y = m;
+					}
+					else
+					{
+						current.y += dy[(direction + 2) % 4] * size;
+					}
+				}
+			}
+			else if(s == "RIGHT")
+			{
+				direction = (direction + 1) % 4;
+			}
+			else if(s == "LEFT")
+			{
+				if(direction == 0)
+				{
+					direction = 3;
+				}
+				else
+				{
+					--direction;
+				}
+			}
+			else
+			{
+				cout << current.x << " " << current.y << endl;
+				break;
+			}
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

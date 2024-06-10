@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int sum[300], num[300][5];
+
+int main(void)
+{
+	int n, i, j, k, c;
+	
+	scanf("%d", &n);
+	
+	for (i = 0; i < n; i++){
+		for (j = 0; j < 3; j++){
+			scanf("%d", &num[i][j]);
+		}
+	}
+	for (k = 0; k < 3; k++){
+		for (i = 0; i < n; i++){
+			
+			c = 0;
+			
+			for (j = 0; j < n; j++){
+				if (i != j && num[i][k] == num[j][k]){
+					num[j][k] = 0;
+					c = 1;
+				}
+			}
+			if (c == 1){
+				num[i][k] = 0;
+			}
+		}
+		for (j = 0; j < n; j++){
+				sum[j] += num[j][k];
+		}
+	}
+	for (i = 0; i < n; i++){
+		printf("%d\n", sum[i]);
+	}
+	
+	return (0);
+}
+
+			

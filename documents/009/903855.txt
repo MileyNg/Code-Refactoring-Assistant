@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+int H, W;
+char grid[101][101];
+
+int const dx[4] = {-1,1,0,0};
+int const dy[4] = {0,0,-1,1};
+
+int memo[101][101];
+
+inline bool IN(int x, int y) {
+  return 0<=x && x<W && 0<=y && y<H;
+}
+
+int const INF = 1<<29;
+
+int main() {
+  
+  while(cin >> W >> H && W) {
+    
+    int sx, sy;
+    
+    for(int i=0; i<H; i++) {
+      for(int j=0; j<W; j++) {
+        cin >> grid[i][j];
+        if(grid[i][j] == '&') {
+          sx = j, sy = i;
+        }
+      }
+    }
+    
+    memset(memo, -1, sizeof(memo));
+    typedef pair<int, int> Pii;
+    typedef pair<int, Pii> Piii;
+    
+    priority_queue<Piii> PQ;
+    PQ.push(Piii(0, Pii(sx, sy)));
+    while(!PQ.empty()) {
+      Piii piii = PQ.top(); PQ.pop();
+      int const x = piii.second.first;
+      int const y = piii.second.second;
+      int const cost = -piii.first;
+      
+      if(!IN(x, y)) {
+        cout << cost << endl;
+        break;
+      }
+      
+      for(int k=0; k<4; k++) {
+        int nx = x + dx[k], ny = y + dy[k];
+        int ncost = cost + (grid[ny][nx] == '#');
+        if(memo[ny][nx] == -1
+           || memo[ny][nx] > ncost) {
+          memo[ny][nx] = ncost;
+          PQ.push(Piii(-ncost, Pii(nx, ny)));
+        }
+      }
+    }
+    
+  }
+  
+  return 0;
+}

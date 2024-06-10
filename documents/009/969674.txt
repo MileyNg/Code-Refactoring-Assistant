@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int main()
+{
+  int i, j;
+  int N, Q, M;
+  int canAttend[50][100];
+  int maxMember, maxMemberDate;
+
+  while (1) {
+    scanf("%d%d", &N, &Q); if (N == 0 && Q == 0) { return -1; }
+    for (i = 0; i < N; i++) {
+      for (j = 0; j < 100; j++) { canAttend[i][j] = 0; }
+      scanf("%d", &M);
+      for (j = 0; j < M; j++) {
+	int date;
+	scanf("%d", &date);
+	canAttend[i][date] = 1;
+      }
+    }
+
+    maxMember = Q - 1;
+    maxMemberDate = 0;
+    for (i = 1; i < 100; i++) {
+      int numMember = 0;
+      for (j = 0; j < N; j++) {
+        if (canAttend[j][i]) {
+	  numMember++;
+        }
+      }
+      if (numMember > maxMember) {
+	maxMember = numMember;
+	maxMemberDate = i;
+      }
+    }
+    printf("%d\n", maxMemberDate);
+  }
+  return 0;
+}

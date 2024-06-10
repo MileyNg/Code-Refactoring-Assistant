@@ -1,0 +1,54 @@
+#include<iostream>
+#include<valarray>
+#include<vector>
+#include<cmath>
+
+using namespace std;
+
+int main(){
+  for(int d;cin>>d,d;){
+    vector<valarray<double> > v;
+    for(int i=0;i<d+3;i++){
+      valarray<double> va(d+2);
+      va[d]=1;
+      for(int j=0;j<d;j++){
+	va[d-1-j]=va[d-j]*i;
+      }
+      cin>>va[d+1];
+      v.push_back(va);
+    }
+    double mx=1e9;
+    int ans;
+    for(int i=0;i<d+3;i++){
+      vector<valarray<double> > m=v;
+      m.erase(begin(m)+i);
+      for(int j=0;j<d+1;j++){
+	int x=j;
+	for(int k=j;k<d+2;k++){
+	  if(fabs(m[k][j])>fabs(m[x][j])){
+	    x=k;
+	  }
+	}
+	if(fabs(m[x][j])<1e-5)goto next;
+	swap(m[x],m[j]);
+	auto a=m[j][j];
+	m[j]/=a;
+	for(int k=0;k<d+2;k++){
+	  if(k!=j){
+	    auto a=m[k][j];
+	    m[k]-=m[j]*a;
+	  }
+	}
+      }
+      if(mx>fabs(m[d+1][d+1])){
+	mx=fabs(m[d+1][d+1]);
+	ans=i;
+      }
+    next:
+      ;
+    }
+    cout<<ans<<endl;
+  }
+}
+
+      

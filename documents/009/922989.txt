@@ -1,0 +1,29 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+  int n ,m ,cnt=0 ,end=0 ,sai ,now=0 ,mass[1001];
+  while( true ){
+    cin >> n >> m;
+    if( n == 0 && m == 0 ){
+      break;
+    }
+    for( int i=0 ; i<n ; i++ ){
+      cin >> mass[i];
+    }
+    
+    for( int i=0 ; i<m ; i++ ){
+      cin >> sai;
+      if( end == 0 ){
+	now += sai;
+	now += mass[now];
+	cnt++;
+      }
+      if( now >= n ){
+	end = 1;
+      }
+    }
+    cout << cnt << endl;
+    cnt = 0; end = 0; now = 0;
+  }
+}

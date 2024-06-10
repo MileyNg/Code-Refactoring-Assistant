@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	char str[81];
+	int i;
+	int diff;
+	
+	while (gets(str) != NULL){
+		for (diff = 0; diff < 26; diff++){
+			for (i = 0; str[i] != 0; i++){
+				if ('a' <= str[i] && str[i] <= 'z'){
+					str[i] -= 'a';
+					str[i] = (str[i] + 1) % 26;
+					str[i] += 'a';
+				}
+			}
+			for (i = 0; str[i] != 0; i++){
+				if (strncmp(&str[i], "this", 4) == 0){
+					puts(str);
+					diff = 26;
+					break;
+				}
+				else if (strncmp(&str[i], "that", 4) == 0){
+					puts(str);
+					diff = 26;
+					break;
+				}
+				else if (strncmp(&str[i], "the", 3) == 0){
+					puts(str);
+					diff = 26;
+					break;
+				}
+			}
+		}
+	}
+	
+	return 0;
+}

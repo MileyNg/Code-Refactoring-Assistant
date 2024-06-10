@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	
+	int N,score,f,s,t,out,i;
+	string event;
+	
+	for(cin>>N,i=0;i<N;++i){
+		score=out=f=s=t=0;
+		
+		while(out!=3){
+			cin >> event;
+			
+			if(event == "OUT")++out;
+			else if(event == "HIT"){
+				if(t)++score;
+				t=s;
+				s=f;
+				f=1;
+			}else if(event == "HOMERUN"){
+				if(f)++score;
+				if(s)++score;
+				if(t)++score;
+				++score;
+				f=s=t=0;
+			}
+		}
+		cout<<score<<endl;
+	}
+	return 0;
+}

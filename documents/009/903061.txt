@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long ll;
+
+ll getLCM(ll a, ll b){
+	if (a < b) { swap(a, b); }
+	while (a % b) {
+		a = a % b;
+		swap(a, b);
+	}
+	return b;
+}
+
+int main(){
+	ll a, b, A, B;
+	ll gcd, lcm;
+	for (; cin >> a >> b; cout << lcm << " " << gcd << endl) {
+		lcm = getLCM(a, b);
+		gcd = a * b / lcm;
+	}
+	return 0;
+}

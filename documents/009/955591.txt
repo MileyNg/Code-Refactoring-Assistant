@@ -1,0 +1,31 @@
+#include <stdio.h>
+int A[20];
+int n;
+int tmp;
+void search( int, int );
+int main(){
+	int i;
+	int q;
+	int M[200];
+	scanf("%d",&n);
+	for( i=0; i<n; i++ ) scanf("%d", &A[i]);
+	scanf("%d", &q);
+	for( i=0; i<q; i++ ){
+		scanf("%d", &M[i]);
+		search(M[i],0);
+		if( tmp == 1 ) printf("yes\n");
+		else printf("no\n");
+		tmp = 0;
+	}
+	return 0;
+}
+void search( int m, int i ){
+	if( m == 0 ){
+		tmp = 1;
+		return;
+	}
+	else if ( n > i && m > 0){
+		search( m-A[i], i+1 );
+		search( m, i+1);
+	}
+}

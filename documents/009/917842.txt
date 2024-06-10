@@ -1,0 +1,116 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<map>
+#include<stack>
+#include<cstring>
+#include<cstdlib>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+typedef pair<int,int> pii;
+
+const int M = 111;
+const int minf = -1000000000;
+
+int dpt[10][M][M]={0};
+int dp[M][M]={0};
+
+int main(){
+	
+	int s,t,u,n,o,d;
+	cin>>s>>t>>u>>n>>o>>d;
+	
+	vector<pii> train;
+	rep(i,t){
+		int e,c;
+		cin>>e>>c;
+		train.push_back(pii(e,c));
+	}
+	
+	vector<pii> food;
+	rep(i,n){
+		int h,a;
+		cin>>h>>a;
+		food.push_back(pii(h,a));
+	}
+	
+	int calmax = 0;
+	int i1 = 0;
+	int i2 = 1;
+	//printf("enagy\n");
+	rep(i,u+1){
+		rep(j,s+1){
+			rep(k,t+1){
+				dpt[i2][j][k]=minf;
+			}
+		}
+		if(i==0){
+			dpt[i2][0][0]=0;
+		}else{
+			reps(k,1,t+1){
+				rep(j,s+1){
+					pii tr = train[k-1];
+					int cost = tr.first;
+					int value = tr.second;
+					rep(p,k){
+						if(j-cost<0)continue;
+						dpt[i2][j][k]=max(dpt[i2][j][k], dpt[i1][j-cost][p]+value);
+					}
+					calmax = max(calmax, dpt[i2][j][k]);
+				}
+			}
+		}
+		
+		/*rep(k,t+1){
+			rep(j,s+1){
+				if(dpt[i2][j][k]<0)printf(" -1 ");
+				else printf("%3d ",dpt[i2][j][k]);
+			}puts("");
+		}puts("");
+		*/swap(i1,i2);
+	}
+	
+	//puts("happyness");
+	vector<int> dpf(calmax+1);
+	rep(i,calmax+1){
+		rep(j,n){
+			int pos = i-food[j].second;
+			if(pos>=0)
+				dpf[i] = max(dpf[i], dpf[pos]+food[j].first);
+		}
+		//printf("%3d ",dpf[i]);
+	}//puts("");
+	
+	rep(i,M)rep(j,M)dp[i][j] = minf;
+	dp[0][s]=0;
+	
+	
+	int ans = -1;
+	//printf("days\n");
+	reps(i,1,d+1){
+		rep(j,s+1){
+			rep(k,s+1){
+				reps(p,1,t+1){
+					if(dpt[i1][k][p]<0)continue;
+					int bef = j+k-o;
+					if(j<o)continue;
+					if(bef<0 || bef>s)continue;
+					dp[i][j] = max(dp[i][j], dp[i-1][bef]+dpf[dpt[i1][k][p]]);
+				}
+			}
+			ans = max(ans, dp[i][j]);
+			//if(dp[i][j]<0)printf(" -1 ");
+			//else printf("%3d ",dp[i][j]);
+		}//puts("");
+	}
+	
+	if(ans<0)ans=-1;
+	printf("%d\n",ans);
+}

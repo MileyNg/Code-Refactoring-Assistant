@@ -1,0 +1,111 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <set>
+using namespace std;
+typedef pair<int,int> P;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<EPS)
+int main()
+{
+	int n;
+	cin >> n;
+	for(int i=0;i<n;i++)
+	{
+		string s;
+		cin >> s;
+		int sz=s.size();
+		if(s[0]!='>'||sz<6)
+		{
+			cout << "NA" << endl;
+			continue;
+		}
+		if(s[1]=='\'')
+		{
+			int t=sz-3;
+			if(t%2==0)
+			{
+				cout << "NA" << endl;
+				continue;
+			}
+			for(int j=2;j<2+t;j++)
+			{
+				if(j==2+(t+1)/2&&s[j]!='#')
+				{
+					cout << "NA" << endl;
+					goto end;
+				}
+				else if(j!=2+(t+1)/2&&s[j]!='=')
+				{
+					cout << "NA" << endl;
+					goto end;
+				}
+			}
+			if(s[sz-1]!='~')
+			{
+				cout << "NA" << endl;
+				continue;
+			}
+			cout << "A" << endl;
+			end:;
+		}
+		else if(s[1]=='^')
+		{
+			int t=sz-4;
+			if(t%2==1)
+			{
+				cout << "NA" << endl;
+				continue;
+			}
+			for(int j=0;j<t;j++)
+			{
+				if(j%2==0&&s[j+2]!='Q')
+				{
+					cout << "NA" << endl;
+					goto end2;
+				}
+				else if(j%2==1&&s[j+2]!='=')
+				{
+					cout << "NA" << endl;
+					goto end2;
+				}
+			}
+			if(s[sz-1]!='~'||s[sz-2]!='~')
+			{
+				cout << "NA" << endl;
+				continue;
+			}
+			cout << "B" << endl;
+			end2:;
+		}
+		else
+		{
+			cout << "NA" << endl;
+			continue;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int n, p;
+    std::cin >> n >> p;
+    if (n == 0 && p == 0) {
+      break;
+    }
+    int pebbles = p;
+    std::vector<int> mayor(n);
+    int turn = 0;
+    while (true) {
+      if (pebbles == 0) {
+        pebbles = mayor[turn];
+        mayor[turn] = 0;
+      } else {
+        ++mayor[turn];
+        --pebbles;
+        if (mayor[turn] == p) {
+          std::cout << turn << std::endl;
+          break;
+        }
+      }
+      turn = (turn + 1) % n;
+    }
+  }
+  return 0;
+}

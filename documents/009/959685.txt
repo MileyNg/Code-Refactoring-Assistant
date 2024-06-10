@@ -1,0 +1,61 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 16;
+const int Y = 3;
+const int X = 3;
+
+int N;
+int my[] = {0, 0, -1, 1};
+int mx[] = {1, -1, 0, 0};
+double dp[Y][X][MAX_N];
+
+int main() {
+  map<char, P> m;
+  m['A'] = P(0, 0);
+  m['B'] = P(0, 1);
+  m['C'] = P(0, 2);
+  m['D'] = P(1, 0);
+  m['E'] = P(1, 1);
+  m['F'] = P(1, 2);
+  m['G'] = P(2, 0);
+  m['H'] = P(2, 1);
+  m['I'] = P(2, 2);
+  while(cin >>N && N){
+    char S, T, B; cin >>S >>T >>B;
+    REP(i, Y) REP(j, X) REP(k, MAX_N) dp[i][j][k] = 0.0;
+    dp[m[S].first][m[S].second][0] = 1.0;
+    REP(n, N)
+      REP(y, Y)
+        REP(x, X)
+          REP(i, 4){
+            int ny = y + my[i], nx = x + mx[i];
+            if(ny >= 0 && nx >= 0 && ny < Y && nx < X && !(ny == m[B].first && nx == m[B].second)) dp[ny][nx][n + 1] += (dp[y][x][n] / 4);
+            else dp[y][x][n + 1] += (dp[y][x][n] / 4);
+          }
+    printf("%.8lf\n", dp[m[T].first][m[T].second][N]);
+  }
+  return 0;
+}

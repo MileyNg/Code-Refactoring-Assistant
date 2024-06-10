@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> II;
+/** Problem1100 : Area of Polygons **/
+struct  P {
+	D x, y;
+	P() {}
+	P(D x_, D y_) : x(x_), y(y_) {}
+};
+P operator -(P a, P b) { return P(a.x - b.x, a.y - b.y); }
+
+double area(vector<P> points)
+{
+	points.push_back(points[0]);
+	
+	double S=0;
+	for (int i=0; i<points.size()-1; i++) {
+		P p1 = points[i]-points[0], p2 = points[i+1]-points[0];
+		S += fabs(p1.x*p2.y - p2.x*p1.y);
+	}
+	
+	return S/2;
+}
+
+int main()
+{
+	int N;
+	int idx=1;
+	while (cin>>N, N) {
+		vector<P> points;
+		
+		rep(i, N) {
+			int x, y;
+			cin>>x>>y;
+			points.push_back(P(x, y));
+		}
+
+		printf("%d %.1f\n", idx++, area(points));
+	}
+}

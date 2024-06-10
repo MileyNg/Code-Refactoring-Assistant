@@ -1,0 +1,12 @@
+# your code goes here
+loop {
+	t = gets()
+	if t == nil
+		break
+	end
+	
+	t = t.split(" ")
+	n = t[0].to_i
+	s = t[1].to_i
+	puts [0,1,2,3,4,5,6,7,8,9].permutation(n).select{|ks| ks.map.with_index(1){|r, i| r*i}.inject(:+) == s}.length
+}

@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int m, d;
+	int count;
+	char week[7][16] = {"Thursday", "Friday", "Saturday",
+	"Sunday", "Monday", "Tuesday", "Wednesday"};
+	
+	while (scanf("%d %d", &m, &d)*m){
+		count = d;
+		while (--m > 0){
+			switch (m){
+				case 3: case 5: case 7:
+				case 8: case 10: case 12:
+					count += 31;
+					break;
+				case 1:
+				case 4: case 6: case 9: case 11:
+					count += 30;
+					break;
+				case 2:
+					count += 29;
+					break;
+			}
+		}
+		puts(week[count % 7]);
+	}
+	return 0;
+}

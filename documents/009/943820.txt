@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int AN, BN, R, XA, YA, XB, YB;
+
+inline long long makeKey(int x, int y) {
+    return x * 10000 + y;
+}
+
+inline int getX(long long key) {
+    return key / 10000;
+}
+
+inline int getY(long long key) {
+    return key % 10000;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    while (1) {
+        cin >> AN >> BN >> R;
+        if ( ! AN && ! BN && ! R) break;
+
+        vector<long long> xy;
+        for (int i=0; i<AN; ++i) {
+            cin >> XA >> YA;
+            xy.push_back(makeKey(XA, YA));
+        }
+        sort(begin(xy), end(xy));
+
+        int ans = 0;
+        for (int i=0; i<BN; ++i) {
+            cin >> XB >> YB;
+            auto begin_it = lower_bound(begin(xy), end(xy), makeKey(XB - 4 * R, 0));
+            auto end_it = lower_bound(begin(xy), end(xy), makeKey(XB + 4 * R + 1, 0));
+            for (auto it=begin_it; it!=end_it; ++it) {
+                int dx = getX(*it) - XB;
+                int dy = getY(*it) - YB;
+                ans += (dx * dx + dy * dy <= 16 * R * R);
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

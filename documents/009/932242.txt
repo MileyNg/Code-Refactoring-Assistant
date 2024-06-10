@@ -1,0 +1,11 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+stdin().every(function(line, i) {
+	if(+line)
+		return !console.log('Case ' + (i+1) + ': ' + +line);
+	else
+		return false;
+});

@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+  int n,q;
+  int S[100000], T[50000];
+  int ans;
+  int i,j;
+
+  scanf("%d",&n);
+  for(i=0; i<n; i++){
+    scanf("%d",&S[i]);
+  }
+  for(i=0; i<q; i++){
+    scanf("%d",&T[i]);
+  }
+
+  sort(T,T+q);
+  sort(S,S+n);
+
+  ans = 0;
+  scanf("%d",&q);
+
+  // for(i=0; i<q; i++){
+  //   int found;
+  //   found = binary_search(S, S+n, T[i]);
+  //   if(found) ans++;
+  // }
+
+  for(i=0; i<n; i++){
+    int found;
+    found = binary_search(T, T+q, S[i]);
+    if(found) ans++;
+  }
+
+  printf("%d\n",ans);
+
+  return 0;
+}
+ 

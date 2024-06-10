@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int dayOfWinterVacation;
+	int japanesePage;
+	int mathPage;
+	int c;
+	int d;
+	int finishDay;
+	
+	scanf( "%d%d%d%d%d", &dayOfWinterVacation, &japanesePage, &mathPage, &c, &d );
+	
+	if( japanesePage / c > mathPage / d )
+	{
+		finishDay = japanesePage % c == 0 ? japanesePage / c : japanesePage / c + 1;
+	}
+	else
+	{
+		finishDay = mathPage % d == 0 ? mathPage / d : mathPage / d + 1;
+	}
+	
+	printf( "%d\n", dayOfWinterVacation - finishDay );
+	
+	return (0);
+}

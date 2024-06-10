@@ -1,0 +1,70 @@
+#include<iostream>
+#include<cstdlib>
+#include<cctype>
+#include<cstdio>
+#include<string>
+using namespace std;
+
+#define STACK_SIZE 200
+
+class stack
+{
+        int top;
+        int st[STACK_SIZE];
+public:
+        void init();
+        void push(int n);
+        int pop();
+};
+
+void stack::init()
+{
+        top = 0;
+}
+
+void stack::push(int n)
+{
+        if(top==STACK_SIZE){
+                cout << "Error:Stack is full.\n";
+                return;
+        }
+        st[top] = n;
+        top++;
+}
+
+int stack::pop()
+{
+        if(top==0){
+                cout << "Error:Stack is empty.\n";
+                exit(1);
+        }
+        top--;
+        return st[top]; 
+}
+
+int main()
+{
+        int a, b;
+        string str;
+        stack stk;
+        stk.init();
+        while( cin >> str ){
+                cout << str << endl;
+                if( !(str.compare("+") && str.compare("-") && str.compare("*")) ){
+                        b = stk.pop();
+                        a = stk.pop();
+                        switch(str[0]){
+                        case '+' : stk.push(a+b); break; 
+                        case '-' : stk.push(a-b); break;
+                        case '*' : stk.push(a*b); break;
+                        }
+                }else{
+                        stk.push(stoi(str));
+                }
+        }
+        cout << stk.pop() << endl;
+                        
+        return 0;
+}
+
+                

@@ -1,0 +1,50 @@
+/*
+  AOJ 2443
+  Title:ReverseSort
+  @kankichi573
+*/
+#include <stdio.h>
+#include <limits.h>
+int N,A[10];
+void reverse(int ar[],int n,int a,int b)
+{
+  int wk;
+
+  while(a<b)
+    {
+      wk=ar[a];
+      ar[a]=ar[b];
+      ar[b]=wk;
+      a++;b--;
+    }
+}
+
+int solve(int ar[],int n)
+{
+  int max_,maxp,i;
+  if(n==2)
+    return((ar[0]<ar[1])?0:1);
+  max_=INT_MIN;
+  for(i=0;i<n;i++)
+    if(max_<ar[i])
+      {
+	max_=ar[i];
+	maxp=i;
+      }
+  if(maxp==n-1)
+    return(solve(ar,n-1));
+  else
+    {
+      reverse(ar,n,maxp,n-1);
+      return(1+solve(ar,n-1));
+    }
+}
+main()
+{
+  int i;
+  scanf("%d",&N);
+  for(i=0;i<N;i++)
+    scanf("%d",&A[i]);
+  printf("%d\n",solve(A,N));
+  return(0);
+}

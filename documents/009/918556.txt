@@ -1,0 +1,73 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+ 
+int calc(int);
+long long cnt;
+ 
+void insertionSort(int A[],int n,int g){
+  int v,j;
+  for(int i=g;i<n;i++){
+    v=A[i];
+    j=i-g;
+    while(j>=0&&A[j]>v){
+      A[j+g]=A[j];
+      j=j-g;
+      cnt++;
+    }
+    A[j+g]=v;
+  }
+}
+ 
+void shellSort(int A[],int n){
+ 
+  int G[1000000],g=0,y;
+  int m=calc(n);
+  cnt=0;
+ 
+  G[g++]=m;
+ 
+  y=m;
+  while(1){
+    if(sqrt(y)==1)break;
+    y=sqrt(y);
+    G[g++]=y;
+  }
+  cout<<g<<endl;
+  for(int i=0;i<g;i++){
+    if(i)cout<<' ';
+    cout<<G[i];
+  }
+  cout<<endl;
+
+  //cout<<m<<' '<<g<<endl;
+  for(int i=0;i<m-1;i++){
+    insertionSort(A,n,G[i]);
+  }
+  cout<<cnt<<endl;
+}
+ 
+ 
+int main(){
+ 
+  int n;
+  int A[1000000];
+ 
+  cin>>n;
+  for(int i=0;i<n;i++)cin>>A[i];
+   
+   
+  shellSort(A,n);
+ 
+  for(int i=0;i<n;i++){
+    cout<<A[i]<<endl;
+  }
+ 
+  return 0;
+}
+ 
+int calc(int n){
+  for(int i=sqrt(n);i>=0;i--){
+    if(n%i==0)return n/i;
+  }
+}

@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+int main( void )
+{
+	float a,b,c,d,e,f;
+	while( scanf( "%f %f %f %f %f %f", &a, &b, &c, &d, &e, &f ) )
+	{
+		if( feof( stdin ) ) break;
+		float det = 1.0 / ( a*e - b*d );
+		float x = det * ( e*c - b*f );
+		float y = det * ( -c*d + a*f );
+		printf( "%.3f %.3f\n", x, y );
+	}
+	return 0;
+}

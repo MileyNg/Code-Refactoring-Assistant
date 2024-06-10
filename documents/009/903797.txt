@@ -1,0 +1,87 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+
+struct S {
+    int ly, lx;
+    int ry, rx;
+}
+ 
+bool used[50][50][50][50];
+void main() {
+    int W, H;
+    while (readf("%d %d\n", &W, &H), W || H) {
+        auto L = new char[][H],
+             R = new char[][H];
+        foreach (i; 0 .. H) {
+            string[] I = readln.chomp.split(" ");
+            L[i] = cast(char[])I[0];
+            R[i] = cast(char[])I[1];
+        }
+        int lx, ly, rx, ry;
+        foreach (i; 0 .. H) {
+            foreach (j; 0 .. W) {
+                if (L[i][j] == 'L') {
+                    ly = i;
+                    lx = j;
+                    L[i][j] = '.';
+                }
+                if (R[i][j] == 'R') {
+                    ry = i;
+                    rx = j;
+                    R[i][j] = '.';
+                }
+            }
+        }
+
+        bool bfs() {
+            memset(cast(void*)used, 0, used.sizeof);
+            DList!S Q; Q.insert(S(ly, lx, ry, rx)); used[ly][lx][ry][rx] = true;
+            while (!Q.empty) {
+                static const dy = [0, 1, 0, -1],
+                             dx = [1, 0, -1, 0];
+                S c = Q.front; Q.removeFront;
+                foreach (i; 0 .. 4) {
+                    S n;
+                    n.ly = c.ly + dy[i];
+                    n.lx = c.lx + dx[i];
+                    n.ry = c.ry + dy[i];
+                    n.rx = c.rx - dx[i];
+                    //[n.ly, n.lx, n.ry, n.rx].writeln;
+                    if (n.ly < 0 || n.ly >= H) n.ly = c.ly;
+                    if (n.lx < 0 || n.lx >= W) n.lx = c.lx;
+                    if (L[n.ly][n.lx] == '#') n.ly = c.ly;
+                    if (L[n.ly][n.lx] == '#') n.lx = c.lx;
+                    if (n.ry < 0 || n.ry >= H) n.ry = c.ry;
+                    if (n.rx < 0 || n.rx >= W) n.rx = c.rx;
+                    if (R[n.ry][n.rx] == '#') n.ry = c.ry;
+                    if (R[n.ry][n.rx] == '#') n.rx = c.rx;
+                    if (used[n.ly][n.lx][n.ry][n.rx]) continue;
+                    used[n.ly][n.lx][n.ry][n.rx] = true;
+                    if (L[n.ly][n.lx] == '%') {
+                        if (R[n.ry][n.rx] == '%') {
+                            return true;
+                        } else {
+                            continue;
+                        }
+                    }
+                    Q.insert(n);
+                }
+            }
+            return false;
+        }
+
+        writeln(bfs ? "Yes" : "No");
+    }
+}

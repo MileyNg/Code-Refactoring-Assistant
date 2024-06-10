@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void){
+	int w, n;
+	int a[30], b[30];
+	int numbers[30];
+	int i, buf;
+	
+	scanf("%d %d", &w, &n);
+	
+	for (i = 0; i < w; i++){
+		numbers[i] = i + 1;
+	}
+	
+	for (i = 0; i < n; i++){
+		scanf("%d,%d", &a[i], &b[i]);
+	}
+	
+	for (i = 0; i < n; i++){
+		buf = numbers[a[i] - 1];
+		numbers[a[i] - 1] = numbers[b[i] - 1];
+		numbers[b[i] - 1] = buf;
+	}
+	
+	for (i = 0; i < w; i++){
+		printf("%d\n", numbers[i]);
+	}
+	
+	return (0);
+}

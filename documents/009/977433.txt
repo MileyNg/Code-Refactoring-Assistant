@@ -1,0 +1,20 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+
+void main() {
+  foreach (string line; stdin.lines) {
+    double a, b, c, d, e, f;
+    line.formattedRead("%f %f %f %f %f %f\n", &a, &b, &c, &d, &e, &f);
+
+    double x, y = 0;
+    y = (c * d - a * f) / (b * d - a * e);
+    x = (c - b * y) / a;
+
+    writefln("%.3f %.3f", round(x * 1000) / 1000, round(y * 1000) / 1000);
+  }
+}

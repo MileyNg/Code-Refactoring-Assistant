@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(){
+    int n;
+    int ans = 0;
+    string name;
+
+    cin >> n >> name;
+    for(int i=0; i < n; i++){
+        string input;
+        cin >> input;
+
+        bool isPossible = true;
+        if(name == input){
+            ans++;
+            continue;
+        }
+        for(int j=0; j < name.size(); j++){
+            string::size_type index = input.find(name[i]);
+            if(index == string::npos){
+                isPossible = false;
+                break;
+            }
+            else {
+                input.replace(i, 1, " ");
+            }
+        }
+        if(isPossible) ans++;
+    }
+    cout << ans << endl;
+}

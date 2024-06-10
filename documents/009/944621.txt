@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstdlib>
+#include<vector>
+using namespace std;
+
+void makeSet(vector<int>* set, int size);
+int find(vector<int> *v, int x);
+void unite(vector<int> *v, int root1, int root2);
+void printV(vector<int>* v);
+
+int main()
+{
+    int n, q;
+    cin >> n >> q;
+
+    vector<int> set;
+    makeSet(&set, n);
+
+    int com, x, y;
+    for(int i=0; i<q; i++){
+        cin >> com >> x >> y;
+
+        switch(com){
+        case 0 :
+            unite(&set, find(&set, x), find(&set, y));
+            break; 
+        case 1 :
+            find(&set, x) == find(&set, y) ? cout << "1" : cout << "0";
+            cout << endl;
+            break;
+        }
+        // printV(&set);
+    }
+    
+    return 0;
+}
+
+void makeSet(vector<int>* set, int size)
+{
+    for(int i=0; i<size; i++) set->push_back(i);
+}
+
+int find(vector<int> *v, int x)
+{
+    if( !(x >= 0 && x < v->size()) ) exit(1);
+
+    if( v->at(x) == x ) return x;
+    else find(v, v->at(x));
+}
+
+void unite(vector<int> *v, int root1, int root2)
+{
+    if( find(v, root1) == find(v, root2) ) return;
+
+    if( !( (root1>=0 && root1<v->size()) && (root2>=0 && root2<v->size()) ) )
+        return;
+
+    v->at(root1) = root2;
+}
+
+void printV(vector<int>* v)
+{
+    for(int i=0; i<v->size(); i++) cout << v->at(i) << " ";
+    cout << endl;
+}

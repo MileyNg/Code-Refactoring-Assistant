@@ -1,0 +1,24 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+void output(int second){
+    printf("%02d:",second/60/60);
+    second -= second/60/60*60*60;
+    printf("%02d:",second/60);
+    second -= second/60*60;
+    printf("%02d\n",second);
+}
+
+int main(){
+    int hour, minutes, second;
+    int allSecond;
+    while(cin >> hour >> minutes >> second, hour+minutes+second!=-3){
+        second += minutes*60+hour*60*60;
+        allSecond = second;
+        second = 2*60*60 - second;
+        output(second);
+        second = 2*60*60 - allSecond/3;
+        output(second);
+    }
+}

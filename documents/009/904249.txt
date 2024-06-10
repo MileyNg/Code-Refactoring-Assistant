@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	string str;
+	
+	while (getline(cin, str)) {
+	
+		for (int i=0; i<26; i++) {
+			if (str.find("the")!=str.npos || str.find("this")!=str.npos || str.find("that")!=str.npos) break;
+			for (int j=0; j<(int)str.size(); j++) {
+				if (str[j] == '.' || str[j] == ' ') continue;
+				str[j] = 'a' + (str[j] - 'a' + 1)%26;
+			}
+		}
+	
+		cout << str << endl;
+		
+	}
+	
+	return 0;
+}

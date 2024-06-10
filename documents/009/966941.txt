@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+
+#define MAX_N 10000
+
+using namespace std;
+
+int N;
+int k[MAX_N];
+
+//void solve();
+
+int main()
+{
+	while (cin>>N&&N) {
+		//for (int i=0; i<N; i++) cin>>k[i];
+		//solve();
+		int zero=0,one=0;
+		for (int i=0; i<N; i++) {
+			int t;
+			cin>>t;
+			if (t==0) zero++;
+			else if (t==1) one++;
+		}
+		if (zero+one==N) {
+			cout<<"NA"<<endl;
+		} else {
+			cout<<N+1-zero<<endl;
+		}
+	}
+}
+/*
+void solve()
+{
+	int zero=0;
+	sort(k,k+N);
+	if (k[N-1]<2) {
+		cout<<"NA"<<endl;
+	} else if (k[0]>=2) {
+		cout<<N+1<<endl;
+	} else {
+		while (k[zero]==0) zero++;
+		cout<<N+1-zero<<endl;
+	}
+	
+}
+*/

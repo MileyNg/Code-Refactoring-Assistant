@@ -1,0 +1,316 @@
+#include <stdio.h>
+
+#define N 5
+
+//役を調べる関数群
+int isFourCard(int hand[]);
+int isFullHouse(int hand[]);
+int isStraight(int hand[]);
+int isThreeCard(int hand[]);
+int isTwoPair(int hand[]);
+int isOnePair(int hand[]);
+
+//hand[]の中からnの数を数える関数
+int countCard(int hand[], int n);
+
+//挿入ソート
+void insertionSort(int array[], int n);
+
+//チェック用。
+void display(int array[], int n);
+
+
+int main(void){
+	
+	int hands[N+1];
+	char temp;
+	int i, ret;
+	int result;
+	
+	while(1){
+		
+		
+		//入力
+		for(i=0; i<N; i++){
+			
+			ret = scanf("%d%c", &hands[i], &temp);
+			
+			if(ret == EOF){
+				
+				break;
+				
+			}
+			
+		}
+		
+		if(ret == EOF){
+			
+			break;
+			
+		}
+		
+		
+		//昇順にソート
+		insertionSort(hands, N);
+		
+		
+		//ソートできてるかチェック
+		//display(hands, N);
+		
+		
+		//役を調べる
+		if(isFourCard(hands)){
+			
+			printf("four card\n");
+			
+		}
+		else if(isFullHouse(hands)){
+			
+			printf("full house\n");
+			
+		}
+		else if(isStraight(hands)){
+			
+			printf("straight\n");
+			
+		}
+		else if(isThreeCard(hands)){
+			
+			printf("three card\n");
+			
+		}
+		else if(isTwoPair(hands)){
+			
+			printf("two pair\n");
+			
+		}
+		else if(isOnePair(hands)){
+			
+			printf("one pair\n");
+			
+		}
+		else{
+			
+			printf("null\n");
+			
+		}
+		
+	}
+	
+	return 0;
+	
+}
+
+
+
+//4カード
+int isFourCard(int hand[]){
+	
+	int ret = 0;
+	
+	//4カードに出てくる数字は2種類。  [0]番目と[4]番目は必ず違う数字になるので、そのどちらかが4枚あれば良い。
+	if(countCard(hand, hand[0]) == 4 || countCard(hand, hand[4]) == 4){
+		
+		ret = 1;
+		
+	}
+	
+	return ret;
+	
+}
+
+
+//フルハウス
+int isFullHouse(int hand[]){
+	
+	int ret = 0;
+	
+	//フルハウスに出てくる数字は2種類。  2:3 か 3:2 の並びになる。
+	if((countCard(hand, hand[0]) == 2 && countCard(hand, hand[4]) == 3) || (countCard(hand, hand[0]) == 3 && countCard(hand, hand[4]) == 2)){
+		
+		ret = 1;
+		
+	}
+	
+	return ret;
+	
+}
+
+
+//ストレート
+int isStraight(int hand[]){
+	
+	int ret = 1;
+	int i;
+	
+	//階段になっているかどうかをチェック
+	for(i=0; i<N-1; i++){
+		
+		//階段になっていなければ抜ける
+		if(hand[i]+1 != hand[i+1]){
+			
+			ret = 0;
+			break;
+			
+		}
+		
+	}
+	
+	
+	//[0]番目が1だった場合は、A, 10, 11, 12, 13の可能性があるのでそれをチェック
+	if(hand[0] == 1){
+		
+		ret = 1;
+		
+		for(i=1; i<N-1; i++){
+			
+			if(hand[i]+1 != hand[i+1]){
+				
+				ret = 0;
+				break;
+				
+			}
+			
+		}
+		
+		//hand[1]が10ではなかった場合はそもそもダメ。
+		if(hand[1] != 10){
+			
+			ret = 0;
+			
+		}
+		
+	}
+	
+	return ret;
+	
+}
+
+
+//3カード
+int isThreeCard(int hand[]){
+	
+	int ret = 0;
+	
+	//3カードにおいて、[1]番目と[4]番目が同じ数字になることはない。 → [1]番目と[4]番目の枚数を数え、どちらかが3枚あれば良い。
+	if(countCard(hand, hand[1]) == 3 || countCard(hand, hand[4]) == 3){
+		
+		ret = 1;
+		
+	}
+	
+	return ret;
+	
+}
+
+
+//2ペア
+int isTwoPair(int hand[]){
+	
+	int ret = 0;
+	int counts[3];
+	
+	//2ペアにおいて、[0], [2], [4]がそれぞれ同じになることはない。 → [0], [2], [4]の枚数を数え、いずれか2つが2枚あれば良い。
+	counts[0] = countCard(hand, hand[0]);
+	counts[1] = countCard(hand, hand[2]);
+	counts[2] = countCard(hand, hand[4]);
+	
+	//countsの中から、2の数を数える。  countsにはhands[0],[2],[4]の枚数が入っているため、「『2枚あった数字』の数」を求めることになる。
+	if(countCard(counts, 2) == 2){
+		
+		ret = 1;
+		
+	}
+	
+	return ret;
+	
+}
+
+
+//1ペアは甘え
+int isOnePair(int hand[]){
+	
+	int ret = 0;
+	int i;
+	
+	//1ペア = 同じものが見つかり次第抜ける。
+	for(i=0; i<N-1; i++){
+		
+		if(hand[i] == hand[i+1]){
+			
+			ret = 1;
+			break;
+			
+		}
+		
+	}
+	
+	return ret;
+	
+}
+
+
+
+int countCard(int hand[], int n){
+	
+	int count = 0;
+	int i;
+	
+	for(i=0; i<N; i++){
+		
+		if(hand[i] == n){
+			
+			count++;
+			
+		}
+		
+	}
+	
+	return count;
+	
+}
+
+
+
+void insertionSort(int array[], int n){
+	
+	int i, k;
+	int temp;
+	
+	for(i=1; i<n; i++){
+		
+		temp = array[i];
+		k = i;
+		
+		while(k > 0 && temp < array[k-1]){
+			
+			array[k] = array[k-1];
+			k--;
+			
+		}
+		
+		array[k] = temp;
+		
+	}
+	
+	return;
+	
+}
+
+
+
+void display(int array[], int n){
+	
+	int i;
+	
+	for(i=0; i<n; i++){
+		
+		printf("%d ", array[i]);
+		
+	}
+	
+	printf("\n");
+	
+	return;
+	
+}

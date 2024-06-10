@@ -1,0 +1,41 @@
+#include<iostream>
+ 
+using namespace std;
+
+#define NMAX 400
+#define INF 1000000
+
+int max(int a,int b) {return (a>b)?a:b;}
+
+int main(){
+ 
+	int n,m;
+	int a,b,c;
+	int dp[NMAX][NMAX];
+
+	cin>>n>>m;
+
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			if(i!=j) dp[i][j]=-1*INF;
+			else dp[i][j]=0;
+		}
+	}
+
+	for(int i=0;i<m;i++){
+		cin>>a>>b>>c;
+		dp[a][b]=c;
+	}
+
+	for(int k=0;k<n;k++){
+		for(int i=0;i<n;i++){
+			for(int j=0;j<n;j++){
+				if(dp[i][k]!=INF*-1&&dp[k][j]!=INF*-1) dp[i][j]=max(dp[i][j],dp[i][k]+dp[k][j]);
+			}
+		}
+	}
+
+	cout<<dp[0][n-1]<<endl;
+
+	return 0;
+}

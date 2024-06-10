@@ -1,0 +1,39 @@
+#include<iostream>
+#include<iomanip>
+#include<map>
+#include<cmath>
+using namespace std;
+
+pair<double,double> route_vet(pair<double,double>a,double deg)
+{//kaiten
+  double x,y;
+  x=cos(deg/180.0*M_PI)*a.first+(-sin(deg/180.0*M_PI))*a.second;
+  y=sin(deg/180.0*M_PI)*a.first+cos(deg/180.0*M_PI)*a.second;
+  return make_pair(x,y);
+}
+
+pair<double,double> norm_vet(pair<double,double>a)
+{//seikika
+  double x,y;
+  x=a.first/sqrt(a.first*a.first+a.second*a.second);
+  y=a.second/sqrt(a.first*a.first+a.second*a.second);
+  return make_pair(x,y);
+}
+
+int main()
+{
+  
+  int n;
+  for(;cin>>n,n!=-1;)
+    {
+      double x=1,y=1;   
+      n-=2;
+      for(;n--;)
+	{
+	  pair<double,double> tmp = norm_vet(route_vet(make_pair(x,y),90.0));
+	  x+=tmp.first;
+	  y+=tmp.second;
+	}
+      cout<<fixed<<setprecision(2)<<x<<endl<<y<<endl;
+    }
+}

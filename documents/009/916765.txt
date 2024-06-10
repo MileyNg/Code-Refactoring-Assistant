@@ -1,0 +1,58 @@
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <cassert>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+typedef long long ll;
+
+const int    INF = 1000000000;
+const int    MOD = 1000000007;
+const double EPS = 1e-8;
+struct Amida{
+    int left, right, height;
+    Amida() {}
+    Amida(int l, int r, int h) : 
+        left(l), right(r), height(h) {}
+};
+
+int main(){
+    int N, M;
+    cin >> N >> M;
+    vector<Amida> amida(M);
+    REP(i, M){
+        int a;
+        cin >> a;
+        amida[i] = Amida(a, a + 1, i);
+    }
+    REP(iter, 1000) {
+        REP(i, M) if(amida[i].height > 0) {
+            bool ok = true;
+            Amida newamida = amida[i];
+            newamida.height --;
+            REP(j, M) if(i != j && newamida.height == amida[j].height) {
+                if(newamida.left == amida[j].right) ok = false;
+                if(newamida.right == amida[j].left) ok = false;
+                if(newamida.left == amida[j].left) ok = false;
+            }
+            if(ok) amida[i] = newamida;
+        }
+    }
+    int answer = 0;
+    //REP(i, M) cout << amida[i].height << " "; cout << endl;
+    REP(i, M) answer = max(answer, amida[i].height + 1);
+    cout << answer << endl;
+    return 0;
+}

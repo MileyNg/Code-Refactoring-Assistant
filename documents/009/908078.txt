@@ -1,0 +1,33 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main() {
+  while(true) {
+    int N, M; cin >> N >> M;
+    if(N == 0 && M == 0) break;
+    vector<int> A(N);
+    for(int i = 0; i < N; i++) {
+      cin >> A[i];
+    }
+
+    A.push_back(0);
+    vector<int> B(N*N);
+    for(int a : A) {
+      for(int b : A) {
+        B.push_back(a+b);
+      }
+    }
+    sort(B.begin(), B.end());
+    B.erase(unique(B.begin(), B.end()), B.end());
+
+    int ans = 0;
+    for(int i = 0; i < (int)B.size(); i++) {
+      if(B[i] > M) continue;
+      if(B[i] == M) { ans = M; continue; }
+      ans = max(ans, B[i] + *(lower_bound(B.begin(), B.end(), M - B[i]) - 1));
+    }
+    cout << ans << endl;
+  }
+}

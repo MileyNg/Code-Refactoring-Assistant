@@ -1,0 +1,25 @@
+### subroutines
+
+def isA?(s)
+  (s =~ /^>'(=+)#(=+)~$/ && $1.length == $2.length) ? true : false
+end
+
+def isB?(s)
+  (s =~ /^>\^(Q=)+~~$/) ? true : false
+end
+
+### main
+
+n = gets.strip.to_i
+
+n.times.each do
+  s = gets.strip
+
+  if isA?(s)
+    puts "A"
+  elsif isB?(s)
+    puts "B"
+  else
+    puts "NA"
+  end
+end

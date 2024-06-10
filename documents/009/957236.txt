@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <math.h>
+typedef struct
+{
+  double x;
+  double y;
+} XY;
+int koch (XY ,XY ,int );
+int main()
+{
+  int n;
+  XY a1,a2;
+  scanf("%d",&n);
+  a1.x=0;
+  a1.y=0;
+  a2.x=100;
+  a2.y=0;
+  printf("%f %f\n",a1.x,a1.y);
+  koch(a1,a2,n);
+  return 0;
+}
+
+int koch(XY a1,XY a2,int n)
+{
+  XY b,c,d,leng;
+  if (n==0){
+    printf("%f %f\n",a2.x,a2.y);
+    return 0;
+  }
+
+  leng.x = (a2.x - a1.x)/3;
+  leng.y = (a2.y - a1.y)/3;
+  b.x = leng.x + a1.x;
+  b.y = leng.y + a1.y;
+  c.x = leng.x * cos(M_PI/3.0) - leng.y * sin(M_PI/3.0)+b.x;
+  c.y = leng.x * sin(M_PI/3.0) + leng.y * cos(M_PI/3.0)+b.y;
+  d.x = a2.x - leng.x;
+  d.y = a2.y - leng.y;
+
+  koch(a1,b,n-1);
+  koch(b,c,n-1);
+  koch(c,d,n-1);
+  koch(d,a2,n-1);
+}

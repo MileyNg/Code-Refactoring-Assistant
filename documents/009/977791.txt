@@ -1,0 +1,44 @@
+require 'set'
+
+def calc_cost(s, g, n, edges)
+  q = Set.new (0...n)
+  max_cost = 1000 * n
+  costs = (0...n).map{max_cost}
+  costs[s] = 0
+
+  while ! q.empty?
+    u = q.to_a.min{|a, b| costs[a] <=> costs[b]}
+    q.delete(u)
+
+    for v in (0...n)
+      e = edges[u][v]
+      next if e.nil?
+
+      c = costs[u] + e
+      costs[v] = c if costs[v] > c
+    end
+  end
+
+  return costs[g]
+end
+
+n = gets.chomp.to_i
+m = gets.chomp.to_i
+
+edges = (0...n).map{[]}
+
+m.times.each do
+  n0, n1, c1, c2 = gets.chomp.split(",").map{|s| s.to_i}
+  n0 -= 1
+  n1 -= 1
+  edges[n0][n1] = c1
+  edges[n1][n0] = c2
+end
+
+st, gl, rev, pr = gets.chomp.split(",").map{|s| s.to_i}
+st -= 1
+gl -= 1
+
+c0 = calc_cost(st, gl, n, edges)
+c1 = calc_cost(gl, st, n, edges)
+puts rev - (pr + c0 + c1)

@@ -1,0 +1,90 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
+
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <string>
+#include <queue>
+#include <cmath>
+#include <stack>
+#include <numeric>
+#include <ctime>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <stdio.h>
+
+using namespace std;
+typedef long long int lint;
+
+void solve(string &str)
+{
+	map<char, string> encode;
+	map<string, string> decode;
+	
+	char alpha[32] = {
+		' ', '\'', ',', '-', '.', '?', 'A', 'B',
+		'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+		'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+		'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+	};
+	string code1[32] = {
+		"101", "000000", "000011", "10010001",
+		"010001", "000001", "100101", "10011010",
+		"0101", "0001", "110", "01001",
+		"10011011", "010000", "0111", "10011000",
+		"0110", "00100", "10011001", "10011110",
+		"00101", "111", "10011111", "1000",
+		"00110", "00111", "10011100", "10011101",
+		"000010", "10010010", "10010011", "10010000",
+	};
+
+	string beta[32] = {
+		"A", "B", "C", "D", "E", "F", "G", "H",
+		"I", "J", "K", "L", "M", "N", "O", "P",
+		"Q", "R", "S", "T", "U", "V", "W", "X",
+		"Y", "Z", " ", ".", ",", "-", "\'", "?"
+	};
+	string code2[32] = {
+		"00000", "00001", "00010", "00011", "00100", "00101", "00110", "00111",
+		"01000", "01001", "01010", "01011", "01100", "01101", "01110", "01111",
+		"10000", "10001", "10010", "10011", "10100", "10101", "10110", "10111",
+		"11000", "11001", "11010", "11011", "11100", "11101", "11110", "11111"
+	};
+
+	string bin;
+
+	for(int i = 0; i < 32; i++){
+		encode.insert( map<char, string>::value_type(alpha[i], code1[i]) );
+		decode.insert( map<string, string>::value_type(code2[i], beta[i]) );
+	}
+
+	for(int i = 0; i < str.size(); i++){
+		bin += encode[str[i]];
+	}
+
+	if(bin.size() % 5 != 0){
+		int r = bin.size() % 5;
+		for(int i = 0; i < 5 - r; i++){
+			bin += "0";
+		}
+	}
+
+	int nblock = bin.size() / 5;
+	string result;
+	for(int i = 0; i < nblock; i++){
+		result += decode[bin.substr(i * 5, 5)];
+	}
+	cout << result << endl;
+}
+
+int main()
+{
+	string str;
+	while(getline(cin, str)){
+		solve(str);
+	}
+
+	return 0;
+}

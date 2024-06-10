@@ -1,0 +1,181 @@
+#include<iostream>
+#include<complex>
+#include<queue>
+#include<algorithm>
+#include<cassert>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+template<class T> T at(vector<T> v, int i) {return v[i % v.size()];}
+
+#define X real()
+#define Y imag()
+
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+typedef vector<P> Pol;
+
+
+const D EPS = 1e-8;
+const D PI = acos(-1);
+
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+bool near(P a, P b) {return !sig(norm(a - b));}
+namespace std {
+  bool operator<(P a, P b) {return sig(a.X, b.X) ? a.X < b.X : a.Y < b.Y;}
+  bool operator<(L a, L b) {return !near(a.a, b.a) ? a.a < b.a : a.b < b.b;}
+}
+
+P vec(L a) {return a.b - a.a;}
+
+D det(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+
+enum CCW{FRONT = 1, RIGHT = 2, BACK = 4, LEFT = 8, ON = 16};
+int ccw(P a, P b, P c) {
+  if (near(a, c) || near(b, c)) return ON;
+  int s = sig(det(b - a, c - a));
+  if (s) return s > 0 ? LEFT : RIGHT;
+  return (a < b) == (b < c) ? FRONT : (c < a) == (a < b) ? BACK : ON;
+}
+
+D arg(P base, P a, P b) {return arg((b - base) / (a - base));}
+
+bool iLLs(L a, L b) {return sig(det(vec(a), vec(b)));}
+bool iSS(L a, L b) {
+  int cwa = ccw(a.a, a.b, b.a) | ccw(a.a, a.b, b.b);
+  int cwb = ccw(b.a, b.b, a.a) | ccw(b.a, b.b, a.b);
+  return ((cwa | cwb) & ON) || ((cwa & cwb) == (LEFT | RIGHT));
+}
+
+P pLL(L a, L b) {return a.a + vec(a) * (det(vec(b), b.a - a.a) / det(vec(b), vec(a)));}
+
+D aPol(Pol vp) {D ret = 0; rep (i, vp.size()) ret += det(vp[i], at(vp, i + 1)); return ret / 2;}
+
+int sGP(Pol pol, P p) {
+  int side = -1;
+  rep (i, pol.size()) {
+    P p0 = pol[i] - p, p1 = at(pol, i + 1) - p;
+    if (ccw(p0, p1, 0) == ON) return 0;
+    if (p0.Y > p1.Y) swap(p0, p1);
+    if (sig(p0.Y) <= 0 && 0 < sig(p1.Y) && sig(det(p0, p1)) > 0) side *= -1;
+  }
+  return side;
+}
+
+vector<L> merge(vector<L> s) {
+  rep (i, s.size()) if (s[i].b < s[i].a) swap(s[i].a, s[i].b);
+  sort(s.begin(), s.end());
+  rep (i, s.size()) rep (j, i) if (iSS(s[i], s[j]) && !iLLs(s[i], s[j])) {
+    s[j].b = max(s[i].b, s[j].b);
+    s.erase(s.begin() + i--);
+    break;
+  }
+  return s;
+}
+
+vector<vector<int> > sArr(vector<L> s, vector<P> &vp) {
+  s = merge(s);
+  rep (i, s.size()) {
+    vp.push_back(s[i].a);
+    vp.push_back(s[i].b);
+  }
+  rep (i, s.size()) rep (j, i) if (iSS(s[i], s[j])) vp.push_back(pLL(s[i], s[j]));
+  sort(vp.begin(), vp.end());
+  vp.erase(unique(vp.begin(), vp.end(), near), vp.end());
+  vector<vector<int> > g(vp.size());
+  rep (i, s.size()) {
+    vector<pair<D, int> > v;
+    rep (j, vp.size()) if (ccw(s[i].a, s[i].b, vp[j]) == ON) {
+      v.push_back(make_pair(norm(vp[j] - s[i].a), j));
+    }
+    sort(v.begin(), v.end());
+    rep (j, v.size() - 1) {
+      g[v[j + 1].second].push_back(v[j].second);
+      g[v[j].second].push_back(v[j + 1].second);
+    }
+  }
+  return g;
+}
+
+vector<Pol> dual(vector<L> s) {
+  vector<P> vp;
+  vector<vector<int> > edge = sArr(s, vp);
+  vector<vector<bool> > used(edge.size());
+  rep (i, edge.size()) rep (j, edge[i].size()) used[i].push_back(false);
+  vector<Pol> vpol;
+  rep (i, edge.size()) rep (j, edge[i].size()) if (!used[i][j]) {
+    Pol pol;
+    pol.push_back(vp[i]);
+    used[i][j] = true;
+    int pre = i, now = edge[i][j];
+    while (now != i) {
+      pol.push_back(vp[now]);
+      D a = -4;
+      int next = -1;
+      rep (k, edge[now].size()) {
+	D aa = arg(vp[now], (D)2 * vp[now] - vp[pre], vp[edge[now][k]]);
+	if (!sig(aa, PI)) aa = -PI;
+	if (a < aa) {
+	  a = aa;
+	  next = k;
+	}
+      }
+      used[now][next] = true;
+      pre = now;
+      now = edge[pre][next];
+    }
+    vpol.push_back(pol);
+  }
+  return vpol;
+}
+
+int main() {
+  while (true) {
+    int c, w;
+    cin >> c >> w;
+    if (c == 0 && w == 0) break;
+    vector<P> vp;
+    rep (i, c) {
+      D x, y;
+      cin >> x >> y;
+      vp.push_back(P(x, y));
+    }
+    vector<L> vl;
+    rep (i, w) {
+      int s, t;
+      cin >> s >> t;
+      --s, --t;
+      vl.push_back((L){vp[s], vp[t]});
+    }
+    vector<Pol> d = dual(vl);
+    vector<int> sd;
+    rep (i, d.size()) sd.push_back(sig(aPol(d[i])));
+    vector<pair<int, int> > g[d.size()];
+    rep (i, d.size()) rep (j, i) {
+      bool ok = false;
+      rep (ii, d[i].size()) rep (jj, d[j].size()) if (near(d[i][ii], at(d[j], jj + 1)) && near(at(d[i], ii + 1), d[j][jj])) ok = true;
+      if (ok) {
+	g[i].push_back(make_pair(j, 1));
+	g[j].push_back(make_pair(i, 1));
+      }
+    }
+    int start = -1;
+    rep (i, d.size()) if (sd[i] < 0) start = i;
+    priority_queue<pair<int, int>,vector<pair<int, int> >, greater<pair<int, int> > > que;
+    int dis[d.size()];
+    rep (i, d.size()) dis[i] = 1e9;
+    que.push(make_pair(0, start));
+    while (!que.empty()) {
+      pair<int, int> now = que.top();
+      que.pop();
+      if (dis[now.second] <= now.first) continue;
+      dis[now.second] = now.first;
+      rep (i, g[now.second].size()) que.push(make_pair(now.first + g[now.second][i].second, g[now.second][i].first));
+    }
+    int ans = 0;
+    rep (i, d.size()) ans = max(ans, dis[i]);
+    cout << ans << endl;
+  }
+}

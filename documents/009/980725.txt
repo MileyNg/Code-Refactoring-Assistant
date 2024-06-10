@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int mod = 10007;
+int dp[1010][8];
+
+map<char,int> id = { {'J',0}, {'O',1}, {'I',2} };
+
+int main(){
+  int n;
+  string s;
+
+  cin >> n >> s;
+  dp[0][1] = 1;
+  
+  for(int i=0;i<n;i++){
+    for(int j=0;j<8;j++){
+      for(int k=0;k<8;k++){
+	if( (j&k) && ((k>>id[s[i]])&1) ){
+	  (dp[i+1][k] += dp[i][j]) %= mod;
+	}
+      }
+    }
+  }
+
+  int ans = 0;
+  for(int i=0;i<8;i++){
+    (ans += dp[n][i]) %= mod;
+  }
+  cout << ans << endl;
+}

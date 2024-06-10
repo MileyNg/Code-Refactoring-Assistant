@@ -1,0 +1,45 @@
+#include<iostream>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+queue<pair<string,int> >Q;
+map<string,int> M;
+int main()
+{
+	for(;;)
+	{
+		string s;
+		cin>>s;
+		if(s=="0")break;
+		Q.push(make_pair(s,0));
+		M[s]=1;
+		int res=999;
+		for(;!Q.empty();)
+		{
+			pair<string,int>p=Q.front();Q.pop();
+			s=p.first;
+			int flg=0;
+			for(int i=0;i<s.length()-1;i++)
+			{
+				if(s[i]!=s[i+1])
+				{
+					flg=1;
+					s[i]=s[i+1]=315-s[i]-s[i+1];
+					if(M[s]==0)
+					{
+						M[s]=1;
+						pair<string,int> ins(s,p.second+1);
+						Q.push(ins);
+					}
+					s=p.first;
+				}
+			}
+			if(flg==0)
+				res=min(res,p.second);
+		}
+		if(res==999)cout<<"NA"<<endl;
+		else cout<<res<<endl;
+		M.clear();
+	}
+}

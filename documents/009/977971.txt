@@ -1,0 +1,48 @@
+while (line = gets)
+  rs = line.chomp.split(" ").map{|s| s.to_f}
+
+  bl = rs.shift
+  m = rs.length
+  rs.sort!
+
+  r0 = r1 = rs.shift
+  nums = [r0]
+
+  while ! rs.empty?
+    rlen = rs.length
+    max_diff0 = max_diff1 = 0.0
+    max_i0 = max_i1 = 0
+
+    for i in (0...rlen)
+      diff0 = (r0 - rs[i]).abs
+      if max_diff0 < diff0
+        max_diff0 = diff0
+        max_i0 = i
+      end
+
+      diff1 = (r1 - rs[i]).abs
+      if max_diff1 < diff1
+        max_diff1 = diff1
+        max_i1 = i
+      end
+    end
+
+    if max_diff0 > max_diff1 ||
+        max_diff0 == max_diff1 && r0 + rs[max_i0] <= r1 + rs[max_i1]
+      r0 = rs.delete_at(max_i0)
+      nums.unshift r0
+    else
+      r1 = rs.delete_at(max_i1)
+      nums.push r1
+    end
+  end
+
+  l = nums[0] + nums[m - 1]
+  for i in (1...m)
+    rp = nums[i - 1] + nums[i]
+    rm = nums[i - 1] - nums[i]
+    l += Math.sqrt(rp * rp - rm * rm)
+  end
+
+  puts (bl >= l) ? "OK" : "NA"
+end

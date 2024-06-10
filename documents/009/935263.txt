@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <time.h>
+
+int get_day_week(int year, int month, int day) {
+    struct tm time_in, *local;
+    time_t t;
+
+    time_in.tm_year = year - 1900;
+    time_in.tm_mon  = month - 1;
+    time_in.tm_mday = day;
+    time_in.tm_hour = 1;
+    time_in.tm_min  = 0;
+    time_in.tm_sec  = 0;
+    time_in.tm_wday = 0;
+    time_in.tm_yday = 0;
+
+    if ( (t = mktime(&time_in) ) == (time_t)(-1) ) {
+        return -1;
+    }
+
+    local = localtime(&t);
+    return local->tm_wday;
+}
+
+char week[7][16] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+int main(void) {
+	int m,d;
+	while(1) {
+		scanf("%d %d\n", &m, &d);
+		if(m == 0 && d == 0)
+			break;
+		
+		printf("%s\n", week[get_day_week(2004, m, d)]);
+	}
+	
+	return 0;
+}

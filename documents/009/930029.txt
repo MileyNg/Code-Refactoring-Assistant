@@ -1,0 +1,16 @@
+#include<stdio.h>
+int main(void) {
+	int width[30];
+	int w, n, a, b, tmp, i;
+	scanf("%d", &w);
+	scanf("%d", &n);
+	for(i = 0; i < w; i++) width[i] = i + 1;
+	for(i = 0; i < n; i++){
+		scanf("%d,%d", &a, &b);
+		tmp = width[b-1];
+		width[b-1] = width[a-1];
+		width[a-1] = tmp;
+	}
+	for(i = 0; i < w; i++) printf("%d\n", width[i]);
+	return 0;
+}

@@ -1,0 +1,103 @@
+### constant
+
+MAX_INT = (1 << 31) - 1
+
+### main
+
+while true
+  m, n = gets.strip.split(' ').map{|s| s.to_i}
+  break if m == 0 && n == 0
+
+  carvs = []
+  for i in (0...n)
+    tw = gets.strip.to_i
+    carvs << [i * 10, i + 1, tw]
+  end
+
+  wqueue = []
+
+  pn = 0
+  pcs = m.times.map{[]}
+
+  outs = []
+  t = 0
+
+  while ! carvs.empty? || ! wqueue.empty? || pn > 0
+    ## out
+    if pn > 0
+      for i in (0...m)
+        while ! pcs[i].empty? && pcs[i].last[1] <= t
+          c = pcs[i].pop
+          pn -= 1
+          outs << c[0]
+          #puts "#{t}: OUT: #{c}"
+          #p pcs
+        end
+      end
+    end
+
+    ## arrive
+    if ! carvs.empty?
+      t0, id, tw = carvs[0]
+      if t0 <= t
+        carvs.shift
+        wqueue << [id, tw]
+        #puts "#{t}: ARRIVE: #{[id, tw]}"
+      end
+    end
+
+    ## park
+    while pn < 2 * m && ! wqueue.empty?
+      parked = false
+
+      min_l_i = -1
+      min_l_t = MAX_INT
+      min_e_i = -1
+      min_e_t = MAX_INT
+
+      for i in (0...m)
+        pcn = pcs[i].length
+
+        if pcn == 0
+          c = wqueue.shift
+          c[1] += t
+          pcs[i] << c
+          pn += 1
+          parked = true
+          #puts "#{t}: PARK: #{c} -> #{[i, 0]}"
+          #p pcs
+          break
+        elsif pcn == 1
+          c = wqueue.first
+          dt = pcs[i].first[1] - (t + c[1])
+
+          if dt >= 0
+            if min_l_t > dt
+              min_l_t = dt
+              min_l_i = i
+            end
+          else
+            if min_e_t > -dt
+              min_e_t = -dt
+              min_e_i = i
+            end
+          end
+        end
+      end
+
+      if ! parked
+        i0 = (min_l_i >= 0) ? min_l_i : min_e_i
+        c = wqueue.shift
+        c[1] += t
+        pcs[i0] << c
+        pn += 1
+        #puts "#{t}: PARK: #{c} -> #{[i0, 1]}"
+        #p pcs
+      end
+    end
+
+    t += 1
+  end
+
+  puts outs.join(' ')
+end

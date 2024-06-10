@@ -1,0 +1,60 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+// define eps
+double EPS = 1e-10;
+
+// Point2D & Vector2D
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) : x(a), y(b) {}
+};
+typedef Point2D Vector2D;
+
+// Point2D's and Vector2D's operator
+Point2D operator + (Point2D a, Point2D b) { return Point2D(a.x + b.x, a.y + b.y); }
+Point2D operator - (Point2D a, Point2D b) { return Point2D(a.x - b.x, a.y - b.y); }
+Point2D operator * (Point2D a, double d) { return Point2D(a.x * d, a.y * d); }
+Point2D operator / (Point2D a, double d) { return Point2D(a.x / d, a.y / d); }
+
+bool operator < (const Point2D& a, const Point2D& b) { return a.x != b.x ? a.x < b.x : a.y < b.y; }
+bool operator > (const Point2D& a, const Point2D& b) { return b.x != a.x ? b.x < a.x : b.y < a.y; }
+bool operator == (const Point2D& a, const Point2D& b) { return fabs(a.x-b.x)<EPS && fabs(a.y-b.y)<EPS; }
+
+// basic function
+double norm(Point2D a) { return a.x*a.x + a.y*a.y; }
+double dot2D(const Vector2D& a, const Vector2D& b) { return a.x * b.x + a.y * b.y; }
+double cross2D(const Vector2D& a, const Vector2D& b) { return a.x*b.y - a.y*b.x; }
+double dist2D(const Point2D& a, const Point2D& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) ); }
+
+bool is_vertical(const Vector2D& a, const Vector2D& b) { return fabs(dot2D(a, b))<EPS; }
+bool is_parrallel(const Vector2D& a, const Vector2D& b) { return fabs(cross2D(a, b))<EPS; }
+
+ 
+int main(){
+    Point2D A, B, C, D;
+    
+    while (cin>>A.x>>A.y>>B.x>>B.y>>C.x>>C.y>>D.x>>D.y) {
+  		Vector2D AB = B - A; Vector2D CD = D - C;
+  		if (is_vertical(AB, CD)) cout << "YES" << endl;
+  		else cout << "NO" << endl;
+    }  
+ 
+    return 0;
+}

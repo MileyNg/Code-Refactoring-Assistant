@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int used[110];
+int W, Q;
+
+int sleep(int id, int w){
+  for(int i = 0 ; i < W ; i++){
+    if(used[i] == -1){
+      bool ok = true;
+      for(int j = i ; j < i+w ; j++){
+	if(used[j] != -1 || j >= W){ ok = false; break; }
+      }
+      if(ok){
+	for(int j = i ; j < i+w ; j++) used[j] = id;
+	return i;
+      }
+    }
+  }
+  return -1;
+}
+
+void wakeup(int id){
+  for(int i = 0 ; i < W ; i++){
+    if(used[i] == id) used[i] = -1;
+  }  
+}
+
+int main(){
+
+  while(cin >> W >> Q, W|Q){
+
+    fill(used, used+110, -1);
+    
+    char op;
+    int id, w;
+    while(Q--){
+      cin >> op >> id;
+      if(op == 's'){
+	cin >> w;
+	int res = sleep(id, w);
+	if(res == -1) cout << "impossible" << endl;
+	else cout << res << endl;
+      }
+      else{
+	wakeup(id);
+      }
+    }
+    cout << "END" << endl;
+  }  
+  return 0;
+}

@@ -1,0 +1,32 @@
+#include<cstdio>
+#include<vector>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  while (true) {
+    int an, bn, r;
+    scanf("%d %d %d", &an, &bn, &r);
+    if (an == 0) break;
+    int a[an];
+    rep (i, an) {
+      int x, y;
+      scanf("%d %d", &x, &y);
+      a[i] = (x + 50) * 10112 + y + 50;
+    }
+    vector<bool> b(10112 * 10112, false);
+    rep (i, bn) {
+      int x, y;
+      scanf("%d %d", &x, &y);
+      b[(x + 50) * 10112 + y + 50] = true;
+    }
+    int res = 0;
+    int d[10000];
+    int t = 0;
+    for (int i = -4 * r; i <= 4 * r; ++i) for (int j = -4 * r; j <= 4 * r; ++j) if (4 * r * r <= i * i + j * j && i * i + j * j <= 16 * r * r) d[t++] = i * 10112 + j;
+    rep (i, an) rep (j, t) if (b[a[i] + d[j]]) ++res;
+    printf("%d\n", res);
+  }
+}

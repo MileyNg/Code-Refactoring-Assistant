@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+
+const int inf = 1 << 28;
+
+struct Edge{
+    int to, cost, weight;
+    Edge(){}
+    Edge(int to_, int cost_, int weight_):to(to_), cost(cost_), weight(weight_){}
+};
+
+int N, M, L;
+vector<vector<Edge> > G;
+vector<vector<int> > w;
+
+int solve(int s){
+    w.assign(N+1, vector<int>(L+1, inf));
+    w[s][L] = 0;
+    priority_queue<pair<int, int> > q;
+    for(q.emplace(L, s); !q.empty();){
+        int c = q.top().first, v = q.top().second; q.pop();
+        if(v == N)continue;
+        for(auto e: G[v]){
+            if(e.cost <= c && w[v][c] < w[e.to][c-e.cost]){
+                w[e.to][c-e.cost] = w[v][c];
+                q.emplace(c - e.cost, e.to);
+            }
+            if(e.weight + w[v][c] < w[e.to][c]){
+                w[e.to][c] = e.weight + w[v][c];
+                q.emplace(c, e.to);
+            }
+        }
+    }
+    return *min_element(all(w[N]));
+}
+
+int main(){
+    while(cin >> N >> M >> L, N|M|L){
+        G.assign(N+1, vector<Edge>(0));
+        rep(i, M){
+            int A, B, D, E;
+            cin >> A >> B >> D >> E;
+            G[A].emplace_back(B, D, E);
+            G[B].emplace_back(A, D, E);
+        }
+        cout << solve(1) << '\n';
+    }
+    return 0;
+}

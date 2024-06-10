@@ -1,0 +1,126 @@
+### global variables
+
+$rots = []
+$dscmb = []
+
+### subroutines
+
+def rot_x(d0, n = 1)    # 2:+y->0:+z, 0:+z->3:-y, 3:-y->5:-z, 5:-z->2:+y
+  d = d0
+  n.times.each{d = [d[2], d[1], d[5], d[0], d[4], d[3]]}
+  d
+end
+
+def rot_y(d0, n = 1)    # 0:+z->1:+x, 1:+x->5:-z, 5:-z->4:-x, 4:-x->0:+z
+  d = d0
+  n.times.each{d = [d[4], d[0], d[2], d[3], d[5], d[1]]}
+  d
+end
+
+def rot_z(d0, n = 1)    # 1:+x->2:+y, 2:+y->4:-x, 4:-x->3:-y, 3:-y->1:+x
+  d = d0
+  n.times.each{d = [d[0], d[3], d[1], d[4], d[2], d[5]]}
+  d
+end
+
+def gen_all_rot()
+  d = (0..5).map{|i| i}
+
+  # top=0
+  4.times.each {yield d; d = rot_z(d);}
+  # top=1 1:+x->0:+z
+  d = rot_y(d, 3)
+  4.times.each {yield d; d = rot_z(d);}
+  d = rot_y(d)
+  # top=2 2:+y->0:+z
+  d = rot_x(d)
+  4.times.each {yield d; d = rot_z(d);}
+  d = rot_x(d, 2)
+  # top=3 3:-y->0:+z
+  4.times.each {yield d; d = rot_z(d);}
+  d = rot_x(d)
+  # top=4 4:-x->0:+z
+  d = rot_y(d)
+  4.times.each {yield d; d = rot_z(d);}
+  d = rot_y(d)
+  # top=5 5:-z->0:+z
+  4.times.each {yield d; d = rot_z(d);}
+  d = rot_y(d, 2)
+end
+
+def check_cube(pos, ds, rs, used)
+  return true if pos >= 8
+
+  b = 1
+
+  for i in (0..7)
+    if (used & b) == 0
+      for r in $rots
+        if (pos & 1) != 0
+          pos0 = pos - 1
+          next if ! $dscmb[ds[pos0]][rs[pos0][1]][i][r[4]]
+        end
+        if (pos & 2) != 0
+          pos0 = pos - 2
+          next if ! $dscmb[ds[pos0]][rs[pos0][2]][i][r[3]]
+        end
+        if (pos & 4) != 0
+          pos0 = pos - 4
+          next if ! $dscmb[ds[pos0]][rs[pos0][0]][i][r[5]]
+        end
+
+        if check_cube(pos + 1, ds + [i], rs + [r], used | b)
+          return true
+        end
+      end
+    end
+
+    b <<= 1
+  end
+
+  false
+end
+
+### main
+
+$rots = []
+gen_all_rot(){|r| $rots << r}
+
+while true
+  d = gets.strip
+  break if d == '0'
+
+  ds = [d.split('').map{|s| s}]
+
+  7.times.each do
+    d = gets.strip.split('').map{|s| s}
+    ds << d
+  end
+
+  $dscmb = 8.times.map{6.times.map{8.times.map{6.times.map{false}}}}
+
+  for i in (0..7)
+    for isd in (0..5)
+      ch = ds[i][isd]
+      ch0 = (ch >= 'A' && ch <= 'Z') ? (ch.ord + 32).chr : (ch.ord - 32).chr
+
+      for j in (0..7)
+        next if i == j
+        for jsd in (0..5)
+          if ds[j][jsd] == ch0
+            $dscmb[i][isd][j][jsd] = true
+          end
+        end
+      end
+    end
+  end
+
+  tf = false
+
+  for r in $rots
+    tf = check_cube(1, [0], [r], 1)
+    break if tf
+  end
+
+  puts (tf ? "YES" : "NO")
+end

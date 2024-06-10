@@ -1,0 +1,74 @@
+#include<stdio.h>
+ 
+ 
+struct intree{
+  int key;
+  int id;  
+  int k;
+  int depth;
+  int dom;  
+  int child[15];
+   
+};
+ 
+ 
+ 
+int main(void){
+  int n,i,j,k;
+  struct intree list[100000];
+   
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    list[i].key=-1;
+    list[i].depth=0;
+  }  
+   
+  for(i=0;i<n;i++){
+    scanf("%d",&k);
+    list[k].id=k;
+    list[k] .dom=i;  
+    scanf("%d",&list[k].k);
+     
+    if(list[k].k!=0){
+      for(j=0;j<list[k].k;j++){
+    scanf("%d",&list[k].child[j]);
+    list[list[k].child[j]].key=list[k].id;    
+    list[list[k].child[j]].depth=1;
+      }
+    }
+     
+  
+  }
+   
+  for(i=0;i<n;i++){
+    for(j=0;j<list[list[i].dom].k;j++){  
+      list[list[list[i].dom].child[j]].depth+=list[list[i].dom].depth;
+     
+  }
+}
+ 
+ 
+   
+   
+    for(i=0;i<n;i++){
+    printf("node %d: ",list[i].id);
+    printf("parent = %d, ",list[i].key);
+    printf("depth = %d, ",list[i].depth);  
+    if(list[i].key==-1) printf("root, ");
+    else if(list[i].k==0) printf ("leaf, ");
+    else printf("internal node, ");
+    printf("[");       
+    for(j=0;j<list[i].k;j++){
+      if(j==list[i].k-1){
+    printf("%d",list[i].child[j]);
+    break;}
+      printf("%d, ",list[i].child[j]);
+    }
+    printf("]\n");
+    }
+ 
+/*    for(i=0;i<n;i++){
+      printf("%d\n",list[i].dom);
+      }*/
+  return 0;
+}

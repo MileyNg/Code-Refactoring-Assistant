@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+vector<string> v;
+
+const ll MOD = 1e9 + 7;
+ll dp[10][10][60000][3];
+int R, C;
+
+int thr[11];
+
+inline int get(int x, int pos){
+	return x / thr[pos] % 3;
+}
+
+inline int ins(int x, int pos, int val){
+	return x + (val - get(x, pos))*thr[pos];
+}
+
+int rec(int r, int c, int x, int left){
+	if (r == R) return !x;
+	if (c == C) return left?0:rec(r + 1, 0, x, 0);
+
+	ll &res = dp[r][c][x][left];
+	if (res >= 0) return res;
+
+	res = 0;
+	if (v[r][c] == '.'){
+		if (!(get(x, c) && left)) res = rec(r, c + 1, x, left);
+	}
+	else{
+		int rest = v[r][c] - '0';
+		rest -= get(x, c) + left;
+		for (int right = 0; right < 3; ++right){
+			for (int down = 0; down < 3; ++down){
+				if (right + down != rest) continue;
+				res += rec(r, c + 1, ins(x, c, down), right);
+				res %= MOD;
+			}
+		}
+	}
+
+	return res;
+}
+
+int main(){
+	thr[0] = 1;
+	for (int i = 1; i < 11; ++i){
+		thr[i] = thr[i - 1] * 3;
+	}
+
+	cin >> R >> C;
+	v.resize(R);
+	rep(i, R) cin >> v[i];
+
+	MEMSET(dp, -1);
+	cout << rec(0, 0, 0, 0) << endl;
+
+	return 0;
+}

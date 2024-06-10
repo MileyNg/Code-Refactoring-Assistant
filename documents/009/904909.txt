@@ -1,0 +1,28 @@
+import std.stdio,
+       std.string,
+       std.conv,
+       std.algorithm;
+
+void main(){
+  int count = readln().chomp.to!int;
+  string[] lines;
+  foreach(i; 0..count){
+    lines.length++;
+    lines[i] = readln().chomp;
+  }
+
+  foreach(line; lines){
+    auto num = line.split.map!(to!int);
+    int d;
+
+    foreach(n1; num)
+      foreach(n2; num)
+        foreach(n3; num)
+          if((n1 ^ 2) == (n2 ^ 2) + (n3 ^ 2))
+            d++;
+    if(d != 0)
+      writeln("YES");
+    else
+      writeln("NO");
+  }
+}

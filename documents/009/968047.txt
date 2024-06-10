@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    char field[6][11];
+    char a='a';
+    for(int i=1; i < 7; i++){
+        for(int j=1; j < 6; j++){
+            field[j][i] = a;
+            a++;
+        }
+    }
+    field[2][6] = '.'; field[3][6] = '?'; field[4][6] = '!'; field[5][6] = ' ';
+
+    string input;
+    while(cin >> input){
+        if(input.size()%2 == 1) {
+            cout << "NA" << endl;
+            continue;
+        }
+        for(int i=0; i < input.size(); i+=2){
+            int n = atoi(input.substr(i, 1).c_str());
+            int m = atoi(input.substr(i+1, 1).c_str());
+
+            cout << field[m][n];
+        }
+        cout << endl;
+    }
+}

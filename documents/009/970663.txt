@@ -1,0 +1,32 @@
+def expr(ns)
+  #puts "ns=#{ns}"
+
+  if ns.length == 1
+    return (eval(ns[0]) == 10) ? ns[0] : nil
+  end
+
+  is = (0...ns.length).map{|i| i}
+
+  is.permutation(2) do |i, j|
+    ns0 = [0]
+    is.each{|k| ns0.push(ns[k]) if k != i && k != j}
+
+    for op in ["+", "-", "*"]
+      ns0[0] = "(#{ns[i]}#{op}#{ns[j]})"
+      ans = expr(ns0)
+      return ans unless ans.nil?
+    end
+  end
+
+  nil
+end
+
+### main
+
+while (line = gets)
+  ns = line.chomp.split(" ").map{|s| s.to_i }
+  break if (ns[0] | ns[1] | ns[2] | ns[3]) == 0
+
+  str = expr(ns)
+  puts (str.nil?) ? "0" : str
+end

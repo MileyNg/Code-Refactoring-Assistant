@@ -1,0 +1,49 @@
+#include<iostream>
+#include<string>
+#include<stdio.h>
+using namespace std;
+
+int MinW,MaxV;
+
+void Func(int*w,int*v,int n,int i,int limw,int sumw,int sumv){
+	
+	if( sumw > limw )return;
+	
+	if( sumv > MaxV ){
+		MaxV = sumv;
+		MinW = sumw;
+	}
+	if( sumv == MaxV && sumw<MinW ){
+			MinW = sumw;
+	}
+	for(int j=i;j<n;++j){
+		Func(w,v,n,j+1,limw,sumw+w[j],sumv+v[j]);
+	}
+}
+
+
+int main(){
+	int W,N;
+	int i,c=0;
+	int *weight,*value;
+	
+	while(cin>>W,W){
+		++c;
+		cin>>N;
+		
+		MaxV=0;
+		MinW=W;
+		
+		weight = new int[N];
+		value = new int[N];
+		
+		for(i=0;i<N;++i){
+			scanf("%d,%d",&value[i],&weight[i]);
+		}
+		
+		Func(weight,value,N,0,W,0,0);
+		
+		printf("Case %d:\n%d\n%d\n",c,MaxV,MinW);	
+		
+	}
+}

@@ -1,0 +1,25 @@
+loop {
+	t = gets
+	if t == nil
+		break
+	end
+
+	t = t.split(",")
+	dist = []
+
+	dist[0] = 0.0
+	10.times do |i|
+		dist[i+1] = dist[i] + t[i].to_f
+	end
+	v1 = t[10].to_f
+	v2 = t[11].to_f
+	v = v1 + v2
+	d = v1.to_f * dist[10].to_f / v.to_f
+
+	10.times do |i|
+		if dist[i].to_f >= d
+			puts i
+			break
+		end
+	end
+}

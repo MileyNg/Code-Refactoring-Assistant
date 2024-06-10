@@ -1,0 +1,24 @@
+#include<map>
+#include <cstdio>
+#include<string>
+#include<iostream>
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b);i++)
+#define rep(i,b) loop(i,0,b)
+
+int main(){
+    string s;
+    int al[256]={0};
+    while(cin>>s){
+        rep(i,s.size()){
+            if(!isalpha(s[i])) continue;
+            s[i] = tolower(s[i]);
+            al[s[i]]++;
+        }
+    }
+    loop(c,'a','z'+1){
+        printf("%c : %d\n",c,al[c]);
+    }
+
+}

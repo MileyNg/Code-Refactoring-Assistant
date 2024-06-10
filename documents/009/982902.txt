@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Contest9
+{
+    class Program
+    {
+        public class Sub
+        {
+            static public int func(int num)
+            {
+                num += 1;// 0,1を無くすため
+                int ret = 0;
+
+                bool[] num_array = new bool[num];
+
+                for (int i = 0; i < num;i++ )
+                {
+                    num_array[i] = true;
+                }
+                num_array[0] = false;
+                num_array[1] = false;
+
+                for (int act = 2; act < num; act++)
+                {
+                    if (num_array[act] == true)
+                    {
+                        int tmp = act * 2;
+                        while (tmp < num)
+                        {
+                            num_array[tmp] = false;
+                            tmp += act;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < num; i++)
+                {
+                    if (num_array[i] == true)
+                    {
+                        ret++;
+                    }
+                }
+
+                return ret;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                var line_origin = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(line_origin))
+                {
+                    break;
+                }
+
+                int num = int.Parse(line_origin);
+
+                //素数の個数を探す　エラトステネスのふるい
+                int ans = Sub.func(num);
+                Console.WriteLine(ans.ToString());
+            }
+        }
+    }
+}

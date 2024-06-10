@@ -1,0 +1,79 @@
+#include<stdio.h>
+#include<string.h>
+#define MAX 100005
+
+typedef struct pp{
+  char name[100];
+  int t;
+}P;
+
+P Q[MAX+1];
+int head=1,tail=1,n;
+
+void enqueue(P x){
+  Q[tail]=x;
+  if(tail!=MAX){
+    tail++;
+  } else {
+    tail=1;
+  }
+}
+
+int Emp(){
+  if(tail==head)
+    return 0;
+  else 
+    return 1;
+}
+
+int Min(int a,int b){
+  if(b<a){
+    return b;
+  }
+  else return a;
+}
+
+P dequeue(){
+  P x;
+  x=Q[head];
+  if(head!=MAX){
+    head++;
+  } else {
+    head=1;
+  } 
+  return x;
+}
+
+void Tr(){
+  int j;
+  for(j=head;j<=tail;j++){
+    printf("%s ",Q[j].name);
+  }
+  printf("\n");
+}
+
+
+int main(){
+  int i,j,s,e=0;
+  P u;
+  scanf("%d%d",&n,&j);
+  for(i=1;i<= n;i++){
+    scanf("%s",u.name); 
+    scanf("%d",&u.t); 
+    enqueue(u);
+  }
+
+  while(!Emp()){
+    u=dequeue();
+    s=Min(j,u.t);
+    u.t=u.t-s;
+    e=e+s;
+    if(u.t<=0){
+      printf("%s %d\n",u.name,e);
+    }
+    else if(u.t>0){
+      enqueue(u);
+    }
+  }
+  return 0;
+}

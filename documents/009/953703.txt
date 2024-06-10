@@ -1,0 +1,36 @@
+#include <stdio.h>
+#define Max 2000
+
+int n,A[Max];
+int q,M[Max],i;
+
+int hantei(int,int);
+main(){
+  
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&A[i]);
+  }
+  
+  scanf("%d",&q);
+  for(i=0;i<q;i++){
+    scanf("%d",&M[i]);
+  }
+  
+  for(i=0;i<q;i++){
+    if(hantei(0,M[i])==1)
+      printf("yes\n");
+    else printf("no\n");
+  }
+  return 0;
+}
+
+int hantei(int i,int m){
+  if(A[i]==m)return 1;
+  if(i==n)return 0;
+  else{
+    if (hantei(i+1,m) || hantei(i+1,m-A[i]))
+      return 1;
+  }
+  return 0;
+}

@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<algorithm>
+#include<iostream>
+using namespace std;
+
+int main(){ 
+
+  int i,j;
+  int b,r,g,c,s,t;
+
+  while(1){
+
+    int bonus;      //ボーナスタイムの数
+    int use_coin;   //回すために使ったコインの枚数
+    int lost_turn;  //獲得コインが0だった回数
+    int profits;    //利益
+
+    scanf("%d %d %d %d %d %d",&b,&r,&g,&c,&s,&t);
+
+    if(t==0)break;
+
+    /*損したコインの枚数を計算する*/
+    
+    /*総プレイ回数の内ボーナスタイムの数を調べる*/
+    bonus=b*5+r*3;
+
+    /*総プレイ回数の内獲得が0だった回数を調べる*/
+    lost_turn=t-(bonus+b+r+g+c+s);
+
+    /*回すのに使ったコインの枚数を計算*/
+    use_coin=lost_turn*3;
+
+    /*利益を計算*/
+    profits=100+b*12+r*12+bonus*13+g*4-c;
+
+    /*差し引いた額を出力*/
+    printf("%d\n",profits-use_coin);
+
+  }
+
+  return 0;
+}

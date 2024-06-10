@@ -1,0 +1,31 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+ 
+int main(){
+  int stack[100],i=0,ans=1;
+  char abc[100];
+ 
+  while( scanf("%s", abc) != EOF ){
+
+    if ( abc[0] == '+' ){
+      stack[i-2] += stack[i-1];
+      i--;
+    }
+    else if ( abc[0] == '-' ){
+      stack[i-2] -= stack[i-1];
+      i--;
+    }
+    else if ( abc[0] == '*' ){
+      stack[i-2] *= stack[i-1];
+      i--;
+    } 
+    else {
+      stack[i++] = atoi(abc);
+    }
+  }
+
+  printf("%d\n",stack[0]);
+  return 0;
+
+}

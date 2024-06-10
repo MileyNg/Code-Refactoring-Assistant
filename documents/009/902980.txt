@@ -1,0 +1,58 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+#define N 1000000
+
+int main(int argc, char const *argv[])
+{
+	int n,p;
+
+	bool f[N];
+	int i1,i2;
+
+	set<int> s;
+	set<int>::iterator it1,it2;
+
+
+	f[0]=true;
+	f[1]=true;
+	f[2]=false;
+	for(i1=2;i1<N;i1++){
+		if(f[i1]==false){
+			for(i2=2;i2*i1<N;i2++){
+				f[i1*i2]=true;
+			}
+		}
+	}
+
+	for(i1=2;i1<N;i1++){
+		if(f[i1]==false) s.insert(i1);
+	}
+
+
+	while(1){
+		cin>>n>>p;
+		if(n+p==-2) break;
+
+		multiset<int> M;
+		multiset<int>::iterator it3;
+
+		it1=s.find(n);
+		if(it1!=s.end()) it1++; 
+		else it1=s.lower_bound(n);
+
+		for(i1=0;i1<p;it1++,i1++){
+			for(it2=it1,i2=i1;i2<p;it2++,i2++){
+				M.insert((*it1)+(*it2));
+			}
+		}
+
+		for(it3=M.begin(),i1=1;i1<p;it3++,i1++){}
+		cout<<(*it3)<<endl;
+
+
+	}
+	return 0;
+}

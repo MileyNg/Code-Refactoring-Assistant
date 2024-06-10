@@ -1,0 +1,120 @@
+#include "stdio.h"
+#include "math.h"
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+
+/** Problem0193 : Deven-Eleven **/
+int field[100][100];
+int d[100][100];
+bool vis[100][100];
+const int dx0[6]={0, 1, 1, 1, 0, -1}, dy0[6]={-1, -1, 0, 1, 1, 0};
+const int dx1[6]={-1, 0, 1, 0, -1, -1}, dy1[6]={-1, -1, 0, 1, 1, 0};
+
+int main()
+{
+	int n, m, s, t;
+	while (cin>>m>>n, m||n) {
+		fill(field[0], field[0]+100*100, -1);
+		fill(d[0], d[0]+100*100, INF);
+		
+		cin >> s;
+		rep(k, s) {
+			int x, y; cin >> x >> y;
+			x--; y--;
+			field[x][y] = k;
+			
+			fill(vis[0], vis[0]+100*100, false);
+			queue<P> Q;
+			queue<int> dis;
+			Q.push(P(x, y));
+			dis.push(0);
+			
+			while (Q.size()) {
+				P p = Q.front(); Q.pop();
+				int dd = dis.front(); dis.pop();
+				
+				if (vis[p.first][p.second])continue;
+				vis[p.first][p.second]=true;
+				
+				d[p.first][p.second] = min(dd, d[p.first][p.second]);
+				
+				rep(i, 6) {
+					int nx, ny;
+					if (p.second%2==1) {
+						nx = p.first+dx0[i]; ny = p.second+dy0[i];
+					} else {
+						nx = p.first+dx1[i]; ny = p.second+dy1[i];
+					}
+					if (0<=nx&&nx<m && 0<=ny&&ny<n && !vis[nx][ny]) {
+						Q.push(P(nx, ny));
+						dis.push(dd+1);
+					}
+				}
+			}
+		}
+
+			
+		cin >> t;
+		int ans=0;
+		
+		rep(k, t) {
+			int x, y; cin >> x >> y;
+			x--; y--;
+			fill(vis[0], vis[0]+100*100, false);
+			queue<P> Q;
+			queue<int> dis;
+			Q.push(P(x, y));
+			dis.push(0);
+			
+			int cnt=0;
+			while (Q.size()) {
+				P p = Q.front(); Q.pop();
+				int dd = dis.front(); dis.pop();
+				
+				if (vis[p.first][p.second])continue;
+				vis[p.first][p.second] = true;
+				
+				if (dd<d[p.first][p.second])
+					cnt++;
+				
+				rep(i, 6) {
+					int nx, ny;
+					if (p.second%2==1) {
+						nx = p.first+dx0[i]; ny = p.second+dy0[i];
+					} else {
+						nx = p.first+dx1[i]; ny = p.second+dy1[i];
+					}
+					if (0<=nx&&nx<m && 0<=ny&&ny<n && !vis[nx][ny]) {
+						Q.push(P(nx, ny));
+						dis.push(dd+1);
+					}
+				}
+			}
+			ans = max(ans, cnt);
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

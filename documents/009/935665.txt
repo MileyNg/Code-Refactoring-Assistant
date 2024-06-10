@@ -1,0 +1,50 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int a[100];
+int i = 0;
+ 
+void plus(int x)
+{
+  a[i++] = x;
+}
+
+int minus() 
+{
+  return a[--i];
+}
+
+main()
+{
+  int x;
+  char s[100];
+  
+  while( scanf("%s", s) != EOF )
+    {
+      if ( s[0] == '+' )
+	{
+	  x = minus();
+	  plus(minus() + x);
+	}
+      else if ( s[0] == '-' )
+	{
+	  x = minus();
+	  plus(minus() - x);
+	}
+      else if ( s[0] == '*' )
+	{
+	  x = minus();
+	  plus(minus() * x); 
+	}
+      else
+	{
+	  x = atoi(s);
+	  minus(x);
+	}
+    }
+  
+  printf("%d\n", minus());
+  
+  return 0;
+}

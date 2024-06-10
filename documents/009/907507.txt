@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  int N; cin >> N;
+  vector<int> vec(N), minVec(N);
+  
+  int ans = -(1<<29);
+
+  for(int i=0; i<N; i++) {
+    cin >> vec[i];
+    if(!i) {
+      minVec[i] = vec[i];
+    }
+    else  {
+      if(minVec[i-1] > vec[i]) {
+        minVec[i] = vec[i];
+      }
+      else {
+        minVec[i] = minVec[i-1];
+        ans = max(ans, vec[i] - minVec[i]);
+      } 
+    }
+  }
+  
+  cout << ans << endl;
+  
+  return 0;
+}

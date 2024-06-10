@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+using namespace std;
+int main(){
+
+  int i,j,k=0,dir,a,b;
+  char ch;
+  string str,direction,p;
+
+  cin>>str;
+  cin>>dir;
+
+  for(i=0; i<dir; i++){
+
+    j=k=0;    
+    cin>>direction;
+    cin>>a>>b;
+    
+    if(direction=="print"){
+ 
+      cout<<str.substr(a,b-a+1)<<endl;
+
+    }else if(direction=="reverse"){
+
+      for(j=a; j<=(b-a)/2+a; j++){
+        ch=str[j];
+        str[j]=str[b+a-j];
+        str[b+a-j]=ch;
+
+      }
+    }else if(direction=="replace"){
+
+      cin>>p;
+      for(j=a; j<=b; j++){
+        str[j]=p[k];
+        k++;
+      }
+      
+    }
+
+  }
+  
+}

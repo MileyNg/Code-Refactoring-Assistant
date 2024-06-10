@@ -1,0 +1,21 @@
+while (line = gets) do
+  catch (:done) do
+    h, w = line.split.map(&:to_i)
+    break if h == 0 && w == 0
+
+    diag = h*h + w*w
+    start = h + 1
+    while true do
+      (start..diag).each do |e|
+        v = Math.sqrt(diag - e*e)
+        break if e >= v
+        if v.to_i == v
+          puts [e, v.to_i].join ' '
+          throw :done
+        end
+      end
+      diag += 1
+      start = 1
+    end
+  end
+end

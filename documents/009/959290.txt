@@ -1,0 +1,54 @@
+#include<stdio.h>
+int main(void){
+
+  int in[5]={0};
+  while(scanf("%d,",&in[0])!=EOF){
+    scanf("%d,%d,%d,%d",&in[1],&in[2],&in[3],&in[4]);
+
+    int sort[5]={0};
+    int i,j;
+    int datesu=0;
+
+    for(i=0;i<5;i++){    
+      for(j=datesu-1;j>=0;j--){
+	if(in[i]>sort[j])
+	  sort[j+1]=sort[j];
+	else{
+	  sort[j+1]=in[i];
+	  break;
+	}
+      }
+      if(j==-1)
+	sort[0]=in[i];
+      datesu++;
+    }
+    
+    
+    if(sort[0]==sort[3]||sort[1]==sort[4]){
+      puts("four card");
+    }else if(sort[0]==sort[2]){
+      if(sort[3]==sort[4])
+	puts("full house");
+      else
+	puts("three card");
+    }else if(sort[2]==sort[4]){
+      if(sort[0]==sort[1])
+	puts("full house");
+      else
+	puts("three card");
+    }else if(sort[1]==sort[3]){
+      puts("three card");
+    }else if((sort[0]==sort[1]&&sort[2]==sort[3])||(sort[0]==sort[1]&&sort[3]==sort[4])||(sort[1]==sort[2]&&sort[3]==sort[4])){
+      puts("two pair");
+    }else if(sort[0]==sort[1]||sort[1]==sort[2]||sort[2]==sort[3]||sort[3]==sort[4]){
+      puts("one pair");
+    }else if(sort[4]==1&&sort[3]==10){
+      puts("straight");
+    }else if(sort[4]-sort[0]==-4){
+      puts("straight");
+    }else
+      puts("null");
+  }
+
+  return 0;
+}

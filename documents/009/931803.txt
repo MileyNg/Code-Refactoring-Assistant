@@ -1,0 +1,52 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <tuple>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+typedef tuple<int, int, int> T;
+
+#include <algorithm>
+#include <limits>
+#include <cstring>
+#include <array>
+
+bool solve(int n) {
+    vector<char> v;
+    while (n) {
+        v.push_back(n%10);
+        n /= 10;
+    }
+    for (int i = 0; i < v.size()/2; i++) {
+        if (v[i] != v[v.size()-1-i]) return false;
+    }
+    return true;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    int r = 10000000;
+    for (int i = 0; i <= 10001; i++) {
+        if (solve(i)) {
+            if (abs(n-i) < abs(n-r)) {
+                r = i;
+            }
+        }
+    }
+    cout << r << endl;
+    return 0;
+}

@@ -1,0 +1,60 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+#define MAX 10000
+
+int main(){
+	
+	int n;
+	string s;
+	string stm;
+	vector<int> num[MAX];
+	cin>>n;
+	int lay;
+	int sum;
+	bool f;
+
+	for(int i=0;i<n;i++){
+		cin>>s;
+		lay=0;
+		for(int j=0;j<s.size();j++){
+			if(s[j]=='[') lay++;
+			else if(s[j]==']'){
+				if(stm==""){
+					sort(num[lay+1].begin(),num[lay+1].end());
+					sum=0;
+					for(int i=0;i<num[lay+1].size()/2+1;i++){
+						if(f) sum+=num[lay+1][i]/2+1;
+						else sum+=num[lay+1][i];
+					}
+					f=false;
+					num[lay+1].clear();
+					num[lay].push_back(sum);
+					lay--;
+				}
+				else{
+					num[lay].push_back(atoi(stm.c_str()));
+					lay--;
+					stm=("");
+				}
+			}
+			else{
+				stm+=s[j],f=true;
+			}
+			
+		}
+		sort(num[lay+1].begin(),num[lay+1].end());
+		sum=0;
+		for(int i=0;i<num[lay+1].size()/2+1;i++){
+			sum+=num[lay+1][i];
+		}
+		cout<<sum<<endl;
+		for(int i=0;i<MAX;i++){
+			if(!num[i].empty()) num[i].clear();
+		}
+	}
+}

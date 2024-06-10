@@ -1,0 +1,102 @@
+#include<stdio.h>
+#define MAX 100005
+#define NIL -1
+
+/*
+ p: parent
+ l: left-child
+ r: right sibling
+ */
+
+struct Node{
+    int p, l, r;
+};
+struct Node T[MAX]; // Tree
+int dep,hileft,hiright;
+
+
+int depth(int u){
+  if(T[u].p == NIL)return 0;
+   if(T[T[u].p].p != NIL){
+     dep++;
+    depth(T[u].p);
+  }
+  return dep;
+}
+
+int degree(int u){
+  int i,cnt=0;
+    if (T[u].l != NIL)cnt++;
+    if(T[T[u].l].r != NIL)cnt++;
+    return cnt;
+}
+int sibling(int u){
+  if(T[u].p == NIL) return NIL;
+  else if(T[T[u].p].l==u)return T[u].r;
+  else return T[T[u].p].l;
+  //printf("%d",T[T[u].p].l);
+}
+
+int hight(int u){
+ if(T[u].l == NIL && T[T[u].l].r == NIL)return 0;
+ if(T[u].l != NIL){
+   hileft= hight(T[u].l)+1;
+  }
+ if(T[T[u].l].r != NIL){
+   hiright=hight(T[T[u].l].r)+1;
+  }
+ if(hiright>hileft)return hiright;
+ else return hileft;
+}
+
+
+void print(int u){
+  printf("node %d: ",u);
+  printf("parent = %d, ",T[u].p);
+  printf("sibling = %d, ",sibling(u));
+  printf("degree = %d, ",degree(u));
+  dep=1;
+  printf("depth = %d, ",depth(u));
+  hileft=hiright=0;
+  printf("height = %d, ",hight(u));
+
+  if(T[u].p == NIL)printf("root\n");
+  else if(T[u].p != NIL && T[u].l != NIL)printf("internal node\n");
+  else if(T[u].l == NIL)printf("leaf\n");
+}
+
+
+main(){
+  int i, j, d, v, c, l, n,tmp;
+    
+    scanf("%d", &n);
+    
+    for ( i = 0; i < n; i++ ) {
+        T[i].p = T[i].l = T[i].r = NIL;
+    }
+    
+    for (i = 0; i <n ; i++){
+        scanf("%d", &v);
+        for ( j = 0; j < 2; j++ ){
+            scanf("%d", &c);
+            /* make tree */
+            
+                if(j==0){
+                T[c].p=v;
+                T[v].l=c;
+		tmp=c;
+            }
+            else{
+                T[c].p=v;
+                T[tmp].r=c;
+		tmp=c;
+            }
+
+        }
+    }
+    
+    /*...*/
+    
+    for ( i = 0; i < n; i++ ) print(i);
+    return 0;
+}

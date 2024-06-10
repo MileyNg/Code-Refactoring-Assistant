@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int N, Q;
+  while(scanf("%d%d", &N, &Q) && N+Q){
+    int cnt[101] = {};
+    int M, data;
+    rep(i, N){
+      scanf("%d", &M);
+      rep(i, M){ 
+	scanf("%d", &data);
+	cnt[data]++;
+      }
+    }
+
+    int res = 0;
+    REP(i, 1, 101) if(cnt[res] < cnt[i]) res = i;
+
+    printf("%d\n", cnt[res]<Q?0:res);
+  }
+  return 0;
+}

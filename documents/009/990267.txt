@@ -1,0 +1,42 @@
+#include<iostream>
+#include<set>
+
+using namespace std;
+
+int main(){
+  int n,m;
+  cin>>n>>m;
+  static char s[300001];
+  cin>>s;
+  unsigned long long B=100000007;
+  unsigned long long h=B;
+  static unsigned long long a[300000];
+  static unsigned long long rnk[300000];
+  for(int i=0;i<n;i++){
+    rnk[n-1-i]=h;
+    a[i]=h*s[i];
+    h*=B;
+  }
+  unsigned long long ch=a[0];
+  int l=0,r=0;
+  set<unsigned long long> st;
+  while(m--){
+    char q[4];
+    cin>>q;
+    if(q[0]=='R'){
+      if(q[1]=='+'){
+	ch+=a[++r];
+      }else{
+	ch-=a[r--];
+      }
+    }else{
+      if(q[1]=='+'){
+	ch-=a[l++];
+      }else{
+	ch+=a[--l];
+      }
+    }
+    st.insert(ch*rnk[l]);
+  }
+  cout<<st.size()<<endl;
+}

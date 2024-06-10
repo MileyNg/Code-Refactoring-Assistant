@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <string.h>
+
+#define CMD_NUM 7
+
+typedef struct {
+    int cursor;
+    char text[1001];
+    char buf[1001];
+} editor_t;
+
+void skip_space(editor_t *e) {
+    int len = strlen(e->text);
+    while (e->cursor < len &&
+           e->text[e->cursor] == ' ')
+        e->cursor++;
+}
+
+void forward_char(editor_t *e, const char *command) {
+    if (e->cursor >= strlen(e->text)) return;
+    e->cursor++;
+}
+
+void forward_word(editor_t *e, const char *command) {
+    int len = strlen(e->text);
+    skip_space(e);
+    while (e->cursor < len &&
+           e->text[e->cursor] != ' ')
+        e->cursor++;
+}
+
+void backward_char(editor_t *e, const char *command) {
+    if (e->cursor == 0) return;
+    e->cursor--;
+}
+
+void backward_word(editor_t *e, const char *command) {
+    while (e->cursor > 0 &&
+           e->text[e->cursor-1] == ' ')
+        e->cursor--;
+
+    while (e->cursor > 0 &&
+           e->text[e->cursor-1] != ' ')
+        e->cursor--;
+}
+
+void delete_char(editor_t *e, const char *command) {
+    int len = strlen(e->text);
+    if (e->cursor >= len) return;
+    strncpy(e->buf, e->text + e->cursor + 1, len - e->cursor); // include null
+    strncpy(e->text + e->cursor, e->buf, len - e->cursor);
+}
+
+void delete_word(editor_t *e, const char *command) {
+    int cur_pos = e->cursor;
+    int len = strlen(e->text);
+    skip_space(e);
+    if (e->cursor == len) {
+        e->cursor = cur_pos;
+        return;
+    }
+    forward_word(e, "");
+    strncpy(e->buf, e->text + e->cursor, len - e->cursor + 1);
+    strncpy(e->text + cur_pos, e->buf, len - e->cursor + 1);
+    e->cursor = cur_pos;
+}
+
+void insert(editor_t *e, const char *command) {
+    int len = strlen(e->text);
+    int cmd_len = strlen(command);
+    int a_pos = 8, a_len = cmd_len - 9;
+    strncpy(e->buf, e->text + e->cursor, len - e->cursor + 1);
+    strncpy(e->text + e->cursor, command + a_pos, a_len);
+    strncpy(e->text + e->cursor + a_len, e->buf, len - e->cursor + 1);
+    e->cursor += a_len;
+}
+
+int main () {
+    editor_t editor;
+    char command[120];
+    int i, j, k, n, m; 
+    const char *commands[] = {
+        "forward char",
+        "forward word",
+        "backward char",
+        "backward word",
+        "delete char",
+        "delete word",
+        "insert"
+    };
+    void (*handlers[])(editor_t*, const char*) = {
+        forward_char,
+        forward_word,
+        backward_char,
+        backward_word,
+        delete_char,
+        delete_word,
+        insert
+    };
+
+    scanf("%d\n", &n);
+    for (i = 0; i < n; i++) {
+        editor.cursor = 0;
+        gets(editor.text);
+        scanf("%d\n", &m);
+        for (j = 0; j < m; j++) {
+            gets(command);
+            for (k = 0; k < CMD_NUM; k++) {
+                const char *cmd = commands[k];
+                if (strncmp(cmd, command, strlen(cmd)) == 0) {
+                    handlers[k](&editor, command);
+                    break;
+                }
+
+            }
+        }
+        insert(&editor, "insert \"^\"");
+        printf("%s\n", editor.text);
+    }
+
+    return 0;
+}

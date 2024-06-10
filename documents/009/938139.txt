@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+void swap(int A[], int i, int j) {
+	int t;
+	t = A[i];
+	A[i] = A[j];
+	A[j] = t;
+}
+
+int partition(int A[], int p, int r) {
+	int x,i,j,t;
+	x = A[r];
+	i=p;
+	for(j=p;j<r;j++) {
+		if(A[j] <= x) {
+			swap(A, i, j);
+			i++;
+		}
+	}
+	
+	swap(A, i, r);
+	return i;
+}
+
+int A[100000+2];
+
+int main(void) {
+	int n,i,t;
+	scanf("%d\n", &n);
+	for(i=0;i<n;i++) {
+		scanf("%d", &A[i]);
+	}
+	
+	t = partition(A, 0, n-1);
+	for(i=0;i<n;i++) {
+		if(t == i) {
+			printf("[%d]", A[i]);
+		} else {
+			printf("%d", A[i]);
+		}
+		
+		if(i<n-1) {
+			printf(" ");
+		} else {
+			printf("\n");
+		}
+	}
+	
+	return 0;
+}

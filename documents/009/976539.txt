@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+#include "../geometry.h"
+
+P input(){
+    double x, y;
+    cin >> x >> y;
+    return {x, y};
+}
+const double INF = DBL_MAX;
+vector<double> dijkstra(const Graph& G, int s){
+    typedef pair<double, int> P;
+    priority_queue<P, vector<P>, greater<P>> que;
+    vector<double> res(G.size(), INF);
+    que.push(P(0, s));
+    res[s] = 0;
+    while(!que.empty()){
+        P p = que.top(); que.pop();
+        int v = p.second;
+        double c = p.first;
+        if(c > res[v]) continue;
+        for(auto& e : G[v]){
+            if(res[e.dst] > res[v] + e.cost){
+                res[e.dst] = res[v] + e.cost;
+                que.push(P(res[e.dst], e.dst));
+            }
+        }
+    }
+    return res;
+}
+int main(){
+    int N;
+    int casenum = 0;
+    while(cin >> N && N){
+        P sp = input();
+        P gp = input();
+
+        vector<L> elec(N);
+        REP(i, N) {
+            P pa = input();
+            P pb = input();
+            elec[i] = {pa, pb};
+        }
+
+        vector<L> lines;
+        bool exist_s = false;
+        bool exist_g = false;
+        REP(i, N) {
+            P v = vec(elec[i]) * P(0, 1) / abs(vec(elec[i])) * 1e6;
+            for(P p : {sp, gp}){
+                L l = {p, p + v};
+                if(iLS(l, elec[i])) {
+                    if(p == sp) exist_s = true;
+                    if(p == gp) exist_g = true;
+                    lines.push_back(l);
+                }
+            }
+            lines.push_back({elec[i][0] - v, elec[i][0] + v});
+            lines.push_back({elec[i][1] - v, elec[i][1] + v});
+        }
+
+        if(!exist_s || !exist_g) {
+            printf("Case %d: Impossible\n", ++casenum);
+            continue;
+        }
+
+        vector<P> ps = {sp, gp};
+        merge_segments(lines);
+        Graph G = segment_arrangement(lines, ps);
+
+        int start = lower_bound(ps.begin(), ps.end(), sp) - ps.begin();
+        int goal = lower_bound(ps.begin(), ps.end(), gp) - ps.begin();
+        assert(ps[start] == sp);
+        assert(ps[goal] == gp);
+        vector<double> dist = dijkstra(G, start);
+
+        double res = dist[goal];
+
+        if(res < INF) {
+            printf("Case %d: %.5f\n", ++casenum, res);
+        }else {
+            printf("Case %d: Impossible\n", ++casenum);
+        }
+
+    }
+    return 0;
+}

@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+main(){
+  int x,i=0,a=0,b=0;
+  char s[100];
+  int ans[100];
+
+  while(scanf("%s",s)!=EOF)
+    {
+      if(s[0]=='+')
+	{
+	  a=ans[--i];
+	  b=ans[--i];
+	  ans[i]=b+a;
+	  i++;
+	}
+      else if(s[0]=='-')
+	{
+	  a=ans[--i];
+	  b=ans[--i];
+	  ans[i]=b-a;
+	  i++;
+	}
+      else if(s[0]=='*')
+	{
+	  a=ans[--i];
+	  b=ans[--i];
+	  ans[i]=b*a;
+	  i++;
+	}
+      else 
+	{
+	  x=atoi(s);
+	  ans[i]=x;
+	  i++;
+	}
+    }
+
+  printf("%d\n",ans[--i]);
+
+  return 0;
+}

@@ -1,0 +1,28 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+int main(){
+	string la,lb;
+	int a[4],b[4];
+	int hit,blow;
+	while(cin>>la>>lb,la!="0"&&lb!="0"){
+	hit=blow=0;
+	for(int i=0;i<4;i++){
+		if(la[i]==lb[i]){hit++;}
+		a[i]=la[i]-'0';
+		b[i]=lb[i]-'0';
+	}
+	sort(a,a+4);sort(b,b+4);
+	for(int i=0;i<4;i++){
+		for(int j=0;j<4;j++){
+			if(a[i]==b[j])blow++;
+			if(a[i]<b[j])break;
+		}
+	}
+	
+	cout<< hit<<" "<<blow-hit<<endl;
+	}
+	
+}

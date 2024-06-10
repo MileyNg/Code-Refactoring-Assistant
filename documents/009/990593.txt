@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <math.h>
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem2001 : Amida, the City of Miracle **/
+int main()
+{
+	int amida[1000][100];
+	int n, m, a, h, p, q;
+	while (cin>>n>>m>>a, n||m||a) {
+		fill(amida[0], amida[0]+1000*100, 0);
+		rep(i, n) {
+			cin>>h>>p>>q; h--; p--; q--;
+			amida[h][p] = 1;
+			amida[h][q] = -1;
+		}
+		
+		rep(i, n)
+			a += amida[i][a];
+		
+		cout << a+1 << endl;
+	}
+}

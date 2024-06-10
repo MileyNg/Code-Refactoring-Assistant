@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstring>
+#include <bitset>
+using namespace std;
+
+bool data[55][31];
+int N;
+
+int main() {
+  
+  while(cin >> N && N) {
+    memset(data, false, sizeof data);
+    for(int i=0; i<N; i++) {
+      int k; cin >> k;
+      while(k--) {
+	int h; cin >> h; data[i][h] = true;
+      }
+    }
+    
+    bool flag = false;
+    int dp[55][31];
+    memset(dp, 0, sizeof dp);
+    for(int i=0; i<N; i++) dp[i][0] = 1;
+    for(int i=0; i<N; i++) {
+      for(int j=1; j<=30; j++) {
+	dp[i][j] = max(dp[i][j], dp[i][j-1]);
+	if(!data[i][j]) continue;
+	for(int k=i+1; k<N; k++) { //
+	  dp[k][j] = max(dp[k][j], dp[k][j-1]);
+	  if(!data[k][j]) continue;
+	  dp[i][j] = max(dp[i][j], dp[i][j-1]+dp[k][j-1]);
+	  dp[k][j] = max(dp[k][j], dp[i][j-1]+dp[k][j-1]);
+	  if(dp[i][j] == N) {
+	    cout << j << endl;
+	    flag = true;
+	    goto EXIT;
+	  }
+	}
+      }
+    }
+  EXIT:;
+    if(!flag) cout << -1 << endl;
+  }
+  
+  return 0;
+}

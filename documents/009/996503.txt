@@ -1,0 +1,25 @@
+<?php
+/*
+	AOJ 0159
+	@kankichi573
+*/
+while(fscanf(STDIN,"%d",$n) && $n)
+{
+  $riso_bmi=10000;
+	
+  for($i=0;$i<$n;$i++)
+    {
+      fscanf(STDIN,"%d %d %d",$bango,$height,$weight);
+      $height /= 100.0;
+      $bmi = $weight*1.0/$height/$height;
+      //fprintf(STDOUT,"%f %f %f\n",$bmi,$height,abs($bmi-22));
+      if(abs($bmi-22) < abs($riso_bmi-22))
+	{
+	  $riso_bmi=$bmi;
+	  $riso_no =$bango;
+	}
+    }
+  fprintf(STDOUT,"%d\n",$riso_no);
+ }
+  return(0);
+?>

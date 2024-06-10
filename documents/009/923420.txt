@@ -1,0 +1,40 @@
+import math
+def bin_search_count(list,cond):
+	if cond(list[0]) and cond(list[-1]):
+		return len(list)
+	if cond(list[0]) == False and cond(list[-1]) == False:
+		return 0
+	Imin = 0
+	Imax = len(list) - 1
+	Imid = int(Imin * 0.5 + Imax * 0.5)
+	return bin_search_count(list[:Imid + 1],cond) + bin_search_count(list[Imid + 1:],cond)
+	
+def get_primes(goal):
+	primes = [2,3]
+	prime_index = 1
+	goalrt = math.sqrt(goal+1)
+	sieve = map(lambda n:[n,1],range(5,goal+1,2))#Sieve of Eratosthenes
+	while primes[prime_index] < goalrt:
+		target = primes[prime_index]
+		targetsq = target ** 2
+		part_index = bin_search_count(sieve,lambda n: n[0] < targetsq)
+		primes = primes + map(lambda nd:nd[0],filter(lambda n: n[1] == 1 , sieve[:part_index]))
+		sieve = sieve[part_index:]
+		i = 0
+		while i < len(sieve):
+			sieve[i][1] = 0
+			i += target
+		prime_index += 1
+	primes = primes + map(lambda nd:nd[0],filter(lambda n:n[1] ,sieve))
+	return primes
+
+primes = get_primes(1000000)
+while 2>1:
+	
+	try:
+		n = int(raw_input())
+		print bin_search_count(primes,lambda x:x <= n)
+	except EOFError:
+		break
+	except ValueError:
+		break

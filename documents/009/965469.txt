@@ -1,0 +1,35 @@
+loop{
+	n = gets.to_i()
+	if n == 0 then
+		break
+	end
+	
+	s,t,b = gets.split
+	room_path = {	"A"=>["B","D"],		"B"=>["A","C","E"],		"C"=>["B","F"],
+					"D"=>["A","E","G"],	"E"=>["D","B","F","H"],	"F"=>["E","C","I"],
+					"G"=>["H","D"],		"H"=>["E","G","I"],		"I"=>["F","H"]}
+					
+	room_path[b].each{|r|
+		room_path[r].select!{|item| item != b}
+	}
+	
+	room = Hash.new(0.0)
+	room[s] = 1.0
+	
+	
+	n.times do
+		troom = Hash.new(0.0)
+		room_path.each_key{|key|
+			troom[key] = room[key]
+		}
+		
+		room_path.each{|key,path|
+			room[key] = ((4.-path.size())/4) * troom[key]
+			path.each{|r|
+				room[key] += troom[r]/4
+			}
+		}
+	end
+	p room[t]
+	
+}

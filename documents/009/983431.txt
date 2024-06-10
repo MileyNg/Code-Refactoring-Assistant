@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct UnionFind {
+	vector<int> data;
+	UnionFind(int size) : data(size, -1) {}
+	
+	bool unionSet(int x, int y) {
+		x = root(x); y = root(y);
+		if (x!=y) {
+			if (data[y] < data[x]) swap(x, y);
+			data[x] += data[y];
+			data[y] = x;
+		}
+		return x!=y;
+	}
+	
+	bool sameSet(int x, int y) { return root(x) == root(y); }
+	
+	int root(int x) { return data[x] < 0 ? x : data[x] = root(data[x]); }
+	
+	int size(int x) { return -data[root(x)]; }
+};
+
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+
+int main() {
+	int W, H; cin >> W >> H;
+	vector<string> map;
+	
+	int tx = -1, ty = -1;
+	
+	for (int i=0; i<H; i++) {
+		string str; cin >> str;
+		map.push_back(str);
+		
+		for (int j=0; j<W; j++) {
+			if (str[j]=='t') {
+				tx = j;
+				ty = i;
+			}
+		}
+	}
+	
+	// i = y * H + x
+	UnionFind uf(W*H+10);
+	
+	for (int i=0; i<H; i++) {
+		for (int j=0; j<W; j++) {
+			if (map[i][j]=='#') continue;
+			
+			for (int d=0; d<4; d++) {
+				int x = j + dx[d], y = i + dy[d];
+				if (!(0<=x && x<W && 0<=y && y<H)) continue;
+				if (map[y][x]=='#') continue;
+				uf.unionSet(i * W + j, y * W + x);
+			}
+		}
+	}
+	if (uf.sameSet(0, ty * W + tx)) {
+		cout << 0 << endl; 
+		return 0;
+	}
+	
+	int N; cin >> N;
+	for (int i=0; i<N; i++) {
+		int x, y; cin >> x >> y;
+		if (map[y][x]=='.') continue;
+		
+		map[y][x] = '.';
+		for (int d=0; d<4; d++) {
+			int _x = x + dx[d], _y = y + dy[d];
+			if (!(0<=_x && _x<W && 0<=_y && _y<H)) continue;
+			if (map[_y][_x]=='#') continue;
+			uf.unionSet(y * W + x, _y * W + _x);
+		}
+		
+		if (uf.sameSet(0, ty * W + tx)) {
+			cout << i + 1 << endl;
+			return 0;
+		}
+	}
+	
+	cout << -1 << endl;
+	
+	return 0;
+}

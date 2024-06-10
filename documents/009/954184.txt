@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<math.h>
+#define EPS 1e-8
+void swap(double *a,double *b){
+    int hoge;
+    hoge=*a;
+    *a=*b;
+    *b=hoge;
+}
+int main(void){
+    int i;
+
+    double x[4],y[4],a,b,c,d,ansx,ansy,_x[4],_y[4],hoge;
+    while(1){
+        if(scanf(" %lf",&x[0])==EOF){
+            break;
+        }
+        scanf(",%lf,%lf,%lf,%lf,%lf,%lf,%lf",&y[0],&x[1],&y[1],&x[2],&y[2],&x[3],&y[3]);
+        /*for(i=0;i<4;i++){
+            printf("  %d  %f %f\n",i,x[i],y[i]);
+        }*/
+        if(fabs(x[0]-x[2])<EPS || fabs(y[0]-y[2])<EPS)a=0;
+        else a=(y[0]-y[2])/(x[0]-x[2]);
+        if(fabs(x[1]-x[3])<EPS || fabs(y[1]-y[3])<EPS)c=0;
+        else c=(y[1]-y[3])/(x[1]-x[3]);
+        b=y[0]-a*x[0];
+        d=y[1]-c*x[1];
+        //printf("y = %fx + %f\ny = %fx + %f\n",a,b,c,d);
+        ansx=(b-d)/(c-a);
+        //printf("%f\n",ansx);
+        //puts("test");
+        if(fabs(c-a)==EPS){
+            puts("YES");
+            continue;
+        }
+        if(x[0]-x[2]>EPS)swap(&x[0],&x[2]);
+        if(x[1]-x[3]>EPS)swap(&x[1],&x[3]);
+        if(EPS<ansx-x[0] && EPS<x[2]-ansx && EPS<ansx-x[1] && EPS<x[3]-ansx)puts("YES");
+        else printf("NO\n");
+    }
+    return 0;
+}

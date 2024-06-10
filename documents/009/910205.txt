@@ -1,0 +1,98 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define init(a) memset((a),0,sizeof(a))
+using namespace std;
+typedef double D;
+typedef vector<D> P;
+const D EPS = 1e-8;
+
+int n,m,r;
+P sp[2020],tp[20],ep;
+D sr[2020],tb[20];
+int rm[20][2020],use[2020];
+
+P mul(P p, D d){
+  rep(i,p.size())p[i] *= d;
+  return p;
+}
+
+P add(P a, P b){
+  rep(i,a.size())a[i] += b[i];
+  return a;
+}
+
+D dis2(const P &a, const P &b){
+  D x = a[0]-b[0], y = a[1]-b[1], z = a[2]-b[2];
+  return x*x+y*y+z*z;
+}
+
+D score(int i){
+  return tb[i]/dis2(ep,tp[i]);
+}
+
+int intersect(int p, int c){
+  P l = ep, r = tp[p];
+  D r2 = sr[c]*sr[c];
+  bool f1 = (dis2(sp[c],l)<r2+EPS), f2 = (dis2(sp[c],r)<r2+EPS);
+  if(f1&&f2)return 0;
+  if(f1||f2)return 1;
+
+  rep(i,100){
+    P m1 = mul(add(mul(l,2),r),1.0/3), m2 = mul(add(l,mul(r,2)),1.0/3);
+    D d1 = dis2(sp[c],m1), d2 = dis2(sp[c],m2);
+    if(d1<d2)r = m2;
+    else l = m1;
+  }
+  /*
+  cout << p << " " << c << " " << dis2(sp[c],l) << endl;
+  rep(i,l.size())cout << l[i] << " ";
+  cout << endl;
+  */
+  if(dis2(sp[c],l)<r2+EPS)return 1;
+  return 0;
+}
+
+int main(){
+  while(scanf("%d%d%d",&n,&m,&r),n){
+    rep(i,n){
+      sp[i].resize(3);
+      rep(j,3)scanf("%lf",&sp[i][j]);
+      scanf("%lf",&sr[i]);
+    }
+    rep(i,m){
+      tp[i].resize(3);
+      rep(j,3)scanf("%lf",&tp[i][j]);
+      scanf("%lf",&tb[i]);
+    }
+    ep.resize(3);
+    rep(i,3)scanf("%lf",&ep[i]);
+
+    init(rm);
+    rep(i,m)rep(j,n)rm[i][j] = intersect(i,j);
+    /*
+    rep(i,m)rep(j,n){
+      if(rm[i][j])cout << i << " " << j << endl;
+    }
+    */
+
+    D res = 0.0;
+    D p[20];
+    rep(i,m)p[i] = score(i);
+
+    rep(bit,1<<m){
+
+      init(use);
+      D sum = 0.0;
+      rep(i,m){
+	if((bit>>i)&1){
+	  sum += p[i];
+	  rep(j,n)use[j] |= rm[i][j];
+	}
+      }
+
+      if(accumulate(use,use+n,0)>r)continue;
+      res = max(res,sum);
+    }
+    cout << fixed << setprecision(10) << res << endl;
+  }
+}

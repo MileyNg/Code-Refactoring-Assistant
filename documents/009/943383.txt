@@ -1,0 +1,33 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0206 : Next Trip **/
+int main()
+{
+	int L, a, b, sum, ans;
+	while (cin>>L, L!=0) {
+		ans=0; sum=0;
+		rep(i, 12) {
+			cin >> a >> b;
+			sum+=a-b;
+			
+			if (ans>0) continue;
+			
+			if (sum>=L) {
+				ans = i+1;
+			}
+		}
+		if (ans>0)
+			cout << ans << endl;
+		else
+			cout << "NA" << endl;
+	}
+	return 0;
+}

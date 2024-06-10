@@ -1,0 +1,299 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map>
+#include<algorithm>
+#include<queue>
+#include<complex>
+#include<set>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int INF = 1000000000;
+
+typedef complex<int> pii;
+typedef vector<pii> VP;
+
+class Hexwamp{
+	public:
+	VP x;
+	VP getForm(){
+		VP ret(x.size());
+		rep(i,x.size())ret[i] = x[i]-x[0];
+		return ret;
+	}
+};
+
+map<vector<int>, pii> move;
+vector<int> mk(int a,int b,int c,int d,int e,int f){
+	vector<int> ret(6);
+	ret[0]=a; ret[1]=b; ret[2]=c; ret[3]=d; ret[4]=e; ret[5]=f;
+	return ret;
+}
+void setmove(){
+	move[mk(0,0,1,0,1,1)]=pii(0,1);
+	move[mk(0,0,1,0,2,-1)]=pii(1,-1);
+	
+	move[mk(0,0,1,-1,2,-1)]=pii(1,0);
+	move[mk(0,0,1,-1,1,-2)]=pii(0,-1);
+	
+	move[mk(0,0,0,-1,1,-2)]=pii(1,-1);
+	move[mk(0,0,0,-1,-1,-1)]=pii(-1,0);
+	
+	move[mk(0,0,-1,0,-1,-1)]=pii(0,-1);
+	move[mk(0,0,-1,0,-2,1)]=pii(-1,1);
+	
+	move[mk(0,0,-1,1,-2,1)]=pii(-1,0);
+	move[mk(0,0,-1,1,-1,2)]=pii(0,1);
+	
+	move[mk(0,0,0,1,-1,2)]=pii(-1,1);
+	move[mk(0,0,0,1,1,1)]=pii(1,0);
+}
+pii getMove(pii a, pii b, pii c){
+	pii st = a;
+	a-=st; b-=st; c-=st;
+	pii ret = move[mk(a.real(),a.imag(), b.real(),b.imag(), c.real(),c.imag())];
+	if(ret.real()==0 && ret.imag()==0)return b+st;
+	return ret+st;
+}
+
+map<vector<int>, pii> move2;
+vector<int> mk2(int a,int b,int c,int d,int e){
+	vector<int> ret(5);
+	ret[0]=a; ret[1]=b; ret[2]=c; ret[3]=d; ret[4]=e;
+	return ret;
+}
+void setmove2(){
+	move2[mk2(0,0,1,0,0)]=pii(1,-1);
+	move2[mk2(0,0,1,0,1)]=pii(0,1);
+	
+	move2[mk2(0,0,1,-1,0)]=pii(1,0);
+	move2[mk2(0,0,1,-1,1)]=pii(0,-1);
+	
+	move2[mk2(0,0,0,-1,0)]=pii(1,-1);
+	move2[mk2(0,0,0,-1,1)]=pii(-1,0);
+	
+	move2[mk2(0,0,-1,0,0)]=pii(0,-1);
+	move2[mk2(0,0,-1,0,1)]=pii(-1,1);
+	
+	move2[mk2(0,0,-1,1,0)]=pii(-1,0);
+	move2[mk2(0,0,-1,1,1)]=pii(0,1);
+	
+	move2[mk2(0,0,0,1,0)]=pii(-1,1);
+	move2[mk2(0,0,0,1,1)]=pii(1,0);
+}
+pii getMove2(pii a, pii b,int c){
+	pii st = a;
+	a-=st; b-=st;
+	pii ret = move2[mk2(a.real(),a.imag(), b.real(),b.imag(), c)];
+	if(ret.real()==0 && ret.imag()==0)return b+st;
+	return ret+st;
+}
+void init(){
+	setmove();
+	setmove2();
+}
+
+class piicomp{
+	public:
+	bool operator()(const pii& a, const pii& b)const{
+		if(a.real()==b.real())return a.imag()<b.imag();
+		return a.real()<b.real();
+	}
+};
+
+class VPcomp{
+	public:
+	bool operator()(const VP& a, const VP& b)const{
+		if(a.size()!=b.size())return a.size()<b.size();
+		rep(i,a.size())if(a[i]!=b[i])return piicomp()(a[i],b[i]);
+		return false;
+	}
+};
+
+int main(){
+	init();
+	/*
+	VP a;
+	a.push_back(pii(1,0));
+	
+	VP b;
+	b.push_back(pii(1,0));
+	b.push_back(pii(2,1));
+	printf("%d\n",VPcomp()(a,b));
+	
+	return 0;*/
+	
+	A:;
+	
+	int n;
+	cin>>n;
+	
+	if(n==0)return 0;
+	Hexwamp wamp;
+	rep(i,n){
+		int a,b;
+		cin>>a>>b;
+		wamp.x.push_back(pii(a,b));
+	}
+	int m;
+	cin>>m;
+	map<pii,int,piicomp()> rock;
+	rep(i,m){
+		int a,b;
+		cin>>a>>b;
+		rock[pii(a,b)]=1;
+	}
+	int enx,eny;
+	cin>>enx>>eny;
+	
+	map<pii,int,piicomp()> ok;
+	typedef pair<pii,int> fa;
+	queue<fa> queque;
+	queque.push(fa(pii(enx,eny),0));
+	while(1){
+		if(queque.empty())break;
+		fa u = queque.front();
+		queque.pop();
+		
+		if(ok[u.first]==1)continue;
+		ok[u.first]=1;
+		
+		if(u.second>20)continue;
+		pii d[]={pii(1,0),pii(1,-1),pii(0,-1),pii(-1,0),pii(-1,1),pii(0,1)};
+		rep(i,6){
+			queque.push(fa(u.first+d[i],u.second+1));
+		}
+	}
+	
+	
+	typedef pair<Hexwamp,int> P;
+	queue<P> que;
+	que.push(P(wamp,0));
+	
+	map<VP,int,VPcomp()> visit;
+	map<VP,vector<VP>,VPcomp()> memo;
+	
+	while(1){
+		if(que.empty())break;
+		
+		P u = que.front();
+		que.pop();
+		
+		Hexwamp h = u.first;
+		VP body = h.x;
+		VP form = h.getForm();
+		
+		if(ok.find(body[0])==ok.end())continue;
+		if(visit[body]==1)continue;
+		visit[body]=1;
+		
+		if(body[0].real()==enx && body[0].imag()==eny){
+			printf("%d\n",u.second);
+			break;
+		}
+		
+		/*
+		printf("body %d| ",u.second);
+		rep(i,body.size())cout<<body[i]<<" ";puts("");
+		*/
+		/*
+		printf("form %d| ",u.second);
+		rep(i,body.size())cout<<form[i]<<" ";puts("");
+		*/
+		vector<VP> moves = memo[form];
+		if(moves.size()==0){
+			for(int i=1;i<(1<<form.size());i++){
+				bool flg=true;
+				for(int j=0;j<form.size()-1;j++){
+					if((i&(1<<j))>0 && (i&(1<<(j+1)))>0)flg=false;
+				}
+				if(!flg)continue;
+				
+				VP copy = form;
+				for(int j=1;j<form.size()-1;j++){
+					if((i&(1<<j))>0){
+						pii next = getMove(form[j-1],form[j],form[j+1]);
+						if(next == form[j])flg=false;
+						copy[j] = next;
+					}
+				}
+				if(!flg)continue;
+				//for(int j=0;j<form.size();j++)printf("%d",((i&(1<<j))>0));puts("");
+				
+				map<VP,int,VPcomp> ves;
+				VP aa(2);
+				
+				for(int j=0;j<2;j++){
+					for(int k=0;k<2;k++){
+						pii next1 = getMove2(form[1],form[0],j);
+						pii next2 = getMove2(form[form.size()-2],form[form.size()-1],k);
+						
+						if((i&(1<<0))==0)next1 = form[0];
+						if((i&(1<<(form.size()-1)))==0)next2 = form[form.size()-1];
+						
+						aa[0]=next1; aa[1]=next2;
+						if(ves[aa]==1)continue;
+						ves[aa]=1;
+						
+						copy[0] = next1;
+						copy[form.size()-1] = next2;
+						
+						moves.push_back(copy);
+						
+						copy[0] = form[0];
+						copy[form.size()-1] = form[form.size()-1];
+						
+						//printf("moves | ");
+						//rep(p,copy.size())cout<<copy[p]<<" ";puts("");
+					}
+				}
+			}
+			for(int i=0;i<moves.size();i++){
+				bool flg = true;
+				pii d[]={pii(1,0),pii(1,-1),pii(0,-1),pii(-1,0),pii(-1,1),pii(0,1)};
+				for(int j=0;j<moves[i].size();j++){
+					int count = 0;
+					for(int k=0;k<moves[i].size();k++){
+						rep(p,6){
+							if(moves[i][j]+d[p]==moves[i][k])count++;
+						}
+					}
+					if((j==0 || j==moves[i].size()-1)&&count>1)flg=false;
+					if(count>2)flg=false;
+				}
+				if(!flg){
+					moves.erase(moves.begin()+i);
+					i--;
+				}
+			}
+			memo[form]=moves;
+		}
+		
+		//puts("");
+		/*
+		rep(j,moves.size()){
+			printf("moves %d| ",u.second);
+			rep(i,body.size())cout<<moves[j][i]<<" ";puts("");
+		}puts("");
+		*/
+		
+		rep(i,moves.size()){
+			Hexwamp next;
+			next.x = VP(moves[i].size());
+			bool flg = true;
+			rep(j,moves[i].size()){
+				next.x[j] = moves[i][j]+body[0];
+				if(rock.find(next.x[j])!=rock.end())flg=false;
+			}
+			if(!flg)continue;
+			que.push(P(next,u.second+1));
+		}
+	}
+	
+	goto A;
+}

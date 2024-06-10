@@ -1,0 +1,46 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+
+struct farm{
+	int kouritu;
+	std::string name;
+	farm(int a, std::string str) :kouritu(a), name(str){}
+};
+
+bool ask(const farm& left, const farm& right){
+	if (left.kouritu != right.kouritu)return left.kouritu > right.kouritu;
+	else return left.name < right.name;
+}
+
+int main(){
+
+	int n;
+	while (std::cin >> n, n){
+
+		std::vector<farm>v;
+
+		for (int i = 0; i < n; i++){
+			std::string l;
+			int p, a, b, c, d, e, f, s, m;
+			std::cin >> l >> p >> a >> b >> c >> d >> e >> f >> s >> m;
+
+			int alltime = a + b + c + (d + e)*m;
+			int shunyu = s*f*m - p;
+
+			float kouritu = shunyu / alltime;
+
+			v.push_back(farm(kouritu, l));
+		}
+
+		std::sort(v.begin(), v.end(), ask);
+
+		for (int i = 0; i < v.size(); i++){
+			std::cout << v[i].name << std::endl;
+		}
+		std::cout << "#" << std::endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,45 @@
+#include <cstdio>
+#include <iostream>
+#include <cctype>
+#include <cstring>
+using namespace std;
+
+int main(void) {
+
+  int count , i , x;
+
+  string  w , T;
+
+  count = 0;
+
+  cin >> w;
+
+  while(1) {
+
+    cin >> T;
+
+    if(T == "END_OF_TEXT") break;
+
+    x = T.size();
+
+    for(i = 0; i < x; i++) {
+
+      if(isupper(T[i])) {
+
+	T[i] = tolower(T[i]);
+
+      }
+
+    }
+
+    if(T == w) {
+
+      count++;
+
+    }
+
+  }
+
+  cout << count << "\n";
+
+}

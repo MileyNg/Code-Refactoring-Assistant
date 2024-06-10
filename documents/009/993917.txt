@@ -1,0 +1,51 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+using namespace std;
+typedef long long int lli;
+typedef pair<int,int> P;
+const int INF=100000000;
+const long long int INF_=1000000000000000000;
+
+int N,ANS=INF;
+int T[20][20];
+bool Done[20][20];
+
+void dfs(int v,int cost,int count){
+	if(ANS<=cost) return;
+	if(count==N-1){
+		ANS=cost;
+		return;
+	}
+	for(int i=0; i<N; ++i){
+		if(T[v][i]!=INF){
+			if(!Done[v][i]){
+				Done[v][i]=true;
+				dfs(i,cost+T[v][i],count);
+				Done[v][i]=false;
+			}
+			int tmp=T[v][i];
+			T[v][i]=T[i][v]=INF;
+			dfs(v,cost,count+1);
+			T[v][i]=T[i][v]=tmp;
+		}
+	}
+}
+
+int main(){
+	while(cin >> N&&N){
+		memset(Done,0,sizeof(Done));
+		fill_n((int*)T,20*20,INF); 
+		for(int i=0; i<N-1; ++i){
+			int a,b,t;
+			cin >> a >> b >> t;
+			--a; --b;
+			T[a][b]=T[b][a]=t;
+		}
+		dfs(0,0,0);
+		cout << ANS << endl;
+	}
+	return 0;
+}

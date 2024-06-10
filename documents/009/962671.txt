@@ -1,0 +1,125 @@
+#include<iostream>
+#include<cmath>
+#include<cstdio>
+using namespace std;
+typedef struct node{int x,y;};
+int n,m;
+node a[110];
+double s(int i,int j,int k)
+{
+    return fabs(a[i].x*a[j].y+a[k].x*a[i].y+a[j].x*a[k].y-a[k].x*a[j].y-a[i].x*a[k].y-a[j].x*a[i].y);
+}
+bool tepan(int i,int j,int k,int l)
+{
+    if(max(a[i].x,a[j].x)<min(a[k].x,a[l].x)||min(a[i].x,a[j].x)>max(a[k].x,a[l].x))return false;
+    else return true;
+}
+bool ok(int i,int j,int k, int l)
+{
+    int a=s(i,j,k),b=s(l,i,j),c=s(l,k,i),d=s(l,j,k);
+    if(a==0&&b==0&&c==0&&d==0)return tepan(i,j,k,l);
+    if(a==b+c+d)return true;
+    else return false;
+}
+bool xing(int i,int j,int k)
+{
+    if((a[k].y-a[i].y)*(a[k].x-a[j].x)!=(a[k].x-a[i].x)*(a[k].y-a[j].y))return false;
+    if(a[k].y>max(a[i].y,a[j].y)||a[k].y<min(a[i].y,a[j].y))return false;
+    return true;
+}
+int main()
+{
+    while(~scanf("%d%d",&n,&m),n+m)
+    {
+        for(int i=0;i<m+n;i++)
+            scanf("%d%d",&a[i].x,&a[i].y);
+        int flag=1;
+        for(int i=0;i<n;i++)
+            for(int j=i+1;j<n;j++)
+                for(int k=j+1;k<n;k++)
+                    for(int l=n;l<n+m;l++)
+                        if(ok(i,j,k,l)){flag=0;cout<<i<<' '<<j<<' '<<k<<' '<<l<<endl;break;}
+        if(m<3&&n<3){
+            if(m==1&&n==2){
+                if(xing(0,1,2)){flag=0;}
+            }
+            else if(m==2&&n==1){
+                if(xing(1,2,0)){flag=0;}
+            }
+            else if(m==2&&n==2){
+                a[4].x=2*a[0].x-a[1].x;
+                a[4].y=2*a[0].y-a[1].y;
+                a[5].x=2*a[1].x-a[0].x;
+                a[5].y=2*a[1].y-a[0].y;
+                if(ok(2,3,4,0)&&ok(2,3,5,1)){flag=0;}
+            }
+        }
+        if(flag)printf("YES\n");
+        else printf("NO\n");
+    }
+    return 0;
+}
+
+/*
+3 3
+100 700
+200 200
+600 600
+500 100
+500 300
+800 500
+3 3
+100 300
+400 600
+400 100
+600 400
+500 900
+300 300
+3 4
+300 300
+500 300
+400 600
+100 100
+200 900
+500 900
+800 100
+1 2
+300 300
+100 100
+500 500
+1 1
+100 100
+200 100
+2 2
+0 0
+500 700
+1000 1400
+1500 2100
+2 2
+0 0
+1000 1000
+1000 0
+0 1000
+3 3
+0 100
+4999 102
+10000 103
+5001 102
+10000 102
+0 101
+3 3
+100 100
+200 100
+100 200
+0 0
+400 0
+0 400
+3 3
+2813 1640
+2583 2892
+2967 1916
+541 3562
+9298 3686
+7443 7921
+0 0
+*/

@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+
+void print_pattern(int n, int h, int buf[], int csr) {
+    int i, j;
+    for (i = h<n?h:n; i; i--) {
+        buf[csr] = i;
+        if (n - i) {
+            print_pattern(n - i, i, buf, csr + 1);
+        }
+        else {
+            printf("%d", buf[0]);
+            for (j = 1; j <= csr; j++) {
+                printf(" %d", buf[j]);
+            }
+            puts("");
+        }
+    }
+}
+
+int main(void) {
+    int n;
+    int buf[100];
+
+    while (scanf("%d", &n) != EOF && n) {
+        print_pattern(n, n, buf, 0);
+    }
+    return 0;
+}

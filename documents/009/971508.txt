@@ -1,0 +1,138 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+vector< vector<char> > t,u;
+vector<char> tmp;
+
+char ch;
+int x,y;
+
+void input();
+void funcA();
+void funcE();
+void funcP();
+void funcN();
+void funcF();
+void funcB();
+void funcD();
+void funcK();
+void funcY();
+
+int main(){
+
+  t.clear();
+  tmp.clear();
+  input();
+  x=y=0;
+  while(1){
+    
+    cin>>ch;
+    if(ch=='a')funcA();
+    else if(ch=='e')funcE();
+    else if(ch=='p')funcP();
+    else if(ch=='n')funcN();
+    else if(ch=='f')funcF();
+    else if(ch=='b')funcB();
+    else if(ch=='d')funcD();
+    else if(ch=='k')funcK();
+    else if(ch=='y')funcY();
+    else break;
+    
+    //cout<<y<<' '<<x<<" ty"<<t.size()<<endl;
+  }
+
+  for(int i=0;i<t.size();i++){
+    for(int j=0;j<t[i].size();j++){
+      cout<<t[i][j];
+    }
+  }
+
+  return 0;
+}
+
+void funcA(){
+  x=0;
+}
+
+void funcE(){
+  x=t[y].size()-1;
+}
+
+void funcP(){
+  if(y>0)y--;
+  x=0;
+}
+
+void funcN(){
+  if(y+1<(int)t.size())y++;
+  x=0;
+}
+
+void funcF(){
+  if(x+1<(int)t[y].size())x++;
+  else if(y+1<(int)t.size()){y++;x=0;}
+}
+
+void funcB(){
+  if(x>0)x--;
+  else if(y>0){y--;x=t[y].size()-1;}
+}
+
+void funcD(){
+  if(t[y][x]!='\n'){
+    t[y].erase(t[y].begin()+x);
+    return;
+  }
+  if(y+1==(int)t.size())return;
+  t[y].erase(t[y].begin()+x);
+  for(int i=0;i<(int)t[y+1].size();i++)
+    t[y].push_back(t[y+1][i]);
+  t.erase(t.begin()+y+1);
+}
+
+void funcK(){
+  tmp.clear();
+  if(t[y][x]=='\n'){
+    if(y+1<(int)t.size()){
+      funcD();
+      tmp.push_back('\n');
+    }
+    return;
+  }
+  while(t[y][x]!='\n'){
+    tmp.push_back(t[y][x]);
+    t[y].erase(t[y].begin()+x);
+  }
+  reverse(tmp.begin(),tmp.end());
+
+}
+
+void funcY(){
+  if(tmp.size()==0)return;
+  if(tmp[0]=='\n'){
+    vector<char> z;
+    while(t[y][x]!='\n'){
+      z.push_back(t[y][x]);
+      t[y].erase(t[y].begin()+x);
+    }
+    t.insert(t.begin()+y+1,z);
+    return;
+  }
+  
+}
+
+void input(){
+  vector<char> a;
+  string str;
+  while(1){
+    getline(cin,str);
+    if(str=="END_OF_TEXT")break;
+    a.clear();
+    for(int i=0;i<(int)str.size();i++)
+      a.push_back(str[i]);
+    a.push_back('\n');
+    t.push_back(a);
+  }
+}

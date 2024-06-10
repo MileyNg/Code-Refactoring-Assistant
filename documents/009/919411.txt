@@ -1,0 +1,58 @@
+#include<iostream>
+#include<iomanip>
+#include<cstdio>
+#include<cmath>
+#include<cstring>
+#include<cstdlib>
+#include<string>
+#include<cctype>
+#include<vector>
+#include<set>
+#include<map>
+#include<stack>
+#include<queue>
+#include<deque>
+#include<list>
+#include<algorithm>
+using namespace std;
+
+#define LL long long
+#define LLU unsigned long long
+#define re return(0)
+#define pi 2*acos(0.0)
+#define MAX 120
+
+const int infinity=100000000000LL;
+
+double Edge(double x1,double x2,double y1,double y2)
+{
+    return sqrt((x1-y1)*(x1-y1)+(x2-y2)*(x2-y2));
+}
+
+int main()
+{
+    double p1,p2,q1,q2,r1,r2,x1,x2;
+    while(cin>>p1>>p2>>q1>>q2>>r1>>r2>>x1>>x2)
+    {
+        double a,b,c,s,area,new_area,m,n,o;
+        new_area=0;
+        a=Edge(p1,p2,q1,q2);
+        b=Edge(q1,q2,r1,r2);
+        c=Edge(r1,r2,p1,p2);
+        s=(a+b+c)/2;
+        area=s*(s-a)*(s-b)*(s-c);
+        area=sqrt(area);
+        m=Edge(x1,x2,p1,p2);
+        n=Edge(x1,x2,q1,q2);
+        o=Edge(x1,x2,r1,r2);
+        s=(a+m+n)/2;
+        new_area+=sqrt(s*(s-a)*(s-m)*(s-n));
+        s=(b+n+o)/2;
+        new_area+=sqrt(s*(s-b)*(s-o)*(s-n));
+        s=(c+o+m)/2;
+        new_area+=sqrt(s*(s-c)*(s-m)*(s-o));
+        if(area==new_area) cout<<"YES"<<endl;
+        else cout<<"NO"<<endl;
+    }
+    re;
+}

@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+void shfl(int *a,int n,int r){
+  int p,c;
+  int nxt[n];
+  if(r!=0){
+    scanf("%d %d",&p,&c);
+    int i=0;
+    while(i<c){
+      nxt[i]=a[p-1+i];
+      i++;
+    }
+    i=0;
+    while(i<p-1){
+      nxt[c+i]=a[i];
+      i++;
+    }
+    for(i=p+c-1;i<n;i++){
+      nxt[i]=a[i];
+    }
+    shfl(nxt,n,r-1);
+  }
+  else{
+    printf("%d\n",a[0]);
+  }
+}
+
+void doit(int n,int r){
+  int a[n];
+  int i;
+  for(i=0;i<n;i++){
+    a[n-1-i]=i+1;
+  }
+  shfl(a,n,r);
+}
+
+int main(){
+  int n,r;
+  scanf("%d %d",&n,&r);
+  while(n!=0){
+    doit(n,r);
+    scanf("%d %d",&n,&r);
+  }
+  return 0;
+}

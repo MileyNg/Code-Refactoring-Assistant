@@ -1,0 +1,120 @@
+using System;
+using System.Collections.Generic;
+
+namespace CSharpTest
+{
+    class Card {
+        public char Suit { get; set; }
+        public int Value { get; set; }
+
+        public Card(char suit, int value)
+        {
+            Suit = suit;
+            Value = value;
+        }
+
+        public override string ToString()
+        {
+            return Suit + Value.ToString();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var cards = inputCards();
+
+            var bubbleSortedCards = bubbleSort(cards);
+            outputCards(bubbleSortedCards);
+            Console.Write(isStable(cards, bubbleSortedCards) ? "Stable" : "Not stable" + "\n");
+
+            var selectionSortedCards = selectionSort(cards);
+            outputCards(selectionSortedCards);
+            Console.Write(isStable(cards, selectionSortedCards) ? "Stable" : "Not stable";
+        }
+
+        static Card[] inputCards()
+        {
+            Console.ReadLine();
+            var inputStrings = Console.ReadLine().Split(' ');
+
+            var cards = new Card[inputStrings.Length];
+            for (var i = 0; i < inputStrings.Length; i++)
+            {
+                cards[i] = new Card(inputStrings[i][0], int.Parse(inputStrings[i].Substring(1)));
+            }
+            return cards;
+        }
+
+        static void outputCards(Card[] cards)
+        {
+            var cardStrings = new string[cards.Length];
+            for (var i = 0; i < cards.Length; i++)
+            {
+                cardStrings[i] = cards[i].ToString();
+            }
+            Console.Write(string.Join(" ", cardStrings) + "\n");
+        }
+
+        static Card[] bubbleSort(Card[] cards)
+        {
+            var sortedCards = new Card[cards.Length];
+            cards.CopyTo(sortedCards, 0);
+
+            for (var i = 0; i < sortedCards.Length; i++)
+            {
+                for (var j = sortedCards.Length - 1; j >= i + 1; j--)
+                {
+                    if (sortedCards[j].Value < sortedCards[j - 1].Value)
+                    {
+                        var tmp = sortedCards[j];
+                        sortedCards[j] = sortedCards[j - 1];
+                        sortedCards[j - 1] = tmp;
+                    }
+                }
+            }
+
+            return sortedCards;
+        }
+
+        static Card[] selectionSort(Card[] cards)
+        {
+            var sortedCards = new Card[cards.Length];
+            cards.CopyTo(sortedCards, 0);
+
+            for (var i = 0; i < sortedCards.Length; i++)
+            {
+                var min = i;
+                for (var j = i; j < sortedCards.Length; j++)
+                {
+                    if (sortedCards[j].Value < sortedCards[min].Value)
+                    {
+                        min = j;
+                    }
+                }
+                if (min != i)
+                {
+                    var tmp = sortedCards[min];
+                    sortedCards[min] = sortedCards[i];
+                    sortedCards[i] = tmp;
+                }
+            }
+
+            return sortedCards;
+        }
+
+        static bool isStable(Card[] originalCards, Card[] sortedCards)
+        {
+            for (int i = 0; i < originalCards.Length; i++)
+            {
+                if (originalCards[i].Suit != sortedCards[i].Suit)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+}

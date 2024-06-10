@@ -1,0 +1,84 @@
+$x=0
+$y=0
+$bord = []
+$cnt = 0
+
+
+def calc()
+
+	max = -1
+	for i in 1..$x-1
+		if $bord[0][i] != -1 and $bord[0][i-1] != -1 then
+			$bord[0][i] += $bord[0][i-1] * 10
+			if $bord[0][i] > max then
+				max = $bord[0][i]
+			end
+		end
+	end
+	
+	for j in 1..$y-1
+		if $bord[j][0] != -1 and $bord[j-1][0] != -1 then
+			$bord[j][0] += $bord[j-1][0] * 10
+			if $bord[j][0] > max then
+				max = $bord[j][0]
+			end
+		end
+	end
+	
+	for i in 1..$x-1
+		for j in 1..$y-1
+			now = $bord[j][i]
+			up = $bord[j-1][i]
+			left = $bord[j][i-1]
+			if now != -1 then
+				if up > left and up != -1 then
+					$bord[j][i] += up * 10
+					if $bord[j][i] > max then
+						max = $bord[j][i]
+					end
+				elsif left != -1 then
+					$bord[j][i] += left * 10
+					if $bord[j][i] > max then
+						max = $bord[j][i]
+					end
+				end
+			end
+		end
+	end
+	return max
+end
+	
+loop{
+	line = gets
+	if line==nil then
+		break
+	end
+	sp = line.split(nil)
+	
+	if sp.count() != 2 then
+		break
+	else
+		$x = sp[0].to_i()
+		$y = sp[1].to_i()
+		if $x == 0 and $y == 0 then
+			break
+		end
+		
+		sx = 0
+		sy = 0
+		$cnt = 1 
+		$bord = Array.new($y).map{Array.new($x,0)}
+		for i in 0..$y-1
+			line = gets
+			for j in 0..$x-1
+				tmp = -1
+				if line[j] =~ /\d/ then
+					tmp = line[j].to_i() 
+				end
+				$bord[i][j] = tmp
+			end
+		end
+		print calc()
+		print("\n")
+	end
+}

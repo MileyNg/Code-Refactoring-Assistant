@@ -1,0 +1,31 @@
+/*
+  AOJ 1019
+  Title:Vampirish Night
+  @kankichi573
+*/
+#include <stdio.h>
+int N,K,S[100],B;
+
+main()
+{
+  int i,j,flag;
+
+
+  while(scanf("%d %d",&N,&K) && (N||K))
+    {
+      flag=0;
+      for(j=0;j<K;j++)
+	scanf("%d ",&S[j]);
+      for(i=0;i<N;i++)
+	for(j=0;j<K;j++)
+	  {
+	    scanf("%d ",&B);
+	    S[j] -= B;
+	    if(S[j]<0)
+	      flag=-1;
+	  }
+      printf("%s\n",flag?"No":"Yes");
+
+    }
+  return(0);
+}

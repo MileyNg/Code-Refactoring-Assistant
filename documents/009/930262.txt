@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<vector<int> > seg;
+int wbin, hbin;
+
+void update(int y, int x, int v)
+{
+	y += hbin - 1;
+	x += wbin - 1;
+	
+	seg[y][x] = v;
+	
+	while (y >= 0){
+		int _x = x;
+		while (_x){
+			_x = (_x - 1) / 2;
+			seg[y][_x] = min(seg[y][_x * 2 + 1], seg[y][_x * 2 + 2]);
+		}
+		if (y == 0) break;
+		y = (y - 1) / 2;
+		seg[y][x] = min(seg[y * 2 + 1][x], seg[y * 2 + 2][x]);
+	}
+}
+
+int r1, c1, r2, c2, G;
+
+int _query(int k = 0, int l = 0, int r = wbin)
+{
+	if (c2 <= l || r <= c1) return (INT_MAX);
+	if (c1 <= l && r <= c2) return (seg[G][k]);
+	
+	return (min(_query(k * 2 + 1, l, (l + r) / 2), _query(k * 2 + 2, (l + r) / 2, r)));
+}
+
+int query(int k = 0, int l = 0, int r = hbin)
+{
+	if (r2 <= l || r <= r1) return (INT_MAX);
+	if (r1 <= l && r <= r2){
+		G = k;
+		return (_query());
+	}
+	
+	return (min(query(k * 2 + 1, l, (l + r) / 2), query(k * 2 + 2, (l + r) / 2, r)));
+}
+
+int main()
+{
+	int w, h, q, a;
+	
+	while (scanf("%d %d %d", &h, &w, &q) && w){
+		wbin = hbin = 1;
+		while (wbin < w) wbin *= 2;
+		while (hbin < h) hbin *= 2;
+		
+		vector< vector<int> > local(hbin * 2 - 1, vector<int>(wbin * 2 - 1));
+		
+		seg = local;
+		
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++){
+				scanf("%d", &a);
+				update(i, j, a);
+			}
+		}
+		
+		for (int i = 0; i < q; i++){
+			scanf("%d %d %d %d", &r1, &c1, &r2, &c2);
+			++r2; ++c2;
+			printf("%d\n", query());
+		}
+	}
+	
+	return (0);
+}

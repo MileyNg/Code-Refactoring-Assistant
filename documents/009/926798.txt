@@ -1,0 +1,27 @@
+#include<iostream>
+
+using namespace std;
+
+typedef struct time{
+	int h;
+        int m;
+        int s;
+};
+
+int main(void){
+
+	time s[3],t[3];
+	int st,tt,zt;
+
+	for(int i = 0; i < 3; i++){
+		cin >> s[i].h >> s[i].m >> s[i].s >> t[i].h >> t[i].m >> t[i].s;
+	}
+
+	for (int i = 0; i < 3; i++){
+		st = s[i].s + s[i].m * 60 + s[i].h * 60 * 60;
+		tt = t[i].s + t[i].m * 60 + t[i].h * 60 * 60;
+		zt = tt - st;
+		cout << zt / 3600 << " " << (zt % 3600) / 60 << " " << ((zt % 3600) % 60) << endl;
+	}
+	return 0;
+}

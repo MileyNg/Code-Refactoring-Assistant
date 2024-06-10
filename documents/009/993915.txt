@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int m, n, book[128], shelf[32];
+
+int dfs(int copy, int step){
+  //  fprintf(stderr, "%d %d\n", copy, step);
+  if(step == m) return INF;
+  if(copy == n){
+    int res = 0;
+    rep(i, m) res = max(res, shelf[i]);
+    return res;
+  }
+
+  int res = INF;
+  shelf[step] += book[copy];
+  res = min(res, dfs(copy+1, step));
+  shelf[step] -= book[copy];
+
+  shelf[step+1] = book[copy];
+  res = min(res, dfs(copy+1, step+1));
+  shelf[step+1] -= book[copy];
+  return res;
+}
+
+int main(){
+  while(scanf("%d%d", &m, &n) && m+n){
+    rep(i, n){
+      scanf("%d", book+i);
+    }
+    memset(shelf, 0, sizeof(shelf));
+    printf("%d\n", dfs(0, 0));
+
+  }
+  return 0;
+}

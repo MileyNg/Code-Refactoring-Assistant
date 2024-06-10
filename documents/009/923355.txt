@@ -1,0 +1,43 @@
+#include <iostream>
+
+using namespace std;
+
+/** Problem0036 : A Figure on Surface **/
+int main()
+{
+	char board[8][9];
+	
+	while (1) {
+		for (int i=0; i<8; i++)
+			for (int j=0; j<8; j++)
+				cin >> board[i][j];
+		
+		if (cin.eof()) break;
+		
+		for (int y=0; y<8; y++) {
+			for (int x=0; x<8; x++) {
+				if (board[y][x] == '1') {
+					if (board[y][x+1] == '1' && board[y+1][x] == '1' && board[y+1][x+1] == '1')
+						cout << "A" << endl;
+					else if (board[y+1][x] == '1' && board[y+2][x] == '1' && board[y+3][x] == '1')
+						cout << "B" << endl;
+					else if (board[y][x+1] == '1' && board[y][x+2] == '1' && board[y][x+3] == '1')
+						cout << "C" << endl;
+					else if (board[y+1][x] == '1' && board[y+1][x-1] == '1' && board[y+2][x-1] == '1')
+						cout << "D" << endl;
+					else if (board[y][x+1] == '1' && board[y+1][x+1] == '1' && board[y+1][x+2] == '1')
+						cout << "E" << endl;
+					else if (board[y+1][x] == '1' && board[y+1][x+1] == '1' && board[y+2][x+1] == '1')
+						cout << "F" << endl;
+					else
+						cout << "G" << endl;
+					goto endloop;
+				}
+			}
+		}
+	endloop:
+		;
+	}
+	
+	return 0;
+}

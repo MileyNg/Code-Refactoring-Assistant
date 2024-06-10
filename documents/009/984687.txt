@@ -1,0 +1,25 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int main(){
+    int num=0;
+    string str;
+    string target = "Hoshino";
+    string dest = "Hoshina";
+    cin >> num;
+    cin.ignore();
+    
+    for(int j=0;j<num;j++){
+        getline(cin,str);
+        string::size_type index = str.find(target);
+        
+        while(index != string::npos){
+            str.replace(index,target.length(),dest);
+            index = str.find(target,index+dest.length());
+        }
+        cout << str <<endl;
+    }
+    return 0;
+}

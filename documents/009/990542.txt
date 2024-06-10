@@ -1,0 +1,84 @@
+#include<cstdio>
+#include<queue>
+#include<stack>
+#include<algorithm>
+#include<iostream>
+#include<vector>
+using namespace std;
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);i++)
+int h, w,c;
+int max_n = 0;
+struct Area{ int c, f; };
+Area area[8][8] = { 0 };
+typedef pair <int,int>P;
+
+void solve(int cr, int level){
+
+	queue<P> que;
+	bool color[6] = { false };
+	bool check[8][8] = { false };
+	que.push(P(0, 0));
+	while (!que.empty()){
+		P pos = que.front();
+		que.pop();
+		int y = pos.first;
+		int x = pos.second;
+		area[y][x].f++;
+		if (y > 0)if (!check[y - 1][x]){
+			if (area[y - 1][x].c == cr)que.push(P(y - 1, x));
+			else color[area[y - 1][x].c] = true;
+			check[y - 1][x] = true;
+		}
+		if (x > 0)if (!check[y][x - 1]){
+			if (area[y][x - 1].c == cr)que.push(P(y, x - 1));
+			else color[area[y][x - 1].c] = true;
+			check[y][x - 1] = true;
+		}
+		if (y < h - 1)if (!check[y + 1][x]){
+			if (area[y + 1][x].c == cr)que.push(P(y + 1, x));
+			else color[area[y + 1][x].c] = true;
+			check[y + 1][x] = true;
+		}
+		if (x < w - 1)if (!check[y][x + 1]){
+			if (area[y][x + 1].c == cr)que.push(P(y, x + 1));
+			else color[area[y][x + 1].c] = true;
+			check[y][x + 1] = true;
+		}
+	}
+	
+	if (level<5){
+		rep(k, 0, 6)if (color[k]){
+			rep(i, 0, h)rep(j, 0, w)if (area[i][j].f>0)area[i][j].c = k;
+			solve(k, level + 1);
+		}
+	}
+	if(cr==c){
+		int n = 0;
+		rep(i, 0, h)rep(j, 0, w)if (area[i][j].f > 0)n++;
+		if (max_n<n)max_n = n;
+	}
+	rep(i, 0, h)rep(j, 0, w)if (area[i][j].f>0)area[i][j].c = cr, area[i][j].f--;
+		
+	
+}
+
+int main(void){
+	while (true){
+		cin >> h >> w >> c;
+		if (h == 0)
+		return(0);
+		c--;
+		max_n = 0;
+		//input
+		rep(i, 0, h)rep(j, 0, w){
+			Area input;
+			cin >> input.c;
+			input.c--;
+			input.f = 0;
+			area[i][j] = input;
+
+		}
+		solve(area[0][0].c, 0);
+		cout << max_n << endl;
+	}
+}

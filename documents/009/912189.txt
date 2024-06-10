@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(void)
+{
+	int i,j,num,count,*prime;
+
+	while(scanf("%d",&num) != EOF){
+		count = 0;
+		prime = malloc(sizeof(int) * num);
+		for(i = 2;i <= num;i ++){
+			for(j = 2;(j * i) <= num;j ++){
+				*(prime + (j * i)) = 1;
+			}
+		}
+		for(i = 2;i <= num;i ++){
+			if(*(prime + i) != 1){
+				count ++;
+			}
+		}
+		free(prime);
+		printf("%d\n",count);
+	}
+	return 0;
+}

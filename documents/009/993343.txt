@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int N, P;
+
+vector<int> nprimes;
+
+bool isPrime(int x) {
+	for (int i=2; i*i<=x; i++) if (x%i==0) return false;
+	return x>1;
+}
+void nPrimes() {
+	nprimes.clear();
+	for (int i=N+1; ; i++) {
+		if (isPrime(i)) nprimes.push_back(i);
+		if (nprimes.size() > P) break;
+	}
+}
+
+void solve() {
+	vector<int> all;
+	int size = (int)nprimes.size();
+	for (int i=0; i<size; i++) {
+		for (int j=i; j<size; j++) {
+			all.push_back(nprimes[i] + nprimes[j]);
+		}
+	}
+	sort(all.begin(), all.end());
+	cout << all[P-1] << endl;
+}
+
+int main() {
+	while (1) {
+		cin >> N >> P; if (N==-1 && P==-1) break;
+		nPrimes();
+		solve();
+	}
+	
+	return 0;
+}

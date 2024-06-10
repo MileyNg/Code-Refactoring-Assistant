@@ -1,0 +1,68 @@
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+int N, C;
+vector<int> Ns, Cs;
+bool input() {
+    cin >> N >> C;
+    if (N == 0 && C == 0) return false;
+    Ns.clear(); Cs.clear();
+    for (int i = 0; i < N; i++) {
+        int n = 0;
+        for (int j = 0; j < 16; j++) {
+            int x; cin >> x;
+            n += (x << j);
+        }
+        Ns.push_back(n);
+    }
+    for (int i = 0; i < C; i++) {
+        int c = 0;
+        for (int j = 0; j < 16; j++) {
+            int x; cin >> x;
+            c += (x << j);
+        }
+        Cs.push_back(c);
+    }
+    return true;
+}
+
+void solve() {
+    int Ans = 0;
+    int N1 = 0;
+    for (int i = 0; i < N; i++) {
+        N1 = N1 | Ns[i];
+        int Aindex = 0;
+        int Add = 0;
+        for (int j = 0; j < C; j++) {
+            int BitCount = __builtin_popcount(N1 & Cs[j]);
+            if (Add < BitCount) {
+                Aindex = j;
+                Add = BitCount;
+            }
+        }
+        N1 = N1 - (N1 & Cs[Aindex]);
+        Ans += Add;
+    }
+    cout << Ans << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

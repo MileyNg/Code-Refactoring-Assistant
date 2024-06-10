@@ -1,0 +1,8 @@
+import math
+R=6378.1
+pi=math.pi
+while 1:
+	x1,y1,x2,y2=map(lambda x: float(x)*pi/180,raw_input().split())
+	if x1<0:break
+	cosin=math.cos(x1)*math.cos(x2)*math.cos(y1-y2) + math.sin(x1)*math.sin(x2)
+	print int(round(R*math.acos(cosin)))

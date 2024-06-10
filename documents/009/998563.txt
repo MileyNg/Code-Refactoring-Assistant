@@ -1,0 +1,45 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+int main(){
+
+  int N,gomi,hito[10];
+  string c;
+
+  while(1){
+    
+    cin >>N;
+    
+    if(N == 0)break;
+
+    gomi=0;
+   
+    for(int i=0 ; i < 10 ; i++)hito[i]=0;
+  
+    cin >>c;
+    
+    for(int i=0 ; i < 100 ; i++){
+      
+      if(c[i] == 'M'){
+	hito[i%N]++;
+      }else if(c[i] == 'S'){
+	gomi+=hito[i%N]+1;
+	hito[i%N]=0;
+      }else if(c[i] == 'L'){
+	hito[i%N]+=gomi+1;
+	gomi=0;
+      }
+
+    }
+
+    sort(hito,hito+N);
+      
+    for(int i=0 ;i < N ; i++){
+      cout <<hito[i]<<" ";
+    }
+    cout <<gomi<<endl;
+
+  }
+  return 0;
+}

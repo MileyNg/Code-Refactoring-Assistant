@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int T[8][8] = 
+  {
+    {0,0,0,0,0,0,0,0},
+    {0,0,300,500,600,700,1350,1650},
+    {0,6,0,350,450,600,1150,1500},
+    {0,13,7,0,250,400,1000,1350},
+    {0,18,12,5,0,250,850,1300},
+    {0,23,17,10,5,0,600,1150},
+    {0,43,37,30,25,20,0,500},
+    {0,58,52,45,40,35,15},
+  };
+const int h_begin = 17*60 + 30;
+const int h_end = 19*60 + 30;
+
+int main() {
+  int s, sh, sm, t, th, tm;
+  while(cin >> s && s) {
+    cin >> sh >> sm;
+    cin >> t;
+    cin >> th >> tm;
+    int a = s, b = t;
+    if(a > b) swap(a, b);
+    int cost = T[a][b];
+    int dist = T[b][a];
+    int in = sh * 60 + sm;
+    int out = th * 60 + tm;
+    if(dist <= 40 && 
+       (h_begin <= in && in <= h_end ||
+        h_begin <= out && out <= h_end) ) {
+      cost /= 2;
+      while(cost % 50) ++cost;
+    }
+    cout << cost << endl;
+  }
+  return 0;
+}

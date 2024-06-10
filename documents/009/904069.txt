@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int mHeight[10];
+	int temp;
+	int i, j;
+	
+	for(i = 0; i < 10; i++){
+		scanf("%d", &mHeight[i]);
+	}
+
+	for(i = 0; i < 10 - 1; i++){
+		for(j = 0; j < 10 - 1; j++){
+			if(mHeight[j] < mHeight[j+1]){
+				temp = mHeight[j];
+				mHeight[j] = mHeight[j+1];
+				mHeight[j+1] = temp;
+			}
+		}
+	}
+
+	for(i = 0; i < 3; i++){
+		printf("%d\n", mHeight[i]);
+	}
+
+	return 0;
+}

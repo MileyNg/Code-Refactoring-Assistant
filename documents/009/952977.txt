@@ -1,0 +1,23 @@
+while 1:
+	try:
+		s,d,m = map(int,raw_input().split())
+		if s == 0: break
+		wp = []
+		for i in range(s):
+			input()
+			inp = map(int,raw_input().split())
+			wp.append(zip(inp[0::2],inp[1::2]))
+		S = []
+		for i in map(int,raw_input().split()):
+			S += wp[i]
+		S = sorted(S, key = lambda x:x[1]*1.0/x[0], reverse = True)
+		dp = [0]*(m+1)
+		for w,p in S:
+			for mi in range(m-p,0,-1):
+				if dp[mi] > 0:
+					dp[mi+p] = max(dp[mi+p],dp[mi] + w)
+			dp[p] = max(dp[p],w)
+		print max(dp),dp.index(max(dp))
+		raw_input()
+	except:
+		break

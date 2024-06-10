@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void) {
+	int a, b, xy, i, m;
+	scanf("%d %d", &a, &b);
+	/* 整数 x, y について、1 < y < x ならば
+	   x と y の最大公約数は y と x%y の
+	   最大公約数に等しい。
+	   ここで a%b は a を b で割った余りである。 */
+	   
+	if(1 < a && 1 < b) {
+		if(a == b) {
+			printf("%d\n", a);
+			return 0;
+		} else if(a < b) {
+			xy = a % b;
+		} else if(a > b) {
+			xy = b % a;
+		}
+		for(i=xy;i>0;i--) {
+			m = xy % i; 
+			if(m == 0 && (a%i)==0 && (b%i)==0) {
+				printf("%d\n", i);
+				break;
+			}
+		}
+	}
+	
+	return 0;
+}

@@ -1,0 +1,29 @@
+import std.stdio;
+import std.string;
+import std.conv;
+
+
+int main()
+{
+	string s;
+	while((s = readln()).length != 0)
+	{
+		int count = 0;
+		int number = to!(int)(chomp(s));
+		foreach(int i;0..10)
+		{
+			foreach(int j;0..10)
+			{
+				foreach(int k;0..10)
+				{
+					foreach(int l;0..10)
+					{
+						if(i+k+j+l == number) count++;
+					}
+				}
+			}
+		}
+		writeln(count);
+	}
+	return 0;
+}

@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+#include <cstdlib>
+
+using namespace std;
+
+
+vector<pair<char,int> > B;
+
+vector<pair<char,int> > SelectionSort(vector<pair<char,int> > v){
+    for(int i=0;i<v.size();i++){
+        int mini=i;
+        for(int j=i;j<v.size();j++){
+            if(v[j].second<v[mini].second){
+                mini=j;
+            }
+        }
+        pair<char,int> tmp=v[i];
+        v[i]=v[mini];
+        v[mini]=tmp;
+     }
+     for(int i=0;i<v.size()-1;i++){
+        cout<<v[i].first<<v[i].second<<" ";
+     }
+     cout<<v[v.size()-1].first<<v[v.size()-1].second<<endl;
+     return v;
+}
+
+
+vector<pair<char,int> > BubbleSort(vector<pair<char,int> > A){
+    for(int i=0;i<A.size();i++){
+        for(int j=A.size()-1;j>i;j--){
+            if(A[j].second<A[j-1].second){
+                pair<char,int> tmp=A[j];
+                A[j]=A[j-1];
+                A[j-1]=tmp;
+            }
+        }
+    }
+    
+    for(int k=0;k<A.size()-1;k++){
+         cout<<A[k].first<<A[k].second<<" ";
+    }
+    cout<<A[A.size()-1].first<<A[A.size()-1].second<<endl;
+    return A;
+}
+
+
+int main(){
+    int n;
+   vector<pair<char,int> > B;
+   cin>>n;
+   for(int i=0;i<n;i++){
+       string str;
+      cin>>str;
+      pair<char,int> tmp;
+      tmp.first=str[0];
+      tmp.second=str[1]-'0';
+      B.push_back(tmp);
+   }
+  
+   vector<pair<char,int> > C=BubbleSort(B);
+   cout<<"Stable"<<endl;
+   vector<pair<char,int> > D=SelectionSort(B);
+
+   bool flag=true;
+   for(int i=0;i<n;i++){
+       if(C[i].first!=D[i].first||
+               C[i].second!=D[i].second){
+           flag=false;
+       }
+   }
+   if(flag){
+       cout<<"Stable"<<endl;
+   }else{
+       cout<<"Not stable"<<endl;
+   }
+
+   return 0;
+}

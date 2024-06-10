@@ -1,0 +1,81 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 105;
+const int INF = 1e9 + 7;
+
+int N, M, v[MAX_N][MAX_N];
+
+class C{
+  public:
+    int now, cost, cnt, use_cnt;
+    bool used, using_now;
+    C(int _n, int _c, int _cnt, int _use_cnt, bool _ud, bool _un){ now = _n; cost = _c; cnt = _cnt; use_cnt = _use_cnt; used = _ud, using_now = _un; }
+    C(){}
+    bool operator > (const C &c) const{ return cost > c.cost; }
+};
+
+int calc(){
+  priority_queue<C, vector<C>, greater<C> > open;
+  open.push(C(0, 0, 1, 0, false, false));
+  int closed[MAX_N * MAX_N][MAX_N];
+  REP(i, MAX_N * MAX_N) REP(j, MAX_N) closed[i][j] = INF;
+  while(!open.empty()){
+    C tmp = open.top(); open.pop();
+    int now = tmp.now, cost = tmp.cost, cnt = tmp.cnt, use_cnt = tmp.use_cnt;
+    bool used = tmp.used, using_now = tmp.using_now;
+    //cout <<now + 1 <<", " <<cost <<", " <<use_cnt <<" | " <<used <<", " <<using_now <<endl;
+    if(cost >= closed[use_cnt][now]) continue;
+    if(!using_now) closed[use_cnt][now] = cost;
+    if(now == N - 1) continue;
+    REP(nx, N){
+      if(v[now][nx] == INF) continue;
+      if(using_now){
+        open.push(C(nx, cost, cnt + 1, use_cnt, true, false));
+      } else{
+        open.push(C(nx, cost + v[now][nx], cnt + 1, use_cnt, used, using_now));
+        if(!used) open.push(C(nx, cost, cnt + 1, cnt, true, true));
+      }
+    }
+  }
+  int ret = INF;
+  //REP(i, 10) cout <<i <<": " <<closed[i][N - 1] <<endl;
+  REP(i, MAX_N * MAX_N) ret = min(ret, closed[i][N - 1]);
+  return ret;
+}
+
+int main() {
+  while(cin >>N >>M && N){
+    REP(i, MAX_N) REP(j, MAX_N) v[i][j] = INF;
+    REP(i, M){
+      int from, to, cost; cin >>from >>to >>cost;
+      --from; --to;
+      v[from][to] = min(v[from][to], cost);
+      v[to][from] = min(v[to][from], cost);
+    }
+    cout <<calc() <<endl;
+  }
+  return 0;
+}

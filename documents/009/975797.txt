@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i;
+	int num;
+	char str1[1000+1];
+	char str2[] = "Hoshino";
+	char *ret;
+	char *point;
+	
+	scanf("%d",&num);
+	fgets(str1, sizeof(str1), stdin);
+	
+	for(i = 0; i < num; i++){
+			fgets(str1, sizeof(str1), stdin);
+			point = str1;
+			while((ret = strstr(point , str2)) != NULL){
+				ret[6] = 'a';
+				point = ret + 7;
+			}
+				printf("%s",str1);
+	}
+	printf("\n");
+
+	return 0;
+}

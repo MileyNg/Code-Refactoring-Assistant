@@ -1,0 +1,49 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+typedef long long int ll;
+int n,a[10000];
+int no(int i,int c){
+	int u=a[i];
+	a[i]=c;
+	int ans=0;
+	int p=i;
+	int q=i;
+	int s=1;
+	while(p>0||q<n-1){
+		while(p>0&&a[p]==a[p-1])p--,s++;
+		while(q<n-1&&a[q]==a[q+1])q++,s++;
+		if(s>3){
+			ans+=s;
+			if(a[p--]!=a[q++])break;
+			s=2;
+			continue;
+		}
+		break;
+	}
+	a[i]=u;
+	return ans;
+}
+int main()
+{
+	for(;;){
+	int x;
+	cin >> n;
+	if(n==0)return 0;
+	int ans=n;
+	for(int i=0;i<n;i++)cin >> a[i];
+	for(int i=0;i<n;i++){
+		for(int j=1;j<=3;j++){
+			if(a[i]!=j){
+				x=no(i,j);
+			}
+			ans=min(ans,n-x);
+		}
+	}
+	printf("%d\n",ans);
+	}
+    return 0;
+}

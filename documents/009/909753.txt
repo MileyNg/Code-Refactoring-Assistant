@@ -1,0 +1,79 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<string.h>
+using namespace std;
+typedef struct {
+   short cost, x, y;
+}Point;//螳壻ケ我ク?クェ扈捺桷菴鍋畑譚・蟄伜お豈丈クェ蟾・蜴ら噪蝮先?菴咲スョ蜥悟・カ驟ェ逧??
+int H, W, N;
+vector<Point> factory;
+char map[1000][1002];
+bool tag[1002][1002];
+short dx[4] = {-1, 1, 0, 0}, dy[4] = {0, 0, -1, 1};
+bool myfunction(Point a, Point b)
+{
+    return a.cost < b.cost;
+}
+
+int bfs(int sx, int sy, int ex, int ey);
+int main()
+{
+    cin>>H>>W>>N;
+    int sx, sy;
+    for(int i = 0; i < H; i++){
+        cin>>map[i];
+        for(int j = 0; j < W; j++){
+            if( 1 <= (map[i][j]-'0') && (map[i][j]-'0') <= N){
+                Point p;
+                p.x = i, p.y = j, p.cost = map[i][j] - '0';
+                factory.push_back(p);//謚雁キ・蜴ら噪陦ィ遉コ謾セ蛻ー蜿ッ蜿俶焚扈?クュ
+            }
+            if(map[i][j] == 'S')
+               sx = i, sy = j; //隶ー蠖戊オキ蟋倶ス咲スョ逧?攝譬?        }
+    }
+
+    sort(factory.begin(), factory.end(), myfunction);
+    int ans = 0;
+    int start_x = sx, start_y = sy;
+    for(int i = 0; i < factory.size(); i++){
+    //    cout<<start_x<<'\t'<<start_y<<'\t'<<factory[i].x<<'\t'<<factory[i].y<<endl;
+        ans += bfs(start_x, start_y, factory[i].x, factory[i].y);
+        start_x = factory[i].x;  start_y = factory[i].y;
+    }
+
+    //bfs(1, 8, 4, 3);
+    cout<<ans<<endl;
+
+    return 0;
+}
+
+
+int bfs(int sx, int sy, int ex, int ey)
+{
+   for(int i = 0; i < H; i++)//逕ィ霑吩クェ謨ー扈?擂譬?ョー譟蝉クェ菴咲スョ譏ッ蜷ヲ蟾イ扈丞惠髦溷?荳ュ莠?      fill(tag[i], tag[i]+W, false);
+   queue<Point> q;
+   Point s;
+   s.x = sx; s.y = sy; s.cost = 0;//蛻晏ァ句喧蠑?ァ狗噪豁・謨ー荳コ0
+   q.push(s);//謚願オキ蟋狗せ謾セ蛻ー髦溷?荳ュ
+   tag[sx][sy] = true;
+   while(!q.empty()){
+     s = q.front();
+     q.pop();
+     tag[s.x][s.y] = false;
+     //if(sx == ex && sy == ey) return s.cost;
+     for(int i = 0; i < 4; i++){
+       int xx,yy;
+       xx = s.x + dx[i]; yy = s.y + dy[i];
+       if(xx == ex && yy == ey) return s.cost+1;//螯よ棡蟾イ扈丞芦莠?サ育せ蛻呵ソ泌屓螳?噪豁・謨ー
+       if(xx >= 0 && xx < H && yy >= 0 && yy < W && map[xx][yy] != 'X' && !tag[xx][yy]){
+          // cout<<xx<<'\t'<<yy<<endl;
+           Point now;
+           now.x = xx; now.y = yy; now.cost = s.cost + 1;
+           q.push(now);
+           tag[xx][yy] = true;
+       }
+     }//for()
+   }//while()
+}//bfs()

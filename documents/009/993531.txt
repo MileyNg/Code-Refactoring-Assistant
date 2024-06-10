@@ -1,0 +1,31 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+int main(void) {
+    ll a, b, A, B;
+    while (cin >> a >> b) {
+        A = a; B = b;
+        if (a < b) swap(a, b);
+        ll r = b;
+        while (r) {
+            r = a % b;
+            a = b;
+            b = r;
+        }
+        cout << a << " " << (A/a) * B << endl;
+    }
+    return 0;
+}

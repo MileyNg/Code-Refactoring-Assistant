@@ -1,0 +1,21 @@
+loop{
+	an,bn,r = gets.split.map(&:to_i)
+	if an==0 and bn == 0 then
+		break
+	end
+	rr = 16 * r * r
+	len = (0..4*r).map{|y| Math.sqrt(rr - y*y).to_i}
+	as = an.times.map{gets.split.map(&:to_i)}
+	pow = 0
+	1.step(bn){
+		bx,by = gets.split.map(&:to_i)
+		as.each do |ax,ay|
+			dx = (ax - bx).abs
+			dy = (ay - by).abs
+			if dy <= 4 * r and dx <= len[dy] then
+				pow += 1
+			end
+		end
+	}
+	p pow
+}

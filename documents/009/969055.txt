@@ -1,0 +1,44 @@
+#include <stdio.h>
+
+#define MAX 100000
+
+int Partition(int*,int,int);
+
+int main(){
+  int n, i, arr[MAX], p;
+
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d" , arr+i);
+  }
+
+  p = Partition(arr, 0, n-1);
+  for(i = 0 ; i < n ; i++){
+    if(i == p){
+      printf("[%d]%c" ,arr[i], i != n-1 ? ' ' : '\n');
+    }else{
+      printf("%d%c" ,arr[i], i != n-1 ? ' ' : '\n');
+    }
+  }
+
+  return 0;
+}
+
+int Partition(int arr[], int p, int r){
+  int x = arr[r], i = p - 1, j, tmp;
+
+  for(j = p ; j < r ; j++){
+    if(arr[j] <= x){
+      i++;
+      tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
+    }
+  }
+  
+  tmp = arr[i+1];
+  arr[i+1] = arr[r];
+  arr[r] = tmp;
+  
+  return ++i;
+}

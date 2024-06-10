@@ -1,0 +1,36 @@
+#include<iostream>
+#include<vector>
+
+void drawdown(int a,int size){
+	int i = 0;
+	for (; i < a; i++)std::cout << " ";
+	for (; i < size; i++)std::cout << "^";
+	std::cout << std::endl;
+}
+
+int main(){
+
+	int p, q;
+	while (std::cin >> p >> q){
+		std::vector<int>r;
+		r.push_back(0);
+
+		while (true){
+
+			if (p / q == 0)p *= 10;
+			std::cout << p / q;
+			p %= q;
+			std::vector<int>::iterator it = std::find(r.begin(), r.end(), p);
+			if (it != r.end()){
+				std::cout << std::endl;
+				if (p == 0)break;
+				else {
+					drawdown(it - r.begin(), r.size());
+					break;
+				}
+			}
+			r.push_back(p);
+		}
+	}
+	return 0;
+}

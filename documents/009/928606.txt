@@ -1,0 +1,139 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<math.h>
+#define MAX 20000
+enum Slope{ UP, DOWN, FLAT };
+
+int main(){
+	while (1){
+	char s[MAX];
+	int sa[2][MAX] = { 0 };
+	int seki[MAX];
+	int  num = 0, i, j, k, t = 0, a = 0, b, c=0, m, g, f, r, depth = 0, h, w, sum = 0;
+	double su;
+	enum Slope slope = FLAT;
+
+	scanf("%s", s);
+	if (s[1]=='\0'){ goto go; }
+	for (i = 0; s[i] != '\0'; i++){
+		switch (s[i]){
+		case '\\':
+			//if (slope == UP || slope == FLAT){
+			slope = DOWN;
+			sa[0][t++] = num;
+			//}
+			num--;
+			break;
+		case '/':
+			//if (slope == DOWN || slope == FLAT){
+			slope = UP;
+			sa[0][t++] = num;
+			//}
+			num++;
+			break;
+		case '_':
+			slope = FLAT;
+			sa[0][t++] = num;
+			break;
+		}
+	}
+	sa[0][t] = num;
+	i++;
+	c = 0;
+	t = sa[0][0];
+	b = 0;
+	//最初の山の頂点を見つける
+	for (k = 0; k < i; k++){
+		if (t < sa[0][k]){ t = sa[0][k]; b = k; }
+		if (t>sa[0][k]){ break; }
+	}
+
+	for (j = b; j < i; j++){
+		//前の山との差が0になる場所を探す
+		for (k = j; k < i; k++){
+			m = 1;
+			//前の山との差が0になったら
+			if (sa[0][k] == t && k != b){
+				//前の山の高さと同じ高さを記録（頂点ではない）
+				t = sa[0][k];
+				//同じ場所じゃなかったら
+				if (b != k){
+					//この谷には1箇所水がたまる
+					depth = 0;
+					su = 0.0;
+					//面積の計算
+					for (w = b + 1, h = b; w <= k; w++, h++){
+						if (sa[0][h] > sa[0][w]){ su += depth + 0.5; depth++; }
+						else if (sa[0][h] < sa[0][w]){ su += depth - 1 + 0.5; depth--; }
+						else{ su += depth; }
+					}
+					seki[c] = (int)su;
+					sum += seki[c];
+					c++;
+				}
+				//検索を前の山との差が0になったところから探すようにする
+				j = k;
+				//前の山との差が0になる場所があったことを示すフラグ
+				m = 0;
+
+				//前の山の高さと同じ高さを記録したときに頂点でないときはこれ以降の頂点を探す
+				g = k;//kを変更したくないから
+				f = k;
+				while (1){
+					//読み込んだ山と谷の範囲を出ていたら
+					if (g >= i)break;
+					//上り坂だったら
+					if (sa[0][f]<sa[0][g]){
+						f++;
+					}
+					//下り坂だったら
+					else if (sa[0][f] > sa[0][g]){
+						//検索を次の山の頂点にする
+						j = f;
+						//頂点を記録
+						t = sa[0][f];
+						b = j;
+						//頂点が見つかったので検索ループを出る
+						break;
+					}
+					//平坦だったら
+					else if (g != f && sa[0][g] == sa[0][f]){
+						f++;
+					}
+					g++;
+				}
+				//前の山との差が0になったので検索を出る
+				break;
+			}
+		}
+		//前の山との差が0になる場所がなかったら
+		if (m){
+			//前の山からの次の場所（jには頂点が記録されているのでそこから1進んだ場所の位置を記録）
+			//ただし平坦な場合は1進んでも前の山との差が0になる場所ではないので平坦以外になるまで移動する
+			t = sa[0][j];
+			b = j;
+			//平坦な場合
+			for (r = j + 1; r < i - 1; r++){
+				//傾き場変化する場所を記録
+				if (sa[0][j] != sa[0][r]){
+					b = r - 1;
+					break;
+				}
+			}
+			m = 0;
+		}
+	}
+	go:
+	printf("%d\n%d ", sum, c);
+	for (i = 0; i < c; i++){
+		printf("%d", seki[i]);
+		if (i < c - 1){
+			printf(" ");
+		}
+	}
+	printf("\n");
+}
+	return 0;
+}

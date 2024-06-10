@@ -1,0 +1,81 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int calc(int a[21]) {
+  bool spare[10] = {false};
+  bool strike[10] = {false};
+  int s = 0, p = 0;
+  for (int i=0; i<10; i++) {
+    s += a[p];
+    if (i>0 && (spare[i-1] || strike[i-1])) {
+      s += a[p];
+    }
+    if (p>1 && i>1 && strike[i-1] && strike[i-2]) {
+      s += a[p];
+    }
+    if (a[p] == 10) {
+      strike[i] = true;
+      p++;
+      continue;
+    }
+    s += a[p+1];
+    if (i>0 && strike[i-1]) {
+      s += a[p+1];
+    }
+    if (a[p] + a[p+1] == 10) {
+      spare[i] = true;
+    }
+    p += 2;
+  }
+  if (spare[9]) {
+    s += a[p];
+  } else if (strike[9]) {
+    s += a[p] + a[p+1];
+    if (strike[8]) {
+      s += a[p];
+    }
+  }
+  return s;
+}
+
+bool compare(const pair<int, int> &l, const pair<int, int> &r) {
+  if (l.first < r.first) {
+    return true;
+  } else if (l.first > r.first) {
+    return false;
+  } else if (l.second > r.second) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+int main() {
+  int a[21];
+  pair<int,int> s[40];
+  int n, m, p, c;
+  char buf[100];
+  while (1) {
+    scanf("%d\n", &n);
+    if (!n) break;
+    for (int i=0; i<n; i++) {
+      fgets(buf, sizeof(buf), stdin);
+      p = 0;
+      sscanf(buf, "%d%n", &s[i].second, &c);
+      p += c;
+      m = 0;
+      while (1) {
+        if (sscanf(buf+p, "%d%n", &a[m], &c) != 1) break;
+        ++m;
+        p += c;
+      }
+      s[i].first = calc(a);
+    }
+    sort(s, s+n, compare);
+    for (int i=n-1; i>=0; i--) {
+      printf("%d %d\n", s[i].second, s[i].first);
+    }
+  }
+  return 0;
+}

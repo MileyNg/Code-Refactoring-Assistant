@@ -1,0 +1,54 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int prim(vector<vector<int>> to, vector<vector<int>> dist, int n) {
+  priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> q;
+  q.push(make_pair(0,0));
+  vector<bool> vis(n,false);
+  int sum = 0;
+  while(!q.empty()){
+    auto p=q.top();q.pop();
+    if(vis[p.second]) continue;
+    vis[p.second] = true;
+    sum += p.first;
+    for(int i = 0;i < to[p.second].size(); ++i) {
+      if(vis[to[p.second][i]] == false) {
+        q.push(make_pair(dist[p.second][i], to[p.second][i]));
+      }
+    }
+  }
+  return sum;
+}
+
+int main() {
+  while(1){
+    int n;
+    cin>>n;
+    if(!n)break;
+    int m;
+    cin >> m;
+    vector<vector<int>> to(n);
+    vector<vector<int>> dist(n);
+    for(int i = 0; i < m; ++i) {
+      int a,b,d;
+      scanf("%d,%d,%d", &a,&b,&d);
+      to[a].push_back(b);
+      to[b].push_back(a);
+      dist[a].push_back(d);
+      dist[b].push_back(d);
+    }
+    int mspd = prim(to,dist,n);
+    mspd /= 100;
+    mspd -= n - 1;
+    cout << mspd << endl;
+  }
+  return 0;
+}

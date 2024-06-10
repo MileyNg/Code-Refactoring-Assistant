@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string input;
+    vector<string> ans;
+    getline(cin, input);
+    input += " ";
+    while(input.find(",") != string::npos) input.replace(input.find(","), 1, " ");
+    while(input.find(".") != string::npos) input.replace(input.find("."), 1, " ");
+    while(input.find_first_of(" ") != string::npos){
+
+        string s = input.substr(0, input.find_first_of(" "));
+        if(3 <= s.size() && s.size() <= 6) ans.push_back(s);
+
+        input = input.substr(input.find_first_of(" ")+1);
+    }
+    for(int i=0; i < ans.size(); i++){
+        if(i == 0) cout << ans[i];
+        else cout << " " << ans[i];
+    }
+    cout << endl;
+}

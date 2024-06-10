@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<stdlib.h>
+int s(int *a,int *b){return *a-*b;}
+int N,M,R,P[1005]={0},X[1000005],i,j,p,t;
+int bs(int r,int l,int k)
+{
+	int m;
+	while(l-r>1)
+	{
+		m=(r+l)/2;
+		if(X[m]==k)
+			return m;
+		if(X[m]<=k)
+			r=m+1;
+		else
+			l=m-1;
+	}
+	return l;
+}
+
+int main()
+{
+	for(;scanf("%d%d",&N,&M),N;)
+	{
+		for(i=0;i<N;i++)
+			scanf("%d",&P[i+1]);
+		for(i=p=0;i<=N;i++)
+			for(j=i;j<=N;j++)
+				X[p++]=P[i]+P[j];
+		qsort(X,p,4,s);
+		for(i=R=0;i<p;i++)
+		{
+			if(X[i]<=M)
+			{
+				t=X[i]+X[bs(0,p-1,M-X[i])];
+				if(t<=M&&t>R)R=t;
+			}
+		}
+		printf("%d\n",R);
+	}
+	return 0;
+}

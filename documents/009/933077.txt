@@ -1,0 +1,23 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+#define F(I,J,N) for(int I=J;I<N;I++)
+int main(){
+  int a,b,c,n;
+  cin >>n;
+  F(i,0,n){
+    priority_queue<int> q;
+    cin>>a>>b>>c;
+    q.push(a);
+    q.push(b);
+    q.push(c);
+    a=q.top();q.pop();
+    b=q.top();q.pop();
+    c=q.top();q.pop();
+    bool f=false;
+    if(a*a==(b*b+c*c))f=true;
+    if(f) cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;
+  }
+}

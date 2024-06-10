@@ -1,0 +1,69 @@
+#include<iostream>
+#include<list>
+#include<string>
+#include<cctype>
+using namespace std;
+
+bool checkString(int* key, string s);
+void rotateChar(string* s, int i);
+
+int main()
+{
+    list<string> table;
+    char text[80];
+	int size=0;
+
+	for(size=0; cin.get(text[size]); size++ ){;}
+
+	char ch;
+	string s;
+	for(int i=0; (ch=text[i])!=EOF; i++){
+		if(ch!=' ')s.push_back(ch);
+		else{ table.push_back(s), s.clear();}
+	}		
+
+    int key; // ずらす文字数
+    list<string>::iterator i;
+    for(i=table.begin(); i!=table.end(); i++){
+        // cout << *i << " ";
+        if( i->size() == 3 || i->size() == 4 )
+            if( checkString(&key, *i) ) break;
+    }
+	
+	for(int i=0; i<size; i++){
+		char ch = text[i];
+		if(isalpha(ch)){
+        char c = ch - 'a';
+        ch = 'a' + (c+key)%26;
+		}
+		cout.put(ch);
+	}
+
+    return 0;
+}
+
+void rotateChar(string* s, int i) // iは何文字ずらしたいか
+{
+
+    for(int j=0; j<s->size(); j++){
+        if(!isalpha(s->at(j))){continue;}
+        char c = s->at(j) - 'a';
+        s->at(j) = 'a' + (c+i)%26;
+    }
+}
+
+bool checkString(int* key, string s)
+{
+
+    for(int i=0; i<26; i++){
+        string tmp = s;
+        rotateChar(&tmp, i);
+        // cout << tmp << endl;
+        if( tmp=="the" || tmp=="this" || tmp=="that" ){
+            *key=i;
+            return true;
+        }
+    }
+    return false;
+}
+        

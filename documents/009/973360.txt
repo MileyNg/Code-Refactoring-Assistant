@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(x,b) ((x)>=0&&(x)<(b))
+#define Y first
+#define X second
+#define INF 1 << 30
+
+typedef pair<int, int> pii;
+typedef queue<int> qi;
+typedef pair<int, int> pi;
+
+//int board[51][51], Y, X;
+int board[500][500], Y, X;
+int dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+
+pii nextp1(pii now, int i){
+  pii next = now;
+  next.Y += dy[i];
+  next.X += dx[i];
+  //  printf("%d %d\n", next.Y, next.X);
+  //  if(BW(next.Y, Y)) puts("YES");
+  //  if(BW(next.X, X)) puts("YES");
+  //  printf("%d\n", board[next.Y][next.X]);
+  if(BW((next.Y), Y) && BW((next.X), X) && board[next.Y][next.X] == 0) return next;
+  return now;
+}
+
+pii nextp2(pii now, int i){
+  pii next = now;
+  next.Y += -1 * dy[i];
+  next.X += -1 * dx[i];
+  if(BW(next.Y, Y) && BW(next.X, X) && board[next.Y][next.X] == 0) return next;
+  return now;
+}
+     
+int main(){
+  while(scanf("%d%d", &X,  &Y) && X+Y){
+    int tx, ty, kx, ky;
+    scanf("%d%d%d%d", &tx, &ty, &kx, &ky); tx--; ty--; kx--; ky--;
+    rep(i, X) rep(j, Y) scanf("%d", &board[i][j]);
+
+    map<pair<pi,pi>, bool>m; // t k
+    queue<pii>tq, kq;
+    tq.push(make_pair(ty, tx));
+    kq.push(make_pair(ky, kx));
+    m[make_pair(make_pair(ty, tx), make_pair(ky, kx))] = 1;
+    int res = 1;
+    while(!tq.empty()){
+      if(res >= 100) break;
+      //      printf("%d\n", res);
+      int qsize = (int)tq.size();
+      //      printf(" %d\n", qsize);
+      rep(i, qsize){
+	pii t = tq.front(); tq.pop();
+	pii k = kq.front(); kq.pop();
+	//	printf("%d %d %d %d\n", t.Y, t.X, k.Y, k.X);
+	rep(j, 4){
+	  pii nt = nextp1(t, j), nk = nextp2(k, j);
+	  //	  printf("%d %d %d %d\n", t.Y, t.X, k.Y, k.X);
+	  //	  printf("%d %d %d %d\n", nt.Y, nt.X, nk.Y, nk.X);
+
+	  //	  if(f[nt.Y][nt.X][nk.Y][nk.X]) continue;
+	  pair<pi, pi> next = make_pair(make_pair(nt.Y, nt.X), make_pair(nk.Y, nk.X));
+	  if(m.count(next) == 1) continue;
+	  if(nt == nk){
+	    printf("%d\n", res);
+	    //	    printf("%d %d %d %d\n", nt.Y, nt.X, nk.Y, nk.X);
+	    goto end;
+	  }
+	  //	  fprintf(stderr, "%d %d %d %d\n", nt.Y, nt.X, nk.Y, nk.X);
+	  //	  f[nt.Y][nt.X][nk.Y][nk.X] = 1;
+	  m[next] = 1;
+	  tq.push(nt); kq.push(nk);
+	}
+      }
+      //      if(res > 100) break;
+      res++;
+
+    }
+    //    printf("%d\n", (int)tq.size());
+    puts("NA");
+  end:;
+  }
+  return 0;
+}

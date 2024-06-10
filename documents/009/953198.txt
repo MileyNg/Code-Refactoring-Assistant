@@ -1,0 +1,34 @@
+#include <iostream>
+#include <bitset>
+#include <string>
+
+int main(void) {
+    u_int n;
+    std::string event;
+
+    std::cin >> n;
+    for (u_int i = 0; i < n; ++i) {
+        std::bitset<4> runner;
+        u_int out = 0, score = 0;
+
+        do {
+            std::cin >> event;
+            if ("HIT" == event) {
+                runner <<= 1;
+                runner.set(0);
+                if (runner[3] == 1) {
+                    ++score;
+                }
+            } else if ("HOMERUN" == event) {
+                score += runner.count() - runner[3] + 1;
+                runner.reset();
+            } else if ("OUT" == event) {
+                ++out;
+            }
+        } while(out != 3);
+
+        std::cout << score << std::endl;
+    }
+
+    return 0;
+}

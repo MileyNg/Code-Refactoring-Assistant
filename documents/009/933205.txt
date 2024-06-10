@@ -1,0 +1,29 @@
+#include <algorithm>
+#include <string>
+#include <vector>
+#include "math.h"
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int digit[8], n, a, b;
+	char c;
+	
+	cin >> n;
+	for (int i=0; i<n; i++) {
+		for (int i=0; i<8; i++) {
+			cin >> c;
+			digit[i] = c-'0';
+		}
+		sort(digit, digit+8);
+		a=0; b=0;
+		for (int i=0; i<8; i++) {
+			b+=digit[i]*pow(10, i);
+			a+=digit[7-i]*pow(10, i);
+		}
+		cout << b-a << endl;
+	}
+	return 0;
+}

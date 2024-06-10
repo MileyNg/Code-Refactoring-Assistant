@@ -1,0 +1,101 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 5010;
+const int INF = 1e9 + 7;
+#define now first
+#define depth second
+
+int N, K, cost[MAX_N][MAX_N], C[MAX_N], R[MAX_N];
+vector<int> v[MAX_N];
+
+int main() {
+  cin >>N >>K;
+  //REP(i, MAX_N) memset(v[i], false, sizeof(v[i]));
+  REP(i, MAX_N) REP(j, MAX_N) cost[i][j] = INF;
+  REP(i, N) cin >>C[i] >>R[i];
+  REP(i, K){
+    int A, B; cin >>A >>B;
+    --A; --B;
+    v[A].push_back(B);
+    v[B].push_back(A);
+  }
+  //REP(i, N){
+  //  REP(j, v[i].size()) cout <<v[i][j] <<" ";
+  //  cout <<endl;
+  //}
+  REP(i, N){
+    //cout <<"--" <<endl;
+    int c = C[i], r = R[i];
+    cost[i][i] = 0;
+    queue<P> open;
+    open.push( P(i, r) );
+    bool closed[MAX_N] = {false};
+    closed[i] = true;
+    while(!open.empty()){
+      P now = open.front(); open.pop();
+      if(now.depth <= 0) continue;
+      //cout <<now.now <<", " <<now.depth <<endl;
+      //REP(i, N) cout <<closed[i] <<" "; cout <<endl;
+      REP(k, v[now.now].size()){
+        int j = v[now.now][k];
+        //if(v[now.now][j] == false) continue;
+        //cout <<"!" <<endl;
+        //cout <<"? " <<closed[j] <<", " <<j <<endl;
+        if(closed[j]) continue;
+        //cout <<"!!" <<endl;
+        closed[j] = true;
+        cost[i][j] = c;
+        open.push( P(j, now.depth - 1) );
+      }
+    }
+  }
+  //REP(i, N){
+  //  cout <<i <<": ";
+  //  REP(j, N) printf("%10d ", cost[i][j]);
+  //  cout <<endl;
+  //}
+
+  priority_queue<P, vector<P>, greater<P> > open;
+  open.push( P(0, 0) );
+  int closed[MAX_N];
+  fill(closed, closed + MAX_N, INF);
+  int ans;
+  while(!open.empty()){
+    P now = open.top(); open.pop();
+    if(now.now == N - 1){
+      ans = now.second;
+      break;
+    }
+    if(closed[now.now] <= now.second) continue;
+    closed[now.now] = now.second;
+    REP(i, N){
+      if(i == now.now || cost[now.now][i] == INF) continue;
+      open.push( P(i, now.second + cost[now.now][i]) );
+    }
+  }
+  cout <<ans <<endl;
+  return 0;
+}

@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+char _7seg[][8] = {"0111111", "0000110", "1011011",
+				   "1001001", "1100110", "1101101",
+				   "1111101", "0100111", "1111111",
+				   "1101111", "0000000"};
+
+void make_signal(int now, int next);
+char judge(int a, int b);
+
+int main(void)
+{
+	int i;
+	int n;
+	int now, next;
+	
+	while (1){
+		if (scanf("%d", &n), n == -1) break;
+		
+		now = 10;
+		for (i = 0; i < n; i++){
+			scanf("%d", &next);
+			make_signal(now, next);
+			now = next;
+		}
+	}
+	
+	return (0);
+}
+
+void make_signal(int now, int next)
+{
+	char ans[8];
+	int i;
+	
+	for (i = 0; i < 7; i++){
+		ans[i] = judge(_7seg[now][i] - '0', _7seg[next][i] - '0');
+	}
+	printf("%s\n", ans);
+}
+
+char judge(int a, int b)
+{
+	if (a == b){
+		return ('0');
+	}
+	else {
+		return ('1');
+	}
+}

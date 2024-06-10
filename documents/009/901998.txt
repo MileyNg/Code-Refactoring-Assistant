@@ -1,0 +1,43 @@
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+const int INF=1000000000;
+
+int main(){
+	int a,b;
+	int s[5002],t[5002];
+	scanf("%d%d",&a,&b);
+	for(int i=0;i<a;i++){
+		scanf("%d",&s[i]);
+	}
+	for(int i=0;i<b;i++){
+		scanf("%d",&t[i]);
+	}
+
+	int memo[5002]; for(int i=0;i<b;i++)memo[i]=INF;
+
+	int ret=0;
+	for(int i=0;i<b-ret;i++){
+		int p=0,q=i;
+		int cnt=0;
+		while(1){
+			if(s[p]==t[q]){
+				if(p>=memo[q])break;
+				memo[q]=p;
+				cnt++;
+				p++;
+				q++;
+			}
+			else {
+				p++;
+			}
+			if(p==a){
+				ret=max(ret,cnt);
+				break;
+			}
+		}
+	}
+
+	printf("%d\n",ret);
+}

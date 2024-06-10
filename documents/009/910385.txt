@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<math.h>
+
+int N = 10000;
+int isprime(int);
+
+int main(){
+  
+  int count=0,n,A[N],i;
+  
+  scanf("%d",&n);
+  for ( i = 0; i < n; i++ ) scanf("%d", &A[i]);
+  for(i=0;i<n;i++){
+    if(isprime(A[i])==1){
+      count++;
+    }
+  }
+  printf("%d\n",count);
+  return 0;
+}
+
+int isprime(int A){
+  int c1,c2,i;
+  
+  if(A == 2){ 
+    return 1;
+  }
+  c1=A%2;
+  if(A < 2 || c1==0){
+    return 2;
+  }
+  i = 3;
+  while(i <=sqrt(A)){
+    c2=A%i;
+    if(c2==0)
+      return 2;
+    i = i + 2;
+  }
+  return 1;
+}

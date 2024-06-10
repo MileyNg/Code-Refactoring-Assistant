@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long long int ll;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x);i>=0;i--)
+#define RFOR(i,c) for(__typeof((c).rbegin())i=(c).rbegin();i!=(c).rend();++i)
+
+string s;
+main(){
+	string aidu = "AIDUNYAN";
+	sort(aidu.begin(), aidu.end());
+	while(cin >> s){
+		string ans = "";
+		REP(i, (int)s.size()){
+			string t = s.substr(i, 8);
+			sort(t.begin(), t.end());
+			if(t == aidu){
+				ans += "AIZUNYAN";
+				i += 7;
+			}else ans += s[i];
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

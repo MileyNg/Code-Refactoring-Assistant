@@ -1,0 +1,30 @@
+array = []
+loop do
+  data = gets.chomp.split.map {|s| s.to_i}
+  break if data[0] == 0 && data[1] == 0
+  array << data
+end
+
+array.each do |data|
+  h = data[0]
+  w = data[1]
+
+  h.times do |i|
+    if i % 2 == 0 then
+      flg = true
+    else
+      flg = false
+    end
+    w.times do
+      if flg then
+        print "#"
+        flg = false
+      else
+        print "."
+        flg = true
+      end
+    end
+    print "\n"
+  end
+  print "\n"
+end

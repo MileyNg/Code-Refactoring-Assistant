@@ -1,0 +1,55 @@
+### constants
+
+MAX_P = 1000000
+
+### subroutines
+
+def gen_primes(max_p)
+  primes = Array.new(max_p + 1){true}
+  primes[0] = primes[1] = false
+  num_p = 0
+
+  for p in (2..max_p)
+    if primes[p]
+      num_p += 1
+      for q in (p * p).step(max_p, p)
+        primes[q] = false
+      end
+    end
+  end
+
+  return primes
+end
+
+### main
+
+primes = gen_primes(MAX_P)
+
+pids = Array.new(MAX_P + 1){nil}
+
+id = 0
+for i in (0..MAX_P)
+  id += 1 if primes[i]
+  pids[i] = id
+end
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  kx = 0
+
+  n.times.each do
+    p, m = gets.strip.split(' ').map{|s| s.to_i}
+    #puts "#{p}, #{m}"
+
+    i0 = [p - m - 1, 0].max
+    i1 = [p + m, MAX_P].min
+
+    x = pids[i1] - pids[i0]
+
+    kx += (x - 1)
+  end
+
+  puts kx
+end

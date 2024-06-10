@@ -1,0 +1,33 @@
+<?php
+  /*
+    AOJ 0174
+    title:Badminton
+    @kankichi573
+  */
+function my_count($str,$c)
+{
+  $cnt=0;
+  while($str=strpbrk($str,$c))
+    {
+      //echo "str=".$str;
+      $str=substr($str,1);
+      $cnt++;
+    }
+  return($cnt);
+}
+$i=0;
+$first[1]="0";
+while(fscanf(STDIN,"%s",$record) && $record != "0")
+{
+  $record=substr($record,-(strlen($record)-1),strlen($record)-1);
+  $a=my_count($record,"A");
+  $b=my_count($record,"B");
+  if($a > $b)
+    $a++;
+  else
+    $b++;
+  fprintf(STDOUT,"%d %d\n",$a,$b);
+}
+
+return(0);
+?>

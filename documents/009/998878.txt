@@ -1,0 +1,46 @@
+#define _USE_MATH_DEFINES
+ 
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int main(){
+	vector<string> str;
+	int count[1000]={0};
+	//int length[1000]={0};
+	string max_length="";
+
+	string s;
+	while(cin >> s){
+		int i;
+		bool find_flag = 1;
+		for(i=0;i<str.size();i++){
+			if(str[i]==s){
+				count[i]++;
+				find_flag = 0;
+				break;
+			}
+		}
+		if( find_flag ){
+			str.push_back(s);
+			if(s.size()>max_length.size()){
+				max_length = s;
+			}
+		}
+	}
+	
+	int max = 0;
+	for(int i=0;i<str.size();i++){
+		if(count[i]>max){
+			max=i;
+		}
+	}
+	cout << str[max] << " " << max_length << endl;
+	
+	return 0;
+}

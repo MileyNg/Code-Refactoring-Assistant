@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 200
+
+static void push(int *stack, int* sp, int a) {
+	if (*sp > 0) {
+		stack[--(*sp)] = a;
+	} else {
+		fprintf(stderr, "push error\n");
+	}
+}
+
+static int pop(int *stack, int* sp) {
+	if (*sp < MAX) {
+		return stack[(*sp)++];
+	} else {
+		return 0;
+	}
+}
+
+
+int main() {
+	char s[MAX];
+	int sp = MAX;
+	int stack[MAX];
+
+	while (scanf("%s", s) != EOF) {
+		if (s[0] == '+') {
+			push(stack, &sp, pop(stack, &sp) + pop(stack, &sp));
+		} else if (s[0] == '-') {
+			push(stack, &sp, pop(stack, &sp) - pop(stack, &sp));
+		} else if (s[0] == '*') {
+			push(stack, &sp, pop(stack, &sp) * pop(stack, &sp));
+		} else {
+			push(stack, &sp, atoi(s));
+		}
+	}
+
+	printf("%d", pop(stack, &sp));
+
+	return 0;
+}

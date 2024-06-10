@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+typedef long long ll;
+
+#define REP_N(i,n,s) for(ll i=0; i<(ll)n; i+=s)
+#define REP(i,n) REP_N(i,n,1)
+
+ll table[1000000];
+ll pollock[1000001];
+ll dp[1000001];
+
+void solution(ll output[1000001], int interval) {
+	output[0] = 0;
+	ll current_i = 1-interval;
+	REP(i, 1000001) if (i != 0) {
+		if (table[current_i + interval] == i){
+			current_i += interval;
+			output[i] = 1;
+			continue;
+		}
+		ll minimum = 1000001;
+		REP_N(j, current_i+1, interval) if(j!=0) minimum = min(output[i - table[j]] + 1, minimum);
+		output[i] = minimum;
+
+	}
+}
+
+int main() {
+	{
+		ll i = 0;
+		table[0] = 0;
+		while (1000001 > table[i++]) table[i] = i*(i + 1)*(i + 2) / 6;
+	}
+
+	solution(pollock, 1);
+	solution(dp, 4);
+
+	while (true) {
+		int n;
+		cin >> n;
+		if (n==0) break;
+		
+		cout << pollock[n] << " " << dp[n] << endl;
+	}
+
+}

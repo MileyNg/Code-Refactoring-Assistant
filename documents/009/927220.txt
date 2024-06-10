@@ -1,0 +1,16 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+int main() {
+  double a, b, C, S, L, h;
+
+  cin >> a >> b >> C;
+
+  S = a * b * sin(M_PI * C / 180) / 2;
+  L = sqrt(pow(a, 2) + pow(b, 2) - 2 * a * b * cos(M_PI * C / 180));
+  h = 2 * S / a;
+
+  printf("%.8lf\n%.8lf\n%.8lf\n", S, a+b+L, h);
+}

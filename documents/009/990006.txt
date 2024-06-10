@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <map>
+
+#define MAX_SAC 15
+#define EPS 0.0000000001
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int s,a,c;
+	int m=256;
+	int n;
+	int mins,mina,minc;
+	double min;
+	double h;
+
+	while(1){
+		cin>>n;
+		if(n==0) break;
+
+		vector<int> l(n);
+		for(int i1=0;i1<n;i1++){
+			cin>>l[i1];
+		}
+
+
+		min=100000000.0;
+		mins = 0;
+		mina = 0;
+		minc = 0;
+		for(s=0;s<=MAX_SAC;s++){
+			for(a=0;a<=MAX_SAC;a++){
+				for(c=0;c<=MAX_SAC;c++){
+					
+					int r=s;
+					h = 0;
+					map<int,int> mp;
+
+					for(int i1=0;i1<n;i1++){
+						r=(a*r+c)%m;
+						mp[(l[i1]+r)%m]++;
+					}
+
+					for(map<int,int>::iterator it=mp.begin();it!=mp.end();it++){
+						h-=((double)(*it).second/m)*log((double)(*it).second/m);
+					}
+
+					if((min-EPS)>h) {		
+						min = h;
+						mins = s;
+						mina = a;
+						minc = c;	
+					}
+				}
+			}
+		}
+
+		cout<<mins<<" "<<mina<<" "<<minc<<endl;
+	}
+	return 0;
+}

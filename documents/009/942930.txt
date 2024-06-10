@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main(int argc,char **argv)
+{
+  int a[1000],b[1000];
+  int num;
+  char op[1000];
+
+  num = 0;
+  scanf("%d %c %d",&a[num],&op[num],&b[num]);
+  //  printf("%d %c %d\n",a[num],op[num],b[num]);                                                                                                                                    
+  while(op[num] != '?')
+    {
+      num++;
+      scanf("%d %c %d",&a[num],&op[num],&b[num]);
+      //      printf("%d %c %d\n",a[num],op[num],b[num]);                                                                                                                            
+    }
+
+  int i;
+  for(i=0; i<num; i++)
+    {
+      if(op[i] == '+')
+        { printf("%d\n",a[i]+b[i]);
+        }
+      else if(op[i] == '-')
+        { printf("%d\n",a[i]-b[i]);
+    }
+      else if(op[i] == '*')
+        { printf("%d\n",a[i]*b[i]);
+        }
+      else if(op[i] == '/')
+        { printf("%d\n",a[i]/b[i]);
+        }
+    }
+  return 0;
+}

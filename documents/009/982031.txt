@@ -1,0 +1,137 @@
+//suhan lee,saitama university
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <complex>
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define rep(i,a,b) for(int i=(a);i<(b);++i)
+#define repn(i,n) for(int i=0;i<n;i++)
+#define EACH(t,i,c) for(t::iterator i=(c).begin(); i!=(c).end(); ++i)
+#define pb push_back 
+#define pf push_front
+vector<string> atom;
+vector<int> atwei;
+int unknown_flag;
+int readnum(string input,int& i){
+  int out=input[i++]-'0';
+  while(isdigit(input[i])){
+    out*=10;
+    out+=input[i++]-'0';
+  }
+  return out;
+}
+int mole(string input,int& i);
+int ex2(string input,int& i);
+int atomn(string input,int& i);
+int kak(string input,int & i){
+  i++;
+  int out=mole(input,i);
+  i++;
+  //  cout<<"kak1:"<<out<<endl;
+  out*=readnum(input,i);
+  //cout<<"kak:"<<out<<endl;
+  return out;
+}
+
+int mole(string input,int& i){
+  int out=0;
+  if(input[i]==0||input.size()<=i) return 0;
+  if(input[i]=='('){
+    out+=kak(input,i);
+  }
+  else{
+    out+=ex2(input,i);
+  }
+  if(input[i]!=0&&input[i]!=')')
+    return out+=mole(input,i);
+  else return out;
+}
+int ex2(string input,int& i){
+  int out=atomn(input,i);
+  if(isdigit(input[i])){
+    out*=readnum(input,i);
+  } 
+  return out;
+  
+}
+int atomn(string input,int& i){
+  string atat;
+  if(input[i+1]>='a'&&input[i+1]<='z'){
+    atat=input[i];
+    atat+=input[i+1];
+    i=i+2;
+  }
+  else {
+    atat=input[i];
+    i=i+1;
+  }
+  int j;
+  for(j=0;j<int(atom.size());j++){
+    if(atom[j]==atat) break;
+  }
+  if(j==atom.size()) {
+    unknown_flag=true;
+    //  cout<<atat<<endl;
+    return 0;
+  }
+  //cout<<"i:"<<i<<endl;
+  return atwei[j];
+}
+
+
+
+int main(){
+  
+  int i,tmpwei;
+  string tmpst;
+  i=0;
+  //  printf("%d %d\n",'a','z');
+  while(true){
+    cin>>tmpst;
+    if(tmpst=="END_OF_FIRST_PART")
+      break;
+    cin>>tmpwei;
+    atom.pb(tmpst);
+    atwei.pb(tmpwei);
+  }
+  while(true){
+    unknown_flag=false;
+    i=0;
+    cin>>tmpst;
+    if(tmpst=="0") return 0;
+    tmpwei=mole(tmpst,i);
+    if(unknown_flag) cout<<"UNKNOWN\n";
+    else cout<<tmpwei<<endl;
+  }
+  return 0;
+}

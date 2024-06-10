@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+#define M 1000000007
+
+
+unsigned long long power(int m, int n) {
+    unsigned long long x;
+    if (n == 0) return 1;
+    if (n % 2) {
+        x = power(m, n-1);
+        return (x * m) % M;
+    }
+    else {
+        x = power(m, n/2);
+        return (x * x) % M;
+    }
+}
+
+int main() {
+    int m, n, i;
+    unsigned long long x;
+
+    scanf("%d %d", &m, &n);
+
+    printf("%llu\n", power(m, n));
+
+    return 0;
+}

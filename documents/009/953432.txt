@@ -1,0 +1,46 @@
+s = ""; l = 0;
+def expr(idx):
+    ret, idx = term(idx)
+    while idx<l:
+        if s[idx]=='+':
+            r, idx = term(idx+1)
+            ret += r
+        elif s[idx]=='-':
+            r, idx = term(idx+1)
+            ret -= r
+        else:
+            break
+    return ret, idx
+    
+def term(idx):
+    ret, idx = fact(idx)
+    while idx<l:
+        if s[idx]=='*':
+            r, idx = fact(idx+1)
+            ret *= r
+        elif s[idx]=='/':
+            r, idx = fact(idx+1)
+            ret /= r
+        else:
+            break
+    return ret, idx
+
+def fact(idx):
+    ret = 0
+    if s[idx]=='(':
+        ret, idx = expr(idx+1)
+        idx += 1
+    else:
+        ret, idx = num(idx)
+    return ret, idx
+
+def num(idx):
+    ret = 0
+    while idx<l and s[idx].isdigit():
+        ret = 10*ret + int(s[idx])
+        idx+=1
+    return ret, idx
+
+for i in xrange(input()):
+    s = raw_input(); l = len(s);
+    print expr(0)[0]

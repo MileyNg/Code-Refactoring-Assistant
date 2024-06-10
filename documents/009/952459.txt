@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+
+int gcd(int a, int b);
+int lcm(int a, int b);
+
+int main(){
+	int a, b;
+	while(cin >> a >> b){
+		while(!(((a > 0)&&(a <= 2000000000))&&((b > 0)&&(b <= 2000000000)))){
+			cout << "wrong value\n";
+			cin >> a >> b;
+		}
+		cout << gcd(a, b) << " " << lcm(a, b) << "\n";
+	}
+    return 0;
+}
+
+//Greatest Common Divisor
+int gcd(int a, int b){
+	while(a != b){
+		if(a > b) a = a - b;
+		else b = b - a;
+	}
+	return a;
+}
+
+//Least Common Multiple
+int lcm(int a, int b){
+	return((a / gcd(a, b)) * b);
+}

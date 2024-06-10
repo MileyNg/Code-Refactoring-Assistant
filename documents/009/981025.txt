@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		cin.ignore();
+		
+		map<string,int> f;
+		vector<pii> es;
+		rep(i,n){
+			string s;
+			getline(cin,s,'-');
+			f.insert(mp(s,f.size()));
+			int u=f[s];
+			getline(cin,s);
+			f.insert(mp(s,f.size()));
+			int v=f[s];
+			es.emplace_back(u,v);
+		}
+		
+		n=f.size();
+		vvi g1(n,vi(n));
+		for(auto e:es){
+			int u,v; tie(u,v)=e;
+			g1[u][v]=1;
+		}
+		
+		vvi g(n,vi(n,INF));
+		rep(i,n) rep(j,n){
+			rep(k,n) if((g1[i][k]||g1[k][i])&&(g1[j][k]||g1[k][j]))
+				g[i][j]=0;
+			rep(k,n) if((g1[i][k]&&g1[k][j])||(g1[j][k]&&g1[k][i]))
+				g[i][j]=INF;
+		}
+		rep(i,n) rep(j,n) if(g1[i][j]) g[i][j]=1;
+		rep(k,n) rep(i,n) rep(j,n)
+			g[i][j]=min(g[i][j],g[i][k]+g[k][j]);
+		
+		cout<<n<<endl;
+		
+		int m; cin>>m;
+		cin.ignore();
+		rep(i,m){
+			string s;
+			getline(cin,s,'-');
+			int u=f.count(s)?f[s]:-1;
+			getline(cin,s);
+			int v=f.count(s)?f[s]:-1;
+			
+			if(u==-1 || v==-1)
+				cout<<"NO"<<endl;
+			else
+				cout<<(g[u][v]%2?"YES":"NO")<<endl;
+		}
+	}
+}

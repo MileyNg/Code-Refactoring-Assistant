@@ -1,0 +1,30 @@
+#include<iostream>
+#include<string>
+#include<set>
+
+int main(){
+
+	std::set<std::string>set;
+
+	int n;
+	std::cin >> n;
+	std::cin.ignore();
+
+	for (int i = 0; i < n; i++){
+		std::string str;
+		std::getline(std::cin, str);
+
+		if (str[0] == 'i'){
+			str = str.substr(7, str.size() - 7);
+			set.insert(str);
+		}
+		else{
+			str = str.substr(5, str.size() - 5);
+
+			if (set.find(str) != set.end())std::cout << "yes" << std::endl;
+			else std::cout << "no" << std::endl;
+		}
+	}
+
+	return 0;
+}

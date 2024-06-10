@@ -1,0 +1,80 @@
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+int matatabiTable[16][16];
+int heiankyoTable[16][16];
+
+int N;
+int gx,gy;
+int p;
+int x_1,y_1,x_2,y_2;
+
+int main() {
+  cin >> N;
+
+  for (int i=0;i<N;i++) {
+    for (int j=0;j<16;j++) {
+      for (int k=0;k<16;k++) {
+	matatabiTable[j][k] = 0;
+	heiankyoTable[j][k] = 0;
+      }
+    }
+    // 0行0列にはマタタビが置かれていると考える
+    for (int j=0;j<16;j++) {
+      matatabiTable[j][0] += 2;
+    }
+    for (int k=0;k<16;k++) {
+      matatabiTable[0][k] += 1;
+    }
+    cin >> gx >> gy;
+    cin >> p;
+    for (int j=0;j<p;j++) { // matatabiTableの作成
+      cin >> x_1 >> y_1 >> x_2 >> y_2;
+      if (x_1 == x_2) { // 上にマタタビの場合
+	matatabiTable[x_1][max(y_1,y_2)] += 2;
+      } else if (y_1 == y_2) { //左にマタタビの場合
+	matatabiTable[max(x_1,x_2)][y_1] += 1;
+      } else {
+      
+      }
+    }
+    /*
+    for (int j=0;j<15;j++) {
+      for (int k=0;k<15;k++) {
+	cout << matatabiTable[k][j] << " ";
+      }
+      cout << endl;
+    }
+    cout << endl;
+    */
+    for (int j=0;j<=gx;j++) {
+      for (int k=0;k<=gy;k++) {
+	if (j==0 && k==0) {
+	  heiankyoTable[j][k] = 1;
+	} else if (matatabiTable[j][k] == 3) {
+	  heiankyoTable[j][k] = 0;
+	} else if (matatabiTable[j][k] == 2) {
+	  heiankyoTable[j][k] = heiankyoTable[j-1][k];
+	} else if (matatabiTable[j][k] == 1) {
+	  heiankyoTable[j][k] = heiankyoTable[j][k-1];
+	} else {
+	  heiankyoTable[j][k] = heiankyoTable[j][k-1] + heiankyoTable[j-1][k];
+	}
+      }
+    }
+    /*
+    for (int j=0;j<15;j++) {
+      for (int k=0;k<15;k++) {
+	cout << heiankyoTable[k][j] << " ";
+      }
+      cout << endl;
+    }
+    */
+    if (heiankyoTable[gx][gy] > 0) {
+      cout << heiankyoTable[gx][gy] << endl;
+    } else {
+      cout << "Miserable Hokusai!" << endl;
+    }
+  }
+}

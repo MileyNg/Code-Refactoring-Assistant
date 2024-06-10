@@ -1,0 +1,87 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+#define REP(i,a) rep((i),0,(a))
+using namespace std;
+//global
+int h, w;
+int need_e;
+int town[33][33] = { 0 };
+
+
+
+struct Group{
+	int min_cost;
+	int g_num;
+};
+Group dp[32][32][33][33] = { 0 };
+
+int get_sum(int s_x, int s_y, int _h, int _w){
+	int sum = 0;
+	rep(i, s_x, s_x + _h)rep(j, s_y, s_y + _w)sum += town[i][j];
+	return(sum);
+}
+
+void calc(int s_x, int s_y, int _h, int _w){
+	
+	Group one, two,c;
+	c.g_num = 1;
+	c.min_cost = get_sum(s_x, s_y, _h, _w);
+	rep(i, 1, _h ){
+		one = dp[s_x][s_y][i][_w];
+		two = dp[s_x + i][s_y][_h - i][_w];
+		//printf("[%d,%d],h=%d,h-i=%d,one=%d,two=%d\n", s_x, s_x+i, i, _h-i, one.min_cost, two.min_cost);
+		if (one.min_cost < need_e || two.min_cost < need_e)continue;
+		one.g_num = one.g_num + two.g_num;
+		one.min_cost = (one.min_cost < two.min_cost) ? one.min_cost : two.min_cost;
+		if (c.g_num < one.g_num)c = one;
+		else if (c.g_num == one.g_num&&c.min_cost < one.min_cost)c = one;
+	}
+	rep(i, 1, _w){
+		one = dp[s_x][s_y][_h][i];
+		two = dp[s_x][s_y+i][_h][_w-i];
+		if (one.min_cost < need_e || two.min_cost < need_e)continue;
+		one.g_num = one.g_num + two.g_num;
+		one.min_cost = (one.min_cost < two.min_cost) ? one.min_cost : two.min_cost;
+		if (c.g_num < one.g_num)c = one;
+		else if (c.g_num == one.g_num&&c.min_cost < one.min_cost)c = one;
+	}
+	dp[s_x][s_y][_h][_w] = c;
+	//printf("[%d,%d],h=%d,w=%d,g_num=%d,min_cost=%d\n", s_x, s_y, _h, _w,c.g_num,c.min_cost);
+}
+
+void solve(){
+	int m = h > w ? h : w;
+	rep(height, 2, m + 1){
+		rep(width, 1, height)
+			rep(i, 0, h - width+1)
+			rep(j, 0, w - width+1){
+				if (i + height <= h&&j + width <= w)
+					calc(i, j, height, width);
+				if (i + width <= h&&j + height <= w)
+					calc(i, j, width, height);
+			}
+		rep(i, 0, h - height+1)rep(j, 0, w - height+1)
+			calc(i, j, height, height);
+	}
+
+}
+
+
+int main(void){
+	while (true){
+		cin >> h >> w >> need_e;
+		if (need_e == 0)return(0);
+		rep(i, 0, h)rep(j, 0, w){
+			cin >> town[i][j];
+			dp[i][j][1][1].min_cost = town[i][j];
+			dp[i][j][1][1].g_num = 1;
+		}
+		need_e = get_sum(0, 0, h, w) - need_e;
+		//cout << need_e << endl;
+		solve();
+		printf("%d %d\n", dp[0][0][h][w].g_num, dp[0][0][h][w].min_cost - need_e);
+	}
+
+}

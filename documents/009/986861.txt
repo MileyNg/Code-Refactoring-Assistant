@@ -1,0 +1,63 @@
+### constant
+
+MAX_INT = 1 << 31 - 1
+
+### global variables
+
+$g_cache = []
+
+### subroutines
+
+def check_grv(bits, wsum, fs)
+  return $g_cache[bits] if ! $g_cache[bits].nil?
+  return ($g_cache[bits] = [0, []]) if bits == 0
+
+  n = fs.length
+
+  min_gw = MAX_INT
+  min_ids = []
+
+  for i in (0...n)
+    b = 1 << i
+    if (bits & b) != 0
+      fi, wi, si = fs[i]
+      if si >= wsum - wi
+        gw0, ids0 = check_grv(bits & ~b, wsum - wi, fs)
+        gw = gw0 + wsum
+
+        if min_gw > gw
+          min_gw = gw
+          min_ids = [i] + ids0
+        end
+      end
+    end
+  end
+
+  $g_cache[bits] = [min_gw, min_ids]
+end
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  fs = []
+  n.times.each do
+    fi, wi, si = gets.strip.split(' ')
+    fs << [fi, wi.to_i, si.to_i]
+  end
+
+  $g_cache = []
+
+  wsum = fs.inject(0){|s, f| s + f[1]}
+
+  gw, ids = check_grv((1 << n) - 1, wsum, fs)
+  #p ids
+  #p (gw.to_f / w)
+
+  ids.each do |i|
+    puts fs[i][0]
+    #p fs[i]
+  end
+end

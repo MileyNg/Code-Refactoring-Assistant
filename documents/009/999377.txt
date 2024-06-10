@@ -1,0 +1,49 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define NIL 2000000001
+#define N 251
+int A[N];
+
+int main(void){
+  int i,j,n;
+  
+  scanf("%d",&n);
+  for(i=0;i<=n;i++){
+    A[i]=NIL;
+    
+  }
+  for(i=1;i<=n;i++){
+    scanf("%d",&A[i]);
+    
+  }
+
+  for(i=1 ; i<=n ; i++){
+    printf("node %d: key = %d, ",i,A[i]);
+    
+    if(A[i/2] != NIL){
+      if(A[i/2] != 0){ 
+	printf("parent key = %d, ",A[i/2]);
+      }
+    }
+
+    if(2*i <= n){
+      
+      if(A[2*i] != NIL){
+	
+	if(A[2*i] != 0){ 
+	  printf("left key = %d, ",A[2*i]);
+	}
+      }
+      
+      if(A[2*i+1] != NIL){
+	if(A[2*i+1] != 0){ 
+	  printf("right key = %d, ",A[2*i+1]);
+	}
+      }
+      
+    }
+    printf("\n");
+  }
+  return 0;
+}

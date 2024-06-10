@@ -1,0 +1,40 @@
+### subroutines
+
+def max_growth(k, i)
+  return $gcache[k][i] if ! $gcache[k][i].nil?
+  return ($gcache[k][i] = 1.0) if k == 1
+
+  max_g = -1
+
+  for j in (0...$n)
+    g = $table[i][j] * max_growth(k - 1, j)
+    max_g = g if max_g < g
+  end
+
+  $gcache[k][i] = max_g
+end
+
+### main
+
+while true
+  $n, m = gets.strip.split(' ').map{|s| s.to_i}
+  break if $n == 0 && m == 0
+
+  $table = []
+  $n.times.each do
+    fs = gets.strip.split(' ').map{|s| s.to_f}
+    $table << fs
+  end
+  #p $table
+
+  $gcache = (m + 1).times.map{[]}
+
+  max_g = -1
+
+  for i in (0...$n)
+    g = max_growth(m, i)
+    max_g = g if max_g < g
+  end
+
+  printf("%.2f\n", max_g)
+end

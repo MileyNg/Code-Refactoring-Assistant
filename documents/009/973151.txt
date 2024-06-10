@@ -1,0 +1,52 @@
+DELTA = 1e-6
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  cnts = []
+  n.times do
+    x, y = gets.chomp.split(",").map{|s| s.to_f}
+    cnts.push [x, y]
+  end
+
+  cps = []
+  for i in (0...n)
+    x0, y0 = cnts[i]
+    for j in ((i + 1)...n)
+      x1, y1 = cnts[j]
+      vx = x1 - x0
+      vy = y1 - y0
+      d = vx * vx + vy * vy
+      if (d <= 4.0 + DELTA)
+        sd = Math.sqrt(d)
+        hsd = sd / 2
+        ul = Math.sqrt(1.0 - hsd * hsd)
+
+        ux = -vy / sd * ul
+        uy =  vx / sd * ul
+        cx = (x0 + x1) / 2
+        cy = (y0 + y1) / 2
+
+        cps.push [cx + ux, cy + uy]
+        cps.push [cx - ux, cy - uy]
+      end
+    end
+  end
+
+  max_ov = 1
+
+  for cp in cps
+    cx, cy = cp
+    ov = 0
+
+    for cnt in cnts
+      x, y = cnt
+      ov += 1 if (x - cx) ** 2 + (y - cy) ** 2 <= 1.0 + DELTA
+    end
+
+    max_ov = ov if max_ov < ov
+  end
+
+  puts max_ov
+end

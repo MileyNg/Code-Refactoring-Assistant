@@ -1,0 +1,124 @@
+#include<iostream>
+#include<cmath>
+#include<map>
+
+using namespace std;
+#define LIMIT 30
+
+struct Puzzle {
+  string cont[9];
+  int space;  
+};
+
+int dx[4]={ 0, 1, 0,-1};
+int dy[4]={-1, 0, 1, 0};
+
+int limit;
+Puzzle puzzle;
+char target[9];
+
+string ra(string str){
+  char tmp=str[0];
+  str[0]=str[1];
+  str[1]=tmp;
+  return str;
+}
+string rb(string str){
+  char tmp=str[0];
+  str[0]=str[2];
+  str[2]=tmp;
+  return str;
+}
+
+int getHeuristic(){
+  int sum = 0;
+  for(int i=0;i<9;i++){
+    if(puzzle.cont[i][0]=='E')continue;
+    sum+=(puzzle.cont[i][0]!=target[i]);
+  }
+  return sum;
+}
+
+bool isTarget(){
+  for(int i=0;i<9;i++){
+    if(target[i]!=puzzle.cont[i][0])return false;
+  }
+  return true;
+}
+
+bool dfs(int depth,int prev){
+
+  if(isTarget()){cout<<depth<<endl; return true;}
+  if(depth+getHeuristic() > limit )return false;
+
+  int px,py,nx,ny;
+  Puzzle tmp;
+
+  px=puzzle.space%3;
+  py=puzzle.space/3;
+  /*
+  for(int i=0;i<3;i++){
+    for(int j=0;j<3;j++){
+      cout<<puzzle.cont[i*3+j][0];
+    }
+    cout<<endl;
+  }
+  */
+  for(int i=0;i<4;i++){
+
+    nx=px+dx[i];
+    ny=py+dy[i];
+    if(max(prev,i)-min(prev,i)==2)continue;
+
+    if(nx<0||ny<0||nx>=3||ny>=3)continue;
+
+    tmp=puzzle;
+    
+    if(i%2){
+      puzzle.cont[py*3+px]=rb(puzzle.cont[ny*3+nx]);
+    }else{
+      puzzle.cont[py*3+px]=ra(puzzle.cont[ny*3+nx]);
+    }
+    puzzle.space=ny*3+nx;
+    puzzle.cont[puzzle.space]="EEE";
+    /*
+    for(int ii=0;ii<3;ii++){
+      for(int j=0;j<3;j++){
+	cout<<puzzle.cont[ii*3+j][0];
+      }
+      cout<<endl;
+    }
+    */
+    if(dfs(depth+1,i))return true;
+    puzzle=tmp;
+
+  }
+  return false;
+}
+
+void solve(){
+
+  for(limit=getHeuristic()-1;limit <= LIMIT ; limit+=2 ){
+    if(dfs(0,-100))return;
+  }
+  cout<<"-1"<<endl;
+
+}
+
+int main(){
+  int x,y;
+  while(cin>>x>>y){
+    if(x==0&&y==0)break;
+    x--;y--;
+
+    puzzle.space=y*3+x;
+    for(int i=0;i<9;i++){
+      cin>>target[i];
+      if(i/3==y&&i%3==x)puzzle.cont[i]="EEE";
+      else puzzle.cont[i]="WRB";
+    }
+    solve();
+    
+  }
+  return 0;
+}

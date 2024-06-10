@@ -1,0 +1,12 @@
+def solve(A,Mi):
+	if Mi == 0: return True
+	if len(A) > 0 and Mi > min(A):
+		for i in range(len(A)):
+			r = solve(A[:i]+A[i+1:],Mi-A[i])
+			if r: return r
+n = input()
+A = map(int,raw_input().split())
+q = input()
+M = map(int,raw_input().split())
+for Mi in M:
+	print "yes" if solve(A,Mi) else "no"

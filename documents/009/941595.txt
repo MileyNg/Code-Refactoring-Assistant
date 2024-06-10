@@ -1,0 +1,29 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8').trim();
+var n = +input;
+
+process.stdout.write(n + ': ');
+
+var primes = [];
+
+while (n % 2 == 0) {
+    primes.push(2);
+    n /= 2;
+}
+while (n % 3 == 0) {
+    primes.push(3);
+    n /= 3;
+}
+for (var i = 1; n > 1; i++) {
+    var low = i * 6 - 1;
+    var high = i * 6 + 1;
+    if (n % low == 0) {
+        primes.push(low);
+        n /= low;
+    }
+    if (n % high == 0) {
+        primes.push(high);
+        n /= high;
+    }
+}
+
+console.log(primes.join(' '));

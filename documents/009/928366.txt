@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include <assert.h>
+ 
+main(){
+  int x,sum=0,i,n;
+  char s[110];
+  int stack[110];
+  int stack_top=0;
+   
+  while( scanf("%s",s) != EOF ){
+    if( s[0] == '+' ){
+      sum = stack[--stack_top] + stack[--stack_top];
+      stack[stack_top] = sum;
+      stack_top++;
+    }
+    else if ( s[0] == '-' ){
+      n =  stack[--stack_top];
+      sum = stack[--stack_top] - n;
+      stack[stack_top] = sum;
+      stack_top++;
+    }
+    else if ( s[0] == '*' ){
+      sum = stack[--stack_top] * stack[--stack_top];
+      stack[stack_top] = sum;
+      stack_top++;
+    }
+    else {
+      x = atoi(s);
+      stack[stack_top] = x;
+      stack_top++;
+    }
+  }
+  assert(stack_top == 1);
+  for( i=0 ; i<stack_top ; i++) printf("%d\n",stack[i]);
+  return 0;
+}

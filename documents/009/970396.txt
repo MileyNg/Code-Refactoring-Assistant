@@ -1,0 +1,31 @@
+#include <cstdio>
+#include <regex.h>
+#include <cstring>
+
+int main() {
+  int n;
+  regex_t regst[2];
+  regmatch_t match[3];
+  const char *pattern[] = {"^>'(=+)#(=+)~$", "^>\\^(Q=)+~~$"};
+  const char *type_label[] = {"A", "B", "NA"};
+  int type;
+  char snake[201];
+  
+  scanf("%d", &n);
+  for (int x=0; x<n; x++) {
+    scanf("%s", snake);
+    type = 2;
+    for (int i=0; i<2; i++) {
+      regcomp(&regst[i], pattern[i], REG_EXTENDED);
+    }
+    if (!regexec(&regst[0], snake, 3, match, 0)) {
+      if (match[1].rm_eo - match[1].rm_so == match[2].rm_eo - match[2].rm_so) {
+        type = 0;
+      }
+    } else if (!regexec(&regst[1], snake, 0, NULL, 0)) {
+      type = 1;
+    }
+    printf("%s\n", type_label[type]);
+  }
+  return 0;
+}

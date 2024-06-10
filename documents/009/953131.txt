@@ -1,0 +1,19 @@
+while 1:
+	n = input()
+	if n == 0: break
+	xyzr = [map(float,raw_input().split()) for i in range(n)]
+	ans = 0
+	chain = [xyzr.pop(0)]
+	while xyzr:
+		pipe = 1e10
+		for i in range(len(xyzr)):
+			x,y,z,r = xyzr[i]
+			for j in range(len(chain)):
+				x1,y1,z1,r1 = chain[j]
+				l = max(0,((x-x1)**2 + (y-y1)**2 + (z-z1)**2)**0.5 - r - r1)
+				if l < pipe:
+					pipe = l
+					p = i
+		ans += pipe
+		chain.append(xyzr.pop(p))
+	print ans

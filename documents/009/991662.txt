@@ -1,0 +1,40 @@
+### subroutines
+
+def calc_score(srv)
+  asc = bsc = 0
+  nsrv = srv.length
+
+  for i in (1...nsrv)
+    if srv[i] == 'A'
+      asc += 1
+    else
+      bsc += 1
+    end
+  end
+
+  if asc > bsc
+    asc += 1
+  else
+    bsc += 1
+  end
+
+  [asc, bsc]
+end
+
+### main
+
+while true
+
+  line = gets.strip
+  break if line == '0'
+
+  srvs = []
+  srvs << line.split('')
+  srvs << gets.strip.split('')
+  srvs << gets.strip.split('')
+
+  for srv in srvs
+    asc, bsc = calc_score(srv)
+    puts "#{asc} #{bsc}"
+  end
+end

@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = (int)1e6 + 1;
+int main(void){
+    bool isP[N];
+    memset(isP, true, N);
+    isP[0] = isP[1] = false;
+    for(int i = 2; i * i < N; i++) if(isP[i]) for(int j = i * i; j < N; j += i) isP[j] = false;
+
+    for(int a, d, n; cin >> a >> d >> n, a; cout << a - d << endl){
+        while(n > 0){
+            if(isP[a]) n--;
+            a += d;
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,230 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<complex>
+#include<string>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#define X real()
+#define Y imag()
+
+
+typedef complex<double> Point;
+typedef pair<Point,double> Point3;
+
+const int N = 333;
+
+int n;
+int stx,sty,enx,eny;
+int ina[N],inb[N],inc[N],ind[N],inh[N];
+
+vector<Point3> point;
+vector<Point3> pointbase;
+
+void slide(Point p){
+	rep(i,point.size()){
+		point[i].first -= p;
+	}
+}
+
+void rotate(double theta){
+	rep(i,point.size()){
+		double nx = cos(theta)*point[i].first.X - sin(theta)*point[i].first.Y;
+		double ny = sin(theta)*point[i].first.X + cos(theta)*point[i].first.Y;
+		
+		point[i] = Point3(Point(nx,ny), point[i].second);
+	}
+}
+
+void print(){
+	puts("Points");
+	rep(i,point.size()){
+		printf("(%lf %lf),%lf\n",point[i].first.X, point[i].first.Y, point[i].second);
+	}
+}
+
+double getlen(Point3 point3, Point p){
+	double left = 0;
+	double right = 11111;
+	
+	const double EPS = 0.000000001;
+	
+	while(1){
+		double h = (left+right)/2;
+		
+		Point3 A = Point3(p, h);
+		Point3 B = Point3(point3.first, min(point3.second, h));
+		
+		double dx = A.first.X - B.first.X;
+		double dy = A.first.Y - B.first.Y;
+		double dz = A.second - B.second;
+		
+		double len = sqrt(dx*dx + dy*dy + dz*dz);
+		
+		if(len>h){
+			left = h;
+		}else{
+			right = h;
+		}
+		
+		if(left +  EPS > right)break;
+	}
+	return left;
+}
+
+double getmin(double loadlen){
+	double ret = 11111;
+	rep(i,point.size()){
+		if(point[i].first.X < 0){
+			ret = min(ret, getlen(point[i], Point(0,0)) );
+			continue;
+		}
+		if(point[i].first.X >loadlen){
+			ret = min(ret, getlen(point[i], Point(loadlen,0)) );
+			continue;
+		}
+		
+		ret = min(ret, getlen(point[i], Point(point[i].first.X, 0)));
+	}
+	
+	return ret;
+}
+
+double getlen2(Point p, int num){
+	
+	double ans = 11111;
+	bool xin = ina[num]<p.X && p.X<inc[num];
+	bool yin = inb[num]<p.Y && p.Y<ind[num];
+	
+	if(yin){
+		if(ina[num]>p.X) ans = min(ans ,getlen(Point3(Point(ina[num],p.Y), inh[num]), p));
+		if(inc[num]<p.X) ans = min(ans ,getlen(Point3(Point(inc[num],p.Y), inh[num]), p));
+	}
+	if(xin){
+		if(inb[num]>p.Y) ans = min(ans ,getlen(Point3(Point(p.X, inb[num]), inh[num]), p));
+		if(ind[num]<p.Y) ans = min(ans ,getlen(Point3(Point(p.X, ind[num]), inh[num]), p));
+	}
+	
+	if(xin && yin)return 0;
+	
+	return ans;
+}
+double solve2(){
+	
+	double ret = 11111;
+	
+	
+	rep(i,n){
+		ret = min(ret, getlen2(Point(stx,sty), i));
+		ret = min(ret, getlen2(Point(enx,eny), i));
+	}
+	
+	return ret;
+}
+
+
+double cross(Point a,Point b){
+	return a.X*b.Y - a.Y*b.X;
+}
+
+bool ccw(Point a, Point b, Point c){
+	return cross(b-a, c-a)>0;
+}
+
+bool linehit(Point a,Point b,Point c, Point d){
+	bool ret = (ccw(a,b,c)!=ccw(a,b,d))&&(ccw(c,d,a)!=ccw(c,d,b));
+	//if(ret)cout<<a<<b<<c<<d<<endl;;
+	return ret;
+}
+
+double solve3(){
+	
+	double ret = 11111;
+	rep(i,n){
+		Point st = Point(stx,sty);
+		Point en = Point(enx,eny);
+		
+		bool flg = false;
+		flg |= linehit(st, en, Point(ina[i], inb[i]), Point(ina[i], ind[i]));
+		flg |= linehit(st, en, Point(ina[i], ind[i]), Point(inc[i], ind[i]));
+		flg |= linehit(st, en, Point(inc[i], ind[i]), Point(inc[i], inb[i]));
+		flg |= linehit(st, en, Point(inc[i], inb[i]), Point(ina[i], inb[i]));
+		
+		if(flg)ret = 0;
+	}
+	return ret;
+}
+
+double solve(){
+	cin>>stx>>sty>>enx>>eny;
+
+	
+	vector<Point3> temppt;
+	
+	rep(i,n){
+		double a,b,c,d,h;
+		cin>>a>>b>>c>>d>>h;
+		
+		ina[i] = a; inb[i]=b; inc[i]=c; ind[i]=d; inh[i]=h;
+		
+		temppt.push_back(Point3(Point(a,b),h));
+		temppt.push_back(Point3(Point(a,d),h));
+		temppt.push_back(Point3(Point(c,b),h));
+		temppt.push_back(Point3(Point(c,d),h));
+	}
+	
+	
+	point = temppt;
+	pointbase = temppt;
+	
+	slide(Point(stx,sty));
+	rotate(-atan2(eny-sty, enx-stx));
+	
+	double loadlen = abs(Point(stx,sty)-Point(enx,eny));
+	double mini = getmin( loadlen ); 
+	
+	//print();
+	
+	double ans2 = solve2();
+	double ans3 = solve3();
+	
+	return min(mini, min(ans2, ans3));
+}
+
+
+int main(){
+	
+	/*
+	Point p1 = Point(0,0);
+	Point3 p2(Point(5,0), 4);
+	
+	double val = getlen(p2,p1);
+	printf("%lf\n",val);
+	*/
+	while(1){
+		cin>>n;
+		if(n==0)break;
+		printf("%.9lf\n",solve());
+		
+		//break;
+	}
+}
+
+/*
+1
+1 1 3 3
+2 1 3 2 5
+
+
+1
+1 0 5 2
+2 3 4 5 10
+
+
+*/

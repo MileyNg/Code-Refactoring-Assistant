@@ -1,0 +1,122 @@
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<stack>
+
+using namespace std;
+
+struct S{
+	int x,y,s;
+};
+
+stack<S> ans;
+void solve(int cnt,int fi[][10]){
+	bool f=true;
+	S tm;
+	int x1[]={0,1,0,0,-1};
+	int y1[]={0,0,1,-1,0};
+	int x2[]={0,1,1,1,0,0,-1,-1,-1};
+	int y2[]={0,1,0,-1,1,-1,1,0,-1};
+	int x3[]={0,1,1,1,0,0,-1,-1,-1,0,0,2,-2};
+	int y3[]={0,1,0,-1,1,-1,1,0,-1,2,-2,0,0};
+	int fe[10][10];
+	for(int i=0;i<10;i++){
+		for(int j=0;j<10;j++){
+			if(fi[i][j]!=0) f=false;
+		}
+	}
+
+	if(f){
+		while(!ans.empty()){
+			cout<<ans.top().x<<" "<<ans.top().y<<" "<<ans.top().s<<endl;
+			ans.pop();
+		}
+		exit(0);
+	}
+
+	if(cnt==0) return;
+
+	bool f2,f3=false;
+	for(int i=1;i<10&&!f3;i++){
+		for(int j=1;j<10&&!f3;j++){
+			f2=true;
+			for(int k=0;k<5;k++){
+				if(fi[i+y1[k]][j+x1[k]]-1<0) f2=false;
+			}
+			if(f2) f3=true;
+		}
+	}
+	if(!f3) return;
+
+	for(int i=1;i<9;i++){
+		for(int j=1;j<9;j++){
+			for(int k=0;k<10;k++){
+				for(int l=0;l<10;l++){
+					fe[k][l]=fi[k][l];
+				}
+			}
+			bool f=true;
+			for(int k=0;k<5;k++){
+				if(fe[i+y1[k]][j+x1[k]]-1<0) f=false;
+			}
+			if(f){
+				for(int k=0;k<5;k++){
+				fe[i+y1[k]][j+x1[k]]--;
+				}
+				tm.x=j,tm.y=i,tm.s=1;
+				ans.push(tm);
+				solve(cnt-1,fe);
+				ans.pop();
+			}
+			for(int k=0;k<10;k++){
+				for(int l=0;l<10;l++){
+					fe[k][l]=fi[k][l];
+				}
+			}
+			for(int k=0;k<9;k++){
+				if(fe[i+y2[k]][j+x2[k]]-1<0) f=false;
+			}
+			if(f){
+				for(int k=0;k<9;k++){
+				fe[i+y2[k]][j+x2[k]]--;
+				}
+				tm.x=j,tm.y=i,tm.s=2;
+				ans.push(tm);
+				solve(cnt-1,fe);
+				ans.pop();
+			}
+			for(int k=0;k<10;k++){
+				for(int l=0;l<10;l++){
+					fe[k][l]=fi[k][l];
+				}
+			}
+			for(int k=0;k<13;k++){
+				if(fe[i+y3[k]][j+x3[k]]-1<0) f=false;
+			}
+			if(f){
+				for(int k=0;k<13;k++){
+				fe[i+y3[k]][j+x3[k]]--;
+				}
+				tm.x=j,tm.y=i,tm.s=3;
+				ans.push(tm);
+				solve(cnt-1,fe);
+				ans.pop();
+			}
+		}
+	}
+}
+
+int main(){
+
+	int N;
+	int fi[10][10];
+
+	cin>>N;
+	for(int i=0;i<10;i++){
+		for(int j=0;j<10;j++){
+			cin>>fi[i][j];
+		}
+	}
+
+	solve(N,fi);
+}

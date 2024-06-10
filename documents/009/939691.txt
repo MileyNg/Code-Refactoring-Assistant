@@ -1,0 +1,75 @@
+function updateChildren(cid, pid, sid) {
+	var node = T.filter(function(c){return c.id == cid;})[0];
+	node.parent = pid;
+	node.sibling = sid;
+	node.depth++;
+
+	if (node.left != -1) {
+		updateChildren(node.left, node.id, node.right);
+	}
+	if (node.right != -1) {
+		updateChildren(node.right, node.id, node.left);
+	}
+}
+function height(id) {
+	if (id == -1) {
+		return -1;
+	}
+	var node = T.filter(function(c){return c.id == id;})[0];
+	var left = height(node.left) + 1;
+	var right = height(node.right) + 1;
+
+	return left > right ? left : right;
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var n = +lines.shift()
+
+var T = [];
+for (var i = 0; i < n; i++) {
+	var u = lines.shift().split(' ');
+	var id = +u[0];
+	var left = +u[1];
+	var right = +u[2];
+	var degree = 0;
+	if (left != -1) {
+		degree++;
+	}
+	if (right != -1) {
+		degree++;
+	}
+
+	T.push({id: id, left: left, right: right, parent: -1, sibling: -1, degree: degree, depth: 0});
+}
+
+T.sort(function(a, b){return a.id - b.id;});
+
+T.forEach(function(node) {
+	if (node.left != -1) {
+		updateChildren(node.left, node.id, node.right);
+	}
+	if (node.right != -1) {
+		updateChildren(node.right, node.id, node.left);
+	}
+	node.height = height(node.id);
+});
+
+T.forEach(function(node) {
+	var type;
+	if (node.parent == -1) {
+		type = 'root';
+	}
+	else if (node.degree == 0) {
+		type = 'leaf';
+	}
+	else {
+		type = 'internal node';
+	}
+
+	console.log('node ' + node.id + ': parent = ' + node.parent
+		+ ', sibling = ' + node.sibling + ', degree = ' + node.degree
+		+ ', depth = ' + node.depth + ', height = ' + node.height
+		+ ', ' + type);
+});

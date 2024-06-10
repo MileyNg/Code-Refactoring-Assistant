@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MAX 100
+int main(){
+  int x=0,y=0,i=0;
+  char s[MAX];
+  int sgym[MAX];
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+
+      i--;
+      sgym[i-1]+=sgym[i];
+     } else if ( s[0] == '-' ){
+      i--;
+      sgym[i-1] -= sgym[i];
+     } else if ( s[0] == '*' ){
+ i--;
+      sgym[i-1] *= sgym[i];
+    } else {
+      sgym[i] = atoi(s);
+      i++;
+    }
+  }
+  printf("%d\n",sgym[0]);
+  return 0;
+}

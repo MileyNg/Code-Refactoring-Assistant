@@ -1,0 +1,218 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define SIZE    (100)
+
+enum _tt {TERM_N, TERM_OP_PM, TERM_OP_MD, TERM_LB, TERM_RB, TERM_END};
+
+typedef struct _term_t {
+  enum _tt type;
+  int d;
+} term_t;
+
+static term_t expr[SIZE];
+static term_t rpn[SIZE];
+
+void print_term(term_t *terms, int tn) {
+  int i;
+
+  for (i = 0; i < tn; i++)
+    printf(" (%d, %d)", terms[i].type, terms[i].d);
+  putchar('\n');
+}
+
+term_t *term_push(term_t *expr, int *enp, enum _tt type, int d) {
+  term_t *t = &expr[(*enp)++];
+  t->type = type;
+  t->d = d;
+  return t;
+}
+
+int lex_analyze(char *str, term_t *expr) {
+  int d, come_sign, en, sign;
+  char *pt;
+  term_t *t;
+
+  en = 0;
+  come_sign = 1;
+  sign = 1;
+  d = 0;
+
+  for (pt = str; *pt; pt++) {
+#ifdef DEBUG
+    printf("%c\n", *pt);
+#endif /* DEBUG */
+
+    switch (*pt) {
+    case '+':
+      if (! come_sign) {
+        term_push(expr, &en, TERM_OP_PM, *pt);
+        come_sign = 1;
+      }
+      break;
+
+    case '-':
+      if (come_sign)
+        sign *= -1;
+      else {
+        term_push(expr, &en, TERM_OP_PM, *pt);
+        come_sign = 1;
+        sign = 1;
+      }
+      break;
+
+    case '*':
+    case '/':
+      term_push(expr, &en, TERM_OP_MD, *pt);
+      come_sign = 1;
+      sign = 1;
+      break;
+
+    case '(':
+      term_push(expr, &en, TERM_LB, *pt);
+      come_sign = 1;
+      sign = 1;
+      break;
+
+    case ')':
+      term_push(expr, &en, TERM_RB, *pt);
+      come_sign = 1;
+      sign = 1;
+      break;
+
+    case '=':
+      term_push(expr, &en, TERM_END, *pt);
+      *(pt + 1) = '\0';
+      break;
+
+    default:
+      d = d * 10 + (*pt - '0');
+      if (! isdigit(*(pt + 1))) {
+        term_push(expr, &en, TERM_N, d * sign);
+        d = 0;
+        come_sign = 0;
+        sign = 1;
+      }
+    }
+  }
+
+  return en;
+}
+
+int to_rpn(term_t *expr, int en, term_t *rpn) {
+  int i, rn, sp;
+  term_t *t, *st;
+  static term_t stack[SIZE];
+
+  rn = sp = 0;
+
+  for (i = 0; i < en; i++) {
+    t = &expr[i];
+
+    switch (t->type) {
+    case TERM_N:
+      term_push(rpn, &rn, t->type, t->d);
+      break;
+
+    case TERM_OP_PM:
+      while (sp > 0 &&
+             ((st = &stack[sp - 1])->type == TERM_OP_PM ||
+              st->type == TERM_OP_MD)) {
+        --sp;
+        term_push(rpn, &rn, st->type, st->d);
+      }
+      term_push(stack, &sp, t->type, t->d);
+      break;
+
+    case TERM_OP_MD:
+      while (sp > 0 && stack[sp - 1].type == TERM_OP_MD) {
+        --sp;
+        term_push(rpn, &rn, st->type, st->d);
+      }
+      term_push(stack, &sp, t->type, t->d);
+      break;
+
+    case TERM_LB:
+      term_push(stack, &sp, t->type, t->d);
+      break;
+
+    case TERM_RB:
+      while (stack[sp - 1].type != TERM_LB) {
+        st = &stack[--sp];
+        term_push(rpn, &rn, st->type, st->d);
+      }
+      --sp;
+      break;
+
+    case TERM_END:
+      while (sp > 0) {
+        st = &stack[--sp];
+        term_push(rpn, &rn, st->type, st->d);
+      }
+    }
+  }
+
+  return rn;
+}
+
+int calc_rpn(term_t *rpn, int rn) {
+  int i, n1, n2, sp;
+  term_t *t;
+  static int d_stack[SIZE];
+
+  sp = 0;
+
+  for (i = 0; i < rn; i++) {
+    t = &rpn[i];
+
+    if (t->type == TERM_N)
+      d_stack[sp++] = t->d;
+    else {
+      n2 = d_stack[--sp];
+      n1 = d_stack[--sp];
+      switch (t->d) {
+      case '+':
+        d_stack[sp++] = n1 + n2;
+        break;
+      case '-':
+        d_stack[sp++] = n1 - n2;
+        break;
+      case '*':
+        d_stack[sp++] = n1 * n2;
+        break;
+      case '/':
+        d_stack[sp++] = n1 / n2;
+        break;
+      }
+    }
+  }
+
+  return d_stack[0];
+}
+
+/* main */
+
+int main() {
+  int i, en, n, num, rn;
+  char str[SIZE + 2];
+
+  scanf("%d\n", &n);
+
+  for (i = 0; i < n; i++) {
+    fgets(str, SIZE + 1, stdin);
+
+    en = lex_analyze(str, expr);
+    rn = to_rpn(expr, en, rpn);
+
+#ifdef DEBUG
+    print_term(expr, en);
+    print_term(rpn, rn);
+#endif /* DEBUG */
+
+    num = calc_rpn(rpn, rn);
+    printf("%d\n", num);
+  }
+
+  return 0;
+}

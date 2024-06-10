@@ -1,0 +1,77 @@
+#include<iostream>
+#include<functional>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+#define MMAX 100
+#define INF 10000000
+
+typedef pair<int,int> PII;
+
+struct side{
+	int dir,wei[2];
+};
+
+int main(void){
+
+	int n,m;
+	int a,b,cost,time;
+	int k;
+	int p,q,r;
+	int nod[MMAX+1];
+	vector<side> ed[MMAX+1];
+	priority_queue<PII,vector<PII>,greater<PII> > pq;
+	side tmp;
+	PII pii;
+	int nm;
+
+	while(1){
+
+		for(int i=0;i<=MMAX;i++) nod[i]=0;
+		for(int i=0;i<=MMAX;i++){
+			if(!ed[i].empty()) ed[i].clear();
+		}
+		while(!pq.empty()) pq.pop();
+
+		cin>>n>>m;
+		if(n==0&&m==0) break;
+
+		for(int i=0;i<n;i++){
+			cin>>a>>b>>cost>>time;
+			tmp.dir=b,tmp.wei[0]=cost,tmp.wei[1]=time;
+			ed[a].push_back(tmp);
+			tmp.dir=a;
+			ed[b].push_back(tmp);
+		}
+
+		cin>>k;
+
+		for(int i=0;i<k;i++){
+
+			cin>>p>>q>>r;
+			for(int j=0;j<=m;j++) nod[j]=INF;
+			nod[p]=0;
+			pq.push(PII(0,p));
+
+			while(!pq.empty()){
+				pii=pq.top();
+				pq.pop();
+				nm=pii.second;
+				if(nod[nm]<pii.first) continue;
+				for(int j=0;j<ed[nm].size();j++){
+					tmp=ed[nm][j];
+					if(nod[tmp.dir]>nod[nm]+tmp.wei[r]){
+						nod[tmp.dir]=nod[nm]+tmp.wei[r];
+						pq.push(PII(nod[tmp.dir],tmp.dir));
+					}
+				}
+			}
+			cout<<nod[q]<<endl;
+
+		}
+
+	}
+
+}

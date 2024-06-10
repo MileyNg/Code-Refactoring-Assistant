@@ -1,0 +1,52 @@
+require 'mathn'
+
+def calc(frac,a,n,m,aa,nn)
+=begin	
+	p "----------"
+	p frac
+	p a
+	p n
+	p m
+	p aa
+	p nn
+	p "----------"
+=end
+	
+	if (nn == n)  then
+		return 0
+	end
+	cnt = 0
+	for i in m..a do 
+		fm = 1/i
+=begin
+		print "i ="
+		p i
+		p frac
+		p fm
+=end
+		if (a  >= aa*i) then
+			if (frac == fm) then
+				cnt += 1
+			elsif (frac > fm) then 
+				cnt += calc((frac-fm),a,n,i,aa*i,nn+1)
+			end
+		else
+			break
+		end
+		
+	end
+	return cnt
+end
+
+loop{
+	p, q, a, n = gets.split.map(&:to_i)
+	if ((p==0) and (q==0) and (a==0) and (n==0)) then
+		break
+	end
+	frac = p/q
+	if frac <= 7/2 then
+		p calc(frac,a,n,1,1,0)
+	else
+		p 0
+	end
+}

@@ -1,0 +1,32 @@
+#include<iostream>
+#include<string>
+#include<stack>
+
+using namespace std;
+
+int main(){
+	int p,n,n2;
+	cin>>p;
+	stack<char> s[p];
+	string str;
+	char ch;
+	while(1){
+		cin>>str;
+		if(str.compare("quit")==0)break;	
+		else if(str=="pop"){
+			cin>>n;
+			cout<<s[n].top()<<endl;
+			s[n].pop();
+		}
+		else if(str=="push"){
+			cin>>n>>ch;
+			s[n].push(ch);
+		}
+		else if(str=="move"){
+			cin>>n>>n2;
+			s[n2].push(s[n].top());
+			s[n].pop();
+		}
+	}
+	return 0;
+}

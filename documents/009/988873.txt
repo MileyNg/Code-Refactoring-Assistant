@@ -1,0 +1,55 @@
+#include<stdio.h>
+
+typedef struct {
+  int id,left,right,p,sib,deg,depth,height;
+}Node;
+
+Node t[100000];
+int n;
+
+void scan(void);
+void print(void);
+int main(){
+
+  scan();
+  print();
+  return 0;
+}
+void scan(){
+  int i;
+
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d%d%d",&t[i].id,&t[i].left,&t[i].right);
+  }
+  for(i=0;i<n;i++){
+
+    if(t[i].p==) t[i].p=-1;
+    t[t[i].left].p=t[i].id;
+    t[t[i].right].p=t[i].id;  
+
+    if(t[i].p==-1){
+      t[i].sib=-1;
+    }
+
+    if(t[i].left!=-1 && t[i].right!=-1){
+
+      t[t[i].left].sib=t[i].right;
+      t[t[i].right].sib=t[i].left;
+
+      t[i].deg=2;
+    } else if (t[i].left!=-1 || t[i].right!=-1){
+      t[i].deg=1; 
+    } else {
+      t[i].deg=0;
+    }
+  }
+}
+
+void print(){
+  int i;
+  for(i=0;i<n;i++){
+    printf("node %d: patent = %d, sibling = %d, degree = %d,\n",i,t[i].p,t[i].sib,t[i].deg); 
+//depth = %d, height = %d,",i,);
+  }
+}

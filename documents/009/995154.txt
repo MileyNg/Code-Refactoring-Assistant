@@ -1,0 +1,67 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+const string NIL = "zzzzz";
+
+int n, a, s, g;
+vector<vector<string>> cost;
+
+bool operator<(const string& s1, const string& s2) {
+    for(int i = 0; i < min(s1.size(), s2.size()); ++i) if(s1[i] != s2[i]) return s1[i] < s2[i];
+    return s1.size() < s2.size();
+}
+
+class Node {
+public:
+    int vertex;
+    string cost;
+    Node(int v, string c) :vertex(v), cost(c) {}
+    bool operator>(const Node& n) const {return cost > n.cost;}
+};
+
+string Dijkstra() {
+    vector<string> memo(n, NIL);
+    priority_queue<Node, vector<Node>, greater<Node>> q;
+    q.push(Node(s, ""));
+    while(!q.empty()) {
+        Node current = q.top();
+        q.pop();
+        if(memo[current.vertex] != NIL) {
+            continue;
+        }
+        memo[current.vertex] = current.cost;
+        for(int v = 0; v < n; ++v) {
+            if(cost[current.vertex][v] == NIL) continue;
+            q.push(Node(v, current.cost + cost[current.vertex][v]));
+        }
+    }
+    return memo[g];
+}
+
+
+void WarshalFloyd() {
+    for(int k = 0; k < n; ++k)
+        for(int i = 0; i < n; ++i)
+            for(int j = 0; j < n; ++j)
+    if(cost[i][k] != NIL && cost[k][j] != NIL) cost[i][j] = min(cost[i][j], cost[i][k] + cost[k][j]);
+}
+
+int main() {
+    while(cin >> n >> a >> s >> g, n | a | s | g) {
+        cost.clear();
+        cost.resize(n);
+        for(auto& c: cost) c.resize(n, NIL);
+        for(int i = 0; i < a; ++i) {
+            int x, y;
+            string lab;
+            cin >> x >> y >> lab;
+            cost[x][y] = (cost[x][y] == NIL ? lab : min(cost[x][y], lab));
+        }
+        string candidate = Dijkstra();
+        WarshalFloyd();
+        cout << (candidate != NIL && candidate == cost[s][g] ? candidate : "NO") << endl;
+    }
+}

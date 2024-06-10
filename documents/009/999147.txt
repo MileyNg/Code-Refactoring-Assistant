@@ -1,0 +1,53 @@
+#include<stdio.h>
+
+struct intree{
+  int parent;
+  int left;
+  int right;
+  int key;
+};
+
+int size;
+struct intree list[100000];
+int Parent(int i){
+   return list[i/2].key;
+}
+
+int Left(int i){
+  if(size>=2*i) return list[2*i].key;
+  else return -1;
+}
+
+int Right(int i){
+  if(size>=2*i+1) return list[2*i+1].key;  
+  else return -1;
+}
+
+int main(void){
+  int i,j;
+  
+  scanf("%d",&size);
+  for(i=1;i<=size;i++) scanf("%d",&list[i].key);
+  
+  
+  for(i=1;i<=size;i++){
+    if(i!=1) list[i].parent=Parent(i);
+    else  list[i].parent=-1;  
+    list[i].left=Left(i);
+    list[i].right=Right(i);
+  }
+  
+  
+  for(i=1;i<=size;i++){
+    printf("node %d: ",i);
+    printf("key = %d, ",list[i].key);  
+    if(list[i].parent!=-1)
+      printf("parent key = %d, ",list[i].parent);
+    if(list[i].left!=-1)
+      printf("left key = %d, ",list[i].left);
+    if(list[i].right!=-1)
+      printf("right key = %d, ",list[i].right);
+    printf("\n");  
+  }
+  return 0;
+}

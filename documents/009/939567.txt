@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+char pass[16];
+
+int judge(int i){
+  char a = pass[i-1], b = pass[i];
+  switch(b){
+  case 'A':
+    if(a == 'B' || a == 'D') return 0;
+    break;
+  case 'B':
+    if(a == 'A' || a == 'E' || a == 'C') return 0;
+    break;
+  case 'C':
+    if(a == 'B' || a == 'F') return 0;
+    break;
+  case 'D':
+    if(a == 'A' || a == 'G' || a == 'E') return 0;
+    break;
+  case 'E':
+    if(a == 'B' || a == 'D' || a == 'F' || a == 'H') return 0;
+    break;
+  case 'F':
+    if(a == 'C' || a == 'E' || a == 'I') return 0;
+    break;
+  case 'G':
+    if(a == 'D' || a == 'H') return 0;
+    break;
+  case 'H':
+    if(a == 'E' || a == 'G' || a == 'I') return 0;
+    break;
+  case 'I':
+    if(a == 'F' || a == 'H') return 0;
+    break;
+  }
+  return 1;
+}
+
+int main(){
+  rep(i, 1000){
+    scanf("%s", pass);
+    int f = 0;
+    REP(j, 1, strlen(pass)) f += judge(j);
+    if(!f) puts(pass);
+  } 
+  return 0;
+}

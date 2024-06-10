@@ -1,0 +1,54 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<string, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+class C{
+  public:
+    string first;
+    int second;
+    C(string _f, int _s){ first = _f; second = _s; }
+    C(){}
+    bool operator < (const C &c) const {
+      if (first.length() < c.first.length()) return true;
+      if (first.length() > c.first.length()) return false;
+      return first < c.first;
+    }
+};
+
+int main() {
+  int N; cin >>N;
+  map<string, int> m;
+  REP(i, N){
+    string s;
+    int num;
+    cin >>s >>num;
+    m[s] += num;
+  }
+  vector<C> v;
+  for(map<string, int>::iterator it = m.begin(); it != m.end(); ++it) v.push_back( C(it->first, it->second) );
+  SORT(v);
+  REP(i, v.size()) cout <<v[i].first <<" " <<v[i].second <<endl;
+  return 0;
+}

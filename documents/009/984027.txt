@@ -1,0 +1,22 @@
+while num = gets()
+  break if num.nil? or num == "\n"
+  num = num.to_i
+  list = (2..num).to_a
+
+  prime = Array.new() 
+
+  top = 0
+  while top < Math::sqrt(num)
+    top = list[0]
+    prime.push(top)
+
+    list.each do |n|
+      if n % top == 0 then
+        list.delete(n)
+      end
+    end
+  end
+  prime += list
+
+  p prime.size
+end

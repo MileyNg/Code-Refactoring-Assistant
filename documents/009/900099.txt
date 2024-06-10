@@ -1,0 +1,33 @@
+import math
+
+def make_plist(n):
+	sqrt = int(math.sqrt(n))
+	plist = [1]*(n/2+1)
+	for i in range(2,int(math.sqrt(sqrt))+3):
+		if plist[i]:
+			plist[2*i::i] = [0 for x in range(2*i,sqrt+3,i)]
+	return plist
+
+def get_pfact(plist,n):
+	pfact = []
+	sqrt = int(math.sqrt(n))
+	for i in range(2,sqrt+3):
+		if plist[i] and n%i == 0:
+			pfact.append(i)
+			if plist[n/i]:
+				pfact.append(i)
+	else:
+		if len(pfact) == 0: pfact.append(n)
+	return pfact
+
+def get_phai(n,pfacts):
+	phai = n
+	for pfact in pfacts:
+		phai *= (1-1/float(pfact))
+	return int(phai)
+
+# main	
+n = int(raw_input())
+plist = make_plist(n)
+pfacts = get_pfact(plist,n)
+print get_phai(n,pfacts)

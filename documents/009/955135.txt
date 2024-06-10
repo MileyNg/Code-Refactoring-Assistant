@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<math.h>
+
+void kock(double,double,double,double,int);
+
+double equ_tri_x(double,double,double,double);
+double equ_tri_y(double,double,double,double);
+
+int n;
+
+int main(void){
+	scanf("%d",&n);
+
+	kock(0,0,100,0,0);
+
+	return 0;
+}
+
+
+void kock(double x1,double y1,double x2,double y2,int cnt){
+	if(cnt==n){
+		printf("%f %f\n",x1,y1);
+	}
+	else{
+		kock(x1,y1,(x2-x1)/3.0+x1,(y2-y1)/3.0+y2,cnt+1);
+
+		kock((x2-x1)/3.0+x1,(y2-y1)/3.0+y1,equ_tri_x(x1,y1,x2,y2),equ_tri_y(x1,y1,x2,y2),cnt+1);
+		
+		kock(equ_tri_x(x1,y1,x2,y2),equ_tri_y(x1,y1,x2,y2),(x2-x1)/3.0*2+x1,(y2-y1)/3.0*2+y1,cnt+1);
+		
+		kock((x2-x1)/3.0*2+x1,(y2-y1)/3.0*2+y1,x2,y2,cnt+1);
+
+		if(cnt==0) printf("%f %f\n",x2,y2);
+	}
+}
+
+
+double equ_tri_x(double x1,double y1,double x2,double y2){
+	return (((x2-x1)/3.0)*cos(M_PI/3.0))-(((y2-y1)/3.0)*sin(M_PI/3.0))+(x1+(x2-x1)/3.0);
+}
+
+
+double equ_tri_y(double x1,double y1,double x2,double y2){
+ 	return (((x2-x1)/3.0)*sin(M_PI/3.0))+(((y2-y1)/3.0)*cos(M_PI/3.0))+(y1+(y2-y1)/3.0);
+}

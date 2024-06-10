@@ -1,0 +1,48 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int n;
+	double ax[4], ay[4], x[4], y[4];
+
+	cin >> n;
+
+	for(int i = 0; i < n; i++){
+		cin >> x[0] >> y[0] >> x[1] >> y[1] >> x[2] >> y[2] >> x[3] >> y[3];
+
+		if(x[0] > x[1]){
+			ax[0] = x[1];
+			ay[0] = y[1];
+			ax[1] = x[0];
+			ay[1] = y[0];
+		}
+		else{
+			ax[0] = x[0];
+			ay[0] = y[0];
+			ax[1] = x[1];
+			ay[1] = y[1];
+		}
+
+		if(x[2] > x[3]){
+			ax[2] = x[3];
+			ay[2] = y[3];
+			ax[3] = x[2];
+			ay[3] = y[2];
+		}
+		else{
+			ax[2] = x[2];
+			ay[2] = y[2];
+			ax[3] = x[3];
+			ay[3] = y[3];
+		}
+
+		if((ax[1]-ax[0])==(ax[3]-ax[2]) && (ay[1]-ay[0])==(ay[3]-ay[2]))
+			cout << "YES" << endl;
+		else 
+			cout << "NO" << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <set>
+using namespace std;
+string button[] = {
+  "",
+  "',.!?",
+  "abcABC",
+  "defDEF",
+  "ghiGHI",
+  "jklJKL",
+  "mnoMNO",
+  "pqrsPQRS",
+  "tuvTUV",
+  "wxyzWXYZ"
+};
+char cal(int buf,int cnt){
+  return button[buf][cnt%button[buf].size()];
+}
+int main(){
+  string line;
+  while(cin >> line){
+	string ans;
+	int buf=-1,cnt=0;
+	 
+	for(char c:line){
+	  int index = c-'0';
+	  if(index == 0){
+		if(buf == 0){
+		  ans += " ";
+		}else if(buf != -1){
+		  ans +=cal(buf,cnt);
+		  buf = index;
+		  
+		}
+		continue;
+	  }
+	  if(buf==index)cnt++;
+	  else{
+		if(buf > 0)
+		  ans += cal(buf,cnt);
+		buf = index;
+		cnt = 0;
+	  }
+	}
+	if(buf > 0)ans+=cal(buf,cnt);
+	cout << ans << endl;
+  }
+  return 0;
+}

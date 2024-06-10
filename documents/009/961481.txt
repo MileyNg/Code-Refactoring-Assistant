@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+void record_prime(int memo[], int size) { //エラストテネスの篩
+    for(int r = 2; r <= sqrt(size); r++) {
+        for(int c = 2; r * c <= size; c++) {
+            if(memo[r] != 0)     //既に処理が行われていたならば、再度処理が必要になる事は無い
+                memo[r * c] = 0; //1...素数ではない
+        }
+    }
+}
+
+int count_prime(int memo[], int size) {
+    int count = 0;
+    for(int r = 2; r <= size; r++) {
+        if(memo[r] == 1) count++;
+    }
+    return(count);
+}
+
+int main(void) {
+    int n;
+    //cin >> n;
+    while(scanf("%d", &n) != EOF) {
+        int memo[n + 1];
+        for(int r = 0; r < n + 1; r++) {
+            memo[r] = 1;
+        }
+        record_prime(memo, n);
+        int ans = count_prime(memo, n);
+        cout << ans << endl;
+    }
+    return(0);
+}

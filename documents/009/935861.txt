@@ -1,0 +1,86 @@
+/*
+	1137:Numeral System
+*/
+#include	<iostream>
+#include	<string>
+#include	<stack>
+
+using namespace std;
+
+const char mcxiList[4] = { 'i', 'x', 'c', 'm'};
+
+int MCXI_to_Num(string str);
+string Num_to_MCXI(int x);
+
+int main(void) {
+	int data;
+	cin >> data;
+	for(int i = 0; i < data; i++) {
+		string str01, str02;
+		
+		cin >> str01 >> str02;
+		
+		cout << Num_to_MCXI( MCXI_to_Num(str01) + MCXI_to_Num(str02) ) << endl;
+	}
+	return 0;
+}
+
+int MCXI_to_Num(string str) {
+	int out = 0;
+	string::iterator it = str.begin();
+	
+	while(it != str.end()) {
+		int memo = 1;
+		bool frag = false;
+		for(int i = 0; i < 4; i++) {
+			if(*it == mcxiList[i]) {
+				frag = true;
+				break;
+			}
+		}
+		if(frag == false) {
+			memo = *it - '0';
+			it++;
+		}
+		switch(*it) {
+		case 'm':
+			out += memo * 1000;
+			break;
+		case 'c':
+			out += memo * 100;
+			break;
+		case 'x':
+			out += memo * 10;
+			break;
+		default:
+			out += memo;
+			break;
+		}
+		it++;
+	}
+	
+	return out;
+}
+
+string Num_to_MCXI(int x) {
+	string out;
+	stack<char> str;
+	int count = 0;
+	
+	while(x != 0) {
+		int n = x % 10;
+		if(n != 0) {
+			str.push( mcxiList[count] );
+			if(n != 1) {
+				str.push( n + '0' );
+			}
+		}
+		count++;
+		x /= 10;
+	}
+	while( str.size() ) {
+		out += str.top();
+		str.pop();
+	}
+	return out;
+}

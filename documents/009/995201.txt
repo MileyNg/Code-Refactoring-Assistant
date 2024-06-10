@@ -1,0 +1,106 @@
+#include <iostream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+const int limit = 60 * 24 * 7;  // 開始時は0〜limit分の決め方がある
+int s, n, t, p, m;
+string weekday, my_time;
+const string week[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+bool isWeek(int l, int r)
+{
+    if (weekday == "All")
+        return true;
+
+    const int t = 24 * 60;
+    for (int i = 0; i < 7; ++i) {
+        if (weekday == week[i]) {
+            if ((i * t <= l && l < (i + 1) * t) || (i * t <= r && r < (i + 1) * t))
+                return true;
+            else
+                return false;
+        }
+    }
+
+    return false;
+}
+
+bool isTime(int l, int r)
+{
+    if (my_time == "All")
+        return true;
+    if (my_time == "Day") {
+        int start = 6 * 60, end = 18 * 60;
+        for (int i = 0; i < 7; ++i) {
+            if ((start <= l && l < end) || (start <= r && r <  end))
+                return true;
+
+            start += 24 * 60;
+            end += 24 * 60;
+        }
+    }
+    else if (my_time == "Night") {
+        if ((0 <= l && l < 6 * 60) || (0 <= r && r < 6 * 60))
+            return true;
+        int start = 18 * 60, end = 30 * 60;
+        for (int i = 0; i < 7; ++i) {
+            if ((start <= l && l < end) || (start <= r && r < end))
+                return true;
+            start += 24 * 60;
+            end += 24 * 60;
+        }
+    }
+
+    return false;
+}
+
+bool InLenge(int l, int r)
+{
+    if (weekday == "All" && my_time == "All")
+        return true;
+    l %= limit;
+    r %= limit;
+
+    if (isWeek(l, r) && isTime(l, r))
+        return true;
+    else
+        return false;
+}
+
+int Count(int st)
+{
+    int res = 0;
+
+    for (int i = 0; i < m; ++i) {
+        if (InLenge(st, s))
+            ++res;
+        st += t;
+    }
+
+    return res;
+}
+
+int main()
+{
+
+
+    while (true) {
+        // Input
+        cin >> s >> n >> t >> weekday >> my_time >> p >> m;
+        if (s == 0 && n == 0 && t == 0 && p == 0 && m == 0 &&
+            weekday == "None" && my_time == "None")
+            break;
+
+        cerr << s << "" << n << " " << t << " " << weekday << " " <<
+            my_time << " " << p << " " << m << "\n";
+        int max_cnt = 0;
+        for (int i = 0; i < limit; ++i)
+            max_cnt = max(max_cnt, Count(i));
+
+        printf("%.10f\n", 1.0 - pow(1.0 - 1.0 / p, n * max_cnt));
+    }
+
+    return 0;
+}

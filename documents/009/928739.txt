@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstring>
+#include <map>
+#include <algorithm>
+#define fr first
+#define sc second
+#define INF (2 << 28)
+using namespace std;
+
+typedef pair<int,int> iP;
+iP dat[3];
+
+double dp[5001];
+
+double rec(int sum){
+  if(sum == 0) return 0;
+  if(sum < 0) return INF;
+  if(dp[sum]) return dp[sum];
+  double ret = INF;
+
+  ret = min(rec(sum - 200 * 5) + 380 * 5 * 0.8,ret);
+  ret = min(rec(sum - 300 * 4) + 550 * 4 * 0.85,ret);
+  ret = min(rec(sum - 500 * 3) + 850 * 3 * 0.88,ret);
+  
+  for(int i=0;i<3;i++)
+    ret = min(rec(sum - dat[i].fr) + dat[i].sc,ret);
+  
+
+  return dp[sum] = ret;
+}
+
+int main(){
+  int n;
+  dat[0].fr = 200; dat[0].sc = 380;
+  dat[1].fr = 300; dat[1].sc = 550;
+  dat[2].fr = 500; dat[2].sc = 850;
+
+  while(cin >> n,n){
+    memset(dp,0,sizeof(dp));
+    cout << rec(n) << endl;
+  }
+}
+
+    

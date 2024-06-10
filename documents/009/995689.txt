@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+double memo[3][3][16];
+int n, s, t, b;
+
+int toIndex(char l){
+    return l - 'A';
+}
+
+double pow(double a, int n){
+    double res = 1.0;
+    while(n > 0){
+        if(n & 1){res *= a;}
+        a *= a;
+        n >>= 1;
+    }
+    return res;
+}
+
+void rec(int x, int y, int battery){
+    memo[y][x][battery] += pow(0.25, battery);
+
+    if(battery > n){return;}
+
+    REP(i, 4){
+        int nx = x + dx[i], ny = y + dy[i];
+        if(0 <= nx && nx < 3 &&
+           0 <= ny && ny < 3 &&
+           !(nx == b % 3 && ny == b / 3)){
+            rec(nx, ny, battery+1);
+        }else{
+            rec(x, y, battery+1);
+        }
+    }
+}
+
+int main(){
+    while(std::cin >> n, n){
+        std::fill(memo[0][0], memo[0][0]+3*3*16, 0.0);
+
+        char sl, tl, bl;
+        std::cin >> sl >> tl >> bl;
+
+        s = toIndex(sl), t = toIndex(tl), b = toIndex(bl);
+
+        rec(s%3, s/3, 0);
+        printf("%.7f\n", memo[t/3][t%3][n]);
+    }
+}

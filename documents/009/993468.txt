@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+#define EPS 1e-10
+int n;
+double sx,sy,tx,ty,px[20],py[20];
+
+double dis(double a,double b,double c,double d)
+{return sqrt((a-c)*(a-c)+(b-d)*(b-d));}
+double dis(int a,int b){return dis(px[a],py[a],px[b],py[b]);}
+
+bool dfs(int S,int pos,double cost){
+  if(S==(1<<n)-1)return true;
+  for(int i=0;i<n;i++){
+    if((S>>i)&1)continue;
+    if(cost+dis(pos,i)>=dis(tx,ty,px[i],py[i]))return false;
+  }
+  for(int i=0;i<n;i++){
+    if((S>>i)&1)continue;
+    if(cost+dis(pos,i)>=dis(tx,ty,px[i],py[i]))continue;
+    if( dfs(S|(1<<i),i,cost+dis(pos,i)) )return true;
+  }
+  return false;
+}
+
+bool solve(){
+  for(int i=0;i<n;i++){
+    if( dfs((1<<i),i,dis(sx,sy,px[i],py[i])) )return true;
+  }
+  return false;
+}
+
+int main(){
+  while(1){
+    cin>>n>>sx>>sy>>tx>>ty;
+    if(n==0&&sx==0&&sy==0&&tx==0&&ty==0)break;
+    for(int i=0;i<n;i++)cin>>px[i]>>py[i];
+    cout<<(solve()?"YES":"NO")<<endl;
+  }
+  return 0;
+}

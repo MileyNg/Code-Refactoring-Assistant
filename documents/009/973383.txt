@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+using namespace std;
+int dx[4] = {0,1,0,-1};
+int dy[4] = {1,0,-1,0};
+
+int w,h;
+
+void to_valid(int &a, int limit) {
+  if(a <= 0) a = 1;
+  if(a > limit) a = limit;
+}
+
+void update(int &x, int &y, int vec, int amount) {
+  x += dx[vec] * amount;
+  y += dy[vec] * amount;
+  to_valid(x, w);
+  to_valid(y, h);
+}
+
+int main(){
+  while(cin >> w >> h && !(w == 0 && h == 0)){
+	string str;
+	int cx = 1,cy = 1;
+	int vec = 0;
+	while(cin >> str && str != "STOP"){
+	  if(str == "FORWARD"){
+		int k;
+		cin >> k;
+		update(cx, cy, vec, k);
+	  }else if(str == "RIGHT"){
+		vec = (vec + 1) % 4;
+	  }
+	  else if(str == "LEFT"){
+		vec = (vec + 3) % 4;
+	  }else if(str == "BACKWARD"){
+		int k;
+		cin >> k;
+		update(cx, cy, vec ^ 2, k);
+	  }else {
+		assert(false);
+	  }
+	}
+	cout << cx << " " << cy << endl;
+  }
+  return 0;
+}

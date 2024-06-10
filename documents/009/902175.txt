@@ -1,0 +1,21 @@
+def solve(s)
+  s2 = s.each_char.map do |c|
+    i = c.ord
+    if i < 'a'.ord || i > 'z'.ord
+      c
+    else
+      a = i + 1
+      a = 'a'.ord if a > 'z'.ord
+      a.chr
+    end
+  end.join
+  if s2.split(/[. ]/).select{|w| w == "the" || w == "this" || w == "that"}.size > 0
+    s2
+  else
+    solve(s2)
+  end
+end
+
+gets(nil).chomp.split("\n").each do |s|
+  puts solve(s)
+end

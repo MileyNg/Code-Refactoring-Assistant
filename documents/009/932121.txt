@@ -1,0 +1,26 @@
+#include <iostream>
+#define rep(i,n) for(int i=0;i<n;i++)
+using namespace std;
+int main(){
+	int t;
+	cin >> t;
+	rep(aa,t){
+		int x,y,p,dp[17][17]={};
+		bool tate[16][16]={},yoko[16][16]={};
+		cin >> x >> y >> p;
+		rep(i,p){
+			int a,b,c,d;
+			cin >> a >> b >> c >> d;
+			if(a==c) tate[a][min(b,d)]=true;
+			else yoko[min(a,c)][b]=true;
+		}
+		dp[0][0]=1;
+		rep(i,x+1) rep(j,y+1){
+			if(!yoko[i][j]) dp[i+1][j]+=dp[i][j];
+			if(!tate[i][j]) dp[i][j+1]+=dp[i][j];
+		}
+		if(dp[x][y]==0) cout << "Miserable Hokusai!" << endl;
+		else cout << dp[x][y] << endl;
+	}
+	return 0;
+}

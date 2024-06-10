@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int i,c,n=0;
+
+void BinarySearch(int *A,int key){
+  int left=0;
+  int right=n;
+  int mid;
+
+  while(left<right){
+    mid=(left+right)/2;
+    if(A[mid]==key){
+    c++;
+    return;
+    }else if(key<A[mid]){
+      right=mid;
+    }else{
+	left=mid+1;
+      }
+  }
+  return;
+}
+
+main(){
+  int S[10000];
+  int t,j,q;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&S[i]);
+  }
+
+  scanf("%d",&q);
+  for(j=0;j<q;j++){
+    scanf("%d",&t);
+    BinarySearch(S,t);
+  }
+
+  printf("%d\n",c);
+  return 0;
+}

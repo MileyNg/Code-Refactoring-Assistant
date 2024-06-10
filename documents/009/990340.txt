@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+int dim[e+10];
+
+void init() {
+  fill(dim, dim+110, 0);
+}
+
+bool hitofude() {
+  if ((dim[1]+dim[2])%2) {
+    return false;
+  }
+  for (int i=3; i<e+10; i++) {
+    if (dim[i]%2) {
+      return false;
+    }
+  }
+  return true;
+}
+
+int main() {
+  int a,b;
+  init();
+  while (scanf("%d%d", &a, &b)!=EOF) {
+    dim[a]++;
+    dim[b]++;
+    if (a==0 && b==0) {
+      if (hitofude()) {
+	printf("OK\n");
+      } else {
+	printf("NG\n");
+      }
+      init();
+    }
+  }
+}

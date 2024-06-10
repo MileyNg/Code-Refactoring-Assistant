@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<string.h>
+# define N 36
+int main(){
+  int i, j, n,mini;
+  char A1[N],A2[N];
+  int N1[N],N2[2];
+  int ref1[N], ref2[N];
+  int stability2 =1, stability1=1;//0:not stable 1:stable
+  int tmp1, tmp3, tmp4;
+  char tmp2;
+
+  scanf("%d",&n);
+  for( i=0; i<n; i++ ){//Scan Input
+    scanf(" %c%d",&A1[i],&N1[i]);
+    A2[i]=A1[i];
+    N2[i]=N1[i];
+    ref1[i]=ref2[i]=i;
+  }
+  for( i=0; i<n; i++ ){//Bubble Sort
+    for( j=n-1; j>=i+1; j-- ){
+      if( N1[j]<N1[j-1]){
+    tmp1=N1[j];
+    N1[j]=N1[j-1];
+    N1[j-1]=tmp1;
+    tmp2=A1[j];
+    A1[j]=A1[j-1];
+    A1[j-1]=tmp2;
+    tmp3=ref1[j];
+    ref1[j]=ref1[j-1];
+    ref1[i]=tmp3;
+      }
+    }
+  }
+
+
+  for( i=0; i<n; i++ ){//Selection Sort
+    mini = i;
+    for( j=i; j<n ; j++ ){
+      if( N2[j] < N2[mini] ){
+    mini = j;
+      }    
+    }
+    tmp1=N2[i];
+    N2[i]=N2[mini];
+    N2[mini]=tmp1;
+    tmp2=A2[i];
+    A2[i]=A2[mini];
+    A2[mini]=tmp2;
+    tmp4=ref2[i];
+    ref2[i]=ref2[mini];
+    ref2[mini]=tmp4;
+  }
+ 
+ 
+  for( i=0; i<n; i++ ){
+    //bubble sort  
+    printf("%c%d", A1[i],N1[i]);
+    if( i<n-1 ) printf(" ");
+  }
+
+  for( i=0; i<n; i++ ){
+	  for( j=0; j<n; j++ ){
+		  if( N1[i]==N1[j] ){
+			  if( ref1[i]>ref1[j] ){
+				  stability1 = 0;
+				  break;
+			  }
+		  }
+	  }
+  }
+  if( stability1 == 1 ) printf("\nStable\n");
+  else printf("\nNot stable\n");
+ 
+ 
+  for( i=0; i<n; i++ ){
+    //selection sort
+    printf("%c%d", A1[i],N1[i]);
+    if( i<n-1 ) printf(" ");
+  }
+  
+  for( i=0; i<n; i++ ){
+	  for( j=0; j<n;j++ ){ 
+		if( N2[i]==N2[j] ){
+			if( ref2[i]>ref2[j]){
+				stability2 = 0;
+				break;
+			}
+		}
+	  }
+  }
+  if( stability2 == 1 ) printf("\nStable\n");
+  else printf("\nNot stable\n");
+ 
+
+  return 0;
+}

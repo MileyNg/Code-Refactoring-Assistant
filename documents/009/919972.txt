@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <math.h>
+int main(void){
+    int n;
+    double xa,ya,ra,xb,yb,rb,dis;
+    scanf("%d",&n);
+    while(n-- > 0){
+        scanf("%lf %lf %lf %lf %lf %lf",
+               &xa, &ya, &ra, &xb, &yb, &rb);
+        dis = sqrt( (xa - xb)*(xa - xb) + (ya - yb)*(ya - yb) );
+        if( dis + ra < rb ){
+            puts("-2");
+        }else if( dis + rb < ra ){
+            puts("2");
+        }else if( ra + rb >= dis ){
+            puts("1");
+        }else{
+            puts("0");
+        }
+    }
+    return 0;
+}

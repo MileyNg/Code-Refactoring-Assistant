@@ -1,0 +1,87 @@
+#include<string.h>
+#include<stdio.h>
+
+//出力、比較のためソート用の配列は外部変数
+ char bub[36][3];
+ char sel[36][3];
+//入力数確認
+ int val;
+
+void bubble(void){
+	int s,i;
+	char tmp[3];
+
+	for(i = 0;i < val;i++){
+		for(s = val-1;s > i;--s){
+			if(bub[s][2]<bub[s-1][2]){
+				strcpy(tmp,bub[s-1]);
+				strcpy(bub[s-1],bub[s]);
+				strcpy(bub[s],tmp);
+			}
+		}
+	}
+}
+
+void select(void){
+	int s,i,cmp;
+	char tmp[3];
+
+	for(i = 0;i < val;i++){
+      cmp = i;
+		 for(s=i+1;s<val;s++){
+			 if(sel[s]<sel[cmp])
+				 cmp = s;
+		}
+     strcpy(tmp,sel[i]);
+     strcpy(sel[i],sel[cmp]);
+     strcpy(sel[cmp],tmp);
+	}
+}
+
+ int main(){
+
+ //比較のフラグ
+ int flg = 0;
+ int j; 
+ char scn[36][3];
+ 
+ scanf("%d",&val);
+
+ for(j = 0;j < val;j++){
+	 scanf("%s",scn+j);
+	 strcpy(bub[j],scn[j]);
+	 strcpy(sel[j],scn[j]);
+ }
+
+ //バブルソート
+  bubble(); 
+  for(j = 0;j < val - 1;j++){
+	  printf("%s ",bub[j]);
+	  if(strcmp(scn[j],bub[j]) != 0)
+		  flg = 1;
+  }
+  printf("%s\n",bub[j]);
+  if(strcmp(scn[j],bub[j]) != 0)
+	  flg = 1;
+
+  if(flg == 0)printf("Stable\n");
+  else printf("Not stable\n");
+
+  flg = 0;
+
+  //選択ソート
+  select();
+  for(j = 0;j < val - 1;j++){
+	  printf("%s ",sel[j]);
+	  if(strcmp(scn[j],sel[j]) != 0)
+		  flg = 1;
+  }
+  printf("%s\n",sel[j]);
+  if(strcmp(scn[j],sel[j]) != 0)
+	  flg = 1;
+
+  if(flg == 0)printf("Stable\n");
+  else printf("Not stable\n");
+
+	 return 0;
+ }

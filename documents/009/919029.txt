@@ -1,0 +1,90 @@
+#include<iostream>
+#include<map>
+#include<string>
+
+using namespace std;
+
+int main(void)
+{
+	char c1[33]=" ',-.?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char c2[33]="ABCDEFGHIJKLMNOPQRSTUVWXYZ .,-'?";
+	string s1[32]={
+		"101",
+		"000000",
+		"000011",
+		"10010001",
+		"010001",
+		"000001",
+		"100101",
+		"10011010",
+		"0101",
+		"0001",
+		"110",
+		"01001",
+		"10011011",
+		"010000",
+		"0111",
+		"10011000",
+		"0110",
+		"00100",
+		"10011001",
+		"10011110",
+		"00101",
+		"111",
+		"10011111",
+		"1000",
+		"00110",
+		"00111",
+		"10011100",
+		"10011101",
+		"000010",
+		"10010010",
+		"10010011",
+		"10010000"
+	};
+	char s2[32][6];
+	for(int i=0;i<32;i++){
+		int n=i;
+		for(int j=0;j<5;j++){
+			if(n%2==0) s2[i][4-j]='0';
+			else s2[i][4-j]='1';
+			n/=2;
+		}
+		s2[i][5]='\0';
+	}
+
+	map<char,string> m1;
+	map<string,char> m2;
+
+	for(int i=0;i<32;i++){
+		m1[c1[i]]=s1[i];
+		m2[s2[i]]=c2[i];
+	}
+
+	string str;
+
+	while(getline(cin,str)){
+		string s3="";
+		for(int i=0;i<str.size();i++){
+			s3+=m1[str[i]];
+		}
+		while(s3.size()%5!=0){
+			s3+='0';
+		}
+		string s4;
+		for(int i=0;i<s3.size();i++){
+			if(i%5==0){
+				s4=s3[i];
+			}
+			else{
+				s4+=s3[i];
+			}
+			if(i%5==4){
+				cout<<m2[s4];
+			}
+		}
+		cout<<endl;
+	}
+
+	return 0;
+}

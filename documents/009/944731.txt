@@ -1,0 +1,49 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int x, y;
+
+int solve(int edges[x][2], int edgenum, bool flag[x]){
+    if(edgenum >= y) return 0;
+    
+    int node1 = edges[edgenum][0];
+    int node2 = edges[edgenum][1];
+    
+    int result;
+    
+    if(flag[node1] || flag[node2]){
+        // どちらかの角に店がある場合
+        result = solve(edges, edgenum + 1, flag);
+    }else{
+        // どちらの角にも店がある場合
+        // node1 に店を建てる場合
+        flag[node1] = true;
+        int case1 = solve(edges, edgenum + 1, flag) + 1;
+        flag[node1] = false;
+        
+        // node2 に店を建てる場合
+        flag[node2] = true;
+        int case2 = solve(edges, edgenum + 1, flag) + 1;
+        flag[node2] = false;
+        
+        result = case1 < case2 ? case1 : case2;
+    }
+    return result;
+};
+
+int main(int argc, const char * argv[])
+{
+    while(cin >> x >> y){
+        int edges[x][2];
+        bool flag[x];
+        for(int i = 0; i < y; i++){
+            cin >> edges[i][0] >> edges[i][1];
+        }
+        
+        cout << solve(edges, 0, flag) << "\n";
+    }
+    return 0;
+}

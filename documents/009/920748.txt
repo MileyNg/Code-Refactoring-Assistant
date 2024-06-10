@@ -1,0 +1,31 @@
+import itertools
+from copy import deepcopy
+
+def stuck(Array,Order):
+	remain = len(Array)
+	if remain == 0: return G(Order),Order
+	minG,minOrder = 9999999,[]
+	w = sum([int(Array[i][1]) for i in range(remain)])
+	for i in range(remain):
+		if int(Array[i][2]) >= w-int(Array[i][1]):
+			array = deepcopy(Array)
+			order = deepcopy(Order)
+			order[n-remain] = array.pop(i)
+			curG,curOrder = stuck(array,order)
+			if curG < minG:
+				minG = curG
+				minOrder = curOrder
+	return minG,minOrder
+
+def G(array):
+	nume=sum([(i+1)*int(array[i][1]) for i in range(n)])*1.0
+	denomi=sum([int(array[i][1]) for i in range(n)])
+	return nume/denomi
+	
+while 1:
+	n=input()
+	if n==0:break
+	lunch=[raw_input().split() for i in range(n)]
+	minG,ans=stuck(lunch,[0]*n)
+	for i in range(n):
+		print ans[i][0]

@@ -1,0 +1,38 @@
+#include "stdio.h"
+#include "string.h"
+
+char tablew[256];
+
+int main()
+{
+	char* table = tablew + 128;
+	while(1)
+	{
+		for(int i = -128; i < 128; i++)
+		{
+			table[i] = i;
+		}
+		int n;
+		scanf("%d",&n);
+		if(n == 0)
+		{
+			break;
+		}
+		for(int i = 0; i < n; i++)
+		{
+			char w1,w2;
+			scanf(" %c %c",&w1,&w2);
+			table[w1] = w2;
+		}
+		int m;
+		scanf("%d",&m);
+		for(int i = 0; i < m; i++)
+		{
+			char w1;
+			scanf(" %c",&w1);
+			printf("%c",table[w1]);
+		}
+		printf("\n");
+	}
+	return 0;
+}

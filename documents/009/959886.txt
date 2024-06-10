@@ -1,0 +1,127 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <limits.h>
+#include <cctype>
+
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+
+using namespace std;
+
+#define Max INT_MAX
+#define Inf INT_MIN
+
+
+#define rep(i, n) for(int i = 0; i < n; i++)
+#define repi(i,l,n) for(int (i)=(int)(l);(i)<(int)(n);(i)++)
+// s <= x < g ?
+#define IN(x,s,g) ((x) >= (s) && (x) < (g))
+// 0 <= x < w && 0 <= y < h ?
+#define ISIN(x,y,w,h) (IN((x),0,(w)) && IN((y),0,(h)))
+
+typedef pair<int, int> P;
+
+
+#define MaxN 1000
+
+int par[MaxN];
+int rank[MaxN];
+
+//要素数nで木を初期生成
+void init(int n){
+   rep(i,n){
+       par[i] = i;
+       rank[i] = 0;
+   }
+   return;
+}
+
+int find(int x){
+    if(par[x] == x) {
+       return x;
+    } else {
+       return par[x] = find( par[x] ); 
+    }
+}
+
+void unite(int x, int y){
+    x = find(x);
+    y = find(y);
+    if ( x == y ) { return; }
+
+    if( rank[x] < rank[y] ){
+        par[x] = y;
+    } else {
+        par[y] = x;
+        if( rank[x] == rank[y] ) { rank[x]++; }
+    }
+}
+
+bool same( int x, int y){
+    return find(x) == find(y);
+}
+
+
+
+
+struct edge{ 
+    int u, v, cost;
+
+    edge(int a, int b, int c){
+        u = a; v = b; cost = c;
+    }
+}; 
+
+//typedef struct edge edge;
+
+bool comp( const edge& e1, const edge& e2){
+    return e1.cost < e2.cost;
+}
+
+
+#define MaxE 1000
+vector<struct edge> vec;
+//struct edge es[MaxE];
+
+int E;
+int N;
+int kruskal() { 
+    sort(vec.begin(), vec.end(), comp);
+    init(1000);
+    int res = 0;
+    rep(i,E){
+        struct edge e = vec[i];
+        if(!same(e.u,e.v)) { 
+            unite(e.u, e.v);
+            res += e.cost;
+        }
+    }
+    return res;
+}
+
+
+
+
+
+int main()
+{
+    while ( cin >> N >> E ){
+        vec.clear();
+        init(100);
+        if( N == 0 && E == 0 ) { break; }
+        int a,b,c;
+        rep(i,E){
+            cin >> a >> b >> c;
+            vec.push_back( edge( a, b, c) );
+        }
+        cout << kruskal() << endl;
+    }
+    return 0;
+}

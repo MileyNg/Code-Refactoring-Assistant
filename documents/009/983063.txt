@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> pii;
+typedef tuple<int,int,int> tri;
+
+const int dy[] = {-1,0,1,0}, dx[] = {0,1,0,-1};
+
+int r,w,h,x,y;
+int g[555][555];
+bool vis[555][555];
+
+int main(){
+  while(cin >> r, r){
+    vector<pii> num[2];
+
+    for(int id=0;id<2;id++){
+      cin >> w >> h >> x >> y;
+      x--; y--;
+      for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++)cin >> g[i][j];
+      }
+
+      memset(vis,0,sizeof(vis));
+      vis[y][x] = true;
+      priority_queue<tri> q;
+      q.push(tri(-g[y][x],y,x));
+
+      int cnt = 0, val = 0;
+      while(q.size()){
+	num[id].push_back(pii(cnt,val));
+	
+	do{
+	  cnt++;
+	  y = get<1>(q.top()); x = get<2>(q.top());
+	  val = min(val, get<0>(q.top()) );
+	  q.pop();
+	  
+	  for(int i=0;i<4;i++){
+	    int ny = y+dy[i], nx = x+dx[i];
+	    if(ny<0 || nx<0 || ny>=h || nx>=w)continue;
+	    if(vis[ny][nx])continue;
+	    vis[ny][nx] = true;
+	    q.push(tri(-g[ny][nx],ny,nx));
+	  }
+	}while(q.size() && get<0>(q.top()) >= val);
+      }
+      num[id].push_back(pii(cnt,val));
+    }
+    
+    int ans = 1e9, rev_ite = num[1].size() - 1;
+    for(int i=0;i<(int)num[0].size();i++){
+      while(rev_ite>=0 && num[0][i].first + num[1][rev_ite].first >= r)rev_ite--;
+      rev_ite++;
+      if(num[0][i].first + num[1][rev_ite].first >= r){
+	ans = min(ans, - num[0][i].second - num[1][rev_ite].second);
+      }
+    }
+    cout << ans << endl;
+  }
+}

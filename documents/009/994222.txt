@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+int h,w;
+int g[111][111];
+int m[111][111];
+int c;
+
+const int dx[]={1,0,-1,0};
+const int dy[]={0,1,0,-1};
+
+inline bool in(int x, int y){
+    return x<w && y<h && 0<=x && 0<=y;
+}
+
+int solve(int vis, int x, int y){
+    int ans=0;
+    rep(d,4){
+        int nx=x;
+        int ny=y;
+        while(1){
+            nx+=dx[d];
+            ny+=dy[d];
+            if(!in(nx,ny)) break;
+            if(g[ny][nx]==0){
+                continue;
+            } else if(g[ny][nx]==2){
+                if(vis==(1<<c)-1) ans+=1;
+            } else if(g[ny][nx]==1){
+                int h=m[ny][nx];
+                if(vis>>h&1) break;
+                else {
+                    vis^=1<<h;
+                    ans+=solve(vis,nx,ny);
+                    vis^=1<<h;
+                }
+            }
+        }
+    }
+    //printf("%d=solve(%d %d %d)\n",ans,vis,x,y);
+    return ans;
+}
+
+int main(){
+    while(cin>>w>>h && w|h){
+        int sx,sy;
+        c=0;
+        rep(i,h)rep(j,w){
+            cin >> g[i][j];
+            if(g[i][j]==2){
+                sx=j;
+                sy=i;
+            } else if(g[i][j]==1){
+                m[i][j]=c++;
+            }
+        }
+        cout << solve(0,sx,sy) << endl;
+    }
+}

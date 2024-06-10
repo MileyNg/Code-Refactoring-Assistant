@@ -1,0 +1,45 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+
+int main(void) {
+    int vec[] = {1, -1, 4, -4};
+    queue<string> que;
+    que.push("01234567");
+    map<string, int> d;
+    while (!que.empty()) {
+        string str = que.front(); que.pop();
+        int zero = str.find("0");
+        string str2;
+        for (int i = 0; i < 4; i++) {
+            int nextz = zero + vec[i];
+            if (nextz >= 0 && nextz <= 7 && !((zero == 3 && nextz == 4) || (zero == 4 && nextz == 3))) {
+                str2 = str;
+                swap(str2[zero], str2[nextz]);
+                if (d.find(str2) == d.end()) {
+                    que.push(str2);
+                    d[str2] = d[str] + 1;
+                }
+            }
+        }
+    }
+    string num;
+    while (getline(cin, num)) {
+        string::iterator end_it = remove(num.begin(), num.end(), ' ');
+        num.erase(end_it, num.end());
+        cout << d[num] << endl;
+    }
+    return 0;
+}

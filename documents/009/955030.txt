@@ -1,0 +1,14 @@
+n, q = gets.split.map(&:to_i)
+history = [nil, 'kogakubu10gokan']
+n.times do
+  line = gets.chomp.split
+  line[0] = line[0].to_i
+  history[line[0]] = line.last
+end
+
+q.downto(0) do |i|
+  if history[i]
+    puts history[i]
+    break
+  end
+end

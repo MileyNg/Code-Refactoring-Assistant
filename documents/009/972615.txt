@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+long long int GR[8200][17];
+
+int main() {
+
+  for ( long long int i = 0; i < 17; i++ ) {
+    GR[1][i] = 0;
+  }
+
+  long long int n, S, input;
+
+  while( true ) {
+
+    cin >> n;
+
+    if ( n == 0 ) break;
+
+    cin >> S;
+
+    vector< long long int > m;
+
+    for ( long long int i = 0; i < n * 2; i++ ) {
+
+      cin >> input;
+
+      m.push_back( input );
+
+    }
+
+    for ( long long int i = 2; i <= S; i++ ) {
+
+      for ( long long int j = 0; j < n * 2; j++ ) {
+
+	bool flag[17] = {};
+
+	for ( long long int k = max( 1LL, i - m[j] ); k < i; k++ ) {
+
+	  flag[ GR[k][(j+1)%(n*2)] ] = true;
+
+	}
+
+	int cnt = 0;
+	while( flag[cnt] ) {cnt++;}
+	GR[i][j] = cnt;
+
+      }
+
+    }
+
+    cout << ( GR[S][0] == 0 ? "0" : "1" ) << endl;
+
+  }
+
+  return 0;
+
+}

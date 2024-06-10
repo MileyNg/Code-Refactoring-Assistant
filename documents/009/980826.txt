@@ -1,0 +1,51 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main()
+{
+  int n,r;
+  for(;cin>>n>>r;)
+    {
+      int cc[r];
+      for(int i=0;i<r;i++)
+     	  cin>>cc[i];
+      vector<int> sr;
+      for(int i=0;i<n;i++)
+	sr.push_back(i);
+
+      for(int xx=0;xx<r;xx++)
+	{
+	  //  cout<<"xx"<<xx<<endl;
+	  vector<int> a,b,c;
+	  for(int i=0;i<n/2;i++)
+	    b.push_back(sr[i]);
+	  for(int i=n/2;i<n;i++)
+	    a.push_back(sr[i]);
+
+	while(a.size()!=0 || b.size()!=0 )
+	  {
+	    // cout<<"size"<<a.size() <<" "<<b.size()<<endl;
+	    for(int i=0;i<cc[xx] && a.size()!=0;i++)
+	      {
+		//	cout<<"a-i "<<i<<endl;
+		c.push_back(a[0]);
+		a.erase(a.begin());
+	      }
+	    for(int i=0;i<cc[xx] && b.size()!=0;i++)
+	      {
+		//	cout<<"b-i "<<i<<endl;
+		c.push_back(b[0]);
+		b.erase(b.begin());
+	      }
+	  }
+	sr=c;
+	/*
+	for(int i=0;i<sr.size();i++)
+	  cout<<sr[i]<<" ";
+	cout<<endl;
+	*/
+      }
+      cout<<sr[sr.size()-1]<<endl;
+    }
+}

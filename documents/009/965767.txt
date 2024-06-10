@@ -1,0 +1,89 @@
+using System;
+using System.Collections;
+
+namespace aoj1166
+{
+    class Program
+    {
+        static void Main()
+        {
+            while (true)
+            {
+                string wh = Console.ReadLine();
+                string[] whs = wh.Split(' ');
+                int w = int.Parse(whs[0]);
+                int h = int.Parse(whs[1]);
+                
+                if (w == 0 || h == 0)
+                    break;
+
+                int[,] xwall = new int[w, h - 1];
+                int[,] ywall = new int[w - 1, h];
+                for (int i = 0; i < h; ++i)
+                {
+                    wh = Console.ReadLine();
+                    whs = wh.Split(' ');
+                    for (int j = 0; j < w - 1; ++j) 
+                        ywall[j, i] = int.Parse(whs[j + 1]);
+
+                    if (i == h - 1)
+                        break;
+
+                    wh = Console.ReadLine();
+                    whs = wh.Split(' ');
+                    for (int j = 0; j < w; ++j)
+                        xwall[j, i] = int.Parse(whs[j]);
+                }
+
+                int[,] node = new int[w, h];
+                
+                Queue xq = new Queue();
+                Queue yq = new Queue();
+                
+                for (int i = 0; i < w; ++i) 
+                {
+                    for (int j = 0; j < h; ++j) 
+                    {
+                        node[i, j] = 0;
+                    }
+                }
+                node[0, 0] = 1;
+                
+                xq.Enqueue(0);
+                yq.Enqueue(0);
+
+                while (xq.Count > 0) 
+                {
+                    int nx = (int)xq.Dequeue();
+                    int ny = (int)yq.Dequeue();
+
+                    if (nx > 0 && ywall[nx - 1, ny] == 0 && (node[nx - 1, ny] == 0 || node[nx - 1, ny] > node[nx, ny] + 1)) 
+                    {
+                        node[nx - 1, ny] = node[nx, ny] + 1;
+                        xq.Enqueue(nx - 1);
+                        yq.Enqueue(ny);
+                    }
+                    if (ny > 0 && xwall[nx, ny - 1] == 0 && (node[nx, ny - 1] == 0 || node[nx, ny - 1] > node[nx, ny] + 1))
+                    {
+                        node[nx, ny - 1] = node[nx, ny] + 1;
+                        xq.Enqueue(nx);
+                        yq.Enqueue(ny - 1);
+                    }
+                    if (nx < w - 1 && ywall[nx, ny] == 0 && (node[nx + 1, ny] == 0 || node[nx + 1, ny] > node[nx, ny] + 1))
+                    {
+                        node[nx + 1, ny] = node[nx, ny] + 1;
+                        xq.Enqueue(nx + 1);
+                        yq.Enqueue(ny);
+                    }
+                    if (ny < h - 1 && xwall[nx, ny] == 0 && (node[nx, ny + 1] == 0 || node[nx, ny + 1] > node[nx, ny] + 1))
+                    {
+                        node[nx, ny + 1] = node[nx, ny] + 1;
+                        xq.Enqueue(nx);
+                        yq.Enqueue(ny + 1);
+                    }
+                }
+                Console.WriteLine(node[w - 1, h - 1].ToString());
+            }
+        }
+    }
+}

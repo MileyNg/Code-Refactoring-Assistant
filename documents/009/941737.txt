@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+
+#define N 21
+#define INF 1000000007
+#define min(a,b) (a>b?b:a)
+
+int mat[N][N];
+
+int main() {
+	int n, m, a, b, c, d, x1, x2, y1, y2;
+	char du;
+	cin >> n >> m;
+	for(int i=0; i<n; ++i) for(int j=0; j<n; ++j) mat[i][j] = INF;
+	for(int i=0; i<m; ++i) {
+		cin >> a >> du >> b  >> du >> c >> du >> d; --a; --b;
+		mat[a][b] = c;
+		mat[b][a] = d;
+	}
+	cin >> x1 >> du >> x2  >> du >> y1  >> du >> y2; --x1; --x2;
+	for(int k=0; k<n; ++k) {
+		for(int i=0; i<n; ++i) {
+			for(int j=0; j<n; ++j) {
+				mat[i][j] = min(mat[i][j], mat[i][k]+mat[k][j]);
+			}
+		}
+	}
+	cout << y1 - y2 - mat[x1][x2] - mat[x2][x1] << endl;
+	return 0;
+}

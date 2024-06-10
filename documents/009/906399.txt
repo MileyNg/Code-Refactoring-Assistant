@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+map<char,set<int> > S;
+set<int> U;
+string parse;
+int pos;
+
+set<int> expression();
+
+set<int> term(){
+  if( parse[pos] == '(' ){
+    ++pos;
+    set<int> p = expression();
+    ++pos;
+    return p;
+  } else if( parse[pos] == 'c' ) {
+    ++pos;
+    set<int> p = term();
+    set<int> ret = U;
+    for(set<int>::iterator it = p.begin();it!=p.end();it++) ret.erase(*it);
+    return ret;
+  } else {
+    char c = parse[pos++];
+    return S[c];
+  }
+}
+
+set<int> expression(){
+  set<int> a = term();
+
+  while( parse[pos] == 'u' || parse[pos] == 'i' || parse[pos] == 'd' || parse[pos] == 's' || parse[pos] == 'c' ){
+    char opr = parse[pos++];
+    set<int> b = term();
+    if( opr == 'u' ){
+      set<int> tmp = a;
+      for(set<int>::iterator it = b.begin() ; it != b.end(); it++ ) tmp.insert(*it);
+      a = tmp;
+    } else if( opr == 'i' ) {
+      map<int,int> counter;
+      set<int> tmp;
+      for(set<int>::iterator it = a.begin() ; it != a.end(); it++ ) counter[*it]++;
+      for(set<int>::iterator it = b.begin() ; it != b.end(); it++ ) counter[*it]++;
+      for(auto& i : counter)if( i.second == 2 ) tmp.insert(i.first);
+      a = tmp;
+    } else if( opr == 'd' ) {
+      set<int> tmp = a;
+      for(auto& i : b)tmp.erase(i);
+      a = tmp;
+    } else if( opr == 's' ) {
+      map<int,int> counter;
+      set<int> tmp;
+      for(set<int>::iterator it = a.begin() ; it != a.end(); it++ ) counter[*it]++;
+      for(set<int>::iterator it = b.begin() ; it != b.end(); it++ ) counter[*it]++;
+      for(auto& i : counter)if( i.second != 2 ) tmp.insert(i.first);
+      a = tmp;
+    }
+  }
+  return a;
+}
+
+int main(){
+
+  char c;
+  int n,tmp;
+  while(cin >> c >> n){
+    pos = 0;
+    S.clear();
+    U.clear();
+    rep(i,n){
+      cin >> tmp;
+      S[c].insert(tmp);
+    }
+
+    while(true){
+      cin >> c >> n;
+      if( c == 'R' && n == 0 ) break;
+      rep(i,n){
+	cin >> tmp;
+	S[c].insert(tmp);
+      }
+    }
+
+    for(map<char,set<int> >::iterator it = S.begin(); it != S.end(); it++){
+	for(set<int>::iterator it2 = (it->second).begin(); it2 != (it->second).end();it2++){
+	  U.insert(*it2);
+	}
+    }
+
+    cin >> parse;
+
+    set<int> answer = expression();
+    int i = 0;
+    bool output = false;
+    for(set<int>::iterator iter = answer.begin() ; iter != answer.end() ; iter++,i++ ){
+      if( i ) cout << ' ';
+      output = true;
+      cout << *iter;
+    } 
+    if( !output ) cout << "NULL";
+    cout << endl;
+
+  }
+  return 0;
+}

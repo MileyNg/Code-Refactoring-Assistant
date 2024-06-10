@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstring>
+#include <map>
+using namespace std;
+
+int main() {
+	int n;
+	while(std::cin >> n){
+		if(!n){
+			return 0;
+		}
+		std::map<int, long long> sales;
+		while(n--){
+			int id;
+			long long unit, num;
+			std::cin >> id >> unit >> num;
+			sales[id] += unit * num;
+		}
+		map<int, long long>::iterator it;
+		bool found = false;
+		for(it = sales.begin(); it != sales.end(); it++){
+			if(it->second >= 1000000){
+				found = true;
+				std::cout << it->first << std::endl;
+			}
+		}
+		if(!found){
+			std::cout << "NA" << std::endl;
+		}
+	}
+	return 0;
+}

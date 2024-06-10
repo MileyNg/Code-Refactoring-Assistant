@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+typedef vector<int> vec;
+typedef vector<vec> mat;
+
+const int INF = 1e8;
+int min_steiner_tree(mat d, vector<int> t){
+  int n = d.size();
+  int m = t.size();
+  if(m<=1)return 0;
+
+  rep(k,n)rep(i,n)rep(j,n)d[i][j] = min(d[i][j],d[i][k]+d[k][j]);
+
+  mat ost(1<<m,vec(n,INF));
+  rep(i,m)rep(j,n)ost[1<<i][j] = d[t[i]][j];
+
+  rep(s,1<<m){
+    if(!(s & (s-1)))continue;
+    rep(p,n){
+      int sub = s;
+      do{
+	ost[s][p] = min(ost[s][p], ost[sub][p] + ost[s-sub][p]);
+	sub = (sub-1)&s;
+      }while(sub!=s);
+    }
+
+    rep(p,n){
+      rep(q,n){
+	ost[s][p] = min(ost[s][p], ost[s][q] + d[p][q]);
+      }
+    }
+  }
+
+  int ans = INF;
+  rep(s,1<<m){
+    rep(p,n){
+      ans = min(ans, ost[s][p] + ost[(1<<m)-1-s][p]);
+    }
+  }
+
+  return ans;
+}
+
+int main(){
+  int h,w;
+  while(cin >> h >> w,h){
+    mat d(h*w,vec(w*w,INF));
+    vector<int> t;
+    int a;
+    rep(i,h)rep(j,w){
+      cin >> a;
+      int p = i*w+j;
+      if(a)t.push_back(p);
+      if(p>=1)d[p][p-1] = d[p-1][p] = 1;
+      if(p>=w)d[p][p-w] = d[p-w][p] = 1;
+      d[p][p] = 0;
+    }
+
+    cout << h*w-1-min_steiner_tree(d,t) << endl;
+  }
+}

@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+typedef long long ll;
+
+int main() {
+	int n;
+	cin >> n;
+	ll c = 100000;
+	while (n>0) {
+		ll add = c*5/100;
+		int i = add%10;
+		int j = (add-i)%100;
+		int k = (add-i-j)%1000;
+		if ((add%1000)!=0) add = add-i-j-k+1000;
+		c += add;
+		n--;
+	}
+	cout << c << endl;
+	return 0;
+}

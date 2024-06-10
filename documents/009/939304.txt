@@ -1,0 +1,48 @@
+var cnt = 0;
+
+function merge(A, left, mid, right) {
+	var n1 = mid - left;
+	var n2 = right - mid;
+	var L = [];
+	var R = [];
+	for (var i = 0; i < n1; i++) {
+		L[i] = A[left + i];
+	}
+	for (var i = 0; i < n2; i++) {
+		R[i] = A[mid + i];
+	}
+	L[n1] = Number.MAX_VALUE;
+	R[n2] = Number.MAX_VALUE;
+	var i = 0;
+	var j = 0;
+	for (var k = left; k < right; k++) {
+		cnt++;
+		if (L[i] <= R[j]) {
+			A[k] = L[i];
+			i++;
+		}
+		else {
+			A[k] = R[j];
+			j++;
+		}
+	}
+}
+function mergeSort(A, left, right) {
+	if (left + 1 < right) {
+		var mid = Math.floor((left + right) / 2);
+		mergeSort(A, left, mid);
+		mergeSort(A, mid, right);
+		merge(A, left, mid, right);
+	}
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var n = +lines.shift();
+var A = lines.shift().trim().split(' ').map(function(i){return +i;});
+
+mergeSort(A, 0, n);
+
+console.log(A.join(' '));
+console.log(cnt);

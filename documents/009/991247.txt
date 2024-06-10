@@ -1,0 +1,44 @@
+// 2014/06/20 Tazoe
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+	while(true){
+		string s;
+		cin >> s;
+
+		if(cin.eof())
+			break;
+
+		int cnt = 0;
+		string::size_type index = 0;
+		while(true){
+			index = s.find("JOI", index);
+
+			if(index==string::npos)
+				break;
+
+			cnt++;
+			index++;
+		}
+		cout << cnt << endl;
+ 
+		cnt = 0;
+		index = 0;
+		while(true){
+			index = s.find("IOI", index);
+
+			if(index==string::npos)
+				break;
+
+			cnt++;
+			index++;
+		}
+		cout << cnt << endl;
+	}
+
+	return 0;
+}

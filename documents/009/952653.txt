@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+
+using namespace std;
+
+struct COLOR {
+	int R;
+	int G;
+	int B;
+};
+
+int main() {
+	string b;
+
+	string co = "0123456789abcdef";
+
+
+	COLOR samp[] = {{0,0,0},{0,0,255},{0,255,0},{0,255,255},{255,0,0}, 
+					{255, 0, 255},{255,255,0},{255,255,255}};
+
+	double d;
+	string name[] = {"black","blue","lime","aqua","red","fuchsia","yellow","white"};
+	while (1) {
+		cin >> b;
+		if (b[0] != '#') {
+			break;
+		}
+		int color[3] = {0};
+		int count = 0; 
+		double MIN = 100000.0;
+		int mc;
+		for (int i = 1; i < 7; i++) {
+			if (i % 2 != 0) {
+				for (int j = 0; j < co.size(); j++) {
+					if (b[i] == co[j]) {
+						color[count] += j*16;
+						break;
+					}
+				}
+			} else {
+				for (int j = 0; j < co.size(); j++) {
+					if (b[i] == co[j]) {
+						color[count] += j;
+						break;
+					}
+				}
+				count++;
+			}
+		}
+		for (int i = 0; i < 8; i++) {
+			d = sqrt((double)pow(samp[i].R-color[0],2)+(double)pow(samp[i].G-color[1],2)+(double)pow(samp[i].B-color[2],2));
+			if (d < MIN) {
+				MIN = d;
+				mc = i;
+			}
+		}
+		cout << name[mc] << endl;
+	}
+
+	return 0;
+}

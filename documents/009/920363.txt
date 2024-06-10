@@ -1,0 +1,26 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+int main(void){
+	int n;
+
+	cin >> n;
+	for(int i=0;i<n;i++){
+		int ball;
+		stack<int> b,c;
+		bool put=true;
+
+		for(int j=0;put&&j<10;j++){
+			cin >> ball;
+			if(b.empty()||b.top()<ball)
+				b.push(ball);
+			else if(c.empty()||c.top()<ball)
+				c.push(ball);
+			else
+				put=false;
+		}
+		cout << (put?"YES":"NO") << endl;
+	}
+}

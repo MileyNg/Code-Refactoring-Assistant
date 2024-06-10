@@ -1,0 +1,18 @@
+while set = gets()
+  if (set.nil? or set == "\n" or set == "\n\r") then break end
+  a, b = set.split().map{|x| x.to_i}
+  yakusu = Array.new()
+
+  (2..9).each do |n|
+    while a % n == 0 and b % n == 0 
+      yakusu.push(n)
+      a = a / n
+      b = b / n
+    end
+  end
+  saidai = 1
+  yakusu.each do |y|
+    saidai = saidai * y
+  end
+  puts "#{saidai} #{saidai * a * b}"
+end

@@ -1,0 +1,57 @@
+/*
+  AOJ 2508
+  Title:Project Management
+  @kankichi573
+*/
+#include <stdio.h>
+
+#define max(x,y) (((x)>(y))?(x):(y))
+#define min(x,y) (((x)<(y))?(x):(y))
+int n,m;
+int a[800],b[800],c[800];
+int search[800][800];
+int s_p[800];
+int memo[800];
+critical_path_date(int node)
+{
+  int i,max_,cr,prev,sno;
+  max_=0;
+  if(memo[node])
+    return(memo[node]);
+  if(node==0)
+    return(0);
+  for(i=0;i<s_p[node];i++)
+    {
+      prev=a[(sno=search[node][i])];
+      //printf("%d <= %d\n",node,prev);
+      cr=c[sno]+critical_path_date(prev);
+      max_=max(max_,cr);
+    }
+  memo[node]=max_;
+  return(max_);
+}
+
+
+int solve()
+{
+  return(critical_path_date(n-1));
+}
+main()
+{
+  int i,ret;
+
+  scanf("%d %d",&n,&m);
+  for(i=0;i<m;i++)
+    {
+      scanf("%d %d %d",&a[i],&b[i],&c[i]);
+      search[b[i]][s_p[b[i]]]=i;
+      s_p[b[i]]++;
+    }
+  ret=solve();
+  printf("%d\n",ret);
+  /*
+  for(i=1;i<n;i++)
+    printf("[%d]=%d\n",i,memo[i]);
+  return(0);
+  */
+}

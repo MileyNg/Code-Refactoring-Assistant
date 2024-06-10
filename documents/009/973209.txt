@@ -1,0 +1,38 @@
+$cmap = {"." => true, "*" => false}
+
+### subroutines
+
+### main
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  pl = []
+  n.times.each do
+    hl = gets.chomp.split("").map{|s| $cmap[s]}
+    pl.push hl
+  end
+
+  max_l = 0
+  for y in (0...n)
+    for x in (0...n)
+      l = 0
+      while x + l < n && y + l < n
+        tf = true
+        (0..l).each {|d| tf &&= pl[y + l][x + d]}
+        (0..l).each {|d| tf &&= pl[y + d][x + l]}
+
+        break if ! tf
+
+        if max_l <= l
+          max_l = l + 1
+        end
+
+        l += 1
+      end
+    end
+  end
+
+  puts max_l
+end

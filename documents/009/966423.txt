@@ -1,0 +1,18 @@
+#include<cstdio>
+#include<cmath>
+double pi(){return std::atan(1)*4;}
+double degToRad(double deg){
+  return deg * pi() / 180;
+}
+int main(){
+  double x=0,y=0,angle=0;
+  for(;;){
+    int leng,rot;
+    scanf("%d,%d",&leng,&rot);
+    if(!(leng|rot)){break;}
+    y+=cos(degToRad(angle))*leng;
+    x+=sin(degToRad(angle))*leng;
+    angle+=rot;
+  }
+  printf("%d\n%d\n",(int)x,(int)y);
+}

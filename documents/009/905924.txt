@@ -1,0 +1,43 @@
+#include<iostream>
+#include<cmath>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int main(){
+
+	int d,n,m;
+	int di,ki;
+	int ans,l,r,c;
+	vector<int> shop;
+
+	cin>>d>>n>>m;
+	
+
+	for(int i=0;i<n-1;i++){
+		cin>>di;
+		shop.push_back(di);
+	}
+	shop.push_back(0);
+	shop.push_back(d);
+
+	sort(shop.begin(),shop.end());
+
+	ans=0;
+	for(int i=0;i<m;i++){
+
+		cin>>ki;
+
+		l=0,r=shop.size()-1;
+
+		while(r-l>1){
+			c=(r+l)/2;
+			if(shop[c]-ki>0) r=c;
+			else l=c;
+		}
+		if(abs(shop[r]-ki)>abs(shop[l]-ki)) ans+=abs(shop[l]-ki);
+		else ans+=abs(shop[r]-ki);
+	}
+	cout<<ans<<endl;
+}

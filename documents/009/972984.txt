@@ -1,0 +1,28 @@
+#include<stdio.h>
+main(){
+  int n,a,b[1111111],c,d,e=0,f;
+  scanf("%d",&n);
+  for(a=0;a<n;a++){
+    scanf("%d",&b[a]);
+  }
+  for(c=0;c<n-1;c++){
+    for(d=n-1;d>c;d--){
+      if(b[d] < b[d-1]){
+	e = b[d];
+	b[d] = b[d-1];
+	b[d-1] = e;
+      }
+    }
+  }
+  for(f=0;f<n;f++){
+    printf("%d",b[f]);
+    if(n == f+1){
+      printf("\n");
+    }
+    else{
+      printf(" ");
+    }
+  }
+  return 0;
+}
+      

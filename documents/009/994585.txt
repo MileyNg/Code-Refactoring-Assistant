@@ -1,0 +1,49 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cctype>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int num(char *buf, int &i)
+{
+    int n = buf[i++] - '0';
+    while(isdigit(buf[i])) n = n*10 + buf[i++] - '0';
+    return n;
+}
+
+int solve(char *buf, int &i)
+{
+    int ans = 0;
+    ++i;    // skip '['
+
+    if (isdigit(buf[i])) {
+        ans = num(buf, i) / 2 + 1;
+    } else {
+        vector<int> v;
+        while (buf[i] == '[') {
+            v.push_back(solve(buf, i));
+        }
+        sort(v.begin(), v.end());
+
+        for (int i = 0; i < v.size() / 2 + 1; ++i) {
+            ans += v[i];
+        }
+    }
+
+    ++i;    // skip ']'
+    return ans;
+}
+
+int main()
+{
+    int n;
+    char buf[10001];
+
+    scanf("%d ", &n);
+    for (int i = 0; i < n; ++i) {
+        int j = 0;
+        gets(buf);
+        printf("%d\n", solve(buf, j));
+    }
+}

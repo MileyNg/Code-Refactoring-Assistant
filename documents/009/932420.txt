@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+void StrReplace (string &str, const string &from, const string &to);
+void ToLowerStr(string &str);
+
+int main(void)
+{
+    int num;
+    string W,T_i;
+    
+    num = 0;
+    cin >> W;
+    while (cin >> T_i) {
+        if (T_i == "END_OF_TEXT") {
+            break;
+        }
+        
+        StrReplace(T_i, ".", "");
+        StrReplace(T_i, "\"", "");
+        ToLowerStr(T_i);
+        
+        if (W == T_i) {
+            num++;
+        }
+    }
+    cout << num << endl;
+    
+    return 0;
+}
+
+void StrReplace (string& str, const string& from, const string& to) {
+    string::size_type pos = 0;
+    while(pos = str.find(from, pos), pos != string::npos) {
+        str.replace(pos, from.length(), to);
+        pos += to.length();
+    }
+}
+
+void ToLowerStr(string &str)
+{
+    int len = (int)str.length();
+    
+    for (int i = 0; i < len; i++) {
+        char ch = str.at(i);
+        if ( isupper(ch) ) {
+            str.at(i) = (char)tolower(ch);
+        }
+    }
+}

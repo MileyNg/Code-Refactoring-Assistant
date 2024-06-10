@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int isright(int, int, int);
+
+int main(void){
+	int i, ang1, ang2, ang3;
+	scanf("%d", &i);
+	while(i > 0){
+		scanf("%d %d %d", &ang1, &ang2, &ang3);
+		if(isright(ang1, ang2, ang3) == 1){
+			printf("YES\n");
+		}else{
+			printf("NO\n");
+			break;
+		}
+		i--;
+	}
+	return 0;
+}
+
+int isright(int ang1, int ang2, int ang3){
+	if((ang1*ang1 == ang2*ang2 + ang3*ang3) || (ang2*ang2 == ang3*ang3 + ang1*ang1) || (ang3*ang3 == ang2*ang2 + ang1*ang1)){return 1;}
+	else{return 0;}
+}

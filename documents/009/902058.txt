@@ -1,0 +1,188 @@
+#include <algorithm>
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+#include <vector>
+#include <queue>
+#include <cstdio>
+#include <cmath>
+#include <map>
+#define PI acos(-1.0)
+#define inf 0x3f3f3f3f
+#define E exp(double(1))
+#define maxn 80
+#define eps 1e-7
+using namespace std;
+
+#ifdef __int64
+    typedef __int64 LL;
+#else
+    typedef long long LL;
+#endif
+
+struct path{
+    int v,to;
+    path(){}
+    path(int to,int v):to(to),v(v){}
+};
+
+vector<path>edge_up[100];
+vector<path>edge_down[100];
+
+int n,m;
+
+int d[maxn],e[maxn];
+
+LL up[100][100],down[100][100];
+int fee1[100][100],c1;
+int fee2[100][100],c2;
+
+struct node{
+    int pos;
+    int fee;
+    LL vis;
+    node(){}
+    node(int p,int f,LL v):pos(p),fee(f),vis(v){}
+};
+queue<node>q;
+
+int getval(LL tmp,int pos){
+    tmp>>=(pos-1);
+    return tmp&1;
+}
+
+void bfs1(int st){
+    int i,j,k;
+    while(!q.empty())q.pop();
+    q.push(node(st,0,(LL)1<<(st-1)));
+    fee1[st][st]=0;
+    while(!q.empty()){
+        node s = q.front();
+        q.pop();
+        int sz = edge_up[s.pos].size();
+        for(int i=0;i<sz;i++){
+            int to = edge_up[s.pos][i].to;
+            int fee = s.fee + edge_up[s.pos][i].v +d[to];
+            if(fee>=fee1[st][to])continue;
+            LL v = s.vis|((LL)1<<(to-1));
+            fee1[st][to]=fee;
+//            printf("up %d-->%d  %d\n",st,to,fee);
+            up[st][to]=v;
+            q.push(node(to,fee,v));
+        }
+    }
+}
+void bfs2(int st){
+    int i,j,k;
+    while(!q.empty())q.pop();
+    q.push(node(st,0,(LL)1<<(st-1)));
+    fee1[st][st]=0;
+    while(!q.empty()){
+        node s = q.front();
+        q.pop();
+        int sz = edge_down[s.pos].size();
+        for(int i=0;i<sz;i++){
+            int to = edge_down[s.pos][i].to;
+            int fee = s.fee + edge_down[s.pos][i].v +d[to];
+            if(fee>=fee2[st][to])continue;
+            LL v = s.vis|((LL)1<<(to-1));
+            fee2[st][to]=fee;
+//            printf("down %d-->%d  %d\n",st,to,fee);
+            down[st][to]=v;
+            q.push(node(to,fee,v));
+        }
+    }
+}
+
+int can[70][70];
+int f[70][70];
+int dis[70][70];
+LL vis[70][70];
+
+int main(){
+    int i,j,k;
+    while(scanf("%d%d",&n,&m)!=EOF,n+m){
+        for(i=2;i<n;i++){
+            scanf("%d%d",&d[i],&e[i]);
+        }
+        d[1]=0,e[1]=0;
+        d[n]=0,e[n]=1000;
+        for(i=1;i<=n;i++){
+            edge_up[i].clear();
+            edge_down[i].clear();
+        }
+        memset(can,0,sizeof can);
+        memset(f,0,sizeof f);
+        for(i=0;i<m;i++){
+            int q,h,d;
+            scanf("%d%d%d",&q,&h,&d);
+            can[q][h]=true;f[q][h]=d;
+        }
+        for(i=1;i<=n;i++){
+            for(j=1;j<=n;j++){
+                if(i==j)continue;
+                if(!can[i][j])continue;
+                if(e[i]==e[j]){
+                    edge_up[i].push_back(path(j,f[i][j]));
+                    edge_down[i].push_back(path(j,f[i][j]));
+                }else if(e[i]<e[j]){
+                    edge_up[i].push_back(path(j,f[i][j]));
+                }else{
+                    edge_down[i].push_back(path(j,f[i][j]));
+                }
+            }
+        }
+
+        memset(dis,inf,sizeof dis);
+        memset(fee1,inf,sizeof fee1);
+        memset(fee2,inf,sizeof fee2);
+
+        for(i=1;i<=n;i++){
+            bfs1(i);
+            bfs2(i);
+        }
+//        for(i=1;i<=n;i++){
+//            for(j=1;j<=n;j++){
+//                printf("i:%d -> j:%d   %d  %lld\n",i,j,fee1[i][j],up[i][j]>>1);
+//            }
+//		}
+//		puts("0000000000000000000000000000");
+//		for(i=1;i<=n;i++){
+//            for(j=1;j<=n;j++){
+//                printf("i:%d -> j:%d   %d  %lld\n",i,j,fee2[i][j],down[i][j]>>1);
+//            }
+//		}
+        for(i=1;i<=n;i++){
+			for(j=1;j<=n;j++){
+				if(i==j)dis[i][j]=0;
+				else{
+					dis[i][j]=fee1[i][j]+fee2[j][i];
+					vis[i][j]=up[i][j]|down[j][i];
+				}
+				dis[i][j]=min(dis[i][j],inf);
+//				printf("%d  ",dis[i][j]);
+			}
+//			puts("");
+		}
+
+
+		for(k=1;k<=n;k++){
+			for(i=1;i<=n;i++){
+				for(j=1;j<=n;j++){
+					int val=dis[i][k]+dis[k][j];
+					for(int m=1;m<=n;m++){
+						if(getval(vis[i][k],m)&&getval(vis[k][j],m))val-=d[m];
+					}
+					dis[i][j]=min(dis[i][j],val);
+				}
+			}
+		}
+
+        if(dis[1][n]==inf){
+            puts("-1");
+        }else{
+            printf("%d\n",dis[1][n]);
+        }
+    }
+    return 0;
+}

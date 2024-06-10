@@ -1,0 +1,25 @@
+#include<stdio.h>
+int m[1000000];
+int main(void){
+    int n,i,j,cnt;
+    while(scanf("%d",&n)!=EOF){
+        cnt=0;
+        for(i=0;i<=n;i++){
+            m[i]=i;
+        }
+        m[1] = 0;
+        for(i=2;i<=n;i++){
+            for(j=2;i*j<=n;j++){
+                m[i*j]=0;
+            }
+        }
+        i=0;
+        while(i <= n){
+            if(m[i]!=0)
+                cnt++;
+            i++;
+        }
+        printf("%d\n",cnt);
+    }
+    return 0;
+}

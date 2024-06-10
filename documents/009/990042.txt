@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+void dif(int x,int y,int n,int m,char s[100][100],char a){
+  s[x][y]='\0';
+  loop(i,-1,2){
+    loop(j,-1,2){
+      if(!(i&&j)&&x+i>=0&&x+i<n&&y+j>=0&&y+j<m&&s[x+i][y+j]==a)dif(x+i,y+j,n,m,s,a);
+       }
+    }
+    //    cout<<s[0][0]<<endl;
+}
+
+int main(){
+  int n,m;
+  while(cin>>n>>m,n||m){
+    int co=0;
+    char s[100][100];
+    rep(i,n)cin>>s[i];
+    rep(i,n)
+      rep(j,m)
+      if(s[i][j]){co++;dif(i,j,n,m,s,s[i][j]);}
+    
+    cout<<co<<endl;
+  }
+
+
+}

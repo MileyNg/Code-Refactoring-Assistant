@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+int main(){
+    int n;
+    while(cin >> n){
+        vector<int> v(n);
+        vector<int> sum(n + 1);
+        REP(i, n) {
+            cin >> v[i];
+            sum[i + 1] = sum[i] + v[i];
+        }
+        bool dp[102][102] = {};
+        REP(i, n) dp[i][i + 1] = true;
+        for(int l = 2; l <= n; l++) {
+            for(int b = 0; b + l <= n; b++) {
+                int e = b + l;
+                for(int k = b + 1; k < e; k++) {
+                    if(dp[b][k] && dp[k][e] && (sum[k] - sum[b]) == (sum[e] - sum[k])) {
+                        dp[b][e] = true;
+                    }
+                }
+            }
+        }
+        int dp2[102] = {}; // dp[i] = v[0, i) が終わるまで
+        REP(i, n + 1) dp2[i] = INT_MAX;
+        dp2[0] = 0;
+        for(int i = 1; i <= n; i++) {
+            for(int j = 0; j < i; j++) {
+                if(dp[j][i]) {
+                    dp2[i] = min(dp2[i], dp2[j] + 1);
+                }
+            }
+        }
+        cout << dp2[n] << endl;
+    }
+    return 0;
+}

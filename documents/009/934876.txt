@@ -1,0 +1,24 @@
+#include<stdio.h>
+int main(void){
+   int today[366],i,j,a,b,work=3,month[12]={31,29,31,30,31,30,31,31,30,31,30,31};
+   char day[7][15]={{"Monday"},{"Tuesday"},{"Wednesday"},{"Thursday"},{"Friday"},{"Saturday"},{"Sunday"}};
+   for(i=0;i<=365;i++,work++){
+      if(work==8)work=1;
+      today[i]=work;
+
+   }
+   while(scanf("%d %d",&a,&b)!=EOF){
+      work=366;
+      if(a==0)break;
+      for(i=11;i>=a-1;i--){
+         work-=month[i];
+         work+=b;
+      }
+      printf("%s\n",&day[today[work]]);
+
+   }
+
+
+
+   return 0;
+}

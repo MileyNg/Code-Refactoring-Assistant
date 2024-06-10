@@ -1,0 +1,54 @@
+Edge = Struct.new(:u, :v, :d, :c)
+Cost = Struct.new(:q, :r)
+INF = 123456789
+
+loop do
+  n, m, c, s, g = gets.split.map(&:to_i)
+  break if n == 0
+  s -= 1
+  g -= 1
+  a = Array.new(n).map{Array.new}
+  m.times do
+    x, y, d, cc = gets.split.map(&:to_i)
+    a[x-1] << Edge.new(x-1, y-1, d, cc-1)
+    a[y-1] << Edge.new(y-1, x-1, d, cc-1)
+  end
+  gets  # ignore
+  costs = Array.new(c)
+  c.times do |i|
+    q = gets.split.map(&:to_i) + [INF]
+    r = gets.split.map(&:to_i)
+    costs[i] = Cost.new(q, r)
+  end
+
+  minv = INF
+  getCost = -> (train, dist) do
+    res = 0
+    i = 0
+    dist.times do |d|
+      i += 1 if d == costs[train].q[i]
+      res += costs[train].r[i]
+    end
+    res
+  end
+  search = -> (cur, train, dist, cost, visited) do
+    return if visited[cur]
+    if cur == g
+      val = cost + getCost.call(train, dist)
+      minv = val if minv > val
+      return
+    end
+    visited[cur] = true
+    a[cur].each do |edge|
+      if edge.c == train
+        search.call(edge.v, edge.c, dist + edge.d, cost, visited)
+      else
+        search.call(edge.v, edge.c, edge.d, cost + getCost.call(train, dist), visited)
+      end
+    end
+    visited[cur] = false
+  end
+
+  search.call(s, -1, 0, 0, Array.new(n, false))
+  p minv == INF ? -1 : minv
+end

@@ -1,0 +1,22 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+typedef pair<int, int> P;
+int main()
+{
+	int w, h, n;
+	while (cin >> w >> h >> n && w)
+	{
+		int fx, fy; cin >> fx >> fy;
+		P now = P(fx, fy);
+		int ans = 0;
+		for (int i = 1; i < n; i++)
+		{
+			int x, y; cin >> x >> y;
+			int xsa = now.first - x, ysa = now.second - y;
+			ans += xsa * ysa < 0 ? abs(xsa) + abs(ysa) : max(abs(xsa), abs(ysa));
+			now = P(x, y);
+		}
+		cout << ans << endl;
+	}
+}

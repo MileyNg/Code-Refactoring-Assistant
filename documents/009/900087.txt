@@ -1,0 +1,70 @@
+class Point
+  attr_accessor :x, :y
+
+  def initialize(x, y)
+    @x = x
+    @y = y
+  end
+end
+
+class Line
+  attr_accessor :a, :b
+
+  def initialize(a, b)
+    @a = a
+    @b = b
+  end
+
+  def side(p)
+    n = p.x * (a.y - b.y) + a.x * (b.y - p.y) + b.x * (p.y - a.y)
+    if n > 0
+      return 1
+    elsif n < 0
+      return -1
+    else
+      return 0
+    end
+  end
+end
+
+
+class Triangle
+  attr_accessor :a, :b, :c
+
+  def initialize(a, b, c)
+    @a = a
+    @b = b
+    @c = c
+  end
+
+  def pointInTriangle(p)
+    ab = Line.new(@a, @b)
+    bc = Line.new(@b, @c)
+    ca = Line.new(@c, @a)
+
+    pab = ab.side(p)
+    pbc = bc.side(p)
+    pca = ca.side(p)
+
+    if ((0 < pab) && (0 < pbc) && (0 < pca))
+      return 1
+    end
+    if ((0 > pab) && (0 > pbc) && (0 > pca))
+      return 1
+    end
+    return 0
+  end
+end
+
+while line = gets
+  x1, y1, x2, y2, x3, y3, xp, yp = line.split().map{|i| i.to_f}
+  triangle = Triangle.new(Point.new(x1, y1),
+                          Point.new(x2, y2),
+                          Point.new(x3, y3))
+  state = triangle.pointInTriangle(Point.new(xp, yp)) 
+  if state == 1
+    puts "YES"
+  else
+    puts "NO"
+  end
+end

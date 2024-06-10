@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(){
+	int  n, m;
+	char c;
+	//0:S 1:H 2:C 3:D
+	int trump[4][13];
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 13; j++){
+			trump[i][j] = 0;
+		}
+	}
+
+	cin >> n;
+
+	for(int i = 0; i < n; i++){
+		cin >> c;
+		cin >> m;
+		if(c == 'S')	trump[0][m-1] = 1;
+		else if(c == 'H')	trump[1][m-1] = 1;
+		else if(c == 'C')	trump[2][m-1] = 1;
+		else if(c == 'D')	trump[3][m-1] = 1;
+	}
+
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 13; j++){
+			if(trump[i][j] != 1){
+				if(i == 0)	cout << 'S' << " " << j+1 << endl;
+				else if(i == 1)	cout << 'H' << " " << j+1 << endl;
+				else if(i == 2)	cout << 'C' << " " << j+1 << endl;
+				else if(i == 3)	cout << 'D' << " " << j+1 << endl;
+			}
+		}
+	}
+	
+	return 0;
+}

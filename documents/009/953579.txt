@@ -1,0 +1,41 @@
+#include <stdio.h>
+int Binary(int ,int * ,int,int);
+int main()
+{
+  int n,q;
+  int A[20],M[2000];
+  int i,j;
+
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      scanf("%d",&A[i]);
+      //printf("%d\n",A[i]);
+    }
+  scanf("%d",&q);
+  for(i=0;i<q;i++)
+    {
+      scanf("%d",&M[i]);
+      //printf("%d\n",M[i]);
+    }
+
+  for(i=0;i<q;i++)
+    {
+      if(Binary(M[i],A,n,0)) printf("yes\n");
+      else printf("no\n");
+    }
+  return 0;
+}
+
+int Binary(int m,int *A,int n,int j)
+{
+  int ans=0;
+  // printf("%d %d\n",m,j);
+  if(m==A[j]) return 1;
+  if(j==n) return 0;
+  ans = Binary(m-A[j],A,n,j+1);
+  if(ans == 1) return 1;
+  ans = Binary(m,A,n,j+1);
+  if(ans == 1) return 1;
+  else return 0;
+}

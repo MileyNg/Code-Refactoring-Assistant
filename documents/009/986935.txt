@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+
+int prime[1229];
+bool ifnotPrime[10001];
+
+void setPrime(){
+    int i = 0;
+    ifnotPrime[0] = ifnotPrime[1] = 1;
+    for(int n = 2; n <= 10000; n++){
+        if(!ifnotPrime[n]){
+            prime[i] = n;
+            i++;
+            int m = n*n;
+            while(m <= 10000){
+                ifnotPrime[m] = 1;
+                m += n;
+            }
+        }
+    }
+}
+
+int main(){
+    setPrime();
+    int N;
+    cin >> N;
+    while(N > 0){
+        int M = N, a = 1;
+        for(int i = 0; M > 1 && i < 1229; i++){
+            int b = 1,c = 1;
+            while( M%prime[i] == 0 ){
+                c *= prime[i];
+                b += c;
+                M /= prime[i];
+            }
+            a *= b;
+        }
+        if(M > 1){
+            a *= 1+M;
+        }
+        a -= N;
+        if( a > N ){
+            cout << "abundant number" << endl;
+        }else if( a < N ){
+            cout << "deficient number" << endl;
+        }else{
+            cout << "perfect number" << endl;
+        }
+        cin >> N;
+    }
+    return 0;
+}

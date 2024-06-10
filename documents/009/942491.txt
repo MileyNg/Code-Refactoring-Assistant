@@ -1,0 +1,138 @@
+#include <iostream>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <vector>
+#include <cmath>
+#define pi 3.14159265358979323
+#define ll long long
+using namespace std;
+int a[1005];
+int inpeople[505];
+bool ppp[505];
+struct node
+{
+    int t1,t2;
+    char ch[5];
+    int num;
+};
+struct edge
+{
+    int t1,t2;
+    int num;
+    bool p;
+}e[505];
+int main()
+{
+    int n,maxn,num;
+    int m1,d1,m2,d2;
+    node no;
+    while(scanf("%d",&n) && n)
+    {
+        memset(a,0,sizeof(a));
+        memset(e,0,sizeof(e));
+        maxn=0;
+        num=0;
+        m2=d2=0;
+        for(int i=0;i<n;i++)
+        {
+            scanf("%d/%d %d:%d %s %d",&m1,&d1,&no.t1,&no.t2,no.ch,&no.num);
+            if(m1!=m2 || d1!=d2)
+            {
+                num=0;
+                m2=m1,d2=d1;
+            }
+            if(no.ch[0]=='I' && no.num==0)
+            {
+                for(int k=0;k<num;k++)
+                {
+                    e[k].t1=no.t1;
+                    e[k].t2=no.t2;
+                }
+                i++;
+                for(;i<n;i++)
+                {
+                    scanf("%d/%d %d:%d %s %d",&m1,&d1,&no.t1,&no.t2,no.ch,&no.num);
+                    if(m2!=m1 || d1!=d2)
+                    {
+                        m2=m1,d2=d1;
+                        for(int j=0;j<num;j++)
+                        {
+                            if(e[j].p==false) continue;
+                            a[e[j].num ]+=((24-e[j].t1)*60-e[j].t2);
+                        }
+                        num=0;
+                        e[num].t1=no.t1;
+                        e[num].t2=no.t2;
+                        e[num].num=no.num;
+                        e[num].p=true;
+                        num++;
+                        break;
+                    }
+                    if(i==n-1)
+                    {
+                        for(int j=0;j<num;j++)
+                        {
+                            if(e[j].p==false) continue;
+                            a[e[j].num ]+=((24-e[j].t1)*60-e[j].t2);
+                        }
+                        break;
+                    }
+                    if(no.ch[0]=='O' && no.num==0)
+                    {
+                        for(int j=0;j<num;j++)
+                        {
+                            if(e[j].p==false) continue;
+                            a[e[j].num ]+=((no.t1-e[j].t1)*60+no.t2-e[j].t2);
+                        }
+
+                        break;
+                    }
+                    if(no.ch[0]=='I')
+                    {
+                        e[num].t1=no.t1;
+                        e[num].t2=no.t2;
+                        e[num].num=no.num;
+                        e[num].p=true;
+                        num++;
+                    }
+                    else{
+                        for(int j=0;j<num;j++)
+                        {
+                            if(e[j].num == no.num)
+                            {
+
+                                a[no.num]+=((no.t1-e[j].t1)*60+no.t2-e[j].t2);
+                                e[j].p=false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else if(no.ch[0]=='I')
+            {
+                e[num].t1=no.t1;
+                e[num].t2=no.t2;
+                e[num].num=no.num;
+                e[num].p=true;
+                num++;
+            }
+            else
+            {
+                for(int j=0;j<num;j++)
+                {
+                    if(no.num==e[j].num)
+                    {
+                        e[j].p=false;
+                    }
+                }
+            }
+        }
+        for(int i=0;i<1000;i++)
+            if(maxn < a[i]) maxn=a[i];
+        cout<<maxn<<endl;
+    }
+    return 0;
+}

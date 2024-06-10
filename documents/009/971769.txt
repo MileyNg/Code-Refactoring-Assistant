@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin >> n;
+    for(int p=0; p < n; p++){
+        int h, m;
+        scanf("%d:%d", &h,&m);
+        double hAngle = (360/12)*h + (360.0/12/60)*m;
+        double mAngle = (360/60)*m;
+        double angle = abs(hAngle-mAngle);
+        if(0 <= angle && angle < 30) cout << "alert" << endl;
+        else if(90 <= angle && angle <= 180) cout << "safe" << endl;
+        else cout << "warning" << endl;
+    }
+}

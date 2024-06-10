@@ -1,0 +1,36 @@
+
+#include <cstdio>
+
+using namespace std;
+
+long long gcd(long long a, long long b)
+{
+	if (a<b) {
+		long long tmp = a; a = b; b = tmp;
+	}
+	long long tmp;
+	while (b!=0) {
+		tmp = b;
+		b = a%b;
+		a = tmp;
+	}
+	return a;
+}
+
+
+int main()
+{
+	//freopen("in.txt", "r", stdin);
+
+	long long a, b;
+
+	while (scanf("%lld%lld", &a, &b)==2) {
+		long long v1 = gcd(a, b);
+		long long v2 = a*b/v1;
+
+		printf("%lld %lld\n", v1, v2);
+
+	}
+
+	return 0;
+}

@@ -1,0 +1,40 @@
+CMAP = {">" => 0, "^" => 1, "<" => 2, "v" => 3}
+CMAP.default = -1
+
+DIREC = [[1, 0], [0, -1], [-1, 0], [0, 1]]
+
+while true
+  h, w = gets.chomp.split(" ").map{|s| s.to_i}
+  break if h == 0 && w == 0
+
+  room = []
+  visit = []
+
+  h.times do
+    hl = gets.chomp.split("").map{|s| CMAP[s]}
+
+    room.push hl
+    visit.push hl.map{false}
+  end
+
+  x = 0
+  y = 0
+  loop = true
+
+  while ! visit[y][x]
+    visit[y][x] = true
+    d = room[y][x]
+
+    if d < 0
+      puts [x, y].join(" ")
+      loop = false
+      break
+    end
+
+    dx, dy = DIREC[d]
+    x += dx
+    y += dy
+  end
+
+  puts "LOOP" if loop
+end

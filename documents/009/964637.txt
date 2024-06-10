@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+int check_intersection(const double ra, const double rb, const double distance){
+	if(distance >= (ra + rb)){
+		return 0;
+	}else if(ra > rb){
+		return ((distance + rb) < ra) ? 2 : 1;
+	}else{
+		return ((distance + ra) < rb) ? -2 : 1;
+	}
+}
+
+int main(){
+	int data_set;
+	std::cin >> data_set;
+	std::vector<double> xa(data_set), ya(data_set), ra(data_set), xb(data_set), yb(data_set), rb(data_set);
+	for(int i = 0; i < data_set; ++i){
+		std::cin >> xa[i] >> ya[i] >> ra[i] >> xb[i] >> yb[i] >> rb[i];
+	}
+	double distance;
+	for(int i = 0; i < data_set; ++i){
+		distance = sqrt(pow(xa.at(i) - xb.at(i), 2) + pow(yb.at(i) - yb.at(i), 2));
+		std::cout << check_intersection(ra.at(i), rb.at(i), distance) << std::endl;
+	}
+	return 0;
+}

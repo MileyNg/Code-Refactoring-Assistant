@@ -1,0 +1,120 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+void permute(vi& a,const vi& is)
+{
+	int n=a.size();
+	for(int i:is) a.push_back(a[i]);
+	a.erase(begin(a),begin(a)+n);
+}
+
+int solve(vi& hs,vi& as,vi& ds,vi& ss)
+{
+	{
+		vi is(1,0);
+		repi(i,1,hs.size()){
+			int a=max(as[0]-ds[i],0); // 与ダメージ
+			int b=max(as[i]-ds[0],0); // 被ダメージ
+			if(a==0)
+				if(b==0); // 与・被ダメージが0である敵はいなかったことにする
+				else return -1;
+			else
+				is.push_back(i);
+		}
+		permute(hs,is); permute(as,is); permute(ds,is); permute(ss,is);
+	}
+	
+	int n=hs.size();
+	vi ts(n); // 殺すために必要なターン数
+	vi ps(n); // 被ダメージ
+	repi(i,1,n){
+		int dam=max(as[0]-ds[i],0);
+		assert(dam>0);
+		ts[i]=(hs[i]+dam-1)/dam;
+		ps[i]=max(as[i]-ds[0],0);
+	}
+	
+	ll dam=0; // 自分の最初のターン目までの被ダメージ
+	repi(i,1,n) if(ss[i]>ss[0]) dam+=ps[i];
+	
+	{
+		vi is(n); iota(all(is),0);
+		sort(all(is),[&](int i,int j){return ss[i]>ss[j];});
+		permute(ts,is); permute(ps,is);
+		
+		rep(i,n) if(is[i]==0){
+			rotate(begin(ts),begin(ts)+i+1,end(ts)); ts.pop_back();
+			rotate(begin(ps),begin(ps)+i+1,end(ps)); ps.pop_back();
+			n--;
+			break;
+		}
+	}
+	
+	ll h=hs[0];
+	{
+		vi is(n); iota(all(is),0);
+		sort(all(is),[&](int i,int j){return ll(ts[i])*(ps[j])<ll(ts[j])*(ps[i]);});
+		permute(ts,is); permute(ps,is);
+	}
+	
+	vl sum(n+1);
+	per(i,n) sum[i]=sum[i+1]+ps[i];
+	
+	bool ok=true;
+	rep(i,n){
+		if(h<=dam+1.*ts[i]*sum[i]-ps[i]){
+			ok=false;
+			break;
+		}
+		dam+=ll(ts[i])*sum[i]-ps[i];
+	}
+	
+	return ok?dam:-1;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vi hs(n+1),as(n+1),ds(n+1),ss(n+1);
+		rep(i,n+1) cin>>hs[i]>>as[i]>>ds[i]>>ss[i];
+		
+		cout<<solve(hs,as,ds,ss)<<endl;
+		
+	}
+}

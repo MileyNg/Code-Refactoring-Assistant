@@ -1,0 +1,86 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+
+const int inf=1<<29;
+
+vi graph[50010];
+
+
+int n;
+int cost[8][8];
+
+map<int,string> iconvert;
+map<string,int> sconvert;
+
+int dist[50010];
+int index=0;
+
+void dijkstra(){
+	rep(i,index) dist[i]=inf;
+	priority_queue <pii,vector<pii>,greater<pii> > q;
+	pii init;
+	init.first=0;
+	init.second=0;
+	dist[0]=0;
+	q.push(init);
+	while(!q.empty()){
+		pii cur=q.top(); q.pop();
+		if(dist[cur.first] < cur.second)
+			continue;
+
+		//cout << iconvert[cur.first] << " "<< cur.second << endl;
+
+		rep(i,n)rep(j,n){
+			if(i==j) continue;
+			string next=iconvert[cur.first];
+			int a=next[i]-'0'-1;
+			int b=next[j]-'0'-1;
+			swap(next[i],next[j]);
+			if(dist[sconvert[next]] > cur.second+cost[a][b]){
+				dist[sconvert[next]]=cur.second+cost[a][b];
+				pii tar; tar.first=sconvert[next];tar.second=cur.second+cost[a][b];
+				q.push(tar);
+			}
+		}
+
+	}
+	return ;
+}
+
+
+int main(void){
+	cin >> n;
+	rep(i,n) rep(j,n) cin >> cost[i][j];
+
+	int tar[8];
+	rep(i,n) tar[i]=i+1;
+
+	do{
+		string add="";
+		rep(i,n) add+=(tar[i]+'0');
+		iconvert[index]=add;
+		sconvert[add]=index;
+		index++;
+		//cout << "add " << add << endl;
+
+	}while(next_permutation(tar,tar+n));
+
+	dijkstra();
+	int ans=0;
+	
+	rep(i,index) ans=max(dist[i],ans);
+
+	cout << ans << endl;
+	return 0;
+}

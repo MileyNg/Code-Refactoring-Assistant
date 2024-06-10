@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+
+using namespace std;
+
+
+constexpr int MAXELEMS = 10001;
+
+int main() {
+  int n;
+  cin >> n;
+
+  // prime numbers less than `MAXELEMS'
+  vector<int> primes;
+
+  // eratosthenes sieve
+  vector<bool> sieve(MAXELEMS, true);
+
+  sieve[0] = sieve[1] = false;
+
+  int sqrtelm = sqrt(MAXELEMS);
+  for (int i = 2; i < sqrtelm; i++) {
+    if (sieve[i] == true) {
+      for (int j = i * 2; j < MAXELEMS; j += i) {
+        sieve[j] = false;
+      }
+    }
+  }
+
+  for (int i = 0; i < MAXELEMS; i++) {
+    if (sieve[i] == true) {
+      primes.push_back(i);
+//      cout << "# " << i << endl;
+    }
+  }
+
+  int count = n;
+  for (int i = 0; i < n; i++) {
+    int input;
+    cin >> input;
+
+    for (int p : primes) {
+      if (p * p > input) {
+        break;
+      }
+      if (input % p == 0) {
+        count--;
+        break;
+      }
+    }
+  }
+
+  cout << count;
+}

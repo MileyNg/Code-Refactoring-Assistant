@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+#define PI 3.14159265358979
+
+using namespace std;
+
+int main()
+{
+	string s;
+	int d = 90;
+	double x = 0;
+	double y = 0;
+	while (cin >> s){
+		
+		//入力
+		if (s == "0,0"){
+			break;
+		}
+		string left = "";
+		string right = "";
+		for (int i = 0;; i++){
+			if (s[i] == ','){
+				for (int j = i + 1; j < (signed)s.length(); j++){
+					right += s[j];
+				}
+				break;
+			}
+			left += s[i];
+		}
+		int walk = stoi(left);
+		int turn = stoi(right);
+
+		//計算
+		double rad = d * PI / 180.0;
+		x += walk * cos(rad);
+		y += walk * sin(rad);
+		d = (d - turn + 360) % 360;
+	}
+	cout << (int)x << endl;
+	cout << (int)y << endl;
+	return 0;
+}

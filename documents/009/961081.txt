@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool p[100010];
+
+void erato(){
+    fill(p, p+100010, true);
+    p[0] = p[1] = false;
+    for(int i=0; i < 100010; i++){
+        if(!p[i]) continue;
+        for(int j=i+i; j < 100010; j += i){
+            p[j] = false;
+        }
+    }
+}
+
+int main(){
+    erato();
+    int n;
+    while(cin >> n){
+        int count = 0;
+        for(int i=1; i <= n; i++){
+            if(p[i] && p[n-i+1]) count++;
+        }
+        cout << count << endl;
+    }
+}

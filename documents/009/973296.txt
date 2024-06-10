@@ -1,0 +1,30 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+
+int isPerfect(int num){
+  int sum=0;
+  for(int i=1;i<=num/2;i++){
+    if(num%i==0)
+      sum+=i;
+    if(sum>num) return sum;
+  }
+  return num==1 ? 0 : sum;
+}
+
+
+int main(){
+
+  int num,sum;
+  while(1){
+    scanf("%d",&num);
+    if(num==0) break;
+    sum=isPerfect(num);
+    if(sum==num) printf("perfect number\n");
+    else if(sum<num) printf("deficient number\n");
+    else if(sum>num) printf("abundant number\n");
+  }
+  return 0;
+}

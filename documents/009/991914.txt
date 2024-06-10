@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+#define DELICIOUS 100
+#define DONUTS DELICIOUS
+
+int D, O, N, U, T, S;
+
+int e[110], c[110], h[110], a[110];
+
+int dp1[110][110], dp2[110], dp3[110][110];
+
+int main() {
+	cin >> S >> T >> U >> N >> O >> D;
+	
+	for (int i=0; i<T; i++) cin >> e[i] >> c[i];
+	for (int i=0; i<N; i++) cin >> h[i] >> a[i];
+	
+	memset(dp1, -1, sizeof(dp1));
+	dp1[0][0] = 0;
+	for (int i=0; i<T; i++) {
+		for (int j=i; j>=0; j--) {
+			for (int k=0; k<=S; k++) {
+				if (dp1[j][k] < 0) continue;
+				if (k+e[i]<= S) dp1[j+1][k+e[i]] = max(dp1[j+1][k+e[i]], dp1[j][k] + c[i]);
+			}
+		}
+	}
+	
+	memset(dp2, 0, sizeof(dp2));
+	for (int i=0; i<N; i++) {
+		for (int j=0; j<=DONUTS * U; j++) {
+			if (j + a[i] <= DONUTS * U) dp2[j + a[i]] = max(dp2[j + a[i]], dp2[j] + h[i]);
+		}
+	}
+	
+	memset(dp3, -1, sizeof(dp3));
+	dp3[0][S] = 0;
+	for (int i=0; i<D; i++) {
+		for (int j=0; j<=S; j++) {
+			if (dp3[i][j] < 0) continue;
+			for (int k=0; k<=j; k++) {
+				if (dp1[U][k] < 0) continue;
+				int nxj = min(j-k+O, S);
+				dp3[i+1][nxj] = max(dp3[i+1][nxj], dp3[i][j] + dp2[ dp1[U][k] ]);
+			}
+		}
+	}
+	
+	int ans = -1;
+	for (int i=0; i<=S; i++) ans = max(ans, dp3[D][i]);
+	cout << ans << endl;
+	
+	return 0;
+}

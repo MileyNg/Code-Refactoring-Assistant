@@ -1,0 +1,11 @@
+while 1:
+	n = input()
+	if n == 0: break
+	plant = map(int,raw_input().split())
+	diff = [plant[i+1] - plant[i] for i in range(n)]
+	p = 0
+	for d in list(set(diff)):
+		if diff.count(d) == 1:
+			q = diff.index(d)
+			p = max(p,q) if q < n-1 else max(p,q+1)
+	print plant[p]

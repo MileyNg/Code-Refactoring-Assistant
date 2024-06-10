@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int main()
+{
+	for(int h0,hmax;cin>>h0>>hmax && h0|hmax;){
+		int h,w; cin>>h>>w;
+		vs grid(h);
+		rep(i,h) cin>>grid[i];
+		map<char,int> dmgs;
+		{
+			int len; cin>>len;
+			rep(i,len){
+				char c; int x; cin>>c>>x;
+				dmgs[c]=x;
+			}
+		}
+		string dirs;
+		{
+			int len; cin>>len;
+			rep(i,len){
+				char c; int x; cin>>c>>x;
+				dirs.append(x,c);
+			}
+		}
+		int m=dirs.size();
+		int n; cin>>n;
+		vi pots(n);
+		rep(i,n) cin>>pots[i];
+		
+		vi decs(m);
+		for(int i=0,j=0,k=0;k<m;k++){
+			i+="\xff\x1\0\0"[string("UDLR").find(dirs[k])];
+			j+="\0\0\xff\x1"[string("UDLR").find(dirs[k])];
+			decs[k]=dmgs[grid[i][j]];
+		}
+		
+		vi sums(1<<n);
+		rep(i,1<<n) rep(j,n) if(i>>j&1) sums[i]+=pots[j];
+		
+		queue<tuple<int,int,int>> q;
+		q.emplace(0,h0,(1<<n)-1); // (step,hp,rest)
+		vvi vis(m+1,vi(1<<n));
+		bool res=false;
+		while(q.size()){
+			int ci,ch,cr; tie(ci,ch,cr)=q.front(); q.pop();
+			if(vis[ci][cr]) continue;
+			vis[ci][cr]=1;
+			if(ci==m){
+				res=true;
+				break;
+			}
+			ch-=decs[ci];
+			if(ch>0){
+				q.emplace(ci+1,ch,cr);
+				continue;
+			}
+			for(int s=cr;s;s=s-1&cr)
+				if(ch+sums[s]>0)
+					q.emplace(ci+1,ch+sums[s],cr^s);
+		}
+		cout<<(res?"YES":"NO")<<endl;
+	}
+}

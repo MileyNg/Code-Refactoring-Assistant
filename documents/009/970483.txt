@@ -1,0 +1,69 @@
+#include <vector>
+#include <queue>
+#include <iostream>
+using namespace std;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+#define iter(it,c) for(auto it=c.begin(); it!=c.end(); ++it)
+#define rep(i,b) for(int i=0; i<int(b); i++)
+typedef int Weight;
+int const inf = 1e8;
+struct Edge {
+    int src, dst;
+    Weight weight;
+    Edge(int src, int dst, Weight weight) :
+        src(src), dst(dst), weight(weight) { }
+};
+bool operator < (const Edge &e, const Edge &f) {
+    return e.weight != f.weight ? e.weight > f.weight : // !!INVERSE!!
+        e.src != f.src ? e.src < f.src : e.dst < f.dst;
+}
+typedef vector<Edge> Edges;
+typedef vector<Edges> Graph;
+typedef vector<Weight> Array;
+typedef vector<Array> Matrix;
+void dijk(Graph const&g, int s, vector<Weight> &dist, vi &prev) {
+    int n = g.size();
+    dist.assign(n, inf); dist[s] = 0;
+    prev.assign(n, -1);
+    priority_queue<Edge> q; // "e < f" <=> "e.weight > f.weight"
+    q.push(Edge(-2, s, 0));
+    while(q.size()) {
+        Edge e = q.top();
+        q.pop();
+        if (prev[e.dst] != -1) continue;
+        prev[e.dst] = e.src;
+        iter(f,g[e.dst]) {
+            if (dist[f->dst] > e.weight+f->weight) {
+                dist[f->dst] = e.weight+f->weight;
+                q.push(Edge(f->src, f->dst, e.weight+f->weight));
+            }
+        }
+    }
+}
+
+int main(){
+    int n,k;
+    while(cin>>n>>k, n|k){
+        Graph g(n);
+        rep(i,k){
+            int op; cin>>op;
+            if(op==1){
+                int a,b,c; cin>>a>>b>>c;
+                a--; b--;
+                g[a].push_back(Edge(a,b,c));
+                g[b].push_back(Edge(b,a,c));
+            } else {
+                int a,b; cin>>a>>b;
+                a--; b--;
+                vi d,p;
+                dijk(g,a,d,p);
+                if(d[b]==inf){
+                    cout << -1 << endl;
+                } else {
+                    cout << d[b] << endl;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+import itertools
+r=[0,2,4,6,8,1,3,5,7,9]
+def isId(Id,comb):
+	id=Id[:]
+	for i in comb:
+		id[id.index("*")]=i
+	s=0
+	for i in range(1,len(id)+1):
+		if i%2==1:
+			s+=int(id[-i])
+		else:
+			s+=r[int(id[-i])]
+	return True if s%10==0 else False
+	
+n=input()
+id=list(raw_input())
+l=id.count("*")
+m=input()
+num=raw_input().replace(" ","")
+ans=0
+for comb in itertools.product(num,repeat=l):
+	if isId(id,comb):
+		ans+=1
+print ans

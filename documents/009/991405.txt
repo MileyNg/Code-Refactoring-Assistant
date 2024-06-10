@@ -1,0 +1,81 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <array>
+#include <utility>
+inline int getInt() { int s; scanf("%d", &s); return s; }
+
+#define SIZE 10
+typedef array<array<int, SIZE>, SIZE> Table;
+
+int dx[] = {0, 1, 0, -1};
+int dy[] = {1, 0, -1, 0};
+int g_c;
+
+void fillColor(Table &state, int from, int to) {
+	if (from==to) return;
+	vector<pair<int,int>> stack;
+	stack.emplace_back(1,1);
+	while (!stack.empty()) {
+		int x,y; tie(x, y) = stack.back();
+		stack.pop_back();
+		REP(i, 4) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (state[ny][nx] == from) {
+				stack.emplace_back(nx,ny);
+				state[ny][nx] = to;
+			}
+		}
+	}
+}
+
+int countColor(Table & state) {
+	vector<pair<int, int>> stack;
+	stack.emplace_back(1, 1);
+	int cnt = 0;
+	while (!stack.empty()) {
+		int x,y; tie(x, y) = stack.back();
+		stack.pop_back();
+
+		REP(i, 4) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (state[ny][nx] == g_c) {
+				stack.emplace_back(nx, ny);
+				cnt++;
+				state[ny][nx] = -1;
+			}
+		}
+	}
+	return cnt;
+}
+
+int recursion(int depth, Table state) {
+	if (depth > 5) return countColor(state);
+	
+	int cnt = 1;
+	REP(i, 6) {
+		if(depth==5 && i != g_c) continue;
+		Table ntable = state;
+		ntable[1][1] = i;
+		fillColor(ntable, state[1][1], i);
+		cnt = max(recursion(depth+1, ntable),cnt);
+	}
+	return cnt;
+}
+
+int main() {
+	while (true) {
+		ll h,w;
+		cin >> h >> w 
+		if (h == 0) break;
+		
+		g_c = getInt() - 1;
+		Table table;
+		REP(y, SIZE) REP(x, SIZE) table[y][x] = -1;
+		REP(y, h) REP(x, w) table[y + 1][x + 1] = getInt()-1;
+		cout << recursion(1, table) << endl;
+	}
+}

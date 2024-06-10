@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(void) {
+	long i, n, val, tmin, trange;
+	
+	scanf("%ld\n", &n);
+	scanf("%ld\n", &tmin);
+	scanf("%ld\n", &trange);
+	trange -= tmin;
+	for(i=2;i<n;i++) {
+		scanf("%ld\n", &val);
+		if(trange < (val-tmin)) {
+			trange = val - tmin;
+		}
+		if(tmin > val) {
+			tmin = val;
+		}
+
+	}
+
+	printf("%ld\n", trange);
+
+	return 0;
+}

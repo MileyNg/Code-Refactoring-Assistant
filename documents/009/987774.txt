@@ -1,0 +1,79 @@
+#include <stdio.h>
+#define N 100005
+#define NIL -1
+
+struct Node{
+  int p, left, right;
+};
+struct Node T[N];
+int n;
+
+int getDepth(int p){
+  if(T[p].p == NIL) return 0;
+  else{
+    return getDepth(T[p].p) + 1; 
+  }
+}
+
+int getHeight(int p){
+  int i, count, max = 0;
+  for(i = 0; i < n; i++){
+    if(T[i].p == p){
+    count = getHeight(i) + 1;
+    if(max < count) max = count;
+    }
+  }
+  return max;
+}
+
+main(){
+  int i, c1, c2;
+  int id, tmp;
+  int dep[N], hei[N], sib[N], deg[N];
+
+  scanf("%d", &n);
+  for(i = 0; i < n; i++){
+    T[i].left = T[i].p = T[i].right = NIL;
+    deg[i] = 0;
+    sib[i] = NIL;
+  }
+  for(i = 0; i < n; i++){
+    scanf("%d%d%d", &id, &T[i].left, &T[i].right);
+
+    if(T[i].left == NIL && T[i].right != NIL){
+      c1 = T[i].right;
+      T[c1].p = id;
+      deg[i] = 1;
+
+    }else if (T[i].left != NIL && T[i].right == NIL){
+      c1 = T[i].left;
+      T[c1].p = id;
+      deg[i] = 1;
+
+    }else if(T[i].left != NIL && T[i].left != NIL){
+      deg[i] = 2;
+      c1 = T[i].left;
+      c2 = T[i].right;
+      T[c1].p = id;
+      T[c2].p = id;
+      sib[c1] = c2;
+      sib[c2] = c1;
+    }
+  }    
+  for(i = 0; i < n; i++){
+    dep[i] = getDepth(i);
+    hei[i] = getHeight(i);
+  }
+  
+  for(i = 0; i < n; i++){
+    printf("node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d, ", i, T[i].p, sib[i], deg[i], dep[i], hei[i]);
+    if(i == 0){
+      printf("root\n");
+    }else if(T[i].left == NIL && T[i].right == NIL){
+      printf("leaf\n");
+    }else{
+      printf("internal node\n");
+    }
+  }
+  return 0;
+}

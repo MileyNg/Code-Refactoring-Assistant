@@ -1,0 +1,30 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n;
+  while(scanf("%d", &n) && n){
+    int minp = 999, maxp = 0;
+    rep(j, n){
+      int sum = 0, s;
+      rep(i, 5){ scanf("%d", &s); sum += s;}
+      maxp = max(maxp, sum); minp = min(minp, sum);
+    }
+    printf("%d %d\n", maxp, minp);
+  }
+  return 0;
+}

@@ -1,0 +1,43 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+
+int change(int *); 
+int main(void)
+{
+	int w,n,i,flag=0;
+	int *amida;
+	char value[10];
+
+	gets(value);
+	sscanf(value,"%d",&w);
+	amida=(malloc(sizeof(int)*w));
+ 	for(i=0;i<=w;i++)
+		amida[i]=i+1;
+
+	while(flag!=1){
+		flag=change(amida);
+		for(i=0;i<w;i++)
+			printf("%d",amida[i]);
+		printf("\n");
+	}
+	free(amida);
+	return 0;
+}
+
+int change(int *amida)
+{
+
+	int a,b,temp,i;
+	
+	scanf("%d",&a);
+	if(a==1000)
+		return 1;
+	scanf("%d",&b);
+	if(b==1000)
+		return 1;		
+	temp=amida[a-1];
+	amida[a-1]=amida[b-1];
+	amida[b-1]=temp;
+	return 0;
+}

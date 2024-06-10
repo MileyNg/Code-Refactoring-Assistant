@@ -1,0 +1,38 @@
+#include<iostream>
+#include<algorithm>
+#include<cstdlib>
+using namespace std;
+bool index(int s,int k){
+  if(k<s) return true;
+  return false;
+}
+int main(){
+  int d,n,m;
+  while(cin >> d,d){
+    cin >> n >> m;
+    int s[d],k,ans = 0;
+    s[0] = 0;
+    for(int i=1;i<n;i++) cin >> s[i];
+    sort(s,s+n);
+    for(int i=0;i<m;i++){
+      cin >> k;
+      int max = n - 1;
+      int mins = 0;
+      while(max!=mins+1){
+	int a = (max + mins) / 2;
+	if(s[a]==k){
+	  mins = a;
+	  break;
+	}
+	if(index(s[a],k)) max = a;
+	else mins = a;
+      }
+      if(abs(k-s[max])<abs(k-s[mins])){
+	if(max==n-1) ans += min(abs(k-s[max]),abs(k-d));
+	else ans += abs(k-s[max]);
+      }else if(abs(k-s[max])>=abs(k-s[mins])) ans += abs(k-s[mins]);
+    }
+    cout << ans << endl;
+  }
+  return 0;
+}

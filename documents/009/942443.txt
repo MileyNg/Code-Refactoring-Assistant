@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+int a[200];
+int b[200];
+
+int main()
+{
+	int n,m;
+	scanf("%d",&n);
+	for(int i = 0; i < 2 * n; i++)
+	{
+		a[i] = i + 1;
+	}
+	scanf("%d",&m);
+	for(int i = 0; i < m; i++)
+	{
+		int w;
+		scanf("%d",&w);
+		if(w == 0)
+		{
+			for(int i = 0; i < n; i++)
+			{
+				b[i * 2] = a[i];
+				b[i * 2 + 1] = a[i + n];
+			}
+		}
+		else
+		{
+			int now = 0;
+			for(int i = w; i < 2 * n; i++)
+			{
+				b[now] = a[i];
+				now++;
+			}
+			for(int i = 0; i < w; i++)
+			{
+				b[now] = a[i];
+				now++;
+			}
+		}
+		for(int i = 0; i < 2 * n; i++)
+		{
+			a[i] = b[i];
+		}
+	}
+	for(int i = 0; i < 2 * n; i++)
+	{
+		printf("%d\n",a[i]);
+	}
+	getchar();
+	getchar();
+	return 0;
+}

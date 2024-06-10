@@ -1,0 +1,14 @@
+n, q = gets.split.map(&:to_i)
+s = (0...n).map {|i| [i]}
+q.times do
+  com, x, y = gets.split.map(&:to_i)
+  case com
+  when 0
+    s[y].each do |i|
+      s[x] << i
+      s[i] = s[x]
+    end
+  when 1
+    puts s[x].include?(y) ? 1 : 0
+  end
+end

@@ -1,0 +1,63 @@
+#include<stdio.h>
+#define MAX 100005
+#define NIL -1
+
+
+struct Node{ int p, l, r;};
+struct Node T[MAX]; 
+
+int keiro(int u){
+  if(T[u].p==NIL)return 0;
+  else{
+    return 1+keiro(T[u].p);
+  }
+}
+
+int kodomo(int u){
+  if(u == NIL)return 0;
+
+  else{
+    if(T[u].r==-1)printf("%d",u);
+    else{
+      printf("%d, ",u);
+      kodomo(T[u].r);
+    }
+  }
+}
+
+void print(int u){
+  printf("node %d: parent = %d, depth = %d, ",u,T[u].p,keiro(u));
+  if(T[u].p==NIL)printf("root, [");
+  else if(T[u].l==NIL)printf("leaf, [");
+  else printf("internal node, [");
+  kodomo(T[u].l);
+  printf("]\n");
+}
+
+main(){
+  int i, j, d, v, c, l,n;
+
+  scanf("%d", &n);
+
+  for ( i = 0; i < n; i++ ) {
+    T[i].p = T[i].l = T[i].r = NIL;
+  }
+
+  for ( i = 0; i < n; i++ ){
+    scanf("%d %d", &v, &d);
+    for ( j = 0; j < d; j++ ){
+      scanf("%d", &c);
+      T[c].p=v;
+      if(j==0){      
+	T[v].l=c;
+      }
+      else{
+	T[l].r=c;
+      }
+      l=c;
+      }
+    }
+
+  for ( i = 0; i < n; i++ ) print(i);
+  return 0;
+}

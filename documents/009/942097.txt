@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const double inf = 1e20;
+
+int main() {
+  for(int n, m; cin >> n >> m && (n|m);) {
+    vector<vector<double> > g(n, vector<double>(n));
+    for(int i = 0; i < n; ++i) {
+      for(int j = 0; j < n; ++j) {
+        cin >> g[i][j];
+      }
+    }
+    vector<double> h(n, 1.0);
+    for(int t = 0; t < m-1; ++t) {
+      vector<double> nh(n, -inf);
+      for(int i = 0; i < n; ++i) {
+        for(int j = 0; j < n; ++j) {
+          nh[j] = max(nh[j], h[i] * g[i][j]);
+        }
+      }
+      h = nh;
+    }
+    printf("%.2f\n", *max_element(h.begin(), h.end()));
+  }
+  return 0;
+}

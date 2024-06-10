@@ -1,0 +1,65 @@
+
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<algorithm>
+
+using namespace std;
+
+int dp[11][2001] = {{-1}};		//	dp[ジャンル][売却総数]
+
+int main (void){
+	int have;		//持ってる数
+	int sell;		//売る数
+	int value[16][2048] = {0};
+	int kindnum[16] = {0};
+
+	int ValBuffer,KindBuffer;
+
+	int SoldField[10][2048];	//SoldField[ジャンル][売却数]
+
+	scanf("%d%d",&have,&sell);
+	for(int i=0;i<have;i++){
+		scanf("%d%d",&ValBuffer,&KindBuffer);
+		value[KindBuffer][kindnum[KindBuffer]] = ValBuffer;
+		kindnum[KindBuffer]++;
+	}
+	for(int i=0;i<10;i++){
+		sort(value[i],value[i]+kindnum[i]);
+	}
+
+	for(int i=1;i<=10;i++){
+		SoldField[i][0] = 0;
+		for(int j=1;j<=sell;j++){
+			if(j<=kindnum[i]){
+				SoldField[i][j] = SoldField[i][j-1] + value[i][kindnum[i]-j] + (j-1)*2;
+			}else break;
+		}
+	}
+	for(int i=0;i<=sell;i++){
+		dp[1][i] = SoldField[1][i];
+	}
+	//puts("###DBG0");
+
+	for(int i=1;i<=10;i++){		//ジャンル十種
+		for(int j=0;j<=sell;j++){		//売る冊数<=sell
+			if(j<=kindnum[i]){			//売る冊数<=kindnum[i]
+				for(int k=j;k<=sell;k++){		//売られた冊数<=sell
+					if(dp[i][k]!=-1){
+						for(int l=0;l<=sell;l++){		//次の種類を売る冊数
+							if(k+l>sell)break;
+							dp[i+1][k+l] = max(dp[i][k]+SoldField[i+1][l],dp[i+1][k+l]);
+						}
+					}
+				}
+			}else break;
+		}
+		//printf("kind = %d\n",i);
+	}
+
+	int ans = dp[10][sell];
+
+	printf("%d\n",ans);
+
+	return 0;
+}

@@ -1,0 +1,54 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <functional>
+
+using namespace std;
+
+inline int toInt(std::string s) {int v; std::istringstream sin(s);sin>>v;return v;}
+template<class T> inline std::string toString(T x) {std::ostringstream sout;sout<<x;return sout.str();}
+
+int main(int argc, char const *argv[])
+{
+	int a,L;
+	int max,min;
+	string s;
+	vector<int>::iterator it;
+	int i,j;
+
+	while(1){
+		cin>>a>>L;
+		if(a+L==0) break;
+
+		vector<int> v;
+		v.push_back(a);
+
+		for(i=1;;i++){
+
+			s=toString<int>(a);
+
+			for(int i2=0;i2<L-s.size();i2++){
+				s+='0';
+			}
+			
+			sort(s.begin(), s.end());
+			min=toInt(s);
+			sort(s.begin(), s.end(),greater<int>());
+			max=toInt(s);
+			
+			a=max-min;
+			it=find(v.begin(), v.end(),a);
+			if(it!=v.end()) break;
+
+			v.push_back(a);
+
+		}
+		j=distance(v.begin(),it);
+		cout<<j<<" "<<a<<" "<<i-j<<endl;
+
+
+	}
+
+	return 0;
+}

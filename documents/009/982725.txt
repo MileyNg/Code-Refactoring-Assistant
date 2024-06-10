@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest5
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                //空白で分割する
+                var line_origin = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(line_origin))
+                {
+                    break;
+                }
+                var line = line_origin.Split();
+                //配列の要素、すべてに処理を行う
+                var num_array = Array.ConvertAll(line, len => int.Parse(len));
+
+                Array.Sort(num_array);
+
+                //最大公約数
+                int max = 0;
+                int small = num_array[0];
+                int big = num_array[1];
+                while (true)
+                {
+                    int ans = big % small;
+                    if (ans == 0)
+                    {
+                        max = small;
+                        break;
+                    }
+                    else
+                    {
+                        int tmp = big;
+                        big = small;
+                        small = ans;
+                    }
+
+                }
+                int min = num_array[0] * num_array[1] / max;
+
+                Console.WriteLine("{0} {1}", max.ToString(), min.ToString());
+            }
+        }
+    }
+}

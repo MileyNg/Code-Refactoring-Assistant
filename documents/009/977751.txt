@@ -1,0 +1,29 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+
+void main() {
+  foreach (string line; stdin.lines) {
+    auto a = line.chomp.split.map!(to!int).array;
+    auto b = readln.chomp.split.map!(to!int).array;
+
+    int hit, blow;
+    foreach (i, ai; a) {
+      foreach (j, bj; b) {
+        if (ai == bj) {
+          if (i == j) {
+            hit++;
+          } else {
+            blow++;
+          }
+        }
+      }
+    }
+
+    writeln(hit, " ", blow);
+  }
+}

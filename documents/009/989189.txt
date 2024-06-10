@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+#define rreps(v, f, l) for (int v = (l), v##_ = (f); v >= v##_; --v)
+#define rrep(v, n) rreps(v, 0, n - 1)
+#define rlep(v, n) rreps(v, 1, n)
+#define show_a(a, size) rep(a##_it, size) std::cout << a[a##_it] << " \n"[a##_it == a##_it_ - 1];
+#define show_v(v) show_a(v, v.size())
+#define debug(x) std::cerr << #x << " = " << (x) << "\n";
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+struct Quaternion {
+  int x, y, z, w;
+  Quaternion(){}
+  Quaternion(int k, int j, int i, int x) : x(x), y(i), z(j), w(k) {}
+  Quaternion mul(const Quaternion& q) const {
+    return Quaternion(
+        x * q.w + y * q.z - z * q.y + w * q.x,
+        x * q.z - y * q.w + z * q.x + w * q.y,
+        x * q.y + y * q.x + z * q.w - w * q.z,
+        x * q.x - y * q.y - z * q.z - w * q.w
+        );
+  }
+  void print(){
+    printf("%d %d %d %d\n", x, y, z, w);
+  }
+};
+
+int main()
+{
+  int n;
+  while (n = in(), n){
+    rep(i, n){
+      Quaternion a(in(), in(), in(), in());
+      Quaternion b(in(), in(), in(), in());
+      Quaternion c = a.mul(b);
+      c.print();
+    }
+  }
+  return 0;
+}

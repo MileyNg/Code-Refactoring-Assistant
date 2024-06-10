@@ -1,0 +1,42 @@
+#include<stdio.h>
+
+#define N 10000
+
+int judge(long);
+
+int main(void){
+  long data[N];
+  int cnt=0,flag=0,ans=0;
+  int i;
+
+  while(scanf("%d",&data[cnt])!=EOF){
+    
+    //同じデータは読み飛ばす
+    for(i=0;i<cnt;i++){
+      if(data[cnt]==data[i]) flag=1;
+    }
+
+    if(flag==0){
+      //素数を判定
+      if(judge(data[cnt])==1) ans++;
+    }
+
+    flag=0;
+
+    cnt++;
+  }
+
+  printf("%d\n",ans);
+
+  return 0;
+}
+
+
+int judge(long work){
+  long i;
+
+  for(i=2;i<work;i++){
+    if(work%i==0) return -1;
+  }
+  return 1;
+}

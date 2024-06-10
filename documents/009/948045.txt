@@ -1,0 +1,40 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+int main()
+{
+  string h;
+  getline(cin,h);
+  while(h.size()!=1)
+  {
+   stack<char>s;
+   bool l=true;
+   for(int i=0;i<h.size();i++)
+   {
+    if(h[i]=='(' || h[i]=='[')s.push(h[i]);
+    else if(h[i]==')' )
+    {
+     if(s.empty())
+     {
+      l=false;
+      break;
+     }
+     if(s.top()=='(')s.pop();    
+    }       
+    else if(h[i]==']' )
+    {
+     if(s.empty())
+     {
+      l=false;
+      break;
+     }
+     if(s.top()=='[')s.pop();    
+    }
+   }
+   if(s.empty() && l)cout<<"yes"<<endl;
+   else cout<<"no"<<endl;
+   getline(cin,h);
+  }
+  
+  return 0;
+}

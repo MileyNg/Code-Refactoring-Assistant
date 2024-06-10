@@ -1,0 +1,37 @@
+def min(x, y)
+	return (x) if x < y
+	y
+end
+
+s = gets.split(' ')
+w, h, n = s[0].to_i, s[1].to_i, s[2].to_i
+
+tx = -1
+ty = -1
+sum = 0
+
+n.times {
+	s = gets.split(' ')
+	nx, ny = s[0].to_i, s[1].to_i
+	if (tx < 0)
+		tx = nx
+		ty = ny
+	end
+	dx = nx - tx
+	dy = ny - ty
+	
+	if (dx * dy >= 0)
+		dx = -dx if (dx < 0)
+		dy = -dy if (dy < 0)
+		m = min(dx, dy)
+		sum = sum + dx + dy - m
+	else 
+		dx = -dx if (dx < 0)
+		dy = -dy if (dy < 0)
+		sum = sum + dx + dy
+	end
+	tx = nx
+	ty = ny
+}
+
+puts sum

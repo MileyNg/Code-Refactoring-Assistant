@@ -1,0 +1,23 @@
+#include<stdio.h>
+#include<string.h>
+char S[505];
+int dp[505][505];
+int dfs(int r,int l)
+{
+	int i,R=0;
+	if(dp[r][l]!=-1)return dp[r][l];
+	if(l-r<0)return 1;
+	if(l-r<2)return 0;
+	if(S[r]!='m'||S[l]!='w')return 0;
+	for(i=r+1;i<l;i++)
+		if(S[i]=='e')
+			R|=dfs(r+1,i-1)&dfs(i+1,l-1);
+	return dp[r][l]=R;
+}
+int main()
+{
+	scanf("%s",S);
+	memset(dp,-1,sizeof(dp));
+	printf("%s\n",dfs(0,strlen(S)-1)?"Cat":"Rabbit");
+	return 0;
+}

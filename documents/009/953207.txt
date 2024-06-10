@@ -1,0 +1,35 @@
+#include <iostream>
+#include <bitset>
+#include <string>
+
+int main(void) {
+    u_int n;
+    std::string event;
+
+    std::cin >> n;
+    for (u_int i = 0; i < n; ++i) {
+        std::bitset<4> runner;
+        u_int out = 0, score = 0;
+
+        do {
+            std::cin >> event;
+            if ("HIT" == event) {
+                runner <<= 1;   // 走者を1つずつ進める
+                runner.set(0);  // 一塁に走者を置く
+                if (runner.test(3)) { // ホームインしたかどうか
+                    ++score;
+                    runner.reset(3);
+                }
+            } else if ("HOMERUN" == event) {
+                score += runner.count() + 1;
+                runner.reset(); // 走者をリセット
+            } else if ("OUT" == event) {
+                ++out;
+            }
+        } while (out != 3);
+
+        std::cout << score << std::endl;
+    }
+
+    return 0;
+}

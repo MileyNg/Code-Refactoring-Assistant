@@ -1,0 +1,44 @@
+#include<stdio.h>
+main()
+{
+	int m = 0, f = 0, r = 0;
+	
+	scanf("%d %d %d", &m, &f, &r);
+	
+	while((m != -1) || (f != -1) || (r != -1))
+	{
+		if((m == -1) || (f == -1))
+		{
+			puts("F");
+		}
+		else if((m + f) >= 80)
+		{
+			puts("A");
+		}
+		else if((65 <= (m + f)) && ((m + f) < 80))
+		{
+			puts("B");
+		}
+		else if((50 <= (m + f)) && ((m + f) < 65))
+		{
+			puts("C");
+		}
+		else if((30 <= (m + f)) && ((m + f) < 50))
+		{
+			if(r >= 50)
+			{
+				puts("C");
+			}
+			else
+			{
+				puts("D");
+			}
+		}
+		else if(30 > (m + f))
+		{
+			puts("F");
+		}
+		scanf("%d %d %d", &m, &f, &r);
+	}
+	return 0;
+}

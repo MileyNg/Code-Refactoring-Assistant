@@ -1,0 +1,58 @@
+#include<stdio.h>
+
+int x,y,t[20][5];
+
+int mat(int n){
+	if(n<0)return 0;
+	else{
+		//printf("x=%d,y=%d,t[%d][0]=%d,t[%d][1]=%d,t[%d][2]=%d\n",x,y,n,t[n][0],n,t[n][1],n,t[n][2]);
+		if(t[n][0]==x&&t[n][1]==y&&t[n][2]==0){
+			t[n][2]=1;
+			return 1;
+		}else{
+			mat(n-1);
+		}
+	}
+}
+
+int main(){
+	int n,m,i,ch,tmp,cnt,mo;
+	char ft;
+	while(1){
+		scanf("%d",&n);
+		if(n==0)break;
+		cnt=0;
+		x=10;
+		y=10;
+		for(i=0;i<n;i++){
+			scanf("%d %d",&t[i][0],&t[i][1]);
+			t[i][2]=0;
+		}
+		scanf("%d",&m);
+		while((ch=getchar())!='\n');
+		for(i=0;i<m;i++){
+			scanf("%c %d",&ft,&mo);
+			while((ch=getchar())!='\n');
+			if(ft=='N'){
+				tmp=y+mo;
+				for(;y<=tmp;y++)if(mat(n-1))cnt++;
+				y--;
+			}else if(ft=='S'){
+				tmp=y-mo;
+				for(;y>=tmp;y--)if(mat(n-1))cnt++;
+				y++;
+			}else if(ft=='E'){
+				tmp=x+mo;
+				for(;x<=tmp;x++)if(mat(n-1))cnt++;
+				x--;
+			}else if(ft=='W'){
+				tmp=x-mo;
+				for(;x>=tmp;x--)if(mat(n-1))cnt++;
+				x++;
+			}
+		}
+		if(cnt==n)printf("Yes\n");
+		else printf("No\n");
+	}
+	return 0;
+}

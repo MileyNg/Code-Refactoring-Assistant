@@ -1,0 +1,41 @@
+#include<stdio.h>
+ 
+#define NMAX 1000005
+int list[NMAX];
+int binsearch(int l,int r,int ans){
+    int mid=(l+r)/2;
+    if(r<l){
+        return 0;
+    }else if(ans==list[mid]){
+        return 1;
+    }else if(ans<list[mid]){
+        return binsearch(l,mid-1,ans);
+    }else{
+        return binsearch(mid+1,r,ans);
+    }
+}
+int judge(int* a,int* b){
+    return (*a)-(*b);
+}
+ 
+int main(){
+    int n,q;
+    int i;
+    int buf,ans=0;
+    scanf("%d",&n);
+    for(i=0;i<n;i++){
+        scanf("%d",&list[i]);
+    }
+    qsort(list,n,sizeof(list[0]),judge);
+    scanf("%d",&q);
+    for(i=0;i<q;i++){
+        scanf("%d",&buf);
+        if(binsearch(0,n-1,buf)){
+            ans++;
+        //  printf("%d\n",buf);
+        }
+    }
+    printf("%d\n",ans);
+    return 0;
+ 
+}

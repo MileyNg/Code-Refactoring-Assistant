@@ -1,0 +1,17 @@
+n = gets.chomp.to_i
+
+max_v = 0
+max_a = n + 1
+
+n.times.each do
+  a, v = gets.chomp.split(" ").map{|s| s.to_i}
+
+  if max_v < v
+    max_v = v
+    max_a = a
+  elsif max_v == v && max_a > a
+    max_a = a
+  end
+end
+
+puts [max_a, max_v].join(" ")

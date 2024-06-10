@@ -1,0 +1,38 @@
+#include <stdio.h>
+#define N 10000 
+int sosuu(int );
+int main(){
+  int i,j,n,a[N],key,c=0;
+  scanf("%d",&n);
+
+  for(i=0;i<n;i++){
+    scanf("%d",&a[i]);
+  }
+
+  for(i=1;i<n;i++){
+    key=a[i];
+    j=i-1;
+    while(j>=0 && a[j]>key){
+      a[j+1]=a[j];
+      j--;
+    }
+    a[j+1]=key;
+  }
+
+  for(i=0;i<n;i++){
+    if (!((i!=0 && a[i]==a[i-1] )|| a[i]==1)){
+     c += sosuu(a[i]); 
+    }
+  }
+  printf("%d\n",c);
+  return 0;
+}
+
+int sosuu(int x){
+  int i,j=0;
+
+  for(i=2; i <= x/2 ;i++){
+    if(x%i==0)return 0;
+  }
+  return 1;
+}

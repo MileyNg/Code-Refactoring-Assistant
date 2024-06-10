@@ -1,0 +1,17 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+int main(){
+	string w, t;
+	cin >> w;
+	transform(w.begin(), w.end(), w.begin(), ::tolower);
+	int ans = 0;
+	while(cin >> t){
+		transform(t.begin(), t.end(), t.begin(), ::tolower);
+		if(t == "END_OF_TEXT") break;
+		if(w == t) ans++;
+	}
+	cout << ans << endl;
+}

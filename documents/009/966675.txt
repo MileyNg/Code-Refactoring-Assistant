@@ -1,0 +1,110 @@
+#include<stdio.h>
+
+void initialize(int array[], int n);
+void process(int input[], int copy[], int *result, int n);
+void copying(int input[], int copy[], int n);
+void output(int array[], int n, int result);
+
+main()
+{
+	int i = 0, n = 0, result = 0;
+	while(scanf("%d", &n), n > 0)
+	{
+		int input[n];
+		int copy[n];
+		initialize(input, n);
+		initialize(copy, n);
+		for(i = 0; i < n; i++)
+		{
+			scanf("%d", &input[i]);
+		}
+		process(input, copy, &result, n);
+		output(copy, n, result);
+		result = 0;
+	}
+	return 0;
+}
+void initialize(int array[], int n)
+{
+	int i= 0;
+	for(i = 0; i < n; i++)
+	{
+		array[i] = 0;
+	}
+}
+void process(int input[], int copy[], int *result, int n)
+{
+	*result += 1;
+	int i = 0, j = 0, count = 0, flag = 0;
+	for(i = 0; i < n; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			if(input[i] == input[j])
+			{
+				count++;
+			}
+		}
+		copy[i] = count;
+		count = 0;
+	}
+	for(i = 0; i < n; i++)
+	{
+		if(input[i] == copy[i])
+		{
+			flag++;
+		}
+		else
+		{
+			continue;
+		}
+	}
+	/*
+	printf("result = %d\ninput = ", *result);
+	for(i = 0; i < n; i++)
+	{
+		printf("%d ", input[i]);
+	}
+	printf("\ncopy = ");
+	for(i = 0; i < n; i++)
+	{
+		printf("%d ", copy[i]);
+	}
+	printf("\n");
+	*/
+	if(flag > n - 2)
+	{
+		*result -= 1;
+		return;
+	}
+	else
+	{
+		copying(input, copy, n);
+		process(input, copy, result, n);
+	}
+}
+void copying(int input[], int copy[], int n)
+{
+	int i = 0;
+	for(i = 0; i < n; i++)
+	{
+		input[i] = copy[i];
+		copy[i] = 0;
+	}
+}
+void output(int array[], int n, int result)
+{
+	int i = 0;
+	printf("%d\n", result);
+	for(i = 0; i < n; i++)
+	{
+		if(i < n - 1)
+		{
+			printf("%d ", array[i]);
+		}
+		else
+		{
+			printf("%d\n", array[i]);
+		}
+	}
+}

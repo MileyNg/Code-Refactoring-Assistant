@@ -1,0 +1,13 @@
+while (ln = gets.chomp) != '0 0'
+  h, w = ln.split.map(&:to_i)
+
+  h.times do |i|
+    fmt = '#.'
+    fmt = '.#' if i % 2 > 0
+    s = fmt * (w.to_f / 2).ceil
+    s = s[0, s.length-1] if w.to_f % 2 > 0
+    puts s
+  end
+
+  puts
+end

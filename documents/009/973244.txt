@@ -1,0 +1,111 @@
+#include<iostream>
+#include<vector>
+#include<climits>
+
+using namespace std;
+
+class Heap{
+private:
+public:
+ Heap(){ node.push_back(0);};
+
+ void print(){
+  long n = node.size();
+  for(long i = 1; i < n; ++i)
+   cout << " " << node[i];
+  cout << endl;
+ };
+ 
+ void insert(long num){
+  node.push_back(num);
+ };
+ 
+ long left(long i){ return (2 * i); };
+ long right(long i){ return (2 * i + 1); };
+ long parent(long i){ return (i / 2); };
+
+ void maxHeapify(long i){
+  long l = left(i);
+  long r = right(i);
+  long nodeSize = node.size() - 1;
+  long largest = 0;
+
+  if(l <= nodeSize && node[l] > node[i]){
+   largest = l;
+  }else{
+   largest = i;
+  }
+
+  if(r <= nodeSize && node[r] > node[largest])
+   largest = r;
+  
+  if(largest != i){
+   long buf = node[i];
+   node[i] = node[largest];
+   node[largest] = buf;
+   maxHeapify(largest);
+  }
+  
+ };
+
+ void buildMaxHeap(){
+  long nodeSize = node.size() - 1;
+  for(long i = nodeSize; i > 0; --i)
+   maxHeapify(i);
+ };
+ 
+ long getNodesize(){
+  return node.size();
+ };
+protected:
+ vector<long> node;
+};
+
+class PriorityQueue : public Heap{
+private:
+ void heapIncreaseKey(long i, long num){
+  node[i] = num;
+  while(i > 1 && (node[parent(i)] < node[i]) ){
+   long pi = parent(i);
+   long buf = node[i]; node[i] = node[pi]; node[pi] = buf;
+   i = pi;
+  } 
+ };
+public:
+ void maxHeapInsert(long num){  
+  insert(LONG_MIN);
+  long i = getNodesize() - 1;
+  heapIncreaseKey(i, num);
+ };
+
+ long extractMax(){
+  long heapSize = getNodesize() - 1;
+  if(heapSize < 1) return LONG_MIN;
+  
+  long max = node[1];
+  node[1] = node[heapSize];
+  node.pop_back();
+  maxHeapify(1);
+  return max;
+ }; 
+protected:
+};
+
+int main(){
+ ios::sync_with_stdio(false);
+ cin.tie(0);
+
+ PriorityQueue priorityQueue;
+ do{
+  string str = ""; cin >> str;
+  if(str == "insert"){
+   long num = 0; cin >> num;
+   priorityQueue.maxHeapInsert(num);
+  }else if(str == "extract"){
+   cout << priorityQueue.extractMax() << endl;
+  }else if(str == "end"){
+   break; 
+  }
+ }while(true);
+ return 0;
+}

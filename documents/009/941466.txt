@@ -1,0 +1,65 @@
+#include <algorithm>
+#include <cctype>
+#include <iostream>
+#include <map>
+#include <vector>
+using namespace std;
+
+pair<string, int> parse(const string &letter) {
+	int idx = 0;
+	while(isalpha(letter[idx])) ++idx;
+	return {letter.substr(0, idx), stoi(letter.substr(idx))};
+}
+
+void print(int idx, const vector<int> &next) {
+	while(next[idx] != idx) {
+		cout << idx + 1 << "\n";
+		idx = next[idx];
+	}
+	cout << idx + 1 << "\n";
+}
+
+int main() {
+	for(int n; cin >> n && n;) {
+		map<pair<string, int>, int> jump;
+		vector<int> next(n);
+
+		iota(next.begin(), next.end(), 0);
+
+		for(int i = 0; i < n; ++i) {
+			string letter;
+			cin >> letter;
+
+			if(letter == "-") {
+				print(i, next);
+			}
+			else {
+				const bool re_mark = letter.back() == 'v';
+				if(re_mark) {
+					next[i + 1] = i;
+					letter.pop_back();
+				}
+
+				if(letter.size() > 1) {
+					const auto cur = parse(letter);
+					const auto dest = make_pair(cur.first, cur.second + 1);
+
+					if(jump.count(dest)) {
+						const int dest_idx = jump.at(dest);
+						jump.erase(dest);
+						next[i] = dest_idx;
+					}
+
+					if(cur.second > 1) {
+						jump[cur] = i;
+					}
+					else if(!re_mark) {
+						print(i, next);
+					}
+				}
+			}
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+const int INF = 100000000;
+bool valid(int x, int l){
+    return 0 <= x && x < l;
+}
+void update(int& x, int y){
+    if(x < y) x = y;
+}
+
+int main(){
+    int H, W;
+    while(cin >> H >> W && H > 0){
+        string grid[55];
+        REP(y, H) cin >> grid[y];
+
+        map< int, vector<pair<int, int>> > jewels;
+        REP(y, H) REP(x, W) if(isupper(grid[y][x])) {
+            jewels[ grid[y][x] ].push_back(make_pair(x, y));
+        }
+
+        static int dp[55][55][55][55] = {};
+        memset(dp, -1, sizeof(dp));
+
+        function<int(int, int, int, int)> dfs = [&](int sx, int sy, int gx, int gy){
+            if(!valid(sx, W) || !valid(sy, H)) return -INF;
+            if(sx > gx || sy > gy) return 0; // ???
+            if(grid[sy][sx] == '#') return -INF;
+
+            if(sx == gx && sy == gy) return 0;
+
+            int& res = dp[sx][sy][gx][gy];
+            if(res != -1) {
+                return res;
+            }
+            res = -INF;
+
+            update(res, dfs(sx + 1, sy, gx, gy));
+            update(res, dfs(sx, sy + 1, gx, gy));
+
+            if(islower(grid[sy][sx])){
+                char c = grid[sy][sx] - 'a' + 'A';
+                for(auto p : jewels[c]){
+                    int ngx = p.first;
+                    int ngy = p.second;
+                    if(sx <= ngx && sy <= ngy && ngx <= gx && ngy <= gy){
+                        update(res, 1 + dfs(sx + 1, sy, ngx - 1, ngy) + dfs(ngx, ngy, gx, gy));
+                        update(res, 1 + dfs(sx + 1, sy, ngx, ngy - 1) + dfs(ngx, ngy, gx, gy));
+                        update(res, 1 + dfs(sx, sy + 1, ngx - 1, ngy) + dfs(ngx, ngy, gx, gy));
+                        update(res, 1 + dfs(sx, sy + 1, ngx, ngy - 1) + dfs(ngx, ngy, gx, gy));
+                    }
+                }
+            }
+            return res;
+        };
+
+        int res = dfs(0, 0, W - 1, H - 1);
+        if(res <= -INF) res = -1;
+        cout << res << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,26 @@
+#include<stdio.h>
+int main(){
+    int n[1000000];
+    int i,a,j,tmp;
+    scanf("%d",&a);
+    for(i=0;i<a;i++){
+        scanf("%d",&n[i]);
+    }
+    for(i=0;i<a-1;i++){
+        for(j=i+1;j<a;j++){
+            if(n[i]>n[j]){
+                tmp=n[i];
+                n[i]=n[j];
+                n[j]=tmp;
+            }
+        }
+    }
+    for(i=0;i<a;i++){
+        printf("%d",n[i]);
+        if(i!=a-1){
+            printf(" ");
+        }
+    }
+    printf("\n");
+    return 0;
+}

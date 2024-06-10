@@ -1,0 +1,35 @@
+i = 1j
+s = None
+while True:
+    try:
+        s = raw_input()
+    except EOFError:
+        break
+    k, len_s, overflow = 0, len(s), False
+    while k < len_s:
+        while k < len_s and not s[k].isdigit(): k += 1
+        begin = k
+        while k < len_s and s[k].isdigit(): k += 1
+        end = k
+        if begin == len_s: break
+        while s[begin] == '0':
+            s = s[:begin] + s[begin+1:]
+            end -= 1
+            len_s -= 1
+        if abs( int( s[begin : end] ) ) > 10000:
+            overflow = True
+            break
+        k = end
+    if not overflow:
+        z = eval(s)
+        Rez, Imz = z.real, z.imag
+        if abs( Rez ) > 10000 or abs( Imz ) > 10000: overflow = True
+        else:
+            res = ''
+            if Rez != 0: res += str( int(Rez) )
+            if Imz > 0 and res != '': res += '+'
+            if Imz != 0: res += str( int(Imz) )+'i'
+            if z == 0: res += '0'
+            print res
+    if overflow:
+        print 'overflow'

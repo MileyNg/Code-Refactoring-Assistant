@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int sq(int n){
+  return n*n;
+}
+
+int sum(int d,int n){
+  if(n>=600){
+    return 0;
+  }
+  else{
+    return d*sq(n)+sum(d,n+d);
+  }
+}
+
+void doit(){
+  int n;
+  if(scanf("%d",&n)!=EOF){
+    printf("%d\n",sum(n,0));
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

@@ -1,0 +1,80 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <cmath>
+#include <set>
+#include <map>
+
+using namespace std;
+
+
+int prime[100000000];
+
+bool is_Prime[100000000];
+
+int ans[1010];
+
+
+int main(){
+
+  for(int i = 2 ; i < 100000000 ; i++){
+    is_Prime[i] = true;
+  }
+
+  for(int i = 2 ; i < 100000000 ; i++){
+    if(is_Prime[i]){
+      for(int j = 2; i*j < 100000000 ; j++)
+	is_Prime[i*j] = false;
+    }
+  }
+
+  for(int i = 2,j = 0; i < 100000000 ; i++){
+    if(is_Prime[i] ){
+      prime[j] = i;
+      j++;
+    }
+  }
+
+  for(int i = 0; i < 100; i++){
+    //  cout << prime[i] << " ";
+  
+  }
+
+  int N,P;
+
+  while(1){
+    cin >> N >> P;
+    if(N == -1 && P == -1 ) break;
+
+    int i;
+    for(i = 0; prime[i] <= N ;i++){}
+    // prime[i] テ」ツ?ッNテ」ツつ暗」ツつ甘・ツ、ツァテ」ツ?催」ツ??、ツクツ?ァツ閉ェテ・ツーツ湘」ツ?陛」ツ?ェテァツエツ?ヲツ閉ー 
+    // cout << i << " " ;
+
+
+
+    int t,s,x = 0;
+
+    for(int k = i,t = 0 ; t < 40 ; t++,k++){
+      for(int l = k,s = k-i ; s < 40 ; s++,l++){
+	ans[x] = prime[k]+prime[l];
+	//		cout << ans[x] << " ";
+	x++;
+      }
+      //     cout << endl;
+    }
+
+    sort(ans ,ans + 500);
+
+
+    for(i = 0; i < 100 ; i++){
+      //    cout << ans[i] << " ";
+    }
+    //    cout << endl;    
+       cout << ans[P-1] << endl;
+
+  }
+
+  return 0;
+}

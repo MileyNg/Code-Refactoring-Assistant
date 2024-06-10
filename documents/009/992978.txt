@@ -1,0 +1,18 @@
+#include <iostream>
+#include <cmath>
+
+int main(){
+    int q;
+    double x;
+    while(1){
+        std::cin >> q;
+        if(q == -1){
+            return 0;
+        }
+        x = q / 2.0;
+        while(std::abs(x * x * x - q) >= 0.00001d * q){
+            x = x - (x * x * x - q) / 3 / x / x;
+        }
+        std::cout << x << std::endl;
+    }
+}

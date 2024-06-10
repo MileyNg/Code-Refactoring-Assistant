@@ -1,0 +1,146 @@
+#include<stdio.h>
+#include<algorithm>
+#include<set>
+#include<map>
+using namespace std;
+struct snuke{
+	int x[8];
+	int y[8];
+};
+inline bool operator<(const snuke &a,const snuke &b){
+	for(int i=0;i<8;i++){
+		if(a.x[i]!=b.x[i])return a.x[i]<b.x[i];
+		if(a.y[i]!=b.y[i])return a.y[i]<b.y[i];
+	}
+	return false;
+}
+int dx[]={-1,-1,0,0,1,1};
+int dy[]={0,1,-1,1,-1,0};
+set<pair<int,int> >S;
+map<snuke,int> M;
+int x,y;
+int a,b;
+int ret=20;
+inline int dist(int ax,int ay,int bx,int by){
+	bx-=ax;
+	by-=ay;
+	if(bx*by<=0){
+		return max(max(bx,-bx),max(by,-by));
+	}else{
+		return max(bx,-bx)+max(by,-by);
+	}
+}
+int dfs(snuke now,int time,int at){
+	if(at==0){
+		if(M.count(now)&&M[now]<=time)return ret;
+		M[now]=time;
+		
+	//	for(int i=0;i<a;i++){
+	//		printf("(%d, %d)",now.x[i],now.y[i]);
+	//	}
+	//	printf(": %d\n",time);
+	}
+	if(at==0&&now.x[0]==x&&now.y[0]==y){
+		ret=min(ret,time);
+		return time;
+	}
+	if(time==ret)return ret;
+	if(time+dist(now.x[0],now.y[0],x,y)>=ret)return ret;
+	if(at>=a){
+		
+		int ans=dfs(now,time+1,0);
+		return ans;
+	}
+		
+	int ret=99999;
+	if(at==0){
+		for(int i=0;i<6;i++){
+			now.x[at]+=dx[i];
+			now.y[at]+=dy[i];
+			bool ok=false;
+			for(int j=0;j<6;j++){
+				if(now.x[at+1]==now.x[at]+dx[j]&&now.y[at+1]==now.y[at]+dy[j]){ok=true;break;}
+			}
+			if(S.count(make_pair(now.x[at],now.y[at])))ok=false;
+			if(ok)ret=min(ret,dfs(now,time,at+2));
+			now.x[at]-=dx[i];
+			now.y[at]-=dy[i];
+		}
+	}else if(at<a-1){
+		for(int i=0;i<6;i++){
+			now.x[at]+=dx[i];
+			now.y[at]+=dy[i];
+			bool OK=true;
+			bool ok=false;
+			for(int j=0;j<6;j++){
+				if(now.x[at+1]==now.x[at]+dx[j]&&now.y[at+1]==now.y[at]+dy[j]){ok=true;break;}
+			}
+			if(!ok)OK=false;
+			ok=false;
+			for(int j=0;j<6;j++){
+				if(now.x[at-1]==now.x[at]+dx[j]&&now.y[at-1]==now.y[at]+dy[j]){ok=true;break;}
+			}
+			if(!ok)OK=false;
+			for(int j=0;j<6;j++){
+				for(int k=0;k<at-1;k++){
+					if(now.x[k]==now.x[at]+dx[j]&&now.y[k]==now.y[at]+dy[j]){OK=false;break;}
+					if(now.x[k]==now.x[at]&&now.y[k]==now.y[at]){OK=false;break;}
+				}
+			}
+			if(S.count(make_pair(now.x[at],now.y[at])))OK=false;
+			if(OK)ret=min(ret,dfs(now,time,at+2));
+			now.x[at]-=dx[i];
+			now.y[at]-=dy[i];
+		}
+	}else{
+		for(int i=0;i<6;i++){
+			now.x[at]+=dx[i];
+			now.y[at]+=dy[i];
+			bool OK=true;
+			bool ok=false;
+			for(int j=0;j<6;j++){
+				if(now.x[at-1]==now.x[at]+dx[j]&&now.y[at-1]==now.y[at]+dy[j]){ok=true;break;}
+			}
+			if(!ok)OK=false;
+			for(int j=0;j<6;j++){
+				for(int k=0;k<at-1;k++){
+					if(now.x[k]==now.x[at]+dx[j]&&now.y[k]==now.y[at]+dy[j]){OK=false;break;}
+					if(now.x[k]==now.x[at]&&now.y[k]==now.y[at]){OK=false;break;}
+				}
+			}
+			if(S.count(make_pair(now.x[at],now.y[at])))OK=false;
+			if(OK)ret=min(ret,dfs(now,time,at+2));
+			now.x[at]-=dx[i];
+			now.y[at]-=dy[i];
+		}
+	}
+	bool ok=true;
+	for(int i=0;i<at;i++){
+		if(now.x[i]==now.x[at]&&now.y[i]==now.y[at])ok=false;
+	}
+	for(int j=0;j<6;j++){
+		for(int k=0;k<at-1;k++){
+			if(now.x[k]==now.x[at]+dx[j]&&now.y[k]==now.y[at]+dy[j]){ok=false;break;}
+		}
+	}
+	if(ok)ret=min(ret,dfs(now,time,at+1));
+	return ret;
+}
+int main(){
+	while(scanf("%d",&a),a){
+		snuke start;
+		ret=20;
+		for(int i=0;i<a;i++){
+			scanf("%d%d",start.x+i,start.y+i);
+		}
+		scanf("%d",&b);
+		S.clear();
+		M.clear();
+		for(int i=0;i<b;i++){
+			int u,v;scanf("%d%d",&u,&v);
+			S.insert(make_pair(u,v));
+		}
+		scanf("%d%d",&x,&y);
+		printf("%d\n",dfs(start,0,0));
+	}
+}

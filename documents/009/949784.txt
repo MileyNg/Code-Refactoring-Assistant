@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+const int LIMIT = (1<<16), IINF = INT_MAX;
+
+bool fin[LIMIT];
+int N,dp[16][LIMIT];
+string a,b;
+
+int main(){
+  while( cin >> N, N ){
+    cin.ignore();
+    getline(cin,a);
+    getline(cin,b);
+
+    if( a == b ) {
+      puts("0");
+      continue;
+    }
+
+    rep(i,N)rep(j,(1<<N)) dp[i][j] = IINF;
+    rep(i,N) dp[i][0] = 0;
+
+    rep(i,(1<<N)) {
+      fin[i] = true;
+      rep(j,N){
+        if((i>>j) & 1) continue;
+        if( a[j] != b[j] ) {
+          fin[i] = false;
+          break;
+        }
+      }
+    }
+
+    rep(state,(1<<N)){
+      rep(cur,N){
+        if( dp[cur][state] == IINF ) continue;
+        rep(from,N){
+          if( (state>>from) & 1 ) continue;
+          rep(to,N){
+            if( from == to ) continue;
+            if( (state>>to) & 1 ) continue;
+            if( !( a[from] == b[to] && a[to] == b[from] ) ) continue;
+            int nstate = state|(1<<from)|(1<<to);
+            if( fin[nstate] ) nstate = (1<<N)-1;
+            dp[to][nstate] = min(dp[to][nstate],
+                                 dp[cur][state] + abs(cur-from) + abs(from-to));
+          }
+        }
+      }
+    }
+
+    int mini = IINF;
+    rep(i,N) mini = min(mini,dp[i][(1<<N)-1]);
+    cout << mini << endl;
+  }
+  return 0;
+}

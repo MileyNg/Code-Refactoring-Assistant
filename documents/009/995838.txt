@@ -1,0 +1,60 @@
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <set>
+using namespace std;
+int main(){
+  int q;
+  cin >> q;
+  for(int loop = 0;loop < q;loop++){
+	int n;
+	string str;
+	cin >> n;
+	cin >> str;
+	vector<vector<bool> > field(2,vector<bool>(n+1,false));
+	for(int i = 0;i < 2*n;i++){
+	  if(str[i] == 'Y'){
+		field[0][(i+1)/2] = true;
+	  }
+	  if(str[i+2*n] == 'Y'){
+		field[1][(i+1)/2] = true;
+	  }
+	}
+
+	int ans = n;
+	bool first = true;
+	int b_s = 0;
+	for(int i = 0;i < n+1;i++){
+	  if(first){
+		if(field[1][i]){
+		  first = false;
+		  ans += 2;
+		  b_s = 1;
+		}else if(field[0][i]){
+		  first = false;
+		  ans++;
+		}
+	  }else{
+		if(field[0][i] && field[1][i]){
+		  ans+=2;
+		  b_s = 0;
+		}else if(field[0][i]){
+		  ans++;
+		  b_s = 0;
+		}else if(field[1][i]){
+		  ans++;
+		  b_s = 1;
+		}
+	  }
+	}
+	
+	if(b_s == 1)ans++;
+	cout << ans << endl;
+	
+	
+  }
+  return 0;
+}

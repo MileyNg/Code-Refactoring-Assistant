@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+#define all(c) c.begin(),c.end()
+#define rall(c) c.rbegin(),c.rend()
+#define mp(a,b) make_pair((a),(b))
+#define eq ==
+
+typedef long long ll;
+typedef complex<double> point;
+typedef pair<int,int> pii;
+
+// →↑←↓
+const int dx[] = {1,0,-1,0};
+const int dy[] = {0,-1,0,1};
+
+
+const double EPS = 1e-9;
+
+int main(){
+
+    while(true){
+        int w,h;
+        cin >> w >> h;
+        if(w == 0) break;
+        int sy,sx,gy,gx;
+        cin >> sx >> sy >> gx >> gy;
+        sx--,sy--,gx--,gy--;
+        int n;
+        cin >> n;
+        vector<vector<int> > color(h,vector<int>(w));
+        for(int block=0;block<n;block++){
+            int c,d,x,y;
+            cin >> c >> d >> x >> y;
+            x--;y--;
+            // yoko
+            if(d == 0){
+                for(int i=0;i<2;i++){
+                    for(int j=0;j<4;j++){
+                        color[y+i][x+j] = c;
+                    }
+                }
+            }else{
+                for(int i=0;i<4;i++){
+                    for(int j=0;j<2;j++){
+                        color[y+i][x+j] = c;
+                    }
+                }
+            }
+        }
+        // for(int i=0;i<h;i++){
+        //     for(int j=0;j<w;j++){
+        //         cerr << color[i][j];
+        //     }
+        //     cerr << endl;
+        // }
+        int c = color[sy][sx];
+        vector<vector<char> > visited(h,vector<char>(w));
+        queue<pair<int,int> > Q;
+        Q.push(make_pair(sy,sx));
+        while(not Q.empty()){
+            int y = Q.front().first;
+            int x = Q.front().second;
+            Q.pop();
+
+            if(y >= h or y < 0 or x >= w or x < 0) continue;
+            if(color[y][x] != c) continue;
+            if(visited[y][x]) continue;
+            visited[y][x] = true;
+            for(int i=0;i<4;i++){
+                Q.push(make_pair(y+dy[i],x+dx[i]));
+            }
+        }
+        if(visited[gy][gx]){
+            cout << "OK" << endl;
+        }else{
+            cout << "NG" << endl;
+        }
+    }
+    return 0;
+}

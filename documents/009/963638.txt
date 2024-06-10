@@ -1,0 +1,43 @@
+#include<stdio.h>
+
+int larger(int a,int b){
+  if(a>b){
+    return a;
+  }
+  else{
+    return b;
+  }
+}
+
+int round(int a,int b){
+  if(a%b==0){
+    return 0;
+  }
+  else{
+    return 1;
+  }
+}
+
+
+int main(){
+  int jpn,mth;
+  int jj,jm;
+  int day;
+  int ans;
+  int jday,mday;
+
+  scanf("%d",&day);
+  scanf("%d",&jpn);
+  scanf("%d",&mth);
+  scanf("%d",&jj);
+  scanf("%d",&jm);
+
+  jday=jpn/jj+round(jpn,jj);
+  mday=mth/jm+round(mth,jm);
+
+  ans=day-larger(jday,mday);
+
+  printf("%d\n",ans);
+
+  return 0;
+}

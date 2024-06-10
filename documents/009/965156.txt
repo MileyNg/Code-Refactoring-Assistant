@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+
+
+
+int main(){
+	std::string str;
+	int data_num;
+	std::cin >> data_num;
+	std::cin.ignore();
+	for(int i = 0; i < data_num; ++i){
+		u_int loc = 0;
+		u_int size;
+		std::getline(std::cin, str);
+		size = str.size();
+		while(1){
+			loc = str.find("Hoshino", loc);
+			if(loc == std::string::npos || loc == size){
+				break;
+			}
+			str[loc+6] = 'a';
+			++loc;	
+		}
+		std::cout << str << std::endl;
+	}
+	
+	return 0;
+}
+		

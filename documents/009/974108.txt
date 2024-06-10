@@ -1,0 +1,33 @@
+/*
+	ax+by=c,
+	 dx+ey=f
+	x=(E1*B2-B1*E2)/(A1*B2-B1*A2)
+	y=(E2*A1-E1*A2)/(A1*B2-A2*B1)
+*/
+
+#include<iostream>
+#include <iomanip>
+#include<math.h>
+#include<list>
+#include<string>
+#define round(d, n)	 (double((d) * pow(10, n) + 0.5) / pow(10, n))
+using namespace std;
+
+int main(){
+	double a,b,c,d,e,f;
+	double x, y;
+	list<double> xy;
+	
+	while(!(cin>>a>>b>>c>>d>>e>>f).eof()){
+		xy.push_back((c*e-f*b)/(a*e-b*d));
+		xy.push_back((f*a-d*c)/(a*e-d*b));
+	}
+	list<double>::iterator it = xy.begin();
+	while(it != xy.end()){
+		x = *it;
+		it++;
+		y = *it;
+		cout << fixed << setprecision(3) << round(x,4) << " " << round(y,4) << endl;
+		it++;
+	}
+}

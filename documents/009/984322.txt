@@ -1,0 +1,61 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+vector<vector<int> > edge;
+vector<vector<int> > dist;
+int V, E, r;
+int main() {
+    cin >> V >> E >> r;
+    edge.resize(V);
+    dist.resize(V);
+    for (int i = 0; i < E; i++) {
+        int s, t, d;
+        cin >> s >> t >> d;
+        edge[s].push_back(t);
+        dist[s].push_back(d);
+    }
+    int MAX = 1e9;
+    int d[V];
+    bool check[V];
+    for (int i = 0; i < V; i++) {
+        d[i] = MAX;
+        check[i] = false;
+    }
+    d[r] = 0;
+    for (int i = 0; i < V; i++) {
+        int now = 0;
+        int nowd = MAX;
+        for (int j = 0; j < V; j++) {
+            if (nowd > d[j] && !check[j]) {
+                nowd = d[j];
+                now = j;
+            }
+        }
+        if (nowd == MAX) break;
+        check[now] = true;
+        for (int j = 0; j < edge[now].size(); j++) {
+            int next = edge[now][j];
+            int nextd = d[now] + dist[now][j];
+            if (nextd < d[next]) {
+                d[next] = nextd;
+            }
+        }
+    }
+    for (int i = 0; i < V; i++) {
+        if (d[i] < MAX) cout << d[i] << endl;
+        else cout << "INF" << endl;
+    }
+    return 0;
+}

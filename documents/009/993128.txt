@@ -1,0 +1,85 @@
+// AOJ 0182
+#include<algorithm>
+#include<cstdio>
+#include<cstring>
+#define rep(i,a) for(int i=0; i!=(a); ++i)
+
+int n;
+int a[50];
+bool f[50], fl[50];
+
+// i 番目以前から和が rest になるよう選択。
+// 水の入っているビーカーを組み合わせて水の入っていないビーカーの容量を作る。
+bool choose( int i, int rest )
+{
+	if( !rest )
+		return true;
+
+	if( rest < 0 || i < 0 )
+		return false;
+
+	if( a[i] > rest )
+		return choose( i-1, rest );
+
+	if( f[i] )
+	{
+		f[i] = false;
+		if( choose( i-1, rest-a[i] ) )
+			return true;
+		f[i] = true;
+	}
+
+	return choose( i-1, rest );
+}
+
+// i 番目以降から、和が rest になるよう選択。
+// 最終状態を全通り試す。
+bool dfs( int i, int rest )
+{
+	if( !rest )
+	{
+		rep(i,n)
+		{
+			if( !f[i] )
+			{
+				if( choose( i-1, a[i] ) )
+					f[i] = true;
+				else
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	if( rest < 0 || i >= n )
+		return false;
+
+	if( a[i] > rest )
+		return dfs( i+1, rest );
+
+	f[i] = true;
+	if( dfs( i+1, rest-a[i] ) )
+		return true;
+	f[i] = false;
+
+	return dfs( i+1, rest );
+}
+
+int main()
+{
+	while( scanf("%d", &n), n )
+	{
+		rep(i,n)
+			scanf("%d", a+i);
+
+		std::sort( a, a+n );
+
+		memset( f, false, sizeof(f) );
+		f[0] = true;
+
+		puts( dfs( 1, a[n-1]-a[0] ) ? "YES" : "NO" );
+	}
+
+	return 0;
+}

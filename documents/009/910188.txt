@@ -1,0 +1,14 @@
+#include<stdio.h>
+
+int main(){
+  int a,b,work;
+  scanf("%d %d",&a,&b);
+  if(a<b){
+    work=a;
+    a=b;
+    b=work;}
+  while((work=a%b)!=0){
+    a=b; 
+    b=work;}
+  printf("%d\n",b);
+}

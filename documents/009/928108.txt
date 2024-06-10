@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main(void) {
+	int a, b, c;
+	while(scanf("%d %d %d\n", &a, &b, &c) == 3) {
+		if(a == -1 && b == -1 && c == -1)
+			break;
+		
+		/*
+		    中間試験、期末試験のいずれかを欠席した場合成績は F。
+		    中間試験と期末試験の合計点数が 80 以上ならば成績は A 。
+		    中間試験と期末試験の合計点数が 65 以上 80 未満ならば成績は B。
+		    中間試験と期末試験の合計点数が 50 以上 65 未満ならば成績は C。
+		    中間試験と期末試験の合計点数が 30 以上 50 未満ならば成績は D。 ただし、再試験の点数が 50 以上ならば成績は C。
+		    中間試験と期末試験の合計点数が 30 未満ならば成績は F。
+		*/
+		if(a == -1 || b == -1) {
+			printf("F\n");
+		} else if(a + b >= 80) {
+			printf("A\n");
+		} else if(a + b >= 65) {
+			printf("B\n");
+		} else if(a + b >= 50) {
+			printf("C\n");
+		} else {
+			if(c >= 50) {
+				printf("C\n");
+			} else if(a + b >= 30) {
+				printf("D\n");
+			} else {
+				printf("F\n");
+			}
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,115 @@
+#include<stdio.h>
+#define compile 0
+void init(long array[], long length)
+{
+	long i = 0;
+	for(i = 0; i < length; i++)
+	{
+		array[i] = 0;
+	}
+}
+void merge(long separate1[], long length1, long separate2[], long length2, long array[])
+{
+	long i = 0, j = 0;
+	while(i < length1 || j < length2)
+	{
+		if((j >= length2) ||(i < length1 && (separate1[i] < separate2[j])))
+		{
+			array[i + j] = separate1[i];
+			i++;
+		}
+		else
+		{
+			array[i + j] = separate2[j];
+			j++;
+		}
+	}
+}
+void mergesort(long array[], long length)
+{
+	if(length > 1)
+	{
+		long m = length / 2;
+		long n = length - m;
+		long i = 0;
+		long separate1[m];
+		long separate2[n];
+		init(separate1, m);
+		init(separate2, n);
+		for(i = 0; i < m; i++)
+		{
+			separate1[i] = array[i];
+		}
+		for(i = 0; i < n; i++)
+		{
+			separate2[i] = array[i + m];
+		}
+		mergesort(separate1, m);
+		mergesort(separate2, n);
+		merge(separate1, m, separate2, n, array);
+	}
+}
+long search(long array1[], long length1, long array2[], long length2)
+/*
+array1->main関数内S[], length1->main関数内n
+array2->main関数内T[], length2->main関数内q
+*/
+{
+	long counter = 0;
+	long i = 0, j = 0;
+	
+	//探索する処理を記述
+	while(j < length2)
+	{
+		while(i < length1)
+		{
+#if compile == 1
+		printf("array2[%d] = %d ", j, array2[j]);
+		printf("array1[%d] = %d\n", i, array1[i]);
+#endif
+			if(array1[i] == array2[j])
+			{
+				counter++;
+				#if compile == 1
+				printf("counter++ execution.\n");
+				#endif
+				i++;
+				break;
+			}
+			else if(array1[i] < array2[j])
+			{
+				i++;
+			}
+			else if(array1[i] > array2[j])
+			{
+				j++;
+			}
+		}
+		j++;
+	}
+	return counter;
+}
+main()
+{
+	long n = 0, i = 0, q = 0;
+	long result = 0;
+	scanf("%ld", &n);
+	long S[n];
+	init(S, n);
+	for(i = 0; i < n; i++)
+	{
+		scanf("%ld", &S[i]);
+	}
+	scanf("%ld", &q);
+	long T[q];
+	init(T, q);
+	for(i = 0; i < q; i++)
+	{
+		scanf("%ld", &T[i]);
+	}
+	mergesort(S, n);
+	//mergesort(T, q);
+	result = search(S, n, T, q);
+	printf("%ld\n", result);
+	return 0;
+}

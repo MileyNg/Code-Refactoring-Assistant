@@ -1,0 +1,53 @@
+#include<stdio.h>
+int main(void)
+{
+    int H,W,swi,h,w;
+    H = 1;
+    W = 1;
+    h = 0;
+    swi = 0;
+    scanf("%d %d",&H,&W);
+st: w = 1;
+    printf("\n");
+    if(swi == 0){
+        goto do1;
+    }
+    if(swi == 1){
+        goto do2;
+    }
+    
+do1:while(w<=W){
+    if(w%2==0){
+        printf(".");
+    }
+    else{
+        printf("#");
+    }
+    w++;
+}
+    goto ed;
+    
+do2:while(w<=W){
+    if(w%2==0){
+        printf("#");
+    }
+    else{
+        printf(".");
+    }
+    w++;
+}
+    goto ed;
+ed:if(swi==0){
+    swi=1;
+}
+else{
+    swi = 0;
+}
+    h++;
+    if(h==H){
+        goto ret;
+    }
+    goto st;
+
+ret:return 0;
+}

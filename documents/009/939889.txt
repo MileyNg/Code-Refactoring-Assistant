@@ -1,0 +1,132 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+#define INF 99999999
+struct Edge
+{
+	int b;
+	int x;
+	int y;
+};
+
+vector<int> get_path(int t, int* prev)
+{
+	vector<int> path;
+	while(t != -1)
+	{
+		path.push_back(t);
+		t = prev[t];
+	}
+	reverse(path.begin(), path.end());
+	return(path);
+}
+
+vector<int> dijkstra(int src,int dst, const vector<Edge>& edge)
+{	
+	double d[1001];
+	int prev[1001];
+	bool used[1001];
+
+	fill((double*)d, (double*)d + 1001, INF);
+	fill((bool*)used, (bool*)used + 1001, false);
+	fill((int*)prev, (int*)prev + 1001, -1);
+	d[src] = 0.0;
+	while(true)
+	{
+		int v = -1;
+		for(int u = 0; u < edge.size(); ++u)
+		{
+			if(!used[u] && (v == -1 || d[u] < d[v]))
+			{
+				v = u;
+			}
+		}
+		if(v == -1)
+		{
+			break;
+		}
+		used[v] = true;
+		int srcX = edge[v].x;
+		int srcY = edge[v].y;
+		for(int u = 0; u < edge.size(); ++u)
+		{
+			if(u == v)
+			{
+				continue;
+			}
+			double cost = sqrt((double)(edge[u].x - srcX) * (double)(edge[u].x - srcX) + (double)(edge[u].y - srcY) * (double)(edge[u].y - srcY));
+			if(cost > 50.0)
+			{
+				continue;
+			}
+			if(d[u] > d[v] + cost)
+			{
+				d[u] = d[v] + cost;
+				prev[u] = v;
+			}
+		}
+	}
+	return get_path(dst, prev);
+}
+
+void solve()
+{
+	int n;
+	while(cin >> n, n)
+	{
+		vector<Edge> edge;
+		for(int i = 0; i < n; ++i)
+		{
+			int b,x,y;
+			cin >> b >> x >> y;
+			Edge e = {b,x,y};
+			edge.push_back(e);
+		}
+		int m;
+		cin >> m;
+		for(int i = 0; i < m; ++i)
+		{
+			int src, dst;
+			cin >> src >> dst;
+			int src_idx, dst_idx;
+			for(int j = 0; j < edge.size(); ++j)
+			{
+				if(edge[j].b == src)
+				{
+					src_idx = j;
+				}
+				if(edge[j].b == dst)
+				{
+					dst_idx = j;
+				}
+			}
+			vector<int> route = dijkstra(src_idx,dst_idx,edge);
+			if(route[0] == src_idx && route[route.size() - 1] == dst_idx)
+			{
+				for(int j = 0; j < route.size(); ++j)
+				{
+					cout << edge[route[j]].b;
+					if(j == route.size() - 1)
+					{
+						cout << endl;
+					}
+					else
+					{
+						cout << " ";
+					}
+				}
+			}
+			else cout << "NA" << endl; 
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

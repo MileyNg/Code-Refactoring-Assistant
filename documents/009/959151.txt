@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+#define NO_DATA 100000
+
+
+int main() {
+    int n, m, i, j, denom;
+    int coin[20];
+    int **count, *count_data;
+    int c1, c2;
+
+    scanf("%d %d", &n, &m);
+    for (i=0; i<m; i++) {
+        scanf("%d", &(coin[i]));
+    }
+
+    count_data = (int *)malloc(sizeof(int) * (n+1) * (m+1));
+    count = (int **)malloc(sizeof(int*) * (m+1));
+    for (i = 0; i <= m; i++) {
+        count[i] = &(count_data[i*(n+1)]);
+    }
+
+    for (i = 0; i <= m; i++) {
+        for (j = 0; j <= n; j++) {
+            if (i == 0) {
+                count[i][j] = NO_DATA;
+                continue;
+            }
+            if (j == 0) {
+                count[i][j] = 0;
+                continue;
+            }
+            denom = coin[i-1];
+            if (j < denom) {
+                count[i][j] = count[i-1][j];
+            }
+            else {
+                c1 = count[i][j-denom] + 1;
+                c2 = count[i-1][j];
+                count[i][j] = c1 < c2 ? c1 : c2;
+            }
+        }
+    }
+
+    printf("%d\n", count[m][n]);
+    
+    free(count);
+    free(count_data);
+
+    return 0;
+}

@@ -1,0 +1,14 @@
+def solve(w)
+  ws = []
+  9.downto(0) do |i|
+    if w >= 2**i
+      ws.unshift(2**i)
+      w -= 2**i
+    end
+  end
+  ws.join(" ")
+end
+
+gets(nil).chomp.split("\n").each do |s|
+  puts solve(s.to_i)
+end

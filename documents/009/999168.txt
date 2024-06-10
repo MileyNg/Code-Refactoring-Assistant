@@ -1,0 +1,74 @@
+#include<stdio.h>
+#define INF -2000000001
+
+int A[500001],n;
+
+int parent(int i){return i/2;}
+int left(int i){return i*2;}
+int right(int i){return i*2+1;}
+
+void exchange(int *a,int *b){
+  int tmp=*a;
+  *a=*b;
+  *b=tmp;
+}
+
+void maxHeapify(int i){
+  int l=left(i);
+  int r=right(i);
+  int largest;
+ 
+  if(l<=n&&A[l]>A[i])largest=l;
+  else largest=i;
+ 
+  if(r<=n&&A[r]>A[largest])largest=r;
+ 
+  if(largest!=i){
+    exchange(&A[i],&A[largest]);
+    maxHeapify(largest);
+  }
+ 
+}
+
+int heapExtractMax(){
+  if(n<1)return;
+  int max=A[1];
+  A[1]=A[n];
+  n--;
+  maxHeapify(1);
+  return max;
+}
+
+void heapIncreaseKey(int i,int key){
+  if(key<A[i])return;
+
+  A[i]=key;
+  while(i>1&&A[parent(i)]<A[i]){
+    exchange(&A[i],&A[parent(i)]);
+    i=parent(i);
+  }
+}
+
+void maxHeapInsert(int key){
+  n++;
+  A[n]=INF;
+  heapIncreaseKey(n,key);
+}
+
+int main(){
+  int a;
+  char str[50];
+  n=0;
+  while(1){
+    scanf("%s",str);
+    if(str[2]=='d')break;
+    if(str[0]=='i'){
+      scanf("%d",&a);
+      maxHeapInsert(a);
+    }else if(str[0]=='e'){
+      a=heapExtractMax();
+      printf("%d\n",a);
+    }
+  }
+  return 0;
+}

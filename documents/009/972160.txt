@@ -1,0 +1,31 @@
+#include<stdio.h>
+#include<string.h>
+
+int main(){
+  int a=0,i=0,b=0;
+  char tango[11],bun[1001];
+  scanf("%s",tango);
+  i=0;
+  while(tango[i] != '\0'){
+    if(tango[i] >= 'a' && tango[i] <= 'z'){
+      tango[i] -= 32;
+    }
+    i++;
+  }
+  while(1){
+    scanf("%s",bun);
+    if(strcmp("END_OF_TEXT",bun) == 0)break;
+    b=0;
+    while(bun[b] != '\0'){
+      if(bun[b] >= 'a' && bun[b] <= 'z'){
+	bun[b] -= 32;
+      }
+      b++;
+    }
+    if(strcmp(tango,bun) == 0){
+      a++;
+    }
+  }
+  printf("%d\n",a);
+  return 0;
+}

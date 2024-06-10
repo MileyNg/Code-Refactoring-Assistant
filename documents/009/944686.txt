@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<string.h>
+
+typedef struct dic{
+  char coma[10],mozi[12];
+}D;
+D Dic2[100000];
+int i,j=0;
+
+void insert(D d){
+  strcpy(Dic2[j].mozi,d.mozi);
+  j++;
+}
+
+void find(D d){
+  int k,right=0;
+  for(k=0;k<j;k++){
+    if(strcmp(Dic2[k].mozi,d.mozi)==0){
+      printf("yes\n");
+      right=1;
+      break;
+    }
+  }
+  if(right==0)
+    printf("no\n");
+}
+
+main(){
+  D Dic[100000];
+  int n;
+
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    scanf("%s %s",Dic[i].coma,Dic[i].mozi);
+  for(i=0;i<n;i++)
+    if(Dic[i].coma[0]=='i')
+      insert(Dic[i]);
+    else
+      find(Dic[i]);
+  
+  return 0;
+}

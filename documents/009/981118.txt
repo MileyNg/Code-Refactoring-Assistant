@@ -1,0 +1,44 @@
+#include<stdio.h>
+
+int prime[1000000];
+
+void ertsthns(int n){
+  int i;
+  for(i=2;i<=n;i++){
+    if(prime[i]==1){
+      int j;
+      for(j=2*i;j<=n;j+=i){
+	prime[j]=0;
+      }
+    }
+  }
+}
+
+void doit(int n){
+  int i;
+  int cnt=0;
+  ertsthns(n);
+  for(i=0;i<=n;i++){
+    if(prime[i]==1){
+      cnt++;
+    }
+  }
+  printf("%d\n",cnt);
+}
+
+int main(){
+  int n;
+  while(scanf("%d",&n)!=EOF){
+    int i;
+    for(i=0;i<=n;i++){
+      if(i<2){
+	prime[i]=0;
+      }
+      else{
+	prime[i]=1;
+      }
+    }
+    doit(n);
+  }
+  return 0;
+}

@@ -1,0 +1,109 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<set>
+#include<map>
+#include<queue>
+#include<complex>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#define X real()
+#define Y imag()
+
+typedef complex<double> P;
+
+const double INF = (1<<30);
+
+int n,m;
+vector<P> A;
+vector<P> B;
+
+class L : public vector<P>{
+	public:
+	L(P a, P b){
+		push_back(a);
+		push_back(b);
+	}
+};
+
+
+
+bool input(){
+	cin>>n>>m;
+	A=vector<P>(n);
+	B=vector<P>(m);
+	rep(i,n){
+		double a,b;
+		cin>>a>>b;
+		A[i] = P(a,b);
+	}
+	rep(i,m){
+		double a,b;
+		cin>>a>>b;
+		B[i] = P(a,b);
+	}
+}
+
+void init(){}
+
+double distPP(P a, P b){return abs(a-b);}
+
+
+double cross(P a, P b){return a.X*b.Y-a.Y*b.X;}
+bool ccw(P a, P b, P c){
+	return cross(b-a, c-a)>0;
+}
+
+bool hitLL(L a, L b){
+	bool b1 = ccw(a[0],b[0],b[1])!=ccw(a[1],b[0],b[1]);
+	bool b2 = ccw(b[0],a[0],a[1])!=ccw(b[1],a[0],a[1]);
+	return b1&&b2;
+}
+
+double solve_search(L line, vector<P>& p){
+	
+	double ret = INF;
+	rep(i,p.size()){
+		rep(j,p.size()){
+			double d1 = distPP(p[0], p[i]);
+			double d2 = distPP(p[1], p[j]);
+			double d3 = distPP(p[i], p[j]);
+			
+			L line1(p[0],p[i]);
+			L line2(p[i],p[j]);
+			L line3(p[j],p[1]);
+			
+			if(!hitLL(line1, line)
+				&& !hitLL(line2, line)
+				&& !hitLL(line3, line)){
+					ret = min(ret, d1+d2+d3);
+				}
+		}
+	}
+	
+	return ret+distPP(line[0],line[1]);
+}
+
+double solve(){
+	
+	L AL(A[0],A[1]);
+	L BL(B[0],B[1]);
+	
+	double val = min(solve_search(AL, B), solve_search(BL, A));
+	if(val>=INF)return -1;
+	return val;
+}
+
+int main(){
+	init();
+	input();
+	
+	printf("%.9lf\n",solve());
+}

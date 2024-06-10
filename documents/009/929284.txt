@@ -1,0 +1,133 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+struct Linked_List{
+  int key;
+  struct Linked_List *prev;
+  struct Linked_List *next;
+};
+
+typedef struct Linked_List Link;
+
+//関数のプロトタイプ宣言
+void insert(int);
+void delete(int);
+void deleteFirst(void);
+void deleteLast(void);
+void delete_ALL(void);
+void Show(void);
+
+Link *nill;
+
+int main(void){
+  int n,key;
+  int i;
+  char input[12];
+
+  scanf("%d",&n);
+
+  //先頭へのポインタをnillに格納
+  nill=malloc(sizeof(Link));
+  nill->prev=nill;
+  nill->next=nill;
+
+  for(i=0;i<n;i++){
+    scanf("%s",input);
+    
+    if(strcmp("insert",input)==0){
+      scanf("%d",&key);
+      insert(key);
+    }
+    else if(strcmp("delete",input)==0){
+      scanf("%d",&key);
+      delete(key);
+    }
+    else if(strcmp("deleteFirst",input)==0){
+      deleteFirst();
+    }
+    else if(strcmp("deleteLast",input)==0){
+      deleteLast();
+    }
+    else{
+      printf("Error\n");
+      exit(1);
+    }
+    
+    
+  }
+
+  //出力
+  Show();
+
+  //解放
+  delete_ALL();
+  free(nill);
+
+  return 0;
+}
+
+
+//insert関数
+void insert(int num){
+  Link *data;
+
+  data=malloc(sizeof(Link));
+  data->key=num;
+  nill->next->prev=data;
+  data->next=nill->next;
+  nill->next=data;
+  data->prev=nill;
+}
+
+//delete関数
+void delete(int num){
+  Link *work;
+
+  work=nill->next;
+  while(work->key!=num) work=work->next;
+  work->next->prev=work->prev;
+  work->prev->next=work->next;
+  free(work);
+}
+
+//deleteFirst
+void deleteFirst(void){
+  Link *work;
+
+  work=nill->next;
+  work->next->prev=nill;
+  nill->next=work->next;
+  free(work);
+}
+
+//deleteLast
+void deleteLast(void){
+  Link *work;
+
+  work=nill->next;
+  while(work->next!=nill) work=work->next;
+  nill->prev=work->prev;
+  work->prev->next=nill;
+  free(work);
+}
+
+//delete_ALL関数
+void delete_ALL(void){
+  while(nill->next!=nill){
+    deleteLast();
+  }
+}
+
+
+//Show関数
+void Show(void){
+  Link *work;
+
+  work=nill->next;
+  while(work!=nill){
+    printf("%d ",work->key);
+    work=work->next;
+  }
+  printf("\n");
+}

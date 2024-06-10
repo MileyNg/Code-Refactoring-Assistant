@@ -1,0 +1,35 @@
+#include <cstring>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <map>
+#include <iostream>
+#include <cstring>
+using namespace std;
+typedef long long int lli;
+typedef pair<int,int> P;
+const int INF=100000000;
+const long long int INF_=1000000000000000000;
+
+int main(){
+	int A,B;
+	map<int,int> Count;
+	bool flag=true;
+	while(cin >> A >> B){
+		if(A==0&&B==0){
+			for(auto it=Count.begin(); it!=Count.end(); ++it){
+				if(((it->first==1||it->first==2)&&it->second%2!=1)||(!(it->first==1||it->first==2)&&it->second%2!=0)){
+					flag=false;
+					break;
+				} 
+			}
+			cout << (flag?"OK":"NG") << endl;
+			flag=true;
+			Count.clear();
+		} else {
+			++Count[A];
+			++Count[B];
+		}
+	}
+	return 0;
+}

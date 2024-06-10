@@ -1,0 +1,33 @@
+#include<stdio.h>
+double func_cal_x(int a, int b, int c, int d, int e, int f);
+double func_cal_y(int a, int b, int c, int d, int e, int f);
+void func_output(double x, double y);
+main()
+{
+	int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
+	
+	while(scanf("%d %d %d %d %d %d", &a, &b, &c, &d, &e, &f) != EOF)
+	{
+		double x = 0, y = 0;
+		x = func_cal_x(a, b, c, d, e, f);
+		y = func_cal_y(a, b, c, d, e, f);
+		func_output(x, y);
+	}
+	return 0;
+}
+double func_cal_x(int a, int b, int c, int d, int e, int f)
+{
+	double result = 0.0;
+	result = (double)(((b * f) - (c * e)) / ((b * d) - (a * e)));
+	return result;
+}
+double func_cal_y(int a, int b, int c, int d, int e, int f)
+{
+	double result = 0.0;
+	result = (double)(((c * d) - (a * f)) / ((b * d) - (a * e)));
+	return result;
+}
+void func_output(double x, double y)
+{
+	printf("%.3f %.3f\n", x, y);
+}

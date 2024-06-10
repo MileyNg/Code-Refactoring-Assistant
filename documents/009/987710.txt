@@ -1,0 +1,75 @@
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <queue>
+using namespace std;
+
+#define FORIT(i, c) for (typeof((c).begin()) i = (c).begin(); i != (c).end(); i++)
+#define ISEQ(c) (c).begin(), (c).end()
+typedef long long ll;
+
+
+int main() {
+  while (true) {
+    int n;
+    cin >> n;
+    if (n == 0) break;
+    vector<string> s = vector<string>(n);
+    vector<char> cs;
+    for (int i = 0; i < n; i++) {
+      cin >> s[i];
+      for (int j = 0; j < s[i].size(); j++)
+	cs.push_back(s[i][j]);
+    }
+    sort(ISEQ(cs));
+    cs.erase(unique(ISEQ(cs)), cs.end());
+    int res = 0;
+    int k = cs.size();
+    int comb = (1 << k) -1;
+    vector<int> p = vector<int>(k);
+    map<char, int> memo;
+    while (comb < 1 << 10) {
+      int index = 0;
+      for (int i = 0; i < 10; i++) {
+	if ((comb >> i & 1) == 1)
+	  p[index++] = i;
+      }
+      
+      do {
+	for (int i = 0; i < k; i++) {
+	  memo[cs[i]] = p[i];
+	}
+	int sum = 0;
+	bool flag = false;
+	for (int i = 0; i < n-1; i++) {
+	  int num = 0;
+	  if (s[i].size() > 1 and memo[s[i][0]] == 0) {
+	    flag = true;
+	    break;
+	  }
+	  for (int j = 0; j < s[i].size(); j++) {
+	    num = 10*num + memo[s[i][j]];
+	  }
+	  sum += num;
+	}
+	int num = 0;
+	if (flag or s[n-1].size() > 1 and memo[s[n-1][0]] == 0) continue;
+	for (int i = 0; i < s[n-1].size(); i++)
+	  num = 10*num + memo[s[n-1][i]];
+	if (sum == num) res++;
+      } while(next_permutation(ISEQ(p)));
+      int x = comb & - comb, y = comb + x;
+      comb = ((comb & ~y) / x >> 1) | y;
+    }
+    
+
+    cout << res << endl;
+
+  }
+}

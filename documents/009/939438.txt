@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+int main(){
+	int N,cnt=0,t,mx,mn;
+	cin>>N;
+	int data[10000];
+	for(int i=1;i<N;i++){
+		cin>>t;
+		data[i]=t;
+		if(i==1){
+			mn=data[i];
+		}
+		else{
+			mn=min(mn,t);
+		}
+		cnt++;
+	}
+	for(int j=cnt+1;j<=N;j++){
+		mx=max(mx,data[j]);
+	}
+	cout<<mx-mn<<endl;
+return 0;
+}

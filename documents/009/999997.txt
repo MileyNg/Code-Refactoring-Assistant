@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+namespace AOJ
+{
+    class Program
+    {
+
+
+        private static string solve(int n)
+        {
+            string[,] cnvTbl = new string[,]{
+                {"7","9"}
+                ,{"6","8"}
+                ,{"5","7"}
+                ,{"4","5"}
+            };
+
+            string str8 = Convert.ToString(n, 8);
+
+            for (int i = 0; i < cnvTbl.GetLength(0); i++)
+            {
+                str8 = str8.Replace(cnvTbl[i, 0], cnvTbl[i, 1]);
+            }
+            return str8;
+        }
+        static void Main(string[] args)
+        {
+
+            while (true)
+            {
+                int n = int.Parse(Console.ReadLine());
+                if (n == 0) break;
+                Console.WriteLine(solve(n));
+            }
+        }
+        //private static void solve(int n)
+        //{
+        //    char[,] cnvTbl = new char[,]{
+        //        {'7','9'}
+        //        ,{'6','8'}
+        //        ,{'5','7'}
+        //        ,{'4','5'}
+        //    };
+
+        //    string str8 = Convert.ToString(n, 8);
+
+        //    char[] char8 = str8.ToCharArray();
+            
+        //    for (int j = 0; j < char8.Length; j++)
+        //    {
+        //        for (int i = 0; i < cnvTbl.GetLength(0); i++)
+        //        {
+        //            if (cnvTbl[i, 0] == char8[j])
+        //            {
+        //                char8[j] = cnvTbl[i, 1];
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    for (int i = 0; i < char8.Length; i++) Console.Write(char8[i]);
+        //    Console.WriteLine();
+        //}
+        //static void Main(string[] args)
+        //{
+
+        //    while (true) {
+        //        int n  = int.Parse(Console.ReadLine());
+        //        if (n == 0) break;
+        //        solve(n);
+        //    }
+        //}
+    }
+}

@@ -1,0 +1,33 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+int main()
+{
+	int hit, blow;
+	string num, tmp;
+	
+	while (1) {
+		hit = 0; blow = 0;
+		
+		cin >> num;
+		cin >> tmp;
+		if (num=="0" && tmp=="0") break;
+		
+		for (int i=0; i<4; i++)
+			for (int j=0; j<4; j++)
+				if (num[i] == tmp[j]) {
+					if (i == j) hit++;
+					else		blow++;
+				}
+		cout << hit << " " << blow << endl;
+		
+	}
+	return 0;
+}

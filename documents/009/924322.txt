@@ -1,0 +1,18 @@
+while input=gets do
+  a,b=input.split(" ").collect do |x|
+    x.to_i
+  end
+  ac=a
+  bc=b
+  if ac<bc
+    mem=ac
+    ac=bc
+    bc=mem
+  end
+  until bc==0 do
+    mem=ac%bc
+    ac=bc
+    bc=mem
+  end
+  print ac," ",a*b/ac,"\n"
+end

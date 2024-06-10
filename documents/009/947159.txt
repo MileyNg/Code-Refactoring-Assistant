@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+/*
+	Earth Invasion Diary of Miyabi-sensei
+
+	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2330
+
+	解説は
+	http://d.hatena.ne.jp/nanikaka/20120111/1326289463
+	が詳しい。
+
+	n が 3 の倍数でないときは
+	例えば
+	n = 3*k + 1 のとき
+	n は (k, k, k+1) となって k+1 が一番大きい
+	また
+	n = 3*k + 2 のとき
+	n は (k+1, k+1, k ) となって k+1 が一番大きい
+	よって
+	f(n/3 + 1) としている。
+ 	
+*/
+int f (int n ){
+	return (n <= 1 ? 0 : (n % 3 == 0 ? f(n/3) : f(n/3 + 1) ) + 1 ); 
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int n; cin >> n;
+	int res = f(n);
+	cout << res << endl;
+
+	return 0;
+}

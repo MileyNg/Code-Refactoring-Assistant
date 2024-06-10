@@ -1,0 +1,165 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+
+int mc[13]={0,31,28,31,30,31,30,31,31,30,31,30,31};
+
+class Main{
+public:
+
+
+	ll dcount(int y,int m,int d){
+		ll res=365LL*y;
+		res+=(y-1)/4;res-=(y-1)/100;res+=(y-1)/400;
+		
+		for(int j=1;j<m;j++){
+			res+=mc[j];
+			if(j==2)if(y%4==0 && (y%100!=0 || y%400==0))res++;
+		}
+		res+=d;
+		return res;
+	}
+
+	ll year(int dc){
+		ll l=-1,r=1e10;
+		while(r-l>1){//<dc の max
+			ll m=(l+r)/2;
+			ll d=365LL*m;d+=(m-1)/4;d-=(m-1)/100;d+=(m-1)/400;
+			if(dc<=d)r=m;
+			else l=m;
+		}
+		return l;
+	}
+
+	void run(){
+		while(true){
+			string str;cin >> str;if(str=="#")break;
+			int dotc=0;
+			REP(i,str.size())if(str[i]=='.')dotc++;
+			if(dotc==2){
+				int y,m,d;
+				sscanf(str.c_str(),"%d.%d.%d",&y,&m,&d);
+				ll dc=dcount(y,m,d)-dcount(2012,12,21);
+				int b=dc/(20*20*18*20);dc%=20*20*18*20;
+				int ka=dc/(20*18*20);dc%=20*18*20;
+				int t=dc/(18*20);dc%=18*20;
+				int w=dc/20;dc%=20;
+				int ki=dc;
+				printf("%d.%d.%d.%d.%d\n",b%13,ka,t,w,ki);
+			}else{
+				int b,ka,t,w,ki;
+				sscanf(str.c_str(),"%d.%d.%d.%d.%d",&b,&ka,&t,&w,&ki);
+				ll dc=0;
+				dc+=b*20*20*18*20;
+				dc+=ka*20*18*20;
+				dc+=t*18*20;
+				dc+=w*20;
+				dc+=ki;
+				dc+=dcount(2012,12,21);
+
+				int y=year(dc);
+				int yd=y*365;yd+=(y-1)/4;yd-=(y-1)/100;yd+=(y-1)/400;
+				dc-=yd;
+				int m,d;
+				for(m=1;m<=12;m++){
+					int md=mc[m];
+					if(m==2&&(y%4==0 && (y%100!=0 || y%400==0)))md=29;
+					if(dc<=md){
+						d=dc;break;
+					}
+					dc-=md;
+				}
+				printf("%d.%d.%d\n",y,m,d);
+			}
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

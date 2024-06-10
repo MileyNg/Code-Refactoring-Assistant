@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  while(1){
+    int n;
+    cin>>n;
+    if(!n)break;
+    vector<vector<int>> o(31);
+    REP(i,n){
+      int f;
+      cin>>f;
+      REP(j,f){
+        int d;
+        cin>>d;
+        o[d].push_back(i);
+      }
+    }
+    int mind = 31;
+    for(int i=30;i>0;--i){
+      REP(j,n){
+        set<int> s;
+        s.insert(j);
+        for(int k=i;k>0;--k){
+          bool ok=false;
+          for(int p:o[k]){
+            if(s.find(p)!=end(s))
+              ok=true;
+          }
+          if(ok){
+            for(int p:o[k]){
+              s.insert(p);
+            }
+          }
+        }
+        if(s.size() == n){
+          mind=min(mind,i);
+        }
+      }
+    }
+    if(mind<=30)
+      cout<<mind<<endl;
+    else
+      cout<<-1<<endl;
+  }
+  return 0;
+}

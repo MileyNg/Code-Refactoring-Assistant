@@ -1,0 +1,126 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+
+
+int a[50][50][50][50]={0};
+int vis[50][50];
+int main(){
+	int w,h;
+	int v[4][2]={0,1,0,-1,1,0,-1,0};
+	//cout<<v[0][0]<<" "<<v[0][1]<<endl;
+	//return 0;
+	//cin>>w>>h;
+	/*
+	rep(i,4){
+		cout<<v[i][0]<<" "<<v[i][1]<<endl;
+	}
+	*/
+	while(cin>>w>>h,w){
+		memset(a,0,sizeof(a));
+		memset(vis,0,sizeof(vis));
+		rep(j,w-1){
+			int t;
+			cin>>t;
+			//cout<<t<<" ";
+			//cout<<t<<endl;
+			if(t==1){
+				a[0][j][0][j+1]=a[0][j+1][0][j]=1;
+				//cout<<0<<" "<<j<<"  "<<0<<" "<<j+1<<endl;
+			}
+		}
+		//cout<<endl;
+		rep(i,h-1){
+			rep(j,w){
+				int t;
+				cin>>t;
+				//cout<<t<<" ";
+				if(t==1){
+					a[i][j][i+1][j]=a[i+1][j][i][j]=1;
+					//cout<<i<<" "<<j<<"  "<<i+1<<" "<<j<<endl;
+				}
+			}
+			//cout<<endl;
+			rep(j,w-1){
+				int t;
+				cin>>t;
+				//cout<<t<<" ";
+				
+				if(t==1){
+					a[i+1][j][i+1][j+1]=a[i+1][j+1][i+1][j]=1;
+					//cout<<i+1<<" "<<j<<"  "<<i+1<<" "<<j+1<<endl;
+				}
+			}
+			//cout<<endl;
+		}
+		//cout<<endl;
+		int t;
+		//cout<<a[0][0][0][1]<<endl;
+		//cout<<"a"<<a[0][0][0][1]<<" "<<a[0][0][1][0]<<" "<<a[0][1][0][0]<<" "<<a[1][0][0][0]<<endl;
+		pii pos=mkp(0,0);
+		queue<pii> q;
+		q.push(pos);
+		int ans=0;
+		bool flag=false;
+		vis[0][0]=1;
+		while(!q.empty()){
+			int qs=q.size();
+			
+			//cout<<pos.F<<" "<<pos.S<<endl;
+			
+			
+			ans++;
+			rep(k,qs){
+				pii tq = q.front();
+				q.pop();
+				if(tq.F==h-1&&tq.S==w-1){
+					cout<<ans<<endl;
+					flag=true;
+					break;
+				}	
+				rep(i,4){
+					pii tpos=tq;
+					tpos.F+=v[i][0];
+					tpos.S+=v[i][1];
+					//cout<<"tpos "<<tpos.F<<" "<<tpos.S<<endl;
+					if(tpos.F>=0&&tpos.S>=0&&tpos.F<=h-1&&tpos.S<=w-1&&a[tq.F][tq.S][tpos.F][tpos.S]==0&&vis[tpos.F][tpos.S]==0){
+						vis[tpos.F][tpos.S]=1;
+						//cout<<"tpos "<<tpos.F<<" "<<tpos.S<<endl;
+						q.push(tpos);
+					}
+				}
+			}
+		}
+		if(!flag) cout<<0<<endl;
+		
+	}
+	return 0;
+}

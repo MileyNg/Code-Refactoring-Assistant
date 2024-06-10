@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+int main(int argc, char const* argv[])
+{
+  const int dx[] = { -1, 0, 1, 0 };
+  const int dy[] = { 0, -1, 0, 1 };
+
+  int N;
+  while (true) {
+    std::cin >> N;
+    if (N == 0)
+      break;
+    if (N == 1) {
+      std::cout << "1 1" << std::endl;
+      continue;
+    }
+    std::vector<std::pair<int, int> > boxes(N);
+    boxes[0] = std::make_pair(0, 0);
+    for (int i = 1; i < N; ++i) {
+      int n, d;
+      std::cin >> n >> d;
+      boxes[i] = std::make_pair(boxes[n].first + dx[d], boxes[n].second + dy[d]);
+    }
+    int min_x = 0, min_y = 0, max_x = 0, max_y = 0;
+    for (int i = 0; i < N; ++i) {
+      int x = boxes[i].first, y = boxes[i].second;
+      if (x < min_x)
+        min_x = x;
+      if (max_x < x)
+        max_x = x;
+      if (y < min_y)
+        min_y = y;
+      if (max_y < y)
+        max_y = y;
+    }
+    int w = (max_x - min_x) + 1;
+    int h = (max_y - min_y) + 1;
+    std::cout << w << " " << h << std::endl;
+  }
+  return 0;
+}

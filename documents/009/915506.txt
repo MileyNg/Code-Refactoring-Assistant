@@ -1,0 +1,33 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<vector>
+using namespace std;
+typedef pair<int,int>P;
+int main(){
+	vector<P>V;
+	int w,h,n,x,y,ans=0,mx,my;
+	cin>>w>>h>>n;
+	for(int i=0;i<n;i++){
+		cin>>x>>y;
+		V.push_back(P(x,y));
+	}
+	for(int i=0;i<n-1;i++){
+		mx=V[i].first-V[i+1].first;
+		my=V[i].second-V[i+1].second;
+		if(mx>0 && my>0)
+			ans-=min(mx,my);
+		else if(mx<0 && my<0)
+			ans+=max(mx,my);
+		if(mx<0)
+		ans-=mx;
+		else
+		ans+=mx;
+		if(my<0)
+		ans-=my;
+		else
+		ans+=my;
+	}
+	cout<<ans<<endl;
+return 0;
+}

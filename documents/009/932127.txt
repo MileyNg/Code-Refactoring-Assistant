@@ -1,0 +1,41 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int times;
+	int a[100][100]={0};
+	int m[100][100][100][100]={0};
+	int x,y,z,w,mata,x1,y1;
+	a[0][0]=1;
+	cin >> times;
+	for(int i=0;i<times;i++){
+		cin >>x1>>y1;
+		cin >>mata;
+		for(int j=0;j<mata;j++){
+			cin >> x >>y >> z >>w;
+			m[x][y][z][w]=1;
+			}
+		for(int k=0;k<x1;k++){
+			if(m[k][0][k+1][0]!=1)
+			a[k+1][0]=a[k][0];
+			}
+		for(int l=0;l<y1;l++){
+			if(m[0][l][0][l+1]!=1)
+			a[0][l+1]=a[0][l];
+		}
+		for(int p=0;p<y1-1;p++){
+			for(int q=0;q<x1-1;q++){
+				if(m[q][p+1][q+1][p+1]!=1){
+				a[q+1][p+1]+=a[q][p+1];	
+				}
+				if(m[q+1][p][q+1][p+1]!=1){
+				a[q+1][p+1]+=a[q+1][p];
+				}
+			}
+		}
+		if(a[x1][y1]==0) cout << "Miserable Hokusai!"<<endl;
+		else
+		cout << a[x1][y1]<<endl; 
+	}
+	return 0;
+}

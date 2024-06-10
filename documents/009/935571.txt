@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 100
+
+int pop(void);
+void push(int);
+
+int stackPointer=0;
+int stack[N];
+
+int main(){
+  int x=0,n,y=0;
+  char s[N];
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      x=pop();
+      y=pop();
+      push(x+y);
+    } else if ( s[0] == '-' ){
+      x=pop();
+      y=pop();
+      push(y-x);
+    } else if ( s[0] == '*' ){
+      x=pop();
+      y=pop();
+      push(x*y);
+    } else {
+      n = atoi(s);
+      push(n);
+    }
+  }
+  printf("%d\n",stack[stackPointer]);
+  return 0;
+}
+
+int pop(){
+  stackPointer--;
+  return stack[stackPointer+1];
+}
+
+void push(int s){
+  stackPointer++;
+  stack[stackPointer]=s;
+  return;
+}

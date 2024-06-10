@@ -1,0 +1,55 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+	int N;
+	int M;
+	char dist;
+	int cnt=0;
+	
+	while(1){
+		int x2=10,y2=10;
+		cin>>N;
+		if(!N)	break;
+
+
+		bool houseki[21][21]={false};
+		int x=0,y=0;
+		for(int i=0;i<N;i++){
+			cin>>x>>y;
+			houseki[x][y]=true;
+		}	
+		cin>>M;
+
+		for(int j=0;j<M;j++){
+			int kyori;
+			cin>>dist>>kyori;
+			for(int k=0;k<kyori;k++){
+				switch (dist)
+				{
+				case 'N':
+					y2++;
+					break;
+				case 'E':
+					x2++;
+					break;
+				case 'S':
+					y2--;
+					break;
+				case 'W':
+					x2--;
+					break;
+				}
+				if(houseki[x2][y2]){
+					cnt++;
+					houseki[x2][y2]=false;
+				}
+			}
+		}
+
+		cout<<(N==cnt?"Yes":"No")<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,22 @@
+def solve(s)
+  changed_points = []
+
+  while true
+    i = s.index("apple")
+    break if i.nil?
+    s[i, 5] = "peach"
+    changed_points.push(i)
+  end
+
+  i = 0
+  while true
+    i = s.index("peach", i + 1)
+    break if i.nil?
+    next if changed_points.include?(i)
+    s[i, 5] = "apple"
+  end
+
+  s
+end
+
+puts solve(gets)

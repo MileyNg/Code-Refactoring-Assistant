@@ -1,0 +1,126 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+int degree[30]; // テ暗ォ
+int n;
+int grid[30][30];
+char str[2][20];
+int vis[30];
+int que[30];
+int main()
+{
+    while(scanf("%d", &n))
+    {
+        if(n == 0)
+            break;
+        int ans = 0;
+        int cnt = 0;
+        memset(degree, 0, sizeof(degree));
+        memset(grid, 0, sizeof(grid));
+        memset(vis, 0, sizeof(vis));
+        scanf("%s", str[ans]);
+        bool flag = true;
+        for(int i = 1; i < n; i++)
+        {
+            scanf("%s", str[ans^1]);
+            int len1 = strlen(str[ans]);
+            int len2 = strlen(str[ans^1]);
+            int j;
+            for( j = 0; j < len1 && j < len2 ; j++)
+            {
+                if(str[ans][j] != str[ans^1][j])
+                {
+                    int a = str[ans][j] - 'a';
+                    int b = str[ans^1][j] - 'a';
+                    if(!vis[a])
+                    {
+                        vis[a] = 1;
+                        cnt++;
+                    }
+                    if(!vis[b])
+                    {
+                        vis[b] = 1;
+                        cnt++;
+                    }
+                    if(grid[a][b] == 0)
+                    {
+                        degree[b]++;
+                        grid[a][b] = 1;
+                    }
+                    break;
+                }
+            }
+            if(j == len2 && j< len1)
+            {
+                flag = false;
+            }
+            ans = ans^1;
+        }
+        /*
+        for(int i = 0; i <= 5; i++)
+        {
+            printf("%d\n", degree[i]);
+            for(int j = 0; j <= 5; j++)
+            {
+                printf("%d  ", grid[i][j]);
+            }
+            printf("\n");
+        }
+        */
+        if(!flag)
+        {
+            printf("no\n");
+            continue;
+        }
+        int l = 0, r = 0;
+        for(int i = 0; i < 30; i++)
+            if(vis[i] && degree[i] == 0)
+            {
+                que[r++] = i;
+            }
+        if(r == 0)
+        {
+            printf("no\n");
+            continue;
+        }
+       // printf("---------\n");
+        while(l < r && flag)
+        {
+            int u = que[l++];
+            cnt--;
+            if(cnt == 0)
+                break;
+            //printf("%c\n", u+'a');
+            degree[u] = -1;
+            for(int i = 0; i < 30; i++)
+            {
+                if(vis[i] && grid[u][i] && degree[i] != -1)
+                {
+                    degree[i]--;
+                    if(degree[i] == 0)
+                    {
+                        que[r++] = i;
+                    }
+                }
+            }
+            flag = false;
+            for(int i = 0; i < 30; i++)
+            {
+                if(degree[i] == 0  && vis[i])
+                {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        if(!flag)
+            printf("no\n");
+        else
+            printf("yes\n");
+    }
+    return 0;
+}

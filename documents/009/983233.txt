@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define C first
+#define S second.first
+#define Z second.second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = 100;
+
+int n;
+bool ok[N][N];
+int c[N][N];
+
+bool check();
+
+int main(void){
+    for(int m, res; cin >> n >> m, n; cout << res << endl){
+        res = 0;
+
+        vector< pair<int, pii> > in;
+        while(m--){
+            int a, b, cost; cin >> a >> b >> cost;
+
+            ok[a][b] = ok[b][a] = true;
+            c[a][b] = cost;
+            c[b][a] = cost;
+            in.pb(mp(cost, mp(a, b)));
+        }
+        sort(ALL(in), greater< pair<int, pii> >());
+
+        rep(i, in.size()){
+            int a = in[i].S, b = in[i].Z;
+            ok[a][b] = false;
+            ok[b][a] = false;
+
+            if(!check()){
+                ok[a][b] = true;
+                ok[b][a] = true;
+            }
+        }
+
+        rep(i, n) for(int j = i + 1; j < n; j++) if(ok[i][j]) res += c[i][j];
+    }
+
+    return 0;
+}
+
+bool check(){
+    vector<bool> used(n);
+    
+    queue<int> q;
+    q.push(0);
+
+    while(!q.empty()){
+        int cur = q.front(); q.pop();
+        if(used[cur]) continue;
+        used[cur] = true;
+
+        rep(next, n) if(ok[cur][next]) q.push(next);
+    }
+
+    return !count(ALL(used), false);
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <boost/bind.hpp>
+using namespace std;
+
+int main(){
+    int n;
+    while(cin >> n, n){
+        typedef pair<int, int> value_type;
+        vector<value_type> team;
+        int c, m, s;
+        for(int j=0; j < n; j++){
+            cin >> c;
+            team.push_back(pair<int, int>(c, 0));
+            for(int i=0; i < 4; i++){
+                cin>> m >> s;
+                team[j].second += 60*m + s;
+            }
+        }
+        sort(team.begin(), team.end(), bind(&value_type::second, _1) < bind(&value_type::second, _2));
+
+        cout << team[0].first << endl;
+        cout << team[1].first << endl;
+        cout << team[team.size()-2].first;
+        team.clear();
+    }
+}

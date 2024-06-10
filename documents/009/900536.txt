@@ -1,0 +1,40 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct branch{
+	int n1,n2,w;
+};
+bool f(branch i,branch j){
+	return(i.w>j.w);
+}
+int main(){
+	while(1){
+		int m,n,i,x=0;
+		char c;
+		cin>>n;
+		if(n==0)break;
+		vector<int>T(n);
+		for(i=0;i<n;i++) T[i]=i;
+
+		cin>>m;
+		vector<branch>S(m);
+		for(i=0;i<m;i++) cin>>S[i].n1>>c>>S[i].n2>>c>>S[i].w;
+		sort(S.begin(),S.end(),f);
+
+		branch tmp;
+		while(S.size()){
+			tmp=S.back();
+			S.pop_back();
+			int b=T[tmp.n1],c=T[tmp.n2],a=b;
+			if(b!=c){
+				if(b>c)a=c,c=b;
+				for(i=c;i<n;i++)
+					if(T[i]==c)T[i]=a;
+				x+=tmp.w/100-1;
+			}
+		}
+		cout<<x<<endl;
+	}
+}

@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+char get_another_color(char a, char b){
+  if (a > b) swap(a, b);
+  if (a == 'b') return "gr"[b == 'g'];
+  if (a == 'g') return 'b';
+  return '#';
+}
+
+int solve(string init)
+{
+  queue<string> Q;
+  set<string> vis;
+  Q.push(init);
+  vis.insert(init);
+  int turn = 0;
+  while (!Q.empty()){
+    queue<string> nQ;
+    while (!Q.empty()){
+      string state = Q.front();
+      Q.pop();
+      bool ok = true;
+      rep(i, state.size() - 1){
+        if (state[i] != state[i + 1]){
+          ok = false;
+          string nstate = state;
+          nstate[i] = nstate[i + 1] = get_another_color(nstate[i], nstate[i + 1]);
+          if (vis.find(nstate) != vis.end()) continue;
+          vis.insert(nstate);
+          nQ.push(nstate);
+        }
+      }
+      if (ok) return turn;
+    }
+    turn++;
+    swap(Q, nQ);
+  }
+  return -1;
+}
+
+int main()
+{
+  string state;
+  while (cin >> state, state != "0"){
+    int result = solve(state);
+    if (result < 0) puts("NA");
+    else printf("%d\n", result);
+  }
+  return 0;
+}

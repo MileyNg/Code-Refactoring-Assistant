@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+
+int main(){
+	int a, b, n;
+	while(std::cin >> a >> b){
+		if(a == 0 && b == 0){ break; }
+		
+		std::vector<std::vector<int> > JOI(a + 1, std::vector<int>(b + 1, 0)); //JOI[a+1][b+1]
+		JOI[1][1] = 1;
+		std::cin >> n;
+		
+		//工事中の点の入力
+		for(int i = 0 ; i < n ; ++i){
+			int xi, yi;
+			std::cin >> xi >> yi;
+			JOI[xi][yi] = -1; //工事中の点は-1として表す
+		}
+		
+		for(int y = 1 ; y <= b ; ++y){
+			for(int x = 1 ; x <= a ; ++x){
+				if(JOI[x][y] != -1){
+					if(x != 1 && JOI[x - 1][y] != -1){
+						JOI[x][y] += JOI[x - 1][y];
+					}
+					if(y != 1 && JOI[x][y - 1] != -1){
+						JOI[x][y] += JOI[x][y - 1];
+					}
+				}
+			}
+		}
+		std::cout << JOI[a][b] << std::endl;
+	}
+	
+    return 0;
+}

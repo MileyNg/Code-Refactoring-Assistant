@@ -1,0 +1,167 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+#define INF (1<<24)
+
+bool isNum(char ch){return ('0'<=ch&&ch<='9');}
+
+struct calcStr{
+  string s;
+  int pos,len;
+  bool flag;
+  void init(){ pos=0;len=s.size(); flag=false; }
+
+  int head2Num(){
+    int res=0;
+
+    if(s[pos]=='0'&&isNum(s[pos+1]))flag=true;
+
+    while(1){
+      if(pos==len)break;
+      if('0'<=s[pos]&&s[pos]<='9'){
+	res*=10;
+	res+=(s[pos]-'0');
+      }else break;
+      pos++;
+    }
+    
+    return res;
+  }
+  
+  int getNum(){
+    int res=head2Num(),num;
+    while(1){
+      if(pos==len||s[pos]=='+'||s[pos]=='-')break;
+      char ch=s[pos++];
+      num=head2Num();
+      if(ch=='*'){
+	res*=num;
+      }
+      if(ch=='/'){
+	if(num!=0&&res%num>=0)res/=num;
+	else flag=true;
+	
+      }
+    }
+    return res;
+  }
+  
+  int getAns(){
+    int res=getNum(),num;
+    while(1){
+      if(pos==len||s[pos]=='=')break;
+      char ch=s[pos++];
+      num=getNum();
+      if(ch=='+')res+=num;
+      else if(ch=='-')res-=num;
+    }
+    if(flag)return INF;
+    else return res;
+  }
+};
+
+int H,W,N,M;
+string str;
+string v;
+char t[100][100];
+char u[100];
+vector<string> w;
+
+bool solve();
+bool check();
+bool compute();
+
+int main(){
+  while(1){
+    cin>>H>>W;
+    if(H==0||W==0)break;
+    M=0;
+    w.clear();
+    for(int i=0;i<H;i++){
+      cin>>str;
+      for(int j=0;j<W;j++){
+	t[i][j]=str[j];
+	if(t[i][j]=='.'){
+	  t[i][j]='A'+M;
+	  M++;
+	}
+      }
+    }
+    cin>>N;
+    for(int i=0;i<N;i++)cin>>u[i];
+    
+    string tmp;
+    for(int i=0;i<H;i++){
+      tmp="";
+      for(int j=0;j<W;j++){
+	if(t[i][j]=='#'){
+	  if(tmp.size()>=3)w.push_back(tmp);
+	  tmp="";
+	}else tmp.push_back(t[i][j]);
+      }
+      if(tmp.size()>=3)w.push_back(tmp);
+    }
+    
+    for(int i=0;i<W;i++){
+      tmp="";
+      for(int j=0;j<H;j++){
+	if(t[j][i]=='#'){
+	  if(tmp.size()>=3)w.push_back(tmp);
+	  tmp="";
+	}else tmp.push_back(t[j][i]);
+      }
+      if(tmp.size()>=3)w.push_back(tmp);
+    }
+
+    cout<<(solve()?"Yes":"No")<<endl;
+  }
+  return 0;
+}
+
+bool solve(){
+  sort(u,u+N);
+  do{
+    if(check())return true;
+  }while(next_permutation(u,u+N));
+  return false;
+}
+
+bool check(){
+  for(int i=0;i<(int)w.size();i++){
+    v=w[i];
+    if(compute())return true;
+  }
+  return false;
+}
+
+bool compute(){
+  for(int i=0;i<(int)v.size();i++)
+      if('A'<=v[i]&&v[i]<='Z')v[i]=u[v[i]-'A'];
+  string a="",b="";
+  bool flg=false;
+  b.push_back(v[0]);
+  for(int i=1;i<(int)v.size();i++){
+      if(!isNum(v[i-1])&&!isNum(v[i]))return false;
+      if(v[i]=='=')flg=true;
+      else if(flg)a.push_back(v[i]);
+      else b.push_back(v[i]);
+  }
+  if(!isNum(v[0])||!isNum(v[v.size()-1]))return false;
+
+
+  if(v[0]=='0'&&isNum(v[1]))return false;
+
+  if(flg==false)return false;
+
+  calcStr x,y;
+  x.s=a;
+  x.init();
+  y.s=b;
+  y.init();
+
+  int A = x.getAns();
+  int B = y.getAns();
+  if(A==INF||B==INF)return false;
+  return (A==B);
+}

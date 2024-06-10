@@ -1,0 +1,80 @@
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <queue>
+using namespace std;
+
+#define ISEQ(c) (c).begin(), (c).end()
+typedef long long ll;
+typedef pair<int, int> P;
+const int INF = 1000000000;
+
+typedef struct {
+  int to, cost;
+} edge;
+vector<edge> G[100*101];
+int d[100*101];
+bool used[100*101];
+
+void dijkstra(int s, int n) {
+  for (int i = 0; i < n; i++) {
+    d[i] = INF;
+    used[i] = false;
+  }
+  d[s] = 0;
+  priority_queue<P, vector<P>, greater<P> > que;
+  que.push(P(0, s));
+  while (!que.empty()) {
+    P p = que.top(); que.pop();
+    int v = p.second;
+    if (d[v] < p.first) continue;
+    used[v] = true;
+    for (int i = 0; i < G[v].size(); i++) {
+      edge e = G[v][i];
+      if (!used[e.to] and d[e.to] > d[v] + e.cost) {
+	d[e.to] = d[v] + e.cost;
+	que.push(P(d[e.to], e.to));
+      }
+    }
+  }
+}
+
+int main() {
+  while (true) {
+    int n ,m, l;
+    scanf("%d%d%d", &n, &m, &l);
+    if (n == 0) break;
+    
+    l++;
+    for (int i = 0; i < n*l; i++)
+      G[i].clear();
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < l-1; j++)
+	G[i+n*j].push_back(edge{i+n*(j+1), 0});
+    }
+
+    for (int i = 0; i < m; i++) {
+      int a, b, d, e;
+      scanf("%d%d%d%d", &a, &b, &d, &e);
+      a--; b--;
+      for (int j = 0; j < l; j++) {
+	G[a+n*j].push_back(edge{b+n*j, e});
+	G[b+n*j].push_back(edge{a+n*j, e});
+      }
+      for (int j = 0; j+d < l; j++) {
+	G[a+n*j].push_back(edge{b+n*(j+d), 0});
+	G[b+n*j].push_back(edge{a+n*(j+d), 0});
+      }
+    }
+    
+    dijkstra(0, n*l);
+
+    printf("%d\n", d[n*l-1]);
+  }  
+}

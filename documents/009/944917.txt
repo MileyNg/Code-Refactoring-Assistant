@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<string.h>
+ 
+#define M 101
+#define NIL (-1)
+#define L 14
+ 
+char H[M][L]; /* Hash Table */
+ 
+int getChar(char ch){
+  if ( ch == 'A') return 1;
+  else if ( ch == 'C') return 2;
+  else if ( ch == 'G') return 3;
+  else return 4;
+}
+ 
+/* convert a string into an integer value */
+long long getKey(char str[]){
+  long long sum = 0, p = 1, i;
+  for ( i = 0; i < strlen(str); i++ ){
+    sum += p*(getChar(str[i]));
+    p *= 5;
+  }
+  return sum;
+}
+ 
+int h1(int key){ return key%L; }
+int h2(int key){ return 1 + key%(L-1); }
+ 
+int find(char str[]){
+  long long key;
+  int a1,a2;
+  int i=0;
+  
+  key = getKey(str);
+  a1 = h1(key);
+  a2 = h2(key);
+  while(1){
+    if(strcmp(str,H[a1])==0){
+      return 1;
+    }
+    else{
+      if(i==5){return 0; break;}
+      a1 += a2;
+      if(M<a1)
+    a1 = a1-M;
+      i++;
+    }
+  }
+  return 0;
+}
+ 
+void insert(char str[]){
+  long long key;
+  int a1,a2;
+  int i;
+   
+  key = getKey(str);
+  a1=h1(key);
+  a2=h2(key);
+  if(H[a1][0] != '\0'){
+    while(1){
+      a1 += a2;
+      if(a1>M)
+    a1 = a1-M;
+      if(H[a1][0] != '\0') break;
+    }
+  }
+  strcpy(H[a1],str);
+}
+ 
+int main(){
+  int i, n, h;
+  char str[L], com[9];
+  for ( i = 0; i < M; i++ ) H[i][0] = '\0';
+   
+  scanf("%d", &n);
+   
+  for ( i = 0; i < n; i++ ){
+    scanf("%s %s", com, str);
+     
+    if ( com[0] == 'i' ){
+      insert(str);
+    } else {
+      if (find(str)){
+    printf("yes\n");
+      } else {
+    printf("no\n");
+      }
+    }
+  }
+   
+  return 0;
+}

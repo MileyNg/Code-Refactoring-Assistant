@@ -1,0 +1,68 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+
+int r;
+
+void powerPlus(int x, int y, int coordinate[], int tile[10000][10000]){
+    tile[x][y]++; // これは正直どっちでもいい
+    for(int i = 1; i <= r; i++){
+        if(x+i < 10000) tile[y][x+i]++;
+        if(x-i >= 0) tile[y][x-i]++;
+        if(y+i < 10000) tile[y+i][x]++;
+        if(y-i >= 0) tile[y-i][x]++;
+    }
+    for(int i = 1; i <= r; i++){
+        for(int j = 1; j <= coordinate[i]; j++){
+            if(y+i < 10000){
+                if(x+j < 10000) tile[y+i][x+j]++;
+                if(x-j >= 0) tile[y+i][x-j]++;
+            }
+            if(y-i >= 0){
+                if(x+j < 10000) tile[y-i][x+j]++;
+                if(x-j >= 0) tile[y-i][x-j]++;
+            }
+        }
+    }
+};
+
+int main(int argc, const char * argv[])
+{
+    int an, bn;
+    
+    while(true){
+        cin >> an >> bn >> r;
+        r = 4 * r;
+        
+        if(an == 0 && bn == 0 && r == 0) return 0;
+        
+        int tile[10000][10000];
+        int coordinate[r+1];
+        coordinate[0] = r;
+        for(int i = 1; i < r; i++){
+            coordinate[i] = sqrt(r*r - i*i);
+            // cout << i << " " << coordinate[i] << "\n"; // DEBUG
+        }
+        coordinate[r] = 0;
+        
+        if(an == 0 && bn == 0) return 0;
+        
+        for(int i = 0; i < an; i++){
+            int xa, ya;
+            cin >> xa >> ya;
+            powerPlus(ya, xa, coordinate, tile);
+            // printDebug(); // DEBUG
+        }
+        
+        int sum = 0;
+        for(int i = 0; i < bn; i++){
+            int xb, yb;
+            cin >> xb >> yb;
+            sum += tile[yb][xb];
+        }
+        cout << sum;
+    }
+    
+    return 0;
+}

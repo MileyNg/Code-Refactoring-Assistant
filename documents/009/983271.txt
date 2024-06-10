@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int n;
+    std::cin >> n;
+    if (n == 0) {
+      break;
+    }
+    std::map<char, char> trans;
+    for (int i = 0; i < n; ++i) {
+      char s, d;
+      std::cin >> s >> d;
+      trans[s] = d;
+    }
+
+    std::vector<char> v;
+    int m;
+    std::cin >> m;
+    for (int i = 0; i < m; ++i) {
+      char c;
+      std::cin >> c;
+      v.push_back(c);
+    }
+
+    for (std::vector<char>::const_iterator it = v.begin(); it != v.end(); ++it) {
+      if (trans.find(*it) == trans.end()) {
+        std::cout << *it;
+      } else {
+        std::cout << trans[*it];
+      }
+    }
+    std::cout << std::endl;
+  }
+  return 0;
+}

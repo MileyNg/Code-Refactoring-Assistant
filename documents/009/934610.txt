@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+/* 入力 */
+int D; //D:'D'とかくことができる最大個数
+int x; //x:空欄1マスな数
+char a[30]; //a[i]:i番目の正答
+int p[30]; //p[i]:i番目の配点
+int y; //y:空欄2マスな数
+char b[30], c[30]; //b[i],c[i]:i番目の正答
+int q[30]; //q[i]i番目の配点
+/* おわり */
+
+int dp[14][20][2];
+
+int rec( int mul, int idx, bool one){ //残りＤ個数, 今のところ, 空欄1マスか
+  if(~dp[mul][idx][one]) return dp[mul][idx][one];
+  int ret = 0;
+  if(one){
+    if(idx == x) ret = rec( mul, 0, !one); //空欄2マスのやつ
+    else{
+      ret = rec( mul, idx + 1, one);
+      if(mul > 0 && a[idx] == 'D') ret = max( ret, rec( mul - 1, idx + 1, one) + p[idx]);
+    }
+  }else{
+    if(idx == y) return 0;
+    else{
+      ret = rec( mul, idx + 1, one);
+      if(mul > 1 && b[idx] == 'D' && c[idx] == 'D') ret = max( ret, rec( mul - 2, idx + 1, one) + q[idx]);
+    }
+  }
+  return dp[mul][idx][one] = ret;
+}
+int main(){
+  fill_n( **dp, 14 * 20 * 2, -1);
+  cin >> D >> x;
+  for(int i = 0; i < x; i++){
+    cin >> a[i] >> p[i];  
+  }
+  cin >> y;
+  for(int i = 0; i < y; i++){
+    cin >> b[i] >> c[i] >> q[i];
+  }
+  cout << rec( D, 0, true) << endl;
+  return(0);
+}

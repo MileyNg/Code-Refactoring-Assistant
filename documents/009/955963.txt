@@ -1,0 +1,212 @@
+#include <stdio.h>
+
+#define WIN	(1)
+#define LOSE	(2)
+#define DRAW	(3)
+
+int isWinRow( char board[3][3] )
+{
+	int i;
+	int j;
+	int point;
+	
+	for( i = 0; i < 3; i++ )
+	{
+		point = 0;
+		for( j = 0; j < 3; j++ )
+		{
+			if( board[i][j] == 'o' )
+			{
+				point++;
+			}
+		}
+		if( point == 3 )
+		{
+			return (WIN);
+		}
+	}
+	return (0);
+}
+
+int isWinColumn( char board[3][3] )
+{
+	int i;
+	int j;
+	int point;
+	
+	for( i = 0; i < 3; i++ )
+	{
+		point = 0;
+		for( j = 0; j < 3; j++ )
+		{
+			if( board[j][i] == 'o' )
+			{
+				point++;
+			}
+		}
+		if( point == 3 )
+		{
+			return (WIN);
+		}
+	}
+	return (0);
+}
+
+int isWinDiagonal( char board[3][3] )
+{
+	int i;
+	int j;
+	int point;
+	
+	point = 0;
+	for( i = 0; i < 3; i++ )
+	{
+		if( board[i][i] == 'o' )
+		{
+			point++;
+		}
+	}
+	if( point == 3 )
+	{
+		return (WIN);
+	}
+	
+	point = 0;
+	for( i = 0; i < 3; i++ )
+	{
+		if( board[2 - i][2 - i] == 'o' )
+		{
+			point++;
+		}
+	}
+	if( point == 3 )
+	{
+		return (WIN);
+	}
+	return (0);
+}
+
+int isLoseRow( char board[3][3] )
+{
+	int i;
+	int j;
+	int point;
+	
+	for( i = 0; i < 3; i++ )
+	{
+		point = 0;
+		for( j = 0; j < 3; j++ )
+		{
+			if( board[i][j] == 'x' )
+			{
+				point++;
+			}
+		}
+		if( point == 3 )
+		{
+			return (LOSE);
+		}
+	}
+	return (0);
+}
+
+int isLoseColumn( char board[3][3] )
+{
+	int i;
+	int j;
+	int point;
+	
+	for( i = 0; i < 3; i++ )
+	{
+		point = 0;
+		for( j = 0; j < 3; j++ )
+		{
+			if( board[j][i] == 'x' )
+			{
+				point++;
+			}
+		}
+		if( point == 3 )
+		{
+			return (LOSE);
+		}
+	}
+	return (0);
+}
+
+int isLoseDiagonal( char board[3][3] )
+{
+	int i;
+	int j;
+	int point;
+	
+	point = 0;
+	for( i = 0; i < 3; i++ )
+	{
+		if( board[i][i] == 'x' )
+		{
+			point++;
+		}
+	}
+	if( point == 3 )
+	{
+		return (LOSE);
+	}
+	
+	point = 0;
+	for( i = 0; i < 3; i++ )
+	{
+		if( board[2 - i][2 - i] == 'x' )
+		{
+			point++;
+		}
+	}
+	if( point == 3 )
+	{
+		return (LOSE);
+	}
+	return (0);
+}
+
+int getResult( char* boardSrc )
+{
+	char board[3][3];
+	int i;
+	int j;
+	
+	for( i = 0; i < 3; i++ )
+	{
+		for( j = 0; j < 3; j++ )
+		{
+			board[i][j] = boardSrc[i * 3 + j];
+			printf( "%c", board[i][j] );
+		}
+		printf("\n");
+	}
+	
+	if( isWinRow( board ) == WIN || isWinColumn( board ) == WIN || isWinDiagonal( board ) == WIN )
+	{
+		return (WIN);
+	}
+	if( isLoseRow( board ) == LOSE || isLoseColumn( board ) == LOSE || isLoseDiagonal( board ) == LOSE )
+	{
+		return (LOSE);
+	}
+	
+	return (DRAW);
+}
+
+int main(void)
+{
+	char output[4] = "oxd";
+	char board[10];
+	int result;
+	
+	while( scanf( "%s", board ) != EOF )
+	{
+		result = getResult( board );
+		printf( "%c", output[result - 1] );
+	}
+	
+	return (0);
+}

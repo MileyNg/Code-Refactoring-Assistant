@@ -1,0 +1,38 @@
+### constants
+
+DELTA = 1.0e-9
+
+### subroutines
+
+def poly_area(vs)
+  s = 0
+  deg = 0
+
+  for v in vs
+    s += Math.sin(Math::PI * v / 180)
+    deg += v
+  end
+  s += Math.sin(Math::PI * (360 - deg) / 180)
+
+  s
+end
+
+### main
+
+while true
+  m = gets.strip.to_i
+  break if m == 0
+
+  vms = (m - 1).times.map{gets.strip.to_i}
+  n = gets.strip.to_i
+  vns = (n - 1).times.map{gets.strip.to_i}
+  #p vms
+  #p vns
+
+  sm = poly_area(vms)
+  sn = poly_area(vns)
+
+  d = (sm - sn).abs
+
+  puts (d <= DELTA) ? 0 : (sm > sn) ? 1 : 2
+end

@@ -1,0 +1,77 @@
+### subroutines
+
+def calc_score(ns)
+  th = 0
+
+  frsc = Array.new(11){0}
+
+  # 1-9th frame
+  for fr in (1..9)
+    # first throw
+    t1 = ns[th]
+    th += 1
+
+    frsc[fr] = t1
+    if t1 == 10 # strike
+      frsc[fr] += ns[th] + ns[th + 1]
+      next
+    end
+
+    # second throw
+    t2 = ns[th]
+    th += 1
+
+    frsc[fr] += t2
+    if frsc[fr] == 10   # spare
+      frsc[fr] += ns[th]
+      next
+    end
+  end
+
+  # 10th frame
+  third = false
+
+  t1 = ns[th]
+  th += 1
+  frsc[10] = t1
+  third = true if t1 == 10
+
+  t2 = ns[th]
+  th += 1
+  frsc[10] += t2
+  third = true if frsc[10] == 10
+
+  if third
+    frsc[10] += ns[th]
+  end
+
+  total = frsc[1..10].inject(0){|s, c| s + c}
+
+  #p [frsc[1..10], total]
+  total
+end
+
+### main
+
+while true
+  m = gets.strip.to_i
+  break if m == 0
+
+  scores = []
+
+  m.times.each do
+    ns = gets.strip.split(' ').map{|s| s.to_i}
+
+    sid = ns.shift
+    sc = calc_score(ns)
+
+    scores << [sid, sc]
+  end
+
+  scores.sort do |a, b|
+    cmp = b[1] <=> a[1]
+    cmp != 0 ? cmp : a[0] <=> b[0]
+  end.each do |scr|
+    puts scr.join(' ')
+  end
+end

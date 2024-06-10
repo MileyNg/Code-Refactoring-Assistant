@@ -1,0 +1,38 @@
+n, q = gets.chomp.split(" ").map{|s| s.to_i}
+
+avs = (0...n).map{|a| [a, 0]}
+avcache = {}
+
+max_a, max_v = avs[0]
+
+q.times.each do
+  a, v = gets.chomp.split(" ").map{|s| s.to_i}
+  a -= 1
+
+  av_a = avs[a]
+  v_a = (av_a[1] += v)
+
+  if v > 0
+    avcache[a] = av_a if avcache[a].nil?
+    if max_v < v_a || (max_v == v_a && max_a > a)
+      max_v = v_a
+      max_a = a
+    end
+  else
+    avcache.delete(a) if v_a <= 0
+    if max_a == a
+      if avcache.empty?
+        max_a, max_v = avs[0]
+      else
+        max_a, max_v =
+          avcache.values.max do |a, b|
+            vcmp = a[1] <=> b[1]
+            (vcmp != 0) ? vcmp : (b[0] <=> a[0])
+          end
+      end
+    end
+  end
+
+  #p avs
+  puts [max_a + 1, max_v].join(" ")
+end

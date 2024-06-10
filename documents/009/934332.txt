@@ -1,0 +1,33 @@
+class Hint
+  attr_accessor :try, :hit, :blow
+  def initialize(try, hit, blow)
+    @try, @hit, @blow = try, hit.to_i, blow.to_i
+  end
+end
+
+until (l, h = gets.split.map(&:to_i)).all?(&:zero?)
+  hint_set = h.times.map{Hint.new(*gets.split)}
+  answer = "NO"
+  ("0".."9").to_a.permutation(l) do |p|
+    ok = true
+    hint_set.each do |hint|
+      hit = blow = 0
+      l.times do |i|
+        if p[i] == hint.try[i]
+          hit += 1
+        else
+          blow += 1 if hint.try.include?(p[i])
+        end
+      end
+      ok = false if hit != hint.hit || blow != hint.blow
+      break unless ok
+    end
+    next unless ok
+    if answer != "NO"
+      answer = "NO"
+      break;
+    end
+    answer = p*""
+  end
+  puts answer
+end

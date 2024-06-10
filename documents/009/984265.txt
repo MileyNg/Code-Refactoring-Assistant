@@ -1,0 +1,205 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+
+namespace SyntaxAnalysis{
+	typedef string::const_iterator Cursor;
+
+
+//			l.erase(remove(l.begin(), l.end(), ' '), l.end());//空白除去
+	
+	class ParseError{};
+	// <四則演算の式> ::= <乗算除算の式> (+ or -) <乗算除算の式> (+ or -) ...
+	// <乗算除算の式> ::= <括弧か数> (* or /) <括弧か数> (* or /) ...
+	// <括弧か数>     ::= '(' <四則演算の式> ')' or <数>
+	// <数>           ::= (0|1|2|3|4|5|6|7|8|9)+
+
+	vector<int> expression(Cursor&);
+	vector<int> factor(Cursor&);
+	int number(Cursor&);
+ 
+
+	// <四則演算の式> ::= <乗算除算の式> (+ or -) <乗算除算の式> (+ or -) ...
+	vector<int> expression(Cursor &c){
+	    vector<vector<int>> fs;fs.push_back(factor(c));
+	    vector<char> ops;
+	    while(*c == '+' || *c == '-' || *c =='*' || *c =='/'){
+	        ops.push_back(*c);
+	        c++;fs.push_back(factor(c));
+	    }
+	    int opc=ops.size();
+
+	    vector<int> per(opc);REP(i,opc)per[i]=i;
+	    vector<int> res;
+	    do{
+	    	vector<vector<int>> tmp=fs;
+	    	vector<bool> used(fs.size(),false);
+	    	REP(i,opc){
+	    		vector<int> rlt;
+	    		int l=per[i];while(used[l])l--;
+	    		int r=per[i]+1;while(used[r])r++;
+	    		REP(j,tmp[l].size())REP(k,tmp[r].size()){
+	    			if(ops[per[i]]=='+') rlt.push_back(tmp[l][j]+tmp[r][k]);
+	    			if(ops[per[i]]=='-') rlt.push_back(tmp[l][j]-tmp[r][k]);
+	    			if(ops[per[i]]=='*') rlt.push_back(tmp[l][j]*tmp[r][k]);
+	    			if(ops[per[i]]=='/' && tmp[r][k]!=0) rlt.push_back(tmp[l][j]/tmp[r][k]);
+	    		}
+	    		used[r]=true;
+	    		sort(ALL(rlt)); rlt.erase(unique(ALL(rlt)),rlt.end());
+	    		tmp[l]=rlt;
+	    	}
+	    	REP(i,tmp[0].size())res.push_back(tmp[0][i]);
+	    }while(next_permutation(ALL(per)));
+
+	    sort(ALL(res)); res.erase(unique(ALL(res)),res.end());
+	    return res;
+	}
+
+	// <括弧か数>     ::= '(' <四則演算の式> ')' or <数>
+	vector<int> factor(Cursor &c){
+	    if(*c == '('){
+	        c++;
+	        vector<int> ret = expression(c);
+	        c++; // ')'
+	        return ret;
+	    }else{
+	        return vector<int>(1,number(c));
+	    }
+	}
+
+	// <数>           ::= (0|1|2|3|4|5|6|7|8|9)+
+	int number(Cursor &c){
+	    stringstream ss;
+	    while(isdigit(*c)){
+	        ss << *c;
+	        c++;
+	    }
+	    int ret;
+	    ss >> ret;
+	    return ret;
+	}
+}
+using namespace SyntaxAnalysis;
+
+class Main{
+	public:
+
+	void run(){
+		// ifstream cin("D2");
+//		ofstream cout( "D2.out" );
+		
+		while(true){
+			string str;cin >> str;if(str=="#")break;
+
+			Cursor c=str.begin();
+
+			cout << expression(c).size()<<endl;
+		}
+	}
+
+
+};
+int main(){
+	cout <<fixed<<setprecision(15);	
+	ios::sync_with_stdio(false);
+	Main().run();
+	return 0;
+}

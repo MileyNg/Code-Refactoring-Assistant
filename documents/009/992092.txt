@@ -1,0 +1,74 @@
+#include<cstdio>
+#include<queue>
+#include<algorithm>
+using namespace std;
+#define INF 1<<25
+
+
+typedef struct n
+{
+	int w,h,m,o,g[11][11];
+}n;
+
+struct Order
+{
+	bool operator ()(n const& a, n const& b) const
+	{
+		return a.m<b.m;
+	}
+};
+
+int W,H,F,M,O,G[11][11],mv[4]={0,1,0,-1},f;
+
+n cr(int h,int w,int o,int m,int g[11][11])
+{
+	n ins;
+	ins.h=h;ins.w=w;
+	ins.m=m+(g[h][w]<0?g[h][w]:0);
+	ins.o=min(M,o-1+(g[h][w]>0?g[h][w]:0));
+	memcpy(ins.g,g,sizeof(ins.g));
+	ins.g[h][w]=0;
+	return ins;
+}
+
+int main()
+{
+	for(;~scanf("%d%d%d%d%d",&W,&H,&F,&M,&O),W;)
+	{
+		for(int i=0;i<H;i++)
+			for(int j=0;j<W;j++)
+				scanf("%d",&G[i][j]);
+		priority_queue<n,vector<n>,Order>Q;
+		for(int i=0;i<W;i++)
+		{
+			n ins=cr(0,i,O,F,G);
+			Q.push(ins);
+		}
+		for(f=0;!Q.empty();)
+		{
+			n tmp=Q.top();Q.pop();
+			if(tmp.h==H-1)
+			{
+				printf("%d\n",F-tmp.m);
+				f=1;
+				break;
+			}
+			for(int i=0;i<3;i++)
+			{
+				int nh=tmp.h+mv[i];
+				int nw=tmp.w+mv[i+1];
+				if(0<=nw&&nw<W&&tmp.o>1)
+				{
+					int nc=tmp.m+(G[nh][nw]<0?G[nh][nw]:0);
+					if(nc>0)
+					{
+						n ins=cr(nh,nw,tmp.o,tmp.m,tmp.g);
+						Q.push(ins);
+					}
+				}
+			}
+		}
+		if(!f)puts("NA");
+	}
+	return 0;
+}

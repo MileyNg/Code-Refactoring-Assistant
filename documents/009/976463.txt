@@ -1,0 +1,47 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+const int width = 10;
+const int dx[12] = {-1, 0, 1, -2, 2, -2, 2, -2, 2, -1, 0, 1};
+const int dy[12] = {-2, -2, -2, -1, -1, 0, 0, 1, 1, 2, 2, 2};
+
+bool check(vector<pair<int, int>> &spr, int px, int py, int k) {
+    if (0 <= k) {
+        if ((int)spr.size() <= k) {
+            return true;
+        }
+        if (1 < abs(spr[k].first - px) || 1 < abs(spr[k].second - py)
+            || px < 0 || 10 <= px || py < 0 || 10 <= py) {
+            return false;
+        }
+    }
+    bool ret = false;
+    for (int i=0; i<12; ++i) {
+        ret |= check(spr, px + dx[i], py + dy[i], k + 1);
+    }
+    return ret;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    int px, py, n;
+    vector<pair<int, int>> spr;
+
+    while (1) {
+        cin >> px >> py;
+        if (px == 0 && py == 0) break;
+        cin >> n;
+        spr.clear();
+        spr.resize(n);
+        for (int i=0; i<n; ++i) {
+            cin >> spr[i].first >> spr[i].second;
+        }
+        cout << (check(spr, px, py, -1) ? "OK" : "NA") << endl;
+    }
+
+    return 0;
+}

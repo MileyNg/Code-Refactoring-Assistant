@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <vector>
+#include <queue>
+#include <string>
+
+#define REP(i,n) for (int i = 0; i < (n); i++)
+#define FOR(i,s,n) for (int i = (s); i < (n); i++)
+#define ALLOF(c) c.begin(), c.end()
+#define RANGEOF(c,i,n) c.begin() + (i), c.begin() + (i) + (n)
+#define EPS 1e-9
+using namespace std;
+
+template <class T> T read() { T t; cin >> t; return t; }
+template <class T> vector<T> read_n(int n) { vector<T> v; REP(i,n) { v.push_back(read<T>()); } return v; }
+template <class T> void write(const T &t) { cout << t << endl; }
+struct _Reader { template <class T> _Reader operator ,(T &rhs) { cin >> rhs; return *this; } };
+#define READ(t,...) t __VA_ARGS__; _Reader(), __VA_ARGS__
+
+/// template end ///
+
+int main()
+{
+	while (true)
+	{
+		READ(int, n, r);
+		if (!n && !r) { break; }
+		deque<int> deck;
+		REP(i, n) deck.push_back(n - i);
+
+		REP(i, r)
+		{
+			READ(int, p, c); p--;
+			vector<int> cut(RANGEOF(deck, p, c));
+			deck.erase(RANGEOF(deck, p, c));
+			deck.insert(deck.begin(), ALLOF(cut));
+		}
+		write(deck.at(0));
+	}
+	return 0;
+}

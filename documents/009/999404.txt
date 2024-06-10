@@ -1,0 +1,40 @@
+class UnionFind
+  def initialize
+    @parent = Hash.new
+    @rank = Hash.new
+  end
+  def make(x)
+    @parent[x] = x
+    @rank[x] = 0
+  end
+  def union(a, b)
+    x, y = find(a), find(b)
+    x, y = y, x if @rank[x] < @rank[y]
+    @parent[y] = x
+    @rank[x] += 1 if @rank[x] == @rank[y]
+  end
+  def find(x)
+    @parent[x] == x ? x : @parent[x] = find(@parent[x])
+  end
+  def size
+    @parent.keys.map{|k| find(k)}.sort.uniq.size
+  end
+end
+
+while gets
+  subset = gets.split.map{|d| d.chars.map(&:to_i)}
+  disjoint_set = UnionFind.new
+  degree = Hash.new{0}
+
+  subset.flatten.sort.uniq.each do |d|
+    disjoint_set.make(d)
+  end
+
+  subset.each do |d|
+    degree[d.first] += 1
+    degree[d.last] += 1
+    disjoint_set.union(*d)
+  end
+
+  puts disjoint_set.size == 1 && degree.select{|k, v| v.odd?}.size <= 2 ? "Yes" : "No"
+end

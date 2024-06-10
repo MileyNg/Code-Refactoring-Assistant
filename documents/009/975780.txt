@@ -1,0 +1,29 @@
+array = []
+loop do
+  data = gets.chomp.split.map {|s| s.to_i}
+  break if data[0] == 0 && data[1] == 0
+  array << data
+end
+
+array.each do |data|
+  h = data[0]
+  w = data[1]
+
+  0.upto(h - 1) do |i|
+    if i == 0 || i == h - 1 then
+      0.upto(w - 1) do |j|
+        print "#"
+      end
+    else
+      0.upto(w - 1) do |j|
+        if j == 0 || j == w - 1 then
+          print "#"
+        else
+          print "."
+        end
+      end
+    end
+    print "\n"
+  end
+  print "\n"
+end

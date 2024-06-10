@@ -1,0 +1,114 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+#include <ctime>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+struct info{
+	bool empty;
+	vector<int> x, y;
+
+	info(){
+		x.resize(2);
+		y.resize(2);
+		empty = true;
+	}
+
+	int dist(int xx, int yy){
+		if (empty) return 0;
+		return max({ abs(x[0] - xx), abs(x[1] - xx), abs(y[0] - yy), abs(y[1] - yy) });
+	}
+
+	void add(int xx, int yy){
+		if (empty){
+			x[0] = x[1] = xx;
+			y[0] = y[1] = yy;
+			empty = false;
+		}
+		else{
+			x[0] = max(x[0], xx);
+			x[1] = min(x[1], xx);
+			y[0] = max(y[0], yy);
+			y[1] = min(y[1], yy);
+		}
+	}
+};
+
+vector<int> vx, vy;
+int n;
+bool f(int d){
+	vector<info> v(2);
+
+	for (int i = 0; i < n; ++i){
+		int x = vx[i], y = vy[i];
+		rep(j, 3){
+			if (j == 2) return false;
+			if (v[j].dist(x, y) <= d){
+				v[j].add(x, y);
+				break;
+			}
+		}
+	}
+	return true;
+}
+
+int main(){
+	cin >> n;
+	vx.resize(n), vy.resize(n);
+	rep(i, n){
+		int xx, yy;
+		cin >> xx >> yy;
+		vx[i] = xx + yy, vy[i] = -xx + yy;
+	}
+
+	int lb = 0, ub = 2e5+10;
+	while (ub - lb > 1){
+		int mid = (ub + lb) / 2;
+		if (f(mid)) ub = mid;
+		else lb = mid;
+	}
+	cout << ub << endl;
+
+
+	return 0;
+}

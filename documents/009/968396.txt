@@ -1,0 +1,121 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<queue>
+#include<set>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+
+const int N = 222;
+const int R = 1111;
+
+class E{
+	public:
+	int to;
+	int cost;
+	string kind;
+	E(int to,int cost,string kind):to(to),cost(cost),kind(kind){}
+};
+
+int n,m;
+vector<E> edge[N];
+vector<int> move;
+
+
+bool init(){
+	cin>>n>>m;
+	if(n==0)return false;
+	
+	rep(i,N)edge[i].clear();
+	rep(i,m){
+		int a,b,c;
+		string s;
+		cin>>a>>b>>c>>s;
+		edge[a].push_back(E(b,c,s));
+		edge[b].push_back(E(a,c,s));
+	}
+	
+	int r;
+	cin>>r;
+	
+	move.clear();
+	rep(i,r){
+		int a;
+		cin>>a;
+		move.push_back(a);
+	}
+	return true;
+}
+
+class Q{
+	public:
+	int val;
+	int pos,num,fune;
+	Q(int pos,int num,int fune,int val):
+		pos(pos),num(num),fune(fune),val(val){}
+	bool operator<(const Q& a)const{
+		return val>a.val;
+	}
+};
+
+int visit[N][R][N];
+
+int dijk(){
+	
+	rep(i,n+1)rep(j,move.size())rep(k,n+1)visit[i][j][k]=0;
+	
+	priority_queue<Q> que;
+	que.push(Q(move[0],1,1,0));
+	
+	while(!que.empty()){
+		Q u = que.top();
+		que.pop();
+		
+		if(visit[u.pos][u.num][u.fune]==1)continue;
+		visit[u.pos][u.num][u.fune]=1;
+		
+		//printf("**%d %d %d %d\n",u.pos,u.num,u.fune,u.val);
+		
+		int next = u.num;
+		if(u.pos==move[u.num]){
+			next++;
+		}
+		
+		if(next==n){
+			return u.val;
+		}
+		
+		if(u.pos==u.fune){
+			rep(i,edge[u.pos].size()){
+				E e = edge[u.pos][i];
+				if(e.kind!="S")continue;
+				que.push(Q(e.to, next, e.to, u.val+e.cost));
+			}
+		}
+		rep(i,edge[u.pos].size()){
+			E e = edge[u.pos][i];
+			if(e.kind!="L")continue;
+			que.push(Q(e.to, next, u.fune, u.val+e.cost));
+		}
+	}
+	
+	return -1;
+}
+
+int solve(){
+	return dijk();
+}
+
+
+int main(){
+	while(init()){
+		printf("%d\n",solve());
+	}
+}

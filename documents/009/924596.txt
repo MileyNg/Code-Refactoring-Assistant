@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <string.h>
+typedef struct {
+  char mark;
+  int value;
+}Card;
+ 
+void swap(Card *in,Card *out)
+{
+  Card temp;
+  int i,j;
+  temp.mark = out->mark;
+  temp.value = out->value;
+  out->mark = in->mark;
+  out->value = in->value;
+  in->mark = temp.mark;
+  in->value = temp.value;
+}
+ 
+void Print(Card *in,int num)
+{
+  int i;
+  for(i=0;i<num;i++)
+    {
+      printf("%c%d",in[i].mark,in[i].value);
+      if (i<num-1) printf(" ");
+    }
+  printf("\n");
+}
+int hantei(Card *kai,Card *moto,int num)
+{
+  int i,j;
+  for (i=0;i<num;i++)
+    {
+    if(kai[i].value == kai[i+1].value) 
+    	{
+    		for(j=0;j<num;j++)
+    		{
+      		if (kai[i].value == moto[j].value)
+    			{
+    			/*	printf("aaa%d%c   %d%c\n",kai[i].value,kai[i].mark,
+    				moto[j].value,moto[j].mark);*/
+      			if (kai[i].mark!=moto[j].mark ) return 1;
+      			else break;
+      			}
+    		}
+		 }
+	}
+	return 0;
+}
+
+int main()
+{
+  int i,j;
+  int num,mini;
+  int stable=0;
+  Card A[36],B[36],C[36];
+ 
+  scanf("%d",&num);
+  for (i=0;i<num;i++)
+    {
+      scanf(" %c%d",&A[i].mark,&A[i].value);
+      B[i].mark = A[i].mark;
+      B[i].value = A[i].value;
+      C[i].mark = A[i].mark;
+      C[i].value = A[i].value;
+    }
+ 
+  /*bubble sort*/
+  for (i=0;i<num;i++)
+    {
+      for (j=num-1;j>i;j--)
+    {
+      if ( A[j].value < A[j-1].value) swap(&A[j],&A[j-1]);
+    }
+    }
+  Print(A,num);
+  stable=hantei(A,C,num);
+  if(stable == 1) printf("Not stable\n");
+  else printf("Stable\n");
+ 
+  /*select sort*/
+  for(i=0;i<num;i++)
+    {
+      mini=i;
+      for(j=i;j<num;j++)
+    {
+      if (B[j].value < B[mini].value ) mini=j;
+    }
+      swap(&B[i],&B[mini]);
+    }
+  Print(B,num);
+  stable = hantei(B,C,num);
+  if(stable == 1) printf("Not stable\n");
+  else printf("Stable\n");
+  return 0;
+}

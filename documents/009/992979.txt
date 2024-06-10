@@ -1,0 +1,20 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+int main(){
+    int q;
+    double x;
+    std::cout << std::setprecision(6) << std::fixed;
+    while(1){
+        std::cin >> q;
+        if(q == -1){
+            return 0;
+        }
+        x = q / 2.0;
+        while(std::abs(x * x * x - q) >= 0.00001d * q){
+            x = x * 2 / 3 + q / x / x / 3;
+        }
+        std::cout << x << std::endl;
+    }
+}

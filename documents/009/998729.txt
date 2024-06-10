@@ -1,0 +1,306 @@
+#include<cstdio>
+#include<complex>
+#include<utility>
+#include<vector>
+#include<cmath>
+#include<cassert>
+
+using namespace std;
+
+double eps=1e-9;
+
+typedef complex<double> Point;
+typedef complex<double> Vector;
+
+template<class T> bool eq(T a,T b){
+	return abs(a-b)<eps;
+}
+
+template<class T> int sgn(T r){
+	return eq(r,0.0)?0:(r>0?1:-1);
+}
+
+void print(Point p);
+
+struct Circle{
+	Point center;
+	double r;
+	Circle(Point c,double r):center(c),r(r){}
+	Circle(){}
+};
+
+struct Line{
+	double a,b,c;//ax+by=c
+	Line(){}
+	Line(double a,double b,double c):a(a),b(b),c(c){}
+	Line(Point p1,Point p2){//not verified
+		if(eq(abs(p1-p2),0.0)){
+			print(p1);
+			print(p2);
+			fprintf(stderr,"called Line for same points\n");
+			assert(0);
+		}
+		double x1=p1.real(),y1=p1.imag();
+		double x2=p2.real(),y2=p2.imag();
+		a=y2-y1;
+		b=-(x2-x1);
+		c=x1*y2-x2*y1;
+	}
+};
+
+void print(Point p){
+	if(isnan(p.real())||isnan(p.imag())){
+		printf("NaN Point\n");
+		return;
+	}
+	printf("(%f,%f)\n",p.real(),p.imag());
+}
+
+double pointsDistance(Point p1,Point p2){/*abs(p1-p2)と書いてよい*/
+	double dx=p1.real()-p2.real();
+	double dy=p1.imag()-p2.imag();
+	return sqrt(dx*dx+dy*dy);
+}
+
+double linePointDistance(Line l,Point p){
+	double a=l.a,b=l.b,c=l.c;
+	double x=p.real(),y=p.imag();
+	double num=abs(a*x+b*y-c);
+	double den=sqrt(a*a+b*b);
+	return num/den;
+}
+
+Vector basisVector(Vector v){
+	if(eq(v.real(),0.0)&&eq(v.imag(),0.0)) return v;
+	return v/sqrt(norm(v));
+}
+
+Point linePointProjection(Line l,Point p){
+	double dx=l.a,dy=l.b;
+	double a=l.a,b=l.b,c=l.c;
+	double x=p.real(),y=p.imag();
+	Vector ba=basisVector(Vector(dx,dy));
+	double num=a*x+b*y-c;
+	double den=sqrt(a*a+b*b);
+	Vector v=ba*(-num/den);
+	return p+v;
+}
+
+vector<Point> circleLineIntersection(Circle c,Line l){
+	vector<Point> res;
+	Point p=linePointProjection(l,c.center);
+	double d=linePointDistance(l,c.center);
+	int s=sgn(d-c.r);
+	if(s==1){
+		return res;//empty
+	}else if(s==0){
+		res.push_back(p);
+		return res;
+	}else{
+		double r=c.r;
+		double t=sqrt(r*r-d*d);
+		Vector e=basisVector(Vector(l.b,-l.a));
+		res.push_back(p+t*e);
+		res.push_back(p-t*e);
+		return res;
+	}
+}
+
+vector<Point> circlesIntersection(Circle c1,Circle c2){/*一致するとき処理できない*/
+	if(eq(c1.center.real(),c2.center.real())&&eq(c1.center.imag(),c2.center.imag())&&
+		eq(c1.r,c2.r)){
+				Point p=Point(NAN,NAN);
+				vector<Point> v;
+				v.push_back(p);
+				return v;
+	}
+	double d=pointsDistance(c1.center,c2.center);
+	double r1=c1.r,r2=c2.r;
+	double dif=max(r1,r2)-min(r1,r2);
+	double sum=r1+r2;
+	if(sgn(d-sum)==1||sgn(dif-d)==1){//d>sum||dif>d
+		vector<Point> v;
+		return v;
+	}
+	double x1=c1.center.real(),y1=c1.center.imag();
+	double x2=c2.center.real(),y2=c2.center.imag();
+	Line l=Line(-x1*2+x2*2,-y1*2+y2*2,r1*r1-r2*r2-(x1*x1-x2*x2)-(y1*y1-y2*y2));
+	return circleLineIntersection(c1,l);
+}
+
+double det(double a,double b,double c,double d){
+	return a*d-b*c;
+}
+
+Point linesIntersection(Line l1,Line l2){/*平行の時は常にNAN*/
+	double a=l1.a,b=l1.b,c=l1.c;
+	double d=l2.a,e=l2.b,f=l2.c;
+	double den=det(a,b,d,e);
+	double numx=det(c,b,f,e);
+	double numy=det(a,c,d,f);
+	if(eq(den,0.0)){
+		return Point(NAN,NAN);
+	}
+	return Point(numx/den,numy/den);
+}
+
+//circlesIntersection verify AOJ1190 ICPC Domestic 2013 Balloon
+
+double crossProduct(Vector a,Vector b){
+	return (conj(a)*b).imag();
+}
+
+double dotProduct(Vector a,Vector b){
+	return (conj(a)*b).real();
+}
+
+int ccw(Point p1,Point p2,Point p3){
+	/*p1,p2,p3はすべて異なると仮定
+	そうでない場合の戻り値は不定
+	ではなく
+	p1!=p2と仮定*/
+	Vector b=p2-p1;
+	Vector c=p3-p2;
+	int s=sgn(crossProduct(b,c));
+	if(s==1) return 1;//counterclockwise
+	if(s==-1) return -1;//clockwise
+	int t=sgn(dotProduct(b,c));
+	if(t==-1) return 2;//3--1--2
+	int u=sgn(norm(b)-norm(c));
+	if(eq(norm(c),0.0)) return 0;//1==3
+	if(u==-1) return -2;//1--2--3
+	return 0;//1--3--2 or 2==3
+}
+
+struct Segment{
+	Point p1,p2;
+	Line l;
+	Segment(){}
+	Segment(Point p1,Point p2):p1(p1),p2(p2){
+		l=Line(p1,p2);
+	}
+};
+
+int oneLineCCW(Point p1,Point p2,Point p3){
+	/*p1!=p2かつp1,p2,p3は一直線上と仮定*/
+	/*それ以外の時の戻り値は不定*/
+	Vector b=p2-p1,c=p3-p1;
+	if(sgn(dotProduct(b,c))==-1) return 2;//p3--p1--p2
+	if(eq(abs(p1-p3),0.0)) return 1;//p1==p3--p2
+	int s=sgn(norm(b)-norm(c));
+	if(s==1) return 0;//p1--p3--p2
+	if(s==0) return -1;//p1--p3==p2
+	else return -2;//p1--p2--p3
+}
+
+double pointSegmentDistance(Point p,Segment s){
+	Line l=s.l;
+	double d=linePointDistance(l,p);
+	Point pr=linePointProjection(l,p);
+	int x=oneLineCCW(s.p1,s.p2,pr);
+	if(x>=-1&&x<=1) return d;
+	double a=abs(s.p1-p);
+	double b=abs(s.p2-p);
+	return min(a,b);
+}
+
+bool segmentsIntersect(Segment s1,Segment s2){
+	Point p[2],q[2];
+	p[0]=s1.p1,p[1]=s1.p2;
+	q[0]=s2.p1,q[1]=s2.p2;
+	return ccw(p[0],p[1],q[0])*ccw(p[0],p[1],q[1])<=0&&
+		ccw(q[0],q[1],p[0])*ccw(q[0],q[1],p[1])<=0;
+}
+
+double segmentsDistance(Segment s1,Segment s2){
+	bool flg=segmentsIntersect(s1,s2);
+	if(flg) return 0;
+	Point p[2],q[2];
+	p[0]=s1.p1,p[1]=s1.p2;
+	q[0]=s2.p1,q[1]=s2.p2;
+	double res=-1;
+	for(int k=0;k<2;k++){
+		Point r=linePointProjection(s2.l,p[k]);
+		if(abs(oneLineCCW(q[0],q[1],r))<=1){
+			double tmp=abs(r-p[k]);
+			if(res<0||tmp<res) res=tmp;
+		}
+		r=linePointProjection(s1.l,q[k]);
+		if(abs(oneLineCCW(p[0],p[1],r))<=1){
+			double tmp=abs(r-q[k]);
+			if(res<0||tmp<res) res=tmp;
+		}
+	}
+	for(int i=0;i<2;i++) for(int j=0;j<2;j++){
+		double tmp=abs(p[i]-q[j]);
+		if(res<0||tmp<res) res=tmp;
+	}
+	return res;
+}
+
+//segmentsDistance verified aoj cgl_2 d Distance
+
+Point inputPoint(){
+	double x,y;
+	scanf("%lf%lf",&x,&y);
+	return Point(x,y);
+}
+
+struct Rect{
+	double mx,my,Mx,My;
+	Rect(){}
+	Rect(double x1,double y1,double x2,double y2){
+		mx=x1,my=y1,Mx=x2,My=y2;
+		if(mx>Mx) swap(mx,Mx);
+		if(my>My) swap(my,My);
+	}
+	Rect(Point p1,Point p2){
+		mx=p1.real(),my=p1.imag();
+		Mx=p2.real(),My=p2.imag();
+		if(mx>Mx) swap(mx,Mx);
+		if(my>My) swap(my,My);
+	}
+};
+
+bool inRect(Rect r,Point p){//strictly inside
+	double x=p.real(),y=p.imag();
+	return sgn(x-r.mx)==1&&sgn(r.Mx-x)==1&&sgn(y-r.my)==1&&sgn(r.My-y)==1;
+}
+
+double getR(double d,double h){
+	if(h>d) return d;
+	return (h*h+d*d)/(h*2);
+}
+
+int main(){
+	while(true){
+		int N;
+		scanf("%d",&N);
+		if(N==0) break;
+		Point s=inputPoint();
+		Point t=inputPoint();
+		Segment course=Segment(s,t);
+		double ans=-1;
+		for(int i=0;i<N;i++){
+			Point ps[4];
+			ps[0]=inputPoint();
+			ps[2]=inputPoint();
+			Rect r=Rect(ps[0],ps[2]);
+			if(inRect(r,s)||inRect(r,t)){
+				ans=0;
+			}
+			double h;
+			scanf("%lf",&h);
+			ps[1]=Point(ps[2].real(),ps[0].imag());
+			ps[3]=Point(ps[0].real(),ps[2].imag());
+			for(int j=0;j<4;j++){
+				Segment e=Segment(ps[j],ps[(j+1)%4]);
+				double d=segmentsDistance(e,course);
+				double curR=getR(d,h);
+				if(ans<0||ans>curR) ans=curR;
+			}
+		}
+		printf("%.9f\n",ans);
+	}
+	return 0;
+}

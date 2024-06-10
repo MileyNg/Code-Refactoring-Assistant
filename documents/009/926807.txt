@@ -1,0 +1,30 @@
+
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+    int n;
+    char str[21], min[21];
+    int i,j;
+    
+    scanf("%d",&n);
+    for (i=0; i<n; i++) {
+        scanf(" %s", str);
+        if (i==0) {
+            strcpy(min, str);
+        }
+        
+        for (j=0; j<21; j++) {
+            if (strcmp(min, str) > 0) {
+                strcpy(min, str);
+                break;
+            }else if(str[0]==min[0]){
+                continue;
+            }else{
+                break;
+            }
+        }
+    }
+    printf("%s\n",min);
+    return 0;
+}

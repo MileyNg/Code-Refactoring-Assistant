@@ -1,0 +1,92 @@
+#include <map>
+#include <set>
+#include <queue>
+#include <ctime>
+#include <cmath>
+#include <string>
+#include <cstdio>
+#include <vector>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define all(a) a.begin(),a.end()
+#define clr(a) memset(a,0,sizeof(a))
+#define fill(a,b) memset(a,b,sizeof(a))
+#define pb push_back
+#define mp make_pair
+
+typedef long long LL;
+typedef vector<int> VI;
+typedef pair<int,int> PII;
+typedef vector<pair<int,int> > VII;
+
+const double eps = 1e-8;
+const double pi = acos(-1.0);
+char str[200007];
+int s[200007];
+bool check(int len)
+{
+	bool ok=true;
+	if (len%2==0)
+	{
+		for (int i=0;i<len;i++)
+			if (s[i]!=0)
+			{
+				ok=false;
+				break;
+			}
+		return ok;
+	}
+	else
+	{
+		for (int i=0;i<len;i+=2)
+			if (s[i]!=0)
+			{
+				ok=false;
+				break;
+			}
+		if (ok)
+		{
+			for (int i=1;i<len;i+=2)
+				s[i/2]=s[i];
+			return check(len/2);
+		}
+		else
+		{
+			ok=true;
+			for (int i=1;i<len;i+=2)
+				if (s[i]!=0)
+				{
+					ok=false;
+					break;
+				}
+			if (ok)
+			{
+				for (int i=0;i<len-2;i+=2)
+				{
+					s[i/2]=s[i]^s[i+2];
+					return check(len/2);
+				}
+			}
+			else
+				return false;
+		}
+	}
+}
+
+int main(){
+	scanf("%d",&n);
+	getchar();
+	while (n--)
+	{
+		scanf("%s",str);
+		int len=strlen(str);
+		for (int i=0;i<len;i++)
+			s[i]=str[i]-'0';
+		printf(check());
+	}
+    return 0;
+}

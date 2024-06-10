@@ -1,0 +1,47 @@
+#include <cstring>
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+unordered_map<char, pair<int, int>> dv = {
+	{'N', {0, 1}},
+	{'E', {1, 0}},
+	{'S', {0, -1}},
+	{'W', {-1, 0}},
+};
+
+int field[21][21];
+
+bool check() {
+	for (int i = 0; i <= 20; i++) {
+		for (int j = 0; j <= 20; j++) {
+			if (field[i][j]) return 0;
+		}
+	}
+	return 1;
+}
+
+int main () {
+	int n;
+	while (cin >> n, n) {
+		memset(field, 0, sizeof(field));
+		for (int i = 0; i < n; i++) {
+			int x, y;
+			cin >> x >> y;
+			field[x][y] = 1;
+		}
+		int rx = 10, ry = 10, m;
+		cin >> m;
+		for (int i = 0; i < m; i++) {
+			char d;
+			int l;
+			cin >> d >> l;
+			auto v = dv[d];
+			for (int j = 0; j < l; j++) {
+				rx += v.first; ry += v.second;
+				field[rx][ry] = 0;
+			}
+		}
+		cout << (check() ? "Yes" : "No") << endl;
+	}
+	return 0;
+}

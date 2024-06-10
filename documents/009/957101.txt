@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include<functional>
+#include<algorithm>
+#include<map>
+
+struct P{
+	int first, second;
+	P(int a, int b) :first(a), second(b){}
+};
+
+bool ask(const P &lhs, const P &rhs){
+	return lhs.second > rhs.second;
+}
+
+P calc(std::vector<P>v){
+
+	std::sort(v.begin(), v.end(), ask);
+
+	return P(v[0].first, v[0].second);
+}
+
+int main(){
+
+	int n, q;
+	std::cin >> n >> q;
+
+	std::vector<P>v(n, P(0, 0));
+
+	for (int i = 0; i < n; i++){
+		v[i].first = i + 1;
+		v[i].second = 0;
+	}
+
+	for (int i = 0; i < q; i++){
+
+		int a, b;
+		std::cin >> a >> b;
+		a--;
+
+		v[a].second += b;
+
+		P res(calc(v));
+
+		std::cout << res.first << " " << res.second << std::endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,48 @@
+#include<stdio.h>
+#define LENGTH 27
+#define STRING 1000
+#define A 65
+#define a 90
+#define Z 90
+#define z 122
+
+main()
+{
+	char str[STRING];
+	char alpfabet[LENGTH] = "abcdefghijklmnopqrstuvwxyz";
+	int counter[LENGTH];
+	
+	int i = 0, num = 0;
+	
+	for(i = 0; i < LENGTH - 1; i++)
+	{
+		counter[i] = 0;
+		//printf("counter[%d] = %d\n", i, counter[i]);
+	}
+	
+	i = 0;
+	
+	while(scanf("%c", &str[i]) != EOF)
+	{
+		//printf("str[%d] = %d\n", i, str[i]); //デバッグ用
+		if((a <= str[i]) && (str[i] <= z))
+		{
+			num = str[i] - 'a';
+			counter[num]++;
+			//printf("counter[%d] = %d\n", i, counter[i]);
+		}
+		else if((A <= str[i]) && (str[i] <= Z))
+		{
+			num = str[i] - 'A';
+			counter[num]++;
+			//printf("counter[%d] = %d\n", i, counter[i]);
+		}
+		//printf("num = %d counter[%d] = %d\n", num, i, counter[i]);
+		i++;
+	}
+	for(i = 0; i < LENGTH - 1; i++)
+	{
+		printf("%c : %d\n", alpfabet[i], counter[i]);
+	}
+	return 0;
+}

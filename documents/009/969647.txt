@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = 20;
+
+int w, h, cnt;
+int dx[] = {-1, 0, 1, 0};
+int dy[] = {0, -1, 0, 1};
+vs m(N);
+
+void dfs(pii);
+
+int main(void){
+    for(; cin >> w >> h, w; cout << cnt << endl){
+        cnt = 0;
+        pii p;
+
+        rep(y, h){
+            cin >> m[y];
+            rep(x, w) if(m[y][x] == '@') m[y][x] = '.', p = mp(x, y);
+        }
+        
+        dfs(p);
+    }
+
+    return 0;
+}
+
+void dfs(pii p){
+    if(p.X < 0 || w <= p.X ||
+       p.Y < 0 || h <= p.Y || m[p.Y][p.X] == '#') return;
+
+    cnt++;
+    m[p.Y][p.X] = '#';
+    
+    rep(i, 4) dfs(mp(p.X + dx[i], p.Y + dy[i]));
+}

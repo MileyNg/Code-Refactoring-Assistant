@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int N;
+int b[50], c[50];
+string d[50][50];
+string a[50];
+
+long long can[50]; //いけないところは1
+
+map< string , int > java;
+map< long long, int> dp; 
+
+int rec(long long ikeru, long long used){ //いけるとこ0
+  if(dp.find(ikeru)!=dp.end()) return dp[ikeru];
+  int ret = 0;
+  for(int i = 0; i < N; i++){
+    if((ikeru >> i) & 1LL) continue;
+    if((used >> i) & 1LL) continue;
+    if(used & can[i]) continue;
+    ret = max( ret, rec((ikeru|can[i]),used|(1LL << i)) + b[i]);
+  }
+  return dp[ikeru] = ret;
+}
+
+int main(){
+
+  while(cin >> N, N){
+    java.clear();
+    dp.clear();
+    for(int i = 0; i < N; i++){
+      cin >> a[i] >> b[i] >> c[i];
+      java[a[i]] = i;
+
+      for(int j = 0; j < c[i]; j++){
+        cin >> d[i][j];
+      }
+    }
+
+    for(int i = 0; i < N; i++){
+      can[i] = 0;
+      for(int j = 0; j < c[i]; j++){
+        can[i] |= 1 << java[d[i][j]];
+      }
+    }
+
+    
+    cout << rec( can[0], 1) + b[0] << endl;
+  }
+}

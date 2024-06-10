@@ -1,0 +1,44 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+//#include<vector>
+using namespace std;
+
+struct xyz{
+char abc;
+int count;
+};
+
+
+int main(){
+int x,c=0;
+int y[1000];
+xyz A[26];
+cin >>x;
+
+do{
+for(int i=0;i<26;i++){
+A[i].count=0;
+A[i].abc=97+i;
+}
+
+
+for(int i=0;i<x;i++){
+string St;
+cin >>St;
+char c= St[0]; char d=St[St.length()-1];
+A[c-97].count++; A[d-97].count++;
+}
+
+y[c]=0;
+for(int i=0;i<26;i++){
+if(A[i].count%2) y[c]++;}
+c++;
+cin >>x;
+}while(x!=0);
+
+for(int i=0;i<c;i++){
+if(y[i]==0 || y[i]==0) cout <<"OK\n";
+else cout <<"NG\n";
+}
+}

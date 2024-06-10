@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef long long ll;
+
+struct Data {
+  ll h,a,d,s,t,id;
+  bool operator < ( const Data &data ) const { return d * data.t < data.d * t; }
+};
+
+int n;
+
+int main() {
+  cin >> n;
+  vector<Data> buf(n+1);
+  bool out = false;
+  rep(i,n+1) {
+    buf[i].id = i;
+    cin >> buf[i].h >> buf[i].a >> buf[i].d >> buf[i].s;
+    if( i ) {
+      ll attack = max(0LL,buf[0].a-buf[i].d);
+      if( attack == 0LL ) {
+        out = true;
+        continue;
+      }
+      buf[i].t = (ll)( buf[i].h / attack ) + (ll)( (buf[i].h%attack) != 0 );
+      if( buf[i].s < buf[0].s ) buf[i].t--;
+      assert( buf[i].t >= 0 );
+    }
+  }
+
+  if( out ) {
+    puts("-1");
+    return 0;
+  }
+
+  sort(buf.begin(),buf.end());
+  int sp = -1;
+  rep(i,buf.size()) if( buf[i].id == 0 ) {
+    sp = i;
+    break;
+  }
+
+  ll ans = 0LL, total_turn = 0;
+  rep(i,buf.size()) {
+    if( i == sp ) continue;
+    ll attack = max(0LL,buf[i].a-buf[sp].d);
+    total_turn += buf[i].t;
+    ans += attack * total_turn;
+  }
+
+  cout << ((ans<buf[sp].h)?ans:-1) << endl;
+
+  return 0;
+}

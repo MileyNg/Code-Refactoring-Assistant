@@ -1,0 +1,18 @@
+from collections import Counter
+
+cnt = 0
+trade = Counter()
+while 1:
+    line = raw_input()
+    if not line:
+        break
+    cnt += 1
+    a, b = map(int, line.split(','))
+    trade[a] += 1
+
+for i in xrange(cnt):
+    a, b = map(int, raw_input().split(','))
+    trade[a] += 1
+
+for k, v in sorted(trade.items()):
+    print k, v

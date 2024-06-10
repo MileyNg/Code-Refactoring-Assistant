@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void solve()
+{
+	int n, q;
+	cin >> n >> q;
+	vector<int> fish(n);
+	int maxa = 0;
+	int maxv = 0;
+	for(int i = 0; i < q; ++i)
+	{
+		int a, v;
+		cin >> a >> v;
+		--a;
+		fish[a] += v;
+		if(maxa == a)
+		{
+			maxv += v;
+			if(v < 0)
+			{
+				vector<int>::iterator it = max_element(fish.begin(), fish.end());
+				maxa = it - fish.begin();
+				maxv = fish[maxa];
+			}
+		}
+		if(fish[a] >= maxv)
+		{
+			if(fish[a] == maxv)
+			{
+                if(a < maxa)
+				{
+					maxa = a;
+				}
+            }
+			else
+			{
+				maxv = fish[a];
+                maxa = a;
+            }
+        }
+        cout << maxa + 1 << ' ' << maxv << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

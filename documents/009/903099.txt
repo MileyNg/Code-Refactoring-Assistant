@@ -1,0 +1,59 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+const double eps = 1e-8;
+struct Point {
+    double x, y;
+    Point operator-(const Point &t) const {
+        return (Point) {x-t.x, y-t.y};
+    }
+}p[100005];
+int n, m, k;
+int cross(Point o, Point a, Point b) {
+    double t = (a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
+    if(fabs(t) < eps) return 0;
+    return t > 0 ? 1 : -1;
+}
+bool bin(Point &tp) {
+    int l = 0, r = n-1;
+    while(l < r) {
+        int m = l+r >> 1;
+     //   int c1 = cross(tp, p[0], p[m]);
+//        int c2 = cross(tp, p[0], p[(m+1)%n]);
+//        int c3 = cross(tp, p[m], p[(m+1)%n]);
+        int c1 = cross(p[0], p[m], tp);
+        int c2 = cross(p[0], p[(m+1)%n], tp);
+        int c3 = cross(p[m], p[(m+1)%n], tp);
+        if(c1 >= 0 && c2 <= 0) {
+        	if(c3 <= 0)return true;
+            else return false;
+        }
+        if(c1 > 0)
+            l = m+1;
+        else r = m;
+    }
+    Point a = p[l], b = p[(l+1)%n];
+    return cross(a, b, tp) ==0 && (tp.x-a.x)*(tp.x-b.x) <=0 && (tp.y-a.y)*(tp.y-b.y) <=0;
+}
+int main() {
+    int i;
+    while(~scanf("%d", &n)) {
+        for(i = n-1; i >=0; i--) {
+            getchar();
+            scanf("(%lf,%lf)", &p[i].x, &p[i].y);
+        }
+        int cnt = 0;
+        p[n] = p[0];
+        scanf("%d", &m);
+        while(m--) {
+            Point tp;
+            getchar();
+            scanf("(%lf,%lf)", &tp.x, &tp.y);
+            puts(bin(tp)? "Yes" : "No");
+        }
+    }
+    return 0;
+}

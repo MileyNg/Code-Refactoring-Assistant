@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	map<string, vector<int>> idx;
+
+	string word;
+	int page;
+	while(cin >> word >> page) {
+		idx[word].emplace_back(page);
+	}
+
+	for(auto &word_info : idx) {
+		cout << word_info.first << "\n";
+
+		vector<int> &pages = word_info.second;
+		sort(pages.begin(), pages.end());
+		pages.erase(unique(pages.begin(), pages.end()), pages.end());
+
+		for(unsigned i = 0; i < pages.size(); ++i) {
+			cout << pages[i] << (i + 1 == pages.size() ? "\n" : " ");
+		}
+	}
+
+	return 0;
+}

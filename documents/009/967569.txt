@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<math.h>
+
+#define PI 3.14159265
+
+void koch(double x1,double y1,double x2,double y2,int n){
+  double x3,y3,x4,y4,x5,y5,s,t;
+  
+  if(n==0) return;
+
+  if(n!= 0){
+    s=sin(PI/3);
+    t=cos(PI/3);
+
+  x3=(2*x1+x2 )/3;
+  y3=(2*y1+y2 )/3;
+  x5=(x1+2*x2 )/3;
+  y5=(y1+2*y2 )/3;
+  x4=x3+(x5-x3)*t+(y5-y3)*s;
+  y4=y3-(x5-x3)*s+(y5-y3)*t;
+  koch(x1,y1,x3,y3,n-1);
+  printf("%.8f %.8f\n",x3,fabs(y3));
+  koch(x3,y3,x4,y4,n-1 );
+  printf("%.8f %.8f\n",x4,fabs(y4));
+  koch(x4,y4,x5,y5,n-1 );
+  printf("%.8f %.8f\n",x5,fabs(y5));
+  koch(x5,y5,x2,y2,n-1);
+  }
+  return;
+}
+
+
+main(){
+  int n;
+  double x1=0,y1=0,x2=100,y2=0;
+  
+  scanf("%d",&n);
+  printf("%1.8f %1.8f\n",x1,y1);
+  
+  if(n>=0 || n<=6){
+    koch(x1,y1,x2,y2,n);
+  }
+  
+  printf("%.8f %.8f\n",x2,y2);
+  return 0;
+}

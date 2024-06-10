@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+const char ops[] = "+-*";
+
+int op(int a, int o, int b) {
+    if (o == 0) return a + b;
+    if (o == 1) return a - b;
+    if (o == 2) return a * b;
+    return 0;
+}
+
+bool check1(int n[4], int i, int j, int k) {
+    if (op(op(n[0], i, n[1]), j, op(n[2], k, n[3])) == 10) {
+        printf("((%d %c %d) %c (%d %c %d))\n",
+            n[0], ops[i], n[1], ops[j], n[2], ops[k], n[3]);
+        return true;
+    }
+    return false;
+}
+
+bool check2(int n[4], int i, int j, int k) {
+    if (op(n[0], i, op(n[1], j, op(n[2], k, n[3]))) == 10) {
+        printf("(%d %c (%d %c (%d %c %d)))\n",
+            n[0], ops[i], n[1], ops[j], n[2], ops[k], n[3]);
+        return true;
+    }
+    return false;
+}
+
+bool check3(int n[4], int i, int j, int k) {
+    if (op(n[0], i, op(op(n[1], j, n[2]), k, n[3])) == 10) {
+        printf("(%d %c ((%d %c %d) %c %d))\n",
+            n[0], ops[i], n[1], ops[j], n[2], ops[k], n[3]);
+        return true;
+    }
+    return false;
+}
+
+bool check4(int n[4], int i, int j, int k) {
+    if (op(op(n[0], i, op(n[1], j, n[2])), k, n[3]) == 10) {
+        printf("((%d %c (%d %c %d)) %c %d)\n",
+            n[0], ops[i], n[1], ops[j], n[2], ops[k], n[3]);
+        return true;
+    }
+    return false;
+}
+
+bool check5(int n[4], int i, int j, int k) {
+    if (op(op(op(n[0], i, n[1]), j, n[2]), k, n[3]) == 10) {
+        printf("(((%d %c %d) %c %d) %c %d)\n",
+            n[0], ops[i], n[1], ops[j], n[2], ops[k], n[3]);
+        return true;
+    }
+    return false;
+}
+
+int main(void) {
+    int n[4];
+    while (true) {
+        bool z = true;
+        for (int i = 0; i < 4; i++) {
+            cin >> n[i];
+            if (n[i] != 0) z = false;
+        }
+        if (z) break;
+        do {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        if (check1(n, i, j, k)) goto success;
+                        if (check2(n, i, j, k)) goto success;
+                        if (check3(n, i, j, k)) goto success;
+                        if (check4(n, i, j, k)) goto success;
+                        if (check5(n, i, j, k)) goto success;
+                    }
+                }
+            }
+        } while (next_permutation(n, n + 4));
+        cout << 0 << endl;
+        success: continue;
+    }
+    return 0;
+}

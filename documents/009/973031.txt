@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+main(){
+  int a=0;
+  int b=0;
+  int c=0;
+  int d=0;
+  int e=0;
+  int f=0;
+  int g=0;
+  char A[201];
+  char A2;
+  while(1){
+    scanf("%s",&A);
+    if(A[0]=='-')break;
+    scanf("%d",&a);
+    for(b=0;b<a;b++){
+      scanf("%d",&c);
+      f=c-1;
+      g=c-2;
+      for(d=c;d>0;d--){
+	for(e=strlen(A)-c;e>0;e--){
+	  A2=A[f];
+	  A[f]=A[f+1];
+	  A[f+1]=A2;
+	  f=f+1;
+	}
+	f=g;
+	g=g-1;
+      }
+      f=0;
+    }
+    printf("%s\n",A);
+  }
+  return 0;
+}

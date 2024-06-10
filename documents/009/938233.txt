@@ -1,0 +1,42 @@
+#include <iostream>
+
+using namespace std;
+/** Problem0118 : Property Distribution **/
+char in[100][100];
+int H, W, ans;
+int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1};
+
+void dfs(int x, int y)
+{
+	char c = in[x][y];
+	in[x][y] = ' ';
+	
+	for (int i=0; i<4; i++) {
+		int nx = x+dx[i], ny = y+dy[i];
+		if (0<=nx && nx<W && 0<=ny && ny<H && c == in[nx][ny])
+			dfs(nx, ny);
+	}
+}
+
+int main()
+{
+	while (cin >> H >> W, H!=0 && W!=0) {
+		ans=0;
+		for (int y=0; y<H; y++) {
+			for (int x=0; x<W; x++) {
+				cin >> in[x][y];
+			}
+		}
+		
+		for (int y=0; y<H; y++) {
+			for (int x=0; x<W; x++) {
+				if (in[x][y] != ' ') {
+					ans++;
+					dfs(x, y);
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

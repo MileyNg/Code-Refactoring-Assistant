@@ -1,0 +1,40 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var line;
+while (line = lines.shift()) {
+	var num = +line;
+
+	if (num == 2) {
+		console.log(1);
+		continue;
+	} else if (num == 3) {
+		console.log(2);
+		continue;
+	} else if (num < 2) {
+		console.log(0);
+		continue;
+	}
+
+	var cnt = 2;
+	for (var i = 5; i <= num; i++) {
+		if (isPrime(i)) {
+			cnt++;
+		}
+	}
+
+	console.log(cnt);
+}
+
+function isPrime(num) {
+	if (num == 2 || num == 3) return true;
+	if (num < 2 || num % 2 == 0 || num % 3 == 0) return false;
+	var limit = Math.round(Math.sqrt(num));
+
+	var i = 1;
+	while(i * 6 - 1 <= limit) {
+		if (num % (i * 6 - 1) == 0 || num % (i * 6 + 1) == 0) return false;
+		i++;
+	}
+	return true;
+}

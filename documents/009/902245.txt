@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int n,m;
+  cin >> n >> m;
+  int res = 0;
+  for (int i=0; i<n; ++i) {
+    bool used = (m==1);
+    for (int j=0; j<m; ++j) {
+      bool a; cin >> a;
+      a ^= ((i==0)^(j==0||j==m-1));
+      res += a;
+      if (!used && !a) {
+        used = 1;
+        res++;
+      }
+    }
+    if (!used && m >= 3) res--;
+  }
+  cout << res << endl;
+}

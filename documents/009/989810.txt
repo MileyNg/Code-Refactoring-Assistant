@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <iostream>
+#include <cctype>
+using namespace std;
+int main(){
+  char se[1199],alp='a',ch;
+  int count[26]={},i=0,i2;
+
+  while(cin>>ch){
+    se[i]=ch;
+    i++;
+  }
+
+  for(i2=0; i2<=i; i2++)if(isupper(se[i2]))se[i2]=tolower(se[i2]);
+  
+  for(i2=0; i2<=i; i2++)if(se[i2]-'a'>=0 && se[i2]-'a'<26)
+			  count[se[i2]-'a']++;
+
+  for(i=0; i<26; i++){
+    printf("%c",alp+i);
+    cout<<" : "<<count[i]<<"\n";
+  }
+  
+}

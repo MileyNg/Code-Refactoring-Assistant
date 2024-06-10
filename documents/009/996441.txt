@@ -1,0 +1,64 @@
+#include <cstdio>
+
+int a[10][10],ans,t,x[65],y[65],e[5][3],h,w,c;
+
+int bfs(){
+	int h=0,nx,ny;
+	bool bj[10][10]={false};
+	x[1]=1;
+	y[1]=1;
+	bj[1][1]=true;
+	t=1;
+	while (h<t){
+		h++;
+		for (int i=1;i<=4;i++){
+			nx=x[h]+e[i][1];
+			ny=y[h]+e[i][2];
+			if (a[nx][ny]==a[1][1]&&!bj[nx][ny]){
+				bj[nx][ny]=true;
+				t++;
+				x[t]=nx;
+				y[t]=ny;
+			}
+		}
+	}
+	return 0;
+}
+
+int dfs(int k){
+	if (k==6){
+		if (a[1][1]!=c) return 0;
+		bfs();
+		if (t>ans) ans=t;
+		return 0;
+	}
+	bfs();
+	int nt,nx[65],ny[65],nc;
+	nc=a[1][1];
+	nt=t;
+	for (int i=1;i<=t;i++){
+		nx[i]=x[i];
+		ny[i]=y[i];
+	}
+	for (int i=1;i<=6;i++)if (i!=nc){
+		for (int j=1;j<=nt;j++) a[nx[j]][ny[j]]=i;
+		dfs(k+1);
+	}
+	for (int j=1;j<=nt;j++) a[nx[j]][ny[j]]=nc;
+	return 0;
+}
+
+int main(){
+	e[1][1]=1;e[2][1]=-1;e[3][2]=1;e[4][2]=-1;
+	scanf("%d%d%d",&h,&w,&c);
+	while (h!=0){
+		for (int i=0;i<=9;i++) for (int j=0;j<=9;j++)a[i][j]=0;
+		for (int i=1;i<=h;i++)
+			for (int j=1;j<=w;j++)scanf("%d",&a[i][j]);
+		ans=0;	
+		dfs(1);	
+		printf("%d\n",ans);
+		scanf("%d%d%d",&h,&w,&c);
+	}
+	return 0;
+}

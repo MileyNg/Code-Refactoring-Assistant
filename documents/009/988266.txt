@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <math.h>
+
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 10000000;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> P;
+
+/** Problem1154 : Monday-Saturday Prime Factors **/
+int main()
+{
+	int n;
+	while (cin>>n, n!=1) {
+		set<int> ans;
+		REP(i, 2, n+1) {
+			if ((i%7==1 || i%7==6) && n%i==0) {
+				for (int j=2; j*j<=i; j++) {
+					if ((j%7==1||j%7==6) && i%j==0) goto end;
+				}
+					ans.insert(i);
+			end:;
+			}
+		}
+		set<int>::iterator it = ans.begin();
+		cout << n << ":";
+		for (;it!=ans.end();it++)
+			cout <<" " << *it;
+		cout << endl;
+	}
+}

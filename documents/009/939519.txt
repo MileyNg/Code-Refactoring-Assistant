@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main(){
+	char W[10], T[1000], *check, change;
+	int n = 0, string_l, i;
+	scanf("%s", W);
+	while ( 1 ){
+		scanf("%s", T);
+		if (strcmp(T, "END_OF_TEXT") == 0) break;
+		check = strtok(T, " ");
+		string_l = strlen(check);
+		//printf("%d:", string_l);
+
+		while (check != NULL){
+			for (i = 0; i < string_l; i++){
+				if (islower(check[i]) == 0){
+					change = tolower(check[i]);
+					//printf("1%c ", change);
+					check[i] = change;
+					//printf("2%c ", check[i]);
+				}
+			}
+
+			if (strcmp(check, W) == 0) n++;
+			check = strtok(NULL, " ");
+		}
+	}
+
+	printf("%d\n", n);
+
+	return 0;
+}

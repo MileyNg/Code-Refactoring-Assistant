@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int N, M;
+vector<int> z;
+int Land[210][210];
+int Sea[210][210];
+long long dp[1001][210];
+
+#define INF (1<<29)
+
+int main() {
+  
+  while(cin >> N >> M && (N|M)) {
+    z.clear();
+    for(int i=0; i<N; i++) {
+      Land[i][i] = Sea[i][i] = 0;
+      for(int j=i+1; j<N; j++) {
+	Land[i][j] = Land[j][i] = INF;
+	Sea[i][j] = Sea[j][i] = INF;
+      }
+    }
+    
+    for(int i=0; i<M; i++) {
+      int x, y, t; char sl;
+      cin >> x >> y >> t >> sl; x--, y--;
+      if(sl == 'L') {
+	Land[x][y] = Land[y][x] = min(Land[x][y], t); // taju hen ari
+      }
+      else {
+	Sea[x][y] = Sea[y][x] = min(Sea[x][y], t); // taju hen ari
+      }
+    }
+    
+    int R; cin >> R;
+    z.resize(R);
+    for(int i=0; i<R; i++) {
+      cin >> z[i]; z[i] --;
+    }
+    
+    // warshall floyd
+    for(int k=0; k<N; k++)
+      for(int i=0; i<N; i++)
+	for(int j=0; j<N; j++) {
+	  Land[i][j] = min(Land[i][j], Land[i][k]+Land[k][j]);
+	  Sea[i][j] = min(Sea[i][j], Sea[i][k]+Sea[k][j]);
+	}
+    
+    fill(dp[0], dp[0]+1001*210, INF);
+    dp[0][z[0]] = 0;
+    for(int i=1; i<R; i++) {
+      for(int u=0; u<N; u++) {
+	for(int v=0; v<N; v++) {
+	  dp[i][v] = min(dp[i][v], dp[i-1][u] + Land[z[i-1]][u] + Sea[u][v] + Land[v][z[i]]);
+	  dp[i][v] = min(dp[i][v], dp[i-1][v] + Land[z[i-1]][z[i]]);
+	}
+      }
+    }
+    
+    cout << *min_element(dp[R-1], dp[R]) << endl;
+  }
+  return 0;
+}

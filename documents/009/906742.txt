@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+
+int main(void)
+{
+  int w,n,i,tmp;
+  scanf("%d",&n);
+  scanf("%d",&w);
+
+  int a[n][2],b[n+1];
+
+  for(i=1;i<=n;i++)
+    b[i]=i;
+  for(i=0;i<w;i++){
+    scanf("%d,%d",&a[i][0],&a[i][1]);
+  }
+
+  /* for(i=0;i<n;i++)
+     printf("%d,%d\n",a[i][0],a[i][1]);  
+  */
+  for(i=0;i<w;i++){
+    tmp=b[a[i][0]];b[a[i][0]]=b[a[i][1]];b[a[i][1]]=tmp;
+  }
+  
+  for(i=1;i<=n;i++)
+    printf("%d\n",b[i]);
+  return 0;
+}

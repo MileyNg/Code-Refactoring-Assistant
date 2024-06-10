@@ -1,0 +1,246 @@
+#include <stdio.h>
+
+struct Card{
+  char suit;
+  char value;
+};
+
+void BubbleSort(struct Card *A, int length){
+
+  int i,j;
+  char a,b;
+
+  for(i=0;i<length;i++){
+    for(j=length-1;j>i;j--){
+      if(A[j].value<A[j-1].value){
+
+	a=A[j].value;
+	b=A[j].suit;
+	A[j].value=A[j-1].value;
+	A[j].suit=A[j-1].suit;
+	A[j-1].value=a;
+	A[j-1].suit=b;
+      }
+    }
+  }
+}
+
+void SelectionSort(struct Card *A,int length){
+
+  int i,j,min;
+  char a2,b2;
+
+  for(i=0;i<length;i++){
+    min=i;
+    for(j=i;j<length;j++){
+      if(A[j].value<A[min].value){
+	min=j;
+      }
+    }
+    if(i!=min){
+      a2=A[i].value;
+      b2=A[i].suit;
+      A[i].value=A[min].value;
+      A[i].suit=A[min].suit;
+      A[min].value=a2;
+      A[min].suit=b2;
+    }
+  }
+}
+
+int main(){
+  struct Card C1[101],C2[101];
+  char table[9][4]={};
+  int cnt[9]={};
+
+  int n,m,i;
+  char c;
+
+  m=0;
+  scanf("%d%c",&n,&c);
+  for(i=0;i<n;i++){
+    scanf("%c%c%c",&C1[i].value,&C1[i].suit,&c);
+    table[C1[i].value-'1'][cnt[C1[i].value-'1']]=C1[i].suit;
+    cnt[C1[i].value-'1']++;
+  }
+
+  for(i=0;i<n;i++){
+    C2[i].suit=C1[i].suit;
+    C2[i].value=C1[i].value;
+  }
+
+  BubbleSort(C1,n);
+  SelectionSort(C2,n);
+
+  for(i=0;i<9;i++){
+    cnt[i]=0;
+  }
+
+  if(table[C1[0].value-'1'][cnt[C1[0].value-'1']++]!=C1[0].suit){
+    m=1;
+  }
+
+  printf(" %c%c",C1[0].suit,C1[0].value);
+
+  for(i=1;i<n;i++){
+    if(table[C1[i].value-'1'][cnt[C1[i].value-'1']++]!=C1[i].suit){
+      m=1;
+    }
+    printf(" %c%c",C1[i].suit,C1[i].value);
+  }
+
+  if(m==0){
+    printf("\nStable\n");
+  }else{
+    printf("\nNot stable\n");
+  }
+
+  for(i=0;i<9;i++){
+    cnt[i]=0;
+  }
+  m=0;
+
+  if(table[C2[0].value-'1'][cnt[C2[0].value-'1']++]!=C2[0].suit){
+    m=1;
+  }
+
+  printf(" %c%c",C2[0].suit,C2[0].value);
+
+  for(i=1;i<n;i++){
+    if(table[C1[i].value-'1'][cnt[C1[i].value-'1']++]!=C2[i].suit){
+      m=1;
+    }
+    printf(" %c%c",C2[i].suit, C2[i].value);
+  }
+
+  if(m==0){
+    printf("\nStable\n");
+  }else{
+    printf("\nNot stable\n");
+  }
+
+  return 0;
+}
+#include <stdio.h>
+
+struct Card{
+  char suit;
+  char value;
+};
+
+void BubbleSort(struct Card *A, int length){
+
+  int i,j;
+  char a,b;
+
+  for(i=0;i<length;i++){
+    for(j=length-1;j>i;j--){
+      if(A[j].value<A[j-1].value){
+
+	a=A[j].value;
+	b=A[j].suit;
+	A[j].value=A[j-1].value;
+	A[j].suit=A[j-1].suit;
+	A[j-1].value=a;
+	A[j-1].suit=b;
+      }
+    }
+  }
+}
+
+void SelectionSort(struct Card *A,int length){
+
+  int i,j,min;
+  char a2,b2;
+
+  for(i=0;i<length;i++){
+    min=i;
+    for(j=i;j<length;j++){
+      if(A[j].value<A[min].value){
+	min=j;
+      }
+    }
+    if(i!=min){
+      a2=A[i].value;
+      b2=A[i].suit;
+      A[i].value=A[min].value;
+      A[i].suit=A[min].suit;
+      A[min].value=a2;
+      A[min].suit=b2;
+    }
+  }
+}
+
+int main(){
+  struct Card C1[101],C2[101];
+  char table[9][4]={};
+  int cnt[9]={};
+
+  int n,m,i;
+  char c;
+
+  m=0;
+  scanf("%d%c",&n,&c);
+  for(i=0;i<n;i++){
+    scanf("%c%c%c",&C1[i].value,&C1[i].suit,&c);
+    table[C1[i].value-'1'][cnt[C1[i].value-'1']]=C1[i].suit;
+    cnt[C1[i].value-'1']++;
+  }
+
+  for(i=0;i<n;i++){
+    C2[i].suit=C1[i].suit;
+    C2[i].value=C1[i].value;
+  }
+
+  BubbleSort(C1,n);
+  SelectionSort(C2,n);
+
+  for(i=0;i<9;i++){
+    cnt[i]=0;
+  }
+
+  if(table[C1[0].value-'1'][cnt[C1[0].value-'1']++]!=C1[0].suit){
+    m=1;
+  }
+
+  printf(" %c%c",C1[0].suit,C1[0].value);
+
+  for(i=1;i<n;i++){
+    if(table[C1[i].value-'1'][cnt[C1[i].value-'1']++]!=C1[i].suit){
+      m=1;
+    }
+    printf(" %c%c",C1[i].suit,C1[i].value);
+  }
+
+  if(m==0){
+    printf("\nStable\n");
+  }else{
+    printf("\nNot stable\n");
+  }
+
+  for(i=0;i<9;i++){
+    cnt[i]=0;
+  }
+  m=0;
+
+  if(table[C2[0].value-'1'][cnt[C2[0].value-'1']++]!=C2[0].suit){
+    m=1;
+  }
+
+  printf(" %c%c",C2[0].suit,C2[0].value);
+
+  for(i=1;i<n;i++){
+    if(table[C1[i].value-'1'][cnt[C1[i].value-'1']++]!=C2[i].suit){
+      m=1;
+    }
+    printf(" %c%c",C2[i].suit, C2[i].value);
+  }
+
+  if(m==0){
+    printf("\nStable\n");
+  }else{
+    printf("\nNot stable\n");
+  }
+
+  return 0;
+}

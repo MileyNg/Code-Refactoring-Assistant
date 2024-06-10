@@ -1,0 +1,31 @@
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int main(){
+	ostringstream out;
+
+	int N,W,v,w;
+	while(cin >> N >> W){
+		vector<int> list(W+1);
+		for(int i=0;i<N;i++){
+			cin >> v >> w;
+			for(int j=list.size()-1;j>=0;j--)
+				if(list[j]&&j+w<list.size())
+					list[j+w]=max(list[j+w],list[j]+v);
+			if(w<list.size())
+				list[w]=max(list[w],v);
+		}
+		for(int i=list.size()-1;i>=0;i--)
+			if(list[i]){
+				out << list[i] << endl;
+				break;
+			}
+	}
+
+	cout << out.str();
+	return 0;
+}

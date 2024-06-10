@@ -1,0 +1,22 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define rep(i,b) for(int i=0; i<int(b); i++)
+
+int main(){
+    int n,v[10000];
+    while(cin >> n){
+        rep(i,n) cin >> v[i];
+        sort(v,v+n,[](int x, int y){
+                return y>x;
+            });
+        unsigned long long ans = 1;
+        rep(i,n){
+            ans += max(0,v[i]-i/4);
+        }
+        cout << ans << endl;
+    }
+}

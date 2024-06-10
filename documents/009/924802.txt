@@ -1,0 +1,59 @@
+
+/**邂玲ウ募?譫撰シ?
+*/
+#include<bits/stdc++.h>
+#define MAXN 105000
+#define PI acos(-1.0)
+#define MOD 1000000007
+#define REP(i,n) for(int i=0; i<n; i++)
+#define FOR(i,s,t) for(int i=s; i<=t; i++)
+#define mem(a,b)  memset(a,b,sizeof(a))
+#define show(x) { cerr<<">>>"<<#x<<" = "<<x<<endl; }
+#define show2(x,y) { cerr<<">>>"<<#x<<"="<<x<<"  "<<#y<<" = "<<y<<endl; }
+using namespace std;
+
+long long sum[MAXN];
+//sum[i]陦ィ遉コ[i,B]貊。雜ウ鬚俶э逧?クェ謨ー?井ク榊桁蜷ォ遨コ髮?シ?
+long long cal(long long a)
+{
+    long long ret = 9;
+    while(a > 0)
+    {
+        ret = ret*10 + 9;
+        a = a / 10;
+    }
+    ret = ret / 10;
+    return ret*10;
+}
+
+int main()
+{
+    //freopen("E:\\acm\\input.txt","r",stdin);
+    //freopen("E:\\acm\\output.txt","w",stdout);
+     long long A,B,P;
+     while(cin>>A>>B>>P)
+     {
+         if(A == 0 && B == 0 && P == 0) break;
+         long long ans = 0;
+         for(long long i = B; i >= A; i--)
+         {
+             long long mx = cal(i);
+             long long tmp = 0;
+             if(i == mx / 10)
+             {
+                 tmp = i*10 > B ? 0 : sum[i*10 - A]; //show2(i,tmp);
+             }
+             else
+             {
+                 tmp = i+1 > B ? 0 : sum[i+1 - A];
+                 tmp += i*10 > B ? 0 : sum[i*10 - A];
+                 tmp -= mx > B ? 0 : sum[(i+1)*10 - A];
+                 tmp = (tmp % P + P) % P; //show2(i,tmp);
+             }
+             sum[i-A] = (2 * tmp + 1) % P;
+             ans = (ans + tmp + 1) % P;   //show2(sum[i-A],ans);
+         }
+         cout<<ans<<endl;
+     }
+
+}

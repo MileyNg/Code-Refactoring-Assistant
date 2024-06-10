@@ -1,0 +1,28 @@
+def enum_prime(m):
+    L = [True for _ in range(m + 1)]
+    L[0] = L[1] = False
+
+    for i in range(2, m + 1):
+        if L[i]:
+            for j in range(i + i, m + 1, i):
+                L[j] = False
+            if m < i * i:
+                break
+    return L
+
+FLAGS = enum_prime(50000)
+PRIMES = [i for i, isprime in enumerate(FLAGS) if isprime]
+
+while True:
+    n = int(input())
+    n2 = n // 2
+    cnt = 0
+    if n % 2 == 0:
+        for p in PRIMES:
+            if p > n2:
+                break
+            if FLAGS[n - p]:
+                cnt += 1
+    elif FLAGS[n - 2]:
+        cnt = 1
+    print(cnt)

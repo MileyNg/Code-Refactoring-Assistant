@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main(){
+	string str1, str2;
+	while(cin >> str1 >> str2){
+
+		// int count = 0;
+		// for(int i = 0; i < str1.size(); i++){
+		// 	for(int j = 0; j < str2.size(); j++){
+		// 		int k = 0;
+		// 		while(str1[i+k] == str2[j+k] && i+k < str1.size() && j+k < str2.size()){
+		// 			//if(i + k > str1.size()-1 || j + k > str2.size()-1) break;
+		// 			k++;
+		// 			count = max(count, k);
+		// 			//cout << str2.substr(i, k) << endl;
+		// 		}
+		// 	}
+		// }
+		// cout << count << endl;
+
+		vector<vector<int> > dp(str1.size()+1, vector<int>(str2.size()+1));
+		for(int i = 0; i < str1.size()+1; i++){
+			for(int j = 0; j < str2.size()+1; j++){
+				dp[i][j] = 0;
+			}
+		}
+		int ans = 0;
+		for(int i = 0; i < str1.size(); i++){
+			for(int j = 0; j < str2.size(); j++){
+				if(str1[i] == str2[j]){
+					dp[i+1][j+1] = dp[i][j] + 1;
+					ans = max(ans, dp[i+1][j+1]);
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+
+	return 0;
+}

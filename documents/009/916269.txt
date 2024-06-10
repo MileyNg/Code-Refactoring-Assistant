@@ -1,0 +1,136 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+/*
+	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1155&lang=jp
+
+ 
+	sorce: ICPC Domestic 2008	
+
+	構文解析の問題。
+
+	<formula> ::= 0 | 1 | 2 | P | Q | R |
+              -<formula> | (<formula>*<formula>) | (<formula>+<formula>)
+
+	下のように書き換え
+
+	<expr>::=<term1><op><term1>|<term1>
+	<term1>::='-'<term1>|<term2>
+	<term2>::='('<expr>')'|0|1|2
+
+	文字の部分は数字に置き換え、全探索。
+*/
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+const int _and[3][3] = { 
+				{ 0, 0, 0 },
+				{ 0, 1, 1 },
+				{ 0, 1, 2 } };
+const int _or[3][3] = {
+				{ 0, 1, 2 },
+				{ 0, 1, 2 },
+				{ 2, 2, 2 } };
+
+const int _not[3] = { 2, 1, 0 };
+string s;
+int idx;
+
+int term1 (void );
+int term2 (void );
+int expr (void );
+
+int term1 (void ){
+	if (s[idx] == '-' ){
+		idx++;
+		return _not[term1()];
+	}else return term2();
+}
+
+int term2 (void ){
+	int res = 0;
+	if (s[idx] == '(' ){
+		idx++;
+		res = expr ();
+		idx++;
+	}else{
+		return (s[idx] - '0' );
+	} // end if
+
+	return res;
+}
+
+int expr (void ){
+	int a = term1 ();
+	while (idx < s.size() && s[idx] != ')' ){
+		char op = s[idx++];
+		int b = term1 ();
+		switch (op ){
+			case '*': a = _and[a][b]; break;
+			case '+': a = _or[a][b]; break;
+		} // end switch
+	} // end if
+
+	return a;
+}
+
+int parse (void ){
+	
+	idx = 0;
+	int res = expr ();
+
+	return res;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+
+	string str = "";
+	while (cin >> str, str != "." ){
+		int res = 0;
+		int n = str.length();
+		rep (p, 3 ){
+			string s1 = str;
+			rep (i, n ) if (s1[i] == 'P' ) s1[i] = (char)('0'+p);
+			rep (q, 3 ){
+				string t1 = s1;
+				rep (i, n ) if (t1[i] == 'Q' ) t1[i] = (char)('0'+q);
+				rep (r, 3 ){
+					s = t1;
+					rep (i, n ) if (s[i] == 'R' ) s[i] = (char )('0'+r);
+					int ans = parse ();
+//					cerr << s << '=' << ans << endl;
+					if (ans == 2 ) res++;
+				} // end rep
+			} // end rep
+		} // end rep
+		cout << res << endl;
+	} // end while
+	
+	return 0;
+}

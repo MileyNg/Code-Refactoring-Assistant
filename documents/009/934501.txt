@@ -1,0 +1,23 @@
+while (ln = gets.chomp) != '-1 -1 -1' do
+  m, f, r = ln.split.map(&:to_i)
+  if m < 0 || f < 0
+    puts 'F'
+  else
+    sum = m + f
+    if sum >= 80
+      puts 'A'
+    elsif sum >= 65
+      puts 'B'
+    elsif sum >= 50
+      puts 'C'
+    elsif sum >= 30
+      if r >= 50
+        puts 'C'
+      else
+        puts 'D'
+      end
+    else
+      puts 'F'
+    end
+  end
+end

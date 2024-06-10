@@ -1,0 +1,24 @@
+#include <iostream>
+
+inline int get_function(const u_int x)
+{
+    return x * x;
+}
+
+int get_integral(const u_int x, const u_int d)
+{
+    u_int ans, num_of_iter = x / d;
+    for(u_int i = 1; i < num_of_iter; ++i)
+        ans += d * get_function(d * i);
+    return ans;
+}
+
+int main()
+{
+    const u_int x = 600;
+    u_int d;
+    while(std::cin >> d)
+        std::cout << get_integral(x, d) << std::endl;
+    
+    return 0;
+}

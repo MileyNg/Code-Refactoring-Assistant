@@ -1,0 +1,49 @@
+int main()
+{
+    int n[100];
+    int x[100];
+    int i,j,k;
+    int count;
+    count=0;
+    int result_count;
+    result_count = 0;
+    
+    while (1) {
+        scanf("%d %d",&n[count],&x[count]);
+        
+        if(n[count] == 0 && x[count] == 0){
+            break;
+        }
+        count++;
+    }
+    
+    count=0;
+    
+    while(1){
+        for(i=1; i<n[count]+1; i++){
+            for(j=1; j<n[count]+1; j++){
+                for(k=1; k<n[count]+1; k++){
+                    
+                    if(n[count]==0 && x[count]==0){
+                        break;
+                        
+                    }else if(((i+j+k) == x[count]) && i!=j && i!=k && j!=k && i<j && i<k && j<k){
+
+                        result_count++;
+                    }
+                }
+            }
+        }
+        
+        
+        if(n[count]==0 && x[count]==0){
+            
+            break;
+        }
+        printf("%d\n",result_count);
+        result_count=0;
+        count++;
+    }
+
+    return 0;
+}

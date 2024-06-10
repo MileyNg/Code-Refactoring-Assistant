@@ -1,0 +1,87 @@
+#include<iostream>
+#include<cstdlib>
+#include<cstdio>
+#include<cmath>
+#include<cstring>
+#include<string>
+#include<algorithm>
+using namespace std;
+char G[105][105];
+int vis[105][105][4];
+int dy[4]={0,1,0,-1};
+int dx[4]={-1,0,1,0};
+char df[4]={'N','E','S','W'};
+int h,w,l;
+bool pd(int x,int y)
+{
+    if(x<1||x>h||y<1||y>w)  return false;
+    else if(G[x][y]=='#')   return false;
+    else
+        return true;
+}
+int main()
+{
+   // freopen("in.txt","r",stdin);
+    int x,y,f;
+    while(scanf("%d%d%d",&h,&w,&l)!=EOF)
+    {
+        if(h==0&&w==0&&l==0)    break;
+        memset(vis,-1,sizeof(vis));
+
+        for(int i=1;i<=h;i++)
+        {
+            scanf("%s",G[i]+1);
+            for(int j=1;j<=w;j++)
+            {
+                if(G[i][j]=='N')    {x=i;y=j;f=0;}
+                else if(G[i][j]=='E') {x=i;y=j;f=1;}
+                else if(G[i][j]=='S') {x=i;y=j;f=2;}
+                else if(G[i][j]=='W') {x=i;y=j;f=3;}
+            }
+        }
+
+        vis[x][y][f]=0;
+        int t=0;
+       // cout<<x<<" "<<y<<" "<<df[f]<<endl;
+       int ok=1;
+        while(1)
+        {
+            if(l<=0)
+            {
+                printf("%d %d %c\n",x,y,df[f]);
+                //cout<<endl<<endl;
+                break;
+            }
+
+            if(!pd(x+dx[f],y+dy[f]))
+            {
+                //cout<<"テ猟ェテ催、"<<x<<" "<<y<<" "<<f<<"-";
+                f=(f+1)%4;
+                //cout<<f<<endl;
+                continue;
+            }
+
+            l--;
+           // cout<<x<<" "<<y<<endl;
+            x=x+dx[f];
+            y=y+dy[f];
+            //cout<<x<<" "<<y<<" "<<df[f]<<endl;
+            t++;
+            if(vis[x][y][f]!=-1 &&ok)
+            {
+                //cout<<"x"<<l<<endl;
+                l=l%(t-vis[x][y][f]);
+
+                ok=0;
+                continue;
+            }
+
+            vis[x][y][f]=t;
+            //cout<<l<<endl;
+
+
+        }
+
+    }
+    return 0;
+}

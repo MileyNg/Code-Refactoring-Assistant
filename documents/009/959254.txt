@@ -1,0 +1,94 @@
+#include<iostream>
+#include<tuple>
+#include<vector>
+#include<set>
+#include<bitset>
+#include<algorithm>
+using namespace std;
+
+typedef tuple<vector<int>, int, int> Hint;
+enum{TRY, HIT, BLOW};
+
+const int NUMBERS = 10;
+
+vector<vector<int>> subset_combination(int n, int k, vector<int> number) {
+    vector<vector<int>> result;
+    unsigned long long int S = (1 << k) - 1;
+    unsigned long long int E = ~((1 << n) - 1);
+    while(!(S & E)) {
+        bitset<NUMBERS> flag(S);
+        vector<int> v;
+        for(int i = 0; i < n; i++) if(flag[i]) v.push_back(number[i]);
+        result.push_back(v);
+        unsigned long long int smallest = S & -S;
+        unsigned long long int ripple = S + smallest;
+        unsigned long long int nsmallest = ripple & -ripple;
+        S = ripple | (((nsmallest / smallest) >> 1) - 1);
+    }
+    return result;
+}
+
+vector<vector<int>> check(vector<int> v, const vector<Hint>& hint) {
+    sort(v.begin(), v.end());
+    vector<vector<int>> result;
+    do {
+        bool ok = true;
+        for(const auto& h: hint) {
+            int hit = 0, blow = 0;
+            int count[10] = {0};
+            for(const auto& n: get<TRY>(h)) count[n]++;
+            for(int i = 0; i < v.size(); i++) {
+                if(v[i] == get<TRY>(h)[i]) hit++;
+                else if(count[v[i]]) blow++;
+            }
+            if(hit != get<HIT>(h) || blow != get<BLOW>(h)) {
+                ok = false;
+                break;
+            }
+        }
+        if(ok) {
+            result.push_back(v);
+            if(result.size() > 1) return result;
+        }
+    } while (next_permutation(v.begin(), v.end()));
+    return result;
+}
+
+int main() {
+    int L, H;
+    vector<Hint> hint;
+    vector<vector<int>> candidate;
+    while(cin >> L >> H, L | H) {
+        hint.resize(H);
+        for(auto& element: hint) {
+            string t;
+            int h, b;
+            cin >> t >> h >> b;
+            vector<int> number;
+            for(auto& n: t) number.push_back(n - '0');
+            element = Hint(number, h, b);
+        }
+
+        vector<int> all = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        candidate = subset_combination(NUMBERS, L, all);
+
+        vector<int> answer;
+        bool ok = true;
+        for(auto& v: candidate) {
+            vector<vector<int>> result = check(v, hint);
+            if(result.size() > 1) ok = false;
+            if(result.size() == 1) {
+                if(answer.size()) ok = false;
+                else answer = *result.begin();
+            }
+            if(!ok) break;
+        }
+
+        if(ok && answer.size()) {
+            for(const auto& n: answer) cout << n;
+            cout << endl;
+        } else {
+            cout << "NO" << endl;
+        }
+    }
+}

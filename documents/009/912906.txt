@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int a[3];
+
+int main(void) {
+	int n;
+	int i;
+	int x;
+	
+	scanf("%d",&n);
+	
+	for(i=0;i<n;i++){
+		scanf("%d %d %d",&a[0],&a[1],&a[2]);
+		swap();
+		
+		x=a[0]*a[0]+a[1]*a[1];
+		if(x==a[2]*a[2]){
+			printf("YES\n");
+		}else{
+			printf("NO\n");
+		}
+	}
+	
+	return 0;
+}
+
+void swap(){
+	int i,j;
+	int temp;
+	
+	for(i=0;i<2;i++){
+		for(j=i+1;j<3;j++){
+			if(a[i]>a[j]){
+				temp=a[i];
+				a[i]=a[j];
+				a[j]=temp;
+			}
+		}
+	}
+}

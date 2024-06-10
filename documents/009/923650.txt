@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<string.h>
+#define LENGTH 201
+#define compile 0
+
+void func_change(char f_str[], char f_temp[], int num)
+{
+	int f_i = 0;
+	int f_counter = 0;
+	
+	for(f_i = num; f_str[f_i] != '\0'; f_i++)
+	{
+		f_temp[f_counter] = f_str[f_i];
+		#if compile == 1
+		puts("done line 11 for-roop");
+		printf("temp[%d] = %c str[%d] = %c", f_counter, f_temp[f_counter], f_i, f_str[f_i]);
+		puts("");
+		#endif
+		f_counter++;
+	}
+	
+	for(f_i = 0; f_i < num; f_i++)
+	{
+		f_temp[f_counter] = f_str[f_i];
+		#if compile == 1
+		puts("done line 26 for-roop");
+		printf("temp[%d] = %c str[%d] = %c", f_counter, f_temp[f_counter], f_i, f_str[f_i]);
+		puts("");
+		#endif
+		f_counter++;
+	}
+	
+	f_temp[f_counter] = '\0';
+}
+main()
+{
+	char str[LENGTH];
+	char temp[LENGTH];
+	int h = 0;
+	int m = 0;
+	int i = 0;
+	
+	scanf("%s", str);
+	scanf("%d", &m);
+	
+	while(str[0] != '-')
+	{
+		#if compile == 1
+		printf("m = %d\n", m);
+		#endif
+		
+		for(i = 0; i < m; i++)
+		{
+			fflush(stdin);
+			scanf("%d", &h);
+			#if compile == 1
+			printf("h%d = %d\n", i, h);
+			#endif
+			//ここから文字列の切り貼りの処理
+			func_change(str, temp, h);
+			#if compile == 1
+			printf("done func_change %d\n", i);
+			#endif
+		}
+		
+		#if compile == 1
+		printf("str = %s\ntemp = ", str);
+		#endif
+		
+		printf("%s\n", temp);
+		scanf("%s", str);
+		scanf("%d", &m);
+		
+		#if compile == 1
+		printf("str = %s\n", str);
+		printf("%m = d\n", m);
+		#endif
+	}
+	#if compile == 1
+	puts("end while-roop");
+	#endif
+	
+	return 0;
+}

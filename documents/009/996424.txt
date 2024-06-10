@@ -1,0 +1,122 @@
+#include<cstring>
+#include<cstdio>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+struct recedge
+{
+	int y, next;
+} edge[5555];
+int l, idx[5555], ind[33], x[33], y[33], r[33], c[33], n, ans;
+void build(int x, int y)
+{
+	edge[++l].y = y;
+	edge[l].next = idx[x];
+	idx[x] = l;
+}
+int lg(int x)
+{
+	int rtn = 0;
+	while(x) rtn++, x /= 2;
+	return rtn - 1;
+}
+void dfs(int msk, int d, int c1, int c2, int c3, int c4)
+{
+	ans = max(ans, d);
+	if(ans == n or ans == n - 1) return;
+	int I, J, flag;
+	if(c1 >= 2)
+	{
+		int msk1 = 0;
+		for(int i = 0; i < n; i++) if(c[i + 1] == 1 and ind[i + 1] == 0 and ((1 << i) & msk))
+		{
+			flag = true;
+			for(int p = idx[i + 1]; p; p = edge[p].next) if((1 << (edge[p].y - 1)) & msk)
+			{flag = false; break;}
+			if(flag) msk1 += (1 << i);
+		}
+		for(int i = msk1; i; i -= i & -i) for(int j = i - (i & -i); j; j -= j & -j)
+		{
+			dfs(msk - (i & -i) - (j & -j), d + 2, c1 - 2, c2, c3, c4);
+		}
+	}
+	if(c2 >= 2)
+	{
+		int msk1 = 0;
+		for(int i = 0; i < n; i++) if(c[i + 1] == 2 and ind[i + 1] == 0 and ((1 << i) & msk))
+		{
+			flag = true;
+			for(int p = idx[i + 1]; p; p = edge[p].next) if((1 << (edge[p].y - 1)) & msk)
+			{flag = false; break;}
+			if(flag) msk1 += (1 << i);
+		}
+		for(int i = msk1; i; i -= i & -i) for(int j = i - (i & -i); j; j -= j & -j)
+		{
+			dfs(msk - (i & -i) - (j & -j), d + 2, c1, c2 - 2, c3, c4);
+		}
+	}
+	if(c3 >= 2)
+	{
+		int msk1 = 0;
+		for(int i = 0; i < n; i++) if(c[i + 1] == 3 and ind[i + 1] == 0 and ((1 << i) & msk))
+		{
+			flag = true;
+			for(int p = idx[i + 1]; p; p = edge[p].next) if((1 << (edge[p].y - 1)) & msk)
+			{flag = false; break;}
+			if(flag) msk1 += (1 << i);
+		}
+		for(int i = msk1; i; i -= i & -i) for(int j = i - (i & -i); j; j -= j & -j)
+		{
+			dfs(msk - (i & -i) - (j & -j), d + 2, c1, c2, c3 - 2, c4);
+		}
+	}
+	if(c4 >= 2)
+	{
+		int msk1 = 0;
+		for(int i = 0; i < n; i++) if(c[i + 1] == 4 and ind[i + 1] == 0 and ((1 << i) & msk))
+		{
+			flag = true;
+			for(int p = idx[i + 1]; p; p = edge[p].next) if((1 << (edge[p].y - 1)) & msk)
+			{flag = false; break;}
+			if(flag) msk1 += (1 << i);
+		}
+		for(int i = msk1; i; i -= i & -i) for(int j = i - (i & -i); j; j -= j & -j)
+		{
+			dfs(msk - (i & -i) - (j & -j), d + 2, c1, c2, c3, c4 - 2);
+		}
+	}
+	
+}
+int main()
+{
+	for(;;)
+	{
+		scanf("%d", &n);
+		if(!n) break;
+		l = 0;
+		int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+		for(int i = 1; i <= n; i++)
+		{
+			ind[i] = 0; idx[i] = 0;
+			scanf("%d%d%d%d", &x[i], &y[i], &r[i], &c[i]);
+			if(c[i] == 1) c1++;
+			if(c[i] == 2) c2++;
+			if(c[i] == 3) c3++;
+			if(c[i] == 4) c4++;
+			
+			for(int j = i - 1; j >= 1; j--)
+			{
+				if(sqrt((x[i] - x[j]) * (x[i] - x[j]) + (y[i] - y[j]) * (y[i] - y[j])) < r[i] + r[j])
+				{
+					build(i, j);
+				//	printf("%d -> %d\n", j, i);
+				}
+			}
+		}
+		ans = 0;
+		dfs((1 << n) - 1, 0, c1, c2, c3, c4);
+		printf("%d\n", ans);
+	}
+	fclose(stdin);
+	return 0;
+}

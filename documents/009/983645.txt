@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int N = 0;
+	int x, y, b, p;
+	int max = 0;
+	int wari = 0;
+	int i = 0;
+
+	cin >> N;
+
+	while (1) {
+		cin >> x;
+		cin >> y;
+		cin >> b;
+		cin >> p;
+
+		max = ((x * b) + (y * p));
+
+		if (b < 5){
+			b = 5;
+		}
+
+		if (p < 2){
+			p = 2;
+		}
+
+		wari = ((x * b) + (y * p)) * 0.8;
+
+		if (max < wari) {
+			cout << max << "\n";
+		} else {
+			cout << wari << "\n";
+		}
+
+		if(b == 0 && p == 0){
+			cout << 0 << "\n";
+		}
+
+
+		i++;
+
+		max = 0;
+		wari = 0;
+
+		if(i == N) {
+			return 0;
+		}
+	}
+}

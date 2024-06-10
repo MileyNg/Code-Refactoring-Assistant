@@ -1,0 +1,25 @@
+def count(num, s, c):
+	ans = 0
+	if c == 4:
+		return True if s == num else False
+	for i in range(num+1 if num <= 1000 else 1001):
+		s += i
+		if s >= num:
+			if s > num:
+				s -= i
+				continue
+			else:
+				ans += 1
+				s -= i
+				continue
+		else:
+			ans += count(num, s, c+1)
+		s -= i
+	return ans
+
+while True:
+	try:
+		n = input()
+		print count(n, 0, 0)
+	except:
+		break

@@ -1,0 +1,54 @@
+#include<iostream>
+#include<map>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+
+int point[393];
+int dp[394];
+pair<int,int>len[393];
+int n;
+
+void check(int mmin,int max,int i,int pp)
+{
+  // cout<<mmin<<" "<<max<<" "<<i<<" "<<pp<<endl;
+  if(mmin>393||i>=n)
+    return;
+  int vmax=min(max,393);
+  bool cnt=false;
+  for(int j=mmin;j<=vmax;j++)
+    {
+      if(dp[j]<pp)
+	{
+	  dp[j]=pp;
+	  cnt=true;
+	}
+    }
+//  if(!cnt)
+//    return;
+  check(mmin,max,i+1,pp);
+  check(mmin+len[i].first,max+len[i].second,i,pp+point[i]);
+}
+
+int main()
+{
+ 
+  cin>>n;
+  for(int i=0;i<n;i++)
+    {
+      int s,l,p;
+      cin>>s>>l>>p;
+      len[i]=make_pair(s,l);
+      point[i]=p;
+    }
+  int m;
+  cin>>m;
+  memset(dp,-1,sizeof(dp));
+  check(0,0,0,0);
+  for(int i=0;i<m;i++)
+    {
+      int w;
+      cin>>w;
+      cout<<dp[w]<<endl;
+    }
+}

@@ -1,0 +1,59 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int h, w;
+    int i, j;
+    int row;
+
+    while (1){
+        row = 1;
+        scanf("%d %d", &h, &w);
+        /*w = h = 0 のとき終了*/
+        if (h == 0 && w == 0){
+            break;
+        /*w が偶数のとき*/
+        }else if (w % 2 == 0){
+            /*列ごと*/
+            for (i = 1; i <= h; i++){
+                /*奇数列目*/
+                if (row % 2 == 1){
+                    for (j = 1; j <= (w / 2); j++){
+                        printf("#.");
+                    }
+                /*偶数列目*/
+                }else{
+                    for (j = 1; j <= (w / 2); j++){
+                        printf(".#");
+                    }
+                }
+                printf("\n");
+                row++;
+            }
+        /*w が奇数のとき*/
+        }else{
+            /*列ごと*/
+            for (i = 1; i <= h; i++){
+                /*奇数列目*/
+                if (row % 2 == 1){
+                    for (j = 1; j <= ((w - 1) / 2); j++){
+                        printf("#.");
+                    }
+                    printf("#");
+                /*偶数列目*/
+                }else{
+                    for (j = 1; j <= ((w - 1) / 2); j++){
+                        printf(".#");
+                    }
+                    printf(".");
+                }
+                printf("\n");
+                row++;
+            }
+        }
+        
+        printf("\n");
+    }
+
+    return 0;
+}

@@ -1,0 +1,141 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INF 1e9
+
+struct node {
+  struct node *right;
+  struct node *left;
+  int key;
+};
+typedef struct node * NodePointer;
+
+void init(void);
+NodePointer makenode(int);
+int Search(int,int,int,NodePointer);
+void insert(int,int,int,NodePointer);
+void preorder(NodePointer);
+void inorder(NodePointer);
+void postorder(NodePointer);
+
+NodePointer head, tail;
+
+int main(){
+  int n,i,par,l,r;
+
+  init();
+
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d%d%d" ,&par ,&l ,&r);
+
+    if(!Search(par,l,r,head)){  
+      insert(par,l,r,head);
+    }
+  }
+
+  printf("Preorder\n");
+  preorder(head->right);
+  printf("\n");
+
+  printf("Inorder\n");
+  inorder(head->right);
+  printf("\n");
+
+  printf("Postorder\n");
+  postorder(head->right);
+  printf("\n");
+
+  return 0;
+}
+
+void init(void){
+  head = makenode(-INF);
+  tail = makenode(-INF);
+  head->right = head->left = tail;
+}
+
+NodePointer makenode(int key){
+  NodePointer x;
+
+  x = malloc(sizeof(struct node));
+  x->key = key;
+  x->left = x->right = tail;
+
+  return x;
+}
+
+int Search(int key,int l,int r,NodePointer p){
+  if(p == tail){
+    return 0;
+  }
+
+  if(p->key == key){
+    if(l != -1){
+      p->left = makenode(l);
+    }
+    if(r != -1){
+      p->right = makenode(r);
+    }
+
+    return 1;
+  }
+
+  if(Search(key,l,r,p->left) || Search(key,l,r,p->right)){
+    return 1;
+  }
+
+  return 0;
+}
+
+void insert(int par,int left,int right,NodePointer p){
+  if(par < p->key){
+    if(p->left == tail){
+      p->left = makenode(par);
+      if(left != -1){
+	p->left->left = makenode(left);
+      }
+      if(right != -1){
+	p->left->right = makenode(right);
+      }
+    }else{
+      insert(par,left,right,p->left);
+    }
+  }else{
+    if(p->right == tail){
+      p->right = makenode(par);
+      if(left != -1){
+	p->right->left = makenode(left);
+      }
+      if(right != -1){
+	p->right->right = makenode(right);
+      }
+    }else{
+      insert(par,left,right,p->right);
+    }
+  }
+}
+
+void preorder(NodePointer node){
+  if(node != tail){
+    printf(" %d", node->key);
+    preorder(node->left);
+    preorder(node->right);
+  }
+}
+
+void inorder(NodePointer node){
+  if(node != tail){
+    inorder(node->left);
+    printf(" %d", node->key);
+    inorder(node->right);
+  }
+}
+
+void postorder(NodePointer node){
+  if(node != tail){
+    postorder(node->left);
+    postorder(node->right);
+    printf(" %d", node->key);
+  }
+}

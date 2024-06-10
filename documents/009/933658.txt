@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXP = 1000002;
+int isP[MAXP], S[MAXP];
+
+int main() {
+  fill(isP, isP+MAXP, 1);
+  isP[0] = isP[1] = 0;
+  for(int i = 2; i < MAXP; ++i) {
+    if(!isP[i]) continue;
+    for(int j = i*2; j < MAXP; j += i) isP[j] = 0;
+  }
+  for(int i = 0; i+1 < MAXP; ++i) S[i+1] = S[i] + isP[i];
+
+  int n;
+  while(cin >> n && n) {
+    int res = 0;
+    for(int i = 0; i < n; ++i) {
+      int p, m;
+      cin >> p >> m;
+      int X = S[min(MAXP-1,p+m+1)] - S[max(0,p-m)];
+      if(X) {
+        res += X-1;
+      } else {
+        res -= 1;
+      }
+    }
+    cout << res << endl;
+  }
+  return 0;
+}

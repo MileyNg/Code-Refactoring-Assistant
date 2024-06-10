@@ -1,0 +1,13 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+var tmp = stdin();
+tmp.every(function(line, i) {
+	var W = line.split(''), M = +tmp[i+1];
+	tmp.splice(i+1, M+1).slice(1).map(function(num) {
+		W = W.concat(W.splice(0, +num));
+	});
+	return line != '-' ? !console.log(W.join('')) : false;
+});

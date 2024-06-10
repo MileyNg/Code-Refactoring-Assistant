@@ -1,0 +1,21 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+
+void main() {
+  string s = readln.chomp;
+  int[26] counter;
+
+  foreach (c; s) {
+    int c_s = c.toLower;
+    if ('a' <= c_s && c_s <= 'z') {
+      counter[c_s - 'a']++;
+    }
+  }
+
+  for (int i = 0; i <= 25; i++) {
+    writefln("%s : %d", cast(char)(i + 'a'), counter[i]);
+  }
+}

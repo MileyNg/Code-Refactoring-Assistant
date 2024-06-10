@@ -1,0 +1,29 @@
+def dfs(arr, left, right)
+  return true if arr.size == 0
+
+  if left.last.to_i < arr.first
+    left.push(arr.shift())
+    ans = dfs(arr.dup, left, right)
+    return ans if ans
+    left.pop()
+  end
+  if right.last.to_i < arr.first
+    right.push(arr.shift())
+    ans = dfs(arr.dup, left, right)
+    return ans if ans
+    right.pop()
+  end
+
+  return false
+end
+
+n = gets.to_i
+n.times do
+  arr = gets.split(' ').map(&:to_i)
+
+  left = []
+  right = []
+
+  ans = dfs(arr, left, right)
+  puts ans ? 'YES' : 'NO'
+end

@@ -1,0 +1,22 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <cctype>
+#include <string>
+using namespace std;
+
+int main(){
+	vector<int>a(26, 0);
+	char st;
+	while (cin>>st){
+		if (isalpha(st)){
+			if (isupper(st))
+				st = tolower(st);
+			a[st - 'a']++;
+		}
+	}
+	for (int i = 0; i <= 25; i++){
+		cout << static_cast<char>(i + 'a') << " : " << a[i] << endl;
+	}
+	return 0;
+}

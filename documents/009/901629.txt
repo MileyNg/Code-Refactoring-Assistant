@@ -1,0 +1,22 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef pair<int,int> P;
+int n,m,s;
+P t[1000000];
+int main(){
+  while(cin>>n&&n){
+    for(int i=0;i<n;i++){
+      cin>>t[i].second;
+      t[i].first=0;
+      for(int j=0;j<4;j++){
+	cin>>m>>s;
+	t[i].first+=(m*60+s);
+      } 
+    }
+    sort(t,t+n);
+    cout<<t[0].second<<endl;
+    cout<<t[1].second<<endl;
+    cout<<t[n-2].second<<endl;
+  }
+}

@@ -1,0 +1,57 @@
+def main():
+
+    check_words = ('the', 'this', 'that')
+
+    caesar_chipher_text = tuple(map(str, input().split()))
+
+    if __debug__:
+        print(caesar_chipher_text)
+
+    for i in range(26):
+        after_text = []
+        flag = False
+        if __debug__:
+            print('['+ str(i) + ']', end='')
+
+        print('--------------for word in caesar_chipher_text: ---------------')
+
+        for word in caesar_chipher_text:
+            if __debug__:
+                print(i)
+                print('word: ' + word)
+
+            after_word = []
+
+            for char in word:
+                if __debug__:
+                    print(ord(char))
+
+                char = slide_char(char, i)
+                after_word.append(char)
+
+            after_text.append(after_word)
+
+            if ''.join(after_word) in check_words:
+                if __debug__:
+                    print('yes')
+                flag = True
+
+            if __debug__:
+                print(after_word)
+
+        if __debug__:
+            print('dubug:', end='')
+            print(after_text)
+
+
+        if flag:
+            anser = []
+            for text in after_text:
+                anser.append(''.join(text))
+
+            print(' '.join(anser))
+            break
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,53 @@
+#include<iostream>
+using namespace std;
+
+string str;
+
+string t[8][4]={
+  {"black","00","00","00"},
+  {"blue","00","00","ff"},
+  {"lime","00","ff","00"},
+  {"aqua","00","ff","ff"},
+  {"red","ff","00","00"},
+  {"fuchsia","ff","00","ff"},
+  {"yellow","ff","ff","00"},
+  {"white","ff","ff","ff"}
+};
+
+
+
+int c2i(char ch){
+  if('0'<=ch&&ch<='9')return ch-'0';
+  return 10+ch-'a';
+}
+
+int cc2i(char ch,char ch2){
+  return c2i(ch)*16+c2i(ch2);
+}
+
+int s2i(string str){
+  return cc2i(str[0],str[1]);
+}
+
+int pow(int x){
+  return x*x;
+}
+
+int main(){
+  int a,mini,mini_no;
+  while(cin>>str){
+    if(str=="0")break;
+    mini=9999999;
+    for(int i=0;i<8;i++){
+      a=pow( cc2i(str[1],str[2]) - s2i(t[i][1]) ); 
+      a+=pow(cc2i(str[3],str[4]) - s2i(t[i][2]) );
+      a+=pow(cc2i(str[5],str[6]) - s2i(t[i][3]) ); 
+      if(a<mini){
+	mini=a;
+	mini_no=i;
+      }
+    }
+    cout<<t[mini_no][0]<<endl;
+  }
+  return 0;
+}

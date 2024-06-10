@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int i,height[100000];
+	double value,min_t,just;
+
+	for(i=0;i<sizeof(height);i++)
+	{
+		height[i] = (5 * i )- 5;
+	}
+
+	while(scanf("%lf",&value) != EOF)
+	{
+		min_t = value / 9.8;
+		just = 4.9*min_t*min_t;
+
+		for(i=0;i<sizeof(height);i++)
+		{
+			if(just < height[i])
+			{
+				printf("%d\n",i);
+				break;
+			}
+		}
+	}
+	return 0;
+}

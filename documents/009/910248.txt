@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int N;
+  int sum = 0;
+  cin >> N;
+  while(N--) {
+    int a;
+    cin >> a;
+    if(a >= 2) {
+      ++sum;
+      for(int i = 2; i*i <= a; ++i) {
+	if(a % i) {
+	  --sum;
+	  break;
+	}
+      }
+    }
+  }
+  cout << sum << endl;
+  return 0;
+}

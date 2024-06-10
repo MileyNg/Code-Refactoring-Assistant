@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a, b, c;
+	int h, m, s;
+	int zan, sanbai;
+	int sanh, sanm, sans;
+	
+	while (1) {
+		scanf("%d %d %d", &h, &m, &s);
+		if ((h + m + s) == -3) {
+			break;
+		}
+		
+		zan = 7200 - (h * 3600 + m * 60 + s);
+		
+		sanbai = zan * 3;
+		
+		if (zan / 3600 != 0) {
+			h = zan / 3600;
+			zan = zan % 3600;
+		}
+		else {
+			h = 0;
+		}
+		if (zan / 60 != 0) {
+			m = zan / 60;
+			s = zan % 60;
+		}
+		else {
+			m = 0;
+			s = zan % 60;
+		}
+		if (sanbai / 3600 != 0) {
+			sanh = sanbai / 3600;
+			sanbai = sanbai % 3600;
+		}
+		else {
+			sanh = 0;
+		}
+		if (sanbai / 60 != 0) {
+			sanm = sanbai / 60;
+			sans = sanbai % 60;
+		}
+		
+		printf("%02d:%02d:%02d\n", h, m, s);
+		printf("%02d:%02d:%02d\n", sanh, sanm, sans);
+	}
+	
+	return (0);
+}	
+	
+	

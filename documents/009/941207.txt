@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+void solve()
+{
+	int H, W;
+	while(cin >> H >> W, H || W)
+	{
+		vector< vector<char> > field(H, vector<char>(W));
+		vector< vector<int> > dp(H, vector<int>(W));
+		for(int i = 0; i < H; ++i)
+		{
+			for(int j = 0; j < W; ++j)
+			{
+				cin >> field[i][j];
+				if(field[i][j] == '.')
+				{
+					dp[i][j] = 1;
+				}
+			}
+		}
+		for(int i = 0; i < H; ++i)
+		{
+			for(int j = W - 2; j >= 0; --j)
+			{
+				if(field[i][j] == '.')
+				{
+					dp[i][j] += dp[i][j + 1];
+				}
+				else
+				{
+					dp[i][j] = 0;
+				}
+			}
+		}
+
+		int ans = 0;
+		for(int i = 0; i < H; ++i)
+		{
+			for(int j = 0; j < W; ++j)
+			{
+				if(1 <= i && dp[i][j] == dp[i - 1][j] || dp[i][j] == 0)
+				{
+					continue;
+				}
+				ans = max(ans, dp[i][j]);
+				int k = 1;
+				int minimum = dp[i][j];
+				while(i + k < H && dp[i + k][j] > 0)
+				{
+					minimum = min(minimum, dp[i + k][j]);
+					++k;
+					ans = max(ans, k * minimum);
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

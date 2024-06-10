@@ -1,0 +1,107 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P complex<double>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const double EPS = 1e-8;
+const double INF = 1e12;
+using namespace std;
+namespace std {
+  bool operator < (const P& a, const P& b) {
+    return real(a) != real(b) ? real(a) < real(b) : imag(a) < imag(b);
+  }
+}
+
+struct L : public vector<P> {
+  L(const P &a, const P &b) {
+    push_back(a); push_back(b);
+  }
+};
+
+double cross(const P& a, const P& b) {
+  return imag(conj(a)*b);
+}
+double dot(const P& a, const P& b) {
+  return real(conj(a)*b);
+}
+
+int ccw(P a, P b, P c) {
+  b -= a; c -= a;
+  if (cross(b, c) > 0)   return +1;       // counter clockwise
+  if (cross(b, c) < 0)   return -1;       // clockwise
+  if (dot(b, c) < 0)     return +2;       // c--a--b on line
+  if (norm(b) < norm(c)) return -2;       // a--b--c on line
+  return 0;
+}
+
+bool intersectSS(const L &s, const L &t) {
+  return ccw(s[0],s[1],t[0])*ccw(s[0],s[1],t[1]) <= 0 &&
+         ccw(t[0],t[1],s[0])*ccw(t[0],t[1],s[1]) <= 0;
+}
+
+P projection(const L &l, const P &p) {
+  double t = dot(p-l[0], l[0]-l[1]) / norm(l[0]-l[1]);
+  return l[0] + t*(l[0]-l[1]);
+}
+
+bool intersectSP(const L &s, const P &p) {
+  return abs(s[0]-p)+abs(s[1]-p)-abs(s[1]-s[0]) < EPS; // triangle inequality
+}
+
+double distanceSP(const L &s, const P &p) {
+  const P r = projection(s, p);
+  if (intersectSP(s, r)) return abs(r - p);
+  return min(abs(s[0] - p), abs(s[1] - p));
+}
+
+double distanceSS(const L &s, const L &t) {
+  if (intersectSS(s, t)) return 0;
+  return min(min(distanceSP(s, t[0]), distanceSP(s, t[1])),
+             min(distanceSP(t, s[0]), distanceSP(t, s[1])));
+}
+
+int main() {
+  int N;
+  while(cin >>N && N){
+    double sx, sy, ex, ey; cin >>sx >>sy >>ex >>ey;
+    L route = L(P(sx, sy), P(ex, ey));
+    double ans = INF;
+    REP(n, N){
+      double minx, miny, maxx, maxy, h; cin >>minx >>miny >>maxx >>maxy >>h;
+      vector<L> l;
+      l.push_back(L(P(maxx, maxy), P(minx, maxy)));
+      l.push_back(L(P(maxx, maxy), P(maxx, miny)));
+      l.push_back(L(P(minx, miny), P(maxx, miny)));
+      l.push_back(L(P(minx, maxy), P(minx, miny)));
+      if(minx <= min(sx, ex) && maxx >= max(sx, ex) && miny <= min(sy, ey) && maxy >= max(sy, ey)) ans = 0.0;
+      REP(i, 4){
+        if(intersectSS(route, l[i])) ans = 0.0;
+        double d = distanceSS(route, l[i]);
+        double r = (d * d + h * h) / (2 * h);
+        if(h > d) r = d;
+        ans = min(ans, r);
+      }
+    }
+    printf("%.9lf\n", ans);
+  }
+  return 0;
+}

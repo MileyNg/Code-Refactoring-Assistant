@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+struct Edge{
+  int to,cost;
+  bool operator < (const Edge& e)const{
+    return cost > e.cost;
+  }
+};
+
+const int IINF = INT_MAX;
+
+int V,E;
+vector<Edge> G[10100];
+int mincost[10100];
+bool used[10100];
+
+int main(){
+  cin >> V >> E;
+  rep(i,E){
+    int s,t,w;
+    cin >> s >> t >> w;
+    G[s].push_back((Edge){t,w});
+    G[t].push_back((Edge){s,w});
+  }
+
+  rep(i,V) mincost[i] = IINF, used[i] = false;
+  mincost[0] = 0;
+
+  priority_queue<Edge> Q;
+  Q.push((Edge){0,0});
+  int ans = 0;
+  while(!Q.empty()){
+    Edge e = Q.top(); Q.pop();
+    if( used[e.to] ) continue;
+    used[e.to] = true;
+    ans += mincost[e.to];
+    int cur = e.to;
+    rep(i,G[cur].size()){
+      int next = G[cur][i].to;
+      if( used[next] ) continue;
+      if( mincost[next] > G[cur][i].cost ){
+        mincost[next] = G[cur][i].cost;
+        Q.push((Edge){next,G[cur][i].cost});
+      }
+    }
+  }
+
+  cout << ans << endl;
+
+  return 0;
+}

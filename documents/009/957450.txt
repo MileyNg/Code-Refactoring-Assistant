@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, p;
+vector<int> stones_candidates;
+int stones_cup;
+int current_player;
+
+int game_set()
+{
+    if (stones_cup > 0) return false;
+    bool cond = true;
+    for (int i = 0; i < n; i++) {
+        if (i != current_player && stones_candidates[i] != 0) {
+            cond = false;
+        }
+    }
+    return cond;
+}
+
+inline int next_player()
+{
+    return current_player == n - 1
+        ? 0
+        : current_player + 1;
+}
+
+int main()
+{
+    while (cin >> n >> p, n && p) {
+        stones_candidates = vector<int>(n);
+        stones_cup = p;
+
+        current_player = 0;
+        while (true) {
+            if (stones_cup > 0) {
+                stones_cup--;
+                stones_candidates[current_player]++;
+            } else if (stones_cup == 0) {
+                stones_cup += stones_candidates[current_player];
+                stones_candidates[current_player] = 0;
+            } else {
+                throw "Something wrong!";
+            }
+            
+            if (game_set()) {
+                break;
+            }
+
+            current_player = next_player();
+        }
+
+        cout << current_player << endl;
+    }
+}
+    

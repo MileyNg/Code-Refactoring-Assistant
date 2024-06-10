@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+
+#define rep(i, n) for(int i = 0; i < n; i ++)
+#define COUNT(i, n) for(int i = 1; i <= n; i ++)
+#define ALL(T) T.begin(), T.end()
+#define mp make_pair
+#define pb push_back
+#define ITER(c) __typeof((c).begin())
+#define each(c, it) for(ITER(c) it = (c).begin(); it != (c).end(); it++)
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<string> vs;
+
+const int INF = 1 << 24;
+const int N = 101;
+
+bool ok[N][N];
+int n, res, vv;
+
+void dfs(int, int, int);
+
+int main(void){
+    cin >> n;
+
+    rep(i, n){
+        int r, k; cin >> r >> k;
+        while(k--){
+            int t; cin >> t;
+            ok[r][t] = true;
+        }
+    }
+
+    int p; cin >> p;
+    while(p--){
+        int s, d; cin >> s >> d >> vv;
+        res = INF;
+
+        dfs(s, d, vv - 1);
+     
+        if(res == INF) cout << "NA" << endl;
+        else cout << res << endl;
+    }
+
+    return 0;
+}
+
+void dfs(int cur, int z, int v){
+    if(cur == z){
+        res = vv - v;
+        return;
+    }
+    if(v == 0) return;
+
+    COUNT(i, n) if(ok[cur][i]) dfs(i, z, v - 1);
+}

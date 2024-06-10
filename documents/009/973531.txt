@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+using namespace std;
+
+#define dump(a) (cerr << #a << " = " << (a) << endl)
+
+const string NO = "Impossible";
+int a,b,c,d;
+
+bool ok(int p, int x, int r, int y) {
+  int bun = 2*a;
+  if(!((p * x) % bun == 0 && (r * y) % bun == 0)) return false;
+  int q = p * x / bun;
+  int s = r * y / bun;
+
+  if(!(p * r == a && p * s + r * q == b && q * s == c)) return false;
+  cout << p << " " << q << " " << r << " " << s << endl;
+  return true;
+}
+
+bool valid(int p, int r){
+  int x = -(-b+(int)sqrt(d));
+  int y = -(-b-(int)sqrt(d));
+
+  if(p > r) {
+	if(ok(p, x, r, y)) return true;
+	if(ok(p, y, r, x)) return true;
+  }
+  else {
+	if(ok(p, max(x, y), r, min(x, y))) return true;
+  }
+  return false;
+}
+bool cal(int p){
+  int r = a / p;
+  if(p < r) swap(p, r);
+  if(valid(p, r)) return true;
+  return false;
+}
+int main(){
+  while(cin >> a >> b >> c && a!=0){
+	d = b*b-4*a*c;
+	if((int)sqrt(d) != sqrt(d)){
+	  cout << NO << endl;
+	  continue;
+	}
+	for(int i = 1;i <= 10000;i++){
+	  if(a % i == 0) {
+		if(cal(i))break;
+	  }
+	}
+  }
+  return 0;
+}

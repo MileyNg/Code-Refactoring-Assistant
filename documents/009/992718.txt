@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<stack>
+#include<queue>
+#include<cmath>
+#include<algorithm>
+#include<functional>
+//--
+#include<list>
+#include<deque>
+#include<bitset>
+#include<set>
+#include<map>
+#include<cstdio>
+#include<cstring>
+#include<sstream>
+#include<complex>
+#define X first
+#define Y second
+#define pb push_back
+#define rep(X,Y) for (int (X) = 0;(X) < (Y);++(X))
+#define rrep(X,Y) for (int (X) = Y-1;(X) >=0;--(X))
+#define all(X) (X).begin(),(X).end()
+#define rall(X) (X).rbegin(),(X).rend()
+
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef complex<double> pt;
+double dot(pt a,pt b){return (conj(a)*b).real();}
+double cros(pt a,pt b){return (conj(a)*b).imag();}
+pt proj(pt a,pt to){
+  return dot(a,to)/norm(to)*to;
+}
+
+pt refle(pt a,pt mirror){
+  return pt(2)*proj(a,mirror)-a;
+}
+
+pt pt3(pt a,pt b,pt c){
+  pt p=b-a,q=c-a,tmp;
+  tmp=cros(p,q);
+  cout<<tmp<<endl;
+  return p;
+}
+
+int main(){
+  int i,j,k,n;
+  pt o,p,q;
+ // cout<<cros(pt(1,0),pt(0,-1))<<endl;
+  cin>>o.real()>>o.imag()>>p.real()>>p.imag();
+  cin>>n;
+  rep(i,n){
+    cin>>q.real()>>q.imag();
+    q=refle(q-o,p-o)+o;
+    printf("%.9f %.9f\n",q.real(),q.imag());
+  }
+  return 0;
+}

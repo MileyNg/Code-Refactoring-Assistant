@@ -1,0 +1,103 @@
+#include<stdio.h>
+#include<malloc.h>
+#include<string.h>
+#include<stdlib.h>
+
+typedef struct wordtree{
+	struct wordtree *next;
+	struct wordtree *prev;
+	char *txt;
+	int t_num;
+	int t_size;
+}wordtree;
+
+wordtree *initTree(char *msg,int num,int size){
+	wordtree *x;
+	x=(wordtree *)malloc(sizeof(wordtree));
+	x->prev=NULL;
+	x->next=NULL;
+	x->txt=(char *)malloc(sizeof(char)*32);
+	strcpy(x->txt,msg);
+	x->t_num=num;
+	x->t_size=size;
+	return x;
+}
+int cnt=0;often=0;length=0;
+char *mod2,*mod3;
+void graphtree(wordtree *tree,int mode){
+	switch(mode){
+		case 1:if(tree->txt!="")printf("msg=%s,num=%d,size=%d,depth=%d\n",tree->txt,tree->t_num,tree->t_size,cnt);
+		case 2:if(tree->t_num>=often){often=tree->t_num;mod2=tree->txt;}
+		case 3:if(tree->t_size>=length){length=tree->t_size;mod3=tree->txt;}
+	}
+	if(tree->next!=NULL){
+		cnt++;
+		graphtree(tree->next,mode);
+	}
+	if(tree->prev!=NULL){
+		cnt--;
+		graphtree(tree->prev,mode);
+	}
+	return ;
+}
+		
+void addToTree(char *msg,wordtree *tree){
+	wordtree *x;
+	x=tree;
+	if(strcmp(msg, x->txt)>0){
+		if(x->next==NULL){
+			x->next=initTree(msg,1,strlen(msg));
+			return;
+		}else{
+			addToTree(msg,x->next);
+		}
+	}else{
+		if(x->prev==NULL){
+			x->prev=initTree(msg,1,strlen(msg));
+			return;
+		}else{
+			addToTree(msg,x->prev);
+		}
+	}
+}
+
+wordtree *searchTree(char *msg,wordtree *tree){
+	wordtree *x;
+	x=tree;
+	if(strcmp(msg,x->txt)>0){
+		if(x->next==NULL)return NULL;
+		else searchTree(msg,x->next);
+	}else if(strcmp(msg,x->txt)<0){
+		if(x->prev==NULL)return NULL;
+		else searchTree(msg,x->prev);
+	}else{
+		return x;
+	}
+}
+
+int main(){
+	wordtree *r,*p;
+	int i,j;
+	char txt[1024],s[32];
+	memset(s,'\0',sizeof(s));
+	r=initTree("nn",0,0);//root
+	while(fgets(txt,sizeof(txt),stdin)!=NULL){
+		for(i=0,j=0;i<strlen(txt);i++){
+			if((65<=txt[i]&&txt[i]<=90)||(97<=txt[i]&&txt[i]<=122)){
+				if((65<=txt[i]&&txt[i]<=90))txt[i]+=32;
+				s[j]=txt[i]; j++;
+			}else{
+				j=0;
+				p=searchTree(s,r);
+				if(p==NULL)	addToTree(s,r);
+				else p->t_num++;
+				memset(s,'\0',sizeof(s));
+			}
+		}
+		//graphtree(r,1);
+		graphtree(r,2);
+		graphtree(r,3);
+		printf("%s %s\n",mod2,mod3);
+		return 0;	
+	}
+}

@@ -1,0 +1,28 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+int main(){
+	int n;
+	cin >> n;
+	for( int t = 0; t < n; t++ ){
+		//priority_queue<int, vector<int> > max;
+		//priority_queue<int, vector<int>, greater<int> > min;
+		string num;
+		cin >> num;
+		sort(num.begin(), num.end());
+		int max = 0, min = 0;
+		for( int i = 0; i < num.size(); i++ ){
+			min += (int)(num[i]-'0') * pow(10.0, (double)(num.size()-i-1));
+		}
+		sort(num.begin(), num.end(), greater<int>());
+		for( int i = 0; i < num.size(); i++ ){
+			max += (int)(num[i]-'0') * pow(10.0, (double)(num.size()-i));
+		}
+		cout << max-min << endl;
+	}
+}

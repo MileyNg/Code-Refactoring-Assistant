@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+#define re(i,a,b) for( (i)=(a);(i)<(b);(i)++)
+
+
+using namespace std;
+
+int nd[101]={0};
+int md[101]={0};
+int main() {
+	int n,m;
+	int sum;
+	cin>>n>>m;
+	while(n>0){
+		sum=0;
+	rep(i,0,n){cin>>nd[i];sum+=nd[i];}
+	rep(i,0,m){cin>>md[i];sum-=md[i];}
+	int x,y;
+	int mx=101,my=101;
+	for(x=0;x<n;x++)for(y=0;y<m;y++)if((nd[x]-md[y])*2==sum)if(nd[x]+md[y]<mx+my)mx=nd[x],my=md[y];
+
+	if(mx==101)
+		cout<<-1<<endl;
+	else
+		printf("%d %d\n",mx,my);
+
+	cin>>n>>m;
+	}
+}

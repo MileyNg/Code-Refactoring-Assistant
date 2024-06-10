@@ -1,0 +1,88 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+using namespace std;
+
+const int INF = (int)1e9;
+
+struct State {
+  int pos, cost;
+  State(int pos_, int cost_) : pos(pos_), cost(cost_) { }
+  bool operator >(const State &s) const {
+    return cost > s.cost;
+  }
+};
+
+struct Edge {
+  int to, cost;
+};
+
+typedef vector<vector<Edge>> Graph;
+
+int shortest_path(const Graph &G, const int from, const int to) {
+  const int n = G.size();
+  int d[n];
+  fill(d, d + n, INF);
+  d[from] = 0;
+  priority_queue<State, vector<State>, greater<State>> Q;
+  Q.emplace(from, 0);
+  while(!Q.empty()) {
+    State s = Q.top(); Q.pop();
+    if(s.cost > d[s.pos]) continue;
+    d[s.pos] = s.cost;
+    if(s.pos == to) break;
+    for(Edge e : G[s.pos]) {
+      if(d[e.to] > d[s.pos] + e.cost) {
+        d[e.to] = d[s.pos] + e.cost;
+        Q.emplace(e.to, d[e.to]);
+      }
+    }
+  }
+  return d[to];
+}
+
+int main() {
+  int N, K; cin >> N >> K;
+  vector<pair<int, int>> taxis(N);
+  for(int i = 0; i < N; ++i) {
+    cin >> taxis[i].first >> taxis[i].second;
+  }
+  vector<vector<int> > adj(N);
+  for(int i = 0; i < K; ++i) {
+    int a, b; cin >> a >> b;
+    a--, b--;
+    adj[a].push_back(b);
+    adj[b].push_back(a);
+  }
+
+  Graph G(N);
+
+  for(int i = 0; i < N; ++i) {
+    int d[N];
+    fill(d, d + N, INF);
+    d[i] = 0;
+    queue<int> Q;
+    Q.push(i);
+    while(!Q.empty()) {
+      int x = Q.front(); Q.pop();
+      if(d[x] == taxis[i].second) break;
+      for(int next : adj[x]) {
+        if(d[next] == INF) {
+          d[next] = d[x] + 1;
+          Q.push(next);
+        }
+      }
+    }
+    for(int j = 0; j < N; ++j) {
+      if(j == i) continue;
+      if(d[j] == INF) continue;
+      Edge e;
+      e.to = j;
+      e.cost = taxis[i].first;
+      G[i].push_back(e);
+    }
+  }
+
+  cout << shortest_path(G, 0, N - 1) << endl;
+}

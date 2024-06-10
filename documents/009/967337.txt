@@ -1,0 +1,56 @@
+#include<iostream>
+#include<map>
+#include<vector>
+#include<set>
+using namespace std;
+
+int main()
+{
+  int m;
+  for(;cin>>m,m;)
+    {
+      pair<int,int> tar[201];
+      for(int i=0;i<m;i++)
+	{
+	  int a,b;
+	  cin>>a>>b;
+	  if(i==0)
+	    tar[i]=make_pair(a,b);
+	  else
+	    tar[i]=make_pair(a-tar[0].first,b-tar[0].second);
+	  //	  cout<<tar[i].first<<" "<<tar[i].second<<endl;
+	}
+
+      pair<int,int> star[1001];
+      map<pair<int,int>, bool>maps;
+      int n;
+      cin>>n;
+      for(int i=0;i<n;i++)
+	{
+	  int a,b;
+	  cin>>a>>b;
+	  maps[make_pair(a,b)]=true;
+	  star[i]=make_pair(a,b);
+	}
+      for(int i=0;i<n;i++)
+	{
+	  int diffx=star[i].first-tar[0].first;
+	  int diffy=star[i].second-tar[0].second;
+	  bool flag=true;
+	  for(int j=1;j<m;j++)
+	    {
+	      if(!maps[make_pair(star[i].first+tar[j].first,star[i].second+tar[j].second)])
+		{
+		  //	  cout<<star[i].first<<" "<<tar[j].first<<" "<<star[i].second<<" "<<tar[j].second<<endl;
+		  flag=false;
+		  break;
+		}
+	    }
+	  if(flag)
+	    {
+	      cout<<diffx<<" "<<diffy<<endl;
+	      break;
+	    }
+	}
+    }
+}

@@ -1,0 +1,41 @@
+#include <cstdio>
+#include <complex>
+#include <cmath>
+using namespace std;
+typedef complex<double> point;
+
+point ins[310];
+int main(){
+    for(;;){
+        int N;
+        scanf("%d",&N);
+        if(N==0) break;
+        double x,y;
+        for(int i=0;i<N;i++){
+            scanf("%lf%lf",&x,&y);
+            ins[i]=point(x,y);
+        }
+        int ma=1;
+        for(int i=0;i<N;i++){
+            for(int j=i+1;j<N;j++){
+                double no=norm(ins[i]-ins[j]);
+                if(no<4){
+                    double di=sqrt(1-no/4);
+                    point hen=(ins[i]-ins[j])*point(cos(M_PI/2),sin(M_PI/2))*(di/sqrt(norm(ins[i]-ins[j])));
+                    point cen[2];
+                    cen[0]=(ins[i]+ins[j])/2.0+hen;
+                    cen[1]=(ins[i]+ins[j])/2.0-hen;
+                    for(int k=0;k<2;k++){
+                        int cnt=2;
+                        for(int l=0;l<N;l++){
+                            if(l==i || l==j) continue;
+                            if(norm(cen[k]-ins[l])<1) cnt++;
+                        }
+                        ma=max(ma,cnt);
+                    }
+                }
+            }
+        }
+        printf("%d\n",ma);
+    }
+}

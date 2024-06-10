@@ -1,0 +1,120 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Die{
+	char face[6];
+	Die():face{}{}
+	Die(char f,char b,char r,char l,char u,char d):face{f,b,r,l,u,d}{}
+	void Rotate(int a,int b,int c,int d){
+		tie(face[a],face[b],face[c],face[d])=make_tuple(face[b],face[c],face[d],face[a]);
+	}
+	enum{F,B,R,L,U,D};
+	void TurnX(int n=1){rep(i,n) Rotate(U,R,D,L);} // x軸中心に半時計回り
+	void TurnY(int n=1){rep(i,n) Rotate(U,B,D,F);} // y軸中心に半時計回り
+	void TurnZ(int n=1){rep(i,n) Rotate(F,L,B,R);} // z軸中心に半時計回り
+};
+bool operator==(const Die& a,const Die& b){
+	rep(i,6) if(a.face[i]!=b.face[i]) return false;
+	return true;
+}
+bool operator!=(const Die& a,const Die& b){
+	return !(a==b);
+}
+bool operator<(const Die& a,const Die& b){
+	rep(i,6) if(a.face[i]!=b.face[i]) return a.face[i]<b.face[i];
+	return false;
+}
+
+bool operator<(const tuple<Die,int,int,int>& a,const tuple<Die,int,int,int>& b){
+	if(get<0>(a)!=get<0>(b)) return get<0>(a)<get<0>(b);
+	if(get<1>(a)!=get<1>(b)) return get<1>(a)<get<1>(b);
+	if(get<2>(a)!=get<2>(b)) return get<2>(a)<get<2>(b);
+	if(get<3>(a)!=get<3>(b)) return get<3>(a)<get<3>(b);
+	return 0;
+}
+
+int main()
+{
+	for(int w,h;cin>>w>>h && w|h;){
+		vs grid(h);
+		rep(i,h) cin>>grid[i];
+		string order; cin>>order;
+		
+		queue<tuple<Die,int,int,int,int>> q; // (die,i,j,visit,step)
+		set<tuple<Die,int,int,int>> vis;
+		
+		rep(i,h) rep(j,w) if(grid[i][j]=='#'){
+			grid[i][j]='w';
+			Die d('m','g','b','y','r','c');
+			q.emplace(d,i,j,0,0);
+			vis.insert(make_tuple(d,i,j,0));
+		}
+		
+		int x=-1;
+		while(q.size()){
+			Die d; int i,j,v,s; tie(d,i,j,v,s)=q.front(); q.pop();
+			//dump(mp(string(d.face,d.face+6),vi({i,j,v,s})));
+			if(v==6){
+				x=s;
+				break;
+			}
+			rep(k,4){
+				int ni=i+"\xff\x1\0\0"[k],nj=j+"\0\0\xff\x1"[k];
+				if(ni<0 || h<=ni || nj<0 || w<=nj || grid[ni][nj]=='k') continue;
+				Die nd=d;
+				if(k==0) nd.TurnY(3);
+				if(k==1) nd.TurnY(1);
+				if(k==2) nd.TurnX(1);
+				if(k==3) nd.TurnX(3);
+				int nv=v;
+				if(grid[ni][nj]!='w'){
+					if(grid[ni][nj]!=order[nv]) continue;
+					if(grid[ni][nj]!=nd.face[Die::U]) continue;
+					nv++;
+				}
+				if(vis.insert(make_tuple(nd,ni,nj,nv)).second)
+					q.emplace(nd,ni,nj,nv,s+1);
+			}
+		}
+		if(x!=-1)
+			cout<<x<<endl;
+		else
+			cout<<"unreachable"<<endl;
+	}
+}

@@ -1,0 +1,76 @@
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+typedef pair<int, int> P;
+
+struct State {
+  int turn;
+  char board[10][10];
+};
+
+int main() {
+  while(true) {
+    int X, Y;
+    cin >> X >> Y;
+    if(X == 0 && Y == 0) break;
+    char board[10][10];
+    for(int i = 0; i < Y; i++) {
+      for(int j = 0; j < X; j++) {
+        char c; cin >> c;
+        if(c == 'R') board[i][j] = 0;
+        if(c == 'G') board[i][j] = 1;
+        if(c == 'B') board[i][j] = 2;
+      }
+    }
+    State S;
+    S.turn = 0;
+    memcpy(S.board, board, sizeof(board));
+    queue<State> Q;
+    Q.push(S);
+    int res;
+    while(!Q.empty()) {
+      State s = Q.front(); Q.pop();
+      bool ok = true;
+      for(int i = 0; i < Y; i++) {
+        for(int j = 0; j < X; j++) {
+          if(s.board[i][j] != s.board[0][0]) {
+            ok = false;
+            break;
+          }
+        }
+      }
+      if(ok) {
+        res = s.turn;
+        break;
+      }
+      for(char c = 0; c < 3; c++) {
+        if(s.board[0][0] == c) continue;
+        memcpy(S.board, s.board, sizeof(s.board));
+        queue<P> Q2;
+        Q2.emplace(0, 0);
+        char prev = S.board[0][0];
+        S.board[0][0] = c;
+        while(!Q2.empty()) {
+          P p = Q2.front(); Q2.pop();
+          for(int i = 0; i < 4; i++) {
+            const int dy[4] = { 0, -1, 0, 1 };
+            const int dx[4] = { 1, 0, -1, 0 };
+            int ny = p.first + dy[i];
+            int nx = p.second + dx[i];
+            if(0 <= ny && ny < Y && 0 <= nx && nx < X && S.board[ny][nx] == prev) {
+              S.board[ny][nx] = c;
+              Q2.emplace(ny, nx);
+            }
+          }
+        }
+        S.turn = s.turn + 1;
+        Q.push(S);
+      }
+    }
+    cout << res << endl;
+  }
+}

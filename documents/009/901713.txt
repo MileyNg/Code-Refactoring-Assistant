@@ -1,0 +1,63 @@
+#include <iostream>
+
+using namespace std;
+
+#define WH 52
+
+int dx[8]={ 0, 1, 1, 1, 0,-1,-1,-1};
+int dy[8]={-1,-1, 0, 1, 1, 1, 0,-1};
+int f[WH][WH];
+
+void dfs(int,int);
+
+int main(int argc, char const *argv[])
+{
+	int w,h;
+
+
+	int cnt;
+
+	while(1){
+		cin>>w>>h;
+		if(w+h==0) break;
+
+		for(int i1=0;i1<WH;i1++){
+			for(int i2=0;i2<WH;i2++){
+				f[i1][i2]=0;
+			}
+		}
+
+		for(int i1=1;i1<=h;i1++){
+			for(int i2=1;i2<=w;i2++){
+				cin>>f[i1][i2];
+			}
+		}
+
+		cnt=0;
+		for(int i1=1;i1<=h;i1++){
+			for(int i2=1;i2<=w;i2++){
+				if(f[i1][i2]==1){
+					f[i1][i2]=0;
+					dfs(i2,i1);
+					cnt++;
+				}
+			}
+		}
+
+		cout<<cnt<<endl;
+
+	}
+
+	return 0;
+}
+
+void dfs(int x,int y){
+	for(int i1=0;i1<8;i1++){
+		for(int i2=0;i2<8;i2++){
+			if(f[y+dy[i1]][x+dx[i2]]==1){
+				f[y+dy[i1]][x+dx[i2]]=0;
+				dfs(x+dx[i2],y+dy[i1]);
+			}
+		}
+	}
+}

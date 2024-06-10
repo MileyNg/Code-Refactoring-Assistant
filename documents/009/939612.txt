@@ -1,0 +1,17 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var line;
+while (line = lines.shift()) {
+	var speed = +line;
+
+	for (var f = 1; f < 50; f++) {
+		var t = Math.sqrt((f * 5 - 5) / 4.9);
+		var v = 9.8 * t;
+
+		if (v >= speed) {
+			console.log(f);
+			break;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+
+int main(){
+    set<int> s[2];
+    rep(i,2){
+        int n; cin >> n;
+        rep(j,n){
+            int m; cin >> m;
+            if(s[i].find(m)!=s[i].end()) return -1;
+            s[i].insert(m);
+        }
+    }
+    int ans = 0;
+    for(int i:s[0]){
+        if(s[1].find(i) != s[1].end()) ans++;
+    }
+    cout << ans << endl;
+}

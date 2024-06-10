@@ -1,0 +1,118 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+const int N_MAX = 100;
+
+void sitA( char* seat, int n )
+{
+	int i = 0;
+	while( seat[ i ] != '#' ){
+		++i;
+	}
+	seat[ i ] = 'A';
+}
+
+void sitB( char* seat, int n )
+{
+	int i = n - 1;
+	while( i > 0 ){
+		if( seat[ i ] == '#' ){
+			if( seat[ i - 1 ] != 'A' && seat[ i + 1 ] != 'A' ){
+				seat[ i ] = 'B';
+				return;
+			}
+		}
+	}
+	while( seat[ i ] != '#' ){
+		++i;
+	}
+	seat[ i ] = 'B';
+}
+
+void sitC( char* seat, int n )
+{
+	int i = 0;
+	while( i < n ){
+		if( seat[ i ] != '#' ){
+			if( seat[ i + 1 ] =='#' ){
+				seat[ i + 1 ] = 'C';
+				return;
+			}
+			if( i >= 0 && seat[ i - 1 ] == '#' ){
+				seat[ i - 1 ] = 'C';
+				return;
+			}
+		}
+	}
+	seat[ n / 2 ] = 'C';
+}
+
+void sitD( char* seat, int n )
+{
+	int est[ N_MAX ];
+	int s, e;
+	vector< int > seated;
+	for( int i = 0; i < n; ++i ){
+		if( seat[ i ] != '#' ){
+			seated.push_back( i );
+		}
+	}
+	if( seated.size() == 0 ){
+		seat[ 0 ] = 'D';
+		return;
+	}
+	e = seated[ 0 ];
+	for( int i = e; i >= 0; --i ){
+		est[ i ] = e - i;
+	}
+	for( int i = 1; i < seated.size(); ++i ){
+		s = e;
+		e = seated[ i ];
+		for( int j = 0; j <= ( e - s - 1 ) / 2; ++j ){
+			est[ s + j ] = est[ e - j ] = j;
+		}
+	}
+	for( int i = e; i < n; ++i  ){
+		est[ i ] = i - e;
+	}
+	int estMax = 0, estIdx = 0;
+	for( int i = 0; i < n; ++i ){
+		if( est[ i ] > estMax ){
+			estMax = est[ i ];
+			estIdx = i;
+		}
+	}
+	seat[ estIdx ] = 'D'; 
+}
+
+void sit( char a, char* seat, int n )
+{
+	switch( a ){
+		case 'A': sitA( seat, n ); break;
+		case 'B': sitB( seat, n ); break;
+		case 'C': sitC( seat, n ); break;
+		case 'D': sitD( seat, n ); break;
+	}
+}
+
+int main()
+{
+	int n, m;
+	char seat[ N_MAX + 1 ];
+	while( cin >> n >> m && ( n || m ) ){
+		for( int i = 0; i < n; ++i ){
+			seat[ i ] = '#';
+		}
+		seat[ n ] = '\0';
+
+		for( int i = 0; i < m; ++i ){
+			char a;
+			cin >> a;
+			sit( a, seat, n );
+		}
+		cout << seat << endl;
+	}
+	return 0;
+}

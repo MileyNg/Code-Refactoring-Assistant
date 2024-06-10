@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	char* string;
+	char str[10001];
+	int i;
+	int numOfJOI;
+	int numOfIOI;
+	
+	string = str;
+	
+	while( scanf( "%s", string ) != EOF )
+	{
+		numOfJOI = 0;
+		numOfIOI = 0;
+		while( string[0] != '\0' )
+		{
+			if( strncmp( string, "JOI", 3 ) == 0 )
+			{
+				numOfJOI++;
+			}
+			if( strncmp( string, "IOI", 3 ) == 0 )
+			{
+				numOfIOI++;
+			}
+			string++;
+		}
+		printf( "%d\n%d\n", numOfJOI, numOfIOI );
+	}
+	
+	return (0);
+}

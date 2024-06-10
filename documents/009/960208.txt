@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <limits.h>
+#include <cctype>
+
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+
+using namespace std;
+
+#define Max INT_MAX
+#define Inf (INT_MAX/2)
+
+
+#define rep(i, n) for(int i = 0; i < n; i++)
+#define repi(i,l,n) for(int (i)=(int)(l);(i)<(int)(n);(i)++)
+// s <= x < g ?
+#define IN(x,s,g) ((x) >= (s) && (x) < (g))
+// 0 <= x < w && 0 <= y < h ?
+#define ISIN(x,y,w,h) (IN((x),0,(w)) && IN((y),0,(h)))
+
+typedef pair<int, int> P;
+
+
+#define MaxN 1000
+
+#define MaxE 1000
+//struct edge es[MaxE];
+
+
+
+
+//その時点で考えてる頂点集合の中での
+//i->jの最短路
+int dp[10][10];
+
+int main()
+{
+    int E;
+    while ( cin >> E ){
+        if( E == 0 ) { break; }
+        int a,b,c;
+        rep(i,10){
+            rep(j,10){
+                if( i==j ){
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = Inf;
+                }
+            }
+        }
+
+        rep(i,E){
+            cin >> a >> b >> c;
+            dp[a][b] = c;
+            dp[b][a] = c;
+        }
+        rep(k,10){
+            rep(i,10){
+                rep(j,10){
+                    dp[i][j] = min( dp[i][j], dp[i][k] + dp[k][j] );
+                }
+            }
+        }
+
+        int min = Inf;
+        int minI;
+        rep(i,10){
+            int sum = 0;
+
+            rep(j,10){
+                if( dp[i][j] >= Inf ) { continue; }
+                else if( i == j){ continue; } 
+                else{
+                    sum += dp[i][j];
+                }
+            }
+
+            //cout << "sum " << sum << endl;
+            //
+            if ( sum < min && sum){
+                //cout << "i: " << i << endl;
+                //cout << "min: " << min << endl;
+                min = sum;
+                minI = i;
+            }
+        }
+
+        cout << minI << " " << min << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <vector>
+using namespace std;
+
+bool isSameNumber(vector<int> n){
+    bool isSame = true;
+    for(int i=0; i < n.size(); i++){
+        for(int j=0; j < n.size(); j++){
+            if(n[i] != n[j])isSame = false;
+        }
+    }
+    return isSame;
+}
+
+int main(){
+    vector<int> n;
+    int input;
+    while(cin >> input){
+        int ans = 0;
+        bool isok = true;
+        if(log10(input) < 3) n.push_back(0);
+        if(input == 0) break;
+        while(input != 6174) {
+            while(input != 0){
+                n.push_back(input%10);
+                input /= 10;
+            }
+            if(isSameNumber(n)){
+                cout << "NA" << endl;
+                n.clear();
+                isok = false;
+                break;
+            }
+            vector<int> minNum ,maxNum;
+
+            sort(n.begin(), n.end());
+            minNum = n;
+            reverse(n.begin(), n.end());
+            maxNum = n;
+
+            int p=0, q=0;
+            for(int i=0, m = 1000; i < 4; i++, m/=10){
+                p += minNum[i]*m;
+                q += maxNum[i]*m;
+            }
+            input = q-p;
+            ans++;
+
+            n.clear();
+        }
+        if(isok)cout << ans << endl;
+    }
+}

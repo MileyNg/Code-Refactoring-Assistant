@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+// 素数判定
+int isprime(int a) {
+  int i;
+  
+  if (a == 2) return 1;
+  if (a < 2 || (a % 2 == 0)) return 0;
+  
+  i = 3;
+  while (i <= sqrt(a)) {
+    if (a % i == 0) return 0;
+    i = i + 2;
+  }
+  
+  return 1;
+}
+
+int main () {
+  int *a, i, j, n, cnt;
+  
+  // 動的配列の生成
+  scanf("%d", &n);
+  a = (int *)malloc(sizeof(int) * n);
+  
+  for (i = 0; i < n; i++) scanf("%d", &a[i]);
+  cnt = n;
+  
+  for (j = 0; j < n; j++) {
+    if (!isprime(a[j])) cnt--;
+  }
+  
+  printf("%d\n", cnt);
+  
+  return 0;
+}

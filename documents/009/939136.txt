@@ -1,0 +1,21 @@
+#include<stdio.h>
+int main(void){
+  int n, q, num, i, j;
+  int a[2001] = {1};
+  scanf("%d", &n);
+  for(i = 0; i < n; i++){
+    scanf("%d", &num);
+    for(j= 2000-num;j>=0 ; j--){
+      if(a[j]) a[j + num] = 1;
+    }
+  }
+
+  scanf("%d", &q);
+  for(i=0; i<q; i++){
+    scanf("%d", &num);
+    if(a[num]) printf("yes\n");
+    else printf("no\n");
+  }
+  return 0;
+}
+		 

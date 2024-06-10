@@ -1,0 +1,107 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int main(){
+  vector<string> data;
+  for(string buf;getline(cin,buf),buf!="END_OF_TEXT";)
+    {
+      data.push_back(buf);
+    }
+  int x=0,y=0;
+  string buf="";
+  bool buf_br=false;
+  for(char code;cin>>code,code!='-';)
+    {
+      if(code=='a')
+	y=0;
+      else if(code=='e')
+	y=data[x].size();
+      else if(code=='p')
+	{
+	  x=max(0,x-1);
+	  y=0;
+	}
+      else if(code=='n')
+	{
+	  x=min((int)data.size()-1,x+1);
+	  y=0;
+	}
+      else if(code=='f')
+	{
+	  if(y<data[x].size())
+	    y++;
+	  else if(y==data[x].size() &&x<data.size()-1)
+	    {
+	      x++;
+	      y=0;
+	    }
+	}
+      else if(code=='b')
+	{
+	  if(y>0)
+	    y--;
+	  else if(y==0 &&x>0)
+	    {
+	      x--;
+	      y=data[x].size();
+	    }
+	}
+      else if(code=='d')
+	{
+	  if(y<data[x].size())
+	    data[x].erase(y,1);
+	  else if(y==data[x].size() && x<data.size()-1)
+	    {
+	      data[x]+=data[x+1];
+	      data.erase(data.begin()+x+1);
+	    }
+	}
+      else if(code=='k')
+	{
+	  if(y==data[x].size())
+	    {
+	      if(x<data.size()-1)
+		{
+		  data[x]+=data[x+1];
+		  data.erase(data.begin()+x+1);
+		  buf="\n";
+		  buf_br=true;
+		}
+	    }
+	  else
+	    {
+	      buf=data[x].substr(y,data[x].size()-y);
+	      buf_br=false;
+	      data[x].erase(y,data[x].size()-y);
+	    }	 
+	}
+      else if(code=='y')
+	{
+	  if(buf=="")
+	    continue;
+	  if(buf!="" && buf_br)
+	    {
+	      string tmp=data[x].substr(y,data[x].size()-y);
+	      data[x].erase(y,data[x].size()-y);
+	      data.insert(data.begin()+x+1,tmp);
+	      x++;
+	      y=0;
+	    }
+	  else  if(buf!="" && !buf_br)
+	    {
+	      data[x]=data[x].substr(0,y)+buf+data[x].substr(y,data[x].size()-y);
+	      y+=buf.size();
+	    }
+	}    
+      /*  
+      cout<<"x,y="<<x<<","<<y<<endl;
+      for(int i=0;i<data.size();i++)
+	cout<<data[i]<<endl;
+      */
+    }
+  
+  for(int i=0;i<data.size();i++)
+      cout<<data[i]<<endl;
+}

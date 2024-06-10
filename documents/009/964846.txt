@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+#include <string>
+
+class Baseball{
+    private:
+        std::queue<int> runner;
+        int out_count;
+        int score;
+        
+    public:
+        void initRunner(){
+            while(runner.empty() != true){
+                runner.pop();
+            }
+            for(int i = 0; i < 3; ++i){
+                runner.push(0);
+            }
+        }
+        
+        Baseball(){
+            out_count = 0;
+            score = 0;
+            initRunner();
+        }
+        
+        ~Baseball(){}
+        
+        void hit(){
+            if(runner.back() == 1) ++score;
+            runner.pop();
+            runner.push(1);
+        }
+        
+        void homerun(){
+            do{
+                if(runner.back() == 1) ++score;
+                runner.pop();
+            } while(runner.empty() != true);
+            ++score;
+            initRunner();
+        }
+        
+        int getScore(){
+            initRunner();
+            std::string str;
+            while(out_count != 3){
+                std::cin >> str;
+                if(str == "HIT") hit();
+                if(str == "HOMERUN") homerun();
+                if(str == "OUT") ++out_count;
+            }
+            return score;
+        }
+};
+
+int main(void){
+    int N;
+    std::cin >> N;
+    for(int i = 0; i < N; ++i){
+        Baseball baseball;
+        std::cout << baseball.getScore() << std::endl;
+    }
+}

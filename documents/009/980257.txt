@@ -1,0 +1,35 @@
+#include<iostream>
+#include<map>
+using namespace std;
+
+int main()
+{
+  int n,m;
+  cin>>n>>m;
+  string str;
+  cin>>str;
+  int ans=0;
+  map<string,bool> hash;
+  int l=1,r=1;
+  for(int i=0;i<m;i++)
+    {
+      string buf;
+      cin>>buf;
+      if(buf=="R++")
+	r++;
+      if(buf=="R--")
+	r--;
+      if(buf=="L++")
+	l++;
+      if(buf=="L--")
+	l--;
+      string sub=str.substr(l-1,r-(l-1));
+      if(hash.count(sub)==0)
+	{
+	  ans++;
+	  hash[sub]=true;
+	}
+      //      cout<<sub<<endl;
+    }
+  cout<<ans<<endl;
+}

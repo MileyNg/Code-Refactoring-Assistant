@@ -1,0 +1,72 @@
+#include <stdio.h>
+typedef struct node{
+  int p,lc,rc;
+  
+} node;
+
+node tree[100];
+
+int rootid;
+
+void pre(int x){
+  printf(" %d",x);
+  if(tree[x].lc>-1){
+    pre(tree[x].lc);
+  } 
+  if(tree[x].rc>-1){
+    pre(tree[x].rc);
+  } 
+}
+
+void in(int x){
+  if(tree[x].lc>-1){
+    in(tree[x].lc);
+  } 
+  printf(" %d",x);
+  if(tree[x].rc>-1){
+    in(tree[x].rc);
+  }  
+}
+
+void post(int x){
+  if(tree[x].lc>-1){
+    post(tree[x].lc);
+  }
+  if(tree[x].rc>-1){
+    post(tree[x].rc);
+  } 
+  printf(" %d",x);
+}
+
+int main(){
+
+ 
+  int n,d,d2,k,l,id;
+  int i,j;
+
+  for(i=0;i<100;i++){
+    tree[i].p=-1;
+    tree[i].lc=-1;
+    tree[i].rc=-1;
+
+  }
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&id);
+    scanf("%d%d",&tree[id].lc,&tree[id].rc);
+    tree[tree[id].lc].p=id;
+    tree[tree[id].rc].p=id;
+  }
+
+
+  for(rootid=0;rootid<n;rootid++)
+    if(tree[rootid].p==-1)break;
+  printf("Preorder\n");
+  pre(rootid);
+  printf("\nInorder\n");
+  in(rootid);
+  printf("\nPostorder\n");
+  post(rootid);
+  printf("\n");
+  return 0;
+}

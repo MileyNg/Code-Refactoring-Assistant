@@ -1,0 +1,31 @@
+#include<stdio.h>
+#include<string.h>
+int main(void)
+{
+  char bun[1200];
+  int kazu = 0;
+  int i,l,j;
+  char moji,MOJI;
+
+  fgets(bun, 1200, stdin);
+  l = strlen(bun);
+  moji = 97;
+  MOJI = 65;
+  
+  for(i = 0;i < 26;i++){ 
+    for(j = 0;j < l;j++){  
+      if(bun[j] == moji || bun[j] == MOJI){
+	kazu += 1;
+      }
+      else{
+	kazu += 0;
+      }
+    }
+    printf("%c : %d\n",moji,kazu);
+    moji++;
+    MOJI++;
+    kazu = 0;
+  }
+
+  return 0;
+}

@@ -1,0 +1,17 @@
+while line = gets do
+    m, n = line.split.map(&:to_i)
+    if m < n
+        t = m
+        m = n
+        n = t
+    end
+    while true do
+        if n == 0
+            break
+        end
+        t = n
+        n = m % n
+        m = t
+    end
+    puts m
+end

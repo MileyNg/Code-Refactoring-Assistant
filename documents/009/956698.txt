@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  int in[100]={0};
+  int num;
+  int i,j=0;
+  int datesu=0;
+  int mc=0;
+  int count[100]={0};
+
+  for(i=0;scanf("%d",&num)!=EOF;i++,datesu++){
+    for(j=i-1;j>=0;j--){
+      if(num<in[j])
+	in[j+1]=in[j];
+      else{
+	in[j+1]=num;
+	break;
+      }
+    }
+    if(j==-1)
+      in[0]=num;
+  }
+
+  num=1;
+
+  for(i=0;i<datesu;i++){
+    while(in[i]!=num){
+      num++;
+    }
+    if(in[i]==num)
+      count[num]++;
+    if(mc<count[num])
+      mc=count[num];
+  }
+
+  for(i=1;i<=num;i++){
+    if(mc==count[i])
+      printf("%d\n",i);
+  }
+
+
+  return 0;
+}

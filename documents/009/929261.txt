@@ -1,0 +1,81 @@
+g#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+#define whole(xs) xs.begin(), xs.end()
+
+int n, w, d;
+
+bool input() {
+    cin >> n >> w >> d;
+    if (n == 0 && w == 0 && d == 0) return false;
+    return true;
+}
+
+struct S {
+    int y, x;
+    S(int y, int x) {
+        this->y = y;
+        this->x = x;
+    }
+    const int area() const {
+        return y * x;
+    }
+    const int length() const {
+        return 2 * (y + x);
+    }
+};
+ostream& operator<<(ostream& os, S s) {
+    os << "S(" << s.y << " " << s.x << ")";
+    return os;
+}
+bool compare_area(const S& a, const S& b) {
+    return a.area() < b.area();
+}
+
+void step(vector<S>& cakes, int index, int s) {
+    S cake = cakes[index];
+    s %= cake.length();
+    vector<S> add;
+    int y = cake.y, x = cake.x;
+    if (0 <= s && s < x) {
+        add.push_back(S(y, s));
+        add.push_back(S(y, x - s));
+    } else if (x <= s && s < x + y) {
+        s = s - x;
+        add.push_back(S(s, x));
+        add.push_back(S(y - s, x));
+    } else if (x + y <= s && s < x * 2 + y) {
+        s = s - (x + y);
+        add.push_back(S(y, s));
+        add.push_back(S(y, x - s));
+    } else {
+        s = s - (x * 2 + y);
+        add.push_back(S(y - s, x));
+        add.push_back(S(s, x));
+    }
+    sort(whole(add), compare_area);
+    cakes.insert(cakes.end(), whole(add));
+    cakes.erase(cakes.begin() + index);
+}
+
+int main() {
+    while (input()) {
+        vector<S> cakes;
+        cakes.push_back(S(d, w));
+        for (int i = 0; i < n; i++) {
+            int index, s;
+            cin >> index >> s;
+            index--;
+            step(cakes, index, s);
+        }
+        sort(whole(cakes), compare_area);
+        cout << cakes[0].area();
+        for (int i = 1; i < cakes.size(); i++) {
+            cout << " " << cakes[i].area();
+        }
+        cout << endl;
+    }
+    return 0;
+}

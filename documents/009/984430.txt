@@ -1,0 +1,28 @@
+
+def check_rank(eye)
+  return 0 if eye >= 11
+  return 1 if eye >= 6
+  return 2 if eye >= 2
+  return 3
+end
+
+### main
+
+rank = Array.new(4){[0, 0]}
+
+while (line = gets)
+  le, re = line.strip.split(" ").map do |s|
+    s0, s1 = s.split(".")
+    s0.to_i * 10 + s1.to_i
+  end
+
+  lr = check_rank(le)
+  rr = check_rank(re)
+
+  rank[lr][0] += 1
+  rank[rr][1] += 1
+end
+
+for rn in rank
+  puts "#{rn[0]} #{rn[1]}"
+end

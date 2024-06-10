@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	char str[1024];
+	const char *apple = "apple";
+	const char *peach = "peach";
+	int i;
+
+	fgets(str, 1000, stdin);
+	for (i = 0; str[i] != 0; i++){
+		if (strncmp(&str[i], apple, 5) == 0){
+			strncpy(str + i, peach, 5);
+		}
+		else if (strncmp(&str[i], peach, 5) == 0){
+			strncpy(str + i, apple, 5);
+		}
+	}
+	puts(str);
+
+	return 0;
+}

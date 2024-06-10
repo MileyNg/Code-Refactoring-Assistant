@@ -1,0 +1,36 @@
+#include<stdio.h>
+int a (void){
+  printf("#");
+  return 0;
+}
+
+int b (){
+  printf(".");
+  return 0;
+}
+
+int c (void){
+  printf("\n");
+  return 0;
+}
+
+main (void){
+  int h,w,i,j;
+  for (;;){
+    scanf ("%d%d",&h,&w);
+    if(h==0||w==0){break;}
+    for (i=0;i<h;i++){
+      for (j=0;j<w;j++){
+        if (i==0||i==h-1){a();}
+        else{
+          if (j==0||j==w-1){a();}
+          else{b();}
+        }
+        if(j==w-1){c();}
+      }
+    }
+    c();
+  }
+
+  return 0;
+}

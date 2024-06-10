@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void) {
+	int i, n;
+	double val[1000];
+	double m;
+	double aa;
+	while(scanf("%d\n", &n)==1) {
+		if(n == 0)
+			break;
+		
+		for(i=0,m=0;i<n;i++) {
+			scanf("%lf", &val[i]);
+			m += val[i];
+		}
+		scanf("\n");
+		
+		m /= n;	/* 平均 */
+		for(i=0,aa=0;i<n;i++) {
+			aa += ((val[i]-m)*(val[i]-m));
+		}
+		aa /= n;	/* 分散 */
+		printf("%.8lf\n", sqrt(aa));
+	}
+	
+	return 0;
+}

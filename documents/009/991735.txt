@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <limits.h>
+#define MAX 110
+int cost[MAX][MAX];
+int matrix[MAX];
+int len;
+
+void matrixChain(){
+  int n = len;
+  int i,j,k,l;
+  int q;
+
+  for(i=1;i<=n;i++) cost[i][i]=0;
+
+  for(l=2;l<=n;l++){
+    for(i=1;i<=n-l+1;i++){
+      j=i+l-1;
+      cost[i][j]=INT_MAX;
+      for(k=i;k<=j-1;k++){
+	q=cost[i][k]+cost[k+1][j]+matrix[i-1]*matrix[k]*matrix[j];
+	if(cost[i][j]>q) cost[i][j]=q;
+      }
+    }
+  }
+}
+
+int main(){
+  int i,j;
+  scanf("%d",&len);
+  for(i=0;i<len;i++){
+    scanf("%d %d",&matrix[i],&j);
+  }
+  matrix[len]=j;
+  matrixChain();
+  printf("%d\n",cost[1][len]);
+return 0;
+}

@@ -1,0 +1,76 @@
+import itertools
+S,M,L = 5,9,13
+ref = {5:1,9:2,13:3}
+dx = [0, 0, 1, 0,-1, 1, 1,-1,-1, 2, 0,-2, 0]
+dy = [0,-1, 0, 1, 0,-1, 1, 1,-1, 0, 2, 0,-2]
+
+def minus(C,x,y,size):
+	for i in range(size):
+		try: C[y+dy[i]][x+dx[i]] -= 1
+		except: pass
+
+def canMinus(C,x,y,size):
+	for i in range(size):
+		try:
+			if C[y+dy[i]][x+dx[i]] == 0:
+				return False
+		except: pass
+	return True
+
+def canMinusList(C,size):
+	ls = []
+	for y in range(10):
+		for x in range(10):
+			if canMinus(C,x,y,size):
+				ls.append([x,y])
+	return ls
+
+def copy(C):
+	C_copy = [C[i][:] for i in range(len(C))]
+	return C_copy
+
+def tryFindAns(Cloth,drop,p,Rslt):
+	size,num = drop[p][0],drop[p][1]
+	canList = canMinusList(Cloth,size)
+	for comb in itertools.combinations(canList,num):
+		rslt = copy(Rslt)
+		C = copy(Cloth)
+		for x,y in comb:
+			if  canMinus(C,x,y,size):
+				minus(C,x,y,size)
+				rslt.append([x,y,size])
+			else:
+				break
+		else:
+			if p+1 == len(drop):
+				return rslt
+			else:
+				return tryFindAns(C,drop,p+1,rslt)
+
+def findAns(Cloth,drop):
+	for i in range(2,-1,-1):
+		if drop[i][1] == 0:
+			drop.pop(i)
+	p,rslt = 0,[]
+	return tryFindAns(Cloth,drop,p,rslt)
+
+n = int(raw_input())
+Cloth = [map(int, raw_input().split()) for i in range(10)]
+sm = sum([sum(Cloth[i]) for i in range(10)])
+dropList = []
+
+for s in range(n):
+	m4 = 13*n-sm-8*s
+	if m4 < 0: break
+	if m4%4 == 0:
+		m = m4/4
+		if s+m <= n:
+			dropList.append([[13,n-s-m],[9,m],[5,s]])
+
+for drop in dropList:
+	ans = findAns(Cloth,drop)
+	if ans is not None:
+		break
+
+for a in ans:
+	print  a[0],a[1],ref[a[2]]

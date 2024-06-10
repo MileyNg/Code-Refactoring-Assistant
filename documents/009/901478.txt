@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+struct Edge{
+    int to, cost;
+};
+
+int N;
+std::vector<Edge> G[20];
+
+bool isEndPoint(int v, int p){
+    for(auto &e : G[v]){
+        if(e.to != p){return false;}
+    }
+    return true;
+}
+
+int dfs(int v, int p){
+    int res = 0, min_cost = INF, n = 0;
+    for(auto &e : G[v]){
+        if(e.to != p && !isEndPoint(e.to, v)){
+            int cost = dfs(e.to, v) + e.cost;
+            // printf("->%d: %d\n", v, cost);
+            min_cost = std::min(min_cost, cost);
+            res += cost;
+            ++n;
+        }
+    }
+
+    if(n > 1){res += min_cost;}
+    return res;
+}
+
+int main(){
+    while(std::cin >> N, N){
+        REP(i, 20){
+            G[i].clear();
+        }
+    
+        REP(i, N-1){
+            int from, to, cost;
+            std::cin >> from >> to >> cost;
+            --from; --to;
+            G[from].push_back({to, cost});
+            G[to].push_back({from, cost});
+        }
+
+        std::cout << dfs(0, -1) << std::endl;
+    }
+}

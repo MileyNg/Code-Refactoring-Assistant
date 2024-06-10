@@ -1,0 +1,67 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+#include <climits>
+using namespace std;
+
+enum stats_detail {
+  WEIGHT = 0,
+  PRICE  = 1,
+  UNIT   = 2,
+  RATE   = 3
+};
+
+enum shop {
+  A = 0,
+  B = 1,
+  C = 2
+};
+
+const static int shop_stats[ 3 ][ 4 ] = {
+  { 200, 380, 5, 20 },
+  { 300, 550, 4, 15 },
+  { 500, 850, 3, 12 }
+};
+
+const static int W_MAX = 5000;
+const static int W_UNIT = 100;
+const static int OPT_ARRAY_SIZE = W_MAX / W_UNIT + 1;
+
+int get_price( shop id, int num ) {
+  
+  int discount_num = num - num % shop_stats[ id ][ UNIT ];
+  return (
+      shop_stats[ id ][ PRICE ] *
+      discount_num *
+      ( 100 - shop_stats[ id ][ RATE ] ) / 100  +
+      shop_stats[ id ][ PRICE ] * ( num - discount_num )
+ );
+ 
+  return 0;
+}
+int main() {
+  int opt[ OPT_ARRAY_SIZE ];
+  fill( opt, opt + OPT_ARRAY_SIZE, INT_MAX );
+  for( int i = 0; i <= W_MAX / shop_stats[ A ][ WEIGHT ]; i++ ) {
+    int apr = get_price( A, i );
+    int aw  = i * shop_stats[ A ][ WEIGHT ];
+    for( int j = 0; j <= W_MAX / shop_stats[ B ][ WEIGHT ]; j++ ) {
+      int bpr = get_price( B, j );
+      int bw  = j * shop_stats[ B ][ WEIGHT ];
+      for( int k = 0; k <= W_MAX / shop_stats[ C ][ WEIGHT ]; k++ ) {
+        int cpr = get_price( C, k );
+        int cw  = k * shop_stats[ C ][ WEIGHT ];
+        int sumw = aw + bw + cw;
+        if( sumw > W_MAX ) { continue; }
+        opt[ sumw / W_UNIT ] = min( opt[ sumw / W_UNIT ], apr + bpr + cpr );
+      }
+    }
+  } 
+  while( 1 ) {
+    int w;
+    cin >> w;
+    if( !w ) { break; }
+    cout << opt[ w / W_UNIT ] << endl;
+  }
+  return EXIT_SUCCESS;
+}

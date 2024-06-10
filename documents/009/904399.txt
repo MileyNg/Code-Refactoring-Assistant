@@ -1,0 +1,17 @@
+A=[[1.0,0.0]]
+N=1
+def f(n):
+    x,y=A[-1]
+    for i in range(N,n):
+        tmp=i**.5
+        x = x-y/tmp
+        y = y+x/tmp
+        A.append([x,y])
+    return len(A)
+
+while 1:
+    n = input()
+    if n==-1:break
+    elif n>N: N=f(n)
+    a,b = A[n-1]
+    print "%.2f\n%.2f" % (a,b)

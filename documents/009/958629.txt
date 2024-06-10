@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct State{
+	int i,lap,time;
+	State(){}
+	State(int i,int l,int t):i(i),lap(l),time(t){}
+};
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vi ts(n),cs(n);
+		rep(i,n) cin>>ts[i]>>cs[i];
+		
+		queue<State> q[2]; // (index,lap,time)
+		rep(i,n) q[1].emplace(i,0,0);
+		
+		int res=-1;
+		for(;;){
+			if(q[0].empty() && q[1].empty()) break;
+			int cur=0,next=1;
+			if(q[1].size() && (q[0].empty() || q[1].front().time<q[0].front().time))
+				cur=1,next=0;
+			
+			int t=q[cur].front().time;
+			vector<State> buf;
+			while(q[cur].size() && t>=q[cur].front().time){
+				State s=q[cur].front(); q[cur].pop();
+				if(cur==1) s.lap++;
+				if(s.lap>cs[s.i]){
+					res=t;
+					continue;
+				}
+				buf.emplace_back(s.i,s.lap,t+ts[s.i]);
+			}
+			
+			sort(all(buf),[](State a,State b){return a.time<b.time;});
+			for(auto t:buf) q[next].emplace(t);
+		}
+		
+		cout<<res<<endl;
+	}
+}

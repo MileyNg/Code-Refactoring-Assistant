@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+
+/** Problem0066 : Tic Tac Toe **/
+int main()
+{
+	string board;
+	while (cin>>board) {
+		for (int i=0; i<3; i++) {
+			if (board[i*3] != 's' && board[i*3] == board[i*3+1] && board[i*3] == board[i*3+2]) {
+				cout << board[i*3] << endl;
+				goto end;
+			}
+			else if (board[i] != 's' && board[i] == board[i+3] && board[i] == board[i+6]) {
+				cout << board[i*3] << endl;
+				goto end;
+			}
+		}
+		
+		if (board[0] != 's' && board[0] == board[4] && board[0] == board[8])
+			cout << board[0] << endl;
+		else if (board[2] != 's' && board[2] == board[4] && board[2] == board[6])
+			cout << board[2] << endl;
+		else
+			cout << "d" << endl;
+		
+	end: ;
+	}
+	return 0;
+}

@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int h, m, s;
+	
+	scanf("%d %d %d", &h, &m, &s);
+	while (h != -1 | m != -1 | s != -1){
+		int remain = 7200;
+		
+		remain -= h * 3600 + m * 60 + s;
+		h = remain / 3600;
+		m = (remain % 3600) / 60;
+		s = remain % 60;
+		printf("%02d %02d %02d\n", h, m, s);
+		h *= 3;
+		m *= 3;
+		if (m >= 60){
+			h += m / 60;
+			m %= 60;
+		}
+		s *= 3;
+		if (s >= 60){
+			m += s / 60;
+			s %= 60;
+		}
+		printf("%02d %02d %02d\n", h, m, s);
+		
+		scanf("%d %d %d", &h, &m, &s);
+	}
+	
+	return 0;
+}

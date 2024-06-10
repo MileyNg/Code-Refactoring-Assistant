@@ -1,0 +1,43 @@
+#include <iostream>
+using namespace std;
+
+int N, T, H, L;
+int coins[101][2];
+
+int solve() {
+    int i = 0;
+    int cur = 0;
+    while (1) {
+        if (coins[i][0]) {
+            cur += 10; T++;
+            coins[i][0]--;
+            if (T > L) break;
+            if (cur >= 90) {
+                cur = 0;
+            }
+        }
+        else if (coins[i][1]) {
+            cur += 100; H++;
+            coins[i][1]--;
+            int c = (cur - 90) / 10;
+            T -= c; coins[i][0] += c;
+            cur = 0;
+            if (T < 0) break;
+        }
+        else {
+            break;
+        }
+        i = (i + 1) % N;
+    }
+    return i + 1;
+}
+
+int main() {
+    while (cin >> N >> T >> H >> L) {
+        for (int i = 0; i < N; i++) {
+            cin >> coins[i][0] >> coins[i][1];
+        }
+        cout << solve() << endl;
+    }
+    return 0;
+}

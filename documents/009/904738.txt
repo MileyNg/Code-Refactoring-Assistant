@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include <queue>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i <= ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 1, n )
+
+typedef pair< string, int > P;  // 名前：時間
+
+int main() {
+	int n, q, t = 0;
+	queue< P > que;
+	cin >> n >> q;
+	REP( i, n ) {
+		string name;
+		int time;
+		cin >> name >> time;
+		que.push( P( name, time ) );
+	}
+	while( !que.empty() ) {
+		P p = que.front();  que.pop();
+		int time = p.second;
+		string name = p.first;
+		if( time > q ) {
+			t += q;
+			time -= q;
+			que.push( P( name, time ) );
+		} else {
+			t += time;
+			cout << name << " " << t << endl;
+		}
+	}
+	return 0;
+}

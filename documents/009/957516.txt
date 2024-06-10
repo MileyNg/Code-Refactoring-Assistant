@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void)
+{
+	char str[128];
+	char original[128];
+
+	while (scanf("%s", str) != EOF){
+		int i, j;
+		int loop;
+		char loop_char;
+
+		for (i = j = 0; str[i] != 0; i++){
+			if (str[i] == '@'){
+				loop = str[++i] - '0';
+				loop_char = str[++i];
+				while (loop-- > 0){
+					original[j++] = loop_char;
+				}
+			}
+			else {
+				original[j++] = str[i];
+			}
+		}
+		original[j] = 0;
+		puts(original);
+	}
+
+	return 0;
+}

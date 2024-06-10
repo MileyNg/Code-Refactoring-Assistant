@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<map>
+#include<cmath>
+#define F first
+#define S second
+#define INF 1<<28
+using namespace std;
+
+int w, h;
+char c[1111][1111]; //y, x
+int sx, sy, gx, gy;
+typedef pair < int, int > P; //x, y
+vector < P > d[9];
+int memo[9][9][1111];
+
+int cost(int p, int nk, int ni, int wk, int wi){ //cnt, now_kind, now_get, will_kind, will_ get
+  int wx = d[wk][wi].F, wy = d[wk][wi].S, nx = d[nk][ni].F, ny = d[nk][ni].S;
+  if(!p) nx = sx, ny = sy;
+  else if(p == 4) wx = gx, wy = gy;
+
+  return abs(wx - nx) + abs(wy - ny);
+}
+
+int solve(int p, int nk,int ni){ //cnt, now_kind, now_get
+  int ret = INF, wk = (nk+1)%5;
+  if(memo[p][nk][ni]) return memo[p][nk][ni];
+  if(p == 5) return 0;
+
+  for(int i=0;i<d[wk].size();i++) ret = min(solve(p+1,wk,i) + cost(p,nk,ni,wk,i), ret);
+
+  return memo[p][nk][ni] = ret;
+}
+
+int main(){
+
+  while(true){
+    cin >> w >> h;
+    if(!w && !h) break;
+
+    for(int i=0;i<9;i++) d[i].clear();
+
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++){
+	cin >> c[i][j];
+	if(c[i][j] == 'S') sx = j, sy = i;
+	else if(c[i][j] == 'G') gx = j, gy = i;
+	else if(c[i][j] != '.') d[c[i][j]-'1'].push_back(P(j, i));
+      }
+    }
+    
+    memset(memo, 0, sizeof(memo));
+
+    P p(INF, INF);
+    for(int i=0;i<5;i++) if(p.S > solve(0,i,0)) p.F = i+1, p.S = solve(0,i,0);
+
+    if(p.F == INF) cout << "NA" << endl;
+    else cout << p.F << " " << p.S << endl;
+  }
+}

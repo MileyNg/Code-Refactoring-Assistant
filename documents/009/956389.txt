@@ -1,0 +1,27 @@
+#include<iostream>
+#include<vector>
+
+int bun[] = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 };
+
+int main(){
+
+	int n;
+	while (std::cin >> n){
+
+		std::vector<int> res;
+
+		for (int i = 9; i >= 0; i--){
+			if (n >= bun[i]){
+				res.push_back(bun[i]);
+				n -= bun[i];
+			}
+		}
+
+		for (int i = res.size() - 1; i >= 0; i--){
+			if (i == 0)std::cout << res[i] << std::endl;
+			else std::cout << res[i] << " ";
+		}
+	}
+
+	return 0;
+}

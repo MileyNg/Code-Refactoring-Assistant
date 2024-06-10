@@ -1,0 +1,65 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+char field[110][110];
+
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+
+int h, w;
+void bfs(int p, int q, char m){
+    for(int i=0; i < 4; i++){
+        if(field[dx[i]+p][dy[i]+q] == m){
+            field[dx[i]+p][dy[i]+q] = '-';
+            bfs(dx[i]+p, dy[i]+q, m);
+        }
+    }
+}
+
+int main(){
+    while(cin >> h >> w, h+w){
+        for(int i=0; i < h ; i++){
+            for(int j=0; j < w; j++){
+                cin >> field[i][j];
+            }
+        }
+        int count = 0;
+        for(int i=0; i < h; i++){
+            for(int j=0; j < w; j++){
+                if(field[i][j] != '-'){
+                    count++;
+                    bfs(i, j, field[i][j]);
+                }
+            }
+        }
+        cout << count << endl;
+    }
+}

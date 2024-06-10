@@ -1,0 +1,39 @@
+#include<stdio.h>
+void sort(int *a,int *b){
+  int *w;
+  *w=*a;*a=*b;*b=*w;
+  return; 
+}
+
+int main(void){
+  char I[5];
+  int a[3]={1,0,0};
+  int cn1,cn2,i;
+  
+  while(fgets(I,5,stdin)!='\0'){
+    switch(I[0]-'A'){
+    case 0:cn1=0;break;
+    case 1:cn1=1;break;
+    case 2:cn1=2;break;
+    }
+
+    switch(I[2]-'A'){
+    case 0:cn2=0;break;
+    case 1:cn2=1;break;
+    case 2:cn2=2;break;
+    }
+    
+    sort(&a[cn1],&a[cn2]);
+  }
+  
+  for(i=0;i<3;i++){
+    if(a[i]==1){
+      switch(i){
+      case 0:printf("A\n");break;
+      case 1:printf("B\n");break;
+      case 2:printf("C\n");break;
+      }
+    }
+  }
+  return 0;
+}

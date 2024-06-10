@@ -1,0 +1,39 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int m,n;
+  for(;cin>>m>>n,m;)
+    {
+      vector<long long int> book;
+      long long int ans=0;
+      for(int i=0;i<n;i++)
+	{
+	  long long int tmp;
+	  cin>>tmp;
+	  ans=max(ans,tmp);
+	  book.push_back(tmp);
+	}
+      while(m<book.size())
+	{
+	  long long int tmp_min=100000001;
+	  int tmp_cnt=0;
+	  for(int i=0;i<book.size()-1;i++)
+	    {
+	      if(tmp_min>book[i]+book[i+1])
+		{
+		  tmp_min=book[i]+book[i+1];
+		  tmp_cnt=i;
+		}
+	    }
+	  //	  cout<<"tmp_cnt "<<tmp_cnt<<" "<<book[tmp_cnt]+book[tmp_cnt+1]<<endl;
+	  book[tmp_cnt]+=book[tmp_cnt+1];
+	  book.erase(book.begin()+tmp_cnt+1);
+	  ans=max(ans,book[tmp_cnt]);
+	}
+      cout<<ans<<endl;
+
+    }
+}

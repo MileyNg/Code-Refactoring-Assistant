@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <tuple>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+
+vector<tuple<int, int, int> > fs;
+
+void writefs(int I, int S){
+    for(int i=1; i<(int)fs.size(); ++i){
+        if(1 < get<0>(fs[i]) - get<1>(fs[i-1])){
+            int fw = get<1>(fs[i-1]) + 1, sp = get<0>(fs[i]) - get<1>(fs[i-1]) - 1;
+            fs.insert(fs.begin() + i, make_tuple(fw, fw + min(sp, S) - 1, I));
+            S -= sp;
+            if(S <= 0)return;
+        }
+    }
+    int fw = get<1>(fs.back()) + 1;
+    fs.push_back(make_tuple(fw, fw + S - 1, I));
+}
+
+void deletefs(int I){
+    fs.erase(remove_if(all(fs), [&](tuple<int, int, int> &t){return get<2>(t) == I;}), fs.end());
+}
+
+void readfs(int P){
+    for(int i=1; i<(int)fs.size(); ++i){
+        if(get<0>(fs[i]) <= P && P <= get<1>(fs[i])){
+            cout << get<2>(fs[i]) << '\n';
+            return;
+        }
+    }
+    cout << "-1\n";
+}
+
+int main(){
+    for(int N; cin >> N, N; cout << '\n'){
+        cin.ignore();
+        fs.clear();
+        fs.push_back(make_tuple(-1, -1, -1));
+        while(N--){
+            char c;
+            cin >> c;
+            if(c == 'W'){
+                int I, S;
+                cin >> I >> S;
+                writefs(I, S);
+            }
+            if(c == 'D'){
+                int I;
+                cin >> I;
+                deletefs(I);
+            }
+            if(c == 'R'){
+                int P;
+                cin >> P;
+                readfs(P);
+            }
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,59 @@
+def check_lots(n, m, t, d, hls)
+  x = m
+  for y in (0...d)
+    if x > 0 && hls[y][x - 1] == 1
+      x -= 1
+    elsif x < n - 1 && hls[y][x] == 1
+      x += 1
+    end
+  end
+  x == t
+end
+
+### main
+
+while true
+  n = gets.chomp.to_i
+  break if n == 0
+
+  m = gets.chomp.to_i - 1
+  t = gets.chomp.to_i - 1
+  d = gets.chomp.to_i
+
+  hls = []
+
+  d.times do
+    hls.push gets.chomp.split("").map{|s| s.to_i}
+  end
+
+  if check_lots(n, m, t, d, hls)
+    puts 0
+    next
+  end
+
+  found = false
+
+  for y in (0...d)
+    for x in (0...(n - 1))
+      next if hls[y][x] == 1 ||
+              (x > 0 && hls[y][x - 1] == 1) ||
+              (x < n - 1 && hls[y][x + 1] == 1)
+
+      hls[y][x] = 1
+
+      if check_lots(n, m, t, d, hls)
+        puts "#{y + 1} #{x + 1}"
+        found = true
+        break
+      end
+
+      hls[y][x] = 0
+    end
+
+    break if found
+  end
+
+  if ! found
+    puts 1
+  end
+end

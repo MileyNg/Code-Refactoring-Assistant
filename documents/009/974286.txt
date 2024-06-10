@@ -1,0 +1,97 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_NM = 510 * 2;
+
+int N, M, B[MAX_NM], R[MAX_NM];
+int match[MAX_NM];
+bool used[MAX_NM];
+vector<int> G[MAX_NM];
+
+bool dfs(int v){
+  used[v] = true;
+  REP(tmp_u, G[v].size()){
+    int u = G[v][tmp_u];
+    int w = match[u];
+    if(w < 0 || (!used[w] && dfs(w))){
+      match[v] = u;
+      match[u] = v;
+      return true;
+    }
+  }
+  return false;
+}
+
+int bipartiteMatching(int V){
+  memset(match, -1, sizeof(match));
+  memset(used, 0, sizeof(used));
+  int ret = 0;
+  REP(v, V){
+    if(match[v] < 0){
+      memset(used, 0, sizeof(used));
+      if(dfs(v)) ++ret;
+    }
+  }
+  return ret;
+}
+
+int canGet(int a, int b){
+  //cout <<"    " <<a <<", " <<b <<endl;
+  if(b == 0) return a;
+  return canGet(b, a % b);
+}
+
+int main() {
+  while(cin >>M >>N && M){
+    REP(i, MAX_NM) G[i].clear();
+    //cout <<"------------" <<endl;
+    REP(i, M) cin >>B[i];
+    REP(i, N) cin >>R[i];
+    REP(i, M){
+      REP(j, N){
+        //int dfs = (canGet(max(B[i], R[j]), min(B[i], R[j])));
+        //cout <<"dfs = " <<dfs <<endl;
+        //if(B[i] == 6 && R[j] == 2) cout <<B[i] <<", " <<R[j] <<", " <<(canGet(max(B[i], R[j]), min(B[i], R[j]))) <<endl;
+        if(canGet(max(B[i], R[j]), min(B[i], R[j])) != 1){
+          G[i].push_back(M + j);
+          G[M + j].push_back(i);
+        }
+      }
+    }
+    int ans = bipartiteMatching(M + N);
+    //debug start
+    //cout <<"BLUE "; REP(i, M) cout <<B[i] <<", "; cout <<endl;
+    //cout <<"RED "; REP(i, N) cout <<R[i] <<", "; cout <<endl;
+    //REP(i, M){
+    //  cout <<B[i] <<" : ";
+    //  REP(j, G[i].size()) cout <<R[G[i][j] - M] <<", ";
+    //  cout <<endl;
+    //}
+    //REP(i, M) cout <<R[match[i] - M] <<", "; cout <<endl;
+    //debug end
+    cout <<ans <<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,20 @@
+scores = []
+shash = {}
+
+while true
+  id, score = gets.chomp.split(",").map{|s| s.to_i}
+  break if id == 0 && score == 0
+
+  scores[id] = score
+  shash[score] = true
+end
+
+srank = shash.keys.sort{|a, b| b <=> a}
+rhash = {}
+(0...srank.length).each{|i| rhash[srank[i]] = i + 1}
+
+while (line = gets)
+  id = line.chomp.to_i
+
+  puts rhash[scores[id]]
+end

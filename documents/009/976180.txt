@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <cctype>
+using namespace std;
+
+typedef string::const_iterator iter;
+int number(iter &it);
+
+int expr(iter &it) {
+  ++it; // skip [
+  int res;
+  if(isdigit(*it)) {
+    res = number(it) / 2 + 1;
+  }
+  else {
+    vector<int> vec;
+    while(*it == '[') {
+      vec.push_back(expr(it));
+    }
+    sort(vec.begin(), vec.end());
+    res = 0;
+    for(int i = 0; i < (int)vec.size() / 2 + 1; ++i) {
+      res += vec[i];
+    }
+  }
+  ++it; // skip ]
+  return res;
+}
+
+int number(iter &it) {
+  int res = 0;
+  while(isdigit(*it)) {
+    res *= 10;
+    res += *it - '0';
+    ++it;
+  }
+  return res;
+}
+
+int main() {
+  int N; cin >> N;
+  while(N--) {
+    string s; cin >> s;
+    iter it = s.begin();
+    cout << expr(it) << endl;
+  }
+}

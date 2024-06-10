@@ -1,0 +1,15 @@
+def isEle(n):
+	s = 0
+	for i in range(len(n)):
+		s += (-1)**i * int(n[i])
+	return True if s%11 == 0 else False
+		
+while 1:
+	n = raw_input()
+	if n == "0": break
+	c = 0
+	for i in range(2,len(n) + 1):
+		for sp in range(len(n) - i + 1):
+			if n[sp] != "0" and isEle(n[sp:sp + i]):
+				c += 1
+	print c

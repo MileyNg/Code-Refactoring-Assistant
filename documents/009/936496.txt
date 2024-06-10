@@ -1,0 +1,55 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  int h,w;
+  for(;cin>>h>>w,h||w;)
+    {
+      char maps[h][w];
+      int tate[h][w];
+      for(int i=0;i<h;i++)
+	for(int j=0;j<w;j++)
+	  {
+	    cin>>maps[i][j];
+	    if(maps[i][j]=='*')
+	      {
+		tate[i][j]=0;
+	      }
+	    else
+	      {
+		if(i==0)
+		  tate[i][j]=1;
+		else
+		  tate[i][j]=tate[i-1][j]+1;
+	      }
+	  }
+      //      cout<<endl;
+      int ans=0;
+      for(int i=h-1;i>=0;i--)
+	{
+	  int cnt=0;
+	  int min_tate=99999;
+	  for(int j=w-1;j>=0;j--)
+	    {
+	      if(tate[i][j]!=0)
+		{
+		  min_tate=min(min_tate,tate[i][j]);
+		  cnt++;
+		  ans=max(ans,min_tate*cnt);
+		  //	  	  cout<<ans<<endl;
+		}
+	      else
+		{
+		  cnt=0;
+		  min_tate=99999;
+		}
+	      //cout<<tate[i][j];
+	    }
+
+	}
+      cout<<ans<<endl;
+
+    }
+
+}

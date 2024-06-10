@@ -1,0 +1,44 @@
+// 2014/06/26 Tazoe
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+	int cnt0 = 0;
+	int cnt1 = 0;
+	int cnt2 = 0;
+	int cnt3 = 0;
+
+	while(true){
+		int a, b, c;
+		cin >> a >> b >> c;
+
+		if(a<b){
+			swap(a, b);
+		}
+		if(a<c){
+			swap(a, c);
+		}
+
+		if(a>=b+c){
+			cout << cnt0 << ' ' << cnt1 << ' ' << cnt2 << ' ' << cnt3 << endl;
+			break;
+		}
+
+		cnt0++;
+
+		if(a*a==b*b+c*c){
+			cnt1++;
+		}
+		else if(a*a<b*b+c*c){
+			cnt2++;
+		}
+		else{
+			cnt3++;
+		}
+	}
+
+	return 0;
+}

@@ -1,0 +1,90 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <climits>
+#include <cfloat>
+#include <functional>
+using namespace std;
+
+const int INF = INT_MAX / 2;
+
+int main()
+{
+    int m;
+    cin >> m;
+
+    vector<int> a(6);
+    for(int i=0; i<6; ++i)
+        cin >> a[i];
+
+    int start, goal;
+    cin >> start >> goal;
+    -- start;
+    -- goal;
+
+    vector<int> n(m);
+    for(int i=0; i<m; ++i)
+        cin >> n[i];
+
+    vector<int> dist(m, INF);
+    dist[goal] = 0;
+    for(int k=0; k<m; ++k){
+        for(int s=0; s<m; ++s){
+            for(int i=0; i<6; ++i){
+                for(int j=-1; j<=1; j+=2){
+                    int t = s + a[i] * j;
+                    if(t < 0 || m <= t)
+                        continue;
+                    t += n[t];
+                    if(dist[t] + 1 < dist[s])
+                        dist[s] = dist[t] + 1;
+                }
+            }
+        }
+    }
+
+    int pos = start;
+    for(;;){
+        int dice;
+        cin >> dice;
+        -- dice;
+        int ret = 0;
+
+        int right = pos + a[dice];
+        int left = pos - a[dice];
+
+        if(0 <= right && right < m){
+            right += n[right];
+            if(dist[right] < dist[pos]){
+                pos = right;
+                ret = 1;
+            }
+        }
+
+        if(0 <= left && left < m){
+            left += n[left];
+            if(dist[left] < dist[pos]){
+                pos = left;
+                ret = -1;
+            }
+        }
+
+        cout << ret << endl;
+
+        if(pos == goal)
+            return 0;
+    }
+}

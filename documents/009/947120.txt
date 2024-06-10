@@ -1,0 +1,31 @@
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+
+bool isTriangle(int a, int b, int c);
+
+int main(){
+	int a, b, c, count;
+	bool check;
+	
+	std::cin >> count;
+	
+	for(int i = 0; i < count; ++i){
+		std::cin >> a >> b >> c;
+		
+		int max_num = std::max({a, b, c});
+		if(max_num == a) check = isTriangle(b, c, a);
+		else if(max_num == b) check = isTriangle(a, c, b);
+		else if(max_num == c) check = isTriangle(a, b, c);
+		
+		if(check) std::cout << "YES" << std::endl;
+		else std::cout << "NO" << std::endl;
+	}
+	
+	return 0;
+}
+
+bool isTriangle(int a, int b, int c){
+	if(std::pow(a, 2) + std::pow(b, 2) == std::pow(c, 2)) return true;
+	else return false;
+}

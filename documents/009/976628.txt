@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int stack[100];
+int n;
+
+void init(){
+	n = 0;
+}
+
+void push(int x){
+	stack[n++] = x;
+}
+
+int pop(void){
+	return stack[--n];
+}
+
+int main(void){
+	int n, a, b;
+	init();
+
+	while((n = getchar()) != '\n'){
+		if(isdigit(n)){
+			ungetc(n, stdin);
+			scanf("%d", &n);
+			push(n);
+		}else{
+			if(isspace(n)){
+				continue;
+			}else{
+				switch(n){
+					case'+':
+						b = pop(); a = pop();
+						push(a + b);
+						break;
+					case'-':
+						b = pop(); a = pop();
+						push(a - b);
+						break;
+					case'*':
+						b = pop(); a = pop();
+						push(a * b);
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+
+	printf("%d\n", pop());
+	return 0;
+}

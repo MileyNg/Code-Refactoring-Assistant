@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+int main (int argc, char * const argv[]) {
+    // insert code here...
+    double a, b, c, d, e, f, x, y;
+	while(cin >> a >> b >> c >> d >> e >> f ){
+		x=(c*e-b*f)/(a*e-b*d);
+		y=(c*d-a*f)/(b*d-a*e);
+		
+		x*=1000;y*=1000;
+		if(x<0){
+			x-=0.5;
+		}else{
+			x+=0.5;
+		}
+		if(y<0){
+			y-=0.5;
+		}else{
+			y+=0.5;
+		}
+		int xi = (int)x;
+		int yi = (int)y;
+		x = (double)xi;
+		y = (double)yi;
+		x/=1000;y/=1000;
+		
+		printf("%.3f %.3f\n", x, y);
+	} 
+	return 0;
+}

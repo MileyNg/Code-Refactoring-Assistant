@@ -1,0 +1,69 @@
+
+class Point
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_f)
+  end
+  def -(p)
+    Point.new(@x - p.x, @y - p.y, @z - p.z)
+  end
+  def dot(p)
+    @x * p.x + @y * p.y + @z * p.z
+  end
+  def cross(p)
+    Point.new(@y * p.z - @z * p.y, @z * p.x - @x * p.z, @x * p.y - @y * p.x)
+  end
+  def ==(p)
+    (@x - p.x).abs < EPS && (@y - p.y).abs < EPS && (@z - p.z).abs < EPS
+  end
+  def +(p)
+    Point.new(@x + p.x, @y + p.y, @z + p.z)
+  end
+  def distance(p)
+    (self - p).abs
+  end
+  def abs
+    Math::sqrt(@x * @x + @y * @y + @z * @z)
+  end
+  def normalize
+    Point.new(@x / abs, @y / abs, @z / abs)
+  end
+end
+EPS = 1e-9
+def intersect?(a, b, c, d)
+  ab = b - a
+  cd = d - c
+  n1 = ab.normalize
+  n2 = cd.normalize
+  work1 = n1.dot(n2)
+  work2 = 1.0 - work1 * work1
+  ac = c - a
+  d1 = (ac.dot(n1) - work1 * ac.dot(n2)) / work2
+  d2 = (work1 * ac.dot(n1) - ac.dot(n2)) / work2
+  p1 = a + Point.new(d1 * n1.x, d1 * n1.y, d1 * n1.z)
+  p2 = c + Point.new(d2 * n2.x, d2 * n2.y, d2 * n2.z)
+# p a.distance(p1) + b.distance(p1)
+# p a.distance(b)
+# p c.distance(p2) + d.distance(p2)
+# p c.distance(d)
+nil.times
+  (p1 == p2) && ((a.distance(p1) + b.distance(p1) - a.distance(b)).abs < EPS) && ((c.distance(p2) + d.distance(p2) - c.distance(d)).abs < EPS)
+end
+def parallel?(a, b, c, d)
+  (b - a).normalize == (d - c).normalize
+end
+def orthogonal?(a, b, c, d)
+end
+def solve2
+  d, e, a, b, c = 5.times.map{Point.new(*gets.split)}
+  return intersect?(a, c, d, e) if parallel?(a, b, d, e)
+  return intersect?(b, a, d, e) if parallel?(b, c, d, e)
+  return intersect?(c, b, d, e) if parallel?(c, a, d, e)
+  abde = (e - d).dot((b - a).cross(d - a)).abs
+  bcde = (e - d).dot((c - b).cross(d - b)).abs
+  cade = (e - d).dot((a - c).cross(d - c)).abs
+  abcd = (d - c).dot((b - a).cross(c - a)).abs
+  abce = (e - c).dot((b - a).cross(c - a)).abs
+  abde + bcde + cade == abcd + abce
+end
+puts (solve2 ? "MISS" : "HIT")

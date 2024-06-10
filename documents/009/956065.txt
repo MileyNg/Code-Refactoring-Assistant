@@ -1,0 +1,67 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+int A, B, D;
+bool Swapped;
+bool input() {
+    cin >> A >> B >> D;
+    return A != 0;
+}
+
+void solve() {
+#define INF (1<<28)
+    int X = INF, Y = INF,
+        MinSum = INF, MinProduct = INF;
+    for (int x = 0; A * x <= D; x++) {
+        int R = D - A * x;
+        if (R % B != 0) continue;
+        int y = R / B;
+        if (x + y < MinSum || (x + y == MinSum && A * x + B * y < MinProduct)) {
+            MinSum = x + y;
+            MinProduct = A * x + B * y;
+            X = x; Y = y;
+        }
+    }
+    for (int x = 0; x < MinSum; x++) {
+        int R = A * x - D;
+        if (R < 0) continue;
+        if (R % B == 0) {
+            int y = R / B;
+            if (x + y < MinSum || (x + y == MinSum && A * x + B * y < MinProduct)) {
+                MinSum = x + y;
+                MinProduct = A * x + B * y;
+                X = x; Y = y;
+            }
+        }
+    }
+    for (int y = 0; y < MinSum; y++) {
+        int R = B * y - D;
+        if (R < 0) continue;
+        if (R % A == 0) {
+            int x = R / A;
+            if (x + y < MinSum || (x + y == MinSum && A * x + B * y < MinProduct)) {
+                MinSum = x + y;
+                MinProduct = A * x + B * y;
+                X = x; Y = y;
+            }
+        }
+    }
+    cout << X << " " << Y << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

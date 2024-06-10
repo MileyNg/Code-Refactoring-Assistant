@@ -1,0 +1,58 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int n;	//参加者数
+	int q;	//イベント数
+	cin >> n >> q;
+
+	int a; //参加者番号
+	int v; //イベントでの獲得匹数
+	int* num; //所持数
+
+	int winner = 0;
+	int max = 0;
+
+	num = new int[n+1];
+	for (int i = 0; i <= n; i++){
+		num[i] = 0;
+	}
+
+	for (int i = 0; i < q; i++){
+		cin >> a >> v;
+		num[a] += v;
+
+		//キャッチの場合
+		if (v >= 0){
+			//トップの人が獲得した場合
+			if (a == winner){
+				max = num[a];
+			}
+			//それ以外の人が獲得した場合
+			else{
+				if (num[a] > max){
+					max = num[a];
+					winner = a;
+				}
+				else if (num[a] == max && a < winner){
+					winner = a;
+
+				}
+			}
+		}
+		//リリースの場合
+		else if (a == winner){
+			max = num[0];
+			winner = 0;
+			for (int i = 1; i <= n; i++){
+				if (num[i] > max){
+					max = num[i];
+					winner = i;
+				}
+			}
+		}
+		cout << winner << " " << max << endl;
+	}//各イベント終了
+	
+	return 0;
+}

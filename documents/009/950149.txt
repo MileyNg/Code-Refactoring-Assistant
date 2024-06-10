@@ -1,0 +1,79 @@
+class Object
+  def define_accessor *properties
+    properties.each do |property|
+      self.instance_eval %Q{
+        def self.#{property}
+          return @#{property}
+        end
+
+        def self.#{property}=(arg)
+          @#{property} = arg
+        end
+      }
+    end
+  end
+end
+
+def main
+  command = gets.chomp
+  obj = make_obj
+  puts command_eval(obj, command)
+end
+
+def command_eval obj, command
+  eval %Q{
+    begin
+      if obj#{command}.instance_of?(String)
+        return \"string \\"\" + obj#{command} + \"\\"\"
+      elsif obj#{command}.instance_of?(Object)
+        return 'object'
+      end
+    rescue
+      return 'no such property'
+    end
+  }
+end
+
+def make_obj
+  next_line,obj = make_child_obj
+  obj
+end
+
+def make_child_obj
+  obj = Object.new
+  line = gets.chomp
+  next_line = ''
+  level = obj_level(line)
+  loop do
+    key,value = parse_line(line)
+    obj.define_accessor(key)
+
+    if value.nil?
+      next_line,value = make_child_obj
+      eval("obj.#{key} = value")
+    else
+      next_line = gets.chomp
+      eval("obj.#{key} = \"#{value}\"")
+    end
+
+    break if next_line.size == 0 or obj_level(next_line) < level
+    line = next_line
+  end
+  [next_line, obj]
+end
+
+def parse_line str
+  key,value = str.split(':')
+  key.strip!
+  value.sub!(/^ /, '') unless value.nil?
+  [key,value]
+end
+
+def obj_level str
+  str.index(/[a-z0-9]/)
+end
+
+
+if __FILE__ == $0
+  main
+end

@@ -1,0 +1,26 @@
+#include<stdio.h>
+
+int O[10][10000],R,C,i,j,f,r,t,o;
+
+int main()
+{
+	for(;scanf("%d%d",&R,&C),R;)
+	{
+		for(i=0;i<R;i++)
+			for(j=0;j<C;j++)
+				scanf("%d",&O[i][j]);
+		for(f=r=0;f<=(1<<R);f++)
+		{
+			for(j=o=0;j<C;j++)
+			{
+				for(i=t=0;i<R;i++)
+					if(!((O[i][j]+((f>>i)&1))%2))
+						t++;
+				o+=(t>R/2?t:R-t);
+			}
+			r=r<o?o:r;
+		}
+		printf("%d\n",r);
+	}
+	return 0;
+}

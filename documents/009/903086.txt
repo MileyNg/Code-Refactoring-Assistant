@@ -1,0 +1,156 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<sstream>
+#define INF (1<<24)
+using namespace std;
+ 
+struct State{
+  int pos;
+  int S;
+  vector <string> rt;
+};
+ 
+int n,m,k,flg;
+vector <int> t[15];
+vector <int> u[15];
+bool vd[15][(1<<15)];
+ 
+
+ 
+int start;
+
+void input();
+void init();
+//void print_bit(int);
+void dijkstra();
+string change(int x);
+ 
+int main(){
+  while(cin>>n>>m){
+    if(n==0&&m==0)break;
+    init();
+    input();
+    dijkstra();
+  }
+  return 0;
+}
+ 
+void init(){
+  for(int i=0;i<15;i++){
+    t[i].clear();
+    u[i].clear();
+    for(int j=0;j<(1<<15);j++){
+      vd[i][j]=false;
+    }
+  }
+  start=flg=0;
+}
+ 
+void input(){
+  int a,b;
+ 
+  for(int i=0;i<m;i++){
+    cin>>a>>b;
+    a--;
+    b--;
+    t[a].push_back(b);
+    t[b].push_back(a);
+  }
+ 
+  for(int i=0;i<n;i++){
+    cin>>a;
+    if(a==1)start|=(1<<i);
+  }
+   
+  for(int i=0;i<n;i++){
+    cin>>a;
+    for(int j=0;j<a;j++){
+      cin>>b;
+      if (i + 1 != b)u[i].push_back(b-1);
+    }
+    sort(u[i].begin(),u[i].end());
+  }
+}
+ 
+void dijkstra(){
+queue < State > Q;
+  State A,X;
+  int p;
+ 
+  A.pos=0;
+  A.S=start;
+  A.rt.clear();
+  Q.push(A);
+ 
+  while(!Q.empty()){
+ 
+    X=Q.front();Q.pop();
+ 
+    if(vd[X.pos][X.S]==true)continue;
+    vd[X.pos][X.S]=true;
+
+    if(X.pos==n-1){
+      flg=1;
+      if(X.S == (1<<(n-1)) ){
+	cout<<"You can go home in "<<X.rt.size()<<" steps."<<endl;
+	for(int i=0;i<(int)X.rt.size();i++)cout<<X.rt[i]<<endl;
+	return;
+      }
+    }
+ 
+    for(int i=0;i<(int)t[X.pos].size();i++){
+      p=t[X.pos][i];
+      
+      if (!(X.S & 1 << t[X.pos][i])) continue;
+
+      A.pos=p;A.S=X.S;A.rt=X.rt;
+      A.rt.push_back("Move to room "+change(p)+".");
+      Q.push(A); 
+    }
+ 
+    for(int i=0;i<(int)u[X.pos].size();i++){
+      p=u[X.pos][i];
+ 
+      A.pos=X.pos; A.S=X.S^(1<<p);A.rt=X.rt;
+
+      if((X.S>>p)&1)A.rt.push_back("Switch off room "+change(p)+".");
+      else A.rt.push_back("Switch on room "+change(p)+".");
+      Q.push(A);
+ 
+    }
+ 
+  }
+   
+ 
+  if(flg==1){
+    cout<<"You can not switch off all lights."<<endl;
+  }else{
+    cout<<"Help me!"<<endl;
+  }
+}
+ 
+/*
+vector <int> print_b;
+void print_bit(int x){
+  print_b.clear();
+  for(int i=0;i<15;i++){
+    print_b.push_back(x%2);
+    x/=2;
+  }
+  for(int i=14;i>=0;i--){
+    cout<<print_b[i];
+  }
+  cout<<endl;
+}
+*/
+
+string change(int x){
+  x++;
+  string res;
+  stringstream ss;
+  ss<<x;
+  ss>>res;
+  return res;
+}

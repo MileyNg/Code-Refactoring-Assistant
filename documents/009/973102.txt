@@ -1,0 +1,51 @@
+#include<stdio.h>
+
+int ice[10];
+
+void init(int i){
+  if(i<10){
+    ice[i]=0;
+    init(i+1);
+  }
+}
+
+void count(int n){
+  if(n!=0){
+    int m;
+    scanf("%d",&m);
+    ice[m]++;
+    count(n-1);
+  }
+}
+
+void prgraph(int n){
+  if(n<10){
+    if(ice[n]==0){
+      printf("-\n");
+    }
+    else{
+      int i;
+      for(i=0;i<ice[n];i++){
+	printf("*");
+      }
+      printf("\n");
+    }
+    prgraph(n+1);
+  }
+}
+
+void doit(){
+  int n;
+  scanf("%d",&n);
+  if(n!=0){
+    init(0);
+    count(n);
+    prgraph(0);
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

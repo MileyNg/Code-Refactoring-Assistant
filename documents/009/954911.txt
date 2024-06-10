@@ -1,0 +1,23 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <cmath>
+using namespace std;
+double q;
+double cal(double n){
+  double ans;
+  while(1){
+    ans = n - n/3.0 - q/(3.0*n*n);
+    if(fabs(fabs(ans*ans*ans)-fabs(q)) < 0.00001*q){
+      return fabs(ans);
+    }
+    n = ans;    
+  }
+}
+
+int main(){
+  while(cin >> q,q != -1){
+    cout  << fixed << setprecision(7) << cal(q/2.0) << endl;
+  }
+  return 0;
+}

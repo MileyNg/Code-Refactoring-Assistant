@@ -1,0 +1,5 @@
+input()
+S = set(map(int, raw_input().split()))
+input()
+T = set(map(int, raw_input().split()))
+print len(S & T)

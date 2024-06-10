@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main(){
+	string str1, str2;
+	while(cin >> str1 >> str2){
+		int count = 0;
+		for(int i = 0; i < str1.size(); i++){
+			for(int j = 0; j < str2.size(); j++){
+				int k = 0;
+				while(str1[i+k] == str2[j+k] && i+k <= str1.size()-1 && j+k <= str2.size()-1){
+					//if(i + k > str1.size()-1 || j + k > str2.size()-1) break;
+					k++;
+					count = max(count, k);
+					//cout << str2.substr(i, k) << endl;
+				}
+			}
+		}
+		cout << count << endl;
+	}
+}

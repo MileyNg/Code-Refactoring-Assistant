@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+int N,M,C,i,j,k,l,F[142][142]={0},c;
+int main()
+{
+	scanf("%d",&C);
+	for(;C--;)
+	{
+		memset(F,0,sizeof(F));
+		scanf("%d%d",&M,&N);
+		int tmp=(abs(M)<abs(N)?abs(N):abs(M))+1;
+		for(i=-tmp,c=0;i<tmp;i++)
+			for(j=-tmp;j<tmp;j++)
+				for(k=-tmp;k<tmp;k++)
+					for(l=-tmp;l<tmp;l++)
+						if(i*k-j*l==M&&i*l+j*k==N)
+							c++;
+		puts(c>8?"C":"P");
+	}
+	return 0;
+}

@@ -1,0 +1,24 @@
+#include <iostream>
+
+int judge(int n, int s, int max)
+{
+    if(n == 1)
+    {
+        return 0 <= s && s <= max ? 1 : 0;
+    }
+    int ret = 0;
+    for(int i = 0; i <= max; i++)
+    {
+        ret += judge(n-1, s-i*n-(n-1), max-i-1);
+    }
+    return ret;
+}
+
+int main()
+{
+    int n, s;
+    while(std::cin >> n >> s, s || n)
+    {
+        std::cout << judge(n, s, 9) << std::endl;        
+    }
+}

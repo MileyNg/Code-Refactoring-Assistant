@@ -1,0 +1,117 @@
+## constant
+
+D_E = 0
+D_W = 1
+D_N = 2
+D_S = 3
+
+### subroutines
+
+def hv2nd(hv, n)
+  h, v = hv.split('-')
+  (h.ord - 'a'.ord) * n + (v.to_i - 1)
+end
+
+def sig_stop?(tm, k, direc)
+  return false if k.nil?
+  p = (tm / k) & 1
+  dhv = (direc & 2) >> 1
+  p == dhv
+end
+
+### main
+
+while true
+  m, n = gets.strip.split(' ').map{|s| s.to_i}
+  break if m == 0 && n == 0
+
+  d = gets.strip.to_i
+
+  ns = gets.strip.to_i
+  sigs = []
+  ns.times.each do
+    hv, k = gets.strip.split(' ')
+    sigs[hv2nd(hv, n)] = k.to_i
+  end
+
+  mn = m * n
+
+  edges = mn.times.map{[]}
+  nbrs = mn.times.map{[nil] * 4}
+
+  for n0 in (0...mn)
+    x = n0 % n
+    y = n0 / n
+    if x < n - 1
+      n1 = n0 + 1
+      edges[n0][n1] = d
+      edges[n1][n0] = d
+      nbrs[n0][D_E] = n1
+      nbrs[n1][D_W] = n0
+    end
+    if y < m - 1
+      n1 = n0 + n
+      edges[n0][n1] = d
+      edges[n1][n0] = d
+      nbrs[n0][D_S] = n1
+      nbrs[n1][D_N] = n0
+    end
+  end
+
+  nc = gets.strip.to_i
+  nc.times.each do
+    hv1, hv2 = gets.strip.split(' ')
+    n1 = hv2nd(hv1, n)
+    n2 = hv2nd(hv2, n)
+
+    edges[n1][n2] = edges[n2][n1] = nil
+    nbrs[n1][nbrs[n1].index(n2)] = nil
+    nbrs[n2][nbrs[n2].index(n1)] = nil
+  end
+
+  nj = gets.strip.to_i
+  nj.times.each do
+    hv1, hv2, d0 = gets.strip.split(' ')
+    n1 = hv2nd(hv1, n)
+    n2 = hv2nd(hv2, n)
+    di = d0.to_i
+
+    edges[n1][n2] += di
+    edges[n2][n1] += di
+  end
+
+  shv, ghv = gets.strip.split(' ')
+  snd = hv2nd(shv, n)
+  gnd = hv2nd(ghv, n)
+  #puts "#{snd}->#{gnd}"
+
+  s = [snd, 0, D_E]
+  q = [s]
+  visited = {s.join(',') => true}
+  gtime = nil
+
+  while ! q.empty?
+    n0, time0, direc0 = q.shift
+    if n0 == gnd
+      gtime = time0
+      break
+    end
+
+    for direc1 in (0..3)
+      n1 = nbrs[n0][direc1]
+      next if n1.nil? || (direc1 ^ 1) == direc0
+
+      time1 = time0 + edges[n0][n1]
+      s = [n1, time1, direc1]
+      skey = s.join(',')
+
+      next if ! visited[skey].nil? || sig_stop?(time1, sigs[n1], direc1)
+
+      q << s
+      visited[skey] = true
+    end
+  end
+  #p times
+
+  puts gtime
+end

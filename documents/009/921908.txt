@@ -1,0 +1,26 @@
+#include <iostream>
+using namespace std;
+
+int f_debt(int n)
+{
+	n *= 1.05;
+	if((n % 1000) != 0)
+	{
+		n = n - (n%1000) + 1000;
+	}
+	return n;
+}
+
+
+int main()
+{
+	int i,debt=100000;
+	cin >> i;
+
+	for(int j=0;j<i;j++)
+	{
+		debt = f_debt(debt);
+	}
+	cout << debt << endl;
+	return 0;
+}

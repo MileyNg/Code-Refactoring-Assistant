@@ -1,0 +1,167 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+const long long MOD = 1000000009;
+
+struct Step
+{
+    long long Marx[75][75];
+    long long H;
+    long long W;
+};
+struct Obstruction
+{
+    long long x;
+    long long y;
+};
+
+Step StepByStep(Step a,Step b)
+{
+    Step ret;
+    ret.H = a.H + b.H - 1;
+    ret.W = a.W;
+
+    for(int i=0;i<ret.W;++i)
+    {
+        for(int j=0;j<ret.W;++j)
+        {
+            ret.Marx[i][j] = 0;
+            for(int k=0;k<ret.W;++k)
+            {
+                ret.Marx[i][j] += a.Marx[i][k]*b.Marx[k][j];
+                ret.Marx[i][j] = ret.Marx[i][j]%MOD;
+            }
+        }
+    }
+
+    return ret;
+}
+
+long long InitStep(Step step[],long long W,long long H)
+{
+    long long h = 3;
+    long long Tot = 1;
+    step[0].W = W;
+    step[0].H = 2;
+    for(int i=0;i<W;++i)
+    {
+        for(int j=0;j<W;++j)
+        {
+            if(i==j||i==j-1||i==j+1)
+            step[0].Marx[i][j] = 1;
+            else
+            step[0].Marx[i][j] = 0;
+        }
+    }
+
+    while(h<=H)
+    {
+        step[Tot] = StepByStep(step[Tot-1],step[Tot-1]);
+        ++Tot;
+        h = 2*h-1;
+    }
+
+    return Tot;
+}
+
+Step CombineStep(long long H,long long W,Step step[],long long N) //H 荳コ鬮伜コヲ
+{
+    Step way;
+    way.H = 1;
+    way.W = W;
+    for(int i=0;i<W;++i)
+    for(int j=0;j<W;++j)
+    {
+        if(i==j)
+        way.Marx[i][j] = 1;
+        else way.Marx[i][j] = 0;
+    }
+
+    long long h = 1;
+    for(int i=N-1;i>=0;--i)
+    {
+        if(h+step[i].H-1<=H)
+        {
+            way = StepByStep(way,step[i]);
+            h += step[i].H-1;
+        }
+    }
+    return way;
+}
+
+int cmp(Obstruction obs1,Obstruction obs2)
+{
+    return obs1.y<obs2.y;
+}
+
+long long W,H,N;
+Step step[100],way;
+long long Tot;
+Obstruction obs[30];
+
+int main()
+{
+    //freopen("in.txt","r",stdin);
+    int iCase = 1;
+    while(scanf("%I64d %I64d %I64d",&W,&H,&N)!=EOF)
+    {
+        if(W==0&&H==0&&N==0)
+        break;
+
+        Tot = InitStep(step,W,H);
+
+        for(int i=0;i<N;++i)
+        {
+            scanf("%I64d %I64d",&obs[i].x,&obs[i].y);
+        }
+        sort(obs,obs+N,cmp);
+        if(N==0)
+        {
+            way = CombineStep(H,W,step,Tot);
+        }
+        else
+        {
+            way.H = 1;
+            way.W = W;
+            for(int i=0;i<W;++i)
+            for(int j=0;j<W;++j)
+            {
+                if(i==j)
+                way.Marx[i][j] = 1;
+                else way.Marx[i][j] = 0;
+            }
+
+            for(int i=0;i<=N;++i)
+            {
+                if(i==0)
+                {
+                    way = StepByStep(way,CombineStep(obs[i].y,W,step,Tot));
+                    for(int j=0;j<W;++j)
+                    {
+                        way.Marx[j][obs[i].x-1] = 0;
+                    }
+                }
+                else if(i==N)
+                {
+                    way = StepByStep(way,CombineStep(H - obs[N-1].y+1,W,step,Tot));
+                }
+                else
+                {
+                    way = StepByStep(way,CombineStep(obs[i].y-obs[i-1].y+1,W,step,Tot));
+                    for(int j=0;j<W;++j)
+                    {
+                        way.Marx[j][obs[i].x-1] = 0;
+                    }
+                }
+            }
+
+        }
+
+        printf("Case %d: %I64d\n",iCase,way.Marx[0][W-1]%MOD);
+        ++iCase;
+    }
+    return 0;
+}

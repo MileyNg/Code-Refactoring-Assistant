@@ -1,0 +1,91 @@
+/*
+  AOJ 2443
+  Title:ReverseSort
+  @kankichi573
+*/
+#include <stdio.h>
+#include <limits.h>
+#include <string.h>
+
+int N,A[10];
+void reverse(int ar[],int n,int a,int b)
+{
+  int wk;
+
+  while(a<b)
+    {
+      wk=ar[a];
+      ar[a]=ar[b];
+      ar[b]=wk;
+      a++;b--;
+    }
+}
+void dump(int ar[],int n)
+{
+  int i;
+  for(i=0;i<n;i++)
+    printf("%d:",ar[i]);
+  printf("\n");
+}
+int solve(int ar[],int n)
+{
+  int max_,maxp,min_,minp,i,ret1,ret2,flag;
+  int newar[10],newar2[10];
+  //dump(ar,n);
+  if(n==2)
+    return((ar[0]<ar[1])?0:1);
+  max_=INT_MIN;
+  min_=INT_MAX;
+  for(i=0;i<n;i++)
+    {
+    if(max_<ar[i])
+      {
+	max_=ar[i];
+	maxp=i;
+      }
+    if(min_>ar[i])
+      {
+	min_=ar[i];
+	minp=i;
+      }
+    }
+  
+  memcpy(newar,ar,n*sizeof(int));
+  if(maxp<n-1)
+    {
+      reverse(newar,n,maxp,n-1);
+      flag=1;
+    }
+  else
+    flag=0;
+  ret1=solve(newar,n-1)+flag;
+  
+
+  memcpy(newar2,ar,n*sizeof(int));
+  if(minp>0)
+    {
+      reverse(newar2,n,0,minp);
+      flag=1;
+    }
+  else
+    flag=0;
+  ret2=solve(newar2+1,n-1)+flag;
+  
+  if(n==10)
+    printf(":%d %d\n",ret1,ret2);
+
+  if(ret1>ret2)
+    return(ret2);
+  else
+    return(ret1);
+}
+
+main()
+{
+  int i;
+  scanf("%d",&N);
+  for(i=0;i<N;i++)
+    scanf("%d",&A[i]);
+  printf("%d\n",solve(A,N));
+  return(0);
+}

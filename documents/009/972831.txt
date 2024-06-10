@@ -1,0 +1,35 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),n.end()
+#define PI acos(-1)
+using namespace std;
+int main(){
+
+  int n;
+  char in[100]={0};
+  while(cin>>n,n){
+    int ba=0;
+    int pl[10]={0};
+    int num=-1;
+    cin>>in;
+    rep(i,100){
+      num++;
+      if(num>=n)num=0;
+      //cout<<ba<<endl;
+      if(in[i]=='M')pl[num]++;
+      else if(in[i]=='L'){pl[num]+=1+ba;ba=0;}
+      else if(in[i]=='S'){ba+=1+pl[num];pl[num]=0;}
+    }
+    sort(pl,pl+n);
+    rep(i,n)cout<<pl[i]<<" ";
+    cout<<ba<<endl;
+  }
+}

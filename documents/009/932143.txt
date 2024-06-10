@@ -1,0 +1,87 @@
+#include<cstdio>
+#include<algorithm>
+
+using namespace std;
+
+int field[33][33];
+int sum[33][33];
+int num[33][33][33][33];
+int msz[33][33][33][33];
+
+int H,W,S;
+int all;
+
+const int inf=1<<29;
+
+int get(int i1,int i2,int j1,int j2){
+	i1--;j1--;
+	return sum[i2][j2]-sum[i1][j2]-sum[i2][j1]+sum[i1][j1];
+}
+
+int main(){
+	while(true){
+		scanf("%d%d%d",&H,&W,&S);
+		if(H==0&&W==0) return 0;
+		for(int i=1;i<=H;i++)for(int j=1;j<=W;j++)scanf("%d",&field[i][j]);
+		memset(sum,0,sizeof(sum));
+		for(int i=1;i<=H;i++) for(int j=1;j<=W;j++){
+			sum[i][j]=sum[i-1][j]+sum[i][j-1]-sum[i-1][j-1]+field[i][j];
+		}
+		int x=sum[H][W]-S;
+		memset(num,-1,sizeof(num));
+		memset(msz,-1,sizeof(msz));
+		for(int i=1;i<=H;i++)for(int j=1;j<=W;j++){
+			if(field[i][j]<x){
+				num[i][i][j][j]=-inf;
+				msz[i][i][j][j]=-inf;
+			}else{
+				num[i][i][j][j]=1;
+				msz[i][i][j][j]=field[i][j];
+			}
+		}
+//		printf("aa%d %d\n",get(1,2,1,2),sum[2][3]);
+		for(int id=0;id<=H-1;id++) for(int jd=0;jd<=W-1;jd++){
+		if(id==0&&jd==0) continue;
+			for(int i=1;i+id<=H;i++){
+				for(int j=1;j+jd<=W;j++){
+					int i1=i,i2=i+id,j1=j,j2=j+jd;
+					int cAll=get(i1,i2,j1,j2);
+					if(cAll<x){
+						num[i1][i2][j1][j2]=-inf;
+						msz[i1][i2][j1][j2]=-inf;
+						continue;
+					}
+					num[i1][i2][j1][j2]=1;
+					msz[i1][i2][j1][j2]=cAll;
+					if(id!=0){
+						for(int si=i1;si<i2;si++){
+							//[i][si],[si+1][i2]
+							int nnum=num[i1][si][j1][j2]+num[si+1][i2][j1][j2];
+							int nmsz=min(msz[i1][si][j1][j2],msz[si+1][i2][j1][j2]);
+							int &cnum=num[i1][i2][j1][j2];
+							int &cmsz=msz[i1][i2][j1][j2];
+							if(cnum<nnum||(cnum==nnum&&cmsz<nmsz)){
+								cnum=nnum;
+								cmsz=nmsz;
+							}
+						}
+					}
+					if(jd!=0){
+						for(int sj=j1;sj<j2;sj++){
+							int nnum=num[i1][i2][j1][sj]+num[i1][i2][sj+1][j2];
+							int nmsz=min(msz[i1][i2][j1][sj],msz[i1][i2][sj+1][j2]);
+							int &cnum=num[i1][i2][j1][j2];
+							int &cmsz=msz[i1][i2][j1][j2];
+							if(cnum<nnum||(cnum==nnum&&cmsz<nmsz)){
+								cnum=nnum;
+								cmsz=nmsz;
+							}
+						}
+					}
+				}
+			}
+		}
+		printf("%d %d\n",num[1][H][1][W],msz[1][H][1][W]-x);
+	}
+	return 0;
+}

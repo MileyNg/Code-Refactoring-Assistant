@@ -1,0 +1,110 @@
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <sstream>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+struct UnionFind {
+    int* parent;
+    int N;
+    UnionFind(int N) : N(N) {
+        parent = new int[N];
+        fill(parent, parent + N, -1);
+    }
+    ~UnionFind() {
+        delete[] parent;
+    }
+    int root(int x) {
+        if (parent[x] == -1) return x;
+        return parent[x] = root(parent[x]);
+    }
+    bool query(int x, int y) {
+        return root(x) == root(y);
+    }
+    void merge(int x, int y) {
+        x = root(x); 
+        y = root(y);
+        if (x != y) {
+            parent[x] = y;
+        }
+    }
+};
+
+int N;
+#define L 100
+double x[L], y[L], z[L], r[L];
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    for (int i = 0; i < N; i++) {
+        cin >> x[i] >> y[i] >> z[i] >> r[i];
+    }
+    return true;
+}
+
+const double INF = 1e20;
+struct Kruskal {
+    struct Edge {
+        int from, to;
+        double cost;
+        Edge(int from, int to, double cost) : from(from), to(to), cost(cost) {}
+        bool operator<(const Edge& e) const {
+            return cost < e.cost;
+        }
+    };
+    vector<Edge> G;
+    Kruskal() {
+        G.clear();
+    }
+    void addEdge(int from, int to, double cost) {
+        G.push_back(Edge(from, to, cost));
+    }
+    double solve() {
+        UnionFind uf(N);
+        sort(whole(G));
+        double Ret = 0;
+        for (int i = 0; i < G.size(); i++) {
+            if (!uf.query(G[i].from, G[i].to)) {
+                uf.merge(G[i].from, G[i].to);
+                Ret += G[i].cost;
+            }
+        }
+        return Ret;
+    }
+};
+
+#define POW2(x) ((x) * (x))
+double Dist(int a, int b) {
+    return sqrt(POW2(x[a] - x[b]) + POW2(y[a] - y[b]) + POW2(z[a] - z[b])) - (r[a] + r[b]);
+}
+
+void solve() {
+    Kruskal K;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            K.addEdge(i, j, max(0.0, Dist(i, j)));
+        }
+    }
+    printf("%.3lf\n", K.solve());
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

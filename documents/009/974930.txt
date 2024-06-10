@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAX 20000
+
+int ans, N;
+bool G[MAX][MAX];
+
+void solve(int p){
+  for(int i = 0 ; i < N ; i++){
+    if(G[p][i]){
+      ans++;
+      solve(i);
+    }
+  }
+}
+
+int main(){
+  int M, t, s, d;
+
+  while(cin >> N >> M , N){
+    memset(G, false, sizeof(G));
+    for(int i = 0 ; i < M ; i++){
+      cin >> t >> s >> d;
+      G[s-1][d-1] = true;
+    }
+
+    ans = 1;
+    solve(0);
+    cout << ans << endl;
+  }
+
+  return 0;
+}

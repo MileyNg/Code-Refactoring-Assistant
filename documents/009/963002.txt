@@ -1,0 +1,31 @@
+#include <iostream>
+
+int main(){
+	
+	int count;
+	std::cin >> count;
+	//改行を無視
+	std::cin.get();
+	
+	const std::string before_word = "Hoshino";
+	const int before_word_length = before_word.length();
+	const std::string after_word = "Hoshina";
+	
+	for(int i = 0; i < count; ++i){
+		std::string str;
+		std::getline(std::cin, str);
+		
+		//全ての"Hoshino"を置換するまで無限ループ
+		while(true){
+			std::size_t found = str.find(before_word);
+			if(found != std::string::npos){
+				str.replace(found, before_word_length, after_word);
+			}
+			else break;
+		}
+		
+		std::cout << str << std::endl;
+	}
+	
+	return 0;
+}

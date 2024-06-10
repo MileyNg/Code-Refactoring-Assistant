@@ -1,0 +1,57 @@
+#include<iostream>
+#define rep(i,a) for(int i=0;i<(int)a;i++)
+using namespace std;
+
+const int dy[] = {0,1,-1,0}, dx[] = {-1,0,0,1};
+
+const int rot[4][6] = { {4,0,2,3,5,1},
+			{3,1,0,5,4,2},
+			{2,1,5,0,4,3},
+			{1,5,2,3,0,4} };
+
+const int die[6][6] = { {0,2,4,1,3,0},
+			{3,0,0,5,0,2},
+			{1,5,0,0,0,4},
+			{4,0,0,0,5,1},
+			{2,0,5,0,0,3},
+			{0,3,1,4,2,0} };
+
+int main(){
+  int n,u,f,y,x;
+  int h[80][80],s[80][80],res[7];
+  int d[6],tmp[6];
+
+  while(scanf("%d",&n),n){
+    rep(i,80)rep(j,80)h[i][j] = s[i][j] = -1;
+
+    while(n--){
+      scanf("%d %d",&u,&f);
+      u--; f--;
+      d[0] = u; d[5] = 5-u;
+      d[1] = f; d[4] = 5-f;
+      d[2] = die[u][f]; d[3] = 5-die[u][f];
+      
+      f = true;
+      y = x = 40;
+      while(f){
+	f = false;
+	for(int i=5;i>=3 && !f;i--){
+	  rep(j,4){
+	    if(d[j+1] == i && h[y][x] > h[y+dy[j]][x+dx[j]]){
+	      y = y+dy[j]; x = x+dx[j];
+	      for(int k=0;k<6;k++)tmp[k] = d[rot[j][k]];
+	      for(int k=0;k<6;k++)d[k] = tmp[k];
+	      f = true;
+	      break;
+	    }
+	  }
+	}
+      } 
+      h[y][x]++; s[y][x] = d[0];
+    }
+    
+    rep(i,7)res[i] = 0;
+    rep(i,80)rep(j,80)res[s[i][j]+1]++;
+    rep(i,6)printf("%d%c",res[i+1],i==5?'\n':' ');
+  }
+}

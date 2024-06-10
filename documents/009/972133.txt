@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main(){
+  vector<int> ls;
+  string order;
+  int n,data;
+  
+  cin>>n;
+  for(int i=0;i<n;i++){
+    cin>>order;
+    if(order=="insert"){
+      cin>>data;
+      ls.push_back(data);
+    }else if(order=="delete"){
+      cin>>data;
+      vector<int>::iterator it=ls.begin();
+      while( it !=ls.end() ){
+	if(*it==data){
+	  ls.erase(it);
+	  break;
+	}
+	++it;
+      }
+    }else if(order=="deleteFirst"){
+      ls.erase( ls.begin() );
+    }else if(order=="deleteLast"){
+      ls.pop_back();
+    }
+  }
+  while(!ls.empty()){
+    cout<<ls.back();
+    ls.pop_back();
+    if(!ls.empty()) cout<<" ";
+    else cout<<endl;
+  }
+  return 0;
+}

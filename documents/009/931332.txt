@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+typedef struct st{int s,t;double d;}st;
+int N,U[100],i,j,k;
+double P[100][4],R;
+st D[110];
+int s(const void *a,const void *b)
+{
+	return ((st*)a)->d-((st*)b)->d>0;
+}
+int pa(int n){return U[n]!=n?pa(U[n]):n;};
+int eq(int a,int b){return pa(a)==pa(b);}
+int main()
+{
+	for(;scanf("%d",&N),N;)
+	{
+		for(i=0;i<N;i++)
+			scanf("%lf%lf%lf%lf",&P[i][0],&P[i][1],&P[i][2],&P[i][3]);
+		for(i=k=0;i<N-1;i++)
+			for(j=i+1;j<N;j++)
+			{
+				double *p=P[i],*q=P[j],d;
+				d=sqrt((p[0]-q[0])*(p[0]-q[0])+(p[1]-q[1])*(p[1]-q[1])+(p[2]-q[2])*(p[2]-q[2]));
+				d=d<p[3]+q[3]?0:d-p[3]-q[3];
+				D[k].s=i;
+				D[k].t=j;
+				D[k].d=d;
+				k++;
+			}
+		qsort(D,k,sizeof(st),s);
+		for(i=0;i<N;i++)U[i]=i;
+		for(i=R=0;i<k;i++)
+		{
+			if(!eq(D[i].s,D[i].t))
+			{
+				U[pa(D[i].s)]=pa(D[i].t);
+				R+=D[i].d;
+			}
+		}
+		printf("%lf\n",R);
+	}
+	return 0;
+}

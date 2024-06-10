@@ -1,0 +1,138 @@
+class Point
+  include Comparable
+  attr_reader :x, :y, :z
+  def initialize(x, y, z)
+    @x, @y, @z = [x, y, z].map(&:to_i)
+  end
+  def ===(other)
+    @x == other.x && @y == other.y && @z == other.z
+  end
+  def <=>(other)
+    return @x <=> other.x unless @x === other.x
+    return @y <=> other.y unless @y === other.y
+    @z <=> other.z
+  end
+  def +(other)
+    Point.new(@x + other.x, @y + other.y, @z + other.z)
+  end
+  def -(other)
+    Point.new(@x - other.x, @y - other.y, @z - other.z)
+  end
+  def rotate(direction)
+    case direction
+      when :x
+        @y, @z = -@z, @y
+      when :y
+        @x, @z = -@z, @x
+      when :z
+        @x, @y = -@y, @x
+    end
+  end
+  def to_a
+    [@x, @y, @z]
+  end
+end
+
+class Edge
+  include Comparable
+  attr_accessor :initial, :terminal
+  def initialize(initial, terminal)
+    @initial, @terminal = initial, terminal
+  end
+  def ===(other)
+    @initial === other.initial && @terminal === other.terminal
+  end
+  def <=>(other)
+    return @initial <=> other.initial unless @initial === other.initial
+    @terminal <=> other.terminal
+  end
+end
+
+class Key
+  attr_reader :edge
+  def initialize(list)
+    l = list.map(&:dup)
+    @edge = Array.new
+    @point = Hash.new
+    make_path(l.shift) until l.empty?
+  end
+  def make_path(list)
+    label = list.shift
+    @point[label] = [0, 0, 0] unless @point[label]
+    x, y, z = @point[label]
+    until list.empty?
+      operator, direction = list.shift.chars
+      px, py, pz = x, y, z
+      case operator
+        when "+"
+          x += 1 if direction == "x"
+          y += 1 if direction == "y"
+          z += 1 if direction == "z"
+          @edge << Edge.new(Point.new(x, y, z), Point.new(px, py, pz))
+        when "-"
+          x -= 1 if direction == "x"
+          y -= 1 if direction == "y"
+          z -= 1 if direction == "z"
+          @edge << Edge.new(Point.new(x, y, z), Point.new(px, py, pz))
+        else
+          @point[operator] = [x, y, z] unless @point[operator]
+          x, y, z = @point[operator]
+      end
+    end
+  end
+  def ===(other)
+    difference = (@edge.first.initial - other.edge.first.initial)
+    return false unless @edge.size == other.edge.size
+    @edge.size.times do |i|
+      return false unless (@edge[i].initial - other.edge[i].initial) === difference
+      return false unless (@edge[i].terminal - other.edge[i].terminal) === difference
+    end
+    return true
+  end
+  def rotate(direction)
+    @edge.each do |e|
+      e.initial.rotate(direction)
+      e.terminal.rotate(direction)
+    end
+  end
+  def sort
+    @edge.each do |e|
+      e.initial, e.terminal = e.terminal, e.initial if e.initial > e.terminal
+    end
+    @edge.sort!
+  end
+end
+
+key = Array.new
+loop do
+  list = Array.new
+  case gets.include?(" ")
+    when true
+      list << $_.split(" ")
+    when false
+      n = $_.to_i
+      list << gets.split(" ") until list.flatten.size == n
+  end
+  break if list.empty?
+
+  key << Key.new(list)
+  if key.size == 2
+    origin = key.shift
+    other = key.shift
+    origin.sort
+
+    ok = false
+    4.times do |i|
+      4.times do |j|
+        4.times do |k|
+          other.sort
+          ok |= (origin === other)
+          other.rotate(:z)
+        end
+        other.rotate(:y)
+      end
+      other.rotate(:x)
+    end
+    puts ok ? "SAME" : "DIFFERENT"
+  end
+end

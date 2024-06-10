@@ -1,0 +1,82 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+void island(vcs& board, int i, int j) {
+	if (i<0 || i>=12 || j<0 || j>=12) return;
+	if (board[i][j]=='0') return;
+	
+	board[i][j]='0';
+	
+	island(board, i + 1, j);
+	island(board, i, j + 1);
+	island(board, i - 1, j);
+	island(board, i, j - 1);
+}
+
+int main() {
+	string s;
+	vcs board(12);
+	
+	while (cin>>s) {
+		board[0] = s;
+		for_(i, 1, 12) {
+			cin>>s;
+			board[i] = s;
+		}
+		
+		int ans = 0;
+		for_(i, 0, 12) for_(j, 0, 12) {
+			if (board[i][j]=='1') {
+				ans++;
+				island(board, i, j);
+			}
+		}
+		cout << ans << endl;
+		
+		getline(cin, s);
+	}
+	
+	return 0;
+}

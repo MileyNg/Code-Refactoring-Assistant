@@ -1,0 +1,110 @@
+#include <iostream>
+#include <sstream>
+
+
+using namespace std;
+/*
+ 入力1までの日数　−　入力2までの日数
+*/
+
+int day_per_month[13] ={0,31, 28, 31, 30, 31, 30 ,31, 31, 30, 31, 30, 31};
+int day_per_month_leap_year[13] ={0,31, 29, 31, 30, 31, 30 ,31, 31, 30, 31, 30, 31};
+
+int main(){
+
+    int y1, m1, d1, y2, m2, d2;
+    while(cin>>y1>>m1>>d1>>y2>>m2>>d2){
+        if(y1<0||m1<0||d1<0||y2<0||m2<0||d2<0){
+            break;
+        }
+        
+        long long int ans1=0, ans2=0;
+        
+        /*--------------------------*/
+        for(int i=1; i<y1; i++){
+            bool flag=false;
+            if(i%4==0){
+                flag = true;
+                if(i%100==0){
+                    flag = false;
+                    if(i%400==0){
+                        flag = true;
+                    }
+                }
+            }
+            
+            if(flag){
+                ans1+=366;
+            }else{
+                ans1+=365;
+            }
+        }
+        
+        bool flag=false;
+        if(y1%4==0){
+            flag = true;
+            if(y1%100==0){
+                flag = false;
+                if(y1%400==0){
+                    flag = true;
+                }
+            }
+        }
+        
+        for(int i=1; i<m1; i++){
+            if(flag){
+                ans1+=day_per_month_leap_year[i];
+            }else{
+                ans1+=day_per_month[i];
+            }
+        }
+        
+        ans1+=d1;
+        
+        /*--------------------------------*/
+        for(int i=1; i<y2; i++){
+            bool flag=false;
+            if(i%4==0){
+                flag = true;
+                if(i%100==0){
+                    flag = false;
+                    if(i%400==0){
+                        flag = true;
+                    }
+                }
+            }
+            
+            if(flag){
+                ans2+=366;
+            }else{
+                ans2+=365;
+            }
+        }
+        
+        flag= false;
+        if(y2%4==0){
+            flag = true;
+            if(y2%100==0){
+                flag = false;
+                if(y2%400==0){
+                    flag = true;
+                }
+            }
+        }
+        
+        for(int i=1; i<m2; i++){
+            if(flag){
+                ans2+=day_per_month_leap_year[i];
+            }else{
+                ans2+=day_per_month[i];
+            }
+        }
+        
+        ans2+=d2;
+        
+        /*--------------------------*/
+        
+        cout<<ans2-ans1<<endl;
+        
+    }
+}

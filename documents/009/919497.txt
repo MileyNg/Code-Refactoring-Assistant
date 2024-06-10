@@ -1,0 +1,29 @@
+#include<iostream>
+#include<stdlib.h>
+#include<math.h>
+using namespace std ;
+
+int main(){
+	
+	int n ;
+	int a,b,c,d ;
+	int y[101]={} ;
+	int min = 1000 , distance[2] ;
+	
+	cin >> n ;
+	cin >> a >> b ;
+	cin >> c >> d ;
+	
+	for( int i=0 ; i<n ;i++ ) y[i] = i+1 ;
+	
+	for( int i=0 ; i<n ; i++ ){
+		distance[0] = abs( (a-1)%y[i] - (b-1)%y[i] ) + abs( (a-1)/y[i] - (b-1)/y[i] ) ;
+		distance[1] = abs( (c-1)%y[i] - (d-1)%y[i] ) + abs( (c-1)/y[i] - (d-1)/y[i] ) ;
+		if( min > distance[0] + distance[1] )
+			min = distance[0] + distance[1] ;
+	}
+	
+	cout << min << endl ;
+	
+return 0;
+}

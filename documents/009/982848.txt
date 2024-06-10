@@ -1,0 +1,26 @@
+#include<stdio.h>
+main(){
+  long a=0;
+  long b=0;
+  long c=0;
+  long d=0;
+  long e=0;
+  long f=0;
+  long A[100000]={0};
+  scanf("%d",&a);
+  for(b=0;b<a;b++){
+    scanf(" %d",&A[b]);
+    f=f+A[b];
+  }
+  for(c=0;c<a;c++){
+    for(d=a-1;d>0;d--){
+      if(A[d]>A[d-1]){
+	e=A[d];
+	A[d]=A[d-1];
+	A[d-1]=e;
+      }
+    }
+  }
+  printf("%d %d %d\n",A[b-1],A[0],f);
+  return 0;
+}

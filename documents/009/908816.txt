@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define fs first
+#define sc second
+#define mp make_pair
+using namespace std;
+typedef pair<pair<int,int>,int> pii;
+
+bool l(const pii &a,const pii &b){
+  int s1 = a.fs.sc*b.fs.fs, s2 = a.fs.fs*b.fs.sc;
+  if(s1==s2)return a.sc<b.sc;
+  if(a.fs.fs==0)return false;
+  if(b.fs.fs==0)return true;
+  return s1<s2;
+}
+
+int main(){
+  int h,w;
+  string f[999];
+  cin.tie(0);
+  std::ios::sync_with_stdio(0);
+  cin >> h >> w;
+
+  vector<pii> v;
+  rep(i,h){
+    cin >> f[i];
+    rep(j,w){
+      if( (i==0&&f[i][j]=='#') || (i!=0&&f[i][j]!=f[i-1][j]) ){
+	v.push_back(mp(mp(j,h-i),-1));
+	v.push_back(mp(mp(j+1,h-i),1));
+      }
+      if( (j==w-1&&f[i][j]=='#') || (j!=w-1&&f[i][j]!=f[i][j+1])){
+	v.push_back(mp(mp(j+1,h-i),-1));
+	v.push_back(mp(mp(j+1,h-i-1),1));
+      }
+    }
+  }
+
+  int res = 0, tmp = 0;
+  sort(v.begin(),v.end(),l);
+  rep(i,v.size()){
+    tmp += v[i].sc;
+    res = max(res,tmp);
+  }
+  cout << (res+3)/2 << endl;
+}

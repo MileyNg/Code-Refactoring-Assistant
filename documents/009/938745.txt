@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <queue>
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+#include <string.h>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+char s[505][15];
+struct edge{
+    int v,next;
+}e[10000];
+int head[30];
+int en;
+void add(int u,int v)
+{
+    e[en].v=v;
+    e[en].next=head[u];
+    head[u]=en++;
+}
+bool vis[30];
+bool dfs(int u)
+{
+    vis[u]=true;
+    for(int i=head[u];i!=-1;i=e[i].next)
+    {
+        int v = e[i].v;
+        if(vis[v])return true;
+        if(dfs(v))return true;
+    }
+    vis[u]=false;
+    return false;
+}
+bool has[30][30];
+int main()
+{
+    //freopen("a.txt","r",stdin);
+    int n;
+    while(~scanf("%d",&n)&&n)
+    {
+        if(n==1)
+        {
+            char ss[15];
+            scanf("%s",ss);
+            printf("yes\n");
+            continue;
+        }
+        int len=0;
+        memset(s,0,sizeof(s));
+        memset(head,-1,sizeof(head));
+        en=0;
+        for(int i=0;i<n;++i){
+            scanf("%s",s[i]);
+            len=max(len,(int)strlen(s[i]));
+        }
+        int same[2][505];
+        bool flag = true;
+        memset(has,false,sizeof(has));
+        memset(same,0,sizeof(same));
+        for(int i=0;i<len;++i)
+        {
+            int q=i&1;
+            int now = 0;
+            for(int j=1;j<n;++j)
+            {
+                if(same[q^1][j-1]==same[q^1][j])
+                {
+                    int a = s[j-1][i] - 'a';
+                    int b = s[j][i] - 'a';
+
+                    if(b<0&&a>=0){
+                        flag=false;
+                        same[q][j]=++now;
+                    }
+                    else if(a<0&&b<0){
+                        same[q][j]=same[q][j-1];
+                    }
+                    else if(a<0&&b>=0)
+                    {
+                        same[q][j]=++now;
+                    }
+                    else if(a==b){
+                        same[q][j]=same[q][j-1];
+                    }
+                    else{
+                        if(!has[a][b])
+                        {
+                            has[a][b]=true;
+                            add(a,b);
+                        }
+                        same[q][j]=++now;
+                    }
+                }
+                else same[q][j]=++now;
+            }
+        }
+        for(int i=0;i<26;++i){
+            memset(vis,false,sizeof(vis));
+            if(dfs(i))
+            {
+                flag=false;
+                break;
+            }
+        }
+        if(!flag)printf("no\n");
+        else printf("yes\n");
+    }
+    return 0;
+}

@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int w;
+	int case_num = 1;
+	
+	while (scanf("%d", &w) * w != 0){
+		int bag[1000] = {0};
+		int i;
+		int t;
+		
+		scanf("%d", &t);
+		while (t-- > 0){
+			int v, wn;
+			scanf("%d,%d", &v, &wn);
+			for (i = w - wn - 1; i >= 0; i--){
+				if ((i == 0 || bag[i] != 0) && bag[i] + v > bag[i + wn]){
+					bag[i + wn] = bag[i] + v;
+				}
+			}
+		}
+		for (i = w - 1; i >= 0; i--){
+			if (bag[i] > 0){
+				printf("Case %d:\n", case_num);
+				printf("%d\n", bag[i]);
+				printf("%d\n", i);
+				break;
+			}
+		}
+		case_num++;
+	}
+	
+	return 0;
+}

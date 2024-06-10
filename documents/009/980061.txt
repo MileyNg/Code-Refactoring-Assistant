@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct KMP{
+	string pat;
+	vi fail;
+	KMP(const string& p):pat(p),fail(p.size()+1){
+		fail[0]=-1;
+		for(int i=0,j=-1;i<pat.size();){
+			while(j>=0 && pat[i]!=pat[j])
+				j=fail[j];
+			i++,j++;
+			fail[i]=j;
+		}
+	}
+	int Match(const string& text){
+		for(int i=0,j=0;i<text.size();){
+			while(j>=0 && text[i]!=pat[j])
+				j=fail[j];
+			i++,j++;
+			if(j==pat.size())
+				return i-j;
+		}
+		return -1;
+	}
+	vi MatchAll(const string& text){
+		vi res;
+		for(int i=0,j=0;i<text.size();){
+			while(j>=0 && text[i]!=pat[j])
+				j=fail[j];
+			i++,j++;
+			if(j==pat.size()){
+				res.push_back(i-j);
+				j=fail[j];
+			}
+		}
+		return res;
+	}
+};
+
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef vector<vvb> vvvb;
+
+int main()
+{
+	for(int n,m;cin>>n>>m && n|m;){
+		vs ps(n);
+		rep(i,n) cin>>ps[i];
+		string t;
+		rep(i,m){
+			string x; cin>>x;
+			t+=x;
+		}
+		vvi ms(n);
+		rep(i,n) ms[i]=KMP(ps[i]).MatchAll(t);
+		
+		m=t.size();
+		vvvb dp(1<<n,vvb(n,vb(m+1)));
+		rep(i,n) rep(j,ms[i].size()) dp[1<<i][i][ms[i][j]+ps[i].size()]=1;
+		rep(i,1<<n) rep(j,n) if(i>>j&1) rep(k,n) if(!(i>>k&1)){
+			rep(l,ms[k].size()) if(dp[i][j][ms[k][l]])
+				dp[i|1<<k][k][ms[k][l]+ps[k].size()]=1;
+		}
+		
+		vi res(m+1);
+		rep(i,n) rep(j,m+1) res[j]|=dp.back()[i][j];
+		cout<<accumulate(all(res),0)<<endl;
+	}
+}

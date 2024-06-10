@@ -1,0 +1,144 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+/*
+	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1244
+
+	Source: ACM International Collegiate Programming Contest,
+	Asia Regional Aizu, Aizu, Japan, 2003-11-02 
+
+	http://web-ext.u-aizu.ac.jp/conference/ACM/
+
+	構文解析
+	
+	<term>::=<atom>|<atom><number>|'('<formula>')'<number>
+	<formula>::=<term>|<term><formula>
+*/
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+map<string, int> table;
+int idx;
+string s;
+bool ok;
+
+#define ASRT if (!ok ) return 0;
+
+int formula(void );
+
+int atom (void ){
+	string atom = "";
+	if (isupper(s[idx] ) || (idx + 1 < s.size() && islower(s[idx+1] ) ) ){
+		if (!islower(s[idx+1] ) ){
+			atom += s[idx++];
+		}else{
+			atom += s[idx++];
+			atom += s[idx++];
+		} // end if			
+	} // end if
+	
+	if (table.count (atom ) ){
+		return table[atom];
+	} // end if
+	ok = false;
+
+	return 0;
+}
+
+int number (void ){
+	int res = 0;
+	while (isdigit (s[idx] ) ){ res = 10*res + (int)(s[idx++] - '0' ); }
+
+	return res;
+}
+
+int term (void ){
+	int res = 0;
+	if (isalpha (s[idx] ) ){
+		res = atom(); ASRT;
+		if (isdigit (s[idx] ) ){
+			int n = number ();
+			res *= n;
+		} // end if
+	}else
+	if (s[idx] == '(' ){
+		idx++;
+		res = formula (); ASRT;
+		idx++; // omit ')';
+	}// end if
+
+	if (isdigit(s[idx] ) ){
+		int n = number();
+		res *= n;
+	} // end if
+
+	return res;
+}
+
+int formula (void ){
+	int res = term(); ASRT;
+	while (idx < s.size() && s[idx] != ')' ){
+		res += term (); ASRT;
+	} // end while
+
+	return res;
+}
+
+int parse (string str ){
+	s = str;
+	idx = 0;
+	ok = true;
+
+	int res = formula();
+
+	return (ok ? res : -1 ); 
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	string str = "";
+	table.clear();
+	while (getline (cin, str ), str != "END_OF_FIRST_PART" ){
+		stringstream ss (str );
+		string atom; int wight;
+		ss >> atom >> wight;
+		table[atom] = wight;
+	} // end while
+
+	while (cin >> str, str != "0" ){
+		int res = parse (str );
+		if (res == -1 ){
+			cout << "UNKNOWN" << endl;
+		}else{
+			cout << res << endl;
+		} // end if
+	} // end while
+
+	return 0;
+}

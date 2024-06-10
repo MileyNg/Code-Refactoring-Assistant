@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<string.h>		/* strcmp関数を使うために使用 */
+#include<ctype.h>		/* tolower関数を使うために使用 */
+
+int main(void)
+{
+	int i,count=0;
+	char number[10]={0};
+	char bun[1000]={0};
+
+	scanf("%s",number);
+	for(i = 0;i < 10;i++)
+	{
+		/* tolower関数:大文字を小文字に変換する関数 */
+		number[i] = tolower(number[i]);
+
+	}
+	while(1)
+	{
+		scanf("%s",bun);
+		if(strcmp(bun,"END_OF_TEXT") == 0)
+		{
+			break;
+		}
+		for(i = 0;i < 1000;i++)
+		{
+			bun[i] = tolower(bun[i]);
+		}
+		if(strcmp(number,bun) == 0)
+		{
+			count++;
+		}
+	}
+	printf("%d\n",count);
+	return 0;
+}

@@ -1,0 +1,214 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+
+typedef int  i32;
+typedef long long i64,ll;
+typedef long double ld;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(int)l;i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//config
+//#define NDEBUG
+//#define INF 1<<30
+//#define EPS 1e-8
+//const ll MOD =100000007;
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T> inline T pmod(T v,T MOD){
+	return (v%MOD+MOD)%MOD;
+}
+#define nextInt(n) scanf("%d",&n)
+#define defInt(n) int n;nextInt(n)
+#define nextLong(n) scanf("%lld",&n)
+#define defLong(n) ll n;nextLong(n)
+#define nextDouble(n) scanf("%lf",&n)
+
+namespace EGraph{
+    typedef double Cost;Cost CINF=1e15;
+    struct Edge{
+        int from,to;Cost cost;
+        Edge(int from,int to,Cost cost)
+        : from(from),to(to),cost(cost) {};
+        bool operator<(Edge r) const{
+            return cost<r.cost;
+        }
+        bool operator>(Edge r) const{
+            return cost>r.cost;
+        }
+    };
+    typedef vector<vector<Edge> >  Graph;
+
+    void  addedge(Graph& g,int a,int b,Cost c){
+            g[a].push_back(Edge(a,b,c));
+//            g[b].push_back(Edge(b,a,c));
+    }
+}
+using namespace EGraph;
+
+namespace ShortestPath{
+    using namespace EGraph;
+
+    struct Task{
+        int prev,pos;Cost cost;
+        Task(int prev,int pos,Cost cost)
+            :prev(prev),pos(pos),cost(cost){};
+        bool operator>(const Task& r) const{
+            return cost>r.cost;
+        }
+    };
+ 
+    //verified by codoforces 144D http://codeforces.com/contest/144/submission/4976825
+    // // 負の辺がない
+    // // O(E*logV)
+    vector<Cost> dijkstra(const Graph& g,const int s,vector<int>& prev){
+        const int V=g.size();
+        vector<Cost> d(V,CINF);d[s]=0;
+        fill(ALL(prev), -2);
+        priority_queue<Task,vector<Task>,greater<Task> > que;
+        que.push(Task(-1,s,0));
+        while(!que.empty()){
+            Task task=que.top();que.pop();
+            //if(prev[task.pos]!=-2)continue;
+            if(d[task.pos]<task.cost)continue;
+            prev[task.pos]=task.prev;
+            EACH(e,g[task.pos]){
+                if(d[e->to]>d[e->from]+e->cost){
+                    d[e->to]=d[e->from]+e->cost;
+                    que.push(Task(e->from,e->to,d[e->to]));
+                }
+            }   
+        }
+        return d;
+    }
+    vector<Cost> dijkstra(const Graph& g,const int s){
+        vector<int> prev(g.size());return dijkstra(g,s,prev);
+    }
+
+}
+
+using namespace ShortestPath;
+
+class Main{
+public:
+
+        int N,M,P,A,B;
+
+        vector<int> ts;
+        Graph g;
+
+        int enc(int x,int bit){
+            return x*(1<<N)+bit;
+        }
+
+        bool input(){
+            //   ifstream cin("in");
+            //  ofstream cout( "out" );
+            nextInt(N);nextInt(M);nextInt(P);nextInt(A);nextInt(B);A--;B--; if(N==0)return false;
+            ts=vector<int> (N);REP(i,N) nextInt(ts[i]);//馬車券と頭数
+            g=Graph(M*(1<<N));
+            REP(i,P){
+                int x,y;double z;nextInt(x);nextInt(y);nextDouble(z);x--;y--;
+                REP(bit,1<<N){
+                    REP(c,N)if((bit>>c)&1){
+                        addedge(g,enc(x,bit),enc(y,bit-(1<<c)),z/ts[c]);
+                        addedge(g,enc(y,bit),enc(x,bit-(1<<c)),z/ts[c]);
+                    }
+                }
+            }
+            return true;
+        }
+
+        void run(){
+            while(input()){
+                //30*2^8
+                Cost mv=CINF;
+                vector<double> res=dijkstra(g,enc(A,(1<<N) -1));
+                REP(bit,1<<N)mv=min(mv,res[enc(B,bit)]);
+
+                if(mv!=CINF) cout << mv<<endl;
+                else  cout << "Impossible"<<endl;
+            }
+        }
+};
+
+int main(){
+    cout <<fixed<<setprecision(15);	
+    ios::sync_with_stdio(false);
+    Main().run();
+    return 0;
+}

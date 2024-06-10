@@ -1,0 +1,92 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+#define min_int(a,b) ((a)<(b)?(a):(b))
+#define INF 100000 //2^31
+
+using namespace std;
+int h, w,V;
+int cost[4000][4000];
+int sign[4];//0A a> 1V 3< 
+int area[40][40];
+int d[4000];
+bool used[4000];
+void solve(int s){
+	rep(i, 0, V)d[i] = INF, used[i] = false;
+	d[s] = 0;
+	while (true){
+		int v = -1;
+		rep(u, 0, V)if (!used[u] && (v == -1 || d[u]<d[v]))v = u;
+
+		if (v == -1)break;
+		used[v] = true;
+		rep(u, 0, V)d[u] = min_int(d[u], d[v] + cost[v][u]);
+	//	rep(i, 0, V)printf("%d/", d[i]); cout << endl;
+	}
+}
+
+int calc_d(int dx,int dy){
+	if (dx > 0)return(1);
+	if (dx < 0)return(3);
+	if (dy>0)return(2);
+	return(0);
+}
+void inset_cost(){
+	rep(i, 0, V)rep(j, 0, V){
+		int dx, dy;//差
+		int before_d = i % 4, after_d = j % 4;//方向 
+		if (i == j)cost[i][i] = 0;
+		else{
+			dx = (j / 4) % w - (i / 4) % w;
+			dy = (j / 4) / w - (i / 4) / w;
+			if (dx*dx + dy*dy == 1){
+				int temp;
+				if (calc_d(dx, dy) != after_d)cost[i][j] = INF;
+				else{
+
+					cost[i][j] = sign[temp = ((after_d - before_d + 4) % 4)];
+					int x = (i / 4) % w, y = (i / 4) / w;
+					if (temp == area[y][x])cost[i][j] = 0;//
+				}
+			}
+			else
+				cost[i][j] = INF;
+
+		}
+
+	}
+
+	//rep(i, 0, V){
+	//	rep(j, 0, V)printf("x=%d,y=%d,ax=%d,ay=%d,bd=%d,ad=%d,%11d, ", (i / 4) % w, (i / 4) / w, (j / 4) % w, (j / 4) / w, i % 4, j % 4, cost[i][j]);
+		//cout << endl;
+	//}
+
+}
+
+int main(void){
+	while (true){
+		cin >> w >> h;
+		if (h == 0)break;
+		rep(i, 0, h)rep(j, 0, w)cin >> area[i][j];
+		rep(i, 0, 4)cin >> sign[i];
+		V = 4 * h*w;
+		
+		inset_cost();
+
+		solve(1);
+		int result = d[V - 1];
+		for (int i = V - 2; i > V - 5; i--)
+			result = min_int(result, d[i]);
+
+		cout << result << endl;
+
+	}
+
+
+
+
+	return(0);
+}

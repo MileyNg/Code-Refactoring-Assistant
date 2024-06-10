@@ -1,0 +1,35 @@
+#include<stdio.h>
+#include<string.h>
+int S,D,M,K[105],W[105][55],P[105][55],F[105],i,j,k,w,p,dp[105][305];
+int main()
+{
+	for(;~scanf("%d%d%d",&S,&D,&M);)
+	{
+		memset(dp,-1,sizeof(dp));
+		dp[0][0]=0;
+		for(i=0;i<S;i++)
+			for(scanf("%d",&K[i]),j=0;j<K[i];j++)
+				scanf("%d%d",&W[i][j],&P[i][j]);
+		for(i=0;i<D;i++)scanf("%d",&F[i]);
+		for(i=0;i<D;i++)
+			for(j=0;j<M;j++)
+				if(dp[i][j]>=0)
+				{
+					for(k=0;k<K[F[i]];k++)
+					{
+						w=dp[i][j];
+						p=j+P[F[i]][k];
+						if(dp[i+1][j]<w)dp[i+1][j]=w;
+						if(p<=M&&dp[i+1][p]<w+W[F[i]][k])dp[i+1][p]=w+W[F[i]][k];
+					}
+				}
+		for(i=w=p=0;i<=M;i++)
+			if(w<dp[D][i])
+			{
+				w=dp[D][i];
+				p=i;
+			}
+		printf("%d %d\n",w,p);
+	}
+	return 0;
+}

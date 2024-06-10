@@ -1,0 +1,91 @@
+#include<stdio.h>
+#define N 100000
+#define NIL -1
+
+typedef struct{
+  int parent;
+  int left;
+  int right;
+  int k;
+}Node;
+
+Node node[N];
+
+int depth(int);
+
+int main(){
+  int i, j, id, sub, m, n, child;
+  scanf("%d", &n);
+  for(i = 0;i < n;i++){
+    node[i].left = node[i].parent = NIL;
+  }
+  for(i = 0;i < n;i++){
+    scanf("%d%d", &id, &m);
+    node[id].k = m;
+    sub = id;
+    for(j = 0;j < m;j++){
+      scanf("%d", &child);
+      if(j == 0){
+        node[sub].left = child;
+        node[node[sub].left].parent = id;
+        sub = child;
+      }
+      else{
+        node[sub].right = child;
+        node[node[sub].right].parent = id;
+        sub = child;
+      }
+    }
+  }
+  for(i = 0;i < n;i++){
+    printf("node %d: parent = %d, depth = %d, ", i, node[i].pa\
+rent, depth(i));
+    if(node[i].left != NIL){
+      if(node[i].parent != NIL){
+        printf("internal node, [");
+      }
+      else{
+        printf("root, [");
+      }
+      for(j = 0;j < node[i].k-1;j++){
+        if(j == 0){
+        if(j == 0){
+          sub = node[i].left;
+          printf("%d, ", node[i].left);
+        }
+        else{
+          printf("%d, ", node[sub].right);
+          sub = node[sub].right;
+        }
+      }
+      if(node[i].k == 1){
+        printf("%d]\n", node[i].left);
+      }
+      else{
+        printf("%d]\n", node[sub].right);
+      }
+    }
+    else{
+      if(node[i].parent == NIL){
+        printf("root, []\n");
+      }
+      else{
+        printf("leaf, []\n");
+      }
+    }
+  }
+  return 0;
+}
+
+int depth(int id){
+  int dep = 0;
+  while(1){
+    if(node[id].parent == NIL){
+      return dep;
+    }
+    else{
+      dep++;
+      id = node[id].parent;
+    }
+  }
+}

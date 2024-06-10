@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    int N, W, H, x, y, S, T;
+
+    while (cin >> N && N) {
+        cin >> W >> H;
+        vector< vector<int> > persimmon(H + 1, vector<int>(W + 1, 0));
+        for (int i=0; i<N; ++i) {
+            cin >> x >> y;
+            persimmon[y][x] = 1;
+        }
+        cin >> S >> T;
+
+        vector< vector<int> > count = persimmon;
+        for (int i=0; i<=H; ++i) {
+            for (int j=1; j<=W; ++j) {
+                count[i][j] += count[i][j - 1];
+            }
+        }
+        for (int j=0; j<=W; ++j) {
+            for (int i=1; i<=H; ++i) {
+                count[i][j] += count[i - 1][j];
+            }
+        }
+
+        int ans = 0;
+        for (int i=1; i<=H; ++i) {
+            for (int j=1; j<=W; ++j) {
+                int x1 = j, y1 = i, x2 = j + S - 1, y2 = i + T - 1;
+                if (W < x2 || H < y2) continue;
+                int c = count[y2][x2] - count[y2][x1 - 1] - count[y1 - 1][x2] + count[y1 - 1][x1 - 1];
+                ans = max(ans, c);
+            }
+        }
+        cout << ans << endl;
+    }
+
+    return 0;
+}

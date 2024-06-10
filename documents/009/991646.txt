@@ -1,0 +1,71 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define ALL(T) T.begin(),T.end()
+
+unsigned nCk(unsigned n, unsigned k);
+
+int main(){
+	string S; cin >> S;
+	map<char, int> chrs;
+
+	for (char c = 'a'; c <= 'z'; c++) { chrs[c] = 0; }
+
+	for (int i = 0; i < S.size(); i++) { chrs[S[i]]++; }
+
+	int odd = 0, even = 0;
+	vector<int> hchrc;
+	for (map<char, int>::iterator it = chrs.begin(); it != chrs.end(); it++) {
+		if (it->second % 2) {
+			odd++;
+		} else {
+			if (it->second) {
+				hchrc.push_back((it->second)/2);
+				even++;
+			}
+		}
+	}
+
+	int res = 0;
+
+	if (odd < 2) {
+		string s;
+		for (map<char, int>::iterator it = chrs.begin(); it != chrs.end(); it++) {
+			if (it->second || !(it->second%2)) {
+				for (int i = 0; i < it->second/2; i++) {
+					s += it->first;
+				}
+			}
+		}
+		sort(ALL(s));
+		set<string> strs;
+		do {
+			strs.insert(s);
+		} while (next_permutation(ALL(s)));
+		res = strs.size();
+	}
+
+	cout << res << endl;
+
+
+	return 0;
+}
+
+unsigned nCk(unsigned n, unsigned k){
+	if (k > n) return 0;
+	if (k * 2 > n) k = n-k;
+	if (k == 0) return 1;
+
+	int res = n;
+	for (int i = 2; i <= k; ++i) {
+		res *= (n-i+1);
+		res /= i;
+	}
+	return res;
+}

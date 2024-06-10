@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+typedef pair<int, int> P;
+
+void solve()
+{
+	int n, m, a;
+	while(cin >> n >> m >> a, n || m || a)
+	{
+		vector< vector<P> > yoko(1001);
+		for(int i = 0; i < m; ++i)
+		{
+			int h, p, q;
+			cin >> h >> p >> q;
+			yoko[h].push_back(P(p, q));
+		}
+		int current = a;
+		for(int i = 1000; i >= 1; --i)
+		{
+			for(int j = 0; j < yoko[i].size(); ++j)
+			{
+				if(yoko[i][j].first == current)
+				{
+					current = yoko[i][j].second;
+					break;
+				}
+				else if(yoko[i][j].second == current)
+				{
+					current = yoko[i][j].first;
+					break;
+				}
+			}
+		}
+		cout << current << endl;
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

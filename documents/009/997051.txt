@@ -1,0 +1,63 @@
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int num[108];
+
+void decode(int l, int k[300], char s[108], char alph[56])
+{	
+	for(int i = 0; i < l; i++){
+		if(s[i] >= 'a' && s[i] <= 'z'){
+			num[i] = s[i] - 'a';
+		}
+		else{
+			num[i] = s[i] - 'A' + 26;
+		}
+		if(num[i] - k[i] < 0){
+			num[i] += 52 - k[i];
+		}
+		else{
+			num[i] -= k[i];
+		}
+		cout << alph[num[i]];
+	}
+	puts("");
+}
+
+
+int main()
+{
+	int n, m, l;
+	int k[300];
+	char s[108];
+	char alph[56];
+	
+	for(int i = 0; i < 26; i++){
+		alph[i] = 'a' + i;
+	}
+	for(int i = 0; i < 26; i++){
+		alph[i + 26] = 'A' + i;
+	}
+
+	
+	while(scanf("%d", &n) != EOF){
+		if(n == 0) break;
+		for(int i = 0; i < n; i++){
+			cin >> k[i];
+		}
+		cin >> s;
+		
+		m = n;
+		l = strlen(s);
+		while(l > m){
+			for(int i = 1; i <= n; i++){
+				k[m + i - 1] = k[i - 1];
+			}
+			m += n;
+		}
+		decode(l, k, s, alph);
+	}
+	return 0;
+}	

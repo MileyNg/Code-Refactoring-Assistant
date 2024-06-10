@@ -1,0 +1,84 @@
+### subroutines
+
+def oprod(x1, y1, x2, y2)
+  x1 * y2 - x2 * y1
+end
+
+def p_in_tr?(x1, y1, x2, y2, x3, y3, xp, yp)
+  op12 = oprod(x2 - x1, y2 - y1, xp - x1, yp - y1)
+  op23 = oprod(x3 - x2, y3 - y2, xp - x2, yp - y2)
+  op31 = oprod(x1 - x3, y1 - y3, xp - x3, yp - y3)
+
+  (op12 >= 0 && op23 >= 0 && op31 >= 0) ||
+    (op12 <= 0 && op23 <= 0 && op31 <= 0)
+end
+
+def cross_c_l(x1, y1, x2, y2, xc, yc, rr)
+  vx = x2 - x1
+  vy = y2 - y1
+
+  # ([t*vx+x1,t*vy+y1]-[xp,yp]) * [vx,vp] = 0
+  # [t*vx+x1-xp,t*vy+y1-yp] * [vx,vp] = 0
+  # vx*(t*vx+x1-xp)+vy(t*vy+y1-yp) = 0
+  # t*vx^2+vx(x1-xp)+t*vy^2+vy(y1-yp) = 0
+  # t*(vx^2+vy^2) = vx*(xp-x1)+vy*(yp-y1)
+  # t = (vx*(xp-x1)+vy*(yp-y1)) / (vx^2+vy^2)
+
+  t = (vx * (xc - x1) + vy * (yc - y1)).to_f / (vx ** 2 + vy ** 2)
+  x = t * vx + x1
+  y = t * vy + y1
+  dd = (x - xc) ** 2 + (y - yc) ** 2
+
+  tf = (t > 0 && t < 1 &&  dd < rr)
+  #p ["cross_c_l", x1, y1, x2, y2, xc, yc, rr, t, x, y, dd, tf]
+
+  tf
+end
+
+### main
+
+while true
+  x1, y1 = gets.strip.split(' ').map{|s| s.to_i}
+  break if x1 == 0 && y1 == 0
+
+  x2, y2 = gets.strip.split(' ').map{|s| s.to_i}
+  x3, y3 = gets.strip.split(' ').map{|s| s.to_i}
+
+  xc, yc = gets.strip.split(' ').map{|s| s.to_i}
+  r = gets.strip.to_i
+  #p [[x1, y1], [x2, y2], [x3, y3], [xc, yc], r]
+
+  rr = r ** 2
+  dd1 = (x1 - xc) ** 2 + (y1 - yc) ** 2
+  dd2 = (x2 - xc) ** 2 + (y2 - yc) ** 2
+  dd3 = (x3 - xc) ** 2 + (y3 - yc) ** 2
+  #p "dd1=#{dd1}, dd2=#{dd2}, dd3=#{dd3}, rr=#{rr}"
+
+  rel = ''
+
+  if dd1 <= rr && dd2 <= rr && dd3 <= rr
+    #rel = 'b: tr in cir'
+    rel = 'b'
+  elsif dd1 > rr && dd2 > rr && dd3 > rr
+    cl12 = cross_c_l(x1, y1, x2, y2, xc, yc, rr)
+    cl23 = cross_c_l(x2, y2, x3, y3, xc, yc, rr)
+    cl31 = cross_c_l(x3, y3, x1, y1, xc, yc, rr)
+    p_tr = p_in_tr?(x1, y1, x2, y2, x3, y3, xc, yc)
+    #p "cl12=#{cl12}, cl23=#{cl23}, cl31=#{cl31}, p_tr=#{p_tr}"
+    if cl12 || cl23 || cl31
+      #rel = 'c: intersection'
+      rel = 'c'
+    elsif p_tr
+      #rel = 'a: cir in tr'
+      rel = 'a'
+    else
+      #rel = 'd: no intersection'
+      rel = 'd'
+    end
+  else
+    #rel = 'c: intersection'
+    rel = 'c'
+  end
+
+  puts rel
+end

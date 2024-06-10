@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int w, n;
+	int a, b, c;
+	int amida[100];
+	int kae;
+	
+	scanf("%d", &w);
+	scanf("%d", &n);
+	
+	for (a = 0; a < w; a++) {
+		amida[a] = a + 1;
+	}
+	for (a = 0; a < n; a++) {
+		scanf("%d,%d", &b, &c);
+		kae = amida[b-1];
+		amida[b-1] = amida[c-1];
+		amida[c-1] = kae;
+	}
+	for (a = 0; a < w; a++) {
+		printf("%d\n", amida[a]);
+	}
+	
+	return (0);
+}	

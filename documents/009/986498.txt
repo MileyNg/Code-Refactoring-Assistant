@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+int cost[21][21];
+int n,m;
+int start,goal,tono,hashira;
+
+int dijkstra_go_village[21];
+int dijkstra_go_home[21];
+
+
+
+
+int main(){
+    for(int i=0; i<21; i++){
+        for(int j=0; j<21; j++){
+            cost[i][j]=999999999;
+        }
+    }
+    
+    while(cin>>n){
+        cin>>m;
+        for(int i=0; i<m; i++){
+            string text;
+            cin>>text;
+            
+            for(int i=0; i<text.size(); i++){
+                if(text[i] == ',')text[i] = ' ';
+            }
+            
+            stringstream ss;
+            ss<<text;
+            
+            int a,b,c,d;
+            ss>>a>>b>>c>>d;
+            
+            cost[a][b]=c;
+            cost[b][a]=d;
+            
+            
+        }
+        
+        string text2;
+        cin>>text2;
+        
+        for(int i=0; i<text2.size(); i++){
+            if(text2[i] == ',')text2[i] = ' ';
+        }
+        
+        stringstream ss;
+        ss<<text2;
+        
+        ss>>start>>goal>>tono>>hashira;
+        
+        for(int i=0; i<21; i++){
+            dijkstra_go_home[i]=999999;
+            dijkstra_go_village[i]=999999;
+        }
+        
+        bool flag1[21] = {0};
+        dijkstra_go_village[start]=0;
+        
+        int now_place;
+        while(1){
+            bool break_flag=true;;
+            int min_cost = 9999999;
+            for(int i=1; i<=n; i++){
+                if(flag1[i]==0&&min_cost>dijkstra_go_village[i]){
+                    min_cost=dijkstra_go_village[i];
+                    now_place=i;
+                    
+                }
+            }
+            
+            flag1[now_place]=1;
+            
+            for(int i=1; i<=n; i++){
+                if(flag1[i]==0){
+                    dijkstra_go_village[i]=min(dijkstra_go_village[i], dijkstra_go_village[now_place]+cost[now_place][i]);
+                    break_flag=false;
+                }
+            }
+            
+            if(break_flag)break;
+        }
+        
+        /////////
+        
+        bool flag2[21] = {0};
+        dijkstra_go_home[goal]=0;
+        
+        while(1){
+            bool break_flag=true;;
+            int min_cost = 9999999;
+            for(int i=1; i<=n; i++){
+                if(flag2[i]==0&&min_cost>dijkstra_go_home[i]){
+                    min_cost=dijkstra_go_home[i];
+                    now_place=i;
+                    
+                }
+            }
+            
+            flag2[now_place]=1;
+            
+            for(int i=1; i<=n; i++){
+                if(flag2[i]==0){
+                    dijkstra_go_home[i]=min(dijkstra_go_home[i], dijkstra_go_home[now_place]+cost[now_place][i]);
+                    break_flag=false;
+                }
+            }
+            
+            if(break_flag)break;
+        }
+        
+        /*
+        for(int i=1; i<=n; i++){
+            cout<<dijkstra_go_village[i]<<endl;
+        }
+        */
+        
+        //cout<<dijkstra_go_village[goal]<<endl;
+        //cout<<dijkstra_go_home[start]<<endl;
+        cout<<tono-hashira-dijkstra_go_village[goal]-dijkstra_go_home[start]<<endl;
+    }
+}

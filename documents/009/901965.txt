@@ -1,0 +1,27 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int z;
+    int memo[1112];
+
+    for (int i = 0; i < 1112; ++i)
+        memo[i] = i * i * i;
+
+    while (cin >> z, z) {
+        int max_xy = 0;
+        int z3 = memo[z];
+
+        for (int x = 1; memo[x] <= z3; ++x) {
+            for (int y = 1; memo[y] <= z3 - memo[x]; ++y)
+                max_xy = max(max_xy, memo[x] + memo[y]);
+        }
+
+        cout << z3 - max_xy << endl;
+    }
+
+    return 0;
+}

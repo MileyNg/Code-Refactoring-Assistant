@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+int a[4][13];
+int cnt=0;
+int i,j;
+int main(){
+  for(i=0; i<4;i++){
+    for(j=0; j<13;j++){
+      a[i][j]=0;
+    }
+  }
+  scanf("%d" ,&cnt);
+
+  for(i=0; i<cnt; i++){
+    char c;
+    int k;
+    scanf(" %c %d" ,&c,&k);
+    switch(c){
+    case 'S':
+      a[0][k-1]=1;
+      break;
+    case 'H':
+      a[1][k-1]=1;
+      break;
+    case 'C':
+      a[2][k-1]=1;
+      break;
+    case'D':
+      a[3][k-1]=1;
+      break;
+    }
+  }
+  for(i=0;i<4;i++){
+    for(j=0;j<13;j++){
+      if(a[i][j]==0){
+	int jj=j+1;
+	switch(i){
+	case 0:
+	printf("S %d" ,jj);
+	break;
+	case 1:
+	  printf("H %d",jj);
+	break;
+	case 2:
+	  printf("C %d" ,jj);
+	  break;
+	case 3:
+	  printf ("D %d" ,jj);
+	  break;
+	}
+	printf("\n");
+      }
+    }
+  }
+  return 0;
+}

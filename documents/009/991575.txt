@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <string>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++)
+#define ascent(i, a, b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+
+//#define pair<int, int> ii
+
+using namespace std;
+
+int dp[200][200];
+
+int main() {
+	int a, b;
+	cin >> a >> b;
+
+	int n;
+	cin >> n;
+
+	vector<pair<int, int> > acc;
+	loop(n) {
+		int x, y;
+		cin >> x >> y;
+		acc.pb(make_pair(x, y));
+	}
+
+	memset(dp, 0, sizeof(dp));
+	dp[1][1] = 1;
+
+	ascent(x, 1, a+1) {
+		ascent(y, 1, b+1) {
+			bool flg = true;
+			ascent(i, 0, n) {
+				if(x == acc[i].first && y == acc[i].second) {
+					dp[x][y] = 0;
+					flg = !flg;
+
+					break;
+				}
+			}
+
+			if(flg) {
+				if(x == 1 && y == 1) { continue; }
+				else if(x == 1) {
+					dp[x][y] = dp[x][y-1];
+				}
+				else if(y == 1) {
+					dp[x][y] = dp[x-1][y];
+				}
+				else {
+					dp[x][y] = dp[x-1][y] + dp[x][y-1];
+				}
+			}
+		}
+	}
+
+	cout << dp[a][b] << endl;
+	
+	return 0;
+}

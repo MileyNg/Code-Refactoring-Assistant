@@ -1,0 +1,105 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int INF = 1e9 + 7;
+const int MAX_S = 105;
+const int MAX_C = 105;
+const int MAX_T = 105;
+const int MAX_D = 105;
+const int MAX_N = 105;
+
+// 体力 -> 消費カロリー
+int dp1[MAX_T][MAX_T][MAX_S];
+// 消費カロリー -> 幸福度
+int dp2[MAX_C];
+// 体力 -> 幸福度
+int dp3[MAX_D][MAX_S];
+
+int S, T, U, N, O, D; 
+int e[MAX_T], c[MAX_T], h[MAX_N], a[MAX_N];
+
+void make_dp1(){
+  memset(dp1, -1, sizeof(dp1));
+  dp1[0][0][0] = 0;
+  REP(i, T){
+    int E = e[i], C = c[i];
+    REP(j, T){
+      REP(k, S + 1){
+        if(dp1[i][j][k] < 0) continue;
+        //トレーニングしない
+        dp1[i + 1][j][k] = max(dp1[i + 1][j][k], dp1[i][j][k]);
+        //する
+        if(k + E < MAX_S && j < U)
+          dp1[i + 1][j + 1][k + E] = max(dp1[i + 1][j + 1][k + E], dp1[i][j][k] + C);
+      }
+    }
+  }
+}
+
+void make_dp2(){
+  REP(i, N)
+    FOR(j, a[i], MAX_C) dp2[j] = max(dp2[j], dp2[j - a[i]] + h[i]);
+}
+
+void make_dp3(){
+  memset(dp3, -1, sizeof(dp3));
+  dp3[0][0] = 0;
+  REP(i, D){
+    REP(j, S + 1){
+      if(dp3[i][j] < 0) continue;
+      //体力kを費やしてトレーニングをする
+      for(int k = 0; j + k <= S; ++k){
+        int kcal = dp1[T][U][k];
+        if(kcal == -1) continue;
+        dp3[i + 1][max(0, j + k - O)] = max(dp3[i + 1][max(0, j + k - O)], dp3[i][j] + dp2[kcal]);
+      }
+    }
+  }
+}
+
+bool is_valid(){
+  REP(i, D + 1){
+    int ok = false;
+    REP(j, S + 1) if(dp3[i][j] > -1) ok = true;
+    if(!ok) return false;
+  }
+  return true;
+}
+
+int main() {
+  scanf("%d %d %d %d %d %d", &S, &T, &U, &N, &O, &D);
+  REP(i, T) scanf("%d %d", &e[i], &c[i]);
+  REP(i, N) scanf("%d %d", &h[i], &a[i]);
+  make_dp1();
+  make_dp2();
+  make_dp3();
+  int ans = -1;
+  if(is_valid())
+    REP(i, MAX_S)
+      ans = max(ans, dp3[D][i]);
+  printf("%d\n", ans);
+
+  return 0;
+}

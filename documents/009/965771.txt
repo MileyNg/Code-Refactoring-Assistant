@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+#define SIEVE_SIZE 32768
+
+int sieve_idx;
+char sieve[SIEVE_SIZE];
+
+void reset_prime_generator() {
+    int i;
+    sieve_idx = 2;
+    sieve[0] = sieve[1] = 0;
+    for (i = 2; i < SIEVE_SIZE; i++) {
+        sieve[i] = 1;
+    }
+}
+
+int next_prime() {
+    int i, j, dj;
+    if (sieve_idx < 3) {
+        return sieve_idx++;
+    }
+    for (i = sieve_idx; i < SIEVE_SIZE; i+=2) {
+        if (sieve[i] == 1) {
+            sieve_idx = i + 2;
+            for (dj = i*2, j = i+dj; j < SIEVE_SIZE; j += dj) {
+                sieve[j] = 0;
+            }
+            return i;
+        }
+    }
+    return 0;
+}
+
+int main() {
+    int n, i, p;
+
+    scanf("%d", &n);
+
+    reset_prime_generator();
+
+    printf("%d:", n);
+    while (n > 1) {
+        p = next_prime();
+        if (!p) {
+            printf(" %d", n);
+            break;
+        }
+        while (n % p == 0) {
+            printf(" %d", p);
+            n = n / p;
+        }
+    }
+    printf("\n");
+
+    return 0;
+}

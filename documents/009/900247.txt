@@ -1,0 +1,11 @@
+if __FILE__ == $0
+  line = gets
+  words = line.split
+  wordCount = Hash.new(0)
+  words.each do |w|
+    wordCount[w] += 1
+  end
+  hinsyutu = wordCount.sort_by{|key, value| -value}[0][0]
+  most_length = words.max_by{|w| w.length}
+  puts "#{ hinsyutu } #{ most_length }"
+end

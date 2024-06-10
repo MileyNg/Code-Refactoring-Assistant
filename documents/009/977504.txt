@@ -1,0 +1,41 @@
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  int n, p, q, s, t;
+  vector<int> v;
+  string buf;
+  while (1) {
+    getline(cin, buf);
+    istringstream iss(buf);
+    iss >> p;
+    if (!p) break;
+    v.clear();
+    v.push_back(p);
+    while (iss >> p) {
+      v.push_back(p);
+    }
+    s = t = 0;
+    for (int i=0; i<(int)v.size(); i++) {
+      if (v[i] < 10) {
+        s += v[i];
+        if (v[i] == 1) {
+          ++t;
+        }
+      } else {
+        s += 10;
+      }
+    }
+    if (s > 21) {
+      s = 0;
+    } else {
+      s += 10 * min(t, (21-s)/10);
+    }
+    cout << s << endl;
+  }
+  return 0;
+}

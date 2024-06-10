@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int cup[3];
+
+void swap( int* a, int* b )
+{
+	char buf;
+	buf = *a;
+	*a = *b;
+	*b = buf;
+}
+
+int main(void)
+{
+	char a;
+	char b;
+	int i;
+	
+	cup[0] = 1;
+	
+	while( scanf("%c,%c\n", &a, &b) != EOF )
+	{
+		swap( &cup[a - 'A'], &cup[b - 'A'] );
+	}
+	
+	for( i = 0; i < 3; i++ )
+	{
+		if( cup[i] != 0 )
+		{
+			printf( "%c\n", 'A' + i );
+		}
+	}
+	
+	return (0);
+}

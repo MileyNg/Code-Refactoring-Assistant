@@ -1,0 +1,45 @@
+#include <iostream>
+#include <memory>
+#include <vector>
+
+using namespace std;
+
+vector<int> d;
+
+bool bin(int l,int r,int key){
+    int mid;
+    while(l < r){
+        mid = (l + r)/2;
+        if(d[mid]==key){
+            return mid;
+        }else if(key < d[mid]){
+            r = mid;
+        }else{
+            l = mid + 1;
+        }
+    }
+    return false;
+}
+
+int main(){          
+
+    int n,itmp;
+    cin>>n;
+
+    for(int i=0;i<n;++i){
+        cin>>itmp;
+        d.push_back(itmp);
+    }
+
+    int q, count=0;
+    cin>>q;
+    for(int i=0;i<q;i++){
+        cin>>itmp;
+        if(bin(0,n-1,itmp)){
+//          cout<<" item:"<<itmp<<endl;
+            count++;
+        }
+    }
+    cout<<count<<endl;
+    return 0;
+}

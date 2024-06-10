@@ -1,0 +1,63 @@
+#include <vector>
+#include <iostream>
+#include <map>
+#include <algorithm>
+#include <stack>
+
+using namespace std;
+
+int h, w;
+string board[20];
+
+const int dx[] = {0, 1, 1, 1, 0, -1, -1, -1};
+const int dy[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+
+void Solve()
+{
+    map<string, int> memo;
+    string res;
+
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j) {
+            for (int d = 0; d < 8; ++d) {
+                string s;
+                int nx = j, ny = i;
+
+                do {
+
+                    s += board[ny][nx];
+                    ++memo[s];
+
+                    nx = (nx + dx[d] + w) % w;
+                    ny = (ny + dy[d] + h) % h;
+
+                    if (memo[s] >= 2) {
+                        if (s.size() > res.size() ||
+                            (s.size() == res.size() && (s < res)))
+                            res = s;
+                    }
+
+                } while (nx != j || ny != i);
+
+            }
+        }
+    }
+
+    if (res.size() <= 1)
+        cout << "0\n";
+    else
+        cout << res << endl;
+}
+
+int main()
+{
+    while (cin >> h >> w, h || w) {
+
+        for (int i = 0; i < h; ++i)
+            cin >> board[i];
+
+        Solve();
+    }
+
+    return 0;
+}

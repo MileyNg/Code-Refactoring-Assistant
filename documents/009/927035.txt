@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+bool check(const char& a, const char& b){
+  if(a=='A') return (b=='B' || b=='D');
+  if(a=='B') return (b=='A' || b=='C' || b=='E');
+  if(a=='C') return (b=='B' || b=='F');
+  if(a=='D') return (b=='A' || b=='E' || b=='G');
+  if(a=='E') return (b=='B' || b=='D' || b=='F' || b=='H');
+  if(a=='F') return (b=='C' || b=='E' || b=='I');
+  if(a=='G') return (b=='D' || b=='H');
+  if(a=='H') return (b=='E' || b=='G' || b=='I');
+  if(a=='I') return (b=='F' || b=='H');
+}
+
+bool solve(const string& s){
+  for(int i=1; i<s.size(); ++i){
+    if(!check(s[i-1], s[i])) return false;
+  }
+  return true;
+}
+
+int main(){
+  string s;
+  while(cin >> s){
+    if(solve(s)) cout << s << endl;
+ }
+  return 0;
+}

@@ -1,0 +1,125 @@
+#include <iostream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+typedef double D; 
+#define EPS (1e-6)
+#define equal(a,b) (fabs((a)-(b)) < EPS)
+
+D add(D a,D b){
+  if(abs(a + b) < EPS * (abs(a) + abs(b))){
+    return 0;
+  }
+  return a + b;
+}
+
+struct Point{
+  D x,y;
+
+  Point (D x = 0, D y = 0) : x(x),y(y) {}
+  
+  Point operator + (Point p) {
+    return Point(add(x,p.x) , add(y,p.y));
+  }
+  Point operator - (Point p) {
+    return Point(add(x,p.x) ,add(y,-p.y));
+  }
+  Point operator * (D a) {
+    return Point( a*x , a*y );
+  }
+  
+  D norm() {
+    return x*x+y*y;
+  }
+
+  D dot(Point p){
+    return add(x*p.x , y*p.y);
+  }
+
+  D det(Point p){
+    return add(x*p.y , -y*p.x);
+  }  
+};
+
+int ccw(Point p0,Point p1,Point p2){
+  Point a = p1 - p0;
+  Point b = p2 - p0;
+
+  if(a.det(b) > EPS) return 1;
+  if(a.det(b) < -EPS) return -1;
+  if(a.dot(b) < -EPS) return 2;
+  if(a.norm() < b.norm()) return -2;
+  return 0;
+}
+
+D S(Point p1,Point p2,Point p3){
+  D a = sqrt(pow(p1.x-p2.x,2) + pow(p1.y-p2.y,2));
+  D b = sqrt(pow(p1.x-p3.x,2) + pow(p1.y-p3.y,2));
+  D c = sqrt(pow(p3.x-p2.x,2) + pow(p3.y-p2.y,2));
+  D s = (a + b + c) / 2;
+
+  return sqrt(s*(s - a)*(s - b)*(s - c));
+}
+
+bool check(Point p1,Point p2,Point p3,Point p4){
+  return (ccw(p1,p2,p3)*ccw(p1,p2,p4) < 0 &&
+	  ccw(p3,p4,p1)*ccw(p3,p4,p2) < 0);
+}
+
+bool eq(D S1,D S2){
+  return equal(S1,S2);
+}
+
+int main(){
+  int n;
+  Point P[3],T[2];
+
+  cin >> n;
+  while(n--){
+    scanf("%lf %lf" ,&P[0].x ,&P[0].y);
+    scanf("%lf %lf" ,&P[1].x ,&P[1].y);
+    scanf("%lf %lf" ,&P[2].x ,&P[2].y);
+    scanf("%lf %lf" ,&T[0].x ,&T[0].y);
+    scanf("%lf %lf" ,&T[1].x ,&T[1].y);
+
+    bool ok = false;
+    D S1 = S(P[0],P[1],P[2]);
+    D S2 = S(P[0],P[1],T[0])+S(P[0],P[2],T[0])+S(P[1],P[2],T[0]);
+    D S3 = S(P[0],P[1],T[1])+S(P[0],P[2],T[1])+S(P[1],P[2],T[1]);
+
+    if(eq(S1,S2) && eq(S1,S3)){
+      puts("NG");
+      continue;
+    }
+
+    if(!eq(S1,S2) && !eq(S1,S3)){
+      puts("NG");
+      continue;
+    }
+
+    if(!eq(S1,S3)){
+      puts("NG");
+      continue;
+    }
+
+    if(check(P[0],P[1],T[0],T[1])){
+      ok = true;
+    }    
+    if(check(P[0],P[2],T[0],T[1])){
+      ok = true;
+    }  
+    if(check(P[1],P[2],T[0],T[1])){
+      ok = true;
+    }  
+
+    if(ok){
+      puts("OK");
+    }else{
+      puts("NG");
+    }
+  }
+
+  return 0;
+}

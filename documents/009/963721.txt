@@ -1,0 +1,86 @@
+#include<stdio.h>
+
+typedef unsigned long long ULONG;
+
+#define FALSE 0
+#define TRUE 1
+#define NUM 0 //社員番号
+#define APIECE 1 //販売単価
+#define QUANT 2 //売上数量
+#define RESULT 3 //総売り上げ
+#define BORDER 1000000
+
+void initialize(ULONG array[][4], int n); //配列を初期化する関数
+void calculation(ULONG array[][4], int n); //総売り上げを計算する関数
+void judge_and_output(ULONG array[][4], int n);
+
+main()
+{
+	int i = 0, n = 0; //i:制御変数,n:データセット数
+	while(scanf("%d", &n), (n != 0))
+	{
+		ULONG menber[n][4]; //入力代入用の配列
+		initialize(menber, n); //配列を初期化
+		for(i = 0; i < n; i++)
+		{
+			scanf("%d %d %d", &menber[i][NUM], &menber[i][APIECE], &menber[i][QUANT]);
+		}
+		calculation(menber, n);
+		judge_and_output(menber, n);
+	}
+	return 0;
+}
+
+void initialize(ULONG array[][4], int n) //配列を初期化する関数
+{
+	int i = 0, j = 0;
+	for(; i < n; i++)
+	{
+		for(; j < 4; j++)
+		{
+			array[i][j] = 0;
+		}
+	}
+}
+
+void calculation(ULONG array[][4], int n) //総売り上げを計算する関数
+{
+	int i = 0, j = 0;
+	for(; i < n; i++)
+	{
+		array[i][RESULT] = array[i][APIECE] * array[i][QUANT];
+		//printf("array[%d][RESULT] = %d\n", i, array[i][RESULT]);
+	}
+	for(i = 0; i < n; i++)
+	{
+		for(j = i + 1; j < n; j++)
+		{
+			if(array[i][NUM] == array[j][NUM])
+			{
+				array[i][RESULT] += array[j][RESULT];
+			}
+		}
+	}
+}
+
+void judge_and_output(ULONG array[][4], int n)
+{
+	int i = 0, flag = 0;
+	for(; i < n; i++)
+	{
+		if(array[i][RESULT] >= BORDER)
+		{
+			printf("%d\n", array[i][NUM]);
+			flag = TRUE;
+		}
+	}
+	if(flag == TRUE)
+	{
+		return;
+	}
+	else
+	{
+		puts("NA");
+		return;
+	}
+}

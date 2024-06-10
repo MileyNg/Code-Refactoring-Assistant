@@ -1,0 +1,91 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+int par[100010],rnk[100010],dif[100010];
+
+void init(int n){
+	rep(i,n){
+		par[i] = i; rnk[i] = 0; dif[i] = 0;
+	}
+}
+
+pi find(int x){
+	if(par[x] == x) return mp(x, 0);
+	else{
+		pi res = find(par[x]);
+		par[x] = res.fir;
+		dif[x] += res.sec;
+		return mp(par[x], dif[x]);
+	}
+}
+
+void unite(int x,int y,int d){
+	pi res0 = find(x), res1 = find(y);
+	x = res0.fir, y = res1.fir;
+	if(x == y) return;
+	if(rnk[x] < rnk[y]){
+		par[x] = y;
+		dif[x] = d - res0.sec + res1.sec;
+	}
+	else{
+		par[y] = x;
+		dif[y] = -d + res0.sec - res1.sec;
+		if(rnk[x] == rnk[y]) rnk[x]++;
+	}
+}
+
+pi query(int x,int y){
+	pi res0 = find(x), res1 = find(y);
+	x = res0.fir, y = res1.fir;
+	if(x != y) return mp(0, 0);
+	else return mp(1, res0.sec - res1.sec);
+}
+
+int N,M;
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	while(cin>>N>>M && N){
+		init(N);
+		rep(i,M){
+			char c;
+			cin>>c;
+			if(c=='!'){
+				int a,b,w;
+				cin>>a>>b>>w,a--,b--;
+				unite(a,b,w);
+			}else{
+				int a,b;
+				cin>>a>>b,a--,b--;
+				pi p = query(a,b);
+				if(p.fir == 0)cout<<"UNKNOWN"<<endl;
+				else cout<<p.sec<<endl;
+			}
+		}
+	}
+}

@@ -1,0 +1,81 @@
+#include <cstdio>
+#include <queue>
+#define MAX 1000
+#define INF 100000
+
+using namespace std;
+
+struct Node {
+    int x, y;
+};
+const int dir[4][2] = {
+    {1, 0}, {-1, 0}, {0, 1}, {0, -1}
+};
+Node start;
+char map[MAX + 5][MAX + 5];
+int dis[MAX + 5][MAX + 5];
+int h, w, n;
+
+int BFS(char cheap);
+
+int main(void)
+{
+    int step = 0;
+    scanf("%d%d%d", &h, &w, &n);
+    for (int i = 0; i < h; ++i)
+        scanf("%s", map[i]);
+    
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            if (map[i][j] == 'S') {
+                start.x = i;
+                start.y = j;
+                break;
+            }
+
+    for (int i = 1; i <= n; ++i) {
+        step += BFS('0' + i);
+    }
+
+    printf("%d\n", step);
+    return 0;
+}
+
+int BFS(char cheap)
+{
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            dis[i][j] = INF;
+
+    dis[start.x][start.y] = 0;
+
+    Node now, next;
+    queue<Node> q;
+
+    q.push(start);
+
+    while (!q.empty()) {
+        now = q.front();
+        q.pop();
+
+        if (map[now.x][now.y] == cheap) {
+            start.x = now.x;
+            start.y = now.y;
+        } else {
+            for (int i = 0; i < 4; ++i) {
+                next.x = now.x + dir[i][0];
+                next.y = now.y + dir[i][1];
+
+                if (next.x >= 0 && next.x < h &&
+                        next.y >= 0 && next.y < w &&
+                        map[next.x][next.y] != 'X' &&
+                        dis[next.x][next.y] == INF) {
+                    dis[next.x][next.y] = dis[now.x][now.y] + 1;
+                    q.push(next);
+                }
+            }
+        }
+    }
+
+    return dis[start.x][start.y];
+}

@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+using namespace std;
+
+//int dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+
+int main(){
+	int x, y, s;
+	int board[10][10] = {{0}};
+	while( ~scanf("%d,%d,%d", &x, &y, &s) ){
+		if( s == 3 ){
+			for(int i=-2; i<3; i++){
+				for(int j=-2; j<3; j++){
+					if( abs(i)+abs(j) < 3 ) board[y+i][x+j]++;
+				}
+			}
+		}else if( s == 2 ){
+			for(int i=-1; i<2; i++){
+				for(int j=-1; j<2; j++){
+					board[y+i][x+j]++;
+				}
+			}
+		}else{
+			for(int i=-1; i<2; i++){
+				for(int j=-1; j<2; j++){
+					if( abs(i)+abs(j) < 2 ) board[y+i][x+j]++;
+				}
+			}
+		}
+	}
+	int max_c = 0, white = 0;
+	for(int i=0; i<10; i++){
+		for(int j=0; j<10; j++){
+			if( board[i][j] == 0 ) white++;
+			max_c = max(max_c, board[i][j]);
+		}
+	}
+	cout << white << endl;
+	cout << max_c << endl;
+}

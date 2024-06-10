@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+  char str[21], *p;
+
+  fgets(str, 21, stdin);
+  p = str + strlen(str) - 1;
+  if (*p == '\n') p--;
+  while (p >= str)
+    putchar(*p--);
+  printf("\n");
+
+  return 0;
+}

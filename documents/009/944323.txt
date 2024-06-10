@@ -1,0 +1,138 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <cstdio>
+using namespace std;
+
+#define sqr(x) ((x)*(x))
+#define INF 1000000000
+
+struct coordinate {
+	double x, y;
+	coordinate() {}
+	coordinate(double a, double b) {
+		x = a; y = b;
+	}
+	bool operator<(const coordinate & a) const{
+		return (sqr(x) + sqr(y)) < (a.sqr(x) + sqr(y));
+	}
+};
+
+struct circle {
+	double x, y, r;
+	circle() {}
+	circle(double a, double b, double c) {
+		x = a; y = b; r = c;
+	}
+	circle(coordinate a, double b) {
+		x = a.x; y = a.y; r = b;
+	}
+};
+
+pair<coordinate,coordinate> cross_cc_pt(circle a, circle b) {
+	double theta, phi;
+	double sqr_d;
+	pair<coordinate,coordinate> ret;
+
+	phi = atan2(b.y - a.y, b.x - a.x);
+	sqr_d = sqr(b.x - a.x) + sqr(b.y - a.y);
+	theta = acos((sqr(a.r) + sqr_d - sqr(b.r)) / (2 * a.r * sqrt(sqr_d)));
+
+	ret.first  = coordinate(a.r * cos(phi + theta) + a.x, a.r * sin(phi + theta) + a.y);
+	ret.second = coordinate(a.r * cos(phi - theta) + a.x, a.r * sin(phi - theta) + a.y);
+
+	return ret;
+}
+
+bool cross_lseg(coordinate a_start, coordinate a_end, coordinate b_start, coordinate b_end) {
+	double xa, xb, xc, ya, yb, yc;
+	double s, t;
+
+	xa = b_start.x - a_start.x; ya = b_start.y - a_start.y;
+	xb = b_end.x   - a_start.x; yb = b_end.y   - a_start.y;
+	xc = a_end.x   - a_start.x; yc = a_end.y   - a_start.y;
+
+	s = (xc * yb - xb * yc) / (xa * yb - xb * ya);
+	t = (xa * yc - xc * ya) / (xa * yb - xb * ya);
+
+	return (s + t >= 1) && (s >= 0) && (t >= 0);
+}
+
+double distance(coordinate a, coordinate b) {
+	return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
+}
+
+int main() {
+	int n;
+
+	while(cin >> n, n) {
+		vector<circle> v;
+		double table[256][256] = {0};
+		vector<pair<coordinate,coordinate> > virtex;
+
+		for(int i = 0; i < n; i++) {
+			int x, y, r;
+			cin >> x >> y >> r;
+			v.push_back(circle(x, y, r));
+		}
+
+		virtex.push_back(make_pair(coordinate(v[0].x, v[0].y), coordinate(v[0].x, v[0].y)));
+		for(int i = 1; i < v.size(); i++) {
+			pair<coordinate,coordinate> tmp;
+			tmp = cross_cc_pt(v[i - 1], v[i]);
+			virtex.push_back(tmp);
+		}
+		virtex.push_back(make_pair(coordinate(v[v.size() - 1].x, v[v.size() - 1].y), coordinate(v[v.size() - 1].x, v[v.size() - 1].y)));
+
+		for(int i = 0; i < virtex.size(); i++) {
+			for(int j = 0; j < virtex.size(); j++) {
+				table[i * 2][j * 2] = distance(virtex[i].first, virtex[j].first);
+				table[i * 2][j * 2 + 1] = distance(virtex[i].first, virtex[j].second);
+				table[i * 2 + 1][j * 2] = distance(virtex[i].second, virtex[j].first);
+				table[i * 2 + 1][j * 2 + 1] = distance(virtex[i].second, virtex[j].second);
+			}
+		}
+
+		/*
+		for(int i = 0; i < virtex.size() * 2; i++) {
+			for(int j = 0; j < virtex.size() * 2; j++) {
+				printf("% 4.3f ", table[i][j]);
+			}
+			cout << endl;
+		}
+		// */
+
+		for(int i = 0; i < virtex.size(); i++) {
+		for(int i_ = 0; i_ < 2; i_++) {
+			coordinate start;
+			start = i_ == 0 ? virtex[i].first : virtex[i].second;
+			for(int j = i; j < virtex.size(); j++) {
+			for(int j_ = 0; j_ < 2; j_++) {
+				coordinate end;
+				end = j_ == 0 ? virtex[j].first : virtex[j].second;
+				bool flag = true;
+				for(int k = i + 1; k < j; k++) {
+					flag &= cross_lseg(virtex[k].first, virtex[k].second, start, end);
+				}
+				if(!flag)
+					table[i * 2 + i_][j * 2 + j_] = table[j * 2 + j_][i * 2 + i_] = INF;
+			}
+			}
+		}
+		}
+
+		for(int i = 0; i < virtex.size() * 2; i++) {
+			for(int j = 0; j < virtex.size() * 2; j++) {
+				for(int k = 0; k < virtex.size() * 2; k++) {
+					table[j][k] = min(table[j][k], table[j][i] + table[i][k]);
+				}
+			}
+		}
+
+		printf("%.10f\n", table[0][virtex.size() * 2 - 1]);
+	}
+
+	return 0;
+}

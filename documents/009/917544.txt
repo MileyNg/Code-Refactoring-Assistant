@@ -1,0 +1,126 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <sstream>
+#include <functional>
+#include <numeric>
+#include <cmath>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+#define ALL(co) co.begin(), co.end()
+
+typedef long long LL;
+typedef pair<int, int> P;
+typedef pair<int, P> IP;
+typedef pair<P, P> PP;
+typedef vector<int> Array;
+typedef vector<vector<int> > Array2;
+typedef vector<int> LArray;
+
+const int INF = 1 << 29;
+const LL LINF = 1LL << 60;
+
+int itiv;
+inline int getInt() { return (cin >> itiv, itiv); }
+void readAll(Array& vec, int n) { for (int i = 0; i < n; i++) cin >> vec[i]; }
+inline bool between(int first, int last, int n) { return first <= n && n <= last; }
+inline bool inRange(int begin, int end, int n) { return begin <= n && n < end; }
+inline bool inRange(int size, int n) { return 0 <= n && n < size; }
+
+int m, n;
+int dx[] = { -1, 0, 1, 0 }, dy[] = { 0, -1, 0, 1 };
+int dr[] = { 0, -1, 0, 1 }, dc[] = { -1, 0, 1, 0 };
+
+
+int V;
+const int MAX_V = 5001;
+struct edge{int to, cost;};
+typedef pair<int, int> P;
+vector<edge> G[MAX_V];
+int dist[MAX_V];
+
+void dijkstra(int s)
+{
+	priority_queue<P, vector<P>, greater<P> > que;
+	fill(dist, dist + V, INF);
+	dist[s] = 0;
+	que.push(P(0, s));
+
+	while(!que.empty())
+	{
+		P p = que.top(); que.pop();
+		int v = p.second;
+		if (dist[v] < p.first) continue;
+		for (int i = 0; i < G[v].size(); i++)
+		{
+			edge e = G[v][i];
+			if (dist[e.to] > dist[v] + e.cost)
+			{
+				dist[e.to] = dist[v] + e.cost;
+				que.push(P(dist[e.to], e.to));
+			}
+		}
+	}
+}
+
+Array2 pathes;
+vector<P> taxis;
+
+bool visited[5001];
+void connect(int from, int to, P p)
+{
+	if(visited[to]) return;
+	if(p.second == 0) return;
+	visited[to] = true;
+	for (Array::iterator it = pathes[to].begin(); it != pathes[to].end(); it++)
+	{
+		edge e;
+		e.to = *it;
+		e.cost = p.first;
+		if(!visited[*it])
+			G[from].push_back(e);
+		connect(from, *it, P(p.first, p.second - 1));
+	}
+}
+
+int main(void)
+{
+	int k;
+	while(cin >> n >> k && n)
+	{
+		pathes.clear();
+		pathes.resize(n);
+		taxis.resize(n);
+		V = n;
+
+		for (int i = 0; i < n; i++)
+		{
+			cin >> taxis[i].first >> taxis[i].second;
+		}
+
+		for (int i = 0; i < k; i++)
+		{
+			int a, b; cin >> a >> b;
+			a--; b--;
+			pathes[a].push_back(b);
+			pathes[b].push_back(a);
+		}
+
+		for (int i = 0; i < n; i++)
+		{
+			memset(visited, false, sizeof(visited));
+			connect(i, i, taxis[i]);
+		}
+
+		dijkstra(0);
+		cout << dist[n-1] << endl;
+	}
+	return 0;
+}

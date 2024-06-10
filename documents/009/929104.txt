@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+const int INF=1000000000;
+
+int main() {
+  while(1){
+    int n;
+    cin>>n;
+    if(!n)break;
+    vector<vector<int>> e(10,vector<int>(10,INF));
+    int mt=0;
+    for(int i=0;i<n;++i){
+      int a,b,c;
+      cin>>a>>b>>c;
+      mt=max(mt,max(a,b));
+      e[a][b] = min(e[a][b],c);
+      e[b][a] = min(e[b][a],c);
+    }
+    mt++;
+    for(int i=0;i<mt;++i)
+      e[i][i]=0;
+    for(int k=0;k<mt;++k)
+      for(int i=0;i<mt;++i)
+        for(int j=0;j<mt;++j)
+          e[i][j] = min(e[i][j],e[i][k]+e[k][j]);
+    int mi=0;
+    int mc=INF;
+    for(int i=0;i<mt;++i){
+      int s=0;
+      for(int j=0;j<mt;++j)
+        s+=e[i][j];
+      if(s<mc){
+        mc=s;
+        mi=i;
+      }
+    }
+    cout<<mi<<' '<<mc<<endl;
+  }
+  return 0;
+}

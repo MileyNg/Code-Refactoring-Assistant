@@ -1,0 +1,62 @@
+#include <algorithm>
+#include <iostream>
+#include <set>
+#include <utility>
+using namespace std;
+#define foreach(i,n) for (int i = 0; i < n; ++i)
+int dx[4] = { 0, 0, -1, 1 };
+int dy[4] = { -1, 1, 0, 0 };
+typedef set<int> seti;
+
+#define MAX_H 20
+#define MAX_W 20
+#define EMPTY 0
+#define BARRIER 1
+#define START 2
+#define GOAL 3
+#define FAIL 100
+
+int W, H;
+bool barriers[MAX_H * MAX_W];
+int goal;
+int at(int w, int h) { return W * h + w; }
+bool on_board(int x, int y) { return (0 <= x) && (x < W) && (0 <= y) && (y < H); }
+bool barriered(const seti & broken, int x, int y) {
+    int ix = at(x,y);
+    return barriers[ix] && (broken.find(ix) == broken.end());
+}
+int solve(const seti & broken, int x, int y, int cnt) {
+    int mcnt = FAIL;
+    foreach (d,4) {
+        if ((not on_board(x+dx[d], y+dy[d])) || barriered(broken, x+dx[d], y+dy[d])) { continue; }
+        int nx = x, ny = y;
+        while (true) {
+            nx += dx[d]; ny += dy[d];
+            if (not on_board(nx,ny)) break;
+            if (barriered(broken,nx,ny)) {
+                if (cnt == 10) break;
+                seti nbroken = broken; nbroken.insert(at(nx,ny));
+                mcnt = min(mcnt, solve(nbroken, nx-dx[d], ny-dy[d], cnt+1));
+                break;
+            }
+            if (at(nx,ny) == goal) { return cnt; }
+        }
+    }
+    return mcnt;
+}
+
+int main() {
+    while (true) {
+        cin >> W >> H; if (W * H == 0) break;
+        int x, y;
+        foreach (h,H) foreach (w,W) {
+            int t; cin >> t;
+            if (t == START) { x = w; y = h; t = EMPTY; }
+            if (t == GOAL) { goal = at(w,h); t = EMPTY; }
+            barriers[at(w,h)] = t == BARRIER;
+        }
+        int cnt = solve(seti(),x,y,1);
+        cout << (cnt != FAIL ? cnt : -1) << endl;
+    }
+    return 0;
+}

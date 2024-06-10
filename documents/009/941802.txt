@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+struct sa
+{
+    char s[507];
+}qq[1007],q[1007],p[1007];
+bool cmp1(sa a,sa b)
+{
+    return strcmp(a.s,b.s)<0;
+}
+bool cmp2(sa a,sa b)
+{
+    return strcmp(a.s,b.s)>0;
+}
+int main()
+{
+    int n;
+    while(scanf("%d",&n),n)
+    {
+          for(int i=0;i<n;i++)
+          {
+              scanf("%s",p[i].s);
+              strcpy(q[i].s,p[i].s);
+              strcpy(qq[i].s,p[i].s);
+          }
+          sort(q,q+n,cmp1);
+          sort(qq,qq+n,cmp2);
+//          for(int i=0;i<n;i++)
+//          {
+//              printf("%s ",q[i].s);
+//          }
+//          printf("\n");
+//           for(int i=0;i<n;i++)
+//          {
+//              printf("%s ",qq[i].s);
+//          }
+//          printf("\n");
+          int flag=1;
+          for(int i=0;i<n;i++)
+            if(strcmp(q[i].s,p[i].s)!=0)
+            {
+                flag=0;
+                break;
+            }
+            if(flag){printf("yes\n");continue;}
+        flag=1;
+         for(int i=0;i<n;i++)
+            if(strcmp(qq[i].s,p[i].s)!=0)
+            {
+                flag=0;
+                break;
+            }
+            if(!flag)printf("no\n");
+            else
+            {
+                int flag2=0;
+                for(int i=0;i<n;i++)
+                {
+                    int len=strlen(p[i].s);
+                    for(int  j=i-1;j>=0;j--)
+                    {
+                        int flag1=0;
+                        for(int k=0;k<len;k++)
+                        {
+                            if(p[i].s[k]!=p[j].s[k])
+                            {
+                                flag1=1;
+                                break;
+                            }
+                        }
+                        if(flag1==0)
+                        {
+                            printf("no\n");
+                            flag2=1;
+                            break;
+                        }
+                    }
+                    if(flag2==1)
+                    break;
+                }
+                if(flag2==0)
+                printf("yes\n");
+            }
+    }
+   return 0;
+}

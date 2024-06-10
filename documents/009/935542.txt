@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+main(){
+  char str[100];
+  int a, b, i,index = 0;
+    int St[100];
+
+  while(scanf("%s", str) != EOF){
+    if(*str == '+'){
+      a = St[--index];
+      b = St[--index];
+      St[index++] = a + b;
+    }else if(*str == '-'){
+      a = St[--index];
+      b = St[--index];
+      St[index++] = a - b;
+    }else if (*str == '*'){
+      a = St[--index];
+      b = St[--index];
+      St[index++] = a * b;
+    }else{
+      St[index++] = atoi(str);
+    }
+  }
+  printf("%d\n", St[--index]);
+  return 0;
+}

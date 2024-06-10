@@ -1,0 +1,21 @@
+loop{
+	an,bn,r = gets.split.map(&:to_i)
+	if an==0 and bn == 0 then
+		break
+	end
+	rr = 16 * r * r
+	
+	as = an.times.map{gets.chomp.split.map(&:to_i)}
+	pow = 0
+	1.step(bn){
+		bx,by = gets.split.map(&:to_i)
+		as.each do |ax,ay|
+			len2 = (ax - bx)**2 + (ay - by)**2
+			if len2 <= rr then
+				pow += 1
+			end
+		end
+	}
+	print pow
+	print "\n"
+}

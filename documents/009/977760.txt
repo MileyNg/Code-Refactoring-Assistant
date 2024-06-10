@@ -1,0 +1,33 @@
+#include<cstdio>
+#include<algorithm>
+#include<iostream>
+using namespace std;
+
+int getDay(int array[],int Q,int N){
+  int max=0;
+  for(int i=1;i<=100;i++)
+    if(array[i]>=Q){
+      if(array[i]==N) return i;
+      if(max<i) max=i;
+    }
+  return max;
+}
+
+int main(){
+  
+  int N,Q,M,work;
+  while(1){
+    int array[101]={0};
+    cin>>N>>Q;
+    if(N==0 && Q==0) break;
+    for(int i=0;i<N;i++){
+      cin>>M;
+      for(int j=0;j<M;j++){
+	cin>>work;
+	array[work]++;
+      }
+    }
+    cout<<getDay(array, Q, N)<<endl;
+  }
+  return 0;
+}

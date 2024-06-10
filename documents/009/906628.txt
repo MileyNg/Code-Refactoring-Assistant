@@ -1,0 +1,229 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+#define fs first
+#define sc second
+#define all(a) (a).begin(),(a).end()
+using namespace std;
+typedef long double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+typedef vector<P> Poly;
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+typedef pair<D,int> pdi;
+
+const D EPS = 1e-10L;
+const D PI = acos(-1);
+
+namespace std{
+  bool operator<(const P &a,const P &b){
+    return EQ(real(a),real(b))?imag(a)<imag(b):real(a)<real(b);
+  }
+  bool operator==(const P &a, const P &b){return EQ(a,b);}
+}
+
+inline D dot(P x,P y){return real(conj(x)*y);}
+inline D cross(P x,P y){return imag(conj(x)*y);}
+
+inline int ccw(P a,P b,P c){
+  b -= a;c -= a;
+  if (cross(b,c)>EPS) return 1;   //counter clockwise
+  if (cross(b,c)<-EPS) return -1; //clockwise
+  if (dot(b, c)<-EPS) return 2;   //c--a--b on line
+  if (abs(b)+EPS<abs(c)) return -2;   //a--b--c on line
+  return 0;                       //on segment
+}
+
+inline bool is_cp(L a,L b){
+  if(ccw(a.fs,a.sc,b.fs)*ccw(a.fs,a.sc,b.sc)<=0)
+    if(ccw(b.fs,b.sc,a.fs)*ccw(b.fs,b.sc,a.sc)<=0)return true;
+  return false;
+}
+
+inline P seg_cp(L a,L b){
+  double d = abs(cross(b.sc-b.fs,a.fs-b.fs));
+  return a.fs + (a.sc-a.fs)*( d /(d + abs(cross(b.sc-b.fs,a.sc-b.fs))) );
+}
+
+inline  bool para(L a,L b){return abs(cross(a.fs-a.sc,b.fs-b.sc))<EPS;}
+
+inline bool in_poly(Poly p,P x){
+  if(p.empty())return false;
+
+  int s = p.size();
+  D xMax = x.real();
+  rep(i,s){
+    if(xMax < p[i].real())xMax = p[i].real();
+    if(EQ(x,p[i]))return false;
+  }
+  L h = L( x,P(xMax + 1.0, x.imag()) );
+
+  int c = 0;
+  rep(i,s){
+    L l = L(p[i],p[(i+1)%s]);
+    if(!para(h,l) && is_cp(h,l)){
+      P cp = seg_cp(h,l);
+      if(cp.real() < x.real() + EPS)continue;
+      if(!EQ(cp, (l.fs.imag() < l.sc.imag())?l.sc:l.fs))c++;
+    }
+  }
+
+  return (c&1)?true:false;
+}
+
+inline vector<L> seg_set_cut(vector<L> l){
+  int card = l.size();
+  vector< vector<L> > vl(card);
+  rep(i,card)vl[i].push_back(l[i]);
+  
+  rep(i,card)for(int j=i+1;j<card;j++){
+    rep(ii,vl[i].size())rep(jj,vl[j].size()){
+      if(is_cp(vl[i][ii],vl[j][jj])){
+	P cp = seg_cp(vl[i][ii],vl[j][jj]);
+	if(!EQ(vl[i][ii].fs,cp) && !EQ(vl[i][ii].sc,cp)){
+	  vl[i].push_back(L(vl[i][ii].sc,cp));
+	  vl[i][ii] = L(vl[i][ii].fs,cp);
+	}
+	if(!EQ(vl[j][jj].fs,cp) && !EQ(vl[j][jj].sc,cp)){
+	  vl[j].push_back(L(vl[j][jj].sc,cp));
+	  vl[j][jj] = L(vl[j][jj].fs,cp);
+	}
+	goto END;
+      }
+    }
+  END:;
+  }
+  vector<L> res;
+  rep(i,card){
+    rep(j,vl[i].size())res.push_back(vl[i][j]);
+  }
+  return res;
+}
+
+//union-find
+vi uf,rank;
+void init(int n){
+  uf.resize(n); rank.resize(n);
+  rep(i,n)uf[i] = i, rank[i] = 0;
+}
+
+int find(int a){
+  if(uf[a]==a)return a;
+  return uf[a] = find(uf[a]);
+}
+
+int unite(int a, int b){
+  a = find(a); b = find(b);
+  if(a==b)return 0;
+  if(rank[a]<rank[b])uf[a] = b;
+  else{
+    uf[b] = a;
+    if(rank[a]==rank[b])rank[a]++;
+  }
+  return 1;
+}
+
+int main(){
+  int n;
+  cin >> n;
+  vector<L> seg(n);
+
+  rep(i,n){
+    int x,y;
+    cin >> x >> y; seg[i].fs = P(x,y);
+    cin >> x >> y; seg[i].sc = P(x,y);
+  }
+
+  vector<L> SegSet = seg_set_cut(seg);
+
+  vector<P> p;
+  rep(i,SegSet.size()){
+    p.push_back(SegSet[i].fs);
+    p.push_back(SegSet[i].sc);
+  }
+  sort(all(p));
+  p.erase(unique(all(p)),p.end());
+
+  vector<pii> l(SegSet.size());
+  vector< vector<pdi> > wall(p.size());
+ 
+  rep(i,SegSet.size()){
+    int s = lower_bound(all(p),SegSet[i].fs)-p.begin();
+    int t = lower_bound(all(p),SegSet[i].sc)-p.begin();
+    l[i] = pii(s,t);
+    wall[s].push_back(pdi(arg(p[t]-p[s]),t));
+    wall[t].push_back(pdi(arg(p[s]-p[t]),s));
+  }
+
+  rep(i,p.size())sort(all(wall[i]));
+
+  vector<vi> g(l.size(),vi(2,-1));
+  vector<Poly> PolySet;
+  vi id;
+
+  rep(i,l.size()){
+    rep(j,2){
+      int cur = i, dir = j;
+      if(g[cur][dir]>=0)continue;
+
+      D area = 0;
+      Poly poly;
+      while(true){
+	g[cur][dir] = id.size();
+	poly.push_back(dir?p[l[cur].fs]:p[l[cur].sc]);
+
+	int node = dir?l[cur].fs:l[cur].sc;
+	int prv = dir?l[cur].sc:l[cur].fs;
+	rep(k,wall[node].size()){
+	  if(wall[node][k].sc == prv){
+	    int nxt = wall[node][(k+1)%wall[node].size()].sc;
+	    area += cross(p[node],p[prv]);
+	    prv = node;
+	    node = nxt;
+	    break;
+	  }
+	}
+	
+	rep(k,l.size()){
+	  if(prv == l[k].fs && node == l[k].sc){
+	    cur = k; dir = 0; break;
+	  }
+	  if(prv == l[k].sc && node == l[k].fs){
+	    cur = k; dir = 1;  break;
+	  }
+	}
+	if(g[cur][dir]>=0)break;
+      }
+      if(area>EPS){
+	id.push_back(PolySet.size());
+	PolySet.push_back(poly);
+      }else{
+	id.push_back(-1);
+      }
+    }
+  }
+
+  int ans = PolySet.size();
+  init(PolySet.size());
+
+  rep(i,PolySet.size()){
+    rep(j,PolySet.size()){
+      if(i==j)continue;
+      bool f = true;
+      rep(k,PolySet[i].size()){
+	f &= in_poly(PolySet[j],PolySet[i][k]);
+	if(!f)break;
+      }
+      if(f)ans -= unite(i,j);
+    }
+  }
+
+  rep(i,l.size()){
+    int a = id[g[i][0]], b = id[g[i][1]];
+    if(a<0 || b<0)continue;
+    ans -= unite(a,b);
+  }
+
+  cout << ans << endl;
+}

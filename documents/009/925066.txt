@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
+using namespace std;
+struct Rect {
+  int w, h;
+};
+
+bool operator < ( const Rect &r1, const Rect &r2 ) {
+  int r1cl = r1.h * r1.h + r1.w * r1.w;
+  int r2cl = r2.h * r2.h + r2.w * r2.w;
+  if( r1cl == r2cl ) {
+    return r1.h < r2.h;
+  } else {
+    return r1cl < r2cl;
+  }
+}
+
+int main() {
+  vector<Rect> vr;
+  
+  for( int w = 2; w <= 150; w++ ) {
+    for( int h = 1; h < w; h++ ) {
+      Rect r;
+      r.w = w;
+      r.h = h;
+      vr.push_back( r );
+    }
+  }
+  
+  sort( vr.begin(), vr.end() );
+  int iw, ih;
+  int len = vr.size();
+  while( 1 ) {
+    cin >> ih >> iw;
+    if( !iw && !ih ) { break; }
+    for( int i = 0; i < len; i++ ) {
+      if( vr[ i ].w == iw && vr[ i ].h == ih ) {
+        cout << vr[ i + 1 ].h << " " << vr[ i + 1 ].w << endl;
+        break;
+      }
+    }
+  }
+}

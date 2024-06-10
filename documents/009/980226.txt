@@ -1,0 +1,58 @@
+#include<iostream>
+#include<stack>
+
+using namespace std;
+
+	int a[10];
+	stack<int> B,C;
+
+
+bool dfs(int n){
+	if(n==10){
+
+		return true;
+	}
+
+	if(B.empty() || B.top()<a[n]){
+		B.push(a[n]);
+		if( dfs(n+1) )return true;
+	}else{
+		B.pop();
+		return false;
+	}
+
+	if(C.empty() || C.top()<a[n]){
+		C.push(a[n]);
+		if( dfs(n+1) )return true;
+	}else{
+		C.pop();
+		return false;
+	}
+}
+
+
+
+int main(){
+	int n;
+	cin>>n;
+
+	for(int T=0;T<n;T++){
+		for(int i=0;i<10;i++){
+			cin>>a[i];
+		}
+
+		while(B.size()){
+			B.pop();
+		}
+		while(C.size()){
+			C.pop();
+		}
+
+		if(dfs(0)){
+			cout<<"YES"<<endl;
+		}
+		else{
+			cout<<"NO"<<endl;
+		}
+	}
+}

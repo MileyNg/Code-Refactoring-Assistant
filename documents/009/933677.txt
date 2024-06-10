@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+void q_sort(int nums[], int f_num, int e_num){
+    
+    int i, j, pbt, tmp;
+    
+    i = f_num;
+    j = e_num;
+    
+    pbt = nums[(f_num+e_num) / 2];
+    
+    while (1) {
+        
+        while (nums[i] < pbt) {
+            i++;
+        }
+        while (nums[j] > pbt) {
+            j--;
+        }
+        if (i >= j) {
+            break;
+        }
+        
+        tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+        i++;
+        j--;
+    }
+    
+    if (f_num < i - 1) {
+        q_sort(nums, f_num, i-1);
+    }
+    if (e_num > j + 1) {
+        q_sort(nums, j+1, e_num);
+    }
+    
+    
+}
+
+int main(void){
+	
+    int i, num[1000];
+    
+    int n;
+	
+    scanf("%d", &n);
+        
+    for (i = 0; i < n; i++) {
+        scanf("%d", &num[i]);
+    }    
+    
+    q_sort(num, 0, n-1);
+    
+    for (i = 0; i < n-1; i++) {
+        printf("%d ", num[i]);
+    }
+    printf("%d\n", num[i]);
+    
+	
+	return 0;
+    
+}

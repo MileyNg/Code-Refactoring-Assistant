@@ -1,0 +1,33 @@
+#include <iostream>
+#include <list>
+#include <algorithm>
+ 
+using namespace std;
+ 
+int main() {
+int n;
+ 
+while(!cin.eof()) {
+cin >> n;
+list<int> search_list(n);
+list<int> prime_number;
+while(n!=1) {
+search_list.push_front(n);
+n--;
+}
+while(!search_list.empty()) {
+int m = search_list.front();
+prime_number.push_back(m);
+search_list.pop_front();
+list<int>::iterator it = search_list.begin();
+while(it!=search_list.end()) {
+if((*it % prime_number.front()) == 0){
+it = search_list.erase(it);
+continue;
+}
+it++;
+}	
+}
+cout << prime_number.size()-1 << endl;
+}
+}

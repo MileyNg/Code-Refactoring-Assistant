@@ -1,0 +1,66 @@
+#include<stdio.h>
+int main(void)
+{
+  int n,i,j;
+  
+  scanf("%d",&n);
+  
+  for(j=0;j<n;j++){
+    char a[80]={'\0'};
+	char b[80]={'\0'};
+	char ca[80]={0};
+	char cb[80]={0};
+	int ac=0;
+	int bc=0;
+	scanf("%s",a);
+	scanf("%s",b);
+    for(i=0;a[i]!='\0';i++)
+	  ac++;
+    for(i=0;b[i]!='\0';i++)
+	  bc++;
+    for(i=0;i<ac;i++)
+	  ca[80-ac+i]=a[i];
+	  
+    //for(i=79;i>0;i--){
+	//  if(ca[i]==0)
+	//    continue;
+	//  printf("%c",ca[i]);
+	//}
+	//printf("%d",ca[13]);
+	//putchar('\n');
+	  
+    for(i=0;i<bc;i++)
+	  cb[80-bc+i]=b[i];
+	  
+	//printf("%c",cb[79]);
+	//putchar('\n');
+	  
+	for(i=79;ca[i]!=0||cb[i]!=0;i--){
+	  ca[i]+=cb[i]-'0';
+	  if(ca[i]<20)
+	    ca[i]+=48;
+	  if(ca[i]<20)
+	    ca[i]+=48;
+	  if(ca[i]>'9' && i!=0){
+	    ca[i]-=10;
+		ca[i-1]+=1;
+      }
+	}
+	//printf("%d",ca[78]);
+	//putchar('\n');
+	
+	
+	if(ca[0]>'9')
+	  printf("overflow");
+	else{
+	  for(i=0;i<80;i++){
+	    if(ca[i]==0)
+		  continue;
+	    printf("%c",ca[i]);
+	  }
+	}
+	putchar('\n');
+  }
+
+  return 0;
+}

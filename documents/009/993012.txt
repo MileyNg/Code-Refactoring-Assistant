@@ -1,0 +1,38 @@
+import std.stdio,std.string,std.conv,std.math;
+
+int main()
+{
+	int[4] a,b;
+	int count,count_2;
+	string s,s2;
+	while((s = readln.chomp).length != 0 )
+	{
+		s2 = readln.chomp;
+		string[] input = split(s);
+		string[] input2 = split(s2);
+
+		foreach(i;0..4)
+		{
+			a[i] = input[i].to!int;
+			b[i] = input2[i].to!int;
+		}
+
+		count = 0;
+		count_2 = 0;
+
+		foreach(i;0..4)
+		{
+			foreach(j;0..4)
+			{
+				if(a[i] == b[j]) 
+				{
+					if(i == j) count++;
+					else count_2++;
+				}
+			}
+		}
+		writeln(count," ",count_2);
+
+	}
+	return 0;
+}

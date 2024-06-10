@@ -1,0 +1,77 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <ctime>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <string>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+
+using namespace std;
+template<typename T> ostream& operator<<(ostream& os, const vector<T>& v){
+    os << "{ ";
+    for(typename vector<T>::const_iterator it=v.begin(); it!=v.end(); ++it)
+        os << '\"' << *it << '\"' << (it+1==v.end() ? "" : ", ");
+    os << " }";
+    return os;
+}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+#define vv(type,w,h,init) vector<vector<type>>(h,vector<type>(w,init))
+typedef vector<string> vs;
+typedef long long ll;
+typedef unsigned uint;
+typedef unsigned long ul;
+typedef unsigned long long ull;
+
+#define all(c) (c).begin(), (c).end()
+#define rall(c) (c).rbegin(), (c).rend()
+#define loop(i,a,b) for(ull i=(a); i<(ull)(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define pb push_back
+#define mp make_pair
+
+string const resstr[] = {"Impossible","Possible","No","Yes"};
+
+int const rs[]={60,80,100,120,140,160,int(1e8)}; 
+int const rw[]={2,5,10,15,20,25,int(1e8)}; 
+int const p[]={600,800,1000,1200,1400,1600,int(1e8)};
+
+int solve(int n, int x){
+    int ans = 0;
+    loop(i,1,n+1)loop(j,i+1,n+1)loop(k,j+1,n+1){
+        if(i+j+k==x) ans++;
+    }
+    return ans;
+}
+
+int main(){
+    ull n;
+    while (cin >> n, n){
+        ull div5=0, div2=0;
+        loop(i,2,n+1){
+            ull t=i;
+            while(t%2==0){
+                div2++;
+                t/=2;
+            }
+            while(t%5==0){
+                div5++;
+                t/=5;
+            }
+        }
+        cout << min(div2,div5) << endl;
+    }
+}

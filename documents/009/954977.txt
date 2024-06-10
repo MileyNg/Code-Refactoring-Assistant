@@ -1,0 +1,33 @@
+#include<stdio.h>
+#define M 2000 
+int a[M],n,i,S[M];
+void solve(int p,int t){
+  if(t==0){
+    S[i]=1;
+  }
+  if(t>0 && p<n){
+    solve(p+1,t-a[p]);
+    solve(p+1,t);
+  }
+}
+main(){
+  int q,m[M];
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    scanf("%d",&a[i]);
+  scanf("%d",&q);
+  for(i=0;i<q;i++)
+    scanf("%d",&m[i]); 
+  for(i=0;i<q;i++)
+    S[i]=0;
+  for(i=0;i<q;i++){
+    solve(0,m[i]);
+  }
+  for(i=0;i<q;i++){
+    if(S[i]==1)
+      printf("yes\n");
+    else
+      printf("no\n");
+  }
+  return 0; 
+}

@@ -1,0 +1,49 @@
+#include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+using namespace std;
+static const double eps = 1e-7;
+
+void solve()
+{
+	int m;
+	while(cin >> m, m)
+	{
+		double s1 = 0.0;
+		for(int i = 0; i < m - 1; ++i)
+		{
+			int v;
+			cin >> v;
+			s1 += 0.5 * sin(M_PI * v / 180);
+		}
+		
+		int n;
+		cin >> n;
+		double s2 = 0.0;
+		for(int i = 0; i < n - 1; ++i)
+		{
+			int v;
+			cin >> v;
+			s2 += 0.5 * sin(M_PI * v / 180);
+		}
+		if(fabs(s1 - s2) < eps)
+		{
+			cout << 0 << endl;
+		}
+		else if(s1 > s2)
+		{
+			cout << 1 << endl;
+		}
+		else
+		{
+			cout << 2 << endl;
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

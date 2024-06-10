@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int w, n;
+
+struct bar {
+	int a, b;
+};
+
+vector <bar> v;
+int order[35];
+
+int main() {
+	scanf("%d", &w);
+	scanf("%d", &n);
+	
+	for (int i=0; i<n; i++) {
+		bar r;
+		scanf("%d, %d", &r.a, &r.b);
+		v.push_back(r);
+	}
+	
+	for (int i=1; i<=w; i++) {
+		int s = i;
+		for (int j=0; j<n; j++) {
+			if (v[j].a==s) s = v[j].b;
+			else if (v[j].b==s) s = v[j].a;
+		}
+		order[s] = i;
+	}
+	
+	for (int i=1; i<=w; i++) cout << order[i] << endl;
+	
+	return 0;
+}

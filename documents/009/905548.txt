@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+typedef long long ll;
+
+int N, T, L, B;
+int board[110];
+
+void solve()
+{
+    double dp[T + 10][N + 10]; // dp[i][j]: iターン目にjにいる確率
+
+    for (int i = 0; i < T + 10; ++i)
+        for (int j = 0; j < N + 10; ++j)
+            dp[i][j] = 0.0;
+    dp[0][0] = 1.0;
+
+    for (int i = 0; i < T; ++i) {
+        for (int j = 0; j < N; ++j) {
+            for (int d = 1; d <= 6; ++d) {
+                int next_turn = i + 1, next_pos = j + d;
+
+                if (next_pos > N)
+                    next_pos = N - (next_pos % N);
+                if (board[next_pos] == 1) // Lose
+                    ++next_turn;
+                else if (board[next_pos] == 2) // Back
+                    next_pos = 0;
+
+                dp[next_turn][next_pos] += dp[i][j] / 6.0;
+            }
+        }
+    }
+
+    double prob = 0.0;
+    for (int i = 0; i <= T; ++i)
+        prob += dp[i][N];
+
+    printf("%.8f\n", prob);
+}
+
+int main()
+{
+    while (cin >> N >> T >> L >> B) {
+        if (N + T + L + B == 0)
+            break;
+
+        memset(board, 0, sizeof(board));
+        // 0: None 1: Lose 2: Back
+        int t;
+        for (int i = 0; i < L; ++i) {
+            cin >> t;
+            board[t] = 1;
+        }
+        for (int i = 0; i < B; ++i) {
+            cin >> t;
+            board[t] = 2;
+        }
+
+        solve();
+    }
+
+    return 0;
+}

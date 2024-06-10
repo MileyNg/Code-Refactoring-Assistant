@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void) {
+
+	double a[500];
+	int i=0;
+	while( scanf("%lf", &a[i++]) != EOF) ;
+	
+	int j,k;
+	for(j=0; j<i-1; j++){
+		for(k=j; k<i-1; k++) {
+			if(a[j] < a[k]){
+				double temp = a[j];
+				a[j] = a[k];
+				a[k] = temp;
+			}
+		}
+	}
+	
+	printf("%.1lf", a[0]-a[i-2]);
+
+	return 0;
+}

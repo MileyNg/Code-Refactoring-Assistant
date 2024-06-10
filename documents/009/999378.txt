@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+const double INF = 1e10;
+const double EPS = 1e-8;
+
+struct Point {
+	double x, y;
+	Point() : x(0), y(0) { }
+	Point(double x, double y) : x(x), y(y) { }
+	Point operator+(const Point &p) const { return Point(x + p.x, y + p.y); }
+	Point operator-(const Point &p) const { return Point(x - p.x, y - p.y); }
+	Point operator*(double s) const { return Point(x * s, y * s); }
+	Point operator/(double s) const { return Point(x / s, y / s); }
+	Point &operator+=(const Point &p){ x += p.x; y += p.y; return *this; }
+	Point &operator-=(const Point &p){ x -= p.x; y -= p.y; return *this; }
+	Point &operator*=(double s){ x *= s; y *= s; return *this; }
+	Point &operator/=(double s){ x /= s; y /= s; return *this; }
+	bool operator==(const Point &p) const { return x == p.x && y == p.y; }
+	bool operator!=(const Point &p) const { return x != p.x || y != p.y; }
+	bool operator<(const Point &p) const {
+		return (x == p.x) ? (y < p.y) : (x < p.x);
+	}
+};
+inline Point operator*(double s, const Point &p){ return p * s; }
+
+inline double norm(const Point &p){ return p.x * p.x + p.y * p.y; }
+inline double abs(const Point &p){ return sqrt(norm(p)); }
+inline double arg(const Point &p){ return atan2(p.y, p.x); }
+inline Point unit(const Point &p){ return p / abs(p); }
+inline Point ortho(const Point &p){ return Point(-p.y, p.x); }
+
+int main(){
+	ios_base::sync_with_stdio(false);
+	while(true){
+		int n;
+		cin >> n;
+		if(n == 0){ break; }
+		vector<Point> p(n);
+		for(int i = 0; i < n; ++i){ cin >> p[i].x >> p[i].y; }
+		const double limit = (1.0 + EPS) * (1.0 + EPS);
+		int answer = 1;
+		for(int i = 0; i < n; ++i){
+			const Point a = p[i];
+			for(int j = i + 1; j < n; ++j){
+				const Point b = p[j];
+				if(abs(b - a) > 2.0){ continue; }
+				const Point c = (a + b) * 0.5;
+				const Point v = unit(ortho(b - a));
+				const double t = sqrt(1.0 - norm(b - c));
+				const Point q[2] = { c + v * t, c + v * -t };
+				for(int k = 0; k < 2; ++k){
+					int count = 0;
+					for(int l = 0; l < n; ++l){
+						if(norm(p[l] - q[k]) <= limit){ ++count; }
+					}
+					answer = max(answer, count);
+				}
+			}
+		}
+		cout << answer << endl;
+	}
+	return 0;
+}

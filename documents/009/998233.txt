@@ -1,0 +1,81 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+struct point{
+    double x;
+    double y;
+};
+
+int n;
+point points[300];
+
+double getDist2(point a, point b){
+    return pow(a.x - b.x ,2) + pow(a.y - b.y, 2);
+}
+
+double getDist(point a, point b){
+    return sqrt(getDist2(a, b));
+}
+
+int findMaxCover(){
+    int ans = 1;
+    int count;
+    int sign[2] = {-1, 1};
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            point a, b;
+            a = points[i];
+            b = points[j];
+            if (getDist2(a, b) > 4.0) {
+                continue;
+            }
+            point m;
+            m.x = (a.x + b.x) / 2.0;
+            m.y = (a.y + b.y) / 2.0;
+            double v, u, d, e;
+            d = getDist(a, b);
+            v = (a.y - b.y) / d;
+            u = (a.x - b.x) / d;
+            d = getDist(a, b);
+            e = sqrt(1 - d * d / 4);
+            for (int k = 0; k < 2; k++) {
+                count = 0;
+                double p = m.x - e * v * sign[k];
+                double q = m.y + e * u * sign[k];
+                for (int l = 0; l < n; l++) {
+                    point t;
+                    t.x = p;
+                    t.y = q;
+                    if (l == i || l == j) {
+                        count++;
+                        continue;
+                    }
+                    if (getDist2(t, points[l]) <= 1.0) {
+                        count++;
+                    }
+                }
+                ans = max(ans, count);
+            }
+        }
+    }
+    return ans;
+}
+
+int main()
+{
+    while (true) {
+        cin >> n;
+        if (n == 0) {
+            break;
+        }
+        for (int i = 0; i < n; i++) {
+            cin >> points[i].x >> points[i].y;
+        }
+        cout << findMaxCover() << endl;
+        
+    }
+
+    return 0;
+}

@@ -1,0 +1,41 @@
+#include <iostream>
+
+#define MOUNTAINS 10
+#define RANK 3
+
+using namespace std;
+
+void InsertToRank(int *rank, int idx, int height);
+
+int main(void)
+{
+    int i, j;
+    int rank[RANK] = {0};
+    int height;
+    
+    for (i = 0; i < MOUNTAINS; i++) {
+        cin >> height;
+        for (j = 0; j < RANK; j++) {
+            if (rank[j] < height) {
+                InsertToRank(rank, j, height);
+                break;
+            }
+        }
+    }
+    
+    for (i = 0; i < RANK; i++) {
+        cout << rank[i] << endl;
+    }
+    
+    return 0;
+}
+
+void InsertToRank(int *rank, int idx, int height)
+{
+    int i;
+    
+    for (i = 2; i > idx; i--) {
+        rank[i] = rank[i - 1];
+    }
+    rank[idx] = height;
+}

@@ -1,0 +1,24 @@
+#include<iostream>
+#include<cmath>
+#include<string>
+#include<cctype>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main(){
+        long long a,b,gcda,gcdb,c;
+        while(scanf("%lld %lld",&a,&b)!=EOF){
+                if(a<b){
+                        swap(a,b);
+                }
+                gcda=a;
+                gcdb=b;
+                while(gcda%gcdb){
+                        c=gcdb;
+                        gcdb=gcda%gcdb;
+                        gcda=c;
+                }
+                printf("%lld %lld\n",gcdb,(a*b)/gcdb);
+        }
+        return 0;
+}

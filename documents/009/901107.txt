@@ -1,0 +1,79 @@
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <set>
+#include <utility>
+#include <vector>
+using namespace std;
+
+template<class T> inline void chmax(T &a, const T &b) { if(a < b) a = b; }
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		vector<pair<int, int>> swimmers(n);
+		vector<int> t(n), c(n);
+
+		for(auto &e : swimmers) {
+			cin >> e.first >> e.second;
+		}
+
+		sort(swimmers.begin(), swimmers.end());
+		queue<pair<int, int>> go, back;
+		for(int i = 0; i < n; ++i) {
+			go.push({swimmers[i].first, i});
+		}
+
+		int go_last = swimmers[n - 1].first;
+		int back_last = 0;
+		while(true) {
+			int time = INT_MAX;
+			bool go_turn;
+			set<int> S;
+
+			if(!go.empty()) {
+				time = go.front().first;
+				go_turn = true;
+			}
+			if(!back.empty() && time > back.front().first) {
+				time = back.front().first;
+				go_turn = false;
+			}
+
+			if(go_turn) {
+				while(!go.empty() && time == go.front().first) {
+					S.insert(go.front().second);
+					go.pop();
+				}
+
+				for(const auto &e : S) {
+					chmax(back_last, time + swimmers[e].first);
+					back.push({back_last, e});
+				}
+			}
+			else {
+				while(!back.empty() && time == back.front().first) {
+					S.insert(back.front().second);
+					back.pop();
+				}
+
+				for(const auto &e : S) {
+					if(--swimmers[e].second == 0) continue;
+					chmax(go_last, time + swimmers[e].first);
+					go.push({go_last, e});
+				}
+
+				if(go.empty() && back.empty()) {
+					cout << time << endl;
+					break;
+				}
+			}
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

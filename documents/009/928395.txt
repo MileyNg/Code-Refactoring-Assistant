@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <memory.h>
+
+int main(void) {
+	int i, j, k, n, p, size;
+	char buff1[202];
+	char buff2[202];
+	char *ptr1, *ptr2;
+	char *ptr;
+	
+	ptr1 = buff1;
+	ptr2 = buff2;
+	while(1) {
+		fgets(ptr1, sizeof(buff1), stdin);
+		if(ptr1[0] == '-' && ptr1[1] != '\n')
+			break;
+		
+		/* 改行消す */	
+		ptr1[strlen(ptr1)-1] = '\0';
+			
+		scanf("%d\n", &n);
+		for(i=0;i<n;i++) {
+			scanf("%d\n", &p);
+			for(j=0,size=strlen(buff1);j<size;j++) {
+				if(j+p<size) {
+					ptr2[j] = ptr1[j+p];
+					k=0;
+				} else {
+					ptr2[j] = ptr1[k];
+					k++;
+				}
+			}
+			ptr2[j] = '\0';
+			ptr = ptr1;
+			ptr1 = ptr2;
+			ptr2 = ptr;
+		}
+		printf("%s\n", ptr1);
+	}
+	
+	return 0;
+}

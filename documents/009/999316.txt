@@ -1,0 +1,56 @@
+#include<stdio.h>
+#define N 250
+
+int parent(int);
+int left(int);
+int right(int);
+
+struct a{
+  int id;
+  int key;
+  int pk;
+  int lk;
+  int rk;
+};
+struct a T[N];
+
+int main(){
+  int hsize;
+  int i;
+
+  //input
+  scanf("%d",&hsize);
+  for(i=1;i<=hsize;i++){
+    scanf("%d",&T[i].key);
+    T[i].id=i;
+  }
+
+  for(i=1;i<=hsize;i++){
+    printf("node %d: key = %d, ",T[i].id,T[i].key);
+
+    if((T[i].pk=T[parent(i)].key)!=0)
+      printf("parent key = %d, ",T[i].pk);
+
+      if((T[i].lk=T[left(i)].key)!=0)
+    printf("left key = %d, ",T[i].lk);
+
+    if(( T[i].rk=T[right(i)].key)!=0)
+    printf("right key = %d, ",T[i].rk);
+
+    printf("\n");
+  }
+  
+  return 0;
+}
+
+int parent(int id){
+  return id/2;
+}
+
+int left(int id){
+  return 2*id;
+}
+
+int right(int id){
+  return 2*id+1;
+}

@@ -1,0 +1,32 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int line,n;
+	scanf("%d",&line);
+	scanf("%d",&n);
+
+	int values[line],i;
+	for(i=0;i<line;i++)
+	{
+		values[i] = i+1;
+	}
+
+
+	for(i=0;i<n;i++)
+	{
+		int a,b;
+		scanf("%d,%d",&a,&b);
+		int value = values[a-1];
+		values[a-1] = values[b-1];
+		values[b-1] = value;
+	}
+
+	for(i=0;i<line;i++)
+	{
+		printf("%d\n",values[i]);
+
+	}
+
+	return 0;
+}

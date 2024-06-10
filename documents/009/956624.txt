@@ -1,0 +1,52 @@
+INF = 100000
+
+loop{
+	
+	n,m,p,a,b = gets.split.map(&:to_i)
+	if n == 0 and m == 0 and p == 0 and a == 0 and b == 0 then
+		break
+	end
+	mat = Array.new(m).map{Array.new(m,INF)}
+	carr = Array.new(m,INF)
+	arr = gets.split.map(&:to_f)
+	arr.sort!
+	arr.reverse!
+	p.times{|i|
+		x,y,z = gets.split.map(&:to_f)
+		mat[y-1][x-1] = z
+		mat[x-1][y-1] = z
+	}
+	
+	now = a - 1
+	stack = [[now,0,[]]]
+	
+	while (!stack.empty?) do
+		pos,cost,root = stack.pop()
+		mat[pos].each_with_index{|toc,i|
+			if toc == INF then
+				next
+			end
+			nroot = root +[toc]
+			if nroot.size() > n then
+				next
+			end 
+			ncost = 0
+			nroot.sort!
+			nroot.reverse!
+			nroot.each_with_index{|r,ind|
+				ncost += (r / arr[ind])
+			}
+			
+			if (ncost < carr[i]) then
+				carr [i] = ncost
+				stack.push([i,ncost,nroot])
+			end
+			
+		}
+	end
+	if carr[b-1] >=INF then
+		print "Impossible\n"
+	else 
+		p carr[b-1]
+	end
+}

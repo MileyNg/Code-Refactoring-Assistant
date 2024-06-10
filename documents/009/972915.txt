@@ -1,0 +1,44 @@
+// 2014/06/03 Tazoe
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main()
+{
+	while(true){
+		char s[10001];
+		cin >> s;
+
+		if(cin.eof())
+			break;
+
+		int cnt = 0;
+		char* p = s;
+		while(true){
+			p = strstr(p, "JOI");
+
+			if(p==0)
+				break;
+
+			cnt++;
+			p++;
+		}
+		cout << cnt << '\n';
+
+		cnt = 0;
+		p = s;
+		while(true){
+			p = strstr(p, "IOI");
+
+			if(p==0)
+				break;
+
+			cnt++;
+			p++;
+		}
+		cout << cnt << '\n';
+	}
+
+	return 0;
+}

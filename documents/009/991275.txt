@@ -1,0 +1,29 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+int gcd(int a, int b){
+	while( b!=0 ){
+		int c = b;
+		b = a%b;
+		a = c;
+	}
+	return a;
+}
+
+int main (int argc, char * const argv[]) {
+    // insert code here...
+    int a, b, c;
+	while(cin >> a >> b){
+		if(a<b){
+			swap(a, b);
+		}
+		c = gcd(a, b);
+		cout << c << " " << a/c*b << endl;
+	}
+	return 0;
+}

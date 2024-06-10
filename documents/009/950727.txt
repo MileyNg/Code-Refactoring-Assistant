@@ -1,0 +1,62 @@
+#include<stdio.h>
+#include<limits.h>
+#include<math.h>
+
+#define MAX 500
+#define INF (1 << 21)
+
+int cost[MAX][MAX]; // cost[u][v]は辺e=(u,v)のコスト(存在しない場合はINF)
+int mincost[MAX]; // 集合Xからの辺の最小コスト
+int used[MAX]; // 頂点iがXに含まれているか
+int V; // 頂点数
+
+int solve() {
+	int i, v, u;
+    int res = 0;
+    for(i=1;i<=V;i++) {
+        mincost[i] = INF;
+        used[i] = 0;
+    }
+
+    mincost[0] = 0;
+    used[1] = 1;
+    for(u=1; u<=V;u++) {
+        mincost[u] = cost[1][u];
+    }
+
+    while(1) {
+        v = 0;
+        // Xに属さない頂点のうちXからの辺のコストが最小になる頂点を探す
+        for(u=1;u<=V;u++) {
+            if (!used[u] && (v == 0 || mincost[u] < mincost[v])) v = u;
+        }
+
+        if (v == 0) break;
+        used[v] = 1; // 頂点vをXに追加
+        res += mincost[v]; // 辺のコストを加える
+
+        for(u=1; u<=V;u++) {
+            if(mincost[u] > cost[v][u]) {
+                mincost[u] = cost[v][u];
+            }
+        }
+    }
+    return res;
+}
+
+int main(void) {
+    int n, i, j, e;
+
+    scanf("%d\n", &n);
+    V = n;
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            scanf("%d", &e);
+            cost[i][j] = (e == -1) ? INF : e;
+        }
+    }
+
+    printf("%d\n", solve());
+
+    return 0;
+}

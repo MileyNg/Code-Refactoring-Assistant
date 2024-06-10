@@ -1,0 +1,10 @@
+n = gets.to_i
+nums = gets.chomp.split.map(&:to_i)
+nums.each.with_index do |num, i|
+  while 0 < i && num < nums[i-1]
+    nums[i] = nums[i-1]
+    i -= 1
+  end
+  nums[i] = num
+  puts nums * ' '
+end

@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+int n;
+
+int dp[2][1000010], adp[2][1000010];
+int INF = 1e9;
+
+void solve() {
+	for (int i=0; i<2; i++) {
+		fill(dp[i], dp[i]+1000010, INF);
+		fill(adp[i], adp[i]+1000010, INF);
+	}
+	
+	dp[0][0] = 0;
+	adp[0][0] = 0;
+	for (int i=0; i<200; i++) {
+		int nw = i%2, nx = (i+1)%2;
+		int add = i * (i+1) * (i+2) / 6;
+		if (add > n) break;
+		for (int j=0; j<=n; j++) {
+			if (add <= j) {
+				dp[nx][j] = min(dp[nw][j], dp[nx][j-add] + 1);
+			} else {
+				dp[nx][j] = dp[nw][j];
+			}
+			
+			if (add%2==0) {
+				adp[nx][j] = adp[nw][j];
+			} else {
+				if (add <= j) {
+					adp[nx][j] = min(adp[nw][j], adp[nx][j-add] + 1);
+				} else {
+					adp[nx][j] = adp[nw][j];
+				}
+			}
+		}
+	}
+	
+	int ans1 = INF, ans2 = INF;
+	for (int i=0; i<2; i++) {
+		ans1 = min(ans1, dp[i][n]);
+		ans2 = min(ans2, adp[i][n]);
+	}
+	cout << ans1 << " " << ans2 << endl;
+}
+
+int main() {
+	while (1) {
+		cin >> n; if (n==0) break;
+		solve();
+	}
+	
+	return 0;
+}

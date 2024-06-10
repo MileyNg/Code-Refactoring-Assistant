@@ -1,0 +1,29 @@
+
+MAX_VAL = (1 << 31) - 1
+
+### subroutines
+
+def lay(i0, i1, st, lcache)
+  return 0 if i0 >= i1
+  return lcache[i0][i1] if ! lcache[i0][i1].nil?
+
+  min_sum = MAX_VAL
+
+  for j in (i0...i1)
+    sum =
+      lay(i0, j, st, lcache) + lay(j + 1, i1, st, lcache) +
+      st[i0][0] * st[j][1] * st[j + 1][0] * st[i1][1]
+    min_sum = sum if min_sum > sum
+  end
+
+  lcache[i0][i1] = min_sum
+end
+
+### main
+
+n = gets.strip.to_i
+
+stocks = n.times.map{gets.strip.split(' ').map{|s| s.to_i}}
+lcache = (0...n).map{(0...n).map{nil}}
+
+puts lay(0, n - 1, stocks, lcache)

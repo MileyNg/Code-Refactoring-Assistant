@@ -1,0 +1,54 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=x && x<w && 0<=y && y<h)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef pair<int, int> P;
+/** Problem2198 : Moonlight Farm **/
+int main()
+{
+	int N, P, A, B, C, D, E, F, S, M;
+	string L;
+	map<double, vector<string>, greater<double> > list;
+	
+	while (cin>>N, N) {
+		list.clear();
+		rep(k, N) {
+			cin>>L>>P>>A>>B>>C>>D>>E>>F>>S>>M;
+			double time=0.0; int t=M;
+			time += A+B+C;
+			while (t>0) {
+				time+=D+E;
+				t--;
+			}
+			list[double(F*M*S-P)/time].push_back(L);
+		}
+		map<double, vector<string>, greater<double> >::iterator it=list.begin();
+		for (;it!=list.end(); it++) {
+			sort(it->second.begin(), it->second.end());
+			vector<string>::iterator it2 = it->second.begin();
+			for(;it2!=it->second.end(); it2++) {
+				cout << *it2 << endl;
+			}
+		}
+		cout << "#" << endl;
+	}
+	return 0;
+}

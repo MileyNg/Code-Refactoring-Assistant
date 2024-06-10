@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int dx[] = {-1, 0, 0, 1};
+const int dy[] = { 0,-1, 1, 0};
+
+int sx, sy, gx, gy, n;
+double P[3][3];
+
+bool check(int x, int y){
+  return 0 <= x && x < 3 && 0 <= y && y < 3;
+}
+
+void solve(){
+  P[sy][sx] = 1;
+
+  queue<int> qx, qy, rem;
+  qx.push(sx), qy.push(sy), rem.push(n);
+
+  while(!qx.empty()){
+    int x = qx.front(); qx.pop();
+    int y = qy.front(); qy.pop();
+    int r = rem.front(); rem.pop();
+
+    if(x == gx && y == gy || r == 0) break;
+
+    for(int i = 0 ; i < 4 ; i++){
+      int nx = x + dx[i];
+      int ny = y + dy[i];
+
+      if(!check(nx, ny)) continue;
+      P[ny][nx] = P[y][x] / 4;
+      qx.push(nx), qy.push(ny), rem.push(r-1);
+    }
+  }
+
+  printf("%.6f\n",P[gy][gx]);
+}
+
+int main(){
+  char s, t, b;
+  
+  while(cin >> n, n){
+    memset(P, 0, sizeof(P));
+
+    cin >> s >> t >> b;
+    int ss = s - 'A', tt = t - 'A', bb = b - 'A';
+    P[bb/3][bb%3] = -1;
+    sx = ss%3; sy = ss/3;
+    gx = tt%3; gy = tt/3;
+    solve();
+  }
+
+  return 0;
+}

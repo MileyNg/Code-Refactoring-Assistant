@@ -1,0 +1,39 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+int main(){
+
+	int n,r;
+	int p,c;
+	vector<int> dek;
+	vector<int>::iterator ite;
+	queue<int> tmp;
+
+	while(1){
+
+		cin>>n>>r;
+		if(n==0&&r==0) break;
+
+		if(!dek.empty()) dek.clear();
+		for(int i=1;i<=n;i++) dek.push_back(i);
+
+		for(int i=0;i<r;i++){
+			cin>>p>>c;
+			ite=dek.begin();
+			advance(ite,n-p-c+1);
+			for(int i=0;i<c;i++){
+				tmp.push(*ite);
+				ite=dek.erase(ite);
+			}
+			while(!tmp.empty()){
+				dek.push_back(tmp.front());
+				tmp.pop();
+			}
+		}
+		cout<<dek[n-1]<<endl;
+	}
+
+}

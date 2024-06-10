@@ -1,0 +1,42 @@
+&#65279;&#65279;&#65279;&#65279;&#65279;&#65279;&#65279;#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define INF 1 << 28
+
+using namespace std;
+
+int n, m;
+int cost[400][400];
+
+int main(){
+  scanf("%d%d", &n, &m);
+  rep(i, n) rep(j, n) cost[i][j] = 0;
+  int a, b, c;
+  rep(i, m){
+    scanf("%d%d%d", &a, &b, &c);
+    cost[a][b]  = c;
+  }
+
+  rep(k, n) rep(i, n) rep(j, n)  if(cost[i][k] && cost[k][j]) // if(i != j && k != i && k != j)
+    cost[i][j] = max(cost[i][j], cost[i][k] + cost[k][j]);
+
+  /*  rep(i, n){
+    rep(j, n) printf("%d ", cost[i][j]);
+    puts("");
+    }*/
+
+  printf("%d\n", cost[0][n-1]);
+  return 0;
+}

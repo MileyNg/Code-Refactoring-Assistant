@@ -1,0 +1,62 @@
+#include <stdio.h>
+
+int main(void)
+{
+    int i, j;
+    int in_num;
+    int row, column;
+    int all_sum = 0;
+
+    scanf("%d %d", &row, &column);
+    int in_spread[row][column];
+    int row_sum[row];
+    int column_sum[column];
+    int out_spread[row + 1][column + 1];
+
+    for (i = 0; i < row; i++){
+        for (j = 0; j < column; j++){
+            scanf("%d", &in_num);
+            in_spread[i][j] = in_num;
+            all_sum += in_num;
+        }
+    }
+
+    for (i = 0; i < row; i++){
+        row_sum[i] = 0;
+        for (j = 0; j < column; j++){
+            row_sum[i] += in_spread[i][j];
+        }
+    }
+
+    for (j = 0; j < column; j++){
+        column_sum[j] = 0;
+        for (i = 0; i < row; i++){
+            column_sum[j] += in_spread[i][j];
+        }
+    }
+
+    for (i = 0; i < row; i++){
+        for (j = 0; j < column; j++){
+            out_spread[i][j] = in_spread[i][j];
+        }
+    }
+    for (i = 0; i < row; i++){
+        out_spread[i][column] = row_sum[i];
+    }
+    for (j = 0; j < column; j++){
+        out_spread[row][j] = column_sum[j];
+    }
+    out_spread[row][column] = all_sum;
+
+    for (i = 0; i < row + 1; i++){
+        for (j = 0; j < column + 1; j++){
+            if (j){
+                printf(" ");
+            }
+            printf("%d", out_spread[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}

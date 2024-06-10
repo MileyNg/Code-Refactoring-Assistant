@@ -1,0 +1,15 @@
+i = 1j
+overflow = False
+while not overflow :
+    z = eval(raw_input())
+    res = ""
+    if abs(z.real) > 10000 or abs(z.imag) > 10000:
+        print "overflow"
+        overflow = True
+    else:
+        if z.real != 0: res += str(int(z.real))
+        if z.imag != 0:
+            if z.imag > 0 or res == "":
+                res += "+"
+            res += str(int(z.imag))+"i"
+        print res

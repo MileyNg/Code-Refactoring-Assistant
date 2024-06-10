@@ -1,0 +1,65 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int W, H; readf("%d %d\n", &W, &H);
+    auto F = new int[][](H, W);
+    int Y, X; // 福袋の座標
+    foreach (i; 0 .. H) {
+        string s = readln.chomp;
+        foreach (j; 0 .. W) {
+            if (s[j] == '.') {
+                F[i][j] = 0;
+            } else if (s[j] == '#') {
+                F[i][j] = int.max;
+            } else { assert(s[j] == 't');
+                F[i][j] = 0;
+                Y = i; X = j;
+            }
+        }
+    }
+    int N; readf("%d\n", &N);
+    foreach (int i; 1 .. N + 1) {
+        int x, y; readf("%d %d\n", &x, &y);
+        F[y][x] = i;
+    }
+
+    foreach (int t; 0 .. N + 1) {
+        struct P { int y, x; }
+        DList!P Q;
+        Q.insert(P(0, 0));
+        auto used = new bool[][](H, W);
+        while (!Q.empty) {
+            static const dy = [0, 1, 0, -1],
+                         dx = [1, 0, -1, 0];
+            P p = Q.front; Q.removeFront;
+            foreach (i; 0 .. 4) {
+                int ny = p.y + dy[i],
+                    nx = p.x + dx[i];
+                if (ny < 0 || ny >= H) continue;
+                if (nx < 0 || nx >= W) continue;
+                if (F[ny][nx] > t) continue;
+                if (used[ny][nx]) continue;
+                if (ny == Y && nx == X) {
+                    t.writeln;
+                    return;
+                }
+                used[ny][nx] = true;
+                Q.insert(P(ny, nx));
+            }
+        }
+    }
+    writeln(-1);
+}

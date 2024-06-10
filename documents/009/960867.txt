@@ -1,0 +1,133 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<queue>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+typedef pair<int,int> pii;
+
+const int INF = 1000000000;
+
+const int N = 222;
+int w,n;
+vector<pii> block[N];
+
+bool input(){
+	cin>>w>>n;
+	if(w==0)return false;
+	
+	rep(i,N)block[i].clear();
+	
+	rep(i,n){
+		int m;
+		cin>>m;
+		rep(j,m){
+			int a,b;
+			cin>>a>>b;
+			block[i].push_back(pii(a,b));
+		}
+	}
+	return true;
+}
+
+typedef pair<int,double> pid;
+
+vector<pid> edge[N];
+
+double getlen(pii a, pii b){
+	double d1 = a.first-b.first;
+	double d2 = a.second-b.second;
+	
+	return sqrt(d1*d1 + d2*d2);
+}
+
+void mkedge_line(int num, double w){
+	rep(i,n){
+		double mini = INF;
+		rep(j,block[i].size()){
+			mini = min(mini,  getlen(pii(w,block[i][j].second), block[i][j]) );
+		}
+		edge[num].push_back(pid(i,mini));
+		edge[i].push_back(pid(num,mini));
+	}
+}
+
+void mkedge_block(){
+	rep(i,n){
+		reps(j,i+1,n){
+			double mini = INF;
+			rep(k,block[i].size()){
+				rep(p, block[j].size()){
+					mini = min(mini, getlen(block[i][k], block[j][p]) );
+				}
+			}
+			edge[i].push_back(pid(j,mini));
+			edge[j].push_back(pid(i,mini));
+		}
+	}
+}
+
+void mkedge(){
+	rep(i,N)edge[i].clear();
+	
+	mkedge_line(n,0);
+	mkedge_line(n+1, w);
+	mkedge_block();
+}
+
+int visit[N];
+double dijk(){
+	
+	rep(i,N)visit[i]=0;
+	
+	typedef pair<double,int> P;
+	priority_queue<P> que;
+	que.push(P(0,n));
+	
+	while(!que.empty()){
+		
+		P u = que.top();
+		que.pop();
+		
+		if(visit[u.second]==1)continue;
+		visit[u.second]=1;
+		
+		if(u.second==n+1)return -u.first;
+		
+		rep(i,edge[u.second].size()){
+			pid e = edge[u.second][i];
+			que.push( P(u.first- e.second, e.first) );
+		}
+	}
+	return 0.0;
+}
+double solve(){
+	
+	if(n==0)return w;
+	mkedge();
+	return dijk();;
+}
+
+void printedge(){
+	rep(i,n+2){
+		printf("%d ",i);
+		rep(j,edge[i].size())printf("(%d %lf)",edge[i][j].first,edge[i][j].second);puts("");
+	}
+}
+
+int main(){
+	while(input()){
+		printf("%.9lf\n",solve());
+		
+		//printedge();
+	}
+}

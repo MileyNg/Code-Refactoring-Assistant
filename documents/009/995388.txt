@@ -1,0 +1,94 @@
+#include <climits>
+#include <cstdlib>
+#include <functional>
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+struct edge {
+	int to, cost;
+	edge(int to_, int cost_):to(to_), cost(cost_) {}
+};
+
+typedef pair<int, int> P;
+
+vector<int> dijkstra(int s, const vector<vector<edge>> &G) {
+	const int n = G.size();
+
+	vector<int> dist(n, INT_MAX);
+	priority_queue<P, vector<P>, greater<P>> que;
+	dist[s] = 0;
+	que.push({0, s});
+
+	while(!que.empty()) {
+		const int d = que.top().first;
+		const int v = que.top().second;
+		que.pop();
+
+		if(dist[v] < d) continue;
+
+		for(const auto &e : G[v]) {
+			const int next_dist = d + e.cost;
+			if(dist[e.to] > next_dist) {
+				dist[e.to] = next_dist;
+				que.push({next_dist, e.to});
+			}
+		}
+	}
+
+	return dist;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+	cout.precision(8);
+	cout.setf(ios::fixed);
+
+	for(int n, m, p; cin >> n >> m >> p && n;) {
+		vector<vector<edge>> G(n);
+		for(int i = 0; i < m; ++i) {
+			int a, b, cost;
+			cin >> a >> b >> cost;
+			G[a].emplace_back(b, cost);
+			G[b].emplace_back(a, cost);
+		}
+
+		const auto dist = dijkstra(n - 1, G);
+		vector<double> probability(n, 0.0);
+		priority_queue<P, vector<P>, greater<P>> que;
+		probability[0] = 1.0;
+
+		for(int i = 0; i < n; ++i) {
+			que.push({dist[i], i});
+		}
+
+		while(!que.empty()) {
+			const int d = que.top().first;
+			const int v = que.top().second;
+			que.pop();
+
+			vector<int> next_nodes;
+
+			for(const auto &e : G[v]) {
+				if(d - e.cost == dist[e.to]) {
+					next_nodes.emplace_back(e.to);
+				}
+			}
+
+			for(const auto &u : next_nodes) {
+				probability[u] += probability[v] / next_nodes.size();
+			}
+		}
+
+		while(p--) {
+			int v;
+			cin >> v;
+			cout << probability[v] << endl;
+		}
+		cout << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

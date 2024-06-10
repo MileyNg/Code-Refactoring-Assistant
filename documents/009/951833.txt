@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+int main(void)
+{
+  int n,i,j;
+  int num[1000000]={0};
+
+  for(i=3;i<999998;i+=2){
+    if(num[i]==1)
+      continue;
+    for(j=3*i;j<999998;j+=i*2)
+      num[j]=1;
+  }
+
+  for(;scanf("%d",&n)!=EOF;){
+    int count=1;
+    for(i=3;i<=n;i+=2){
+      if(num[i]==1)
+        continue;
+      count+=1;
+    }
+    if(n<2)
+      count=0;
+    printf("%d\n",count);
+  }
+
+  return 0;
+}

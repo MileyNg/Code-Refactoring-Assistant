@@ -1,0 +1,78 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<cstring>
+#include<map>
+using namespace std;
+int main()
+{
+  int w,h;
+  for(;cin>>w>>h,w;)
+    {
+      char maps[h][w];
+      vector<pair<int,int> > dast;
+      int sx,sy;
+      for(int i=0;i<h;i++)
+	for(int j=0;j<w;j++)
+	  {
+	    cin>>maps[i][j];
+	    if(maps[i][j]=='*')
+	      {
+		dast.push_back(make_pair(i,j));
+	      }
+	    else if(maps[i][j]=='o')
+	      {
+		sx=i;
+		sy=j;
+	      }
+	  }
+      //now,bit;
+      map<pair<pair<int,int>,int>,bool >hash;
+      //now, bit,cnt;
+      queue<pair< pair<int,int>,pair<int,int> > >qu;
+      qu.push(make_pair(make_pair(sx,sy),make_pair(0,0)));
+      int ans=-1;
+      int size=dast.size();
+      int dx[]={1,-1,0,0};
+      int dy[]={0,0,1,-1};
+      //cout<<"lastbit:"<<((1<<(size))-1)<<endl;
+      //      qu.pop();
+      while(!qu.empty())
+	{
+	  pair<int,int> now=qu.front().first;
+	  int x=now.first;
+	  int y=now.second;
+	  int bit=qu.front().second.first;
+	  int cnt=qu.front().second.second;
+	  qu.pop();
+	  //	  cout<<"now: "<<x<<" "<<y<<" "<<bit<<" "<<cnt<<endl;
+	  if(maps[x][y]=='*')
+	    {
+	      for(int i=0;i<size;i++)
+		{
+		  if(x==dast[i].first &&y==dast[i].second )
+		    bit=bit|(1<<i);
+		}
+	    }
+	  if(bit==(1<<size)-1)
+	    {
+	      ans=cnt;
+	      break;
+	    }
+	  if(hash.count(make_pair(now,bit))!=0)
+	    continue;
+	  hash[make_pair(now,bit)]=true;
+	  for(int i=0;i<4;i++)
+	    {
+	      if(x+dx[i]>=0 &&x+dx[i]<h &&
+		 y+dy[i]>=0 &&y+dy[i]<w &&
+		 maps[x+dx[i]][y+dy[i]]!='x' &&
+		 hash.count(make_pair(make_pair(x+dx[i],y+dy[i]),bit))==0
+		 )
+		qu.push(make_pair(make_pair(x+dx[i],y+dy[i]),make_pair(bit,cnt+1)));
+
+	    }
+	}
+      cout<<ans<<endl;
+    }
+}

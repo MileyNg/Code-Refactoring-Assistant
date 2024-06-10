@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Candidate{
+	int stone;
+};
+
+int main(void){
+	int n, p, i, j, cnt, win;
+	while(1){
+		scanf("%d %d", &n, &p);
+		if(n==0&&p==0)	break;
+		struct Candidate *can = (struct Candidate*)malloc(sizeof(struct Candidate)*n);
+		while(1){
+			if(i == n)	i = 0;
+			if(p != 0){
+				can[i].stone++;
+				p--;
+				if(p == 0){
+					cnt = 0;
+					for(j = 0; j < n; j++){
+						if(j == i) continue;
+						if(can[j].stone == 0)	cnt++;
+					}
+					if(cnt == n-1){
+						win = i;
+						break;
+					}
+				}
+			}else{
+				p = can[i].stone;
+				can[i].stone = 0;
+			}
+			i++;
+		}
+		printf("%d\n", win);
+		i = 0;
+	}
+	return 0;
+}

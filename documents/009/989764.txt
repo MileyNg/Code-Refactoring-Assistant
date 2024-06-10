@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+int main(){
+  vector<string> a(100);
+  vector<int> b(100);
+  int i=0;
+  while(cin>>a[i]>>b[i])i++;
+
+  rep(k,i){
+    rep(j,i-1){
+      if(a[j]>a[j+1]){
+	swap(a[j],a[j+1]);
+	swap(b[j],b[j+1]);
+      }
+      if(a[j]==a[j+1]&&b[j]>b[j+1])
+	swap(b[j],b[j+1]);
+    }
+  }
+
+
+  rep(j,i){
+    if(j&&a[j]==a[j-1])cout<<" "<<b[j];
+    else cout<<a[j]<<endl<<b[j];
+    if(j-i+1&&a[j]!=a[j+1])cout<<endl;
+  }
+  cout<<endl;
+}

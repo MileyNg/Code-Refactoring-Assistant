@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int n, p, q, m, s, e;
+int t[100000];
+
+int main(){
+  while(scanf("%d%d%d", &n, &p, &q) && n+p+q){
+    p = (p/100)*60 + (p%100);
+    q = (q/100)*60 + (q%100);
+    memset(t, 0, sizeof(t));
+    rep(i, n){
+      scanf("%d", &m);
+      rep(j, m){
+	scanf("%d%d", &s, &e);
+	s = (s/100)*60 + (s%100);
+	e = (e/100)*60 + (e%100);
+	REP(k, s, e) t[k]++;
+      }
+    }
+
+    //    REP(i, p, q) printf("%d ", t[i]); puts("");
+    int res = 0, c = 0;
+    REP(i, p, q){
+      if(t[i] == n){
+	c = 0;
+      }else{
+	c++;
+	res = max(res, c);
+      }
+    }
+
+    printf("%d\n", res);
+  }
+  return 0;
+}

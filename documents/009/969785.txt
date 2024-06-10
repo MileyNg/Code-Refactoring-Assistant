@@ -1,0 +1,102 @@
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+const int M = 256;
+
+int N;
+#define MN 256
+int I[MN + 1];
+bool input() {
+    cin >> N;
+    if (N == 0) return false;
+    for (int i = 0; i < N; i++) {
+        cin >> I[i];
+    }
+    return true;
+}
+
+void MakeR(int S, int A, int C, vector<int>& R) {
+    R.resize(N + 1, 0);
+    R[0] = S;
+    for (int i = 1; i < N; i++) {
+        R[i] = (A * R[i - 1] + C) % M;
+    }
+}
+double H(int S, int A, int C) {
+    double Ret = 0;
+    vector<int> R;
+    MakeR(S, A, C, R);
+    vector<int> Occ(256, 0);
+    //cout << S << " " << A << " " << C << endl;
+    for (int i = 0; i < N; i++) {
+        int O = (I[i] + R[i + 1]) % M;
+        //cout << O << " ";
+        Occ[O]++;
+    }
+    for (int i = 0; i < 256; i++) {
+        if (Occ[i] == 0) continue;
+        double x = Occ[i];
+        Ret -= (x / N) * log(x / N);
+    }
+    //cout << " -> " << Ret << endl;
+    return Ret;
+}
+
+const double EPS = 1e-9;
+#define EQ(x, y) (abs((x) - (y)) <= EPS)
+
+void solve() {
+    int Ans[3];
+    double MinH = 1e10;
+    for (int S = 0; S <= 15; S++) {
+        for (int A = 0; A <= 15; A++) {
+            for (int C = 0; C <= 15; C++) {
+                double h = H(S, A, C);
+                int v[3] = {S, A, C};
+                //cout << h << endl;
+                if (MinH > h) {
+                    MinH = h;
+                    Ans[0] = S;
+                    Ans[1] = A;
+                    Ans[2] = C;
+                }
+                if (EQ(MinH, h)) {
+                    if (Ans[0] < S) continue;
+                    if (Ans[0] > S) {
+                        memcpy(Ans, v, sizeof(v));
+                        continue;
+                    }
+                    if (Ans[1] < A) continue;
+                    if (Ans[1] > A) {
+                        memcpy(Ans, v, sizeof(v));
+                        continue;
+                    }
+                    if (Ans[2] < C) continue;
+                    if (Ans[2] > C) {
+                        memcpy(Ans, v, sizeof(v));
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    cout << Ans[0] << " " << Ans[1] << " " << Ans[2] << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

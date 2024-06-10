@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <math.h>
+
+typedef struct {
+    int x;
+    int y;
+} point_t;
+
+typedef struct {
+    int deg;
+    int a;
+} wind_t;
+
+void scan_coordinate(point_t p[], int count) {
+    int i;
+    for (i = 0; i < count; i++) {
+        scanf("%d%d", &(p[i].x), &(p[i].y));
+    }
+}
+
+int atan2_deg(double y, double x) {
+    int deg = atan2(y, x) * 180.0 / M_PI;
+    return (deg + 360) % 360;
+}
+
+int main(void) {
+    int H, R, U, M, S, du, dm, ds;
+    point_t house[100], ume[10], momo[10], sakura[10];
+    point_t *hus, *um, *mm, *skr;
+    wind_t wind[100], *wnd;
+    int nice_house[100], nice_max, nice;
+    int i, h, w, d, deg, pfirst;
+
+    while (scanf("%d%d\n", &H, &R) == 2 && H && R) {
+        scan_coordinate(house, H);
+        scanf("%d%d%d%d%d%d\n", &U, &M, &S, &du, &dm, &ds);
+        scan_coordinate(ume, U);
+        scan_coordinate(momo, M);
+        scan_coordinate(sakura, S);
+        for (i = 0; i < R; i++) {
+            scanf("%d%d", &(wind[i].deg), &(wind[i].a));
+        }
+
+        
+        for (h = 0, nice_max = 0; h < H; h++) {
+            hus = &house[h];
+            nice_house[h] = 0;
+            for (w = 0; w < R; w++) {
+                wnd = &wind[w];
+                nice = 0;
+                if (hypot(hus->x, hus->y) < wnd->a) {
+                    deg = atan2_deg(hus->y, hus->x);
+                    if ((wnd->deg - du / 2) < deg && deg < (wnd->deg + du/2)) {
+                        nice = 1;
+                    }
+                }
+                if (!nice) continue;
+
+                for (i = 0; i < 3; i++) {
+                    int t, T;
+                    point_t *tp, *tree;
+                    switch (i) {
+                    case 0:
+                        tree = ume; T = U; d = du; break;
+                    case 1:
+                        tree = momo; T = M; d = dm; break;
+                    case 2:
+                        tree = sakura; T = S; d = ds; break;
+                    }
+                    for (t = 0; t < T; t++) {
+                        tp = &tree[t];
+                        if (hypot(tp->x - hus->x, tp->y - hus->y) < wnd->a) {
+                            deg = atan2_deg(hus->y - tp->y, hus->x - tp->x);
+                            // printf("%d: %d -- %d - %d\n", h+1, deg, wnd->deg - d/2, wnd->deg + d/2);
+                            if (deg > (wnd->deg - d/2) && (wnd->deg + d/2) > deg) {
+                                nice = 0;
+                                break;
+                            }
+                        }
+                    }
+                    if (!nice) break;
+                }
+                nice_house[h] += nice;
+            }
+            if (nice_max < nice_house[h]) {
+                nice_max = nice_house[h];
+            }
+        }
+        if (nice_max > 0) {
+            for (h = 0, pfirst = 1; h < H; h++) {
+                if (nice_house[h] == nice_max) {
+                    printf("%s%d", pfirst ? "": " ", h+1);
+                    if (pfirst) pfirst = 0;
+                }
+            }
+            printf("\n");
+        }
+        else printf("NA\n");
+    }
+    return 0;
+}

@@ -1,0 +1,40 @@
+#define MAX (5)
+int main(int argc, const char * argv[])
+{
+    int m[MAX] = {0}; //中間 MAX 50点
+    int f[MAX] = {0}; //期末 MAX 50点
+    int r[MAX] = {0}; //再試験 MAX 100点
+    int sum[MAX] = {0}; //中間・期末の合計
+    int i = 0;
+    int max;
+    
+    while(1){
+        scanf("%d %d %d",&m[i],&f[i],&r[i]);
+        sum[i] = m[i]+f[i];
+        if(m[i] == -1 && f[i] == -1 && r[i] == -1){ //オール −１入力でループエンド
+            break;
+        }
+        i++;
+    }
+    max = i;
+    for(i=0; i<=max; i++){
+        if(m[i] == -1 || f[i] == -1){ //中間 or 期末を欠席  F
+            printf("F\n");
+        }else if(80 <= sum[i]){ //中間・期末の合計８０点以上　A
+            printf("A\n");
+        }else if(65 <= sum[i] && sum[i] < 80){ //中間・期末合計が65 ~ 80 B
+            printf("B\n");
+        }else if(50 <= sum[i] && sum[i] < 80){ //中間・期末合計50~65 C
+            printf("C\n");
+        }else if(30 <= sum[i] && sum[i] < 50){ //中間・期末合計30~50で再試験
+            if(50 <= sum[i]){ //再試験が５０以上なら C
+                printf("C\n");
+            }else if(30 <= f[i] && f[i] < 50){
+                printf("D\n");
+            }else { //再試験が50未満なら F
+                printf("F\n");
+            }
+        }
+    }
+    return 0;
+}

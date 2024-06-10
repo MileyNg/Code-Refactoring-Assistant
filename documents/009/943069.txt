@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int N, T;
+
+int main(){
+  int h1, m1, h2, m2;
+  char st[51], ar[51];
+
+  char s[10][51];
+  scanf("%d%d", &N, &T);
+  vector<pair<int, int> >time(N);
+  rep(i, N){
+    scanf("%d:%d%s%d:%d%s", &h1, &m1, s[i], &h2, &m2, ar);
+    time[i] = make_pair(h1*60+m1, h2*60+m2);
+  }
+  int M = 0;
+  vector<pair<string, int> >res(N);
+  REP(i, 1, N){
+    int trip = time[i].first - time[i-1].second;
+    if(trip < T) continue;
+    res[M] = make_pair(string(s[i]), trip);
+    M++;
+  }
+
+  printf("%d\n", M);
+  rep(i, M) printf("%s %d\n", res[i].first.c_str(), res[i].second);
+
+  return 0;
+}

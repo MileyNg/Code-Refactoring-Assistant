@@ -1,0 +1,20 @@
+#include <stdio.h>
+int main(void){
+    int px[50],py[50],np,i,sign,cnt = 1;
+    double area;
+    scanf("%d", &np);
+    while( np > 0 ){
+        for(i = 0; i < np; i++){
+            scanf( "%d %d", &px[i], &py[i] );
+        }
+        area = 0;
+        for(i = 2; i < np; i++){
+            area += (double)( (px[i] - px[0])*(py[i-1] - py[0])
+                              - (px[i-1] - px[0])*(py[i] - py[0]) )/2;
+
+        }
+        printf("%d %.1lf\n",cnt++, area);
+        scanf("%d", &np);
+    }
+    return 0;
+}

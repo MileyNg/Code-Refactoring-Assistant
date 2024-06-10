@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<string.h>
+int main(){
+  int i,ko,kuontamu,time[50000],j=0,goukei=0,dai2,t,nagasa;
+  char s[50000][10],dai[10];
+  scanf("%d%d",&ko,&kuontamu);
+  for(i=0;i<ko;i++){
+    scanf("%s%d",&s[i][0],&time[i]);
+  }
+  while(1){
+    time[j]-=kuontamu;
+    if(time[j]<=0){
+      goukei+=(kuontamu+time[j]);
+      time[j]=goukei;
+      j++;
+    }
+    else if(time[j]>0){
+      goukei+=kuontamu;
+      dai2=time[j];
+      nagasa=strlen(s[j]);
+      for(t=0;t<nagasa;t++){
+	dai[t]=s[j][t];
+      }
+      for(i=j;i<ko-1;i++){
+	time[i]=time[i+1];
+      nagasa=strlen(s[j]);
+	for(t=0;t<nagasa;t++){
+	  s[i][t]=s[i+1][t];
+	}
+      }
+      time[ko-1]=dai2;
+      nagasa=strlen(s[j]);
+      for(t=0;t<nagasa;t++){
+	s[ko-1][t]=dai[t];
+      }
+    }
+    if(j>=ko)break;
+  }
+  for(i=0;i<ko;i++)
+    printf("%s %d\n",s[i],time[i]);
+  return 0;
+}

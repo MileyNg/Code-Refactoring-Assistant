@@ -1,0 +1,17 @@
+if __FILE__ == $0
+  while line = gets
+    data = line.split(',').map{|i| i.to_i}
+    rail_length = data[0..-3].inject(:+)
+    cross_point = rail_length * (data[-2].to_f / (data[-2] + data[-1]).to_f)
+    section = 0
+    len_acc = 0
+    while true
+      if len_acc >= cross_point 
+        break
+      end
+      len_acc += data[section]
+      section += 1
+    end
+    puts section
+  end
+end

@@ -1,0 +1,23 @@
+def leap?(y)
+  return true if y % 400 == 0
+  return false if y % 100 == 0
+  return y %4 == 0
+end
+
+### main
+
+ans = []
+
+while true
+  a, b = gets.chomp.split(" ").map{|s| s.to_i}
+  break if a == 0 && b == 0
+
+  lys = []
+  for y in (a..b)
+    lys.push y if leap?(y)
+  end
+
+  ans.push (lys.length > 0) ? lys.join("\n") : "NA"
+end
+
+puts ans.join("\n\n")

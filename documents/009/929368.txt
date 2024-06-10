@@ -1,0 +1,49 @@
+#include "math.h"
+#include "stdio.h"
+#include <algorithm>
+#include <string>
+#include <map>
+#include <iostream>
+
+using namespace std;
+
+/** Problem0042 : A Thief **/
+int W, N, tre[1100][2]={0}, solW, solN;
+void solve(int n, int i, int value)
+{
+	if (n > W || i>N)
+		return;
+	
+	if (value > solW) {
+		solW = value;
+		solN = n;
+	} else if (value == solW) {
+		solN = min(n, solN);
+	}
+	
+
+	
+	solve(n+tre[i][1], i+1, value+tre[i][0]);
+	solve(n, i+1, value);
+}
+
+int main()
+{
+	int set=0; char cam;
+	while (1) {
+		set++;
+		
+		cin >> W;
+		solW = 0; solN = 0;
+		if (W==0) break;
+		cin >> N;
+		for (int i=0; i<N; i++) {
+			cin >> tre[i][0] >> cam >> tre[i][1];
+		}
+		solve(0, 0, 0);
+		cout << "Case " << set << ":" << endl;
+		cout << solW << endl;
+		cout << solN << endl;
+	}
+	return 0;
+}

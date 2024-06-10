@@ -1,0 +1,31 @@
+#include<stdio.h>
+int main(void){
+    int w,n,ai[30],bi[30],_ai[30],_bi[30],i,j,m,output[30];
+    scanf("%d%d",&w,&n);
+    for(i=0;i<n;i++){
+        scanf("%d,%d",&ai[i],&bi[i]);
+    }
+    for(i=1;i<=w;i++){
+        for(j=0;j<n;j++){
+            _ai[j]=ai[j];
+            _bi[j]=bi[j];
+        }
+        for(j=0,m=i;j<n;j++){
+            if(_ai[j]==m){
+                m=_bi[j];
+                _ai[j]=0;
+                _bi[j]=0;
+            }
+            if(_bi[j]==m){
+                m=_ai[j];
+                _ai[j]=0;
+                _bi[j]=0;
+            }
+        }
+        output[m-1]=i;
+    }
+    for(i=0;i<w;i++){
+        printf("%d\n",output[i]);
+    }
+return 0;
+}

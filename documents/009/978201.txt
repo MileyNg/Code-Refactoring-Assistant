@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+#include <complex>
+#include <iomanip>
+#include <cmath>
+
+using namespace std;
+
+typedef complex<double> P;
+#define rep(i, n) for(int i=0; i<(n); ++i)
+#define all(c) (c).begin(), (c).end()
+const double eps = 1e-8, inf = 1e8;
+
+template<typename T> T sqr(T x){return x*x;}
+
+double cross(const P &a, const P &b){
+    return imag(conj(a) * b);
+}
+
+double dot(const P &a, const P &b){
+    return real(conj(a) * b);
+}
+
+int ccw(P a, P b, P c){
+    b -= a; c -= a;
+    if(cross(a, b) > eps)return 1;
+    if(cross(b, c) < -eps)return -1;
+    if(dot(b, c) < 0)return 2;
+    if(norm(b) < norm(c))return -2;
+    return 0;
+}
+
+struct L:vector<P>{
+    L(const P &a, const P &b){
+        push_back(a); push_back(b);
+    }
+};
+
+bool interSS(const L &s, const L &t){
+    return ccw(s[0], s[1], t[0]) * ccw(s[0], s[1], t[1]) <= 0 &&
+           ccw(t[0], t[1], s[0]) * ccw(t[0], t[1], s[1]) <= 0;
+}
+
+P xptLL(const L &l, const L &m){
+    double d = cross(l[1] - l[0], m[1] - m[0]);
+    if(abs(d) < eps)return l[0];
+    return m[0] + (m[1] - m[0]) * cross(l[1] - l[0], l[1] - m[0]) / d;
+}
+
+struct C:P{
+    double r;
+    C(const P &a, double r):P(a), r(r){}
+};
+
+int overlap(const C &c1, const C &c2){
+    if(sqr(c1.r + c2.r) < norm(c1 - c2))return 0;
+    if(abs(c1 - c2) + c1.r < c2.r + eps)return -1;
+    if(c2.r < c1.r && abs(c1 - c2) + c2.r < c1.r + eps)return 1;
+    if(abs(abs(c1 - c2) - c1.r - c2.r) < eps)return -2;
+    return 2;
+}
+
+vector<P> xptCC(const C &c1, const C &c2){
+    vector<P> res;
+    double d = abs(c1 - c2);
+    if(d < eps || abs(overlap(c1, c2)) != 2)return res;
+    double rc = (sqr(d) + sqr(c1.r) - sqr(c2.r)) / (2 * d);
+    double rs = sqrt(sqr(c1.r) - sqr(rc));
+    P diff = (c2 - c1) / d;
+    res.push_back(c1 + diff * P(rc, rs));
+    res.push_back(c1 + diff * P(rc, -rs));
+    return res;
+}
+
+double solve(vector<C> stake){
+    vector<P> fixpt(all(stake));
+    vector<L> locus;
+    rep(i, (int)stake.size())rep(j, i){
+        vector<P> xpt = xptCC(stake[i], stake[j]);
+        if(xpt.empty())continue;
+        fixpt.insert(fixpt.end(), all(xpt));
+        fixpt.push_back((xpt[0] + xpt[1]) / 2.);
+        locus.push_back(L(xpt[0], xpt[1]));
+    }
+    rep(i, (int)locus.size())rep(j, i){
+        if(!interSS(locus[i], locus[j]))continue;
+        fixpt.push_back(xptLL(locus[i], locus[j]));
+    }
+    double res = 0.;
+    for(auto p: fixpt){
+        double h = inf;
+        for(auto c: stake)h = min(h, sqr(c.r) - norm(c - p));
+        res = max(res, h);
+    }
+    return sqrt(res);
+}
+
+int main(){
+    for(int n; cin >> n, n;){
+        vector<C> stake;
+        rep(i, n){
+            int x, y, l;
+            cin >> x >> y >> l;
+            stake.push_back(C(P(1. * x, 1. * y), 1. * l));
+        }
+        cout << fixed << setprecision(8) << solve(stake) << '\n';
+    }
+    return 0;
+}

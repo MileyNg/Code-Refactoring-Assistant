@@ -1,0 +1,83 @@
+
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+using namespace std;
+
+//マクロ定義
+#define ALL(v) (v).begin(),(v).end()
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
+#define REP(i,a,b) for(int i=(int)(a); i<(int)(b); ++i)
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define SORT(x) sort(begin(x),end(x))
+#define SELECT_SORT(x, n) sort(begin(x),begin(x)+n)
+#define SWAP(type, a, b) do {type tmp = a; a = b; b = tmp;} while (0)
+#define rep_split(tok,a_str,re) for(char *tok = strtok((char *)a_str.c_str(),re); tok != NULL; tok = strtok(NULL,re))
+
+//定数
+#define INF 2000000000000
+#define MAX 10
+
+//DEBUG用
+#define BAR() cout << "----------------------------" << endl;
+#define DUMP(v) (cerr << #v << ": " << v << endl)
+#define PRINT(list) cout << "{ "; for(auto nth : list){ cout << nth << " "; } cout << "}" << endl;
+
+int check(int h, int m){
+	int time = h*100 + m;
+	if(time >= 1100 && time <= 1459){
+		return 0;
+	}
+	else if(time >= 1800 && time <= 2059){
+		return 1;
+	}
+	else if(time >= 2100 || time <= 159){
+		return 2;
+	}
+	else{
+		return -1;
+	}
+}
+
+bool ok(int m, int m2){
+	if(m2 >= m){
+		return (m2-m) <= 8;
+	}
+	else{
+		return (60-m)+m2 <= 8;
+	}
+}
+
+int main()
+{
+	int h, m, m2, n;
+	
+	while(cin >> n && n){
+		double accept[3]={0};
+		double total[3]={0};
+		rep(i, n){
+			scanf("%d%*c%d%d", &h,&m,&m2);
+			if(check(h, m) != -1){
+				total[check(h,m)]++;
+				if(ok(m,m2)){accept[check(h,m)]++;}
+			};
+		}
+		string ans[3];
+		rep(i,3)
+		{
+			if(total[i] == 0){
+				ans[i] = "no guest";
+			}else{
+				ans[i] = to_string((int)((accept[i]/total[i]) * 100));
+			}
+		}
+		cout << "lunch" << " " << ans[0] << endl;
+		cout << "dinner" << " " << ans[1] << endl;
+		cout << "midnight" << " " << ans[2] << endl;
+	}
+}

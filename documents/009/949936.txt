@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int short_cmp(const short*,const short*);
+
+void main(){
+	short* height = (short*)malloc(10*sizeof(short));
+	{char i;
+	scanf("");
+	for(i=0;i<10;i++){
+			//printf("入力してください。%hhd件目\n",i);
+			scanf("%*c%hd",&height[i]);
+		}
+	}
+	
+	qsort(height, 10, sizeof(short),(int (*)(const void*, const void*))short_cmp);
+
+	{char i;
+	for(i=0;i<3;i++)
+		printf("%hd\n",height[9-i]);
+	}
+	
+	free(height);
+}
+
+int short_cmp(const short* a,const short* b){
+	return (*a<*b)?-1:(*a==*b)?0:1;
+}

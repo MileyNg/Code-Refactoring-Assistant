@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int b[8] = {4, 1, 4, 1, 2, 1, 2, 1};
+
+int main(){
+    int p[8];
+    while(cin >> p[0]){
+        int ans[8];
+        for(int i=1; i < 8; i++) cin >> p[i];
+
+        int maxPoint = 0;
+        for(int i=0; i < 8; i++){
+            int point = 0;
+            for(int j=0; j < 8; j++){
+                point += min(p[j], b[(i+j)%8]);
+            }
+            if(maxPoint < point){
+                maxPoint = point;
+                for(int k=0; k < 8; k++){
+                    ans[k] = b[(i+k)%8];
+                }
+            }
+        }
+        for(int i=0; i < 8; i++){
+            if(i == 0) cout << ans[i];
+            else cout << " " << ans[i];
+        }
+        cout << endl;
+    }
+}

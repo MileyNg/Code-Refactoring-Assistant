@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+    
+#define NMAX 1000
+
+struct S{
+	int e,w;
+	string n;
+};
+
+int main(void){
+       
+   int N,Q;
+   int q;
+   S year[NMAX];
+
+   while(1){
+	   cin>>N>>Q;
+	   if(N==0&&Q==0) break;
+	   for(int i=0;i<N;i++){
+		   cin>>year[i].n>>year[i].e>>year[i].w;
+	   }
+	   for(int i=0;i<Q;i++){
+		   cin>>q;
+		   for(int i=0;i<N;i++){
+			   if(q>=year[i].w-year[i].e+1&&q<=year[i].w){
+				   cout<<year[i].n<<" "<<q-(year[i].w-year[i].e)<<endl;
+				   break;
+			   }
+			   if(i==N-1) cout<<"Unknown"<<endl;
+		   }
+	   }
+   }
+
+   return 0;
+}

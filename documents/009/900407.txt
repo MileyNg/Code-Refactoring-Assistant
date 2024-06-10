@@ -1,0 +1,51 @@
+#include <iostream>
+
+using namespace std;
+
+int hyou[14][14] = {0};
+
+void judge(int ii, int jj) {
+	int imove[4] = {0, 1, 0, -1};
+	int jmove[4] = {1, 0, -1, 0};
+	hyou[ii][jj] = 0;
+	for (int i = 0; i < 4; i++) {
+		if (hyou[ii+imove[i]][jj+jmove[i]] == 1) {
+			judge(ii+imove[i], jj+jmove[i]);
+		}
+	}
+	return;
+}
+
+void solve(void) {
+	int counter = 0;
+	for (int i = 1; i < 13; i++) {
+		for (int j = 1; j < 13; j++) {
+			if (hyou[i][j] == 1) {
+				judge(i, j);
+				counter++;
+			}
+		}
+	}
+	cout << counter << endl;
+	return;
+}
+
+int main() {
+	char a;
+	while (cin >> a) {
+		hyou[1][1] = a - '0';
+		for (int j = 2; j < 13; j++) {
+			cin >> a;
+			hyou[1][j] = a - '0';
+		}
+
+		for (int i = 2; i < 13; i++) {
+			for (int j = 1; j < 13; j++) {
+				cin >> a;
+				hyou[i][j] = a - '0';
+			}
+		}
+		solve();
+	}
+	return 0;
+}

@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int n;
+  while(scanf("%d", &n) && n){
+    int res = 0;
+    REP(i, 1, n/2+1){
+      int sum = 0;
+      for(int j = i; sum <= n; j++){
+	sum += j;
+	if(sum == n) res++;
+      }
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

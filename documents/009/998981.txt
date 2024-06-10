@@ -1,0 +1,54 @@
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  prices = {}
+
+  n.times.each do
+    i, pr = gets.strip.split(' ')
+    prices[i] = pr.to_i
+  end
+
+  m = gets.strip.to_i
+
+  recipes = {}
+
+  m.times.each do
+    rs = gets.strip.split(' ')
+    i = rs.shift
+    k = rs.shift
+
+    recipes[i] = rs
+  end
+
+  target = gets.strip
+
+  stack = [target]
+  mccache = {}
+
+  while ! stack.empty?
+    i = stack.pop
+
+    next if ! mccache[i].nil?
+
+    rcp = recipes[i]
+    if rcp.nil?
+      mccache[i] = prices[i]
+      next
+    end
+
+    is = rcp.select{|ri| mccache[ri].nil?}
+    if ! is.empty?
+      stack << i
+      stack += is
+      next
+    end
+
+    sum = rcp.inject(0){|s, ri| s + mccache[ri]}
+    mccache[i] = (prices[i] < sum) ? prices[i] : sum
+  end
+
+  puts mccache[target]
+end

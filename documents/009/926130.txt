@@ -1,0 +1,18 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+int main(){
+    double a,b,c;//a,bが３角形の辺、cがその間の角度
+    scanf("%lf %lf %lf",&a,&b,&c);
+
+    double s,l,h;
+    //sが面積、lが周の長さ、hがaを底辺とした時の高さ
+    h = b*sin(c*M_PI/180); //sin,cosだと値がないからb*sin
+    s = (a*h)/2;//aが底辺だから高さかけて割るだけ
+    l = a+b+ sqrt(a*a + b*b - 2*a*b*cos(c*M_PI/180)); //周だからa+b + 余弦定理
+    
+    
+    printf("%f %f %f",s,l,h);
+    
+    return 0;
+}

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+const double EPS = 1e-9; const double INF = 1e10; const double PI = M_PI;
+struct Point{
+  Point(double x, double y ):x(x), y(y){}
+  Point(){}
+  double x,y;
+};
+Point operator+(const Point &a, const Point &b){ return Point(a.x + b.x, a.y + b.y); }
+Point operator-(const Point &a, const Point &b){ return Point(a.x - b.x, a.y - b.y); }
+double cross( const Point &a, const Point &b ){ return a.x * b.y - a.y * b.x; }
+double dot(const Point &a, const Point &b){ return a.x * b.x + a.y * b.y; }
+double norm( const Point &a ) { return dot( a, a ) ; }
+int ccw( Point a, Point b, Point c ) {
+  b = b - a;
+  c = c - a;
+  if ( cross( b, c ) > EPS ) return 1;
+  if ( cross( b, c ) < -EPS ) return -1;
+  return 0;
+}
+int main () {
+
+  double xa, ya, xb, yb, xc, yc, xd, yd;
+  char ch;
+  while(cin >> xa >> ch >> ya >> ch >> xb >> ch >> yb >> ch >> xc >> ch >> yc >> ch >> xd >> ch >> yd){
+    Point points[4] = {};
+
+    points[0] = Point(xa, ya);
+    points[1] = Point(xb, yb);
+    points[2] = Point(xc, yc);
+    points[3] = Point(xd, yd);
+    
+    bool same = true;
+    bool already = false;
+    int sign = 0;
+    for(int i = 0; i < 4; i++){
+      const int next = (i + 1) % 4;
+      const int nnext = (next + 1) % 4;
+      
+      //cout << points[i].x << "," << points[i].y  << endl;
+      if(!already){
+	sign = ccw(points[i], points[next], points[nnext]);
+	already = true;
+      }else if(sign != ccw(points[i], points[next], points[nnext])){
+	same = false;
+	break;
+      }
+    }
+    cout << (same ? "YES" : "NO") << endl;
+  }
+
+  return 0;
+
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+
+bool isSmallAlpha(char c){
+	return 'a' <= c && c <= 'z';
+}
+
+void encode(std::string& str, int s){
+	for(int i=0; i < str.size(); i++){
+		if(isSmallAlpha(str[i])){
+			str[i] = (str[i] - 'a' + s) % 26 + 'a';
+		}
+	}
+}
+
+int main() {
+	std::string s;
+	while(std::getline(std::cin, s)){
+		for(int i = 0; i < 26; i++){
+			encode(s, 1);
+			if(s.find("the") != std::string::npos ||
+			   s.find("that") != std::string::npos ||
+			   s.find("this") != std::string::npos){
+				std::cout << s << std::endl;   	
+			}
+		}
+	}
+	return 0;
+}

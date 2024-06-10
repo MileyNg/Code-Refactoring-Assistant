@@ -1,0 +1,9 @@
+# Simultaneous Equation
+require 'matrix'
+while line = ARGF.gets do
+  a1,b1,z1,a2,b2,z2 = line.split.map($:to_i)
+  m1 = Matrix.column_vector [z1,z2]
+  m2 = Matrix[[a1,b1],[a2,b2]]
+  r  = m1 / m2
+  puts r.column(0).to_a.join("\s") 
+end

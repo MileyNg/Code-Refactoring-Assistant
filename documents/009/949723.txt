@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    int L,m,n;
+    while(cin>>L, L){
+        int s = 0;
+        bool ok =false;
+        int ans = -1;
+        for(int i=0; i<12; i++){
+            cin>>m>>n;
+            s +=(m-n);
+            if(s>=L && !ok){
+                ok =true;
+                ans = i+1;
+            }
+        }
+        if(ok){
+            cout << ans << endl;
+        } else {
+            cout << "NA" << endl;
+        }
+    }
+}

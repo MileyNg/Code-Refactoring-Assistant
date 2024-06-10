@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <math.h>
+#define N 500
+
+int parent(int );
+int left(int );
+int right(int );
+
+main(){
+  int n,i,*k[N],x,p,l,r;
+
+  scanf("%d",&n);
+
+  for(i=1; i<=n; i++)
+    scanf("%d",(k+i));
+
+  
+  for(i=1; i<=n; i++){
+    
+    printf("node %d: ",i);
+    printf("key = %d, ",*(k+i));
+    
+    if(i==1){
+      l=left(i);
+      r=right(i);
+      printf("left key = %d, ",*(k+l));
+      printf("right key = %d, \n",*(k+r));
+    }
+    
+    
+    else if(i!=1 && 2*i+1<=n){
+      p=parent(i);
+      l=left(i);
+      r=right(i);
+      printf("parent key = %d, ",*(k+p));
+      printf("left key = %d, ",*(k+l));
+      printf("right key = %d, \n",*(k+r));
+    }
+    
+    else if(i!=1 && 2*i<=n){
+      p=parent(i);
+      l=left(i);
+      printf("parent key = %d, ",*(k+p));
+      printf("left key = %d, \n",*(k+l));
+    }
+    
+    else{
+      p=parent(i);
+      printf("parent key = %d, \n",*(k+p));
+    }
+  }
+  return 0;
+}
+
+
+
+int parent(int i){
+  return floor(i/2);
+}
+
+int left(int i){
+  return 2*i;
+}
+
+int right(int i){
+  return 2*i+1;
+}

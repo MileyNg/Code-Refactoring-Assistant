@@ -1,0 +1,75 @@
+### constant
+
+ROPE2 = 50 * 50
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  bldgs = []
+  bids = {}
+
+  (0...n).each do |i|
+    b, x, y = gets.strip.split(' ').map{|s| s.to_i}
+    bldgs[i] = [b, x, y]
+    bids[b] = i
+  end
+
+  edges = Array.new(n){Array.new(n){false}}
+
+  for i in (0...n)
+    bi, xi, yi = bldgs[i]
+    for j in ((i + 1)...n)
+      bj, xj, yj = bldgs[j]
+      d2 = (xi - xj) ** 2 + (yi - yj) ** 2
+      if d2 <= ROPE2
+        edges[i][j] = edges[j][i] = true
+      end
+    end
+  end
+
+  nbrs = Array.new(n){[]}
+
+  for i in (0...n)
+    nbrs[i] = (0...n).select{|j| edges[i][j]}
+  end
+
+  m = gets.strip.to_i
+
+  m.times.each do
+    s, g = gets.strip.split(' ').map{|s| s.to_i}
+
+    dist = (0...n).map{n}
+    dist[bids[s]] = 0
+    prev = []
+    queue = (0...n).map{|i| i}
+
+    while ! queue.empty?
+      u = queue.min{|a, b| dist[a] <=> dist[b]}
+      queue.delete u
+
+      ndist = dist[u] + 1
+      for v in nbrs[u]
+        if dist[v] > ndist
+          dist[v] = ndist
+          prev[v] = u
+        end
+      end
+    end
+
+    v = bids[g]
+    if dist[v] >= n
+      puts "NA"
+    else
+      rt = []
+      while ! v.nil?
+        rt << bldgs[v][0]
+        v = prev[v]
+      end
+
+      puts rt.reverse.join(' ')
+    end
+  end
+end

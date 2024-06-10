@@ -1,0 +1,63 @@
+#include<stdio.h>
+
+char clas[3]={'A','B','C'};
+
+int has100(int m,int e,int j){
+  if((m==100)||(e==100)||(j==100)){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
+int ave3(int m,int e,int j){
+  return (m+e+j)/3;
+}
+
+void prclass(int x){
+  printf("%c\n",clas[x]);
+}
+
+void dvdstdnt(int n){
+  if(n!=0){
+    int m,e,j;
+    scanf("%d %d %d",&m,&e,&j);
+    if(has100(m,e,j)==1){
+      prclass(0);
+    }
+    else if((m+e)/2>=90){
+      prclass(0);
+    }
+    else{
+      int av3=ave3(m,e,j);
+      if(av3>=80){
+	prclass(0);
+      }
+      else if(av3>=70){
+	prclass(1);
+      }
+      else if((av3>=50)&&((m>=80)||(e>=80))){
+	prclass(1);
+      }
+      else{
+	prclass(2);
+      }
+    }
+    dvdstdnt(n-1);
+  }
+}
+
+void doit(){
+  int n;
+  scanf("%d",&n);
+  if(n!=0){
+    dvdstdnt(n);
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

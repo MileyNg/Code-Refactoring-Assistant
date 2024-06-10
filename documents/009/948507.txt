@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long double ld;
+
+const ld EPS = 1e-9;
+const ld INF = 1e10;
+const ld PI = M_PI;
+
+struct Point{
+  ld x, y;
+  Point(ld x, ld y):x(x), y(y){}
+  Point(){}
+};
+
+Point operator+(const Point &a, const Point &b){
+  return Point(a.x + b.x, a.y + b.y);
+}
+Point operator-(const Point &a, const Point &b){
+  return Point(a.x - b.x, a.y - b.y);
+}
+Point operator*(const Point &a, const ld b){
+  return Point(a.x * b, a.y * b);
+}
+Point operator*(const Point &a, const Point &b){
+  return Point(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);
+}
+Point operator/(const Point &a, const ld b){
+  return Point(a.x / b, a.y / b);
+}
+
+ld cross(const Point &a, const Point &b){
+  return a.x*b.y - a.y*b.x;
+}
+
+ld dot(const Point &a, const Point &b){
+  return a.x*b.x + a.y*b.y;
+}
+
+ld norm(const Point &a){
+  return dot(a, a);
+}
+
+struct Line:vector<Point>{
+  Line(Point a = Point(0, 0), Point b = Point(0, 0)){
+    this->push_back(a);
+    this->push_back(b);
+  }
+};
+
+typedef vector<Point> Polygon;
+
+int ccw(Point a, Point b, Point c){
+  b = b - a;
+  c = c - a;
+  if(cross(b, c) > EPS) return +1; // 反時計周り
+  if(cross(b, c) < -EPS) return -1; // 時計周り
+  if(dot(b, c) < 0) return +2; // c -- a -- b がこの順番に一直線上
+  if(norm(b) < norm(c)) return -2; // a -- b -- c がこの順番に一直線上
+  return 0; // a -- c -- b が一直線上
+}
+
+Point next(const Polygon &a, int x){
+  return a[(x+1)%a.size()];
+}
+
+Point prev(const Polygon &a, int x){
+  return a[(x-1+a.size()) % a.size()];
+}
+
+bool is_convex(const Polygon &poly){
+  for(int i = 0 ; i < (int)poly.size() ; i++){
+    if(ccw(prev(poly, i), poly[i], next(poly, i)) == -1) return false;
+  }
+  return true;
+}
+
+int main(){  
+  int q;
+  cin >> q;
+  Polygon poly;
+  while(q--){
+    Point p;
+    cin >> p.x >> p.y;
+    poly.push_back(p);
+  }
+  if(is_convex(poly)) cout << 1 << endl;
+  else cout << 0 << endl;
+  
+  return 0;
+}

@@ -1,0 +1,66 @@
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+int map[105][105];
+int xg,yg;
+int w,h;
+int dx[]={0,0,-1,1};
+int dy[]={-1,1,0,0};
+
+bool check(int x,int y)
+{
+  if(x==xg && y==yg)
+    return true;
+  if(map[x][y]==-1)
+    return false;
+  if(x>h||y>w||x<=0||y<=0)
+    return false;
+  
+  char buf=map[x][y];
+  map[x][y]=-1;
+  for(int i=0;i<4;i++)
+    {
+      if(x+dx[i]<=h && x+dx[i]>=0 &&
+	 y+dy[i]<=w && y+dy[i]>=0 &&
+	 map[x+dx[i]][y+dy[i]]==buf && 
+	 check(x+dx[i],y+dy[i])
+	 )
+	return true;
+    }
+  return false;
+}
+int main()
+{
+  for(;cin>>w>>h,w;)
+    {
+      memset(map,-1,sizeof(map));
+      int xs,ys;
+      cin>>xs>>ys;
+      cin>>xg>>yg;
+      int n;
+      cin>>n;
+      for(int i=0;i<n;i++)
+	{
+	  int c,d,x,y;
+	  cin>>c>>d>>y>>x;
+	  if(d==0)
+	    {
+	      for(int xx=x;xx<x+2;xx++)
+		for(int yy=y;yy<y+4;yy++)
+		  map[xx][yy]=c;
+	    }
+	  else
+	    {
+	      for(int xx=x;xx<x+4;xx++)
+		for(int yy=y;yy<y+2;yy++)
+		  map[xx][yy]=c;
+	    }
+	}
+      if(check(xs,ys))
+	cout<<"OK"<<endl;
+      else 
+	cout<<"NG"<<endl;      
+    }
+}

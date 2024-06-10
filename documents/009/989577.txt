@@ -1,0 +1,89 @@
+#include <stdio.h>
+#define N 100000
+ 
+typedef struct{
+  int left,right,p;
+}Node;
+
+Node tree[N];
+
+int n;
+ 
+void in(int);
+void post(int);
+void pre(int);
+
+ 
+ 
+main(void){
+  int i, id;
+  
+  scanf("%d", &n);
+  
+  for(i = 0; i < n; i++){
+    tree[i].left = -1;
+    tree[i].p = -1;
+    tree[i].right = -1;
+  }
+  
+  for(i = 0; i < n; i++){
+
+    scanf("%d", &id);
+
+    scanf("%d %d", &tree[id].left, &tree[id].right);
+
+      tree[tree[id].left].p = id;
+      tree[tree[id].right].p = id;
+
+    }   
+ 
+  printf("Preorder\n");
+  for(i = 0; i < n; i++){
+    if(tree[i].p == -1){
+      pre(i);
+    }
+  }
+
+  printf("\nInorder\n");
+  for(i = 0; i < n; i++){
+    if(tree[i].p == -1){
+      in(i);
+    }
+  }
+
+  printf("\nPostorder\n");
+  for(i = 0; i < n; i++){
+    if(tree[i].p == -1){
+      post(i);
+    }
+  }
+  printf("\n");
+  return 0;
+}
+
+
+
+void in(int p){
+  if(p != -1) {
+    in(tree[p].left);
+    printf(" %d", p);
+    in(tree[p].right);
+  }
+}
+ 
+void post(int p){
+if(p != -1) {
+    post(tree[p].left);
+    post(tree[p].right);
+    printf(" %d", p);
+  }
+}
+ 
+void pre(int p){
+if(p != -1) {
+  printf(" %d", p);
+  pre(tree[p].left);
+  pre(tree[p].right);
+  }
+}
+ 

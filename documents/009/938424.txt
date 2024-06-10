@@ -1,0 +1,58 @@
+#include<iostream>
+#include<algorithm>
+#include<cstdio>
+using namespace std;
+#define maxn 10100
+
+struct N
+{
+    int n1, n2, cost;
+}e[maxn];
+
+int fa[maxn];
+
+bool cmp(N a, N b)
+{
+    return a.cost<b.cost;
+}
+
+void init()
+{
+    for(int i=0; i<maxn; i++)
+        fa[i]=i;
+}
+
+int find1(int x)
+{
+    if(x==fa[x])
+        return x;
+    fa[x]=find1(fa[x]);
+    return fa[x];
+}
+
+int main()
+{
+    int n,m;
+    while(scanf("%d%d",&n,&m)&&(n||m))
+    {
+        init();
+        for(int i=0; i<m; i++)
+            scanf("%d%d%d",&e[i].n1,&e[i].n2,&e[i].cost);
+        sort(e,e+m,cmp);
+        int num=0;
+        for(int i=0; i<m; i++)
+        {
+            int a=find1(e[i].n1);
+            int b=find1(e[i].n2);
+            if(a==b)
+                continue;
+            fa[a]=fa[b];
+            num++;
+            if(num==(n+1)/2)
+            {
+                cout << e[i].cost << endl;
+                break;
+            }
+        }
+    }
+}

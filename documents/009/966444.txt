@@ -1,0 +1,29 @@
+#include<iostream>
+
+using namespace std;
+
+
+
+int main(){
+	while(1){
+		int w,h;
+		int Nw,Nh;
+		cin>>h>>w;
+		int mini=1000000;
+		if(w==0 && h==0)break;
+
+
+		for(int i=1;i<=10000;i++){
+			for(int j=1;(j<i && i*j<=10000);j++){
+				if(i*i+j*j>w*w+h*h){
+					if(i*i+j*j<mini){
+						mini=i*i+j*j;
+						Nw=i,Nh=j;
+					}
+				}
+			}
+		}
+		cout<<Nh<<" "<<Nw<<endl;
+	}
+	return 0;
+}

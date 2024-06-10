@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+#define MAX 20
+
+struct P{
+  double x, y;
+}; 
+
+int N;
+P h, d, c[MAX];
+ 
+double dist(P a, P b){
+  return sqrt(pow(a.x-b.x,2) + pow(a.y-b.y,2));
+}
+
+bool used[MAX];
+bool rec(int now, double sum, int dep){
+  if(dep == N){
+    return true;
+  }
+
+  for(int i = 0 ; i < N ; i++){
+    if(!used[i]){
+      if(sum + dist(c[now],c[i]) >= dist(d,c[i])){
+        return false;
+      }
+    }
+  }
+
+  for(int i = 0 ; i < N ; i++){
+    if(!used[i]){
+      used[i] = true;
+      if(rec(i, sum+dist(c[now],c[i]),dep+1)){
+        return true;
+      }
+      used[i] = false;
+    }
+  }
+  return false;
+}
+
+bool solve(){
+  for(int i = 0 ; i < N ; i++){
+    memset(used, false, sizeof(used));
+    if(rec(i, dist(h,c[i]), 0)){
+      return true;
+    }
+  }
+  return false;
+}
+ 
+int main(){
+  while(cin >> N >> h.x >> h.y >> d.x >> d.y, (N + h.x + h.y + d.x + d.y)){
+    for(int i = 0 ; i < N ; i++){
+      cin >> c[i].x >> c[i].y;
+    }
+    cout << (solve() ? "YES" : "NO") << endl;
+  }
+  
+  return 0;
+}

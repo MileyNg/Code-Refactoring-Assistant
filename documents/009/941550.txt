@@ -1,0 +1,53 @@
+#include<iostream>
+#include<vector>
+
+int memo[20][20];
+int x, y;
+
+int calc(std::vector<std::vector<int> > &v, int x, int y){
+
+	int res = 0;
+	if (memo[x][y] != -1)return memo[x][y];
+	if ((x > v.size() - 1) || (x == v.size() - 1 && v[x][y] != 1))return 1;
+
+	if (v[x][y] == 2)res += calc(v, x + 2, y);
+
+	if (v[x][y] == 0){
+		if (v[x + 1][y] == 0 || v[x + 1][y] == 2)res += calc(v, x + 1, y);
+
+		if (y < v[x].size() - 1 && v[x + 1][y + 1] == 0)res += calc(v, x + 1, y + 1);
+
+		if (y > 0 && v[x + 1][y - 1] == 0)res += calc(v, x + 1, y - 1);
+	}
+
+	return memo[x][y] = res;
+}
+
+
+int main(){
+
+	while (std::cin >> x >> y){
+
+		if (x == 0 && y == 0)break;
+
+		int res = 0;
+		std::vector<std::vector<int> >v(y, std::vector<int>(x));
+
+		for (int i = 0; i < 20; i++){
+			for (int j = 0; j < 20; j++){
+				memo[i][j] = -1;
+			}
+		}
+
+		for (int i = 0; i < y; i++){
+			for (int j = 0; j < x; j++){
+				std::cin >> v[i][j];
+			}
+		}
+
+		for (int i = 0; i < v[0].size(); i++)res += calc(v, 0, i);
+
+		std::cout << res << std::endl;
+	}
+	return 0;
+}

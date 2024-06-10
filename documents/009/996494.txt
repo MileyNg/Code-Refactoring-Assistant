@@ -1,0 +1,18 @@
+def suber(c, k):
+    if ord('a')<=ord(c):
+        w = ord(c) - ord('a')
+        if w < k:
+            return chr(ord('Z') - (k - w - 1))
+        return chr(ord('a') + (w - k))
+    else:
+        w = ord(c) - ord('A')
+        if w < k:
+            return chr(ord('z') - (k - w - 1))
+        return chr(ord('A') + (w - k))
+while True:
+    n = input()
+    if n==0:
+        break
+    k = map(int, raw_input().split())
+    s = raw_input()
+    print "".join(suber(s[i], k[i%n]) for i in xrange(len(s)))

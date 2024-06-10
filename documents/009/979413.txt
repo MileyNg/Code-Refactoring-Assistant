@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	vector<int> furui(101000, 0);
+	furui[0] = furui[1] = 1;
+	for (int i = 2; i * i <= 101000; i++) {
+		if (furui[i] == 0) {
+			for (int j = 2; j < 101000/i; j++) {
+				furui[i*j] = 1;
+			}
+		}
+	}
+	int n, p;
+	while (cin >> n >> p) {
+		if (n == -1 && p == -1) {
+			break;
+		}
+		int a = n+1;
+		int counter = 0;
+		while (counter == 0) {
+			if (furui[a] == 0) {
+				counter = a*2;
+				break;
+			} else {
+				a++;
+			}
+		}
+		int limit;
+		int j = a;
+		for (int i = 1; i < p; i++) {
+			if (j == a) {
+				counter++;
+			}
+			limit = counter/2;
+			while (j <= limit) {
+				if (furui[j] == 0 && furui[counter-j] == 0) {
+					break;
+				} else {
+					j++;
+				}
+			}
+			if (j > limit) {
+				j = a;
+				i--;
+			} else {
+				j++;
+			}
+		}
+		cout << counter << endl;
+	}
+	return 0;
+}

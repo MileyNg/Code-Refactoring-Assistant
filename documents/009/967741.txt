@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+/*動的計画法で解く*/
+int main(){
+	//入力1行目
+	int a, b;
+	while(std::cin >> a >> b){
+		if(a == 0 && b == 0) break;
+	//入力2行目
+		int n;
+		std::cin >> n;
+		//二次元のベクタ用意(a*b) dpはパターン数をいれる 1で初期化しておく（結局上書き）
+		std::vector<std::vector<int> > dp(a, std::vector<int>(b, 1));
+		//工事中の点に0をいれる
+		int x, y;
+		for(int i = 0; i < n; ++i){
+			std::cin >> x >> y;
+			//端が工事中になればそのうえかみぎは全て0
+			if(y == 1){
+				for(int i = x - 1; i < a; ++i){
+					dp[i][y - 1] = 0;
+				}
+			}
+			else if(x == 1){
+				for(int i = y - 1; i < b; ++i){
+					dp[x - 1][i] = 0;
+				}
+			}
+			else{
+				dp[x - 1][y - 1] = 0;
+			}
+		}
+		//求める処理　現在の点は左の点と下の点を足す
+		for(int i = 1; i < a; ++i){
+			for(int j = 1; j < b; ++j){
+				if(dp[i][j] != 0){
+					dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+				}
+			}
+		}
+		std::cout << dp[a - 1][b - 1] << std::endl;
+	}
+}

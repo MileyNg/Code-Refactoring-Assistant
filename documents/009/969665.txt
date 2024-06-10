@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define P(a,n) for (int k = 0; k < n; k++) printf("%d ", a[k]);
+
+int main(){
+    int n, r;
+    while (cin >> n >> r && n && r) {
+        vector<int> pct(n);
+        for (int i = 0; i < n; i++) { pct[i] = n-i; }
+        for (int i = 0; i < r; i++) {
+            int p, c; cin >> p >> c;
+            vector<int> tmp1(c);
+            vector<int> tmp2(p-1);
+            for (int j = 0; j < c; j++) tmp1[j] = pct[p+j-1];
+            for (int j = 0; j < p-1; j++) tmp2[j] = pct[j];
+            for (int j = 0; j < p-1; j++) pct[c+j] = tmp2[j];
+            for (int j = 0; j < c; j++) pct[j] = tmp1[j];
+        }
+        cout << pct[0] << endl;
+    }
+    return 0;
+}

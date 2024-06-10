@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define FIELD_LENGTH_MAX 31
+
+const char block_blank = '.';
+
+void swap_block(char f[][FIELD_LENGTH_MAX], int r1, int c1, int r2, int c2) {
+    char t = f[r1][c1];
+    f[r1][c1] = f[r2][c2];
+    f[r2][c2] = t;
+}
+
+void _erase_block(char f[][FIELD_LENGTH_MAX], int w, int h,
+                  int r, int c, char b) {
+    if (r < 0 || h <= r || c < 0 || w <= c) return;
+    if (f[r][c] != b) return;
+    f[r][c] = block_blank;
+    _erase_block(f, w, h, r-1, c, b);
+    _erase_block(f, w, h, r, c-1, b);
+    _erase_block(f, w, h, r+1, c, b);
+    _erase_block(f, w, h, r, c+1, b);
+}
+
+int erase_block (char f[][FIELD_LENGTH_MAX], int w, int h, int n) {
+    int r, c, i, j, erased = 0;
+    char e[FIELD_LENGTH_MAX][FIELD_LENGTH_MAX] = {};
+    for (r = 0; r < h; r++) {
+        for (c = 0; c < w; c++) {
+            char block = f[r][c];
+            if (block == block_blank) continue;
+            if (r + n <= h) {
+                for (i = r; i < h; i++) {
+                    if (block != f[i][c]) break;
+                }
+                if (i - r >= n) {
+                    for (j = r; j < i; j++) {
+                        e[j][c] = 1;
+                    }
+                }
+            }
+            if (c + n <= w) {
+                for (i = c; i < w; i++) {
+                    if (block != f[r][i]) break;
+                }
+                if (i - c >= n) {
+                    for (j = c; j < i; j++) {
+                        e[r][j] = 1;
+                    }
+                }
+            }
+        }
+    }
+    for (r = 0; r < h; r++) {
+        for (c = 0; c < w; c++) {
+            if (e[r][c]) {
+                f[r][c] = block_blank;
+                erased = 1;
+            }
+        }
+    }
+    return erased;
+}
+
+void drop_block (char f[][FIELD_LENGTH_MAX], int w, int h) {
+    int i, j;
+    for (i = h -2; i >= 0; i--) {
+        for (j = w - 1; j >= 0; j--) {
+            if (f[i][j] != block_blank &&
+                f[i+1][j] == block_blank) {
+                swap_block(f, i, j, i+1, j);
+            }
+        }
+    }
+}
+
+int field_is_clear(char f[][FIELD_LENGTH_MAX], int w, int h) {
+    int i, j;
+    for (i = 0; i < h; i++) {
+        for (j = 0; j < w; j++) {
+            if (f[i][j] != block_blank) return 0;
+        }
+    }
+    return 1;
+}
+
+void print_field(char f[][FIELD_LENGTH_MAX], int w, int h) {
+    int i, j;
+    printf(" ----\n");
+    for (i = 0; i < h; i++) {
+        for (j = 0; j < w; j++) {
+            printf("%c", f[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main (void) {
+    int h, w, n, i, r, c;
+    char f[FIELD_LENGTH_MAX][FIELD_LENGTH_MAX], ff[FIELD_LENGTH_MAX][FIELD_LENGTH_MAX];
+
+    while (scanf("%d%d%d\n", &h, &w, &n) == 3) {
+        for (i = 0; i < h; i++) {
+            scanf("%s", f[i]);
+        }
+
+        for (r = 0; r < h; r++) {
+            for (c = 0; c < w; c++) {
+                for (i = 0; i <= 1; i++) {
+                    int ar, ac, rr, cc;
+                    ar = r + i;
+                    ac = c + 1 - i;
+                    if (ar == h || ac == w) continue;
+                    if (f[r][c] != block_blank &&
+                        f[ar][ac] != block_blank &&
+                        f[r][c] != f[ar][ac]) {
+                        for (rr = 0; rr < h; rr++) {
+                            for (cc = 0; cc < w; cc++) {
+                                ff[rr][cc] = f[rr][cc];
+                            }
+                        }
+                        swap_block(ff, r, c, ar, ac);
+
+                        while (erase_block(ff, w, h, n)) {
+                            drop_block(ff, w, h);
+                        }
+
+                        if (field_is_clear(ff, w, h)) {
+                            printf("YES\n");
+                            goto NEXT;
+                        }
+                    }
+                }
+            }
+        }
+        printf("NO\n");
+        NEXT:;
+    }
+    return 0;
+}

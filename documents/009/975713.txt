@@ -1,0 +1,116 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const ll INF=1e18;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Edge{
+	int src,dst;
+	ll weight;
+	Edge(){}
+	Edge(int s,int d,ll w):src(s),dst(d),weight(w){}
+};
+typedef vector<vector<Edge>> Graph;
+bool operator<(const Edge& a,const Edge& b){return a.weight<b.weight;}
+bool operator>(const Edge& a,const Edge& b){return a.weight>b.weight;}
+
+void Dijkstra(const Graph& g,int v,vl& dist)
+{
+	priority_queue<Edge,vector<Edge>,greater<Edge>> pq;
+	pq.emplace(-1,v,0);
+	while(pq.size()){
+		Edge cur=pq.top(); pq.pop();
+		if(dist[cur.dst]!=INF) continue;
+		dist[cur.dst]=cur.weight;
+		for(Edge e:g[cur.dst])
+			pq.emplace(e.src,e.dst,cur.weight+e.weight);
+	}
+}
+
+string to_string(int x)
+{
+	ostringstream oss; oss<<x;
+	return oss.str();
+}
+
+int main()
+{
+	for(int n,t;cin>>n>>t && n|t;){
+		string src,dst; cin>>src>>dst;
+		map<string,int> ntoi,freq;
+		vector<Edge> es;
+		rep(i,n){
+			int m; cin>>m;
+			vs ss(m); rep(j,m) cin>>ss[j];
+			vi ds(m-1); rep(j,m-1) cin>>ds[j];
+			for(auto& s:ss){
+				if(!ntoi.count(s)) ntoi.insert(mp(s,ntoi.size()));
+				int u=ntoi[s];
+				s+=to_string(++freq[s]);
+				ntoi.insert(mp(s,ntoi.size()));
+				int v=ntoi[s];
+				es.emplace_back(u,v,50000ll*t+1);
+				es.emplace_back(v,u,50000ll*t+1);
+			}
+			rep(i,m-1){
+				int u=ntoi[ss[i]],v=ntoi[ss[i+1]];
+				es.emplace_back(u,v,100000ll*ds[i]);
+				es.emplace_back(v,u,100000ll*ds[i]);
+			}
+		}
+		
+		assert(ntoi.count(src));
+		assert(ntoi.count(dst));
+		
+		//for(auto p:ntoi) dump(p);
+		//for(auto e:es) cout<<e.src<<' '<<e.dst<<' '<<e.weight<<endl;
+		
+		n=ntoi.size();
+		Graph g(n);
+		for(auto e:es) g[e.src].emplace_back(e.src,e.dst,e.weight);
+		vl dist(n,INF);
+		Dijkstra(g,ntoi[src],dist);
+		
+		ll d=dist[ntoi[dst]];
+		if(d==INF){
+			cout<<-1<<endl;
+			continue;
+		}
+		int res=d/100000-t;
+		int trans=(d%100000-2)/2;
+		cout<<res<<' '<<trans<<endl;
+	}
+}

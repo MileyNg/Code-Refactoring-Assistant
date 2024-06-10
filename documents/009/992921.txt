@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+int a, b, c;
+
+int gcd(int x, int y){
+    int t;
+    if( x < y ){
+        t = y;
+        y = x;
+        x = t;
+    }
+    while( y ){
+        t = x%y;
+        x = y;
+        y = t;
+    }
+    return x;
+}
+
+int abs(int x){
+    return x<0?-x:x;
+}
+
+int main(){
+    cin >> a >> b >> c;
+    while( a || b || c ){
+        bool possible = true;
+        int d = 0, x1, x2, u1, u2;
+        while( d*d < b*b - 4*a*c ) d++;
+        possible = (d*d == b*b - 4*a*c);
+        if( possible ){
+            x1 = - b - d;
+            if( x1 ){
+                u1 = 2*a/gcd(x1, 2*a);
+                x1 = -x1/gcd(x1, 2*a);
+                u2 = a/u1;
+                x2 = c/x1;
+            }else{
+                u1 = 1;
+                u2 = a;
+                x2 = b;
+            }
+            if( u1 < u2 || (u1 == u2 && x1 < x2) ){
+                int t = x1;
+                x1 = x2;
+                x2 = t;
+                t = u1;
+                u1 = u2;
+                u2 = t;
+            }
+            cout << u1 << ' ' << x1 << ' ' << u2 << ' ' << x2 << endl;
+        }else{
+            cout << "Impossible" << endl;
+        }
+        cin >> a >> b >> c;
+    }
+    return 0;
+}

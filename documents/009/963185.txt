@@ -1,0 +1,48 @@
+/*
+  AOJ 1008
+  Title:What Color Is The Universe?
+  @kankichi573
+*/
+#include <stdio.h>
+int number[1000000];
+int count[1000000];
+int N;
+int ncnt;
+int ret;
+
+void regist (int col)
+{
+  int i;
+
+  for(i=0;i<=ncnt;i++)
+    if(number[i]==col)
+      {
+	count[i]++;
+	if(count[i]>N/2)
+	  ret=col;
+	return;
+      }
+  number[ncnt]=col;
+  count[ncnt]=1;
+  ncnt++; 
+}
+
+main()
+{
+  int i,col;
+
+  while(scanf("%d",&N) && N)
+    {
+      ncnt=0;ret=-1;
+      for(i=0;i<N;i++)
+	{
+	  scanf("%d",&col);
+	  regist(col);
+	}
+      if(ret==-1)
+	printf("NO COLOR\n");
+      else
+	printf("%d\n",ret);
+    }
+  return(0);
+}

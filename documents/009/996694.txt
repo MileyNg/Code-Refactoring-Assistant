@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> PII;
+
+struct  P {
+	int x, y;
+	P() {}
+	P(int x_, int y_) : x(x_), y(y_) {}
+};
+
+/** GRL_7 : Matcing - Bipartite Matching **/
+const int MAX_V = 1000;
+
+class Flow {
+public:
+	struct edge { int to, cap, rev; };
+	vector<edge> G[MAX_V];
+	bool used[MAX_V];
+	
+	void add_edge(int from, int to, int cap) {
+		G[from].push_back((edge){to, cap, (int)G[to].size()});
+		G[to].push_back((edge){from, 0, (int)G[from].size()-1});
+	}
+	
+	int dfs(int v, int t, int f) {
+		if (v==t) return f;
+		used[v] = true;
+		for (int i=0; i<G[v].size(); i++) {
+			edge &e = G[v][i];
+			if (!used[e.to] && e.cap>0) {
+				int d = dfs(e.to, t, min(f, e.cap));
+				if (d>0) {
+					e.cap-=d;
+					G[e.to][e.rev].cap += d;
+					return d;
+				}
+			}
+		}
+		return 0;
+	}
+	
+	int max_flow(int s, int t) {
+		int flow = 0;
+		for (;;) {
+			memset(used, 0, sizeof(used));
+			int f = dfs(s, t, INF);
+			if (f==0) return flow;
+			flow += f;
+		}
+	}
+};
+
+int main()
+{
+	Flow F;
+	int X, Y, E;
+	// 0 ~ X-1 : X
+	// X ~ X+Y-1 : Y
+	// X+Y : s
+	// X+Y+1 : t
+	cin>>X>>Y>>E;
+	int s=X+Y, t=s+1;
+	rep(i, E) {
+		int x, y;
+		cin>>x>>y;
+		F.add_edge(x, X+y, 1);
+	}
+	rep(i, X) {
+		F.add_edge(s, i, 1);
+	}
+	rep(i, Y) {
+		F.add_edge(X+i, t, 1);
+	}
+	
+	cout << F.max_flow(s, t) << endl;
+}

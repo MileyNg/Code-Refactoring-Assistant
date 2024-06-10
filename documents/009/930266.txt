@@ -1,0 +1,50 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<double>X;
+double s2d(string a){
+	stringstream ss;
+	double d;
+	ss << a;
+	ss >> d;
+	return d;
+}
+double f(char c,vector<double>&X){
+	double a, b, x;
+	b = X.back(); X.pop_back();
+	a = X.back(); X.pop_back();
+	switch (c){
+		case'+':
+			x = a + b;
+			break;
+		case'-':
+			x = a - b;
+			break;
+		case'*':
+			x = a * b;
+			break;
+		case'/':
+			x = a / b;
+	}
+	return x;
+}
+int main(){
+	string s;
+	stringstream ss;
+	double a;
+	while(getline(cin,s),s!=""){
+		ss<<s;
+		while(ss>>s){
+			if (s[0] < '0')
+				a=f(s[0],X);
+			else
+				a=s2d(s);
+			X.push_back(a);
+		}
+		cout << X[0] << endl;
+		ss.clear();
+		X.pop_back();
+	}
+}

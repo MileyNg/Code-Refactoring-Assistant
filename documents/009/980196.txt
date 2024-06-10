@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vbb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+
+#define loop(i,a,b) for(int i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const double inf = (int)1e8;
+
+const ull B = 100000007;
+
+int main(){
+    set<ull> S;
+    int n, m;
+    cin >> n >> m;
+
+    char s[300010];
+    cin >> s;
+    cout << s << endl;
+    int r = 1, l = 1;
+    rep(i, m){
+        string command;
+        cin >> command;
+        if(command == "R++") r++;
+        else if(command == "R--") r--;
+        else if(command == "L++") l++;
+        else if(command == "L--") l--;
+        char str[100];
+        rep(j, 100) str[i] = '\0';
+        strncpy(str, s+l-1, r-l+1);
+        cout << l << " " << r << endl;
+        cout << str << endl;
+        int sl = strlen(str);
+        ull t = 1;
+        rep(j, sl) t *= B;
+
+        ull sh = 0;
+        rep(j, sl) sh = sh*B+str[j];
+        S.insert(sh);
+    }
+    cout << S.size() << endl;
+}

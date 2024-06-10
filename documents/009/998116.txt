@@ -1,0 +1,77 @@
+/*
+    2014.06.25
+    C language Lecture week 3
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define Block       64
+
+int main (void) {
+    
+    int section = 1;
+    int bcode = 0;
+    
+    int *x;
+    int *y;
+    
+    int *x_tmp;
+    int *y_tmp;
+    
+    int max = -1;
+    
+    if ( ( x = (int*) malloc ( sizeof(int) * Block ) ) == NULL ){
+        printf ( "Failed to allocate memory X : %d\n", section );
+    }
+    if ( ( y = (int*) malloc ( sizeof(int) * Block ) ) == NULL ){
+        printf ( "Failed to allocate memory y : %d\n", section );
+    }
+    
+    while(1){
+        for ( int cnt = 0; cnt < Block; cnt ++ ){
+            max ++;
+            scanf ( "%d %d", &x[max], &y[max] );
+            if ( x[max] == 0 && y[max] == 0 ){
+                bcode = 1;
+                break;
+            }
+        }
+        
+        if ( bcode == 1 ){
+            break;
+        }
+        
+        section ++;
+        
+        if ( ( x_tmp = (int*) malloc ( sizeof(int) * Block * section ) ) == NULL ){
+            printf ( "Failed to allocate memory X : %d\n", section );
+            return 1;
+        }
+        if ( ( y_tmp = (int*) malloc ( sizeof(int) * Block * section ) ) == NULL ){
+            printf ( "Failed to allocate memory y : %d\n", section );
+            return 1;
+        }
+        for ( int cnt = 0; cnt <= max; cnt ++ ){
+            x_tmp[cnt] = x[cnt];
+            y_tmp[cnt] = y[cnt];
+        }
+        
+        x = x_tmp;
+        y = y_tmp;
+        
+    }
+    
+    for ( int cnt = 0; cnt < max; cnt ++ ){
+        if ( x[cnt] < y[cnt] ){
+            printf ("%d %d\n", x[cnt], y[cnt] );
+        } else {
+            printf ("%d %d\n", y[cnt], x[cnt] );
+        }
+    }
+    
+    free(x);
+    free(y);
+    
+    return 0;
+}

@@ -1,0 +1,55 @@
+
+// http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0080
+
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+using namespace std;
+
+//マクロ定義
+#define ALL(v) (v).begin(),(v).end()
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
+#define REP(i,a,b) for(int i=(int)(a); i<(int)(b); ++i)
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define SORT(x) sort(begin(x),end(x))
+#define SELECT_SORT(x, n) sort(begin(x),begin(x)+n)
+#define SWAP(type, a, b) do {type tmp = a; a = b; b = tmp;} while (0)
+#define rep_split(tok,a_str,re) for(char *tok = strtok((char *)a_str.c_str(),re); tok != NULL; tok = strtok(NULL,re))
+
+//定数
+#define INF 2000000000000
+#define MAX 10
+
+//DEBUG用
+#define BAR() cout << "----------------------------" << endl;
+#define DUMP(v) (cerr << #v << ": " << v << endl)
+#define PRINT(list) cout << "{ "; for(auto nth : list){ cout << nth << " "; } cout << "}" << endl;
+
+double formula(double x, double q){
+	return x - ( (pow(x, 3) - q) / ( 3*pow(x,2) ) );
+}
+
+int main()
+{
+	cout.precision(7);
+	cout.setf(ios::fixed);
+	
+	double q;
+	double ans;
+	while(cin >> q && q != -1)
+	{
+		ans = q/2;
+		while(true){
+			if(fabs( pow(ans,3) - q ) < 0.00001*q){ break; }
+			ans = formula(ans,q);
+		}
+		cout << ans << endl;
+	}
+}

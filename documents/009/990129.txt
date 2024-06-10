@@ -1,0 +1,64 @@
+#include<cstdio>
+#include<utility>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+#define INF 1<<20
+typedef pair<int,int>p;
+int N,M,K,a,b,l,d[3000],rd[3000];
+vector<p>G[3000];//to,cost
+vector<int>S;
+
+void dij(int s)
+{
+	priority_queue<p,vector<p>,greater<p> >Q;
+	fill(d,d+N,INF);
+	d[s]=0;Q.push(p(0,s));
+	for(;!Q.empty();)
+	{
+		p tmp=Q.top();Q.pop();
+		int v=tmp.second;
+		if(d[v]<tmp.first)continue;
+		for(int i=0;i<G[v].size();i++)
+		{
+			p e=G[v][i];
+			if(d[e.first]>d[v]+e.second)
+			{
+				d[e.first]=d[v]+e.second;
+				Q.push(p(d[e.first],e.first));
+			}
+		}
+	}
+}
+
+int main()
+{
+	scanf("%d%d%d",&N,&M,&K);
+	for(int i=0;i<M;i++)
+	{
+		scanf("%d%d%d",&a,&b,&l);
+		a--;b--;
+		G[a].push_back(p(b,l));
+		G[b].push_back(p(a,l));
+	}
+	fill(rd,rd+N,INF);
+	for(int i=0;i<K;i++)
+	{
+		scanf("%d",&a);
+		a--;
+		dij(a);
+		for(int j=0;j<N;j++)rd[j]=min(rd[j],d[j]);
+	}
+	int res=0;
+	for(int i=0;i<M;i++)
+		for(int j=0;j<G[i].size();j++)
+		{
+			int tmp=(double)(abs(d[i]-rd[G[i][j].first])+G[i][j].second)/2+0.5;
+			int tmp1=rd[G[i][j].first];
+			int tmp2=G[i][j].second-tmp;
+			res=max(res,rd[i]+(rd[i]<=tmp1?max(tmp,tmp2):min(tmp,tmp2)));
+		}
+	printf("%d\n",res);
+	return 0;
+}

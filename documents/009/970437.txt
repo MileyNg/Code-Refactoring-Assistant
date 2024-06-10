@@ -1,0 +1,465 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include <iostream>
+#include <set>
+#include <queue>
+#include <functional>
+
+using namespace std;
+/*
+typedef struct
+{
+	int n;
+	int o;
+	int k1,k2;
+	int d;
+}point;
+
+class mset
+{
+private:
+	priority_queue<int,vector<int>,greater<int> > pq;
+	int last;
+
+	int pg()
+	{
+		if(pq.empty() == false)
+		{
+			int w = pq.top();
+			pq.pop();
+			return w;
+		}
+		else
+		{
+			last++;
+			return last - 1;
+		}
+	}
+
+	void rotate(int a)
+	{
+		if(a < 0)
+		{
+			return;
+		}
+		if(top < 0)
+		{
+			return;
+		}
+		int now = a;
+		while(1)
+		{
+			int k1 = d[now].k1;
+			int k2 = d[now].k2;
+			int l1 = d[k1].d;
+			int l2 = d[k2].d;
+			int noww = now;
+			d[now].d = max(d[k1].d,d[k2].d) + 1;
+			if(l1 >= l2 + 2)
+			{
+				int k1_1 = d[k1].k1;
+				int k1_2 = d[k1].k2;
+				d[k1].o = d[now].o;
+				if(d[now].n < d[d[now].o].n)
+				{
+					d[d[now].o].k1 = k1;
+				}
+				else
+				{
+					d[d[now].o].k2 = k1;
+				}
+
+				d[now].k1 = k1_2;
+				d[k1_2].o = now;
+				d[now].d = max(d[k1_2].d,d[k2].d) + 1;
+
+				d[k1].k2 = now;
+				d[now].o = k1;
+				d[k1].d = max(d[k1_1].d,d[now].d) + 1;
+
+				noww = k1;
+			}
+			else if(l2 >= l1 + 2)
+			{
+				int k2_1 = d[k2].k1;
+				int k2_2 = d[k2].k2;
+				d[k2].o = d[now].o;
+				if(d[now].n < d[d[now].o].n)
+				{
+					d[d[now].o].k1 = k2;
+				}
+				else
+				{
+					d[d[now].o].k2 = k2;
+				}
+
+				d[now].k2 = k2_1;
+				d[k2_1].o = now;
+				d[now].d = max(d[k1].d,d[k2_1].d) + 1;
+
+				d[k2].k1 = now;
+				d[now].o = k2;
+				d[k2].d = max(d[now].d,d[k2_2].d) + 1;
+
+				noww = k2;
+			}
+			else if(now != top)
+			{
+				if(d[now].n < d[d[now].o].n)
+				{
+					if(l1 < l2)
+					{
+						int k2_1 = d[k2].k1;
+						int k2_2 = d[k2].k2;
+						d[k2].o = d[now].o;
+						if(d[now].n < d[d[now].o].n)
+						{
+							d[d[now].o].k1 = k2;
+						}
+						else
+						{
+							d[d[now].o].k2 = k2;
+						}
+
+						d[now].k2 = k2_1;
+						d[k2_1].o = now;
+						d[now].d = max(d[k1].d,d[k2_1].d) + 1;
+
+						d[k2].k1 = now;
+						d[now].o = k2;
+						d[k2].d = max(d[now].d,d[k2_2].d) + 1;
+
+						noww = k2;
+					}
+				}
+				else
+				{
+					if(l2 < l1)
+					{
+						int k1_1 = d[k1].k1;
+						int k1_2 = d[k1].k2;
+						d[k1].o = d[now].o;
+						if(d[now].n < d[d[now].o].n)
+						{
+							d[d[now].o].k1 = k1;
+						}
+						else
+						{
+							d[d[now].o].k2 = k1;
+						}
+
+						d[now].k1 = k1_2;
+						d[k1_2].o = now;
+						d[now].d = max(d[k1_2].d,d[k2].d) + 1;
+
+						d[k1].k2 = now;
+						d[now].o = k1;
+						d[k1].d = max(d[k1_1].d,d[now].d) + 1;
+
+						noww = k1;
+					}
+				}
+			}
+			if(now == top)
+			{
+				top = noww;
+				break;
+			}
+			now = d[noww].o;
+		}
+	}
+public:
+	point* d;
+	int top;
+
+	mset()
+	{
+		top = -1;
+		d = (point*)malloc(sizeof(point) * 1000000) + 1;
+		d[-1].d = 0;
+		d[-1].k1 = -1;
+		d[-1].k2 = -1;
+		last = 0;
+	}
+	
+	mset(int a)
+	{
+		top = -1;
+		d = (point*)malloc(sizeof(point) * (a + 100)) + 1;
+		d[-1].d = 0;
+		d[-1].k1 = -1;
+		d[-1].k2 = -1;
+		last = 0;
+	}
+
+	int find(int a)
+	{
+		if(top == -1)
+		{
+			return -1;
+		}
+		int now = top;
+		while(1)
+		{
+			if(a < d[now].n)
+			{
+				if(d[now].k1 < 0)
+				{
+					return now;
+				}
+				now = d[now].k1;
+			}
+			else if(d[now].n < a)
+			{
+				if(d[now].k2 < 0)
+				{
+					return now;
+				}
+				now = d[now].k2;
+			}
+			else
+			{
+				return now;
+			}
+		}
+	}
+
+	int first()
+	{
+		int now = top;
+		while(1)
+		{
+			if(d[now].k1 < 0)
+			{
+				return now;
+			}
+			now = d[now].k1;
+		}
+	}
+
+	int next(int a)
+	{
+		if(0 <= d[a].k2)
+		{
+			int now = d[a].k2;
+			while(1)
+			{
+				if(d[now].k1 < 0)
+				{
+					return now;
+				}
+				now = d[now].k1;
+			}
+		}
+		else
+		{
+			int now = a;
+			while(1)
+			{
+				if(now == top)
+				{
+					return -1;
+				}
+				int o = d[now].o;
+				if(d[now].n < d[o].n)
+				{
+					return o;
+				}
+				now = o;
+			}
+		}
+	}
+
+	void insert(int a)
+	{
+		int w = find(a);
+		if(a == d[w].n)
+		{
+			return;
+		}
+		if(w == -1)
+		{
+			int m = pg();
+			d[m].n = a;
+			d[m].k1 = -1;
+			d[m].k2 = -1;
+			d[m].d = 1;
+			d[m].o = -1;
+			top = m;
+			return;
+		}
+		int m = pg();
+		d[m].n = a;
+		d[m].k1 = -1;
+		d[m].k2 = -1;
+		d[m].d = 1;
+		d[m].o = w;
+		if(a < d[w].n)
+		{
+			d[w].k1 = m;
+		}
+		else
+		{
+			d[w].k2 = m;
+		}
+		rotate(m);
+	}
+
+	void erase(int a)
+	{
+		int w = find(a);
+		if(w < 0)
+		{
+			return;
+		}
+		if(d[w].n != a)
+		{
+			return;
+		}
+		int o = d[w].o;
+		if(d[w].k1 < 0 && d[w].k2 < 0)
+		{
+			if(w == top)
+			{
+				top = -1;
+			}
+			else if(a < d[o].n)
+			{
+				d[o].k1 = -1;
+			}
+			else
+			{
+				d[o].k2 = -1;
+			}
+			rotate(o);
+		}
+		else if(d[w].k1 < 0 || d[w].k2 < 0)
+		{
+			int b;
+			if(d[w].k1 < 0)
+			{
+				b = d[w].k2;
+			}
+			else
+			{
+				b = d[w].k1;
+			}
+			d[b].o = o;
+			if(w == top)
+			{
+				top = b;
+			}
+			else if(a < d[o].n)
+			{
+				d[o].k1 = b;
+			}
+			else
+			{
+				d[o].k2 = b;
+			}
+			rotate(o);
+		}
+		else if(d[d[w].k2].k1 < 0)
+		{
+			int k = d[w].k2;
+			d[k].k1 = d[w].k1;
+			d[d[w].k1].o = k;
+			d[k].o = o;
+			if(w == top)
+			{
+				top = k;
+			}
+			else if(a < d[o].n)
+			{
+				d[o].k1 = k;
+			}
+			else
+			{
+				d[o].k2 = k;
+			}
+			rotate(k);
+		}
+		else
+		{
+			int ww = next(w);
+			int mo = d[ww].o;
+			d[mo].k1 = d[ww].k2;
+			d[d[ww].k2].o = mo;
+			if(w == top)
+			{
+				top = ww;
+			}
+			else if(a < d[o].n)
+			{
+				d[o].k1 = ww;
+			}
+			else
+			{
+				d[o].k2 = ww;
+			}
+			d[ww].o = o;
+			d[ww].k1 = d[w].k1;
+			d[ww].k2 = d[w].k2;
+			d[d[w].k1].o = ww;
+			d[d[w].k2].o = ww;
+			rotate(mo);
+		}
+		pq.push(w);
+	}
+
+	~mset()
+	{
+		free(d - 1);
+	}
+};
+*/
+int main()
+{
+	while(1)
+	{
+		int n;
+		scanf("%d",&n);
+		if(n == 0)
+		{
+			break;
+		}
+		pair<int,int> sei[1000];
+		for(int i = 0; i < n; i++)
+		{
+			int w1,w2;
+			scanf("%d %d",&w1,&w2);
+			sei[i] = make_pair(w1,w2);
+		}
+		int m;
+		scanf("%d",&m);
+		set<pair<int,int> > s;
+		for(int i = 0; i < m; i++)
+		{
+			int w1,w2;
+			scanf("%d %d",&w1,&w2);
+			s.insert(make_pair(w1,w2));
+		}
+		set<pair<int,int> >::iterator it = s.begin();
+		for(int i = 0; i < m; i++)
+		{
+			int w1 = (*it).first - sei[0].first;
+			int w2 = (*it).second - sei[0].second;
+			int flg = 0;
+			for(int ii = 0; ii < n; ii++)
+			{
+				if(s.end() == s.find(make_pair(sei[ii].first + w1,sei[ii].second + w2)))
+				{
+					flg = 1;
+					break;
+				}
+			}
+			if(flg == 0)
+			{
+				printf("%d %d\n",w1,w2);
+				break;
+			}
+			it++;
+		}
+	}
+	return 0;
+}

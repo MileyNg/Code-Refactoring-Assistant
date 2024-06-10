@@ -1,0 +1,22 @@
+def zero3(n):
+	ret = str(n)
+	while len(ret) < 3:
+		ret = "0" + ret
+	return ret
+
+def to_str(n):
+    a = int(n*0.001)
+    b = n % 1000
+    return str(a) + "." + zero3(b)
+
+
+while 2>1:
+	try:
+		a,b,c,d,e,f = map(int, raw_input().split(" "))
+		x=int(1000*(c*e-b*f)/(e*a-b*d) + 0.5)
+		y=int(1000*(c*d-a*f)/(b*d-e*a) + 0.5)
+		print " ".join(map(to_str,[x,y]))
+	except EOFError:
+		break
+	except ValueError:
+		break

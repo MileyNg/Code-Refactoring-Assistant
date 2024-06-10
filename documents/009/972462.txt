@@ -1,0 +1,85 @@
+
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <array>
+#include <set>
+#include <algorithm>
+
+#define X first
+#define Y second
+
+using namespace std;
+
+char table[52][52]; // [x][y]
+
+int dx[4] = { 0, 1, 0, -1 };
+int dy[4] = { 1, 0, -1, 0 };
+
+int g_count[2];
+
+void breadth(int x, int y) {
+	std::vector<pair<int, int>> queue;
+	queue.emplace_back(x,y);
+	set<char> owner;
+	table[x][y] = 'H';
+	int count = 1;
+	while (!queue.empty()) {
+		auto a = queue.back();
+		int x = a.X;
+		int y = a.Y;
+		queue.pop_back();
+
+		for (int i = 0; i < 4; ++i) {
+			if (table[x + dx[i]][y + dy[i]] == '.') {
+				++count;
+				queue.emplace_back(x + dx[i], y + dy[i]);
+				table[x + dx[i]][y + dy[i]] = 'H';
+			} else {
+				owner.insert(table[x + dx[i]][y + dy[i]]);
+			}
+		}
+	}
+
+	if (owner.count('W') != 0 && owner.count('B') == 0) {
+		g_count[1] += count;
+
+	} else if (owner.count('W') == 0 && owner.count('B') != 0) {
+		g_count[0] += count;
+	}
+}
+
+int main() {
+	for (int i = 0; i < 52; ++i) {
+		table[i][0] = 'H';
+		table[0][i] = 'H';
+	}
+
+	while (true) {
+		int w, h;
+		cin >> w >> h;
+		if (w == 0) break;
+
+		g_count[0] = 0;
+		g_count[1] = 0;
+
+		for (int y = 1; y <= h; ++y) {
+			for (int x = 1; x <= w; ++x) {
+				cin >> table[x][y];
+			}
+		}
+
+		for (int i = 0; i < 52; ++i) {
+			table[i][h+1] = 'H';
+			table[w+1][i] = 'H';
+		}
+
+		for (int x = 1; x <= w; ++x) {
+			for (int y = 1; y <= h; ++y) {
+				if (table[x][y] != '.') continue;
+				breadth(x,y);
+			}
+		}
+		cout << g_count[0] << " " << g_count[1] << endl;
+	}
+}

@@ -1,0 +1,89 @@
+#include <cmath>
+#include <iostream>
+#include <limits>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+namespace libcomp {
+namespace geometry {
+static const double EPS = 1e-9;
+inline double abs(double x){ return std::abs(x); }
+inline bool tolerant_eq(double a, double b){ return abs(a - b) < EPS; }
+}
+}
+namespace libcomp {
+namespace geometry {
+struct Point {
+	double x;
+	double y;
+	explicit Point(const double &x = 0.0, const double &y = 0.0) :
+		x(x), y(y)
+	{ }
+	static Point invalid(){
+		double qnan = numeric_limits<double>::quiet_NaN();
+		return Point(qnan, qnan);
+	}
+	bool is_valid() const { return !(std::isnan(x) || std::isnan(y)); }
+	Point operator+(const Point &p) const { return Point(x + p.x, y + p.y); }
+	Point &operator+=(const Point &p){ return *this = *this + p; }
+	Point operator-(const Point &p) const { return Point(x - p.x, y - p.y); }
+	Point &operator-=(const Point &p){ return *this = *this - p; }
+	Point operator*(double s) const { return Point(x * s, y * s); }
+	Point &operator*=(double s){ return *this = *this * s; }
+	Point operator*(const Point &p) const {
+		return Point(x * p.x - y * p.y, x * p.y + y * p.x);
+	}
+	Point &operator*=(const Point &p){ return *this = *this * p; }
+	Point operator/(double s) const { return Point(x / s, y / s); }
+	Point &operator/=(double s){ return *this = *this / s; }
+	bool operator==(const Point &p) const { return x == p.x && y == p.y; }
+	bool operator!=(const Point &p) const { return x != p.x || y != p.y; }
+	bool operator<(const Point &p) const {
+		return (x == p.x) ? (y < p.y) : (x < p.x);
+	}
+	double abs() const { return sqrt(x * x + y * y); }
+	double norm() const { return x * x + y * y; }
+	Point unit() const { return *this / abs(); }
+	Point ortho() const { return Point(-y, x); }
+};
+inline Point operator*(double s, const Point &p){ return p * s; }
+inline bool tolerant_eq(const Point &a, const Point &b){
+	return tolerant_eq(a.x, b.x) && tolerant_eq(a.y, b.y);
+}
+inline double cross(const Point &a, const Point &b){
+	return a.x * b.y - a.y * b.x;
+}
+inline double dot(const Point &a, const Point &b){
+	return a.x * b.x + a.y * b.y;
+}
+inline int ccw(const Point &a, const Point &b, const Point &c){
+	Point d = b - a, e = c - a;
+	if(cross(d, e) > 0.0){ return 1; }
+	if(cross(d, e) < 0.0){ return -1; }
+	if(dot(d, e) < 0.0){ return 2; }
+	if(d.abs() < e.abs()){ return -2; }
+	return 0;
+}
+}
+}
+namespace geom = libcomp::geometry;
+const char *TABLE[] = {
+	"ONLINE_FRONT",
+	"CLOCKWISE",
+	"ON_SEGMENT",
+	"COUNTER_CLOCKWISE",
+	"ONLINE_BACK"
+};
+int main(){
+	ios_base::sync_with_stdio(false);
+	geom::Point a, b;
+	cin >> a.x >> a.y >> b.x >> b.y;
+	int T;
+	cin >> T;
+	while(T--){
+		geom::Point c;
+		cin >> c.x >> c.y;
+		cout << TABLE[geom::ccw(a, b, c) + 2] << endl;
+	}
+	return 0;
+}

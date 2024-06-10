@@ -1,0 +1,26 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+int HMS(const int count,int &h,int &m,int &s){
+    int buf=count;
+    h=buf/3600;
+    buf-=h*3600;
+    m=buf/60;
+    buf-=m*60;
+    s=buf;
+}
+int main(){
+  int h,m,s;
+  while(cin>>h>>m>>s&&h!=-1&&m!=-1&&s!=-1){
+    int count=h*3600+60*m+s;
+    int rest_h,rest_m,rest_s;
+    HMS(120*60-count,rest_h,rest_m,rest_s);
+    cout<<setfill('0');
+   cout<<setw(2)<<rest_h<<":"<<setw(2)<<rest_m<<":"<<setw(2)<<rest_s<<endl; 
+   HMS(3*(120*60-count),rest_h,rest_m,rest_s);
+   cout<<setw(2)<<rest_h<<":"<<setw(2)<<rest_m<<":"<<setw(2)<<rest_s<<endl;
+ 
+  }
+}

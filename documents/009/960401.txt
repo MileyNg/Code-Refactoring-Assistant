@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <math.h>
+typedef struct{
+	double x;
+	double y;
+}Coordinate;
+void Koch_Curve(Coordinate, Coordinate, int);
+int main(){
+	int n;
+	Coordinate p1={0,0};
+	Coordinate p2={100,0};
+	scanf("%d", &n);
+	printf("%f %f\n", p1.x, p1.y);
+	Koch_Curve(p1, p2, n);
+	printf("%f %f\n", p2.x, p2.y);
+	return 0;
+}
+void Koch_Curve(Coordinate p1, Coordinate p2, int n){
+	Coordinate s;
+	Coordinate t;
+	Coordinate u;
+	if( n == 0 ) return;
+	s.x = (p2.x-p1.x)/3+p1.x;
+	t.x = 2*(p2.x-p1.x)/3+p1.x;
+	u.x = (t.x-s.x)/2-(t.y-s.y)*(sqrt(3)/2)+s.x;
+
+	s.y = (p2.y-p1.y)/3+p1.y;
+	t.y = 2*(p2.y-p1.y)/3+p1.y;
+	u.y = (t.x-s.x)*(sqrt(3)/2.0)+(t.y-s.y)/2+s.y;
+
+	Koch_Curve(p1, s, n-1);
+	printf("%f %f\n", s.x, s.y);
+	Koch_Curve(s, u, n-1);
+	printf("%f %f\n", u.x, u.y);
+	Koch_Curve(u, t, n-1);
+	printf("%f %f\n", t.x, t.y);
+	Koch_Curve(t, p2, n-1);
+	return;
+}

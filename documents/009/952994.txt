@@ -1,0 +1,64 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+#include<vector>
+using namespace std;
+
+struct node{
+  int cost;
+  int c;
+  int now;
+  node(int C,int cc,int n):cost(C),c(cc),now(n){}
+  bool operator >(const node &e) const{
+    return cost > e.cost;
+  }
+};
+
+int main()
+{
+  int c,n,m,s,d;
+
+  for(;cin>>c>>n>>m>>s>>d,c;)
+    {
+      int edge[n][n];
+      bool close[c+1][n];
+      memset(edge,-1,sizeof(edge));
+      memset(close,false,sizeof(close));      
+      for(int i=0;i<m;i++)
+	{
+	  int a,b,f;
+	  cin>>a>>b>>f;
+	  a--;
+	  b--;
+	  edge[a][b]=f;
+	  edge[b][a]=f;
+	}
+      s--;
+      d--;
+      priority_queue<node,vector<node>,greater<node> >qu;
+      qu.push(node(0,c,s));
+      while(!qu.empty())
+	{
+	  node tmp = qu.top();
+	  //	  cout<<tmp.now<<" "<<tmp.cost<<" "<<tmp.c<<endl;
+	  qu.pop();
+	  close[tmp.c][tmp.now]=true;
+	  if(tmp.now==d)
+	    {
+	      cout<<tmp.cost<<endl;
+	      break;
+	    }
+	  for(int i=0;i<n;i++)
+	    {
+	      if(edge[tmp.now][i]!=-1)
+		{
+		  if(!close[tmp.c][i])
+		    qu.push(node(edge[tmp.now][i]+tmp.cost,tmp.c,i));
+		  if(tmp.c>0 && !close[tmp.c-1][i])
+		    qu.push(node(edge[tmp.now][i]/2+tmp.cost,tmp.c-1,i));
+		}
+	    }
+	}
+    }
+
+}

@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int main(){
+  int n;
+  cin >> n;
+  int num[n],pos = 0;
+  string s[n];
+  for(int t=0;t<n;t++){
+    cin >> s[pos] >> num[pos];
+    pos++;
+    for(int tt=0;tt<pos-1;tt++){
+      //cout << s[tt] << " " << s[pos-1] << endl;
+      if(s[tt] == s[pos-1]){ 
+	num[tt] += num[pos-1];
+	pos--;
+	break;
+      }
+    }
+
+  }
+
+  for(int i=0;i<pos;i++){
+    for(int j=pos-1;j>i;j--){
+      if(s[j].size()<s[j-1].size() || (s[j].size()==s[j-1].size() && s[j]<s[j-1])){
+	swap(s[j],s[j-1]);
+	swap(num[j],num[j-1]);
+      }
+    }
+  }
+  
+  for(int i=0;i<pos;i++){
+    cout << s[i] << " " << num[i] << endl;
+  }
+
+}

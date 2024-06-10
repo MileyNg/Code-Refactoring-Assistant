@@ -1,0 +1,66 @@
+function treeInsert(T, z) {
+	var y = null;
+	var x = T.filter(function(n){return n.p == null;})[0];
+	while (x != null) {
+		y = x;
+		if (z.key < x.key)
+			x = x.left;
+		else
+			x = x.right;
+	}
+	z.p = y;
+	if (y == null)
+		T.push(z);
+	else if (z.key < y.key)
+		y.left = z;
+	else
+		y.right = z;
+}
+
+function print(T) {
+	var root = T.filter(function(n){return n.p == null;})[0];
+
+	var tmp = [];
+	inorder(root, tmp);
+	console.log(' ' + tmp.join(' '));
+
+	tmp = [];
+	preorder(root, tmp);
+	console.log(' ' + tmp.join(' '));
+}
+
+function preorder(node, arr) {
+	if (node == null)
+		return;
+
+	arr.push(node.key);
+	preorder(node.left, arr);
+	preorder(node.right, arr);
+}
+
+function inorder(node, arr) {
+	if (node == null)
+		return;
+
+	inorder(node.left, arr);
+	arr.push(node.key);
+	inorder(node.right, arr);
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var n = +lines.shift()
+
+var T = [];
+for (var i = 0; i < n; i++) {
+	var command = lines.shift().trim();
+
+	if (command == 'print') {
+		print(T);
+	}
+	else {
+		var key = +command.split(' ')[1];
+		treeInsert(T, {key: key, left: null, right: null});
+	}
+}

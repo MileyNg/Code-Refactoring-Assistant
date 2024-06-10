@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+int dp[10][500][2][3][500]; //前 桁 自由 増減 倍数
+int mod;
+string s;
+int rec( int prev, int idx, bool free, int updw, int pow){
+  if(idx == s.size()) return pow == 0;
+  if(~dp[prev][idx][free][updw][pow]) return dp[prev][idx][free][updw][pow];
+  int ret = 0, end = free ? 9 : s[idx] - '0';
+  for(int i = 0; i <= end; i++){
+    int next;
+    if(updw == 0){ //前あがった
+      if(i >= prev) continue;
+      next = 1;
+    }else if(updw == 1){ //前下がった
+      if(i <= prev) continue;
+      next = 0;
+    }else{ //ずっと0
+      if(prev && prev == i) continue;
+      if(prev == 0) next = 2;
+      else if(prev > i) next = 1;
+      else next = 0;
+    }
+    ret += rec( i, idx + 1, free|(i!=end), next, (pow * 10 + i) % mod);
+  }
+  return dp[prev][idx][free][updw][pow] = ret % 10000;
+}
+
+int main(){
+  string a, b;
+  cin >> a >> b >> mod;
+  for(int i = a.size() - 1; i >= 0; i--){
+    if(a[i] > '0') a[i]--;
+    else break;
+  }
+  fill_n( ****dp, 10 * 500 * 2 * 3 * 500, -1);
+  s = b;
+  int ue = rec( 0, 0, 0, 2, 0);
+  fill_n( ****dp, 10 * 500 * 2 * 3 * 500, -1);
+  s = a;
+  int sita = rec( 0, 0, 0, 2, 0);
+  cout << ue - sita << endl;
+}

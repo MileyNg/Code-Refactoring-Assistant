@@ -1,0 +1,124 @@
+#include <algorithm>
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <cctype>
+using namespace std;
+typedef long long int LL;
+const int maxn = 105;
+const LL INF = 1LL << 62;
+LL L[maxn];
+
+int main()
+{
+    char s[maxn], tmps[maxn];
+
+    LL _j = 1, _J[maxn];
+
+    _J[1] = 0; _J[2] = 10;
+    for(int i = 3; i < 20; i++) _J[i] = _J[i-1] * 10;
+
+    L[1] = 0;
+    for(int i = 2; i < 20; i++, _j *= 10) {
+        L[i] = (i-1) * (_J[i] - _J[i-1]) + L[i-1];
+    }
+    //for(int i = 1; i <10; i++) cout << L[i] <<endl;
+
+
+    while(1)
+    {
+        scanf("%s", s);
+        if(!isdigit(s[0])) break;
+
+        int sti, stj, ansi, ansj, len = strlen(s);
+        LL ans = INF;
+        bool ok = 0;
+
+        for(int i = 0; i < len; i++) if(s[i] != '0') {
+            ok = 1; break;
+        }
+        if(!ok) {
+            s[len] = '1'; len++;
+        }
+
+        if(len <= 32) {
+            //cout << s << endl;
+            for(int i = 1; i < len; i++) if(s[i] != '0') {
+                    //printf("______%d\n", i);
+                int c = 0;
+                for(int j = i; j < len; j++) tmps[c++] = s[j];
+                for(int j = 0; j < i; j++) tmps[c++] = s[j];
+                tmps[c] = 0;
+                //printf("--%d %s\n", i, tmps);
+                int ll = len, tt = len-i, gao = 0, a, l, r;
+
+                for(a = 1; !gao && a < tt; a++) {
+                    for(l = a, r = tt; l < tt && r < len-1; l++, r++)
+                        if(tmps[l] != tmps[r]) break;
+                    if(l == tt) {
+                        //cout << '%' << a << ' ' <<l << ' ' << r << endl;
+                        ll -= tt - a;
+                        for(l = tt; r < len; r++, l++) tmps[l] = tmps[r];
+                        tmps[l] = 0;
+                        gao = 1;
+                        //cout << tmps <<endl;
+                        break;
+                    }
+                }
+                //cout << ll <<endl;
+                if(ll > 16) continue;
+                LL tmp;
+                sscanf(tmps, "%lld", &tmp);
+                if(++tmp < ans) {
+                    ans = tmp; ansi = i; ansj = ll;
+                }
+            }
+        }
+
+        for(sti = 0; sti < 16 && sti < len; sti++) if(s[sti] != '0') {
+            for(stj = sti+1; stj <= 16 && sti+stj <= len; stj++) {
+                for(int i = sti, j = 0; j < stj; j++, i++) tmps[j] = s[i]; tmps[stj] = 0;
+                //cout << tmps << endl;
+                long long tmp, _tmp;
+                bool tmpok = 1;
+                sscanf(tmps, "%lld", &tmp);
+                sprintf(tmps, "%lld", tmp-1);
+                for(int i = sti-1, j = stj-1; i >= 0; i--, j--)
+                    if(tmps[j] != s[i]) { tmpok = 0; break; }
+                if(tmpok == 0) continue;
+                //cout << sti << ' ' << stj << endl;
+                _tmp = tmp;
+
+                sprintf(tmps, "%lld", ++tmp);
+                int tmplen = strlen(tmps);
+
+                for(int i = sti+stj, j = 0; i < len; i++, j++) {
+
+                    if(j == tmplen) {
+                        sprintf(tmps, "%lld", ++tmp);
+                        tmplen = strlen(tmps);
+                        j = 0;
+                    }
+                    //printf("-----%s %c %c\n", tmps, s[i], tmps[j]);
+                    if(s[i] != tmps[j]) { tmpok = 0; break; }
+                }
+
+                if(tmpok && _tmp < ans) {
+                    ans = _tmp; ansi = sti; ansj = stj;
+                    ok = 1;
+                }
+            }
+        }
+        //cout << ans << ' ' << ansi << ' ' << ansj <<endl;
+
+        LL tot = L[ansj]; _j = 1;
+        //cout << tot << ' ' << ans - _J[ansj] << endl;
+
+        tot += (ans - _J[ansj]) * ansj;
+
+        //cout << tot << endl;
+        tot -= ansi;
+        cout << tot << endl;
+    }
+    return 0;
+}

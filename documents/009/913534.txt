@@ -1,0 +1,21 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main(int argc, char** argv){
+	string str, word;
+	int cnt = 0;
+	string::size_type index = (string::size_type)0;
+	getline(cin, word);
+	while (getline(cin, str), str != "END_OF_TEXT"){
+		while(true){
+			index = str.find(word, index + 1);
+			if (index == string::npos){
+				break;
+			}
+			cnt++;
+		}
+	}
+	cout << cnt << endl;
+}

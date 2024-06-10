@@ -1,0 +1,29 @@
+#include<cstdio>
+#include<vector>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  while (true) {
+    int an, bn, r;
+    scanf("%d %d %d", &an, &bn, &r);
+    if (an == 0) break;
+    int a[an][2];
+    rep (i, an) scanf("%d %d", &(a[i][0]), &(a[i][1]));
+    rep (i, an) a[i][0] += 50;
+    rep (i, an) a[i][1] += 50;
+    vector<vector<bool> > b(10112, vector<bool>(10112, false));
+    rep (i, bn) {
+      int x, y;
+      scanf("%d %d", &x, &y);
+      b[x + 50][y + 50] = true;
+    }
+    int res = 0;
+    vector<pair<int, int> > d;
+    for (int i = -4 * r; i <= 4 * r; ++i) for (int j = -4 * r; j <= 4 * r; ++j) if (4 * r * r <= i * i + j * j && i * i + j * j <= 16 * r * r) d.push_back(make_pair(i, j));
+    rep (i, an) rep (j, d.size()) if (b[a[i][0] + d[j].first][a[i][1] + d[j].second]) ++res;
+    printf("%d\n", res);
+  }
+}

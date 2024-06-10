@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std ;
+
+int m[246913] = {} ;
+
+void cal(){
+	for( int i=2 ; i<246913  ; i++ ){
+		for( int j=2 ; j<246913  ; j++ ){
+			if( i*j < 246913 ) m[i*j] = 1 ;
+			else break ;
+		}
+	}
+}
+	
+int main(){
+	
+	int n ;
+	int count ;
+	
+	cal();
+	
+	while(1){
+		cin >> n ;
+		if( n==0 ) break ;
+		
+		count = 0 ;
+		for( int i=n+1 ; i<=n*2 ; i++ ){
+			if( m[i] == 0 ) count++;
+		}
+		
+		cout << count << endl ;
+	}
+	
+return 0;
+}

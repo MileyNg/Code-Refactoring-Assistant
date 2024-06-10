@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <string>
+using namespace std;
+typedef long long ll;
+int n,m;
+int g[20][20];
+char s[20][50];
+int l[20];
+int path(char *s1,char *s2)
+{
+    int l1=strlen(s1);
+    int l2=strlen(s2);
+    int l=max(l1,l2);
+    int lm=min(l1,l2);
+    int res=0;
+    for (int i=1; i<=lm; i++)
+    {
+        bool ok=true;
+        for (int j=0; j<i; j++)
+        if (s1[l1-i+j]!=s2[j])
+        {
+            ok=false; break;
+        }
+        if (ok) res=i;
+    }
+    return res;
+}
+int ans=0;
+bool vis[20];
+void dfs(int u,int cnt,int len)
+{
+    if (len>=ans) return;
+    if (cnt==n) ans=len;
+    for (int j=0; j<n; j++)
+    if (!vis[j])
+    {
+        vis[j]=true;
+        dfs(j,cnt+1,len+l[j]-g[u][j]);
+        vis[j]=false;
+    }
+}
+
+int main()
+{
+//    freopen("in.txt","r",stdin);
+    while(~scanf("%d",&n) && n)
+    {
+        memset(g,-1,sizeof g);
+        int lsum=0;
+        for (int i=0; i<n; i++)
+        scanf("%s",s[i]),l[i]=strlen(s[i]),lsum+=l[i];
+
+        for (int i=0; i<n; i++)
+         for (int j=0; j<n; j++)
+         g[i][j]=path(s[i],s[j]);
+         ans=99999999;
+        for (int i=0; i<n; i++)
+        {
+            memset(vis,false,sizeof vis);
+            vis[i]=true;
+            dfs(i,1,l[i]);
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}

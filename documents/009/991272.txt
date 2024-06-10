@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+bool sosu(long long a){
+	bool flag=1;
+
+	for(int i=2;i<(a/4);i++){
+		if(!(a%i)){
+			flag=0;
+			break;
+		}
+	}
+
+	return flag;
+}
+
+int sosuCount(long long a){
+	int count=0;
+
+	for(int j=a+1;j<=2*a;j++){
+		count+=sosu(j);
+	}
+	
+	return count;
+}
+
+int main(void){
+
+	long long n;
+
+	while(1){
+
+	cin >> n ;
+
+	if(!n)
+		break;
+
+	cout<< sosuCount(n)<<endl;
+
+
+	}
+
+	return 0;
+}

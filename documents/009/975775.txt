@@ -1,0 +1,29 @@
+def main
+  n = gets.chomp.to_i
+  a,b = gets.chomp.split(' ').map(&:to_i)
+  c,d = gets.chomp.split(' ').map(&:to_i)
+
+  min = n * 2
+  1.upto(n) do |w|
+    ax,ay = position(w, a)
+    bx,by = position(w, b)
+    ab = distance(ax, ay, bx, by)
+    cx,cy = position(w, c)
+    dx,dy = position(w, d)
+    cd = distance(cx, cy, dx, dy)
+    min = [(ab + cd), min].min
+  end
+  puts min
+end
+
+def distance x1, y1, x2, y2
+  (x1 - x2).abs + (y1 - y2).abs
+end
+
+def position width, order
+  x = (order - 1) / width
+  y = (order - 1) % width
+  [x, y]
+end
+
+main

@@ -1,0 +1,74 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int comp(const void *p,const void *q){
+  return *(int*)p-*(int*)q;
+}
+
+int dgt(int n){
+  if(n==0){
+    return 0;
+  }
+  else{
+    return 1+dgt(n/10);
+  }
+}
+
+int mlten(int n){
+  if(n==0){
+    return 1;
+  }
+  else{
+    return 10*mlten(n-1);
+  }
+}
+
+int fixit(int a,int b){
+  return b+a*mlten(dgt(b));
+}
+
+void doit(){
+  int n;
+  scanf("%d",&n);
+  {
+    int i,j;
+    int a[n];
+    int fst=1000000000,scd=1000000000,thd=1000000000;
+    for(i=0;i<n;i++){
+      scanf("%d",&a[i]);
+    }
+    qsort(a,n,sizeof(int),comp);
+    
+    for(i=0;i<3;i++){
+      int lmt;
+      if(n==3){
+	lmt=3;
+      }
+      else{
+	lmt=4;
+      }
+      for(j=0;j<lmt;j++){
+	if(i!=j){
+	  int tmp=fixit(a[i],a[j]);
+	  if(tmp<=thd){
+	    thd=tmp;
+	    if(tmp<=scd){
+	      thd=scd;
+	      scd=tmp;
+	      if(tmp<=fst){
+		scd=fst;
+		fst=tmp;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    printf("%d\n",thd);
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

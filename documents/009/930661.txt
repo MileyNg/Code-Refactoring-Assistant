@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+#define LEN 100005
+
+typedef struct p
+{
+  char name[100];
+  int t;
+}P;
+
+P Q[LEN+1];
+int head=1,tail,n;
+
+void enqueue(P x)
+  {
+    Q[tail]=x;
+    if(tail==LEN+1)
+      tail=0;
+    else 
+      tail++;
+  }
+  
+
+P dequeue()
+{
+  P x;
+  x=Q[head];
+  if(head==LEN+1)
+    head=0;
+  else 
+    head++;
+  
+  return x;
+}
+
+
+
+
+
+main()
+{
+  int i,q;
+  int sum=0;
+  scanf("%d %d",&n,&q);
+  
+  for(i=1;i<=n;i++)
+    {
+      scanf("%s",Q[i].name);
+      scanf("%d",&Q[i].t);
+}
+  tail=i;
+
+  while(head != tail)
+    {
+      if(Q[head].t>q)
+	{
+	  sum+=q;
+	  Q[head].t-=q;
+	  enqueue(dequeue(Q[head]));
+	}
+      else 
+	{
+	  sum+=Q[head].t;
+	  printf("%s %d\n",Q[head].name,sum);
+	  dequeue(Q[head]);
+	}
+    }
+   return 0;
+}  
+  
+
+  

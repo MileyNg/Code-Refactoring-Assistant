@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long lli;
+
+const lli mod = 1000000007LL;
+
+string s;
+int p;
+
+lli All[2][1000006], F[2][1000006];
+pair<lli,lli> X[3][1000006];
+
+pair<lli,lli> exp();
+pair<lli,lli> term();
+pair<lli,lli> fact();
+
+pair<lli,lli> exp() {
+  int k = p;
+  X[0][k] = term();
+  All[0][k] = (X[0][k].first + X[0][k].second) % mod;
+  F[0][k] = X[0][k].second;
+  while(s[p] == '|') {
+    ++p;
+    X[0][k] = term();
+    All[0][k] = (All[0][k] * (X[0][k].first+X[0][k].second)) % mod;
+    F[0][k] = (F[0][k] * (X[0][k].second)) % mod;
+  }
+  return make_pair(((All[0][k] - F[0][k]) % mod + mod) % mod, F[0][k]);
+}
+
+pair<lli,lli> term() {
+  int k = p;
+  X[1][k] = fact();
+  All[1][k] = (X[1][k].first + X[1][k].second) % mod;
+  F[1][k] = X[1][k].first;
+  while(s[p] == '&') {
+    ++p;
+    X[1][k] = fact();
+    All[1][k] = (All[1][k] * (X[1][k].first+X[1][k].second)) % mod;
+    F[1][k] = (F[1][k] * (X[1][k].first)) % mod;
+  }
+  return make_pair(F[1][k], ((All[1][k] - F[1][k]) % mod + mod) % mod);
+}
+
+pair<lli,lli> fact() {
+  int k = p;
+  if(s[p] == '(') {
+    ++p;
+    X[2][k] = exp();
+    ++p;
+    return X[2][k];
+  } else if(s[p] == '~') {
+    ++p;
+    X[2][k] = fact();
+    swap(X[2][k].first, X[2][k].second);
+    return X[2][k];
+  } else if(s[p] == 'x') {
+    ++p;
+    while(isdigit(s[p])) ++p;
+    return make_pair(1LL, 1LL);
+  } else {
+    //assert(false);
+  }
+}
+
+int main() {
+  cin >> s;
+  /*
+  for(int i = 1; i <= 1000000 && s.size() < 1000000; ++i) {
+    char buff[100];
+    sprintf(buff, "%d", i);
+    if(i != 1) s += "|";
+    s += "x" + string(buff);
+  }
+  */
+  string t;
+  for(int i = 0, j = 0; i < s.size(); ++i) {
+    if(s[i] == '~') {
+      ++j;
+    } else {
+      if(j % 2) t += "~";
+      j = 0;
+      t += s[i];
+    }
+  }
+  s = t;
+  s += "$";
+  p = 0;
+  cout << exp().first << endl;
+  return 0;
+}

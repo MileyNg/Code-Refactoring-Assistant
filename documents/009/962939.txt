@@ -1,0 +1,59 @@
+#include<iostream>
+#include<stack>
+#include<map>
+using namespace std;
+
+#define W 501
+
+#define rep(i, n) for(int i=0; i<n; ++i)
+#define max(a,b) (a>b?a:b)
+
+typedef pair<int, int> P;
+
+int main() {
+	char c[W][W]; int h, w;
+	int m[W][W];
+	while(cin >> h >> w && h && w) {
+		rep(i, h) {
+			rep(j, w) {
+				cin >> c[i][j];
+			}
+		}
+		rep(i, w) {
+			int cnt = 0;
+			for(int j=h-1; j>=0; --j) {
+				if(c[j][i]=='.') ++cnt;
+				else cnt = 0;
+				m[j][i] = cnt;
+			}
+		}
+		int ans = 0;
+		rep(i, h) {
+			stack<P> st;
+			rep(j, w) {
+				int mi = -1;
+				// cout << i << " " << j << " : " << ans << endl;
+				while(!st.empty() && m[i][j]<st.top().second) {
+					P p = st.top(); st.pop();
+					mi = p.first;
+					// cout << "output : " << p.first << ", " << p.second << " " << j << endl;
+					ans = max(ans, (j - p.first)*p.second);
+				}
+				if(m[i][j]>0) {
+					if(mi!=-1 && (st.empty() || st.top().second<m[i][j])) {
+						st.push(P(mi, m[i][j]));
+					}else if(st.empty() || st.top().second<m[i][j]) {
+						st.push(P(j, m[i][j]));
+					}
+				}
+			}
+			while(!st.empty()) {
+				P p = st.top(); st.pop();
+				// cout << "*output : " << p.first << ", " << p.second << " " << w << endl;
+				ans = max(ans, (w - p.first)*p.second);
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

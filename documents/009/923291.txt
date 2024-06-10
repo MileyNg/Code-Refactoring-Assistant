@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Programminng
+{
+    class AOJ_Volume0010
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+
+            for (int i = 0; i < n; i++)
+            {
+                string[] s = Console.ReadLine().Split(' ');
+                double x1 = double.Parse(s[0]);
+                double y1 = double.Parse(s[1]);
+                double x2 = double.Parse(s[2]);
+                double y2 = double.Parse(s[3]);
+                double x3 = double.Parse(s[4]);
+                double y3 = double.Parse(s[5]);
+                
+                double a1 = 2 * (x2 - x1);
+                double b1 = 2 * (y2 - y1);
+                double c1 = x1 * x1 - x2 * x2 + y1 * y1 - y2 * y2;
+
+                double a2 = 2 * (x3 - x1);
+                double b2 = 2 * (y3 - y1);
+                double c2 = x1 * x1 - x3 * x3 + y1 * y1 - y3 * y3;
+
+                double x = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
+                double y = (c1 * a2 - c2 * a1) / (a1 * b2 - a2 * b1);
+
+                double r_2 = (x1 - x) * (x1 - x) + (y1 - y) * (y1 - y);
+                double r = Math.Sqrt(r_2);
+
+                Console.WriteLine("{0:F3} {1:F2} {2:F3}",x,y,r);
+            }
+        }
+    }
+}

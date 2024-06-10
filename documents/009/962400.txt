@@ -1,0 +1,75 @@
+#include <iostream>
+#include <string>
+#include <queue>
+
+class Baseball{
+	
+	//field
+	int score, out_count;
+	std::queue<int> runners;
+public:
+	Baseball();
+	~Baseball(){}
+	
+	//関数
+	void hit();
+	void homerun();
+	void out();
+	//setter,getter
+	/*
+	void set_score(int s) {score = s;}
+	void set_out(int o) {out_count = o;}
+	*/
+	int get_score() {return score;}
+	int get_out() {return out_count;}
+};
+
+//コンストラクタ
+Baseball::Baseball()
+{
+	score = 0;
+	out_count = 0;
+}
+
+void Baseball::hit(){
+	runners.push(1);
+	if(runners.size() == 4){
+		++score;
+		runners.pop();
+	}
+}
+
+void Baseball::homerun(){
+	score += runners.size() + 1;
+	while(runners.size() != 0){
+		runners.pop();
+	}
+}
+
+void Baseball::out(){
+	++out_count;
+}
+//クラスのフィールドアクセス？？
+//キュー以外のいい感じのライブラリ探す？
+int main(){
+	int inning;
+	std::string event;
+	std::cin >> inning;
+	//inningの回数だけループ
+	for(int i = 0; i < inning; ++i){
+		Baseball game;
+		while(game.get_out() != 3){
+			std::cin >> event;
+			if(event == "HIT"){
+				game.hit();
+			}
+			else if(event == "HOMERUN"){
+				game.homerun();
+			}
+			else if(event == "OUT"){
+				game.out();
+			}
+		}
+	std::cout << game.get_score() << std::endl;
+	}
+}

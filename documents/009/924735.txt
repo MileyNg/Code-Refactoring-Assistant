@@ -1,0 +1,78 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <queue>
+#include <map>
+#include <string>
+#include <sstream>
+#define FI first
+#define SE second
+using namespace std;
+const double EPS = 1e-8;
+const int MAXN = 500005;
+const int INF = 1111111111;
+struct Node{
+    string str;
+    int id;
+    bool operator<(const Node &a)const {
+        return str<a.str;
+    }
+}node[MAXN];
+long long tree[MAXN];
+int n;
+long long ans[MAXN];
+int a,b,MOD;
+int lowbit(int x) {
+    return x&(-x);
+}
+void update (int x,long long add) {
+    while (x<=n) {
+        tree[x] = (tree[x]+add)%MOD;
+        x += lowbit(x);
+    }
+}
+long  query(int x) {
+    long ret = 0;
+    while (x > 0) {
+        ret = (ret +tree[x])%MOD;
+        x -= lowbit(x);
+    }
+    return ret;
+}
+int main() {
+    //freopen("/home/qitaishui/in.txt","r",stdin);
+
+    while (scanf("%d%d%d",&a,&b,&MOD)&&(MOD)) {
+        n = 1;
+        for (int i = a; i <= b; ++i) {
+            node[n].id = n;
+            //int tmp = i;
+            stringstream st;
+            st<<i;
+            st>>node[n].str;
+
+            ++n;
+            //cout<<node[n++].str<<endl;
+        }
+        --n;
+        memset(tree,0,sizeof(tree));
+        sort (node+1,node+n+1);
+        long long su = 0;
+        memset(ans,0,sizeof(ans));
+        for (int i = 1; i <= n; ++i) {
+
+            ans[i] = (su+query(node[i].id) + 1)%MOD;
+            //su =  (su+ans[i])%MOD;
+            update(node[i].id,ans[i]);
+            //cout<<i<<endl;
+        }
+        long long ret = 0;
+        for (int i = 1; i <= n; ++i) {
+            ret = (ret+ans[i])%MOD;
+        }
+        cout<<ret<<"\n";
+    }
+    return 0;
+}

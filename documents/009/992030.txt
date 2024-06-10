@@ -1,0 +1,30 @@
+#include<stdio.h>
+ 
+#define H 250
+ 
+int main(int argc,char *argv[])
+{
+    int heap[H+1];
+    int i, j;
+ 
+    scanf("%d", &i);
+    for(j = 1; j <= i; j++){
+        scanf("%d", &heap[j]);
+    }
+ 
+    for(j = 1; j <= i; j++){
+        printf("node %d: key = %d, ", j, heap[j]);
+        if(0 < (j / 2)){
+            printf("parent key = %d, ", heap[j / 2]);
+        }
+        if((2 * j) <= i){
+            printf("left key = %d, ", heap[2 * j]);
+        }
+        if((2 * j + 1) <= i){
+            printf("right key = %d, ", heap[2 * j + 1]);
+        }
+        printf("\n");
+    }
+ 
+    return 0;
+}

@@ -1,0 +1,150 @@
+#include<map>
+#include<set>
+#include<list>
+#include<cmath>
+#include<queue>
+#include<stack>
+#include<cstdio>
+#include<string>
+#include<vector>
+#include<complex>
+#include<cstdlib>
+#include<cstring>
+#include<climits>
+#include<numeric>
+#include<sstream>
+#include<iostream>
+#include<algorithm>
+#include<functional>
+ 
+#define mp       make_pair
+#define pb       push_back
+#define all(x)   (x).begin(),(x).end()
+#define rep(i,n) for(int i=0;i<(n);i++)
+ 
+using namespace std;
+ 
+typedef    long long          ll;
+typedef    unsigned long long ull;
+typedef    vector<bool>       vb;
+typedef    vector<int>        vi;
+typedef    vector<vb>         vvb;
+typedef    vector<vi>         vvi;
+typedef    pair<int,int>      pii;
+ 
+const double EPS=1e-9;
+ 
+const int dx[]={1,0,-1,0},dy[]={0,-1,0,1};
+
+
+int cakesize(int x1,int y1, int x2, int y2){
+	return abs(x1-x2)*abs(y1-y2);
+}
+
+struct cake{
+	int x[4];	//左上、右上、右下、左下
+	int y[4];
+	bool operator==(const cake& c1){
+		rep(i,4){
+			if(x[i] != c1.x[i]){
+				return false;
+			}
+			if(y[i] != c1.y[i]){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	bool operator<(const cake& c1){
+		
+	}
+};
+
+
+bool cakesort(const cake& c1, const cake& c2){
+	return cakesize(c1.x[0],c1.y[0],c1.x[2],c1.y[2]) < cakesize(c2.x[0],c2.y[0],c2.x[2],c2.y[2]); 
+}
+
+
+int main(){
+	int n,w,d;
+	while(true){
+		cin >> n >> w >> d;
+		if(n+w+d == 0){
+			break;
+		}
+		vector<cake> data;
+		cake s;
+		s.x[0] = 0; s.x[1] = w; s.x[2] = w; s.x[3] = 0;
+		s.y[0] = d; s.y[1] = d; s.y[2] = 0; s.y[3] = 0;
+		data.pb(s);
+
+		int a,b;
+		rep(i,n){
+			cin >> a >> b;
+			a--;
+			cake buf = data[a];
+			vector<cake>::iterator del = remove(all(data),data[a]);
+			data.erase(del, data.end());
+
+			int mx = buf.x[1] - buf.x[0];
+			int my = buf.y[1] - buf.y[2];
+			int mv = 0;
+			while(true){
+				if(b / mx == 0){
+					break;
+				}
+				b -= mx;
+				mv++;
+
+				if(b / my == 0){
+					break;
+				}
+				b -= my;
+				mv++;
+			}
+			mv %= 4;
+
+			cake add1,add2;
+			rep(i,4){
+				add1.x[i] = buf.x[i]; add2.x[i] = buf.x[i];
+				add1.y[i] = buf.y[i]; add2.y[i] = buf.y[i];
+			}
+
+			if(mv&1){
+				int ny;
+				if(mv == 1){
+					ny = (my-b) + buf.y[2];
+				}else{
+					ny = b + buf.y[2];
+				}
+				add1.y[2] = ny; add1.y[3] = ny;
+				add2.y[0] = ny; add2.y[1] = ny;
+			}else{
+				int nx;
+				if(mv == 2){
+					nx = (mx-b) + buf.x[0];
+				}else{
+					nx = b + buf.x[0];
+				}
+				add1.x[1] = nx; add1.x[2] = nx;
+				add2.x[0] = nx; add2.x[3] = nx;
+			}
+
+			if(cakesize(add1.x[0],add1.y[0],add1.x[2],add1.y[2]) < cakesize(add2.x[0],add2.y[0],add2.x[2],add2.y[2])){
+				data.pb(add1);
+				data.pb(add2);
+			}else{
+				data.pb(add2);
+				data.pb(add1);
+			}
+		}
+
+		sort(all(data), cakesort);
+
+		rep(i,data.size()){
+			cout << cakesize(data[i].x[0],data[i].y[0],data[i].x[2],data[i].y[2]) << (i+1==data.size() ? "\n" : " ");
+		}
+	}
+}

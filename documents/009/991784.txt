@@ -1,0 +1,94 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+#define REP(i,a) rep((i),0,(a))
+using namespace std;
+//global
+
+struct Data{
+	int x, y,r;
+	int c;
+};
+Data data[24];
+bool dp[1024 * 1024 * 16];
+int min_num;
+int N;
+bool double_check(int i, int j){
+	int dx, dy, dr;
+	dx = data[j].x - data[i].x;
+	dy = data[j].y - data[i].y;
+	dr = data[j].r + data[i].r;
+	//printf("[%d,%d]%d,%d,%d\n", i, j, dx, dy, dr);
+	if ((dx*dx + dy*dy)<(dr*dr))return(true);
+	else return(false);
+}
+
+void printbit(int x){
+	REP(i, N){
+		if ((x >> (N - i-1)) & 1)cout << 1;
+		else cout<<0;
+	}
+	cout << endl;
+
+
+}
+void solve(int num, int rest){
+	//cout << rest<<endl;
+	//printbit(rest);
+	if (min_num > num)min_num = num;
+	if (num <= 1)return;
+	if (dp[rest])return;
+
+	int color[4] = { 0 }, index[4] = { 0 };
+	REP(i, N){
+		int bit = (1 << i);
+		if ((rest&bit) > 0){
+			bool f = true;
+			rep(j,0,i)if((rest&(1<<j))>0)
+			if (double_check(i, j)){
+				f = false; continue;
+			}
+			if (f){
+				color[data[i].c] += bit;
+				index[data[i].c]++;
+			}
+		}
+	}
+	//rep(i, 0, 4){printf("%d,",index[i]);printbit(color[i]);}
+	rep(i, 0, 4)
+	if (index[i]>=2)
+	if (!(index[i] & 1)){
+		solve(num - index[i], rest - color[i]);
+	}
+	else{
+		int p = 1;
+		rep(j, 0, index[j]){
+			while (!(p & 1))p <<= 1;
+			solve(num - index[i] + 1, rest - color[i] + p);
+
+		}
+
+
+
+	}
+
+
+}
+
+
+
+int main(void){
+	while (true){
+		cin >> N;
+		if (N == 0)return(0);
+		min_num = N;
+		memset(dp, 0, sizeof(dp));
+		REP(i, N){
+			cin >> data[i].x >> data[i].y >> data[i].r>>data[i].c;
+			data[i].c--;
+		}
+		solve(N, (1 << N) - 1);
+		cout << N - min_num << endl;
+	}}

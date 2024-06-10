@@ -1,0 +1,43 @@
+#include<iostream>
+#include<cmath>
+#include<algorithm>
+#include<cstdlib>
+#define INF 16777216
+typedef long long llong;
+using namespace std;
+
+llong EN2D(llong,llong);
+llong EN2R(llong,llong);
+llong D2EN(llong,llong);
+llong R2EN(llong,llong);
+
+int main(){
+  llong M,Cd,Cr,MD,MR,RA,DA;
+  int rD,rR;
+  cin >> M >> rD >> rR >> Cd >> Cr;
+  
+  MD=D2EN(Cd,rD);
+  MR=R2EN(Cr,rR);
+  if(M<MD+MR){
+    cout<<-1<<endl;
+  }else{
+    DA=D2EN( EN2D(10000,rD),rD);
+    RA=R2EN( EN2R(10000,rR),rR);
+    cout<<M-MD-MR<<endl;
+  }
+
+  return 0;
+}
+
+llong EN2D(llong x,llong rD){
+  return (rD*x)/100 + ((rD*x)%100>0);
+}
+llong EN2R(llong x,llong rR){
+  return (rR*x)/100 + ((rR*x)%100>0);
+}
+llong D2EN(llong x,llong rD){
+  return (100*x)/rD + ((100*x)%rD>0);
+}
+llong R2EN(llong x,llong rR){
+  return (100*x)/rR + ((100*x)%rR>0);
+}

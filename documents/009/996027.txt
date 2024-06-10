@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int h, m, i, j;
+	char card[200], out[200];
+	
+	while (1){
+		scanf("%s", card);
+		
+		if (card[0] == '-'){
+			break;
+		}
+		
+		scanf("%d", &m);
+		
+		for (i = 0; i < m; i++){
+			strcpy(out, "");
+						
+			scanf("%d", &h);
+			
+			j = h;
+			while (card[j] != '\0'){
+				out[j - h] = card[j];
+				j++;
+			}
+			out[j - h] = '\0';
+			
+			strncat(out, card, h);
+			strcpy(card, out);
+		}
+		printf("%s\n", out);
+		
+	}
+	
+	return (0);
+}

@@ -1,0 +1,38 @@
+#include<stdio.h>
+#define maxN 1000
+
+static int a[maxN+1],N;
+void insert(int v){
+  a[++N]=v;
+}
+int rem(){
+  int j,max,v;
+  max=1;
+  for(j=2;j<=N;j++)
+    if(a[j]>a[max])
+      max=j;
+  v=a[max];
+  a[max]=a[N--];
+  return v;
+  }
+int main(void){
+  char com[10];
+  int v,i=0,j=0,b[maxN];
+  while(1){
+    scanf("%s",com); 
+    if(com[0]=='i'){
+      scanf("%d",&v);
+      insert(v);
+    }
+    else
+      if(com[1]=='x'){
+	b[i]=rem();
+	i++;
+      }
+      else
+	break;
+  }
+  for(j=0;j<i;j++)
+     printf("%d\n",b[j]);
+  return 0;
+}

@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <math.h>
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+#define if_range(x, y, w, h) if (0<=(int)(x) && (int)(x)<(int)(w) && 0<=(int)(y) && (int)(y)<(int)(h))
+
+const int INF = 100000000;
+typedef double D;
+const D EPS = 1e-8;
+const double PI = 3.14159;
+int dx[4]={-1, 0, 1, 0}, dy[4]={0, -1, 0, 1};
+using namespace std;
+typedef pair<int, int> PII;
+
+/** Problem1020 : Cleaning Robot **/
+struct  P {
+	int x, y;
+	P() {}
+	P(int x_, int y_) : x(x_), y(y_) {}
+};
+
+int main()
+{
+	double dp[16][3][3];
+	P s, b, t;
+	int N;
+	char S, T, B;
+	while (cin>>N, N) {
+		cin>>S>>T>>B;
+		memset(dp, 0, sizeof(dp));
+		
+		s.x = (S-'A')%3;
+		s.y = (S-'A')/3;
+		b.x = (B-'A')%3;
+		b.y = (B-'A')/3;
+		t.x = (T-'A')%3;
+		t.y = (T-'A')/3;
+		
+		dp[0][t.x][t.y]=1;
+		
+		REP(i, 1, N+1) {
+			rep(y, 3) {
+				rep(x, 3) {
+					rep(j, 4) {
+						int ox = x+dx[j], oy=y+dy[j];
+						if_range(ox, oy, 3, 3) {
+							if (b.x==ox && b.y == oy) {
+								ox = x; oy=y;
+							}
+							
+						} else {
+							ox = x; oy = y;
+						}
+						dp[i][x][y] += dp[i-1][ox][oy]*0.25;
+					}
+				}
+			}
+		}
+		printf("%.8f\n", dp[N][s.x][s.y]);
+	}
+}

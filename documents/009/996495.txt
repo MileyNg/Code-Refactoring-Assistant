@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+bool used[10];
+bool tabu[10];
+int keisu[10];
+int cnt, ans;
+
+void dfs(int k, int sum){
+    if (k == cnt) {
+        if (!sum) {
+            ans++;
+        }
+        return;
+    }
+    
+    for (int i = 0; i < 10; i++) {
+        if (used[i] || (i == 0 && tabu[k])) {
+            continue;
+        }
+        used[i] = true;
+        dfs(k+1, sum+i*keisu[k]);
+        used[i] = false;
+    }
+    return;
+}
+
+int main(){
+    while (true) {
+        int n;
+        cin >> n;
+        if (n == 0) {
+            break;
+        }
+        vector<string> str(n);
+        map<char, int> id;
+        cnt = 0;
+        ans = 0;
+        
+        for (int i = 0; i < 10; i++) {
+            used[i] = false;
+            tabu[i] = false;
+            keisu[i] = 0;
+        }
+
+        for(int i = 0; i < n; i++){
+            cin >> str[i];
+            string s = str[i];
+            for (int j = 0; j < s.size(); j++) {
+                if (id.find(s[j]) == id.end()) {
+                    id[s[j]] = cnt++;
+                }
+                if (j == 0 && s.size() > 1) { // 0にならない記号か
+                    tabu[id[s[j]]] = true;
+                }
+                if (i != n - 1) {
+                    keisu[id[s[j]]] += (int)pow(10, s.size() - j - 1);
+                }else{
+                    keisu[id[s[j]]] -= (int)pow(10, s.size() - j - 1);
+                }
+            }
+        }
+        dfs(0, 0);
+        cout << ans << endl;
+    }
+    
+    return 0;
+}

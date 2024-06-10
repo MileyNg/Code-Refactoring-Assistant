@@ -1,0 +1,29 @@
+def get_i(i)
+  if $s[i] != i
+    nums = []
+    loop do
+      nums << $s[i]
+      $s[i] = $s[$s[i]]
+      break if $s[i] == $s[$s[i]]
+    end
+    nums.each {|j| $s[j] = $s[i]}
+    $s[i]
+  else
+    i
+  end
+end
+
+n, q = gets.split.map(&:to_i)
+$s = (0...n).to_a
+
+q.times do
+  com, x, y = gets.split.map(&:to_i)
+  xi = get_i(x)
+  yi = get_i(y)
+  case com
+  when 0
+    $s[xi] = yi if xi != yi
+  when 1
+    puts xi == yi ? '1' : '0'
+  end
+end

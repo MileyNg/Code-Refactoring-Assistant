@@ -1,0 +1,101 @@
+//include----------------------------------------------------------------------------------------------------------------------
+#include<cstdio>
+#include<cmath>
+#include<cstdlib>
+#include<cstring>
+#include<string>
+#include<cctype>
+#include<string>
+#include<vector>
+#include<stack>
+#include<list>
+#include<queue>
+#include<deque>
+#include<bitset>
+#include<map>
+#include<algorithm>
+#include<memory>
+
+
+//using namespace--------------------------------------------------------------------------------------------------------------
+using namespace std;
+
+//define,const-----------------------------------------------------------------------------------------------------------------
+#define rep(i, n) for(int i = 0; i < n; i++)
+const int INF = 1 << 25;
+#define MAX 1000
+
+//global-----------------------------------------------------------------------------------------------------------------------
+int board_range_w, board_range_h, start_x, start_y, goal_x, goal_y;
+int color[MAX][MAX];
+bool dp[MAX][MAX];
+
+//function---------------------------------------------------------------------------------------------------------------------
+bool solve(int x, int y, int before_x, int before_y){
+	if ( x == goal_x && y == goal_y )
+		return true;
+	if ( !color[x][y] ){
+		dp[x][y] = false;
+		return false;
+	}
+	if ( color[x][y] == color[x + 1][y] && x + 1 != before_x && dp[x + 1][y] )
+		if ( solve(x + 1, y, x, y) )
+			return true;
+	if ( color[x][y] == color[x][y + 1] && y + 1 != before_y && dp[x][y + 1] )
+		if ( solve(x, y + 1, x, y) )
+			return true;
+	if ( color[x][y] == color[x][y - 1] && y - 1 != before_y && dp[x][y - 1] )
+		if ( solve(x, y - 1, x, y) )
+			return true;
+	if ( color[x][y] == color[x - 1][y] && x - 1 != before_x && dp[x - 1][y] )
+		if ( solve(x - 1, y, x, y) )
+			return true;
+	dp[x][y] = false;
+	return false;
+}
+
+int n, c[30000], d[30000];
+
+
+int main(){
+	while ( scanf("%d %d", &board_range_w, &board_range_h) ) {
+		if ( board_range_w == 0 && board_range_h == 0 )
+			return 0;
+		for ( int i = 0; i < 1000; i++ ){
+			for ( int j = 0; j < 1000; j++ ){
+				color[i][j] = 0;
+				dp[i][j] = true;
+			}
+		}
+		scanf("%d %d", &start_x, &start_y);
+		scanf("%d %d", &goal_x, &goal_y);
+		int block;
+		scanf("%d", &block);
+		for ( int i = 0; i < block; i++ ){
+			//ブロック情報
+			int block_color, block_quarter, block_start_x, block_start_y;
+			scanf("%d %d %d %d", &block_color, &block_quarter, &block_start_x, &block_start_y);
+			color[block_start_x + 1][block_start_y + 1] = block_color;
+			color[block_start_x][block_start_y + 1] = block_color;
+			color[block_start_x + 1][block_start_y] = block_color;
+			color[block_start_x][block_start_y] = block_color;
+			if ( block_quarter == 0 ){
+				color[block_start_x + 2][block_start_y + 1] = block_color;
+				color[block_start_x + 2][block_start_y] = block_color;
+				color[block_start_x + 3][block_start_y + 1] = block_color;
+				color[block_start_x + 3][block_start_y] = block_color;
+			}										
+			else{
+				color[block_start_x + 1][block_start_y + 3] = block_color;
+				color[block_start_x][block_start_y + 3] = block_color;
+				color[block_start_x + 1][block_start_y + 2] = block_color;
+				color[block_start_x][block_start_y + 2] = block_color;
+			}
+		}
+		if ( solve(start_x, start_y, start_x, start_y) )
+			printf("OK\n");
+		else
+			printf("NG\n");
+	}
+	return 0;
+}

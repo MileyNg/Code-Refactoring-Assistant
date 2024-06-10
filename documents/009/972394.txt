@@ -1,0 +1,41 @@
+#include<stdio.h>
+
+int setprice(int x,int y,int b,int p){
+  if(b<5){
+    b=5;
+  }
+  if(p<2){
+    p=2;
+  }
+  return (x*b+y*p)*4/5;
+}
+
+void doit(int n){
+  int x,y,b,p;
+  int set=0;
+  int amount;
+  int stp;
+
+  if(n!=0){
+    scanf("%d %d %d %d",&x,&y,&b,&p);
+    if((b>=5)&&(p>=2)){
+      set=1;
+    }
+    amount=(x*b+y*p);
+    stp=setprice(x,y,b,p);
+    if(amount<stp){
+      printf("%d\n",amount);
+    }
+    else{
+      printf("%d\n",stp);
+    }
+    doit(n-1);
+  }
+}
+
+int main(){
+  int n;
+  scanf("%d",&n);
+  doit(n);
+  return 0;
+}

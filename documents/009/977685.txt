@@ -1,0 +1,36 @@
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+#define INF 1<<28
+using namespace std;
+
+int a[222], b[222], c[222];
+int d, n;
+int t[66];
+int memo[66][222];
+
+int solve(int p, int q){
+  if(p == d-1) return 0;
+  if(memo[p][q]) return memo[p][q];
+  
+  int ret = -INF;
+  for(int i=0;i<n;i++) 
+    if(a[i] <= t[p+1] && t[p+1] <= b[i])
+      ret = max(solve(p+1, i)+abs(c[q]-c[i]), ret);
+  
+  return memo[p][q] = ret;
+}
+
+int main(){
+  
+  cin >> d >> n;
+  for(int i=0;i<d;i++) cin >> t[i];
+  for(int i=0;i<n;i++) cin >> a[i] >> b[i] >> c[i];
+  
+  int ans = -(1<<28);
+  for(int i=0;i<n;i++)
+    if(a[i] <= t[0] && t[0] <= b[i])
+      ans = max(solve(0, i), ans);
+  
+  cout << ans << endl;
+}

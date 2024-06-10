@@ -1,0 +1,54 @@
+#include <stdio.h>
+#define N 100001
+#define NIL -1
+
+struct Node{
+  int p,l,r;
+};
+struct Node T[N];
+
+int CalcDepth(int id){
+  if(T[id].p==NIL)return 0;
+  return CalcDepth(T[id].p)+1;
+}
+
+int main(){
+  int n,i,j,id,k,c,pr;
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    T[i].p=NIL;
+    T[i].l=NIL;
+    T[i].r=NIL;
+  }
+  for(i=0;i<n;i++){
+    scanf("%d%d",&id,&k);
+    for(j=0;j<k;j++){    
+      scanf("%d",&c);
+      if(j==0) {
+	T[id].l=c;
+	T[c].p=id;
+	pr=c;
+      }else{
+	T[pr].r=c;
+	T[c].p=id;
+	pr=c;     
+      }
+    }
+  }
+  for(i=0;i<n;i++){
+    printf("node %d: parent = %d, depth = %d, ",i,T[i].p,CalcDepth(i));
+    if(T[i].p==NIL) printf("root, ["); 
+    else if(T[i].l==NIL) printf("leaf, [");
+    else printf("internal node, [");
+    if(T[i].l!=NIL){
+      printf("%d", T[i].l);
+      pr = T[i].l;
+      while(T[pr].r!=NIL){
+	printf(" ,%d", T[pr].r);
+	pr = T[pr].r;
+      }
+    }
+    printf("]\n");
+  }
+  return 0;
+}

@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int a, b, c, e, f;
+	
+	while(scanf("%d %d", &a, &b)!=EOF){
+		e = 1;
+		for (c = 2; c <= a; c++) {
+			if (a % c == 0 && b % c == 0) {
+				e *= c;
+				a = a / c;
+				b = b / c;
+			}
+		}
+		f = e * a * b;
+		printf("%d %d\n", e, f);
+	}
+	printf("\n");
+	return (0);
+}	

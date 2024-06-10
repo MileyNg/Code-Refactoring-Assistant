@@ -1,0 +1,52 @@
+def straight?(ncs)
+  if ncs[10] == 1 && ncs[11] == 1 && ncs[12] == 1 && ncs[13] == 1 &&
+      ncs[1] == 1
+    return true
+  end
+
+  max_con = 1
+  con = 0
+
+  for nc in ncs
+    if nc > 0
+      con += 1
+      if (max_con < con)
+        max_con = con
+      end
+    else
+      con = 0
+    end
+  end
+
+  max_con == 5
+end
+
+### main
+
+while (line =gets)
+  ncs = (0..13).map{ 0 }
+  line.chop.split(",").each{|s| ncs[s.to_i] += 1}
+
+  n4 = ncs.select{|n| n == 4}.length
+  n3 = ncs.select{|n| n == 3}.length
+  n2 = ncs.select{|n| n == 2}.length
+  n1 = ncs.select{|n| n == 1}.length
+
+  hand = "null"
+
+  if n4 == 1
+    hand = "four card"
+  elsif n3 == 1 && n2 == 1
+    hand = "full house"
+  elsif n1 == 5 && straight?(ncs)
+    hand = "straight"
+  elsif n3 == 1
+    hand = "three card"
+  elsif n2 == 2
+    hand = "two pair"
+  elsif n2 == 1
+    hand = "one pair"
+  end
+
+  puts hand
+end

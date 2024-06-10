@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdlib>
+#define max_T 50
+#define max_P 10
+
+using namespace std;
+
+int cmp(const void *,const void *);
+
+int main(void){
+	for(int M,T,P,R;cin >> M >> T >> P >> R,M;){
+		int solve[max_T][3]={0};
+		for(int i=0;i<T;i++)
+			solve[i][0]=i+1;
+
+		int p_min[max_T][max_P]={0};
+		for(int m,t,p,j,i=0;i<R&&cin >> m >> t >> p >> j;i++){
+			p_min[t-1][p-1]+=j?20:m;
+			if(!j){
+				solve[t-1][1]++;
+				solve[t-1][2]+=p_min[t-1][p-1];
+			}
+		}
+
+		qsort((void *)solve,T,sizeof(solve[0]),cmp);
+
+		for(int i=0;i<T;i++)
+			cout << solve[i][0] << (i<T-1?solve[i][1]!=solve[i+1][1]||solve[i][2]!=solve[i+1][2]?",":"=":"");
+		cout << endl;
+	}
+}
+
+int cmp(const void *a,const void *b){
+	int *s[2]={(int *)a,(int *)b},ret;
+
+	if(s[0][1]>s[1][1])
+		ret=-1;
+	else if(s[0][1]<s[1][1])
+		ret=1;
+	else
+		if(s[0][2]<s[1][2])
+			ret=-1;
+		else if(s[0][2]>s[1][2])
+			ret=1;
+		else
+			ret=s[0][0]>s[1][0]?-1:1;
+
+	return ret;
+}

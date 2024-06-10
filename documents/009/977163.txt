@@ -1,0 +1,45 @@
+#include <stdio.h>
+// #include <string.h>
+
+
+const int step[][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+void remove_land(char c[][51], int x, int y, int w, int h) {
+    int i, j;
+    if (x < 0 || w <= x || y < 0 || h <= y) return;
+    if (!c[y][x]) return;
+    c[y][x] = 0;
+    for (i = -1; i <= 1; i++) {
+        for (j = -1; j <= 1; j++) {
+            if (i == 0 && j == 0) continue;
+            remove_land(c, x+j, y+i, w, h);
+        }
+    }
+    return;
+}
+
+int main() {
+    int w, h, i, j;
+    char c[50][51];
+    int count;
+
+    while (scanf("%d%d\n", &w, &h) != EOF && w && h) {
+        for (i = 0; i < h; i++) {
+            for (j = 0; j < w; j++) {
+                scanf("%d", &c[i][j]);
+            }
+        }
+
+        for (count = 0, i = 0; i < h; i++) {
+            for (j = 0; j < w; j++) {
+                if (c[i][j]) {
+                    remove_land(c, j, i, w, h);
+                    count++;
+                }
+            }
+        }
+        printf("%d\n", count);
+    }
+
+    return 0;
+}

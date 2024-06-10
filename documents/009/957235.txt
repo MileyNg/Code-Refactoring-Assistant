@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
+using namespace std;
+typedef long long int ll;
+typedef pair<int, int> pii;
+typedef pair<pii, int> ppiii;
+typedef vector<int> vi;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x)-1;i>=0;i--)
+#define RFOR(i,c) for(auto i=(c).rbegin();i!=(c).rend();++i)
+#define ALL(container) container.begin(), container.end()
+#define SZ(container) ((int)container.size())
+
+const int INF = 1<<28;
+const double EPS = 1e-8;
+const int MOD = 1000000007;
+
+main(){
+	int M, T, P, R;
+	while(cin >> M >> T >> P >> R, M){
+		vector<ppiii> lis(T);
+		vector< vector<int> > wa(T+1, vector<int>(P+1, 0));
+		REP(i, T) lis[i] = ppiii(pii(0, 0), -i-1);
+		REP(i, R){
+			int m, t, p, j;
+			cin >> m >> t >> p >> j;
+			if(j) wa[t][p]++;
+			else{
+				lis[t-1].first.first --;
+				lis[t-1].first.second += m + wa[t][p]*20;
+			}
+		}
+		sort(lis.begin(), lis.end());
+		cout << -lis[0].second;
+		for(int i=1;i<T;i++){
+			cout << (lis[i-1].first==lis[i].first?"=":",")<<-lis[i].second;
+		}
+		cout << endl;
+	}
+	return 0;
+}

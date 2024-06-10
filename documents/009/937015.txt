@@ -1,0 +1,13 @@
+loop do
+  n,k = gets.chomp.split(' ').map(&:to_i)
+  break if n+k == 0
+
+  stock = gets.chomp.split(' ').map(&:to_i)
+  use=[]
+  n.times{use << gets.chomp.split(' ').map(&:to_i)}
+  sum=[]
+  use.transpose.each{|x| sum << x.inject(:+)}
+  success=true
+  stock.zip(sum){|x,y|success=false if x < y}
+  puts success ? 'Yes' : 'No'
+end

@@ -1,0 +1,120 @@
+// compile in C++11. use -std=c++11.
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <valarray>
+#include <map>
+#include <set>
+#include <list>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <complex>
+#include <string>
+#include <sstream>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+
+// this require C++11
+#include <unordered_set>
+#include <unordered_map>
+#include <random>
+
+using namespace std;
+
+#define all(c) c.begin(),c.end()
+#define repeat(i,n) for(int i=0;i<static_cast<int>(n);i++)
+#define debug(x) #x << "=" << (x)
+#define dump(x) cerr << debug(x) << " (L:" << __LINE__ << ")"<< endl
+
+typedef complex<double> point;
+
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& vec){
+    os << "[";
+    for(const auto& v : vec){
+        os << v << ",";
+    }
+    os << "]";
+    return os;
+}
+
+template<typename T>
+T input(){
+    T t;cin >> t;
+    return t;
+}
+
+template<typename T>
+vector<T> input(const int N){
+    vector<T> v(N);
+    repeat(i,N) cin >> v[i];
+    return v;
+}
+
+// 円と円の交点(2点ある前提)
+vector<point> circles_point(point c1,double r1,point c2,double r2){
+    double d = abs(c1-c2);
+    double s = (r1+r2+d) / 2;
+    double S = sqrt(s*(s-r1)*(s-r2)*(s-d));
+    double h = 2 * S / d;
+    point v = (c2-c1) / (abs(c2-c1));
+
+    double m = sqrt(r1*r1 - h*h);
+
+    vector<point> ret;
+    ret.push_back(c1 + m*v+h*v*point(0,1));
+    ret.push_back(c1 + m*v-h*v*point(0,1));
+    return ret;
+}
+
+const double EPS = 1e-7;
+int solve(vector<point> ps){
+    int n = ps.size();
+    int ret = 1;
+    for(int apple=0;apple<n;apple++){
+        for(int banana=0;banana<n;banana++){
+            if(apple == banana) continue;
+
+            point a = ps[apple];
+            point b = ps[banana];
+            if(abs(a-b) < 2){
+                vector<point> check = circles_point(a,1,b,1);
+                for(point c : check){
+                    int cur = 0;
+                    // if(abs(c-a) < EPS or abs(c-b) < EPS) continue;
+                    for(const point& p : ps){
+                        if(abs(c-p) <= 1 + EPS){
+                            cur++;
+                        }
+                    }
+                    ret = max(ret,cur);
+                }
+            }
+        }
+    }
+    return ret;
+}
+
+int main(){
+    while(true){
+        int n = input<int>();
+        if(n == 0) break;
+        vector<point> ps;
+        repeat(apple,n){
+            double x,y;
+            char c;
+            cin >> x >> c >> y;
+            ps.push_back(point(x,y));
+        }
+        cout << solve(ps) << endl;
+    }
+    return 0;
+}

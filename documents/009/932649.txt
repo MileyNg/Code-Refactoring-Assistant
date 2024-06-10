@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int main(int argc, char** argv){
+	int num[1000], n;
+
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		cin >> num[i];
+	}
+	for (int i = 0; i < n; i++){
+		for (int j = i + 1; j < n; j++){
+			if (num[i] > num[j]){
+				num[i] += num[j];
+				num[j] = num[i] - num[j];
+				num[i] -= num[j];
+			}
+		}
+	}
+	for (int i = 0; i < n; i++){
+		cout << num[i] << (i == n - 1 ? "\n" : " ");
+	}
+}

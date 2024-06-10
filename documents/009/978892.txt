@@ -1,0 +1,14 @@
+from itertools import permutations
+
+while True:
+    try:
+        line = input()
+    except EOFError:
+        break
+
+    n, s = map(int, line.split())
+    count = 0
+    for x in permutations(range(10), n):
+        if sum(x[i]*(i+1) for i in range(n)) == s:
+            count += 1
+    print(count)

@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int f(int n){
+	return n-(n/10)*10;
+}
+
+int main() {
+	
+	string nums;
+	int n[10];
+	
+	while(getline(cin,nums)){
+		
+		for(int i=0;i<10;++i){
+			n[i] = nums[i] - '0';
+		}
+		
+		for(int i=9;i>=0;--i){
+			for(int j=0;j<i;++j){
+				n[j] =f( n[j] + n[j+1] );
+			}
+		}
+		
+		cout << n[0] << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,127 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int dx[] = {1, -1, 0, 0};
+const int dy[] = {0, 0, -1, 1};
+
+int h, w, n;
+
+bool Check(vector<string> field)
+{
+    bool change = true;
+
+    while (true) {
+        change = false;
+
+        vector<string> tmp = field;
+        for (int i = 0; i < h; ++i) {
+            for (int j = 0; j < w; ++j) {
+                if (field[i][j] == '.')
+                    continue;
+
+                // right
+                int len = 1;
+                while (len * dx[0] + j < w) {
+                    if (field[i][j] != field[i][len * dx[0] + j])
+                        break;
+                    ++len;
+                }
+                if (n <= len) {
+                    for (int t = 0; t < len; ++t)
+                        tmp[i][t * dx[0] + j] = '.';
+                    change = true;
+                }
+
+                // down
+                len = 1;
+                while (len * dy[3] + i < h) {
+                    if (field[i][j] != field[len * dy[3] + i][j])
+                        break;
+                    ++len;
+                }
+                if (n <= len) {
+                    for (int t = 0; t < len; ++t)
+                        tmp[t * dy[3] + i][j] = '.';
+                    change = true;
+                }
+            }
+        }
+
+        if (!change)
+            break;
+
+        field = tmp;
+        for (int j = 0; j < w; ++j) {
+            int idx = h - 1;
+
+            while (idx >= 0) {
+                if (field[idx][j] == '.') {
+                    int nxt = idx - 1;
+                    while (nxt >= 0) {
+                        if (field[nxt][j] != '.')
+                            break;
+                        else
+                            --nxt;
+                    }
+                    if (nxt < 0)
+                        break;
+                    swap(field[idx][j], field[nxt][j]);
+                    --idx;
+                }
+                else
+                    --idx;
+            }
+        }
+    }
+
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            if (field[i][j] != '.')
+                return false;
+    return true;
+}
+
+bool Solve(vector<string> &field)
+{
+
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j) {
+            if (field[i][j] == '.')
+                continue;
+
+            for (int d = 0; d < 2; ++d) {
+                int nx = j + dx[d];
+                int ny = i + dy[d];
+
+                if (nx < 0 || ny < 0 || nx >= w || ny >= h)
+                    continue;
+                if (field[ny][nx] == '.' || field[i][j] == field[ny][nx])
+                    continue;
+
+                swap(field[i][j], field[ny][nx]);
+                if (Check(field))
+                    return true;
+                swap(field[i][j], field[ny][nx]);
+            }
+        }
+
+    return false;
+}
+
+int main()
+{
+    cin >> h >> w >> n;
+
+    vector<string> field(h);
+    for (int i = 0; i < h; ++i)
+        cin >> field[i];
+
+    if (Solve(field))
+        cout << "YES\n";
+    else
+        cout << "NO\n";
+
+    return 0;
+}

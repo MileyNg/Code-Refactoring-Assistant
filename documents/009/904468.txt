@@ -1,0 +1,22 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int mt[10];
+	for(int i=0;i<10;i++){
+		cin >> mt[i];
+	}
+	for(int i=0;i<3;i++){
+		int *maxmt = &mt[0];//mtと同じ。ポインタにすることでアドレスと値を同時に見れる
+		for(int j=0;j<10;j++){
+			if(*maxmt < mt[j]){
+				maxmt = &mt[j];
+			}
+		}
+		cout << *maxmt << endl;
+		*maxmt = 0;
+	}
+	return 0;
+}

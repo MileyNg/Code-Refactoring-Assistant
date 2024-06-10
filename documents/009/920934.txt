@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+/** Problem0074 : Videotape **/
+void print(int s)
+{
+	cout << s/3600 << ":" << (s/60)%60 << ":" << s%60 << endl;
+}
+
+int main()
+{
+	int h, m, s, sum, ans;
+	
+	while (1) {
+		cin >> h >> m >> s;
+		if (h == -1 && m == -1 && s == -1)
+			break;
+		sum = h*60*60 + m*60 + s;
+		ans = 120*60 - sum;
+		print(ans);
+		print(3*ans);
+	}
+	return 0;
+}

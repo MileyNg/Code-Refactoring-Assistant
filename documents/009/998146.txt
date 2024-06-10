@@ -1,0 +1,66 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+typedef pair<int,int> P;
+#define INF (1<<24)
+#define MAX_V 100
+
+int V,E,a,b,c,d,R;
+
+vector< vector<P> > t;
+vector< vector<P> > u;
+
+void init();
+int dijkstra(int,int,vector< vector<P> >&);
+
+int main(){
+  while(cin>>E>>V){
+    if(V==0&&E==0)break;
+    init();
+    for(int i=0;i<E;i++){
+      cin>>a>>b>>c>>d;
+      b--;a--; 
+      t[a].push_back(P(b,c));
+      t[b].push_back(P(a,c));
+      u[a].push_back(P(b,d));
+      u[b].push_back(P(a,d));
+    }
+    cin>>R;
+    for(int i=0;i<R;i++){
+      cin>>a>>b>>c;
+      a--;b--;
+      cout<<dijkstra(a,b,(c?u:t))<<endl;
+    }
+  }
+  return 0;
+}
+
+
+int dijkstra(int si,int ti,vector< vector<P> > &G){
+  int d[MAX_V];
+  fill(d,d+MAX_V,INF);
+  d[si]=0;
+  priority_queue< P , vector<P> , greater<P> > Q;
+  Q.push(P(0,si));
+  while(!Q.empty()){
+    P p=Q.top();Q.pop();
+    int pos=p.second,cost=p.first;
+    if(d[pos]<cost)continue;
+    for(int i=0;i<(int)G[pos].size();i++){
+      int v=G[pos][i].first;
+      int w=G[pos][i].second;
+      if(cost+w>=d[v])continue;
+      d[v]=cost+w;
+      Q.push(P(d[v],v));
+    }
+  }
+  return d[ti];
+}
+
+void init(){
+  t.clear();
+  u.clear();
+  t.resize(V);
+  u.resize(V);
+}

@@ -1,0 +1,61 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+vector<pair<int, float> > other;
+
+bool pairCompare(const std::pair<int, double>& firstElem, const std::pair<int, double>& secondElem) {
+    return firstElem.second > secondElem.second;
+}
+
+int main(){
+    for(int j=0; j < 3; j++){
+        vector<pair<int, double> > timer;
+        for(int i=0; i < 8; i++){
+            int n; double t;
+            cin >> n >> t;
+            timer.push_back(mp(n, t));
+        }
+        sort(timer.begin(), timer.end(), pairCompare);
+
+        printf("%d %.2f\n",timer[timer.size()-1].first, timer[timer.size()-1].second);
+        printf("%d %.2f\n",timer[timer.size()-2].first, timer[timer.size()-2].second);
+
+        timer.pop_back(); timer.pop_back();
+        for(int i=0; i < timer.size(); i++){
+            other.push_back(timer[i]);
+        }
+        timer.clear();
+    }
+    sort(other.begin(), other.end(), pairCompare);
+    printf("%d %.2f\n",other[other.size()-1].first, other[other.size()-1].second);
+    printf("%d %.2f\n",other[other.size()-2].first, other[other.size()-2].second);
+
+}

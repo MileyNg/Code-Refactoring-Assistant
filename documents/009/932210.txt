@@ -1,0 +1,11 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+function sortByNumber(a, b) {
+	return (+a > +b) ? 1 : -1;
+}
+
+var line = stdin()[0].split(' ').map(function(num_s) { return +num_s; });
+console.log(line.sort(sortByNumber).join(' '));

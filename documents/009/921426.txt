@@ -1,0 +1,32 @@
+import std.stdio;
+
+int gcd(int m,int n)
+{
+	if((m == 0) || (n == 0)) return 0;
+	
+	while(m != n)
+	{
+		if(m > n) m = m -n;
+		else n = n - m;
+	}
+	return m;
+}
+
+int lcm(int m,int n)
+{
+	if((m == 0) || (n == 0)) return 0;
+	return ((m / gcd(m,n) * n));
+}
+
+int main()
+{
+	int a,b;
+	while(readf("%d %d",&a,&b))
+	{
+		int x = gcd(a,b);
+		int y = lcm(a,b);
+
+		writeln("%d %d",x,y);
+	}
+	return 0;
+}

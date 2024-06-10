@@ -1,0 +1,29 @@
+#include <stdio.h>
+int main(){
+	int n;
+	int s;
+	while(1){
+		scanf("%d %d\n",&n,&s);
+		if(!n&&!s)break;
+		int i;
+		int all[101][10];
+		int j,k;
+		for(j=0;j<101;j++)for(k=0;k<10;k++)all[j][k]=0;
+		int bcnt;
+		int bnum;
+		for(i=1;i<(0x1<<10);i++){
+			bcnt=0;
+			bnum=0;
+			for(j=0;j<10;j++){
+				if(i&(0x1<<j)){
+					bcnt++;
+					bnum+=j;
+				}
+			}
+			if(bnum<=s)all[bnum][bcnt]++;
+		}
+		printf("%d\n",all[s][n]);
+	}
+	
+	return 0;
+}

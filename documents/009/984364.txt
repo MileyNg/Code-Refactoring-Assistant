@@ -1,0 +1,170 @@
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <vector>
+#include <queue>
+#include <string>
+#include <complex>
+#include <stack>
+#include <set>
+#include <map>
+using namespace std;
+
+//// MACRO ////
+#define REP(i,n) for (int i = 0; i < (n); i++)
+#define RREP(i,n) for (int i = (n)-1; i >= 0; i--)
+#define FOR(i,s,n) for (int i = (s); i < (n); i++)
+#define allof(c) c.begin(), c.end()
+#define partof(c,i,n) c.begin() + (i), c.begin() + (i) + (n)
+#define EPS 1e-9
+#define INF 1000000000
+
+#define countof(a) (sizeof(a)/sizeof(a[0]))
+#define PREDIACTE(t,a) [](const t & a) -> bool
+#define COMPARISON(t,a,b) [](const t & a, const t & b) -> bool
+
+// start up //
+void solve();
+int main() { solve(); return 0; }
+
+//// prime ////
+vector<unsigned char> isPrime;
+vector<int> primes;
+void initPrimes(int n)
+{
+	isPrime = vector<unsigned char>(n + 1, true);
+	isPrime[0] = isPrime[1] = false;
+	FOR(i, 2, n + 1)
+	{
+		if (!isPrime[i]) continue;
+		primes.push_back(i);
+		for (int j = i * 2; j <= n; j += i)
+			isPrime[j] = false;
+	}
+}
+
+//// iota iterator ////
+struct iotait
+{
+	int n;
+	iotait(int n = 0) : n(n) { }
+	iotait &operator ++() { ++n; return *this; }
+	int operator *() { return n; }
+};
+
+//// geo ////
+struct P3
+{
+	double x, y, z;
+	P3(double x=0, double y=0, double z=0) : x(x), y(y), z(z) { }
+	P3 operator +() const { return *this; }
+	P3 operator +(const P3 &_) const { return P3(x+_.x, y+_.y, z+_.z); }
+	P3 operator -() const { return P3(-x, -y, -z); }
+	P3 operator -(const P3 &_) const { return *this + -_; }
+	P3 operator *(double _) const { return P3(x*_,y*_,z*_); }
+	P3 operator /(double _) const { return P3(x/_,y/_,z/_); }
+	double dot(const P3 &_) const { return x*_.x + y*_.y + z*_.z; }
+	P3 cross(const P3 &_) const { return P3(y*_.z-z*_.y, z*_.x-x*_.z, x*_.y-y*_.x); }
+	double sqlength() const { return x*x+y*y+z*z; }
+	double length() const { return sqrt(sqlength()); }
+	P3 direction() const { return *this / length(); }
+};
+
+struct Sphere
+{
+	P3 c;
+	double r;
+	Sphere(double x, double y, double z, double r) : c(x,y,z), r(r) { }
+};
+
+//// graph ////
+struct Path
+{
+	int from;
+	int to;
+	double cost;
+	Path(int from, int to, double cost) : from(from), to(to), cost(cost) { }
+	bool operator < (const Path &rhs) const { return cost < rhs.cost; }
+	bool operator > (const Path &rhs) const { return cost > rhs.cost; }
+};
+
+// prim //
+pair<double, vector<int>> prim(const vector<vector<double>> &costTable)
+{
+	int N = costTable.size();
+	priority_queue<Path, vector<Path>, greater<Path>> q;
+	q.push(Path(0, 0, 0));
+	
+	vector<int> parent(N, -1);
+	double totalCost = 0;
+	while (!q.empty())
+	{
+		Path cur = q.top(); q.pop();
+		int i = cur.from;
+		if (parent[i] != -1) continue;
+		parent[i] = cur.from;
+		totalCost += cur.cost;
+		REP(j,N) if (parent[i] == -1) q.push(Path(i,j,costTable[i][j]));
+	}
+	return make_pair(totalCost, parent);
+}
+
+//// i/o ////
+template <class T>
+class vevector : public vector<vector<T>>
+{
+public:
+	vevector(int n = 0, int m = 0) : vector<vector<T>>(n, vector<T>(m)) { };
+	vevector(int n, int m, const T &initial) : vector<vector<T>>(n, vector<T>(m, initial)) { };
+	using vector<vector<T>>::operator []; 
+	T& operator [](const POINT &index) { return (*this)[index.real()][index.imag()]; }
+};
+
+template <class T> T read() { T t; cin >> t; return t; }
+template <class T> vector<T> read(int n) { vector<T> v; REP(i,n) { v.push_back(read<T>()); } return v; }
+template <class T> vevector<T> read(int n, int m) { vevector<T> v; REP(i,n) v.push_back(read<T>(m)); return v; }
+template <class T> vevector<T> readjag(int n) { vevector<T> v; REP(i,n) v.push_back(read<T>(read<int>())); return v; }
+template <class T> void write(const T &t) { cout << t << endl; }
+template <class T> void write(const T &t, const T &t2) { cout << t << ' ' << t2 << endl; }
+template <class T> void write(const vector<T> &v)
+{
+	ostringstream ss; 
+	for (auto x : v) ss << x << ' ';
+	auto s = ss.str();
+	cout << s.substr(0, s.length() - 1) << endl;
+}
+
+struct _Reader { template <class T> _Reader operator ,(T &rhs) { cin >> rhs; return *this; } };
+#define READ(t,...) t __VA_ARGS__; _Reader(), __VA_ARGS__
+
+/// template end ///
+
+void solve()
+{
+	REP (testcase, INF)
+	{
+		// よみこみ
+		READ(int, N);
+		if (!N) { break; }
+		vector<Sphere> spheres;
+		REP(i,N) { READ(double, x,y,z,r); spheres.push_back(Sphere(x,y,z,r)); }
+
+		// cost[i][j] = 球i - 球j 間に廊下を作った時のコスト表
+		vevector<double> costTable(N, N);
+		REP(i,N) REP(j,N)
+		{
+			Sphere &si = spheres[i], &sj = spheres[j];
+			costTable[i][j] = max((si.c - sj.c).length() - (si.r + sj.r), 0.0);
+		}
+
+		// 最少全域木
+		double totalCost = prim(costTable).first;
+
+		write(totalCost);
+	}
+}

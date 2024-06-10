@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	long long int a1, m1, a2, m2, a3, m3;
+	while (cin >> a1 >> m1 >> a2 >> m2 >> a3 >> m3) {
+		if (a1 == 0 && m1 == 0 && a2 == 0 && m2 == 0 && a3 == 0 && m3 == 0) {
+			break;
+		} 
+		long long int x, y, z;
+		x = y = z = 1;
+		long long int counter = 1;
+		x = (a1 * x) % m1;
+		y = (a2 * y) % m2;
+		z = (a3 * z) % m3;
+		while (!(x == 1 && y == 1 && z == 1)) {
+			x = (a1 * x) % m1;
+			y = (a2 * y) % m2;
+			z = (a3 * z) % m3;
+			counter++;
+		}
+		cout << counter << endl;
+	}
+	return 0; 
+}

@@ -1,0 +1,30 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+  int n; cin >> n;
+  int win[n];
+  fill(win, win + n, 0);
+  for(int i = 0; i < n*(n-1)/2; i++) {
+    int a, b, c, d; cin >> a >> b >> c >> d;
+    a--, b--;
+    if(c > d) {
+      win[a] += 3;
+    }
+    if(c == d) {
+      win[a] += 1;
+      win[b] += 1;
+    }
+    if(c < d) {
+      win[b] += 3;
+    }
+  }
+  for(int i = 0; i < n; i++) {
+    int k = 0;
+    for(int j = 0; j < n; j++) {
+      if(win[j] > win[i]) k++;
+    }
+    cout << k + 1 << endl;
+  }
+}

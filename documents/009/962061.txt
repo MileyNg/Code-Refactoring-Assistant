@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, pair<int , pair<int , int> > > pppi;
+
+bool cmp(const pppi &a, const pppi &b){
+  if(a.S.S.F != b.S.S.F) return a.S.S.F > b.S.S.F;
+  if(a.S.S.S != b.S.S.S) return a.S.S.S < b.S.S.S;
+  return a.F < b.F;
+}
+
+int main(){
+  int n;
+  while(scanf("%d", &n) && n){
+
+    vector<pppi> re(n);
+
+    int l, u, a, p;
+    rep(i, n){
+
+      scanf("%d%d%d%d", &l, &u, &a, &p); l--; u--;
+      re[i] = make_pair(l, make_pair(u, make_pair(a, p)));
+    }
+
+    sort(re.begin(), re.end(), cmp);
+
+    vector<int>j(1000, 0);
+    int all = 0;
+    rep(i, n){
+      if((all < 10 && j[re[i].S.F] < 3) || (all < 20 && j[re[i].S.F] < 2) || (all < 26 && j[re[i].S.F] < 1)){
+	printf("%d\n", re[i].F+1);
+	j[re[i].S.F]++;
+	all++;
+      }
+    }
+  }
+  return 0;
+}

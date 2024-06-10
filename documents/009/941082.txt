@@ -1,0 +1,43 @@
+#include<iostream>
+#include<cmath>
+#include<cstdio>
+using namespace std;
+
+/*
+  P1(x1, y1) P2(x2, y2) P3(x3, y3) P0(x0, y0)
+
+ <円の中心(x0, y0)>
+  2*(x2-x1)*x0 + 2*(y2-y1)*y0 = x2*x2 - x1*x1 + y2*y2 - y1*y1
+  2*(x3-x1)*x0 + 2*(y3-y1)*y0 = x3*x3 - x1*x1 + y3*y3 - y1*y1
+  x0=((y3-y1)*(x2*x2-x1*x1+y2*y2-y1*y1)+(y1-y2)*(x3*x3-x1*x1+y3*y3-y1*y1))/(2*(x2-x1)*(y3-y1)-(y2-y1)*(x3-x1))
+  y0=((x1-x3)*(x2*x2-x1*x1+y2*y2-y1*y1)+(x2-x1)*(x3*x3-x1*x1+y3*y3-y1*y1))/(2*(x2-x1)*(y3-y1)-(y2-y1)*(x3-x1))
+
+ <円の半径R>
+  R = a/(2*sqrt(q-cosA*cosA)) 
+  a = sqrt( (x2-x3)*(x2-x3) + (y2-y3)*(y2-y3) ) // P2-P3
+  b = sqrt( (x1-x3)*(x1-x3) + (y1-y3)*(y1-y3) ) // P1-P3
+  c = sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) ) // P1-P2
+  cosA = (b*b + c*c - a*a)/(2*b*c)
+ */
+
+int main()
+{
+    double x1, x2, x3, y1, y2, y3; // 3角形の3点
+    int n;
+    cin >> n;
+
+    for(int i=0; i<n; i++){
+        cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+        double x0=((y3-y1)*(x2*x2-x1*x1+y2*y2-y1*y1)+(y1-y2)*(x3*x3-x1*x1+y3*y3-y1*y1))/(2*((x2-x1)*(y3-y1)-(y2-y1)*(x3-x1)));
+        double y0=((x1-x3)*(x2*x2-x1*x1+y2*y2-y1*y1)+(x2-x1)*(x3*x3-x1*x1+y3*y3-y1*y1))/(2*((x2-x1)*(y3-y1)-(y2-y1)*(x3-x1)));
+        double a = sqrt( (x2-x3)*(x2-x3) + (y2-y3)*(y2-y3) );
+        double b = sqrt( (x1-x3)*(x1-x3) + (y1-y3)*(y1-y3) );
+        double c = sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
+        double cosA = (b*b + c*c - a*a)/(2*b*c);
+        double R = a/(2*sqrt(1-cosA*cosA));
+
+        printf("%.3f %.3f %.3f\n", x0, y0, R);
+    }
+
+    return 0;
+}

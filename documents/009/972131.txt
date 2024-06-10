@@ -1,0 +1,144 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+const int N = 1e5 + 10;
+vector<P> G[N];
+
+struct BIT{
+	int n;
+	vector<int> dat;
+	BIT(int _n){
+		n = _n;
+		dat.resize(n + 1);
+	}
+
+	void add(int pos, int val){
+		for (int x = pos; x <= n; x += x&-x) dat[x] += val;
+	}
+	
+	int sum(int pos){
+		int s = 0;
+		for (int x = pos; x > 0; x -= x&-x) s += dat[x];
+		return s;
+	}
+};
+
+void dijk(int start, vector<ll> &d){
+	fill(ALL(d), 1ll << 60);
+
+	d[start] = 0;
+	priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>> q;
+	q.push(MP(0, start));
+
+	while (!q.empty()){
+		ll dist = q.top().first;
+		int pos = q.top().second;
+		q.pop();
+
+		if (dist > d[pos]) continue;
+
+		for (auto e : G[pos]){
+			if (d[e.first] <= dist + e.second) continue;
+			d[e.first] = dist + e.second;
+			q.push(MP(d[e.first], e.first));
+		}
+	}
+}
+
+int main(){
+	int n, m;
+	cin >> n >> m;
+	rep(i, m){
+		int a, b, c;
+		cin >> a >> b >> c;
+		G[a].push_back(MP(b, c));
+		G[b].push_back(MP(a, c));
+	}
+
+	vector<ll> ds(n), dg(n);
+	dijk(0, ds);
+	dijk(n-1, dg);
+
+	vector<pair<ll, ll>> vp(n);
+	rep(i, n) vp[i] = MP(ds[i], dg[i]);
+	sort(ALL(vp));
+
+	auto v = dg;
+
+	int q;
+	cin >> q;
+	vector<pair<ll, ll>> query(q);
+	rep(i, q){
+		cin >> query[i].first >> query[i].second;
+		v.push_back(query[i].second);
+	}
+
+	sort(ALL(v));
+	v.erase(unique(ALL(v)), v.end());
+
+	rep(i, n) vp[i].second = lower_bound(ALL(v), vp[i].second) - v.begin() + 1;
+	rep(i, q) query[i].second = lower_bound(ALL(v), query[i].second) - v.begin() + 1;
+
+	auto sq = query;
+	sort(ALL(sq));
+
+	map<pair<ll, ll>, int> ans;
+
+	BIT bit(v.size());
+
+	int idx = 0;
+	for (auto p : sq){
+		while (idx < n && vp[idx].first <= p.first){
+			bit.add(vp[idx++].second, 1);
+		}
+		ans[p] = bit.sum(bit.n) - bit.sum(p.second-1);
+	}
+
+	for (auto p : query){
+		cout << ans[p] << endl;
+	}
+
+	return 0;
+}

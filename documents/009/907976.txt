@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+#define INF 15001
+
+/*
+	http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_2_A&lang=jp
+
+	巡回セールスマン問題。
+
+	dp[V][0] = 0
+	dp[S][v] = min {dp[S ∪ [u]][u] + d(v,u)| u ? S}
+
+	参考：蟻本 p 174
+*/
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+const int MAX_V = 15;
+
+int V, E;
+int d[MAX_V][MAX_V];
+int dp[1<<MAX_V][MAX_V];	// メモ化テーブル
+int s;				// スタート位置
+
+// すでに訪れた頂点がS、現在位置が v
+int dfs (int S, int v ){
+	if (dp[S][v] >= 0 ) return dp[S][v];
+
+	if (S == (1<<V)-1 && v == s ){
+	// すべての頂点を訪れて戻って来た
+		return dp[S][v] = 0;
+	} // end if
+
+	int res = INF;
+	for (int u = 0; u < V; u++ ){
+		if (!(S>>u & 1 ) ){
+			// 次に u に移動する
+			res = min (res, dfs (S | (1<<u), u ) + d[v][u] );
+		} // end if
+	} // end for
+
+	return dp[S][v] = res;
+}
+
+int main()
+{
+	rep (i, MAX_V ) rep (j, MAX_V ) d[i][j] = INF;
+
+	ios_base::sync_with_stdio(0);
+	cin >> V >> E;
+	rep (i, E ){
+		int from, to, cost;
+		cin >> from >> to >> cost;
+		d[from][to] = cost;
+	} // end rep
+
+	int res = INF;
+	rep (i, V ){
+		memset (dp, -1, sizeof (dp ) );
+		res = min (res, dfs (0, i ) );
+	} // end rep
+	cout << (res == INF ? -1 : res ) << endl;
+
+	return 0;
+}

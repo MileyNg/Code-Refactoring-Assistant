@@ -1,0 +1,253 @@
+#include<iostream>
+#include<cstdio>
+#include<map>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+ 
+typedef pair<int,int> P;
+typedef pair<int,vector<int> > Hand;
+ 
+string yc[2],op[2],cc[3];
+bool card[15][4];
+ 
+int suite(char s){
+  if(s=='S')return 0;
+  if(s=='D')return 1;
+  if(s=='H')return 2;
+  if(s=='C')return 3;
+}
+ 
+int num(char n){
+  if('2'<= n && n<='9')return (int)(n-'0');
+  if(n=='T')return 10;
+  if(n=='J')return 11;
+  if(n=='Q')return 12;
+  if(n=='K')return 13;
+  if(n=='A')return 14;
+}
+ 
+Hand score(vector<P> v){
+  sort(v.begin(),v.end());
+  Hand res;
+  vector<int> tmp;
+  int n[15];
+ 
+  bool st = true,fl = true;
+  for(int i=1;i<5;i++){
+    if(v[i-1].first + 1 != v[i].first)st = false;
+    if(v[i-1].second != v[i].second)fl = false;
+  }
+ 
+  if(v[0].first == 2 && v[1].first == 3 && v[2].first == 4 && v[3].first == 5 && v[4].first == 14)st = true;
+ 
+  if(st && fl){
+    if(v[3].first == 13 && v[4].first == 14){
+      res.first = 10;
+      tmp.resize(1); tmp[0] = 14;
+      res.second = tmp;
+      return res;
+    }else{
+      res.first = 9;
+      tmp.resize(1);
+      if(v[4].first == 14)tmp[0] = v[3].first;
+      else tmp[0] = v[4].first;
+      res.second = tmp;
+      return res;
+    }
+  }
+ 
+  for(int i=0;i<15;i++)n[i] = 0;
+  for(int i=0;i<5;i++)n[v[i].first]++;
+  
+  bool f = false,g;
+  for(int i=0;i<15;i++)
+    if(n[i] == 4)f = true;
+  if(f){
+    res.first = 8;
+    tmp.resize(2);
+    for(int i=0;i<15;i++)
+      if(n[i] == 4)tmp[0] = i;
+      else if(n[i])tmp[1] = i;
+    res.second = tmp;
+    return res;
+  }
+  
+  f = false; g = false;
+  for(int i=0;i<15;i++)
+    if(n[i] == 3)f = true;
+    else if(n[i] == 2)g = true;
+  
+  if(f && g){
+    res.first = 7;
+    tmp.resize(2);
+    for(int i=0;i<15;i++){
+      if(n[i] == 3)tmp[0] = i;
+      else if(n[i]==2)tmp[1] = i;
+    }
+    res.second = tmp;
+    return res;
+  }
+  
+  if(fl){
+    res.first = 6;
+    tmp.resize(5);
+    for(int i=0;i<5;i++)tmp[i] = v[4-i].first;
+    res.second = tmp;
+    return res;
+  }
+  
+  if(st){
+    res.first = 5;
+    tmp.resize(1);
+    if(v[3].first==13 && v[4].first==14)tmp[0] = v[4].first;
+    else tmp[0] = v[3].first;
+    res.second = tmp;
+    return res;
+  }
+  
+  f = false;
+  for(int i=0;i<15;i++){
+    if(n[i] == 3)f = true;
+  }
+  if(f){
+    res.first = 4;
+    tmp.resize(3);
+    f = false;
+    for(int i=14;i>=0;i--){
+      if(n[i] == 3)tmp[0] = i;
+      else if(n[i]){
+	if(!f){
+	  tmp[1] = i;
+	  f = true;
+	}
+	else tmp[2] = i;
+      }
+    }
+    res.second = tmp;
+    return res;
+  }
+  
+  int x = 0;
+  for(int i=0;i<15;i++){
+    if(n[i] == 2)x++;
+  }
+  if(x==2){
+    res.first = 3;
+    tmp.resize(3);
+    f = false;
+    for(int i=14;i>=0;i--){
+      if(n[i] == 2){
+	if(!f){
+	  tmp[0] = i;
+	  f = true;
+	}else tmp[1] = i;
+      }else if(n[i])tmp[2] = i;
+    }
+    res.second = tmp;
+    return res;
+  }
+  
+  if(x == 1){
+    res.first = 2;
+    tmp.resize(4);
+    f = false; g = false;
+    for(int i=14;i>=0;i--){
+      if(n[i] == 2)tmp[0] = i;
+      else if(n[i]){
+	if(!f){
+	  tmp[1] = i;
+	  f =true;
+	}else if(!g){
+	  tmp[2] = i;
+	  g = true;
+	}else{
+	  tmp[3] = i;
+	}
+      }
+    }
+    res.second = tmp;
+    return res;
+  }
+  
+  res.first = 1;
+  tmp.resize(5);
+  for(int i=0;i<5;i++)tmp[i] = v[4-i].first;
+  res.second = tmp;
+  return res;
+}
+ 
+Hand check(vector<P> v){
+  int comb = (1<<5)-1;
+  vector<P> arg(5);
+  int num;
+  vector<int> hoge; hoge.clear();
+  Hand res = Hand(0,hoge);
+ 
+  while(comb < (1<<7)){
+    num = 0;
+    for(int i=0;i<7;i++){
+      if( (comb >> i) &1){
+	arg[num++] = v[i];
+      }
+    }
+    res = max(res,score(arg));
+   
+    int x = comb & -comb, y = comb + x;
+    comb = ((comb & ~y) / x >> 1) | y;
+  }
+  return res;
+}
+int main(){
+  while(cin >> yc[0], yc[0]!="#"){
+    for(int i=0;i<15;i++)
+      for(int j=0;j<4;j++)card[i][j] = false;
+ 
+    cin >> yc[1] >> op[0] >> op[1] >> cc[0] >> cc[1] >> cc[2];
+    P y[2],o[2],c[3];
+ 
+    vector<P> v1,v2;
+    for(int i=0;i<2;i++){
+      y[i].first = num(yc[i][1]);
+      y[i].second = suite(yc[i][0]);
+      card[y[i].first][y[i].second] = true;
+      v1.push_back(y[i]);
+    }
+    for(int i=0;i<2;i++){
+      o[i].first = num(op[i][1]);
+      o[i].second = suite(op[i][0]);
+      card[o[i].first][o[i].second] = true;
+      v2.push_back(o[i]);
+    } 
+    for(int i=0;i<3;i++){
+      c[i].first = num(cc[i][1]);
+      c[i].second = suite(cc[i][0]);
+      card[c[i].first][c[i].second] = true;
+      v1.push_back(c[i]); v2.push_back(c[i]);
+    }
+ 
+    int w=0,l=0,cnt=0;
+ 
+    for(int i=0;i<52;i++){
+      int s1 = i/13, n1 = i%13 + 2;
+ 
+      if(card[n1][s1])continue;
+      v1.push_back(P(n1,s1)); v2.push_back(P(n1,s1));
+      for(int j=i+1;j<52;j++){
+	int s2 = j/13, n2 = j%13 + 2;
+	
+	if(card[n2][s2])continue;
+	v1.push_back(P(n2,s2)); v2.push_back(P(n2,s2));
+    
+	Hand a = check(v1), b = check(v2);
+	if(a<b)l++;
+	else if(b<a)w++;
+	cnt ++;
+	v1.pop_back(); v2.pop_back();
+      }
+      v1.pop_back(); v2.pop_back();
+    }
+    printf("%.30lf\n", (double)(w)/(cnt) );
+  }
+}

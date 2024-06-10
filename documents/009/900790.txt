@@ -1,0 +1,15 @@
+input = gets(nil).chomp
+
+def bottom(s)
+  return s if s.size == 1
+  bs = []
+  s.split("").each_cons(2) do |a, b|
+    bs.push ((a.to_i + b.to_i) % 10).to_s
+  end
+  return bottom(bs.join) if bs.size > 1
+  bs.join
+end
+
+input.split("\n").each do |line|
+  puts bottom(line)
+end

@@ -1,0 +1,35 @@
+// AOJ0011
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(){
+	int w, n;
+	int *L;
+	int **A;
+	int p;
+	int i;
+
+	scanf("%d", &w);
+	scanf("%d", &n);
+
+	L = (int *)malloc(w*sizeof(int));
+	for(i = 0; i < w; i++){
+		L[i] = i+1;
+	}
+
+	A = (int**)malloc(n*sizeof(int *));
+
+	for(i = 0; i < n; i++){
+		A[i] = (int*)malloc(2*sizeof(int));
+		scanf("%d,%d", &A[i][0], &A[i][1]);
+		p = L[A[i][0]-1];
+		L[A[i][0]-1] = L[A[i][1]-1];
+		L[A[i][1]-1] = p;
+	}
+
+	for(i = 0; i < w; i++){
+		printf("%d\n", L[i]);
+	}
+	
+	return 0;
+}

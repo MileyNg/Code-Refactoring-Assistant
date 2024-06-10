@@ -1,0 +1,22 @@
+input = gets(nil)
+
+a = []
+b = []
+
+input.split("\n").each_with_index do |line, i|
+  if i % 2 == 0
+    a = line.split(" ").map(&:to_i)
+    next
+  end
+
+  b = line.split(" ").map(&:to_i)
+
+  s1 = 0
+  s2 = 0
+  0.upto(3) do |i|
+    s1 += 1 if a[i] == b[i]
+    s2 += 1 if a.include?(b[i])
+  end
+
+  puts "#{s1} #{s2-s1}"
+end

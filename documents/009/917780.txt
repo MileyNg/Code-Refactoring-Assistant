@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+void figure(char a[8][8])
+{
+  int i,j;
+  for(i=0;i<8;i++)
+    for(j=0;j<8;j++)
+      if(a[i][j]=='1'){
+	if(a[i][j+1]=='1'){
+	  if(a[i+1][j]=='1' && a[i+1][j+1]=='1')
+	    printf("A\n");
+	  else if(a[i][j+2]=='1' && a[i][j+3]=='1')
+	    printf("C\n");	
+	  else if(a[i+1][j+1]=='1' && a[i+1][j+2]=='1')
+	    printf("E\n");
+	  else if(a[i+1][j]=='1' && a[i+1][j-1]=='1')
+	    printf("G\n");
+	}
+	else if(a[i+1][j]=='1'){
+	  if(a[i+2][j]=='1' && a[i+3][j]=='1')
+	    printf("B\n");
+	  else if(a[i+1][j-1]=='1' && a[i+2][j-1]=='1')
+	    printf("D\n");
+	  else if(a[i+1][j+1]=='1' && a[i+2][j+1]=='1')
+	    printf("F\n");
+	}
+	goto OUT;
+      }
+ OUT:;
+}
+
+int main(void)
+{
+  char a[8][8];
+  char *buf;
+  int i,j,flag;
+  while(1){
+    for(i=0;i<8;i++){
+      buf=malloc(sizeof(char)*9);
+      if(fgets(buf,sizeof(char)*9,stdin)==NULL){
+	goto OUT;
+      }
+      if(flag==1)break;
+      // buf[8]='\0';
+      for(j=0;j<8;j++)
+	a[i][j]=buf[j];
+      free(buf);
+      //rewind(stdin);//これがないと変になる
+    }
+    figure(a);
+   
+  }
+ OUT:
+  return 0;
+}

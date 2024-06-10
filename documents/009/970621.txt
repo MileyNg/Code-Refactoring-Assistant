@@ -1,0 +1,50 @@
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+char t[17];
+int a=1,b,c,mx=0;
+char re(char ch){
+  if(ch=='('){
+    return ')';
+  }else if(ch==')'){
+    return '(';
+  }else if(ch=='{'){
+    return '}';
+  }else if(ch=='}'){
+    return '{';
+  }else if(ch=='['){
+    return ']';
+  }else if(ch==']'){
+    return '[';
+  }else{
+    return ch;
+  }
+}
+void compute(int a,int c,int cnt){
+  if(t[b-a]=='\n'||t[b+c]=='\n'){
+    if(mx<cnt)mx=cnt;
+    return;
+  }
+  int d=0;
+  compute(a+1,c,cnt);
+  while(1){
+    if(t[b+c+d]=='\n')break;
+    if(t[b+c+d]==re(t[b-a])){
+      compute(a+1,c+d+1,cnt+2);
+    }
+    d++;
+  }
+}
+int main(){
+  t[0]='\n';
+  while(1){
+    scanf("%c",&t[a]);
+    if(t[a]=='\n')break;
+    if(t[a]=='w')b=a;
+    a++;
+  }
+  a=c=2;
+  compute(2,2,3);
+  cout<<mx<<endl;
+  return 0;
+}

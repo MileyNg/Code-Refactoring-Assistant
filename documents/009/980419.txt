@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<math.h>
+
+double cb(double x){
+  return x*x*x;
+}
+
+double sq(double x){
+  return x*x;
+}
+
+double cr(double x,double q){
+  double nx=x-(cb(x)-q)/(3*sq(x));
+  if(fabs(cb(x)-q)<0.00001*q){
+    return nx;
+  }
+  else{
+    return cr(nx,q);
+  }
+}
+
+int main(){
+  int n;
+  scanf("%d",&n);
+  while(n!=-1){
+    printf("%.6f\n",cr(((double)n)/2.000000,(double)n));
+    scanf("%d",&n);
+  }
+}

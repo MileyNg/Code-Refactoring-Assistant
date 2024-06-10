@@ -1,0 +1,81 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+
+using namespace std;
+
+#define MAX 30
+
+struct point{
+	int x,y;
+};
+
+int n,m,g,d;
+vector<int> amida[MAX+1];
+char in;
+point ans;
+
+
+bool search(int x,int y,bool f){
+	//cout<<x<<","<<y<<","<<f<<","<<ans.x<<","<<ans.y<<endl;
+	bool ok=false;
+
+	if(y==d+1){
+		if(x==g){
+			ok=true;
+			if(f==false) ans.x=0,ans.y=0;
+		}
+	}
+	else if(amida[y][x-1]==1){
+		ok=search(x-1,y+1,f);
+	}
+	else if(amida[y][x]==1){
+		ok=search(x+1,y+1,f);
+	}
+	else{
+		ok=search(x,y+1,f);
+		if(!f){
+			if(x!=1&&(x==2||amida[y][x-2]==0)){
+				ok=search(x-1,y+1,true);
+				if(ok==true&&((ans.x==-1&&ans.y==-1)||ans.y>y)) ans.x=x-1,ans.y=y;
+			}
+			if(x!=n&&(x==n-1||amida[y][x+1]==0)){
+				//cout<<x<<"."<<y<<endl;
+				ok=search(x+1,y+1,true);
+				//cout<<ok<<endl;
+				if(ok==true&&((ans.x==-1&&ans.y==-1)||ans.y>y)) ans.x=x,ans.y=y;
+			}
+		}
+	}
+	return ok;
+}
+
+int main(){
+
+	while(1){
+
+		cin>>n;
+		if(n==0) break;
+		
+		for(int i=0;i<=MAX;i++) if(!amida[i].empty()) amida[i].clear();
+
+		cin>>m>>g>>d;
+
+		getchar();
+		for(int i=1;i<=d;i++){
+			amida[i].push_back(0);
+			for(int j=1;;j++){
+				in=getchar();
+				if(in=='\n') break;
+				amida[i].push_back(in-'0');	
+			}
+			amida[i].push_back(0);
+		}
+
+		ans.x=-1,ans.y=-1;
+		search(m,1,false);
+		if(ans.x==-1&&ans.y==-1) cout<<"1"<<endl;
+		else if(ans.x==0&&ans.y==0) cout<<"0"<<endl;
+		else cout<<ans.y<<" "<<ans.x<<endl;
+	}
+}

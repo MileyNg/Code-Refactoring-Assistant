@@ -1,0 +1,145 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+class Maybee{
+public:
+    Maybee() = default;
+    Maybee(int _v, int __isNothing):v(_v), _isNothing(__isNothing){}
+    int value(){return v;}
+    bool isNothing(){return _isNothing;}
+private:
+    int v;
+    bool _isNothing;
+};
+
+typedef std::string::const_iterator State;
+
+Maybee expr(State &begin, const int& p);
+
+int mod_inv(int a, const int& p){
+    int n = p - 2, res = 1;
+    
+    while(n > 0){
+        if(n & 1){res = res * a % p;}
+        a = a * a % p;
+        n >>= 1;
+    }
+
+    return res;
+}
+
+Maybee number(State& begin, const int& p){
+    int n = 0;
+    while(std::isdigit(*begin)){
+        n = (n * 10 + *begin - '0') % p;
+        begin += 1;
+    }
+    return Maybee(n, false);
+}
+
+Maybee factor(State& begin, const int& p){
+    Maybee res;
+    if(*begin == '('){
+        begin += 1;
+        res = expr(begin, p);
+        begin += 1;
+    }else{
+        res = number(begin, p);
+    }
+    return res;
+}
+
+Maybee term(State& begin, const int& p){
+    Maybee res = factor(begin, p);
+
+    for(;;){
+        if(*begin == '*'){
+            begin += 1;
+            Maybee m = factor(begin, p);
+            res = Maybee(res.value() * m.value() % p, res.isNothing() || m.isNothing());
+        }else if(*begin == '/'){
+            begin += 1;
+            Maybee m = factor(begin, p);
+            if(m.value() == 0){
+                res = Maybee(res.value(), true);
+            }else{
+                res = Maybee(res.value() * mod_inv(m.value(), p), res.isNothing() || m.isNothing());
+            }
+        }else{
+            break;
+        }
+    }
+    
+    return res;
+}
+
+Maybee expr(State& begin, const int& p){
+    Maybee res = term(begin, p);
+    
+    for(;;){
+        if(*begin == '+'){
+            begin += 1;
+            Maybee m = term(begin, p);
+            res = Maybee((res.value() + m.value()) % p, res.isNothing() || m.isNothing());
+        }else if(*begin == '-'){
+            begin += 1;
+            Maybee m = term(begin, p);
+            res = Maybee((res.value() - m.value() + p) % p, res.isNothing() || m.isNothing());
+        }else{
+            break;
+        }
+    }
+
+    return res;
+}
+
+std::string removeSpace(const std::string& s){
+    std::string res = s;
+    size_t pos;
+
+    while(pos = res.find(" "), pos != std::string::npos){
+        res.erase(pos, 1);
+    }
+
+    return res;
+}
+
+int main(){
+    std::string line;
+    while(std::getline(std::cin, line), line != "0:"){
+        int p = std::stoi(line.substr(0, line.find(":")));
+        std::string expression = removeSpace(line.substr(line.find(":") + 1));
+    
+        State begin = expression.begin();
+
+        // std::cout << p << ", " << expression << std::endl;
+
+        Maybee res = expr(begin, p);
+
+        if(!res.isNothing()){
+            std::cout << expression << " = " << res.value() << " (mod " << p << ")" << std::endl;
+        }else{
+            std::cout << "NG" << std::endl;
+        }
+    }
+}

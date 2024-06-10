@@ -1,0 +1,55 @@
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+void quickSort_ascend(vector<int>& a, vector<int>& b, int l, int r) {
+	if (l < r) {
+		int w = a[(l+r)/2];
+		int i = l, j = r, temp;
+		while (i < j) {
+			while (a[i] < w) i++;
+			while (a[j] > w) j--;
+			if (i <= j) {
+				temp = a[i];
+				a[i] = a[j]; a[j] = temp;
+				temp = b[i];
+				b[i] = b[j]; b[j] = temp;
+				i++; j--;
+			}
+		}
+		quickSort_ascend(a, b, l, j);
+		quickSort_ascend(a, b, i, r);
+	}
+}
+
+int main() {
+	int n, m;
+	cin >> n; cin >> m;
+	vector<int> x(n), y(n);
+	for (int i = 0; i < n; i++) {
+		cin >> x[i];
+		cin >> y[i];
+	}
+
+	quickSort_ascend(x, y, 0, n-1);
+
+	for (int i = 0; i < m; i++) {
+		int x1, y1, x2, y2;
+		cin >> x1; cin >> y1; cin >> x2; cin >> y2;
+		int l = lower_bound(x.begin(), x.end(), x1)-x.begin();
+		int u = upper_bound(x.begin(), x.end(), x2)-x.begin();
+		vector<int> par(u-l);
+		for (int j = 0; j < u-l; j++) {
+			par[j] = y[l+j];
+		}
+		sort(par.begin(), par.end());
+		cout << upper_bound(par.begin(), par.end(), y2) - lower_bound(par.begin(), par.end(), y1) << endl;
+	}
+}

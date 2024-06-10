@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+void swap(int *a, int *b) {
+  int tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+
+int main() {
+  int i;
+
+  // initialize lines
+  int w;
+  scanf("%d", &w);
+  int lines[w];
+  for (i = 0; i < w; i++) {
+    lines[i] = i + 1;
+  }
+
+  // swapping
+  int n;
+  int a, b;
+  scanf("%d", &n);
+  for (i = 0; i < n; i++) {
+    scanf("%d,%d", &a, &b);
+    swap(&lines[a - 1], &lines[b - 1]);
+  }
+
+  // printing
+  for (i = 0; i < w; i++) {
+    printf("%d\n", lines[i]);
+  }
+  return 0;
+}

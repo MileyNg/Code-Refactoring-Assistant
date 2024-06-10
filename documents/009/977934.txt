@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define INF (1<<29)
+int N,M,L;
+int Wa[111][111];
+int P[111],K[111];
+struct edge{
+  int to,c,rev;
+  edge(int to,int c,int rev) : to(to),c(c),rev(rev) {}
+};
+vector<edge> G[111];
+bool used[111];
+int dfs(int v,int t,int f){
+  if( v == t ) return f;
+  used[v] = true;
+  for(int i=0;i<(int)G[v].size();i++){
+    edge &e = G[v][i];
+    if( !used[e.to] && e.c > 0 ){
+      int d = dfs(e.to, t , min(f,e.c) );
+      if( d > 0 ){
+	e.c -= d;
+	G[e.to][e.rev].c += d;
+	return d;
+      }
+    } 
+  }
+  return 0;
+}
+
+int max_flow(){
+  int flow = 0;
+  for(;;){
+    memset(used,0,sizeof(used));
+    int f = dfs(N,N+1,INF);
+    if( f == 0 ) return flow;
+    flow += f;
+  }
+}
+
+int main(){
+  while( cin >> N >> M >> L ){
+    fill(Wa[0],Wa[N],INF);
+    for(int i=0;i<M;i++){
+      int a,b,d;
+      cin >> a >> b >> d;
+      --a; --b;
+      Wa[a][b] = d;
+      Wa[b][a] = d;
+    }
+    for(int i=0;i<N;i++){
+      Wa[i][i] = 0;
+      cin >> P[i];
+    }
+    for(int i=0;i<N;i++){
+      cin >> K[i];
+    }
+  
+    for(int i=0;i<N;i++)
+      for(int j=0;j<N;j++)
+	for(int k=0;k<N;k++)
+	  Wa[j][k] = min(Wa[j][k],Wa[j][i]+Wa[i][k]);
+
+  
+    for(int i=0;i<N+2;i++) G[i].clear();
+    for(int i=0;i<N;i++){
+      if( K[i] > 0 ) {
+	G[i].push_back( edge(N+1,K[i],G[N+1].size() ) );
+	G[N+1].push_back( edge(i,0,G[i].size()-1) );
+      }
+      if( P[i] > 0 ){
+	G[N].push_back( edge(i,P[i],G[i].size()) );
+	G[i].push_back( edge(N,0,G[N].size() -1) );
+      }
+      for(int j=0;j<N;j++){
+	if( Wa[i][j] < L ){
+	  G[i].push_back( edge(j,P[i],G[j].size()) );
+	  G[j].push_back( edge(i,0,G[i].size() - 1) );
+	}
+      }
+    }
+      
+    cout << max_flow() << endl;
+  }
+}

@@ -1,0 +1,27 @@
+import std.stdio;
+import std.conv;
+import std.algorithm;
+import std.range;
+import std.string;
+import std.math;
+import std.format;
+import std.datetime;
+import std.typecons;
+
+void main() {
+  foreach (string line; stdin.lines) {
+    int n = line.chomp.to!int;
+
+    int i = 0;
+    int[] ans;
+    while (n != 0) {
+      if (n % 2 == 1) {
+        ans ~= pow(2, i);
+      }
+      n = n >> 1;
+      i++;
+    }
+
+    ans.map!(to!string).join(" ").writeln;
+  }
+}

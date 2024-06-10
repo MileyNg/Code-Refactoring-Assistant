@@ -1,0 +1,50 @@
+#include<iostream>
+#include<sstream>
+#include<cstdlib>
+#include<stack>
+using namespace std;
+
+string int_to_string(int& n){
+  stringstream ss;
+  ss<<n;
+  return ss.str();
+}
+
+int string_to_int(const string& s){
+  int n;
+  istringstream iss(s);
+  iss >> n;
+  return n;
+}
+
+int main(){
+
+  string num;
+  stack<int> st;
+  int ope1,ope2;
+
+  while(cin>>num){
+    if(num=="+"){
+      ope1=st.top();
+      st.pop();
+      ope2=st.top();
+      st.pop();
+      st.push(ope2+ope1);
+    }else if(num=="-"){
+      ope1=st.top();
+      st.pop();
+      ope2=st.top();
+      st.pop();
+      st.push(ope2-ope1);
+    }else if(num=="*"){
+      ope1=st.top();
+      st.pop();
+      ope2=st.top();
+      st.pop();
+      st.push(ope2*ope1);
+    }else st.push( string_to_int(num) );
+  }
+  ope1=st.top();
+  cout<<ope1<<endl;
+  return 0;
+}

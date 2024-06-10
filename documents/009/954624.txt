@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+const int MAX_N = 5000;
+using namespace std;
+
+int a[MAX_N];
+
+int main(void) {
+  int n;
+  
+  while (cin >> n) {
+    if (n == 0) break;
+    long long max_num = -500000000;
+    for (int i = 0; i < n; i++) {
+      cin >> a[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n-i; j++) {
+	long long tmp = 0;
+	for (int k = i; k <= j; k++) {
+	  tmp += a[k];
+	}
+	max_num = max(max_num, tmp);	
+      }
+    }
+
+    cout << max_num << endl;
+  }
+
+  return 0;
+}

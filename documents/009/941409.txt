@@ -1,0 +1,42 @@
+#include<iostream>
+#include<queue>
+#include<cstring>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  while (true) {
+    int n, m, c;
+    cin >> n >> m >> c;
+    if (n == 0 && m == 0 && c == 0) break;
+    vector<pair<int, int> > edge[n];
+    rep (i, m) {
+      int f, t, cc;
+      cin >> f >> t >> cc;
+      --f, --t;
+      edge[f].push_back(make_pair(t, cc));
+    }
+    priority_queue<pair<int, pair<int, int> >, vector<pair<int, pair<int, int> > >, greater<pair<int, pair<int, int> > > > que;
+    que.push(make_pair(0, make_pair(0, 0)));
+    int dis[111][111];
+    memset(dis, -1, sizeof(dis));
+    while (!que.empty()) {
+      pair<int, pair<int, int> > now = que.top();
+      que.pop();
+      int cost = now.first, pos = now.second.first, del = now.second.second;
+      if (del > n) continue;
+      if (dis[pos][del] != -1 && dis[pos][del] <= cost) continue;
+      dis[pos][del] = cost;
+      rep (i, edge[pos].size()) {
+	que.push(make_pair(cost + edge[pos][i].second, make_pair(edge[pos][i].first, del)));
+	que.push(make_pair(cost, make_pair(edge[pos][i].first, del + 1)));
+      }
+    }
+    rep (i, 111) if (dis[n - 1][i] != -1 && dis[n - 1][i] <= c) {
+      cout << i << endl;
+      break;
+    }
+  }
+}

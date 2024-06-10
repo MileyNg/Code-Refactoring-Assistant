@@ -1,0 +1,108 @@
+#include <stdio.h>
+
+int min(int a, int b){
+	if (a > b){
+		return b;
+	}
+	return a;
+}
+
+int max(int a, int b){
+	if (a > b){
+		return a;
+	}
+	return b;
+}
+
+int solve(int t[], int m){
+	int i, j, ret = -1;
+	/*
+	for (i = 0; i < m; i++){
+		printf("%d ", t[i]);
+	}
+	printf("\n");*/
+	for (i = 0; i < m; i++){
+		for (j = 0; j < m; j++){
+			if (j == 0){
+				if (t[j] > t[j + 1]){
+					t[j] = t[j + 1] + 1;
+				}
+				else{
+					t[j] = 1;
+				}
+			}
+			else if (j == m - 1){
+				if (t[j - 1] < t[j]){
+					t[j] = t[j - 1] + 1;
+				}
+				else{
+					t[j] = 1;
+				}
+			}
+			else{
+				if (t[j] > min(t[j - 1],t[j + 1]) && t[j] < max(t[j - 1], t[j + 1])){
+					t[j] = min(t[j - 1], t[j + 1]) + 1;
+				}
+				else if (t[j] > max(t[j - 1], t[j + 1]) && t[j] > min(t[j - 1],t[j + 1])){
+					t[j] = max(t[j - 1], t[j + 1]) + 1;
+				}
+				else{
+					t[j] = 1;
+				}
+			}
+		}
+		int k;/*
+		printf("c");
+		for (k = 0; k < m; k++){
+		printf("%d ", t[k]);
+		}
+		printf("\n");*/
+	}
+	for (i = 0; i < m; i++){
+		ret = max(ret, t[i]);
+	}
+	//printf("ret : %d\n", ret);
+	return ret;
+}
+
+int rec(int a[],int m,int r){ // 順列を作る処理
+	static int t[8];
+	static int flag[8] = { 0 };
+	int ret;
+	int i;
+	if (r == m){
+		/*
+		for (i = 0; i < m; i++){
+			printf("%d ", t[i]);
+		}
+		printf("\n");*/
+		int tmp[8];
+		for (i = 0; i < m; i++){
+			tmp[i] = t[i];
+		}
+		ret = solve(tmp, m);
+	}
+	else{
+		for (i = 0; i < m; i++){
+			if (!flag[i]){
+				flag[i] = 1;
+				t[r] = a[i];
+				ret = min(rec(a, m, r + 1), ret);
+				flag[i] = 0;
+			}
+		}
+	}
+	return ret;
+}
+
+int main(void){
+	int n, m, i, j, a[10];
+	scanf("%d%d", &n, &m);
+	for (i = 0; i < m; i++){
+		scanf("%d", &a[i]);
+	}
+	printf("%d\n", solve(a, m));
+	//printf("%d\n",rec(a, m, 0));
+
+	return 0;
+}

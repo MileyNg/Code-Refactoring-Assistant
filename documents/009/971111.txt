@@ -1,0 +1,78 @@
+#include <iostream>
+#include <algorithm>
+#include <cfloat>
+using namespace std;
+
+struct C {
+  int c;
+  int d;
+  int w;
+  bool operator<(const C &obj) const {
+    return d<obj.d;
+  }
+};
+
+int main() {
+  int n, w, mi;
+  double s, t, u, mu;
+  bool b, mb;
+  C kura[15];
+  cin >> n;
+  for (int i=0; i<n; i++) {
+    cin >> kura[i].c >> kura[i].d >> kura[i].w; 
+    kura[i].w *= 20;
+  }
+  sort(kura, kura+n);
+  mu = DBL_MAX;
+  for (int i=0; i<n; i++) {
+    w = 0;
+    s = 0.0;
+    for (int j=0; j<n-1; j++) {
+      if (i == j) continue;
+      w += kura[j].w;
+      s += (kura[j+1].d-kura[j].d)*(70.+w);
+    }
+    if (i<n-1) {
+      w += kura[n-1].w;
+      s += (kura[n-1].d-kura[i].d)*(70.+w);
+    }
+    w = 0;
+    t = 0.0;
+    for (int j=n-1; j>0; j--) {
+      if (i == j) continue;
+      w += kura[j].w;
+      t += (kura[j].d-kura[j-1].d)*(70.+w);
+    }
+    if (i>0) {
+      w += kura[0].w;
+      t += (kura[i].d-kura[0].d)*(70.+w);
+    }
+    if (s<t) {
+      u = s;
+      b = true;
+    } else {
+      u = t;
+      b = false;
+    }
+    if (mu > u) {
+      mu = u;
+      mi = i;
+      mb = b;
+    }
+  }
+
+  if (mb) {
+    for (int i=0; i<n; i++) {
+      if (i == mi) continue;
+      cout << kura[i].c << " ";
+    }
+  } else {
+    for (int i=n-1; i>=0; i--) {
+      if (i == mi) continue;
+      cout << kura[i].c << " ";
+    }
+  }
+  cout << kura[mi].c << endl;
+
+  return 0;
+}

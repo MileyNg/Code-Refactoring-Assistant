@@ -1,0 +1,46 @@
+#include<stdio.h>
+
+int Partition(int [],int,int);
+void Quicksort(int [],int,int);
+
+int main(){
+  int n,i,endnumber;
+  int A[100001];
+  
+  scanf("%d", &n);
+  for( i = 1; i <= n; i++ ){
+    scanf("%d", &A[i]);
+  }
+ 
+  endnumber=Partition(A, 1, n);
+ 
+  for(i=1;i< n;i++){
+    if(i==endnumber){
+      printf("[%d] ",A[i]);
+    }
+    else
+      printf("%d ",A[i]);
+  } 
+  printf("%d\n",A[i]);
+
+  return 0;
+}
+
+int Partition(int A[],int p,int r){
+  int x,i,j,exchange;
+  x=A[r];
+  i=p-1;
+  for(j=p;j<=r-1;j++){
+    if(A[j]<=x){
+      i=i+1;
+      exchange=A[j];
+      A[j]=A[i];
+      A[i]=exchange;
+    }
+  }
+  exchange=A[i+1];
+  A[i+1]=A[r];
+  A[r]=exchange;
+
+  return i+1;
+}

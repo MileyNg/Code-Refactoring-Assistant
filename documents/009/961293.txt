@@ -1,0 +1,146 @@
+//Name: Railroad
+//Level: 4
+//Category: グラフ,Graph,最短経路,DAG
+//Note:
+
+/**
+ * AからBまでの最短経路をDijkstra法で求め、そのときに使った辺のみから
+ * なるDAGを構成する。
+ * すると、cからdに最短経路で行けるかの判定は、このDAG上でcからdに行けるかの
+ * 判定と等価になる。
+ * 1クエリについて最悪全ノードの探索が必要で、これはO(S+R)になるが、
+ * 到達可能かどうかは1bitしか使わないのでbit parallelで高速化ができる。
+ * (S+R) × Q = 10^10 程度なので、数十倍程度の高速化をすれば制限時間に間に合う。
+ *
+ * オーダーは O(R log S + (S+R)Q)。
+ */
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <array>
+#include <bitset>
+#include <cstdio>
+
+using namespace std;
+
+typedef long long LL;
+typedef unsigned long long ULL;
+typedef bitset<128> Flag;
+const LL INF = 100000LL * 1000 * 10;
+
+bool solve() {
+    int S, R;
+    if(scanf("%d %d", &S, &R) == EOF) return false;
+
+    array<vector<pair<int,LL>>, 100000> graph;
+    array<vector<int>, 100000> dag;
+    for(int i = 0; i < R; ++i) {
+        int u, v, w;
+        scanf("%d %d %d", &u, &v, &w);
+        --u; --v;
+        graph[u].emplace_back(v, w);
+        graph[v].emplace_back(u, w);
+    }
+    int A, B, Q;
+    scanf("%d %d %d", &A, &B, &Q);
+    --A; --B;
+
+    // Find shortest path
+    array<LL, 100000> memo;
+    priority_queue<pair<LL,int>> q;
+    LL best_cost = INF;
+    fill_n(memo.begin(), S, INF);
+    q.push(make_pair(0, A));
+    memo[A] = 0;
+    while(!q.empty()) {
+        const LL cost = -q.top().first;
+        const int cur = q.top().second;
+        q.pop();
+        if(cost > best_cost) break;
+        if(cur == B && best_cost == INF) {
+            best_cost = cost;
+        }
+        if(memo[cur] < cost) continue;
+        for(const auto &next : graph[cur]) {
+            const LL nc = cost + next.second;
+            if(nc < memo[next.first]) {
+                dag[next.first].clear();
+                dag[next.first].push_back(cur);
+                memo[next.first] = nc;
+                q.push(make_pair(-nc, next.first));
+            } else if(memo[next.first] == nc) {
+                dag[next.first].push_back(cur);
+            }
+        }
+    }
+
+    vector<int> ord;
+    {
+        array<bool, 100000> visited;
+        array<int, 100000> ref_cnt;
+        fill_n(visited.begin(), S, false);
+        fill_n(ref_cnt.begin(), S, 0);
+        queue<int> q;
+        q.push(B);
+        visited[B] = true;
+        while(!q.empty()) {
+            const int cur = q.front();
+            q.pop();
+            for(int to : dag[cur]) {
+                ref_cnt[to]++;
+                if(!visited[to]) {
+                    q.push(to);
+                    visited[to] = true;
+                }
+            }
+        }
+        q.push(B);
+        while(!q.empty()) {
+            const int cur = q.front();
+            ord.push_back(cur);
+            q.pop();
+            for(int to : dag[cur]) {
+                if(--ref_cnt[to] == 0) {
+                    q.push(to);
+                }
+            }
+        }
+    }
+
+    // Determine reachability for each query
+    array<Flag, 100000> reachable;
+    array<int, 128> dest;
+    for(int i = 0; i < Q; ) {
+        for(auto &f : reachable) {
+            f.reset();
+        }
+        int cnt = 0;
+        for(int j = 0; j < 128 && i < Q; ++i, ++j) {
+            int c, d;
+            scanf("%d %d", &c, &d);
+            --c; --d;
+            reachable[d][j] = true;
+            dest[j] = c;
+            ++cnt;
+        }
+        for(int v : ord) {
+            for(int next : dag[v]) {
+                reachable[next] |= reachable[v];
+            }
+        }
+        for(int j = 0; j < cnt; ++j) {
+            if(reachable[dest[j]][j]) {
+                puts("Yes");
+            } else {
+                puts("No");
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    while(solve()) ;
+    return 0;
+}

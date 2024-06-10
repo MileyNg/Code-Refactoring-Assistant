@@ -1,0 +1,22 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int main() {
+    int N, Q;
+    cin >> N >> Q;
+    static int memo[1000001];
+    set<pair<int,int>> s;
+    rep(q,Q){
+        int a, v; 
+        scanf("%d%d", &a, &v);
+        s.erase(make_pair(-memo[a], a));
+        memo[a] += v;
+        s.insert(make_pair(-memo[a], a));
+        printf("%d %d\n", s.begin()->second, -s.begin()->first);
+    }
+}

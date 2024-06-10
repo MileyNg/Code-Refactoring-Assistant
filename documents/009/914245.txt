@@ -1,0 +1,20 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+void replaceAll(string& str, const string& from, const string& to) {
+	size_t cnt = from.size();
+	size_t pos = str.find(from);
+	while (pos != string::npos) {
+		str.replace(pos, cnt, to);
+		pos = str.find(from, pos);
+	}
+}
+
+int main() {
+	string line;
+	getline(cin, line);
+	replaceAll(line, "apple", "peach");
+	cout << line << cin;
+	return 0;
+}

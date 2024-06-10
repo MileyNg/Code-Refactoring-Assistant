@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    char keyword[11];
+    char word[32];
+    int counter = 0;
+
+    memset(keyword, '\0', sizeof(keyword));
+    memset(word, '\0', sizeof(word));
+    
+    scanf("%s", keyword);
+    getchar();
+
+    while (scanf("%s", word), strcmp(word, "END_OF_TEXT"))
+        if (!(strcasecmp(word, keyword))) counter++;
+
+    printf("%d\n", counter);
+    return 0;
+}

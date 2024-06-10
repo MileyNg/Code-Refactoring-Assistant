@@ -1,0 +1,42 @@
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+ 
+#define rep(i,n) for(int i=0;i<(n);i++)
+ 
+using namespace std;
+ 
+struct angle{
+    int x,y,delta;
+    bool operator<(const angle &a)const{
+        return y*a.x==x*a.y ? delta<a.delta : y*a.x<x*a.y;
+    }
+};
+ 
+#define O(i,j) (0<=i && i<h && 0<=j && j<w && B[i][j]=='#')
+#define X(i,j) (!O(i,j))
+ 
+int main(){
+    int h,w; scanf("%d%d",&h,&w);
+    char B[600][601];
+    rep(i,h) scanf("%s",B[i]);
+ 
+    vector<angle> A;
+    rep(i,h+1) rep(j,w+1) {
+        if(O(i-1,j-1) && X(i-1,j)
+        && X( i ,j-1) && X( i ,j)) A.push_back((angle){j,h-i,1});
+        if(X(i-1,j-1) && O(i-1,j)
+        && O( i ,j-1) && O( i ,j)) A.push_back((angle){j,h-i,1});
+        if(O(i-1,j-1) && O(i-1,j)
+        && O( i ,j-1) && X( i ,j)) A.push_back((angle){j,h-i,-1});
+        if(X(i-1,j-1) && X(i-1,j)
+        && X( i ,j-1) && O( i ,j)) A.push_back((angle){j,h-i,-1});
+    }
+    sort(A.begin(),A.end());
+ 
+    int ans=1,num=1;
+    rep(i,A.size()) num+=A[i].delta, ans=max(ans,num);
+    printf("%d\n",ans);
+ 
+    return 0;
+}

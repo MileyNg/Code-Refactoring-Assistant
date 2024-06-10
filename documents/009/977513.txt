@@ -1,0 +1,131 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<queue>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+#ifdef __BORLANDC__
+	typedef __int64 ll;
+#else
+	typedef long long ll;
+#endif
+
+const int INF = 1000000000;
+const int MOD = 1000000007;
+const int N = 222;
+const int W = 11111;
+
+
+int n,r;
+vector<int> w;
+
+void init(){
+	w.clear();
+}
+
+bool input(){
+	cin>>n>>r;
+	if(!n)return false;
+	rep(i,n){
+		int a;
+		cin>>a;
+		w.push_back(a);
+	}
+	return true;
+}
+
+int memcomb[N][N];
+int setcomb(){
+	rep(i,N)rep(j,N)memcomb[i][j]=0;
+	memcomb[0][0]=1;
+	reps(i,1,N){
+		memcomb[i][0]=1;
+		reps(j,1,N){
+			memcomb[i][j] = memcomb[i-1][j]+memcomb[i-1][j-1];
+			memcomb[i][j] %= MOD;
+		}
+	}
+}
+int comb(int a,int b){
+	return memcomb[a][b];
+}
+
+int revdp[N][W];
+void setrevdp(){
+	rep(i,N)rep(j,W)revdp[i][j]=0;
+	
+	vector<int> revw = w;
+	reverse(revw.begin(),revw.end());
+	
+	revdp[0][0]=1;
+	reps(i,0,revw.size()){
+		rep(j,r+1){
+			revdp[i+1][j] += revdp[i][j];
+			revdp[i+1][j] %= MOD;
+			if(j-revw[i]>=0)revdp[i+1][j] += revdp[i][j-revw[i]];
+			revdp[i+1][j] %= MOD;
+		}
+	}
+	
+	/*
+	reps(i,0,revw.size()+1){
+		rep(j,r+1)printf("%2d ",revdp[i][j]);puts("");
+	}*/
+}
+
+int solve_dp(int num){
+	int sum = 0;
+	rep(i,num)sum+=w[i];
+	
+	int pos = w.size()-num-1;
+	int ret = 0;
+	
+	int st = max(0, r-sum-w[num]+1);
+	int en = r-sum+1;
+	
+	//printf("%d %d %d  (%d to %d)\n",pos,num,w[num],st,en);
+	reps(i,st,en){
+		ret += revdp[pos][i];
+		ret %= MOD;
+	}
+	return ret;
+}
+
+int solve(){
+	
+	w.push_back(INF);
+	sort(w.begin(),w.end());
+	
+	setrevdp();
+	
+	int sum = 0;
+	rep(i,w.size()){
+		int a=0;
+		rep(j,w.size())if(w[j]==w[i])a++;
+		int b=0;
+		rep(j,i+1)if(w[j]==w[i])b++;
+		
+		int res1 = solve_dp(i);
+		ll result = res1;
+		sum += result%MOD;
+		//printf("%d %d %d\n",res1,comb(a,b),sum);
+	}
+	
+	return sum;
+}
+
+int main(){
+	setcomb();
+	while(init(),input()){
+		printf("%d\n",solve());
+		break;
+	}
+}

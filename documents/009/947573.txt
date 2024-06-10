@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+typedef struct _point {
+	double x,y;
+}point;
+
+double check_rotate(point a, point b, point c) {
+	// x1(y2-y3)+x2(y3-y1)+x3(y1-y2)
+	return a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y);
+}
+
+int main(void) {
+	double abc, dab, dbc, dca;
+	point a, b, c, d;
+	/*
+	三角形ABCの回転の方向（A→B→C→Aと回ったときの向きが右周りか左周りか）と、
+	３つの三角形DAB,DBC,DCAの回転の方向が同じであれば
+	三角形の中に入っていることになります。
+	（３つの三角形DAB,DBC,DCAの回転の方向が全部同じかどうかでも判断できます）
+
+	三角形ABCの回転の方向は、
+	x1(y2-y3)+x2(y3-y1)+x3(y1-y2)
+	の符号で判断できます。
+	（正なら左周り、負なら右回り）
+	*/
+	/* x1 y1 x2 y2 x3 y3 xp yp */
+	while(scanf("%lf %lf %lf %lf %lf %lf %lf %lf\n", &a.x, &a.y, &b.x, &b.y, &c.x, &c.y, &d.x, &d.y)==8) {
+		abc = check_rotate(a, b, c);
+		dab = check_rotate(d, a, b);
+		dbc = check_rotate(d, b, c);
+		dca = check_rotate(d, c, a);
+		
+		if(abc > 0 && dab > 0 && dbc > 0 && dca > 0) {
+			printf("YES\n");
+		} else if(abc < 0 && dab < 0 && dbc < 0 && dca < 0) {
+			printf("YES\n");
+		} else {
+			printf("NO\n");
+		}
+	}
+	
+	return 0;
+}

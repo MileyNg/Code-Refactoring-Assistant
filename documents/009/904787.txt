@@ -1,0 +1,22 @@
+#include<iostream>
+#include<map>
+using namespace std;
+
+int main(){
+  int n;
+  map<int,int> hash;
+  for(int i=0;i<=1000;i++)
+    for(int j=0;j<=1000;j++)
+      hash[i+j]++;
+
+  for(;cin>>n;)
+    {
+      int ans=0;
+      for(int i=0;i<=n;i++)
+        for(int j=0;i+j<=n;j++)
+          {
+            ans+=hash[n-i-j];
+          }
+      cout<<ans<<endl;
+    }
+}

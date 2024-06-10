@@ -1,0 +1,58 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int d, x, y, p;
+  char a[16];
+  vector<int> D, DD;
+  scanf("%d", &d);
+  scanf("%d", &x);
+  rep(i, x){
+    scanf("%s%d", a, &p);
+    if(a[0] == 'D') D.push_back(p);
+  }
+  scanf("%d", &y);
+  rep(i, y){
+    scanf("%s%d", a, &p);
+    if(a[0]=='D' && a[1]=='D') DD.push_back(p);
+  }
+  sort(D.begin(), D.end(), greater<int>());
+  sort(DD.begin(), DD.end(), greater<int>());
+  int res = 0;
+  //  fprintf(stderr, "input\n");
+  while(d){
+    int f = true;
+    //    fprintf(stderr, "%d\n", d);
+    if(DD.empty() && D.empty()) break;
+    if(d >= 2 && !DD.empty()){
+      if((D.size() > 1 && D[0] + D[1] < DD[0]) || (D.size() == 1 && D[0] < DD[0]) || D.empty()){
+	res += DD[0];
+	DD.erase(DD.begin());
+	d -= 2;
+	f = false;
+      }
+    }
+    if(f){
+      res += D[0];
+      D.erase(D.begin());
+      d--;
+    }
+    //    if(DD.empty() && D.empty()) break;
+  }
+  printf("%d\n", res);
+  return 0;
+}

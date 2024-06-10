@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int main(){
+  int n,m;
+  while(cin >> n >> m && n != 0 && m != 0){
+	vector<bool> seki(n,true);
+	int cn = -1;
+	for(int i = 0;i < n-1;i++){
+	  int offset = 0;
+	  for(int j = 0;j < m+offset;j++){
+		cn++;
+		cn = cn%n;
+		if(!seki[cn]){
+		  offset++;
+		}
+	  }
+	  seki[cn] = false;
+	}
+	for(int i=0;i < n;i++){
+	  if(seki[i])cout << i+1 << endl;
+	}
+		
+  }
+}

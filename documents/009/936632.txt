@@ -1,0 +1,210 @@
+#include <vector>
+#include <cstdio>
+#include <queue>
+#include <algorithm>
+#include <set>
+#include <cstdlib>
+using namespace std;
+
+typedef long long LL;
+
+int dy[] = {-1, 0, 1, 1, 0, -1};
+int dx[] = {0, -1, -1, 0, 1, 1};
+int rdtbl[3][3];
+const int base = 30;
+vector<vector<int> > fld;
+int n;
+deque<LL> q;
+set<LL> vis;
+LL goal;
+
+LL encode(const vector<int> &ys, const vector<int> &xs){
+	LL res = ys[0] | xs[0] << 8;
+	for(int i = 1; i < n; ++i){
+		LL d = rdtbl[ys[i] - ys[i - 1] + 1][xs[i] - xs[i - 1] + 1];
+		res |= d << (i * 3 + 13);
+	}
+	return res;
+}
+
+void decode(LL st, vector<int> &ys, vector<int> &xs){
+	ys.resize(n);
+	xs.resize(n);
+	ys[0] = st & 0xff;
+	xs[0] = st >> 8 & 0xff;
+	for(int i = 1; i < n; ++i){
+		int d = st >> (i * 3 + 13) & 7;
+		ys[i] = ys[i - 1] + dy[d];
+		xs[i] = xs[i - 1] + dx[d];
+	}
+}
+
+LL enumsingle(LL st){
+	vector<int> ys, xs;
+	decode(st, ys, xs);
+	for(int i = 0; i < n; ++i){
+		fld[ys[i]][xs[i]] = i + 1;
+	}
+	
+	LL ret = 0;
+	for(int i = 0; i < n; ++i){
+		for(int d = 0; d < 6; ++d){
+			int ny = ys[i] + dy[d], nx = xs[i] + dx[d];
+			if(fld[ny][nx]){ continue; }
+			int flag = 0;
+
+			for(int j = 0; j < 6; ++j){
+				if(fld[ny + dy[j]][nx + dx[j]] == i){
+					flag |= 1;
+				}
+				if(fld[ny + dy[j]][nx + dx[j]] == i + 2){
+					flag |= 2;
+				}
+			}
+			if(i == 0){ flag |= 1; }
+			if(i + 1 == n){ flag |= 2; }
+			if(flag == 3){
+				ret |= 1LL << (i * 6 + d);
+			}
+		}
+	}
+
+	for(int i = 0; i < n; ++i){
+		fld[ys[i]][xs[i]] = 0;
+	}
+
+	return ret;
+}
+
+void check(LL st, LL mv){
+	vector<int> ys, xs;
+	decode(st, ys, xs);
+	for(int i = 0; i < n; ++i){
+		for(int d = 0; d < 6; ++d){
+			if(mv >> (i * 6 + d) & 1){
+				ys[i] += dy[d];
+				xs[i] += dx[d];
+				break;
+			}
+		}
+		fld[ys[i]][xs[i]] = i + 1;
+	}
+
+	bool ok = true;
+	for(int i = 0; i < n; ++i){
+		int flag = 0;
+		if(i == 0){ flag |= 1; }
+		if(i + 1 == n){ flag |= 1 << (n + 1); }
+		for(int d = 0; d < 6; ++d){
+			int t = fld[ys[i] + dy[d]][xs[i] + dx[d]];
+			if(t > 0){
+				flag |= 1 << t;
+			}
+		}
+		
+		if(flag != (5 << i)){
+			ok = false;
+			break;
+		}
+	}
+
+	for(int i = 0; i < n; ++i){
+		fld[ys[i]][xs[i]] = 0;
+	}
+
+	if(ok){
+		LL res = encode(ys, xs);
+		if((res & 0xffff) == goal){ throw 0; }
+		if(vis.insert(res).second){
+			q.push_back(res);
+		}
+	}
+}
+
+void enummove(LL st, LL cand, LL mv, int k){
+	if(k >= n){
+		check(st, mv);
+	}
+	else{
+		enummove(st, cand, mv, k + 1);
+		for(int i = 0; i < 6; ++i){
+			if(cand >> (k * 6 + i) & 1){
+				enummove(st, cand, mv | 1LL << (k * 6 + i), k + 2);
+			}
+		}
+	}
+}
+
+
+int solve(){
+	vis.clear();
+	q.clear();
+
+	const int sz = base * 2 + 1;
+	fld.assign(sz, vector<int>(sz));
+
+	vector<int> hy(n), hx(n);
+	for(int i = 0; i < n; ++i){
+		scanf("%d%d", &hx[i], &hy[i]);
+	}
+	int by = hy[0] - base, bx = hx[0] - base;
+	for(int i = 0; i < n; ++i){
+		hy[i] -= by;
+		hx[i] -= bx;
+	}
+
+	int m;
+	scanf("%d", &m);
+	int ry, rx, ty, tx;
+	for(int i = 0; i < m; ++i){
+		scanf("%d%d", &rx, &ry);
+		ry -= by;
+		rx -= bx;
+		if(ry >= 0 && ry < sz && rx >= 0 && rx < sz){
+			fld[ry][rx] = -9;
+		}
+	}
+	
+	scanf("%d%d", &tx, &ty);
+	ty -= by;
+	tx -= bx;
+	goal = ty | tx << 8;
+
+	LL st = encode(hy, hx);
+
+	q.push_back(st);
+	vis.insert(st);
+	q.push_back(-1);
+	int ans = 1;
+	while(ans < 20){
+		st = q.front();
+		q.pop_front();
+		if(st == -1){
+			q.push_back(-1);
+			++ans;
+			continue;
+		}
+		
+		int mintm = max(abs((st & 0xff) - ty), abs((st >> 8 & 0xff) - tx));
+		if(ans + mintm > 20){ continue; }
+
+		LL ms = enumsingle(st);
+		try{
+			enummove(st, ms, 0, 0);
+		}
+		catch(int){
+			return ans;
+		}
+	}
+	return 20;
+}
+
+int main(){
+	for(int i = 0; i < 6; ++i){
+		rdtbl[dy[i] + 1][dx[i] + 1] = i;
+	}
+
+	while(scanf("%d", &n), n){
+		printf("%d\n", solve());
+	}
+}

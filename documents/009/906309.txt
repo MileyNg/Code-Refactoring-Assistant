@@ -1,0 +1,104 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+using namespace std;
+int INF=(1<<24);
+int dy[6]={0,-1,-1,0,1,1};
+int dx[2][6]={
+  {-1,-1,0,1,0,-1},{-1,0,1,1,1,0}
+};
+int W,H,n,m,I;
+int ty[100],tx[100];
+int uy[100],ux[100];
+int v[100][100];
+
+queue <int> Qy;
+queue <int> Qx;
+queue <int> Qcnt;
+queue <int> Qid;
+
+bool input();
+void init(int);
+void solve();
+int bfs();
+
+int main(){
+  while(input())solve();
+  return 0;
+}
+
+int bfs(){
+  int y,x,ny,nx,cnt,id,res=0;
+  while(!Qy.empty()){
+    y=Qy.front();Qy.pop();
+    x=Qx.front();Qx.pop();
+    cnt=Qcnt.front();Qcnt.pop();
+    id=Qid.front();Qid.pop();
+
+    if(cnt>=v[y][x])continue;
+    v[y][x]=cnt;
+    if(id==n+I)res++;
+
+    for(int i=0;i<6;i++){
+      ny=y+dy[i];
+      nx=x+dx[y%2][i];
+      if(ny<0||nx<0||ny>=H||nx>=W)continue;
+	 
+      Qy.push(ny);
+      Qx.push(nx);
+      Qcnt.push(cnt+1);
+      Qid.push(id);
+    
+    }
+  }
+  return res;
+}
+
+void solve(){
+  int ans=0;
+  for(I=0;I<m;I++){
+    init(I);
+    ans=max(ans,bfs());
+  }
+  cout<<ans<<endl;
+}
+
+bool input(){
+  cin>>W>>H;
+  if(W==0&&H==0)return false;
+  cin>>n;
+  for(int i=0;i<n;i++){
+    cin>>tx[i]>>ty[i];
+  }
+  cin>>m;
+  for(int i=0;i<m;i++){
+    cin>>ux[i]>>uy[i];
+  }
+  return true;
+}
+
+void init(int s){
+  for(int i=0;i<100;i++){
+    for(int j=0;j<100;j++){
+      v[i][j]=INF;
+    }
+  }
+  while(!Qy.empty()){
+    Qy.pop();
+    Qx.pop();
+    Qcnt.pop();
+    Qid.pop();
+  }
+  
+
+  for(int i=0;i<n;i++){
+    Qy.push(ty[i]);
+    Qx.push(tx[i]);
+    Qcnt.push(0);
+    Qid.push(i);
+  }
+  Qy.push(uy[s]);
+  Qx.push(ux[s]);
+  Qcnt.push(0);
+  Qid.push(n+s);
+}

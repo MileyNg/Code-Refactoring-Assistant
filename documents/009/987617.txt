@@ -1,0 +1,145 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<complex>
+
+#define rep(i,a,b) for(int (i)=(a);(i)<(b);(i)++)
+#define min_int(a,b) ((a)<(b)?(a):(b))
+#define INF 10000000 //2^31
+#define EPS (1e-9)
+#define EQ(a,b) (abs((a)-(b))<EPS)
+using namespace std;
+
+class Gio{
+private:
+	typedef complex<double>point;
+	struct line{ 
+		point st, ed;//始点,終点
+	};
+	point min_p,max_p;
+	line orig, test;
+	double min_R;//保存用
+	double test_R;//実行用
+	double dot(point a, point b);//内積
+	double cross(point a, point b);//外積
+
+public:
+	Gio(double sx, double sy,double ex,double ey);
+	void set_p(point* p, double x, double y);
+	void set_line(line* l, point s, point e);
+	void set_testline(double sx, double sy, double ex, double ey);
+	void calc_r(double sx,double sy,double lx,double ly,double h);
+	double get_r();
+	double get_d_pp();//min_pとmax_pの距離を返す
+	double get_d_lp();//min_pとtestの長さを返す
+	double get_d_ll();//origとtestの長さを返す
+	bool intersect();//origとtestが交差していればtrue
+};
+
+Gio::Gio(double sx, double sy, double ex, double ey){
+	set_p(&min_p, sx, sy);
+	set_p(&max_p, ex, ey);
+	set_line(&orig, min_p, max_p);
+	min_R = INF;
+}
+void Gio::set_p(point *p, double x, double y){
+	point a(x, y);
+	*p = a;
+}
+void Gio::set_line(line* l, point s, point e){
+	l->st = s;
+	l->ed=e;
+}
+void Gio::set_testline(double sx,double sy,double ex,double ey){
+	point a, b;
+	set_p(&a, sx, sy); set_p(&b, ex, ey);
+	set_line(&test, a, b);
+	//printf("%lf,%lf\n", test.st.real(), test.st.imag());
+}
+double Gio::dot(point a, point b){
+	return(a.real()*b.real() + a.imag()*b.imag());
+}
+double Gio::cross(point a, point b){
+	return(a.real()*b.imag() - a.imag()*b.real());
+}
+double Gio::get_d_pp(){ return(abs(max_p - min_p)); }
+double Gio::get_d_lp(){
+	point a = test.st;
+	point b = test.ed;
+	point c = min_p;
+	if (dot(b - a, c - a) < EPS)return(abs(c - a));
+	if (dot(a - b, c - b) < EPS)return(abs(c - b));
+	return(abs(cross(b - a, c - a)) / abs(b - a));
+}
+bool Gio::intersect(){
+	point a = orig.st, b = orig.ed, c = test.st, d = test.ed;
+	return(abs((cross(b - a, c - a)*cross(b - a, d - a)) < EPS) && abs((cross(d - c, a - c)*cross(d - c, b - c)) < EPS));
+}
+
+double Gio::get_d_ll(){
+	if (intersect())return(0);
+	point a0, a1,b0,b1;
+	a0 = orig.st;
+	a1 = orig.ed;
+	b0 = test.st;
+	b1 = test.ed;
+	double d1, d2, d3, d4;
+	min_p = a0; d1 = get_d_lp();
+	min_p = a1; d2 = get_d_lp();
+	set_line(&test, a0, a1);
+	min_p = b0; d3 = get_d_lp();
+	min_p = b1; d4 = get_d_lp();
+	d1 = min_int(d1, d2);
+	d2 = min_int(d3, d4);
+	return(min_int(d1, d2));
+}
+
+void Gio::calc_r(double sx, double sy, double lx, double ly,double h){
+	double d1, d2, d3, d4;
+	point p = orig.st;
+	if (sx <= p.real() && p.real() <= lx&&sy <= p.imag()&&p.imag() <= ly){
+		min_R = 0; return;
+	}
+
+	set_testline(sx, sy, sx, ly); d1 = get_d_ll();
+	set_testline(sx, sy, lx, sy); d2 = get_d_ll();
+	set_testline(sx, ly, lx, ly); d3 = get_d_ll();
+	set_testline(lx, sy, lx, ly); d4 = get_d_ll();
+	d1 = min_int(min_int(d1, d2), min_int(d3, d4));
+	if (h >= d1)test_R = d1;
+	else{
+		test_R = ((d1*d1 + h*h) / h) / 2;
+	}
+	min_R = min_int(min_R, test_R);
+}
+double Gio::get_r(){
+	return(min_R);
+}
+
+int b_num;
+
+
+
+int main(void){
+	//Gio g(1, 1, 2, 2);
+	//g.set_testline(1, 2, 2, 3);
+	//cout << g.get_d_ll()<<endl;
+	while (true){
+		cin >> b_num;
+		if (b_num == 0)return(0);
+		double sx, sy, ex, ey,h;
+		cin >> sx >> sy>>ex >> ey;
+		Gio g(sx, sy, ex, ey);
+		rep(i, 0, b_num){
+			cin >> sx >> sy >> ex >> ey>>h;
+			g.calc_r(sx, sy, ex, ey, h);
+		}
+
+		printf("%.10lf\n", g.get_r());
+
+	}
+	
+
+}

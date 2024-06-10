@@ -1,0 +1,111 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+// define eps
+double EPS = 1e-10;
+
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) : x(a), y(b) {}
+};
+typedef Point2D Vector2D;
+
+// Point2D's and Vector2D's operator
+Point2D operator + (Point2D a, Point2D b) { return Point2D(a.x + b.x, a.y + b.y); }
+Point2D operator - (Point2D a, Point2D b) { return Point2D(a.x - b.x, a.y - b.y); }
+Point2D operator * (Point2D a, double d) { return Point2D(a.x * d, a.y * d); }
+Point2D operator / (Point2D a, double d) { return Point2D(a.x / d, a.y / d); }
+
+bool operator < (const Point2D& a, const Point2D& b) { return a.x != b.x ? a.x < b.x : a.y < b.y; }
+bool operator > (const Point2D& a, const Point2D& b) { return b.x != a.x ? b.x < a.x : b.y < a.y; }
+bool operator == (const Point2D& a, const Point2D& b) { return fabs(a.x-b.x)<EPS && fabs(a.y-b.y)<EPS; }
+
+double norm(Point2D a) { return a.x*a.x + a.y*a.y; }
+double dot2D(const Vector2D& a, const Vector2D& b) { return a.x * b.x + a.y * b.y; }
+double cross2D(const Vector2D& a, const Vector2D& b) { return a.x*b.y - a.y*b.x; }
+
+// 点の進行方向	a -> b -> c
+int ccw(Point2D a, Point2D b, Point2D c) {
+	b = b - a; c = c - a;
+	if (cross2D(b, c) > 0) return +1;	// counter clockwise
+	if (cross2D(b, c) < 0) return -1;	// clockwise
+	if (dot2D(b, c) < 0) return +2;		// c--a--b on line
+	if (norm(b) < norm(c)) return -2;	// a--b--c on line
+	return 0;	// 
+}
+
+vector<Point2D> convexHull(vector<Point2D> ps) {
+	int n = (int)ps.size(), k = 0;
+	sort(ps.begin(), ps.end());
+	vector<Point2D> ch(2*n);	
+	for (int i = 0; i < n; ch[k++] = ps[i++]) // lower-hull
+		while (k >= 2 && ccw(ch[k-2], ch[k-1], ps[i]) <= 0) --k;
+	for (int i = n - 2, t = k + 1; i >= 0; ch[k++] = ps[i--])	// upper-hull
+		while (k >= t && ccw(ch[k-2], ch[k-1], ps[i]) <= 0) --k;
+	ch.resize(k-1);
+	return ch;
+}
+
+
+int main() {
+	int n;
+	
+	while (cin>>n) {
+		vector<Point2D> ps(n);
+	
+		for_(i, 0, n) {
+			D x, y;
+			scanf("%lf,%lf", &x, &y);
+			ps[i].x = x; ps[i].y = y;
+		}
+	
+		vector<Point2D> ch = convexHull(ps);
+		int k = (int)ch.sz;
+	
+		cout << n - k << endl;
+	}
+	
+	return 0;
+}

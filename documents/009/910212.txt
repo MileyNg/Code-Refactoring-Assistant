@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long lli;
+
+int main() {
+  lli a, b;
+  cin >> a >> b;
+  if(max(a,b) % min(a,b) == 0) {
+    cout << min(a,b) << endl;
+    return 0;
+  }
+  for(lli i = min(a,b)/2; i >= 1; --i) {
+    if(a*b % (i*i) == 0) {
+      cout << i << endl;
+      return 0;
+    }
+  }
+  return 0;
+}

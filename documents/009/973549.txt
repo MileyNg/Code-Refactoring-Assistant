@@ -1,0 +1,23 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int hi,mi,si;
+	int h,m,s;
+	while(cin>>hi>>mi>>si,hi!=-1&&mi!=-1&&si!=-1){
+		h=2;m=60;s=60;
+		if(si>0){s-=si;m--;}
+			else if(s<=60){s=0;}
+		if(mi>0){m-=mi;h--;}
+			else if(m<=60){m=0;}
+		
+		if(hi>0)h-=hi;
+		
+		cout<<h<<":"<<m<<":"<<s<<endl;
+	
+		h*=3;m*=3;s*=3;
+		while(s>=60){m+=1;s-=60;}
+		while(m>=60){h+=1;m-=60;}
+		cout<<h<<":"<<m<<":"<<s<<endl;
+	}
+}

@@ -1,0 +1,22 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+int main(){
+  int n, m, x, max_=0, ans=0;
+  cin >> n >> m;
+  vector<int> data(n,0), sum(n,0);
+  for(int i=0; i<n; ++i) cin >> data[i];
+  for(int i=0; i<m; ++i){
+    cin >> x;
+    for(int j=0; j<n; ++j){
+      if(data[j]<=x){ ++sum[j]; break; }
+    }
+  }
+  for(int i=0; i<n; ++i){
+    if(sum[i]>max_) max_=sum[i], ans=i+1;
+  }
+  cout << ans << endl;
+  return 0;
+}

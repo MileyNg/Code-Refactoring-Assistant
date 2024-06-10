@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vbb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+
+#define loop(i,a,b) for(int i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+#define MAX 1000010
+
+long long cost[110][110];
+int V;
+
+int dijkstra(int s, int t) {
+    long long d[110];
+    bool used[110];
+    fill(d, d + V, MAX);
+    fill(used, used + V, false);
+    d[s] = 0;
+    while(true) {
+        int v = -1;
+        for(int u=0; u < V; u++){
+            if (!used[u] && (v == -1 || d[u] < d[v])) v = u;
+        }
+        if (v == -1) break;
+        used[v] = true;
+        for (int u = 0; u < V; u++) {
+            d[u] = min(d[u], d[v] + cost[v][u]);
+        }
+    }
+    return d[t];
+}
+
+int main(){
+    int k;
+    while(cin >> V >> k, V+k){
+        rep(i, 110) rep(j, 110) cost[i][j] = MAX;
+
+        rep(p, k){
+            int m;
+            cin >> m;
+            if(m == 1){
+                int s, t;
+                long long c;
+                cin >> s >> t >> c;
+                s--; t--;
+                cost[s][t] = cost[t][s] = min(cost[s][t], c);
+            }
+            else if(m == 0){
+                int s, t;
+                cin >> s >> t;
+                s--; t--;
+                long long c = dijkstra(s, t);
+                if(c == MAX) cout << -1 << endl;
+                else cout << c << endl;
+            }
+        }
+    }
+}

@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+int main(){
+  int N, M, dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+  while(scanf("%d", &N) && N){
+    int x[32], y[32];
+    rep(i, N) scanf("%d%d", x+i, y+i);
+    scanf("%d", &M);
+    int nx = 10, ny = 10, dis, d;
+    bool field[21][21] = {};
+    field[ny][nx] = true;
+    char com[4];
+    rep(i, M){
+      scanf("%s%d", com, &dis);
+      switch(com[0]){
+      case 'N': d = 0; break;
+      case 'E': d = 1; break;
+      case 'S': d = 2; break;
+      case 'W': d = 3; break;
+      }
+      rep(j, dis){
+	nx += dx[d]; ny += dy[d];
+	field[ny][nx] = true;
+      }
+    }
+    /*    rep(i, 21){
+      rep(j, 21) printf("%d ", field[i][j]?1:0);
+      puts("");
+      }*/
+    bool f = true;
+    rep(i, N)
+      if(!field[y[i]][x[i]]) f = false;
+    if(f) puts("Yes");
+    else puts("No");
+  }
+  return 0;
+}

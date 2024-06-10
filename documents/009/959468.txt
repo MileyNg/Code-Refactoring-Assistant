@@ -1,0 +1,62 @@
+/*
+	0104:Magical Tiles
+*/
+#include	<iostream>
+
+using namespace std;
+
+//GV
+char map[101][101];
+
+//FN
+void refmaps(void);
+void start(void);
+
+int main(void) {
+	while(1) {
+		int W, H;
+		
+		refmaps();
+		
+		cin >> H >> W;
+		if(H == 0 && W == 0) { break; }
+		
+		for(int i = 0; i < H; i++) {
+			for(int j = 0; j < W; j++) {
+				char c;
+				cin >> c;
+				map[i][j] = c;
+			}
+		}
+		
+		start();
+	}
+	return 0;
+}
+
+void refmaps(void) {
+	for(int i = 0; i < 101; i++) {
+		for(int j = 0; j < 101; j++) {
+			map[i][j] = '.';
+		}
+	}
+}
+
+void start(void) {
+	int h = 0, w = 0;
+	const int vx[4] = {1, 0, -1, 0}, vy[4] = {0, 1, 0, -1};
+	const char vc[4] = {'>', 'v', '<', '^'};
+	
+	while(1) {
+		if(map[h][w] == '.') { cout << w << ' ' << h << endl; return; }
+		else if(map[h][w] == 'L') { cout << "LOOP" << endl; return; }
+		else {
+			for(int i = 0; i < 4; i++) {
+				if(map[h][w] == vc[i]) {
+					map[h][w] = 'L';
+					h += vy[i];		w += vx[i];
+				}
+			}
+		}
+	}
+}

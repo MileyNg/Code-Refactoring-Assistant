@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+int dfs( int );
+long long int memo[31]={};
+int main(){
+  int n ,ans;
+  while( true ){
+    cin >> n;
+    if( n == 0 ) break;
+    ans = dfs( n );
+    
+    ans /= 3650;
+    cout << ans+1 << endl;
+  }
+}
+
+int dfs( int n ){
+  if( memo[n] ) return memo[n];
+  if( n <= 1 ) return 1;
+  if( n == 2 ) return 2;
+  return memo[n] = dfs( n-1 ) + dfs( n-2 ) + dfs( n-3 );
+}

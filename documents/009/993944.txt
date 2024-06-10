@@ -1,0 +1,41 @@
+#include <iostream>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+int main(void){
+  int n, a, b, c;
+  map<int, long int> m;
+  vector<int> v;
+
+  while(cin >> n, n){
+    v.clear();  m.clear();
+
+    for(int i=0; i<n; i++){
+      cin >> a >> b >> c;
+
+      if(m.find(a) != m.end()){
+        m[a] += b * c;
+      } else {
+        v.push_back(a);
+        m[a] = b * c;
+      }
+    }
+
+    bool flag = false;
+    for(int i=0; i<v.size(); i++){
+      if(m[v[i]] >= 1000000){
+        flag = true;
+        cout << v[i] << endl;
+      }
+    }
+
+    if(flag == false){
+      cout << "NA" << endl;
+    }
+  }
+
+
+  return 0;
+}

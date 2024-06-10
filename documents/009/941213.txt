@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+int main()
+{
+    int b, r, g, c, s, t;
+    while (scanf("%d%d%d%d%d%d", &b, &r, &g, &c, &s, &t), b + r + g + c + s + t){
+        int regular = b * 15 + r * 15 + g * 7 + c * 2 + s * 3;
+        int bonus_game = b * 5 + r * 3;
+        int bonus_grape = bonus_game * 16;
+        int pay = t * 3;
+        int total = regular + bonus_grape - pay;
+        printf("%d\n", 100 + total);
+    }
+    return (0);
+}

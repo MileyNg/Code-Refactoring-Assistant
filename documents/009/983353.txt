@@ -1,0 +1,104 @@
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+struct UnionFind {
+    int* parent;
+    int* value;
+    UnionFind(int N) {
+        parent = new int[N + 1]; fill(parent, parent + N + 1, -1);
+        value = new int[N + 1]; fill(value, value + N + 1, 0);
+    }
+    ~UnionFind() {
+        delete[] parent;
+        delete[] value;
+    }
+    /* 
+     * root :: インデックス -> (ルートのインデックス, ルートとの距離)
+     */
+    pair<int, int> root(int x) {
+        if (parent[x] == -1) return make_pair(x, 0);
+        int p = parent[x];
+        int v = value[x];
+        pair<int, int> proot = root(p);
+        parent[x] = proot.first;
+        value[x] = v + proot.second;
+        return make_pair(parent[x], value[x]);
+    }
+    static const int INF = 1<<28;
+    /* 
+     * query :: (インデックスx, インデックスy) -> yとxの差
+     */
+    int query(int x, int y) {
+        pair<int, int> xroot = root(x),
+                       yroot = root(y);
+        if (xroot.first != yroot.first) return INF;
+        return yroot.second - xroot.second;
+    }
+    /*
+     * merge :: (インデックスx, インデックスy, yとxの差w) -> ()
+     *
+     * xとyがすでに親子関係を持っていて,その差がwでなければ異常終了
+     */
+    void merge(int x, int y, int w) {
+        pair<int, int> xroot = root(x),
+                       yroot = root(y);
+        if (xroot.first == yroot.first) {
+            assert(query(x, y) == w);
+            return;
+        }
+        int px = xroot.first, py = yroot.first;
+        int dx = xroot.second, dy = yroot.second;
+        /* value[y] - value[x] = w
+         * value[x] - value[px] = dx
+         * value[y] - value[py] = dy
+         * value[py] - value[px] = (value[y] - dy) - (value[x] - dx)
+         *                       = (value[y] - value[x]) - (dy - dx)
+         *                       = w - dy + dx
+         */
+        parent[py] = px;
+        value[py] = w - dy + dx;
+    }
+};
+
+int main() {
+    int N, M;
+    while (cin >> N >> M, N || M) {
+        UnionFind uf(N);
+        char c; int a, b, w;
+        for (int i = 0; i < M; i++) {
+            cin >> c;
+            if (c == '?') {
+                cin >> a >> b;
+                int ans = uf.query(a, b);
+                //cerr << "?" << " " << a << " " << b << endl;
+                if (ans == UnionFind::INF) {
+                    cout << "UNKNOWN" << endl;
+                } else {
+                    cout << ans << endl;
+                }
+            } else {
+                assert(c == '!');
+                cin >> a >> b >> w;
+                //cerr << "!" << " " << a << " " << b << " " << w << endl;
+                uf.merge(a, b, w);
+            }
+        }
+    }
+    return 0;
+}

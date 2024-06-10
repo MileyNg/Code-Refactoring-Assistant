@@ -1,0 +1,33 @@
+#include <cstdio.h>
+#include <algorithm>
+
+using namespace std;
+int main(void)
+{
+	double xa, ya, ra, xb, yb, rb;
+	int n;
+	
+	scanf("%d", &n);
+	
+	for (int i = 0; i < n; i++){
+		scanf("%lf %lf %lf %lf %lf %lf", &xa, &ya, &ra, &xb, &yb, &rb);
+		
+		if ((xa - xb) * (xa - xb) + (ya - yb) * (ya - yb) <= (ra + rb) * (ra + rb)){
+			
+			if ((xa - xb) * (xa - xb) + (ya - yb) * (ya - yb) + rb * rb <= ra * ra){
+				printf("2\n");
+			} 
+			else if ((xa - xb) * (xa - xb) + (ya - yb) * (ya - yb) + ra * ra <= rb * rb){
+				printf("-2\n");
+			}
+			else printf("1\n");
+		}
+		else {
+			printf("0\n");
+		}
+	}
+			
+	
+	
+	return (0);
+}

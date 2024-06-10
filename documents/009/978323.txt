@@ -1,0 +1,36 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb(in,tmp) in.push_back(tmp)
+#define all(in) in.begin(),in.end()
+#define PI acos(-1)
+using namespace std;
+void isl(int i,int j,char in[12][12]){
+  in[i][j]='0';
+  loop(k,-1,2){
+    loop(a,-1,2){
+      if(k&&a)continue;
+      if(i+k>=0&&i+k<12&&j+a>=0&&j+a<12&&in[i+k][j+a]=='1')isl(i+k,j+a,in);
+    }
+  }
+}
+int main(){
+  char in[12][12]={0};
+  while(cin>>in[0]){
+    rep(i,11)cin>>in[i+1];
+    int co=0;
+    rep(i,12){
+      rep(j,12){
+	if(in[i][j]=='1'){co++;isl(i,j,in);}
+      }
+    }
+    cout<<co<<endl;
+  }
+
+}

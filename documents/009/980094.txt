@@ -1,0 +1,79 @@
+#include<stdio.h>
+#include<string.h>
+
+#define MAX 500000
+
+typedef struct{
+  int key,le,ri;
+}Node;
+ 
+Node tree[MAX+1];
+int size;
+ 
+void insert(int);
+void inorder(int);
+void preorder(int);
+
+int main(int argc, char *argv[]){
+  int n, i, first;
+  first = 1;
+
+  scanf("%d", &n);
+
+  for(i=0;i<=n;i++) 
+ tree[i].key = tree[i].le = tree[i].ri = -1;
+
+  size = 0;
+
+  while(n--){
+    char str[100];
+    scanf("%s", str);
+    if(!strcmp(str, "insert")){
+      int in;
+      scanf("%d", &in);
+      if(first){
+        tree[size++].key = in;
+        first = 0;
+      }
+      else insert(in);
+    }else{
+      inorder(0);
+      printf("\n");
+      preorder(0);
+      printf("\n");
+    }
+  }
+  return 0;
+}
+
+void insert(int x){
+  int p = 0;
+  while(1){
+    if(x < tree[p].key){
+      if(tree[p].le == -1){
+        tree[p].le = size;
+        tree[size++].key = x;
+        break;
+      }else p = tree[p].le;
+    }else{
+      if(tree[p].ri == -1){
+        tree[p].ri = size;
+        tree[size++].key = x;
+        break;
+      }else p = tree[p].ri;
+    }
+  }
+}
+ 
+void inorder(int p){
+  if(tree[p].le != -1) inorder(tree[p].le);
+  printf(" %d", tree[p].key);
+  if(tree[p].ri != -1) inorder(tree[p].ri);
+}
+ 
+void preorder(int p){
+  printf(" %d", tree[p].key);
+  if(tree[p].le != -1) preorder(tree[p].le);
+  if(tree[p].ri != -1) preorder(tree[p].ri);
+}
+ 

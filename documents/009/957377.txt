@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+#include <cassert>
+using namespace std;
+
+string input;
+int idx;
+
+int minimum_votes();
+int parse_int();
+
+int main()
+{
+    int N;
+    cin >> N;
+    while (N--) {
+        cin >> input;
+        idx = 0;
+        cout << minimum_votes() << endl;
+    }
+}
+
+bool open_bracket()
+{
+    return input[idx] == '[';
+}
+
+bool close_bracket()
+{
+    return input[idx] == ']';
+}
+
+int minimum_votes()
+{
+    assert(open_bracket());
+    idx++;
+
+    {
+        int voters = parse_int();
+        if (voters >= 0) {
+            assert(close_bracket());
+            idx++;
+
+            return (voters + 1) / 2;
+        }
+    }
+
+    vector<int> voters;
+
+    while (open_bracket()) {
+        voters.push_back(minimum_votes());
+    }
+
+    assert(close_bracket());
+    idx++;
+
+    sort(voters.begin(), voters.end());
+
+    int sum = 0;
+    for (int i = 0; i < (voters.size() + 1) / 2; i++) {
+        sum += voters[i];
+    }
+
+    return sum;
+}
+
+int parse_int()
+{
+    if (isdigit(input[idx])) {
+        int result = 0;
+        while (isdigit(input[idx])) {
+            result *= 10;
+            result += input[idx] - '0';
+            idx++;
+        }
+        return result;
+    } else {
+        return -1;
+    }
+}

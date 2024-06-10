@@ -1,0 +1,32 @@
+#include<stdio.h>
+
+int main(){
+
+    int num[10000],a[10000];
+    int k,i,j;
+    scanf("%d",&k);
+
+    for(i=0;i<k;i++)
+        {
+            scanf("%d",&num[i]);
+        }
+
+    for(j=0;j<k;j++){
+        int use;
+        a[j] = 1000000000;
+        for(i=0;i<k;i++){
+            if(num[i] < a[j]){
+                a[j] = num[i];
+                use = i;
+            }
+        }
+        num[use] = 100000000;
+    }
+    for(i=0;i<k;i++){
+        printf("%d",a[i]);
+        if(i==k-1) putchar('\n');
+        else putchar(' ');
+    }
+
+    return 0;
+}

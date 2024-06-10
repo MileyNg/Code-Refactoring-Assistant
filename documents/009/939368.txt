@@ -1,0 +1,94 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+typedef pair<int, int> P;
+
+void solve()
+{
+	int m;
+	while(cin >> m, m)
+	{
+		cin.ignore();
+		vector< vector<int> > Point(m); 
+		vector<P> Data;
+		for(int i = 0; i < m; ++i)
+		{
+			string s;
+			getline(cin, s);
+			string temp;
+			for(int j = 0; j < s.size(); ++j)
+			{
+				if('0' <= s[j] && s[j] <= '9')
+				{
+					temp += s[j];
+				}
+				else
+				{
+					stringstream ss;
+					int d;
+					ss << temp;
+					ss >> d;
+					Point[i].push_back(d);
+					temp = "";
+				}
+			}
+			stringstream ss;
+			int d;
+			ss << temp;
+			ss >> d;
+			Point[i].push_back(d);
+			Point[i].push_back(0);
+			Point[i].push_back(0);
+
+			int sum = 0;
+			int strike = 0;
+			bool spare = false;
+			bool first = true;
+			int frame = 1;
+			for(int j = 1; j < Point[i].size() - 2; ++j)
+			{
+				if(Point[i][j] == 10)
+				{
+					strike = 2;
+					sum += 10 + Point[i][j + 1] + Point[i][j + 2];
+				}
+				else if(Point[i][j] + Point[i][j + 1] == 10)
+				{
+					spare = true;
+					sum += 10 + Point[i][j + 2];
+					++j;
+				}
+				else
+				{
+					sum += Point[i][j] + Point[i][j + 1];
+					++j;
+				}
+				++frame;
+				if(frame == 11)
+				{
+					break;
+				}
+			}
+			P p;
+			p.first = -sum;
+			p.second = Point[i][0];
+			Data.push_back(p);
+		}
+		sort(Data.begin(), Data.end());
+		for(int i = 0; i < Data.size(); ++i)
+		{
+			cout << Data[i].second << " " << -Data[i].first << endl;
+		}
+	}
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

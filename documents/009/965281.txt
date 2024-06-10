@@ -1,0 +1,26 @@
+#include<iostream>
+using namespace std;
+
+bool is_reap(int i){
+	if(!(i%100) && (i%400)) return false;
+	if(!(i%4)) return true;
+	return false;
+}
+
+int main()
+{
+	int a, b;
+	bool flag = false;
+	while(cin >> a >> b){
+		if(!a && !b) break;
+		if(flag)cout << endl;
+		flag = true;
+		bool flag = false;
+		for(int i=a; i<=b; i++){
+			if(is_reap(i)){ cout << i << endl; flag = true;}
+		}
+		if(!flag) cout << "NA" << endl;
+
+	}
+	return 0;
+}

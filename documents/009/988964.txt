@@ -1,0 +1,92 @@
+#include<stdio.h>
+
+typedef struct {
+  int id,left,right,p,sib,deg,depth,height;
+}Node;
+
+Node t[100000];
+int n;
+int count=0;
+
+void scan(void);
+void print(void);
+void depth(int,int);
+void height(int,int);
+
+int main(){
+
+  scan();
+  print();
+  return 0;
+}
+void scan(){
+  int i;
+
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d%d%d",&t[i].id,&t[i].left,&t[i].right);
+  }
+  for(i=0;i<n;i++){
+
+    t[0].p=-1;
+    t[t[i].left].p=t[i].id;
+    t[t[i].right].p=t[i].id;  
+
+    if(t[i].p==-1){
+      t[i].sib=-1;
+
+    }
+
+    if(t[i].left!=-1 && t[i].right!=-1){
+
+      t[t[i].left].sib=t[i].right;
+      t[t[i].right].sib=t[i].left;
+
+      t[i].deg=2;
+    } else if (t[i].left!=-1 || t[i].right!=-1){
+      t[i].deg=1; 
+    } else {
+      t[i].deg=0;
+    }
+   depth(t[i].p,i);
+   height(t[i].id,i);
+  }
+}
+
+void print(){
+  int i;
+  for(i=0;i<n;i++){
+    printf("node %d: patent = %d, sibling = %d, degree = %d,depth = %d, height = %d,",i,t[i].p,t[i].sib,t[i].deg,t[i].depth,t[i].height); 
+
+    if(t[i].depth==0) printf(" root\n");
+    else {
+      if(t[i].deg==0)printf(" leaf\n");
+      else printf(" internal node\n");
+
+    }
+  }
+}
+void depth(int parent,int nodeNumber){
+  
+ //fprintf(stderr,"Check!\n");
+  if(parent != -1){
+    t[nodeNumber].depth++; 
+    depth(t[parent].p,nodeNumber);
+  } 
+}
+
+void height(int own,int nodeNumber){
+ 
+  if(t[own].deg != 0){
+     t[nodeNumber].height++;
+    
+    if(own!=-1){
+   t[nodeNumber].height++;
+    
+      height(t[own].left,nodeNumber);
+      
+      height(t[own].right,nodeNumber);
+      
+    } 
+  }
+}

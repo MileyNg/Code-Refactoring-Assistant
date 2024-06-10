@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string>
+#include <set>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	string s,temp;
+	int cnt;
+	int i1,i2;
+	int check;
+
+	map<string,string> clr;
+	clr["rg"]="bb";
+	clr["gr"]="bb";
+	clr["gb"]="rr";
+	clr["bg"]="rr";
+	clr["br"]="gg";
+	clr["rb"]="gg";
+
+	while(1){
+		cin>>s;
+		if(s=="0") break;
+
+		queue<pair<string,int> > q;
+		q.push(make_pair(s,0));
+		set<string> bf;
+		bf.insert(s);
+
+		while(!q.empty()){
+			s=q.front().first;
+			cnt=q.front().second;
+			q.pop();
+
+			check=0;
+			for(i1=0;i1<s.size()-1;i1++){
+				if(s[i1]!=s[i1+1]) {
+					check=1;
+					if(i1<s.size()-2){
+						temp=s.substr(0,i1)+clr[s.substr(i1,2)]+s.substr(i1+2);
+					}
+					else {
+						temp=s.substr(0,i1)+clr[s.substr(i1,2)];
+					}
+
+					if(bf.find(temp)==bf.end()) {
+						q.push(make_pair(temp,cnt+1));
+						bf.insert(temp);
+					}
+				}
+			}
+			if(check==0) {
+				check=2;
+				break;
+			}
+		}
+
+		if(check==2) cout<<cnt<<endl;
+		else cout<<"NA"<<endl;
+	}
+	return 0;
+}

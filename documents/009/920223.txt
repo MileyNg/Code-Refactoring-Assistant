@@ -1,0 +1,68 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int saiki(string str){
+	//cout<<str<<endl;
+	
+	if(str[0]>='0' && str[0]<='2')return str[0]-'0';
+	
+	if(str[0]=='-'){
+		int val = saiki(str.substr(1,str.size()-1));
+		return (val-1)*-1+1;
+	}
+	
+	if(str[0]=='('){
+		int count = 0;
+		rep(i,str.size()){
+			if(str[i]=='(')count++;
+			if(str[i]==')')count--;
+			
+			if(count==1 && str[i]=='*'){
+				return min(saiki(str.substr(1,i-1)),saiki(str.substr(i+1,str.size()-i-2)));
+			}
+			if(count==1 && str[i]=='+'){
+				return max(saiki(str.substr(1,i-1)),saiki(str.substr(i+1,str.size()-i-2)));
+			}
+		}
+	}
+}
+
+int main(){
+	B:;
+	
+	string str;
+	cin>>str;
+	if(str.size()==1 && str[0]=='.')return 0;
+	
+	int ans = 0;
+	rep(i,3){
+		rep(j,3){
+			rep(k,3){
+				string strcopy = str;
+				rep(p,str.size()){
+					if(str[p]=='P')str[p]='0'+i;
+					if(str[p]=='Q')str[p]='0'+j;
+					if(str[p]=='R')str[p]='0'+k;
+				}
+				int val = saiki(str);
+				str = strcopy;
+				
+				if(val==2)ans++;
+			}
+		}
+	}
+	A:;
+	
+	printf("%d\n",ans);
+	
+	goto B;
+}

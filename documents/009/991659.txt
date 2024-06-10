@@ -1,0 +1,129 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <set>
+#include <queue>
+#include <map>
+#include <ctime>
+using namespace std;
+
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+#define pb push_back
+
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+
+const int inf=1<<29;
+
+string S;
+
+int digit(int cur){
+	return S[cur]-'0';
+}
+
+set<int> number(int cur){
+	int res=digit(cur++);
+	while(isdigit(S[cur])){
+		res=10*res+digit(cur++);
+	}
+	set<int> ans;
+	ans.insert(res);
+	return ans;
+}
+
+set<int> exp2(int l,int r){
+	if(S[l]=='('&&S[r-1]==')') l++,r--;
+	int i=l;
+	bool iscall=false;
+	int num=0;
+	set<int> res;
+
+	while(i<r){
+		if(isdigit(S[i]))
+			continue;
+		else if(S[i]=='(')
+			num++;
+		else if(S[i]==')')
+			num--;
+		else if(num==0){
+			iscall=true;
+			char op=S[i];
+			set<int> a=exp2(0,i);
+			set<int> b=exp2(i+1,r);
+			set<int> res2;
+			switch(op){
+				case '+':
+					for(auto j:a)for(auto k:b) res2.insert(j+k);
+					break;
+				case '-':
+					for(auto j:a)for(auto k:b) res2.insert(j-k);
+					break;
+				case '*':
+					for(auto j:a)for(auto k:b) res2.insert(j*k);
+					break;
+				case '/':
+					for(auto j:a)for(auto k:b)if(k!=0)res2.insert(j/k);
+					break;
+
+			}
+			for(auto j:res2) res.insert(j);
+		}
+	}
+	
+	if(iscall) 
+		return res;
+	else
+		return number(l);
+}
+
+
+int exp(int l,int r){
+	set<int> res;
+	bool iscall=false;
+	int num=0;
+	rep(i,r){
+		if(isdigit(S[i]))
+			continue;
+		else if(S[i]=='(')
+			num++;
+		else if(S[i]==')')
+			num--;
+		else if(num==0){
+			iscall=true;
+			char op=S[i];
+			set<int> a=exp2(0,i);
+			set<int> b=exp2(i+1,r);
+			set<int> res2;
+			switch(op){
+				case '+':
+					for(auto j:a)for(auto k:b) res2.insert(j+k);
+					break;
+				case '-':
+					for(auto j:a)for(auto k:b) res2.insert(j-k);
+					break;
+				case '*':
+					for(auto j:a)for(auto k:b) res2.insert(j*k);
+					break;
+				case '/':
+					for(auto j:a)for(auto k:b)if(k!=0)res2.insert(j/k);
+					break;
+			}
+			for(auto j:res2) res.insert(j);
+		}
+	}
+	if(iscall)
+		return res.size();
+	else
+		return 1;
+}
+
+int main(void){
+	while(cin >> S){
+		int n=S.size();
+		if(S=="#")
+			break;
+		cout << exp(0,n) << endl;
+	}
+	return 0;
+}

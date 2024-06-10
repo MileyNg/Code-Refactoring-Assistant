@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+
+int main(void)
+{
+  int N,i,j;
+  double d,*a;
+  scanf("%d",&N);
+  for(i=0;i<N;i++){
+    a=malloc(sizeof(double)*6);
+    for(j=0;j<6;j++)
+      scanf("%lf",&a[j]);
+    d=sqrt((a[0]-a[3])*(a[0]-a[3])+(a[1]-a[4])*(a[1]-a[4]));
+    
+    if(a[2]>d+a[5])
+      printf("2\n");
+    else if(a[5]>d+a[2])
+      printf("-2\n");
+    else if(fabs(a[2]-a[5])<=d)
+      printf("1\n");
+    else if(a[2]+a[5]<d)
+      printf("0\n");
+    free(a);
+  }
+
+
+  return 0;
+}

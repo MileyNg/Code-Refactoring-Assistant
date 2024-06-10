@@ -1,0 +1,86 @@
+#include<iostream>
+#include<map>
+#include<queue>
+using namespace std;
+
+struct Worm{
+  int body[10];
+  bool operator < ( const Worm &p ) const{
+    for(int i=0;i<10;i++){
+      if(body[i]==p.body[i])continue;
+      return body[i] < p.body[i];
+    }
+  }
+};
+
+int size,nowcnt;
+Worm now,next,X;
+string str;
+map < Worm , bool > vd;
+queue <Worm> Q;
+queue < int > cnt;
+void input();
+void init();
+void solve();
+
+int main(){
+  while(cin>>str&&str!="0"){
+    input();
+    init();
+    solve();
+  }
+  return 0;
+}
+
+void init(){
+  vd.clear();
+  while(!Q.empty()){
+    Q.pop();
+    cnt.pop();
+  }
+}
+
+void input(){
+  size=str.size();
+  for(int i=0;i<size;i++){
+    if(str[i]=='r')X.body[i]=1;
+    if(str[i]=='g')X.body[i]=2;
+    if(str[i]=='b')X.body[i]=3;
+  }
+  for(int i=size;i<10;i++){
+    X.body[i]=0;
+  }
+}
+
+void solve(){
+  int count;
+  Q.push(X);
+  cnt.push(0);
+  vd[X]=true;
+
+  while(!Q.empty()){
+    now=Q.front();Q.pop();
+    nowcnt=cnt.front();cnt.pop();
+    
+    count=0;
+    for(int i=1;i<size;i++)
+      if(now.body[i]==now.body[i-1])count++;
+    if(count==size-1){
+      cout<<nowcnt<<endl;
+      return;
+    }
+    
+    for(int i=0;i<size-1;i++){
+      if(now.body[i]==now.body[i+1])continue;
+      next=now;
+      next.body[i]=next.body[i+1]=(6-now.body[i]-now.body[i+1]);
+      if(vd[next]==true)continue;
+      vd[next]=true;
+      Q.push(next);
+      cnt.push(nowcnt+1);
+
+    }
+
+  }
+  cout<<"NA"<<endl;
+}

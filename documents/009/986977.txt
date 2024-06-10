@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+
+int main(void){
+    int i,n,x,y,sq[15][15];
+	
+    while(scanf("%d",&n)){
+        if(n==0)break;
+		
+        for(i=0, x=n/2, y=n/2-1; i < n*n; i++){
+            if(i%n == 0) y += 2;
+            else {
+				y++;
+				x++;
+			}
+            y = y%n;
+			x = x%n;
+            sq[y][x]=i+1;
+        }
+        for(y=0; y < n; y++){
+            for(x=0; x < n; x++){
+                printf("%4d",sq[y][x]);
+            }
+            printf("\n");
+        }
+    }
+    return 0;
+}

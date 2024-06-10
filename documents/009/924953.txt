@@ -1,0 +1,50 @@
+#include <iostream>
+
+using namespace std;
+
+ int main(void) {
+
+
+	 int n;
+	 int stage[9][9];
+	 int cnt[3][9][10];
+
+	 cin >> n;
+
+	 for (int i = 0; i < n; i++){
+
+		 for (int j = 0; j < 9; j++){
+			 for (int k = 0; k < 9; k++){
+				 cin >> stage[j][k];
+			 }
+		 }
+
+		 for (int j = 0; j < 3; j++){
+			 for (int k = 0; k < 9; k++){
+				 for (int l = 0; l < 10; l++){
+					 cnt[j][k][l] = 0;
+				 }
+			 }
+		 }
+
+		 for (int j = 0; j < 9; j++){
+			 for (int k = 0; k < 9; k++){
+				 cnt[0][j][stage[j][k]]++;
+				 cnt[1][k][stage[j][k]]++;
+				 cnt[2][(j / 3) * 3 + k / 3][stage[k / 3 + (j / 3) * 3][k % 3 + (j % 3) * 3]]++;
+			 }
+		 }
+
+		 for (int j = 0; j < 9; j++){
+			 for (int k = 0; k < 9; k++){
+				 if (cnt[0][j][stage[j][k]] <= 1 && cnt[1][k][stage[j][k]] <= 1 && cnt[2][(j / 3) * 3 + k / 3][stage[k / 3 + (j / 3) * 3][k % 3 + (j % 3) * 3]] <= 1) cout << " " << stage[j][k];
+				 else cout << "*" << stage[j][k];
+			 }
+			 cout << endl;
+		 }
+
+	 }
+
+	 return 0;
+	
+}

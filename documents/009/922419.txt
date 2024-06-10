@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <string.h>
+#define cp 0
+#define LENGTH 21
+#define a 97
+#define z 122
+#define zero 48
+
+void func_ini(char *w);
+
+main()
+{
+	int n = 0;
+	int i = 0, j = 0, k = 0;
+	
+	scanf("%d", &n);
+	
+	char word[n][LENGTH];
+	char temp[LENGTH];
+	#if cp == 1
+	printf("---------------------\n");
+	#endif
+	for(i = 0; i < n; i++)
+	{
+		for(j = 0; j < LENGTH - 1; j++)
+		{
+			func_ini(&word[i][j]);
+			func_ini(&temp[j]);
+			#if cp == 2
+			printf("c = %c ", word[i][j]);
+			printf("d = %d\n ", word[i][j]);
+			#endif
+		}
+		#if cp == 2
+		printf("\n");
+		#endif
+	}
+	#if cp == 2
+	printf("初期化完了\n");
+	#endif
+	
+	for(i = 0; i < n; i++) //単語を取得
+	{
+		scanf("%s", word[i]);
+		#if cp == 2
+		for(j = 0; j < LENGTH; j++)
+		{
+			if(word[i][j] == '\0')
+			{
+				break;
+			}
+			printf("word[%d][%d] = %d\n", i, j, word[i][j]);
+		}
+		#endif
+	}
+	strcpy(temp, word[0]);
+	#if cp == 1
+	printf("temp = %s\n", temp);
+	#endif
+	
+	
+	for(i = 0; i < n; i++)
+	{
+		//printf("i = %d\n", i);
+		if(temp[0] > word[i][0])
+		{
+			strcpy(temp, word[i]);
+			#if cp == 1
+			printf("temp = %s\n", temp);
+			#endif
+		}
+		else if(temp[0] == word[i][0])
+		{
+			for(j = 0; j < LENGTH; j++)
+			{
+				if(temp[j] > word[i][j])
+				{
+					strcpy(temp, word[i]);
+					#if cp == 1
+					printf("temp = %s\n", temp);
+					#endif
+				}
+				else if((temp[j] == '\0') && (word[j] != '\0'))
+				{
+					break;
+				}
+				else if((temp[j] == '\0') && (word[j] == '\0'))
+				{
+					break;
+				}
+			}
+		}
+	}
+	
+	#if cp == 1
+	printf("result = ");
+	#endif
+	printf("%s\n", temp); //出力表示
+	return 0;
+}
+
+void func_ini(char *w) //配列初期化関数
+{
+	*w = '0';
+}

@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+int sch[110][10100];
+int inq[110];
+
+int main(){
+	int n, t;
+	while (cin >> n >> t, n | t){
+		MEMSET(sch, 0);
+		vector<int> cur(n), len(n);
+		rep(i, n){
+			int x;
+			int y = 0;
+			while (cin >> x, x){
+				for (int j = len[i]; j < len[i] + x; ++j){
+					sch[i][j] = y;
+				}
+				len[i] += x;
+				y ^= 1;
+			}
+		}
+		//rep(i, n){
+		//	rep(j, t){
+		//		cout << (sch[i][j%len[i]] ? "." : "*");
+		//	}
+		//	cout << endl;
+		//}
+
+		queue<int> q;
+		MEMSET(inq, 0);
+		int ans = 0;
+		rep(i, t){
+			rep(j, n){
+				if (inq[j]) continue;
+				if (sch[j][cur[j] % len[j]]){
+					q.push(j);
+					inq[j] = 1;
+				}
+				else{
+					++cur[j];
+				}
+			}
+			if (q.empty()) continue;
+			ans += q.size() - 1;
+			int use = q.front();
+			++cur[use];
+			if (!sch[use][cur[use] % len[use]]){
+				q.pop();
+				inq[use] = 0;
+			}
+		}
+		cout << ans << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+bool MAP[50][50];
+int X, Y;
+const int dx[8] = {-1, 0, 1, -1, 1, -1, 0, 1},
+          dy[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+
+void init() {
+  for (int i = 0; i < 50; i++)
+    for (int j = 0; j < 50; j++)
+      MAP[i][j] = false;
+}
+
+void sink_one_island(int x, int y) {
+  if (x < 0 or X < x or y < 0 or Y < y or !MAP[x][y])
+    return;
+
+  MAP[x][y] = false;
+  for (int i = 0; i < 8; i++)
+    sink_one_island(x + dx[i], y + dy[i]);
+}
+
+int sink_all_islands() {
+  int islands = 0;
+
+  for (int x = 0; x < X; x++) {
+    for (int y = 0; y < Y; y++) {
+      if (MAP[x][y]) {
+        sink_one_island(x, y);
+        islands++;
+      }
+    }
+  }
+
+  return islands;
+}
+
+int main() {
+  while (cin >> X >> Y and (X != 0 or Y != 0)) {
+    int s;
+
+    for (int y = 0; y < Y; y++) {
+      for (int x = 0; x < X; x++) {
+        cin >> s;
+        MAP[x][y] = (s == 1)? true:false;
+      }
+    }
+
+    int ids = sink_all_islands();
+
+    cout << ids << endl;
+  }
+}

@@ -1,0 +1,1 @@
+print min([input() for i in range(3)])+min([input() for i in range(2)]) -50

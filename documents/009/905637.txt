@@ -1,0 +1,108 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+#define vcitr vector<int>::iterator
+#define vcsitr vector<string>::iterator
+#define mapcitr map<char, int>::iterator
+#define mapsitr map<string, int>::iterator
+
+typedef long long ll;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) { x=a; y=b; }
+};
+
+typedef Point2D Vector2D;
+
+double dist2D(const Point2D& a, const Point2D& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) ); }
+
+Vector2D sub_vector2D(const Vector2D& a, const Vector2D& b) {
+	Vector2D ret;
+	ret.x = a.x - b.x; ret.y = a.y - b.y;
+	return ret;
+}
+
+double cross_product(const Vector2D& a, const Vector2D& b) { return a.x*b.y - a.y*b.x; }
+
+double inner_product(const Vector2D& a, const Vector2D& b) { return a.x*b.x + a.y*b.y; }
+
+bool point_in_triangle_2D(const Point2D& a, const Point2D& b, const Point2D& c, const Point2D& p) {
+	Vector2D ab = sub_vector2D(b, a); Vector2D bp = sub_vector2D(p, b);
+	Vector2D bc = sub_vector2D(c, b); Vector2D cp = sub_vector2D(p, c);
+	Vector2D ca = sub_vector2D(a, c); Vector2D ap = sub_vector2D(p, a);
+	double c1 = cross_product(ab, bp), c2 = cross_product(bc, cp), c3 = cross_product(ca, ap);
+	return ( (c1>0 && c2>0 && c3>0) || (c1<0 && c2<0 && c3<0) );
+}
+
+struct Circle {
+	Point2D c; 
+	double r;
+	Circle (double a=0, double b=0, double rr=0) { c.x=a; c.y=b; r=rr; }
+};
+
+bool point_in_circle(const Point2D& p, const Circle& t) {
+	double dist = dist2D(p, t.c);
+	return (dist <= t.r);
+}
+
+bool circle_collision (const Circle& a, const Circle& b) {
+	double len = dist2D(a.c, b.c);
+	return (len <= a.r+b.r);
+}
+
+bool circle_in_circle(const Circle& a, const Circle& b) {	// a in b
+	double len = dist2D(a.c, b.c);
+	return (a.r+len <= b.r);
+}
+
+int main() {
+	int n; cin >> n;
+	Circle a, b;
+	
+	for_(i, 0, n) {
+		cin >> a.c.x >> a.c.y >> a.r >> b.c.x >> b.c.y >> b.r;
+		
+		if (circle_in_circle(b, a)) cout << 2 << endl;
+		else if (circle_in_circle(a, b)) cout << -2 << endl;
+		else if (circle_collision(a, b)) cout << 1 << endl;
+		else cout << 0 << endl;
+	}
+	
+	return 0;
+}

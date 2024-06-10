@@ -1,0 +1,112 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <cstdio>
+using namespace std;
+
+const double EPS = 1e-9;
+template<typename T>
+T sqr(T a) { return a * a; }
+
+struct search_point {
+	double x, y;
+	double h;
+	search_point(double x_, double y_, double h_) {
+		x = x_; y = y_; h = h_;
+	}
+};
+
+int main() {
+	int N;
+	while(cin >> N, N) {
+		double sx, sy, ex, ey;
+		vector<search_point> v;
+		vector<pair<search_point,search_point> > line;
+		vector<pair<search_point,search_point> > lect;
+		cin >> sx >> sy >> ex >> ey;
+		double R = 10000;
+		for(int i = 0; i < N; i++) {
+			double x0, y0, x1, y1;
+			double h;
+			cin >> x0 >> y0 >> x1 >> y1 >> h;
+
+			if(h < EPS)
+				h = EPS;
+
+			v.push_back(search_point(x0, y0, h));
+			v.push_back(search_point(x1, y1, h));
+			v.push_back(search_point(x0, y1, h));
+			v.push_back(search_point(x1, y0, h));
+
+			line.push_back(pair<search_point,search_point>(search_point(x0, y0, 0), search_point(x1, y0, 0)));
+			line.push_back(pair<search_point,search_point>(search_point(x1, y0, 0), search_point(x1, y1, 0)));
+			line.push_back(pair<search_point,search_point>(search_point(x1, y1, 0), search_point(x0, y1, 0)));
+			line.push_back(pair<search_point,search_point>(search_point(x0, y1, 0), search_point(x0, y0, 0)));
+
+			lect.push_back(pair<search_point,search_point>(search_point(x0, y0, 0), search_point(x1, y1, 0)));
+
+			if(x0 < sx && sx < x1) {
+				v.push_back(search_point(sx, y0, h));
+				v.push_back(search_point(sx, y1, h));
+			}
+			if(y0 < sy && sy < y1) {
+				v.push_back(search_point(x0, sy, h));
+				v.push_back(search_point(x1, sy, h));
+			}
+			if(x0 < ex && ex < x1) {
+				v.push_back(search_point(ex, y0, h));
+				v.push_back(search_point(ex, y1, h));
+			}
+			if(y0 < ey && ey < y1) {
+				v.push_back(search_point(x0, ey, h));
+				v.push_back(search_point(x1, ey, h));
+			}
+		}
+
+		double veclx = (ex - sx);
+		double vecly = (ey - sy);
+
+		for(int i = 0; i < v.size(); i++) {
+			double d;
+			double mx, my;
+			double r;
+
+			mx = (v[i].x * sqr(veclx) + v[i].y * veclx * vecly + vecly * (sx * ey - sy * ex)) / (sqr(veclx) + sqr(vecly));
+			my = (v[i].y * sqr(vecly) + v[i].x * vecly * veclx + veclx * (sy * ex - sx * ey)) / (sqr(vecly) + sqr(veclx));
+			/*
+			if((ey - sy) * mx - (ex - sx) * my + (ex * sy - sx * ey) > EPS) {
+				cout << "error" << " " << (sy - ey) * mx - (sx - ex) * my - (ex * sy - sx * ey) << endl;
+				cout << mx << "," << my << endl;
+			}
+			// */
+			d = sqrt(sqr(mx - v[i].x) + sqr(my - v[i].y));
+			if(mx <= min(sx,ex) || max(sx,ex) <= mx || my <= min(sy,ey) || max(sy,ey) <= my) {
+				d = min(sqrt(sqr(sx - v[i].x) + sqr(sy -  v[i].y)), sqrt(sqr(ex - v[i].x) + sqr(ey - v[i].y)));
+			}
+			r = fabs(sqr(min(v[i].h,d)) + sqr(d)) / (2 * v[i].h);
+			R = min(R, r);
+		}
+		for(int i = 0; i < line.size(); i++) {
+			double x0, y0, x1, y1;
+			double s, t;
+			x0 = line[i].first.x; y0 = line[i].first.y;
+			x1 = line[i].second.x; y1 = line[i].second.y;
+
+			s = ((ex - sx) * (y1 - sy) - (ey - sy) * (x1 - sx)) / ((x0 - sx) * (y1 - sy) - (y0 - sy) * (x1 - sx));
+			t = ((ex - sx) * (y0 - sy) - (ey - sy) * (x0 - sx)) / ((x1 - sx) * (y0 - sy) - (y1 - sy) * (x0 - sx));
+
+			if(s > -EPS && t > -EPS && s + t > 1 - EPS) {
+				R = 0;
+			}
+		}
+		for(int i = 0; i < lect.size(); i++) {
+			bool flag0, flag1;
+			flag0 = lect[i].first.x < sx && sx < lect[i].second.x && lect[i].first.y < sy && sy < lect[i].second.y;
+			flag1 = lect[i].first.x < ex && ex < lect[i].second.x && lect[i].first.y < ey && ey < lect[i].second.y;
+
+			if(flag0 | flag1)
+				R = 0;
+		}
+		printf("%.10f\n", R);
+	}
+}

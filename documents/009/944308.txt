@@ -1,0 +1,83 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+
+int main(){
+	
+	string s;
+	while(getline(cin,s),s!="."){
+		bool f=true;
+		stringstream ss;
+		rep(i,s.size()){
+			if(s[i]=='('||s[i]==')'||s[i]=='['||s[i]==']'){
+				ss<<s[i];
+			}
+		}
+		string s2;
+		ss>>s2;
+		//cout<<s2<<endl;
+		string tmp=s2;
+		while(1){
+			//cout<<"s2 "<<s2<<endl;
+			stringstream ss2;
+			bool ff=false;
+			rep(i,s2.size()){
+				if(i==s2.size()-1){
+					ss2<<s2[i];
+					ff=true;
+				}
+				else if(s2[i]=='('&&s2[i+1]==')'){
+					i++;
+				}
+				else if(s2[i]=='['&&s2[i+1]==']'){
+					i++;
+				}
+				else{
+					ss2<<s2[i];
+					ff=true;
+				}
+			}
+			if(ff) ss2>>tmp;
+			else break;
+			//cout<<"tmp "<<tmp<<endl;
+			if(tmp==s2){
+				f=false;
+				break;
+			}
+			if(tmp.size()==0) break;
+			s2=tmp;
+		}
+		if(f) cout<<"yes"<<endl;
+		else cout<<"no"<<endl;
+				
+	}
+	return 0;
+}

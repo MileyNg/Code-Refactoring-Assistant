@@ -1,0 +1,65 @@
+#include <cstdio>
+using namespace std;
+
+int p[10][10], x, y, s, md;
+
+bool inpaper(int x, int y){
+    return x >= 0 && x < 10 && y >= 0 && y < 10;
+}
+
+void drop(int x, int y, int s){
+    int i, j;
+    if( s == 1 ){
+        for(i = -1; i <= 1; i++){
+            for(j = -1; j <= 1;  j++){
+                if( inpaper(x+i, y+j) &&
+                    i + j >= -1 && i + j <= 1 &&
+                    i - j >= -1 && i - j <= 1 ){
+                    p[x+i][y+j]++;
+                    if(p[x+i][y+j] > md) md = p[x+i][y+j];
+                }
+            }
+        }
+    }else if( s == 2 ){
+        for(i = -1; i <= 1; i++){
+            for(j = -1; j <= 1; j++){
+                if( inpaper(x+i, y+j) ){
+                    p[x+i][y+j]++;
+                    if(p[x+i][y+j] > md) md = p[x+i][y+j];
+                }
+            }
+        }
+    }else{
+        for(i = -2; i <= 2; i++){
+            for(j = -2; j <= 2; j++){
+                if( inpaper(x+i, y+j) && 
+                    i+j >= -2 && i+j <= 2 &&
+                    i-j >= -2 && i-j <= 2){
+                    p[x+i][y+j]++;
+                    if(p[x+i][y+j] > md) md = p[x+i][y+j];
+                }
+            }
+        }
+    }
+}
+
+int main(){
+    md = 0;
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10;j++){
+            p[i][j] = 0;
+        }
+    }
+    while( scanf("%d,%d,%d", &x, &y, &s) != EOF ){
+        drop(x, y, s);
+    }
+    int empt = 0;
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10;j++){
+            empt += p[i][j]?0:1;
+        }
+    }
+    printf("%d\n%d\n", empt, md);
+    
+    return 0;
+}

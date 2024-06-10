@@ -1,0 +1,56 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int n;
+  for(;cin>>n;)
+    {
+      int data[n][n];
+      int sum_data[n][n];
+      int ans=-10000;
+      for(int i=0;i<n;i++)
+	for(int j=0;j<n;j++)
+	  {
+	    cin>>data[i][j];
+	    int sum=data[i][j];
+	    if(i>0)
+	      sum+=sum_data[i-1][j];
+	    if(j>0)
+	      sum+=sum_data[i][j-1];
+	    if(i>0 && j>0)
+	      sum-=sum_data[i-1][j-1];
+	    sum_data[i][j]=sum;
+	  }
+      /*
+      for(int i=0;i<n;i++,cout<<endl)
+	for(int j=0;j<n;j++)
+	  {
+	    cout<<sum_data[i][j]<<" ";
+	  }
+      */
+      for(int i=0;i<n;i++)
+	for(int j=0;j<n;j++)
+	  {
+	    ans=max(ans,sum_data[i][j]);
+	    for(int ii=i;ii>=0;ii--)
+	      for(int jj=j;jj>=0;jj--)
+		{
+		  int sum=sum_data[i][j];
+		  if(ii!=i)
+		    sum-=sum_data[ii][j];
+		  if(jj!=j)
+		    sum-=sum_data[i][jj];
+		  if(ii!=i && jj!=j)
+		    {
+		      //		      int tmp1=min(ii,i);
+		      sum+=sum_data[ii][jj];
+		    }
+		  ans=max(ans,sum);
+		}
+	  }
+      cout<<ans<<endl;
+
+    }
+
+}

@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+#define DEBUG(x) cerr << #x << " = " << x << endl
+
+int main()
+{
+    int n, p;
+    while (cin>>n>>p, n||p) {
+        int get[50]={0}, stone=p, win=-1, i=0;
+        while (1) {
+            if (stone==0) {
+                stone+=get[i];
+                get[i]=0;
+            } else {
+                stone--;
+                get[i]++;
+                if (stone==0) {
+                    for (int j=0; j<n; j++) {
+                        if (get[j] != 0 && i!= j){
+                          goto end;
+                        }
+                    }
+                    win = i; break;
+                end:;
+                }
+            }
+            i= (i+1)%n;
+        }
+        cout << win << endl;
+    }
+    return 0;
+}

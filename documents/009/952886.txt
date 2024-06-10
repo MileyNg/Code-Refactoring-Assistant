@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(){
+  int ans[4]={0,0,0,0};
+  // data[i] テ」ツ?ッ i テァツ閉ェテ」ツ?ョテ、ツコツコテ」ツ?ョティツ。ツ?ヲツカツイテ・ツ楪凝」ツつ津ィツ。ツィテ」ツ??
+  static int data[1<<25]={};
+  int i;
+  int cnt = 0;
+  int t;
+  char blood[5];
+  int a=0, b=0, o=0, ab=0;
+
+  while(scanf("%d,%s",&t, blood)!=EOF){
+    if(blood[0]=='A'&&blood[1]=='B') data[t] = 3;
+    else if(blood[0]=='A') data[t] = 0;
+    else if(blood[0]=='B') data[t] = 1;
+    else if(blood[0]=='O') data[t] = 2;
+    cnt++;
+  }
+
+  for(i=0; i<cnt; i++){
+    if(data[i] == 0) a++;
+    if(data[i]==1) b++;
+    if(data[i]==2) o++;
+    if(data[i]==3) ab++;
+  }
+
+  printf("%d\n%d\n%d\n%d\n",a,b,ab,o);
+  return 0;
+}

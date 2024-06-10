@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct {
+char name[10];
+int speed;
+long time;
+}  Process;
+
+int main()
+{
+Process S[10000],Fin[10000];
+long i;
+int z,num=0,qua=0;
+long s_top =0,s_tail=0;
+long fnum=0,time_spend=0;
+
+scanf("%d %d",&num,&qua);
+//printf("%d %d\n",num,qua);
+for(i=0;i<num;i++)
+{
+z=scanf("%s %d",S[i].name,&S[i].speed);
+S[i].time =0;
+//printf("%s %d\n",S[i].name,S[i].speed);
+if(z==EOF) break;
+}
+s_tail = num;
+
+for(i=0;i<1000000000000;i++)
+{
+if(qua >= S[i].speed)
+{
+	time_spend+= S[i].speed;
+ Fin[fnum].speed = S[i].speed;
+strcpy(Fin[fnum].name,S[i].name);
+Fin[fnum].time= time_spend;
+//printf("finish  %s %d\n",Fin[fnum].name,Fin[fnum].time);
+fnum++;
+}
+else 
+{
+	time_spend+= qua;
+ S[s_tail].speed = S[i].speed - qua;
+strcpy(S[s_tail].name,S[i].name);
+// printf("%s  %d\n",S[s_tail].name,S[s_tail].speed);
+s_tail++;
+}
+if(fnum==num) break;
+}
+  
+for(i=0;i<num;i++)
+{
+printf("%s %d\n",Fin[i].name,Fin[i].time);
+}
+return 0;
+}

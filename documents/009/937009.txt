@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+struct UnionFind {
+    vector<int> data;
+    UnionFind(int size) : data(size, -1) { }
+    bool unionSet(int x, int y) {
+        x = root(x); y = root(y);
+        if (x != y) {
+            if (data[y] < data[x]) swap(x, y);
+            data[x] += data[y]; data[y] = x;
+        }
+        return x != y;
+    }
+    bool findSet(int x, int y) {
+        return root(x) == root(y);
+    }
+    int root(int x) {
+        return data[x] < 0 ? x : data[x] = root(data[x]);
+    }
+    int size(int x) {
+        return -data[root(x)];
+    }
+    int count(){
+        int c = 0;
+        rep(i, data.size()){
+            if (data[i] < 0) c++;
+        }
+        return c;
+    }
+};
+
+int main()
+{
+    int h, w;
+    while (w = in(), h = in(), w || h){
+        vector<string> field;
+        rep(i, h){
+            string s;
+            cin >> s;
+            field.push_back(s);
+        }
+        UnionFind uf(h * w);
+        rep(i, h){
+            rep(j, w){
+                if (i + 1 < h && field[i][j] == field[i + 1][j]){
+                    uf.unionSet(i * w + j, i * w + j + w);
+                }
+                if (j + 1 < w && field[i][j] == field[i][j + 1]){
+                    uf.unionSet(i * w + j, i * w + j + 1);
+                }
+                if (i - 1 >= 0 && field[i][j] == field[i - 1][j]){
+                    uf.unionSet(i * w + j, i * w + j - w);
+                }
+                if (j - 1 >= 0 && field[i][j] == field[i][j - 1]){
+                    uf.unionSet(i * w + j, i * w + j - 1);
+                }
+            }
+        }
+        printf("%d\n", uf.count());
+    }
+    return (0);
+}

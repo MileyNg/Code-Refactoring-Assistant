@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void) {
+	int n;
+	int result;
+	
+	// http://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1154186366
+	// 階乗のなかで、０が増えるのは、２と５を約数にもった数を
+	// 掛けたときです。特に２と５の２つを比べると
+	// 圧倒的に５が少ないですから、５の倍数を調べて５の約数の数を
+	// 見つけるのです。そして５の約数の数だけ０が増えていくのです。
+	while(scanf("%d\n", &n) == 1) {
+		if(n==0) break;
+		result = 0;
+		while(n!=0) {
+			n /= 5;
+			result += n;
+		}
+		printf("%d\n", result);
+	}
+	
+	return 0;
+}

@@ -1,0 +1,90 @@
+#include<cstdio>
+#include<cstdlib>
+#include<utility>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+const int INF=99999;
+typedef struct p{int pos,dis;}p;
+typedef struct e{int to,cost;}e;
+
+
+int N,M,L,K,A,H,C[100],D[100];;
+
+
+struct Order
+{
+	bool operator ()(p const& a, p const& b) const
+	{
+		return a.dis>b.dis;
+	}
+};
+
+void dij(int s,vector<e>E[100])
+{
+	priority_queue<p,vector<p>,Order>Q;
+	fill(D,D+N,INF);
+	D[s]=0;
+	p tmp={s,0};
+	Q.push(tmp);
+	for(;!Q.empty();)
+	{
+		tmp=Q.top();Q.pop();
+		if(D[tmp.pos]<tmp.dis)continue;
+		for(int i=0;i<E[tmp.pos].size();i++)
+		{
+			e next=E[tmp.pos][i];
+			if(D[next.to]>D[tmp.pos]+next.cost)
+			{
+				D[next.to]=D[tmp.pos]+next.cost;
+				p ins={next.to,D[tmp.pos]+next.cost};
+				Q.push(ins);
+			}
+		}
+	}
+}
+
+int main()
+{
+	for(;scanf("%d%d%d%d%d%d",&N,&M,&L,&K,&A,&H),N;)
+	{
+		vector<e> G[100],G2[100];
+		memset(C,0,sizeof(C));
+		C[A]=C[H]=1;
+		for(int i=0;i<L;i++)
+		{
+			int t;
+			scanf("%d",&t);
+			C[t]=1;
+		}
+		for(int i=0;i<K;i++)
+		{
+			int x,y,t;
+			scanf("%d%d%d",&x,&y,&t);
+			e e1={x,t},e2={y,t};
+			G[y].push_back(e1);
+			G[x].push_back(e2);
+		}
+		for(int i=0;i<N;i++)
+		{
+			dij(i,G);
+			for(int j=0;j<N;j++)
+			{
+				if(C[j])
+				{
+					if(i!=j&&D[j]<=M)
+					{
+						e e1={j,D[j]};
+						G2[i].push_back(e1);
+					}
+				}
+			}
+		}
+		dij(A,G2);
+		if(D[H]==INF)
+			puts("Help!");
+		else
+			printf("%d\n",D[H]-min(0,M-D[H]));
+	}
+}

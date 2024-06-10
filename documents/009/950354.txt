@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+#define rep(i, b) for( int i = 0; i < b; i++ )
+typedef vector<char> vec;
+
+// char op[5] = { '=', '-', '+' , '*', '/' };
+// char num[10] = {'0','1','2','3','4','5','6','7','8','9'};
+
+int main(){
+    int h, w;
+    while( cin >> h >> w, h ){
+        vector< vector<int> > exist( h, vector<int>(w) );
+        fill( exist.begin(), exist.end(), 0 );
+        vector< vec > grid( h, vec(w) );
+        rep(i, h){
+            rep(j, w){
+                char cell;
+                cin >> cell;
+                grid[i][j] = cell;
+                if( cell != '#' ) exist[i][j]++;
+            }
+        }
+        vector< vec > formula;
+        rep(i, h){
+            rep(j, w){
+                if( exist[i][j] && exist[i][j+1] ){
+                    int k = 0;
+                    vec fml;
+                    while( exist[i][j+k] ){
+                        fml.push_back( grid[i][j+k] );
+                        exist[i][j+k]--;
+                        k++;
+                    }
+                    formula.push_back(vec(fml));
+                }
+                if( exist[i][j] && exist[i+1][j] ){
+                    int k = 0;
+                    vec fml;
+                    while( exist[i+k][j] ){
+                        fml.push_back( grid[i+k][j] );
+                        exist[i+k][j]--;
+                        k++;
+                    }
+                    formula.push_back(vec(fml));
+                }
+            }
+        }
+    }
+}

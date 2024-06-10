@@ -1,0 +1,50 @@
+### constant
+
+MAX_P = 10000
+
+### subroutines
+
+def gen_primes(max_p)
+  primes = Array.new(max_p + 1){true}
+  primes[0] = primes[1] = false
+
+  for p in (2..max_p)
+    if primes[p]
+      for q in (p * p).step(max_p, p)
+        primes[q] = false
+      end
+    end
+  end
+
+  for p in (2..max_p)
+    if primes[p]
+      yield p
+    end
+  end
+
+end
+
+### main
+
+p_nums = []
+gen_primes(MAX_P){|p| p_nums << p }
+num_p = p_nums.length
+
+p_pairs = p_nums[0, num_p - 1].zip(p_nums[1, num_p - 1])
+num_pp = p_pairs.length
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  k = num_pp - 1
+  while p_pairs[k][1] > n
+    k -= 1
+  end
+
+  while p_pairs[k][0] != p_pairs[k][1] - 2
+    k -= 1
+  end
+
+  puts p_pairs[k].join(' ')
+end

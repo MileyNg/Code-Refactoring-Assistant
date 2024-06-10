@@ -1,0 +1,60 @@
+#include <stdio.h>
+#define N 10000
+int isprime(int, int);
+int main()
+{
+  int input;
+  int data[N];
+  int count=0;
+  int  n;
+  int i, j;
+
+  scanf("%d",&n);
+  for( i=0; i<n; i++ )
+    {
+      scanf("%d",&input);
+      if( input >= 2 || input <= 10^8)
+	{
+	  data[i] = input;
+	}
+    }
+
+  for( i = 0; i < n; i++ )
+    {
+      if( isprime(data[i],n) == 1 )
+	{
+	  count++;
+	}
+    }
+
+  printf("%d\n",count);
+  return 0;
+}
+
+int isprime(int x,int n)
+{
+  /*this function will return 1 for a prime number and 0 for non-prime number*/
+  int i = 2;
+  int tmp = 1;
+  for( i = 2; i < n; i++ )
+    {
+      if( x <= i ) break;
+      if( x == 2 )
+	{
+	  return 1;
+	}
+      else if ( x == 0)
+	{
+	  return 0;
+	} 
+      else if( x % i == 0 )
+	{
+	  tmp = 0;  
+	}
+    }
+  if( tmp == 1 )
+    {
+      return 1;
+    }
+  else return 0;
+}

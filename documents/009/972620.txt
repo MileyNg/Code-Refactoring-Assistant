@@ -1,0 +1,23 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(void) {
+    char a, b;
+    bool t[3] = {true, false, false};
+    while (true) {
+        cin >> a;
+        cin.ignore();
+        cin >> b;
+        if (cin.eof()) break;
+        swap(t[int(a - 'A')], t[int(b - 'A')]);
+    }
+    for (int i = 0; i < 3; i++) {
+        if (t[i]) {
+            cout << char('A' + i) << endl;
+            break;
+        }
+    }
+    return 0;
+}

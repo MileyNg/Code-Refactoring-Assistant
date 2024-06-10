@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+#define MAX 50000
+using namespace std;
+
+int dp[MAX];
+int prm[MAX];
+
+int main()
+{
+    fill(prm, prm + MAX, 1);
+    prm[0] = prm[1] = 0;
+    for (int i = 2; i < MAX; i++)
+        for (int j = 2; j * i <= MAX; j++)
+            prm[i * j] = 0;
+
+    int n;
+    while (cin >> n, n > 0) {
+        if (prm[n]) {cout << "0" << endl; continue;}
+        if (dp[n] > 0) {cout << dp[n] << endl; continue;}
+        for (int i = 0; i < n; i++)
+            for (int j = i; j < n; j++)
+                if (prm[i] == 1 && prm[j] == 1 && i + j == n)
+                    dp[n]++;
+        cout << dp[n] << endl;
+    }
+
+    return 0;
+}

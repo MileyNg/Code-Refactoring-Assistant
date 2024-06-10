@@ -1,0 +1,69 @@
+#include <stdio.h>
+#define N 500000
+#define P 250000
+#define M 10000000
+int s[M],count=0;
+
+void MergeSort(int *, int ,int);
+void Merge(int *, int, int, int);
+
+main(){
+  int n,i,left,right;
+
+  scanf("%d",&n);
+  for(i=0; i<n; i++)
+    scanf("%d",&s[i]);
+
+ 
+  left=0;
+  right=n;
+
+  MergeSort(s,left,right);
+
+  for(i=0; i<n; i++)
+    printf("%d",s[i]);
+  printf("\n%d\n",count);
+  return 0;
+
+}
+
+
+void MergeSort(int *s, int left, int right){
+  int mid;
+  if(left+1<right){
+    mid=(left+right)/2;
+    MergeSort(s,left,mid);
+    MergeSort(s,mid,right);
+    Merge(s,left,mid,right);
+  }
+}
+  
+void Merge(int *s, int left, int mid, int right){
+  int n1,n2,i,j,k;
+  int l[P],r[P];
+  
+  n1=mid-left;
+  n2=right-mid;
+  for(i=0; i<n1; i++)
+    l[i]=s[left+i];
+  for(i=0; i<n2; i++)
+    r[i]=s[mid+i];
+  
+  l[n1]=1000000;
+  r[n2]=1000000;
+  
+  i=0;
+  j=0;
+  
+  for(k=left; k<right; k++){
+    if(l[i]<=r[j]){
+      s[k]=l[i];
+      i++;
+    }
+    else {
+      s[k]=r[j];
+      j++;
+    }
+    count++;
+  }
+}

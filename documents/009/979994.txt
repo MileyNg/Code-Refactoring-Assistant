@@ -1,0 +1,89 @@
+//include
+//------------------------------------------
+#include <bits/stdc++.h> // only for GCC
+
+using namespace std;
+
+//typedef
+//------------------------------------------
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef pair<int, int> pii;
+typedef long long ll;
+typedef unsigned long long ull;
+
+//container util
+//------------------------------------------
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+
+//repetition
+//------------------------------------------
+#define loop(i,a,b) for(ull i=(a);i<ull(b);++i)
+#define rep(i,n) loop(i,0,n)
+#define iter(i,c) for(auto i=(c).begin(); i!=(c).end(); ++i)
+#define riter(i,c) for(auto i=(c).rbegin(); i!=(c).rend(); ++i)
+
+//constant
+//--------------------------------------------
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const double inf = (int)1e8;
+
+// output vector
+// ------------------------------------------
+namespace std {
+    template<typename T>ostream&operator<<(ostream&os, vector<T>const&v){
+        iter(it,v) os<<*it<<(it+1==v.end()?"":",");
+        return os;
+    }
+    template<typename T, typename U>ostream&operator<<(ostream&os,const pair<T,U>&p){
+        return os << "[" << p.dirst << "," << p.second << "]";
+    }
+}
+
+//clear memory
+// ------------------------------------------
+#define clr(a,i) memset((a), (i) ,sizeof(a))
+
+int main(){
+   int y,m,d;
+   while(cin >> y >> m >> d){
+      if(y<1868) cout << "pre-meiji" << endl;
+      else if(y==1868){
+         if(m<9) cout << "pre-meiji" << endl;
+         else if(m==9){
+            if(d<8) cout << "pre-meiji" << endl;
+            else cout << "meiji " << y-1867 << " " << m << " " << d << endl;
+         }else cout << "meiji " << y-1867 << " " << m << " " << d << endl;
+      }
+      else if(y<1912) cout << "meiji " << y-1867 << " " << m << " " << d << endl;
+      else if(y==1912){
+         if(m<7) cout << "meiji " << y-1867 << " " << m << " " << d << endl;
+         else if(m==7){
+            if(d<30) cout << "meiji " << y-1867 << " " << m << " " << d << endl;
+            else cout << "taisho " << y-1911 << " " << m << " " << d << endl;
+         }else cout << "taisho " << y-1911 << " " << m << " " << d << endl;
+      }
+      else if(y<1926) cout << "taisho " << y-1911 << " " << m << " " << d << endl;
+      else if(y==1926){
+         if(m<12) cout << "taisho " << y-1911 << " " << m << " " << d << endl;
+         else if(m==12){
+            if(d<25) cout << "taisho " << y-1911 << " " << m << " " << d << endl;
+            else cout << "showa " << y-1925 << " " << m << " " << d << endl;
+         }
+      }
+      else if(y<1989) cout << "showa " << y-1925 << " " << m << " " << d << endl;
+      else if(y==1989){
+         if(m==1){
+            if(d<8) cout << "showa " << y-1925 << " " << m << " " << d << endl;
+            else cout << "heisei " << y-1988 << " " << m << " " << d << endl;
+         }else cout << "heisei " << y-1988 << " " << m << " " << d << endl;
+      }else cout << "heisei " << y-1988 << " " << m << " " << d << endl;
+   }
+}

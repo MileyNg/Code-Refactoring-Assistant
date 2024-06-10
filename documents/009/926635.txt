@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+
+using namespace std;
+
+int main()
+{
+	int n, m;
+	char c1, c2;
+	vector<pair<char, char> > conv;
+	vector<char> data;
+
+	while(cin >> n)
+	{
+		if(n == 0)
+			break;
+
+		for (int i=0; i<n; i++)
+		{
+			cin >> c1 >> c2;
+			conv.push_back (make_pair(c1, c2));
+		}
+	
+		cin >> m;
+	
+		for (int i=0; i<m; i++)
+		{
+			cin >> c1;
+	
+			for (int j=0; j<n; j++)
+			{
+				if (c1 == conv[j].first)
+				{
+					c1 = conv[j].second;
+					break;
+				}
+			}
+	
+			data.push_back (c1);
+		}
+
+		for(int i=0; i<m; i++)
+			cout << data[i];
+	
+		cout << endl;
+
+		conv.clear();
+		data.clear();
+	}
+	
+	return 0;
+}

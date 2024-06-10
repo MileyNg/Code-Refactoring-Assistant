@@ -1,0 +1,35 @@
+def getxy(pic):
+	flag = 0
+	for dy in range(m):
+		for dx in range(m):
+			if pic[dy][dx] > -1:
+				ans = str(x+dx+1)+" "+str(y+dy+1)
+				flag = 1
+				break
+		if flag == 1: break
+	return ans
+	
+while 1:
+	n,m = map(int,raw_input().split())
+	if n == 0: break
+	scene = [map(int,raw_input().split()) for i in range(n)]
+	pic = [map(int,raw_input().split()) for i in range(m)]
+	ans = "NA"
+	for rot in range(4):
+		if scene == pic:
+			ans = getxy(pic)
+		for y in range(n-m):
+			for x in range(n-m):
+				flag = 0
+				for dy in range(m):
+					for dx in range(m):
+						if pic[dy][dx] > -1 and scene[y+dy][x+dx] - pic[dy][dx] != 0:
+							flag = 1
+							break
+					if flag == 1: break
+				if flag == 0:
+					ans = getxy(pic)
+			if flag == 0: break
+		if flag == 0: break
+		pic = [[pic[j][i] for j in range(m-1,-1,-1)] for i in range(m)]
+	print ans

@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace contest11
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string read = Console.ReadLine();
+
+            int vertical_num = int.Parse(read);
+
+            //縦線
+            int[] vert_array = new int[vertical_num];
+            for (int i = 0; i < vertical_num; i++)
+            {
+                vert_array[i] = i + 1;
+            }
+
+            //横線の数
+            read = Console.ReadLine();
+            int hori_num = int.Parse(read);
+
+            for (int i = 0; i < hori_num; i++)
+            {
+                string read_line = Console.ReadLine();
+                char[] text_split = ",".ToCharArray();
+                string[] chang = read_line.Split(text_split);
+
+                //入れ替える
+                int tmp = vert_array[int.Parse(chang[0])-1];
+                vert_array[int.Parse(chang[0]) - 1] = vert_array[int.Parse(chang[1]) - 1];
+                vert_array[int.Parse(chang[1]) - 1] = tmp;
+
+            }
+
+            foreach (int num in vert_array)
+            {
+                Console.WriteLine(num);
+            }
+        }
+    }
+}

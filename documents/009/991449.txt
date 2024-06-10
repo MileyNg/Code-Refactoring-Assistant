@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <map>
+#include <unordered_map>
+
+using namespace std;
+
+int main()
+{
+    int n, i;
+    int key[52];
+    string s;
+    char ans[100];
+
+
+    while(cin >> n){
+        if(n == 0) break;
+
+        for(i = 0; i < n; i++){
+            cin >> key[i];
+        }
+        cin >> s;
+
+        for(i = 0; i < s.size(); i++){
+            if(s[i] >= 'a' && s[i] <= 'z'){
+                int num = key[i % n] - (s[i] - 'a');
+                if(num > 0){
+                    ans[i] = 'Z' - num;
+                } else {
+                    ans[i] = s[i] - key[i % n];
+                }
+            } else {
+                int num = key[i % n] - (s[i] - 'A');
+                if(num > 0){
+                    ans[i] = 'z' - num;
+                } else {
+                    ans[i] = s[i] - key[i % n];
+                }
+            }
+        }
+        ans[s.size()] = '\0';
+
+        cout << ans << endl;
+    }
+
+    return 0;
+}

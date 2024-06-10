@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+
+    int n, S, q, T;
+    vector<int> uS(100000);
+    cin >> n;
+    int k = 0;
+    for (int i=0; i<n; ++i) {
+        cin >> S;
+        if (k == 0 || uS[k] != S) {
+            uS[k] = S;
+            k ++;
+        }
+    }
+
+    int ans = 0;
+    cin >> q;
+    for (int i=0; i<q; ++i) {
+        cin >> T;
+        if (binary_search(uS.begin(), uS.begin() + k, T)) ans ++;
+    }
+    cout << ans << endl;
+    return 0;
+}

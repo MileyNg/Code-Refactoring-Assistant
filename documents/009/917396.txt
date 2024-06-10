@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int times[10001][721];
+
+int main() {
+    int n, m;
+    while( cin >> n >> m, n||m ) {
+        memset( times, 0, sizeof(times) );
+        int r;
+        cin >> r;
+        for(int i=0; i<r; i++) {
+            int t, n, m, s;
+            cin >> t >> n >> m >> s;
+            if( s == 1 ) {
+                times[m][t-540] += 1;
+            } else {
+                times[m][t-540] += -1;
+            }
+        }
+        int q;
+        cin >> q;
+        for(int i=0; i<q; i++) {
+            int res = 0;
+            int ts, te, m;
+            cin >> ts >> te >> m;
+            int state = 0;
+            for(int i=0; i<te-540; i++) {
+                if( times[m][i] != 0 ) {
+                    state += times[m][i];
+                }
+                if( i >= ts-540 && state>0 ) {
+                    res++;
+                }
+            }
+            cout << res << endl;
+        }
+    }
+    return 0;
+}

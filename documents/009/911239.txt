@@ -1,0 +1,71 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+import std.ascii;
+ 
+void main() {
+    int r, c; readf("%d %d\n", &r, &c);
+    string[] F = new string[r];
+    foreach (ref L; F) L = readln.chomp;
+
+    const INF = int.max / 2;
+    const C = 100_000_007;
+
+    int[immutable(int[])][10][10] memo;
+    int dfs(int y, int x, int[] u) {
+        if (y == r) return u.all!"a == 0";
+        if (x == c) return dfs(y + 1, 0, u);
+        //writeln([y, x], " ", u);
+        if (F[y][x] == '.') return dfs(y, x + 1, u);
+        if (u in memo[y][x]) return memo[y][x][u];
+        assert(F[y][x].isDigit);
+        int v = F[y][x] - '0';
+        //writeln(v, " ", u[x]);
+        int[] u1 = u.dup;
+        v -= u1[x];
+        u1[x] = 0;
+        if (v < 0 || 4 < v) return 0;
+        int ret = 0;
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
+                if (i + j != v) continue;
+                int[] u2 = u1.dup;
+                if (j != 0) {
+                    foreach (k; x + 1 .. c) {
+                        if (F[y][k].isDigit) {
+                            u2[k] += j;
+                            goto found;
+                        }
+                        if (u[k]) break;
+                    }
+                    continue;
+                }
+                found: u2[x] = i;
+                ret = (ret + dfs(y, x + 1, u2)) % C;
+            }
+        }
+        return memo[y][x][cast(immutable)u] = ret;
+    }
+
+    writeln(dfs(0, 0, (new int[c])));
+    const D = false;
+    static if (D) {
+        foreach (i; 0 .. r) {
+            foreach (j; 0 .. c) {
+                writeln(i, " ", j, " ", memo[i][j]);
+            }
+        }
+    }
+
+}

@@ -1,0 +1,99 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int h, w, d, n;
+    readf("%d %d %d %d\n", &h, &w, &d, &n);
+    auto F = new string[h];
+    foreach (ref _; F) _ = readln.chomp;
+    int[] R = readln.chomp.split(" ").map!(to!int).array ~ int.max;
+    auto C = new int[][](h, w);
+
+    void f(int y, int x, int r, int z) {
+        foreach (i; 0 .. h) {
+            if (abs(y - i) > r) continue;
+            foreach (j; 0 .. w) {
+                if (abs(x - j) > r) continue;
+                C[i][j] += z;
+            }
+        }
+    }
+
+    auto reachable = new bool[][](h, w);
+    void bfs() {
+        struct P {int y, x;}
+        DList!P Q;
+        int sy, sx;
+        foreach (i; 0 .. h) foreach (j; 0 .. w) {
+            if (F[i][j] == 'D') {
+                sy = i; sx = j;
+            }
+        }
+        Q.insert(P(sy, sx));
+        reachable[sy][sx] = true;
+        while (!Q.empty) {
+            P p = Q.front; Q.removeFront;
+            static const dy = [1, 0, -1, 0], dx = [0, 1, 0, -1];
+            foreach (i; 0 .. 4) {
+                int ny = p.y + dy[i], nx = p.x + dx[i];
+                if (ny < 0 || ny >= h) continue;
+                if (nx < 0 || nx >= w) continue;
+                if (reachable[ny][nx]) continue;
+                if (F[ny][nx] == '#') continue;
+                reachable[ny][nx] = true;
+                Q.insert(P(ny, nx));
+            }
+        }
+    }
+    bfs();
+
+    foreach (i; 0 .. n) {
+        int x, y, s; readf("%d %d %d\n", &x, &y, &s);
+        if (s >= 0) f(y, x, R[s], 1);
+        if (s >= 1) f(y, x, R[s - 1], -1);
+        //[y, x, R[s]].writeln;
+        //foreach (_; C) _.writeln;
+    }
+
+    int[][] c;
+    foreach (i; 0 .. h) {
+        foreach (j; 0 .. w) {
+            if (C[i][j] == n && F[i][j] != '#') {
+                c ~= [i, j];
+            }
+        }
+    }
+    if (c.length == 0) {
+        "Broken".writeln;
+    } else if (c.length >= 2) {
+        int a;
+        foreach (x; c) {
+            if (reachable[x[0]][x[1]]) a++;
+        }
+        if (a == c.length) {
+            "Yes".writeln;
+        } else if (a == 0) {
+            "No".writeln;
+        } else {
+            "Unknown".writeln;
+        }
+    } else { assert(c.length == 1);
+        if (reachable[c[0][0]][c[0][1]]) {
+            "Yes".writeln;
+        } else {
+            "No".writeln;
+        }
+    }
+}

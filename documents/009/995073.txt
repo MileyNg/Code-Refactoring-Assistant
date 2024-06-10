@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <map>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include <queue>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+char soroban_table[8][10]={
+    '*','*','*','*','*',' ',' ',' ',' ',' ',
+    ' ',' ',' ',' ',' ','*','*','*','*','*',
+    '=','=','=','=','=','=','=','=','=','=',
+    ' ','*','*','*','*',' ','*','*','*','*',
+    '*',' ','*','*','*','*',' ','*','*','*',
+    '*','*',' ','*','*','*','*',' ','*','*',
+    '*','*','*',' ','*','*','*','*',' ','*',
+    '*','*','*','*',' ','*','*','*','*',' '
+};
+
+/*
+*****
+     *****
+==========
+ **** ****
+* **** ***
+** **** **
+*** **** *
+**** ****
+*/
+int main(){
+    string input;
+    while(cin >> input){
+        while(input.length()<5){
+            input='0'+input;
+        }
+        for(int i=0; i<8; i++){
+            for(int j=0; j<input.length(); j++){
+                cout<<soroban_table[i][input[j]-'0'];
+            }
+            cout<<endl;
+        }
+        cout<<endl;
+    }
+}

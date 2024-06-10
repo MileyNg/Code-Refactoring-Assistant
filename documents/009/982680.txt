@@ -1,0 +1,75 @@
+#include <stdio.h>
+
+#define N 100001
+
+typedef struct{
+  int parent;
+  int left;
+  int right;
+}Node;
+
+Node T[N];
+
+int main(){
+  int n, i, j, buf;
+  int id, degree, depth[N];
+
+  scanf("%d", &n);
+
+  for(i = 0; i < n; i++){
+    T[i].parent = -1;
+    T[i].left = N;
+    T[i].right = N;
+  }
+  
+  for(i = 0; i < n; i++){
+    scanf("%d%d", &id, &degree);
+    
+    if(degree == 1){
+      scanf("%d",&T[id].left);
+      buf = T[id].left;
+      T[buf].parent = id;
+    }
+    else if(degree > 1){
+      scanf("%d",&T[id].left);
+      buf = T[id].left;
+      for(j = 1; j < degree; j++){
+	scanf("%d", &T[buf].right);
+	T[buf].parent = id;
+	buf = T[buf].right;
+      }
+      T[buf].parent = id;
+    }
+  }
+  
+  for(i = 0; i < n; i++){
+    if(T[i].parent == -1) depth[i] = 0;
+    else depth[i] = depth[T[i].parent] + 1;
+    printf("node %d: parent = %d, depth = %d,", i, T[i].parent, depth[i]);
+    
+    if(T[i].parent == -1){
+      if(T[i].left == N) printf(" root, []\n");
+      else{
+      printf(" root, [%d", T[i].left);
+      buf = T[i].left;
+      while(T[buf].right != N){
+	printf(", %d", T[buf].right);
+	buf = T[buf].right;
+      }
+      printf("]\n");
+      }
+    }
+    else if(T[i].left == N)
+      printf(" leaf, []\n");
+    else{
+      printf(" internal node, [%d", T[i].left);
+      buf = T[i].left;
+      while(T[buf].right != N){
+	printf(", %d", T[buf].right);
+	buf = T[buf].right;
+      }
+      printf("]\n");
+    }
+  }
+  return 0;
+}

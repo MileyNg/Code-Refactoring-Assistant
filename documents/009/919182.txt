@@ -1,0 +1,26 @@
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+int count(int x)
+{
+	int counter = 0, t;
+	for (long temp = x; temp != 0;)
+	{
+		t = temp % 10;
+		temp = temp / 10;
+		if (t != 0)
+			counter++;
+	}
+	return counter;
+}
+int main()
+{
+	long a, b;
+	for (;;)
+	{
+		if (scanf("%ld%ld", &a, &b) == EOF)
+			break;
+		cout << count(a) + count(b) << endl;
+	}
+	return 0;
+}

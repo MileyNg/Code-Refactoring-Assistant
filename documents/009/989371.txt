@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int m[110][110];
+int now[110];
+int n;
+int dfs(int a,int b){
+	if(n==a){
+		if(b<2)return 0;
+		int val=0;
+		for(int i=0;i<b;i++){
+			int t=9999999;
+			for(int j=0;j<b;j++){
+				if(i!=j)t=min(t,m[now[i]][now[j]]);
+			}
+			val+=t;
+		}
+		return val;
+	}
+	int ret=dfs(a+1,b);
+	bool ok=true;
+	for(int i=0;i<b;i++)if(!m[now[i]][a])ok=false;
+	if(ok){
+		now[b]=a;
+		ret=max(ret,dfs(a+1,b+1));
+	}
+	return ret;
+}
+int main(){
+	int a,b;
+	scanf("%d%d",&a,&b);
+	n=a;
+	for(int i=0;i<b;i++){
+		int p,q,r;scanf("%d%d%d",&p,&q,&r);p--;q--;
+		m[p][q]=m[q][p]=r;
+	}
+	printf("%d\n",dfs(0,0));
+}

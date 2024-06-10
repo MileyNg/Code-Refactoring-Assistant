@@ -1,0 +1,27 @@
+pts = []
+
+while (line = gets)
+  pts.push line.chomp.split(",").map{|s| s.to_f}
+end
+
+s = 0.0
+
+pt0 = pts.shift
+pt1 = pts.shift
+
+e01 = Math.sqrt((pt1[0] - pt0[0]) ** 2 + (pt1[1] - pt0[1]) ** 2)
+
+while pts.length > 0
+  pt2 = pts.shift
+
+  e02 = Math.sqrt((pt2[0] - pt0[0]) ** 2 + (pt2[1] - pt0[1]) ** 2)
+  e12 = Math.sqrt((pt2[0] - pt1[0]) ** 2 + (pt2[1] - pt1[1]) ** 2)
+
+  z = (e01 + e02 + e12) / 2
+  s += Math.sqrt(z * (z - e01) * (z - e02) * (z - e12))
+
+  pt1 = pt2
+  e01 = e02
+end
+
+printf("%.6f\n", s)

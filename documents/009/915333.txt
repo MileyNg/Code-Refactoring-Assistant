@@ -1,0 +1,67 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+const int INF=100000000;
+
+
+int n;
+int hx,hy;
+int dx,dy;
+int cx[21],cy[21];
+bool flag[21];
+
+double dist(int x0,int y0,int x1,int y1) {
+	double d = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+	return sqrt(d);
+}
+
+int pow2(int a) {
+	return a*a;
+}
+
+//クリスタルの位置と何日目からとることができるか
+bool check(int x,int y,int d) {
+	return (pow2(dx-x)+pow2(dy-y)) > pow2(d);
+}
+
+//現在位置,何日目
+bool dfs(int x,int y,int d,int cnt) {
+	//printf("[debug] %d,%d,%d,%d\n",x,y,d,cnt);
+	if(cnt==n) return true;
+	rep(i,n) {
+		if(!flag[i]) {
+			flag[i]=true;
+			d += (int)dist(x,y,cx[i],cy[i])+1;
+			if(check(cx[i],cy[i],d)) {
+				return dfs(cx[i],cy[i],d,cnt+1);
+			}
+			flag[i]=false;
+		}
+	}
+	return false;
+
+
+}
+
+
+void solve() {
+	rep(i,n) cin>>cx[i]>>cy[i];
+	rep(i,21) flag[i]=false;
+
+	if(dfs(hx,hy,0,0)) cout<<"YES"<<endl;
+	else cout<<"NO"<<endl;
+}
+
+int main() {
+	while (cin>>n>>hx>>hy>>dx>>dy)
+	{
+		if(n+hx+hy+dx+dy==0) return 0;
+		solve();
+	}
+
+	return 0;
+}

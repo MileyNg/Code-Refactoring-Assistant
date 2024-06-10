@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(){
+  int number[100];
+  char operater[100];
+  int n = 0; 
+  while( scanf("%s", operater) != EOF ){
+
+    if ( operater[0] == '+' ){
+     number[n-2] = number[n-2] + number[n-1];
+     n--;
+    } else if ( operater[0] == '-' ){
+      number[n-2] = number[n-2] - number[n-1];
+      n--;
+    } else if ( operater[0] == '*' ){
+      number[n-2] = number[n-2] * number[n-1];
+      n--;
+    } else {
+	number[n] = atoi(operater);
+	n++;
+    }
+
+  }
+  printf("%d\n",number[0]);
+  return 0;
+}

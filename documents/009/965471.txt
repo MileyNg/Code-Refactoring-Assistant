@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	
+	while (1) {
+		int n, r; cin >> n >> r; if (n==0 && r==0) break;
+		
+		vector<int> num(n);
+		for (int i=0; i<n; i++) num[i] = n-i;
+		
+		for (int rep = 0; rep<r; rep++) {
+			int p, c; cin >> p >> c;
+			
+			vector<int> next(n);
+			int index = 0;
+			for (int i=p-1; i<p+c-1; i++) next[index++] = num[i];
+			for (int i=0; i<p-1; i++) next[index++] = num[i];
+			for (int i=p+c-1; i<n; i++) next[index++] = num[i];
+			
+			num = next;
+		}
+		
+		cout << num[0] << endl;
+	}
+	
+	return 0;
+}

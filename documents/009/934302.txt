@@ -1,0 +1,51 @@
+#include<iostream>
+ 
+using namespace std;
+ 
+#define MMAX 10000
+#define tMAX (60*24)
+
+int main(void){
+ 
+    int N, M;
+    int r;
+    int t, n, m1, s;
+    int q;
+    int ts, te, m2;
+    int num,cnt;
+    int data[MMAX+1][tMAX+1];
+ 
+    while (cin >> N >> M){
+        if (N == 0 && M == 0) break;
+        for (int i = 0; i <= MMAX; i++){
+            for (int j = 0; j <= tMAX; j++){
+                data[i][j] = 0;
+            }
+        }
+        cin >> r;
+		
+        for (int i = 0; i < r; i++){
+            cin >> t >> n >> m1 >> s;
+            if (s == 0) data[m1][t]--;
+            else data[m1][t]++;
+        }
+		return 0;
+        for (int i = 1; i <= M; i++){
+            num = 0;
+            for (int j = 0; j <= tMAX; j++){
+                num += data[i][j];
+                data[i][j] = num;
+            }
+        }
+		cin>>q;
+        for (int i = 0; i < q; i++){
+            cin >> ts >> te >> m2;
+            cnt = 0;
+            for (int j = ts; j < te; j++){
+                if (data[m2][j] >= 1) cnt++;
+            }
+            cout << cnt << endl;
+        }
+    }
+    return 0;
+}

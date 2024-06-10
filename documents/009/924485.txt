@@ -1,0 +1,54 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+
+int main(){
+	int n;
+	cin>>n;
+	rep(i,n){
+		pii ro=mkp(0,0);
+		//cin>>ro.F>>ro.S;
+		int a,b;
+		pii ans=mkp(0,0);
+		while(cin>>a>>b,a||b){
+			//cout<<ro.F<<" "<<ro.S<<endl;
+			ro.F+=a; ro.S+=b;
+			if(ans.F*ans.F+ans.S*ans.S<ro.F*ro.F+ro.S*ro.S){
+				ans=ro;
+			}
+			else if(ans.F*ans.F+ans.S*ans.S==ro.F*ro.F+ro.S*ro.S&&ans.F<ro.F){
+				ans=ro;
+			}
+		}
+		cout<<ans.F<<" "<<ans.S<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+double calc(int m, int d, int hh, int mm) {
+    vector<int> days(13, 31);
+    days[0] = 0;
+    days[2] = 29;
+    for(int i : {4, 6, 9, 11}) {
+        days[i] = 30;
+    }
+    for(int i = 2; i <= 12; i++) {
+        days[i] += days[i - 1];
+    }
+    d += days[m - 1];
+    return (d - 1) + hh / 24.0 + mm / (24.0 * 60.0);
+}
+
+void rotate(double th, double &a, double &b) {
+    double na =  cos(th) * a + -sin(th) * b;
+    double nb =  sin(th) * a + cos(th) * b;
+    a = na;
+    b = nb;
+}
+
+double to_radian(double degree) {
+    return degree / 180.0 * M_PI;
+}
+void make(double a, double b, double& x, double& y, double& z) {
+    x = cos(a);
+    y = sin(a);
+    z = tan(b);
+}
+
+const double EPS = 1e-8;
+
+int main(){
+    int T;
+    cin >> T;
+    for(int casenum = 0; casenum < T; casenum++){
+        int mon, day, hh, mm;
+        scanf("%d/%d", &mon, &day);
+        scanf("%d:%d", &hh, &mm);
+        double theta = to_radian( (1.0 + 1.0 / 365.24) * 360.0 * calc(mon, day, hh, mm) );
+        const double P = to_radian( 43.2 );
+        int n;
+        cin >> n;
+        for(int i = 0; i < n; i++) {
+            string name;
+            int m;
+            cin >> name >> m;
+            bool ok = true;
+            // cout << name << endl;
+            for(int j = 0; j < m; j++) {
+                double a, b;
+                cin >> a >> b;
+                double x, y, z;
+                make(to_radian(a), to_radian(b), x, y, z);
+                // printf("(%f, %f, %f)\n", x, y, z);
+                rotate(-P, x, z);
+                // printf("->(%f, %f, %f)\n", x, y, z);
+                rotate(theta, y, z);
+                // printf("->(%f, %f, %f)\n", x, y, z);
+                rotate(P, x, z);
+                // printf("->(%f, %f, %f)\n", x, y, z);
+                if(z < 0.0 + EPS) {
+                    ok = false;
+                }
+            }
+            if(ok) {
+                cout << name << endl;
+            }
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+void scan();
+void cal();
+void Sort();
+
+int n,m;
+int date[1000][1000]={0};
+int sum[10000000]={0};
+
+int main(){
+
+  while(1){
+  scanf("%d",&n);
+  scanf("%d",&m);
+
+  if(n==m && n==0){
+    break;
+  }
+
+  scan();
+
+  cal();
+
+  Sort();
+
+  }
+
+  return 0;
+}
+
+void scan(){
+
+  int i,j;
+
+  for(i=0;i<n;i++){
+    for(j=0;j<m;j++){
+      scanf("%d",&date[i][j]);
+    }
+  }
+
+}
+
+void cal(){
+
+  int i,j;
+
+  for(i=0;i<m;i++){
+    for(j=0;j<n;j++){
+      sum[i]+=date[j][i];
+    }
+  }
+
+}
+
+void Sort(){
+
+  int i,j,max;
+  int point;
+
+  for(i=0;i<m;i++){
+  max=0;
+  point=0;
+    for(j=0;j<m;j++){
+      if(max<sum[j]){
+	max=sum[j];
+	point=j;
+      }
+    }
+    sum[point]=0;
+    printf("%d ",point+1);
+  }
+  printf("\n");
+
+}

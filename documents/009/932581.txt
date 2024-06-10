@@ -1,0 +1,45 @@
+ 
+# ダイクストラ
+def djk(graph, cost, start)
+  m = graph.size
+  table = [nil] * m
+  queue = [start]
+  table[start] = 0
+   
+  until queue.empty?
+    a = queue.shift
+    graph[a].each do |b|
+      if !table[b] || table[a] + cost[[a,b]] < table[b]
+        c = table[b] = table[a] + cost[[a,b]]
+        i = 0
+        queue.insert queue.index {|x| c < table[x] } || queue.size, b
+      end
+    end
+  end
+   
+  table
+end
+
+
+loop do
+  n, m = gets.split.map(&:to_i)
+  break if n == 0 && m == 0
+  # 線路の情報の数, 駅の数
+  m += 1
+  
+  # 線路の情報
+  graph = Array.new(m) { [] }
+  costs = {}
+  times = {}
+  n.times do
+    a, b, cost, time = gets.split.map(&:to_i)
+    graph[a] << b; graph[b] << a
+    costs[[a,b]] = costs[[b,a]] = cost
+    times[[a,b]] = times[[b,a]] = time
+  end
+
+  gets.to_i.times do
+    p, q, r = gets.split.map(&:to_i)
+    puts djk(graph, [costs, times][r], p)[q]
+  end
+end

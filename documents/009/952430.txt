@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+
+int get_number_of_digits(int num)
+{
+    if(num == 0)
+        return 1;
+        
+    int digit = 0;
+    while(num != 0){
+        num /= 10;
+        ++digit;
+    }
+    return digit;
+}
+
+int main()
+{
+    const int num_of_data = 200;
+    const int min = 0;
+    const int max = 1000000;
+    
+    int a, b, i = 0;
+    //std::cout << num_of_data << "個のまでの整数データa bの入力" << std::endl;
+    while(std::cin >> a >> b && i < 200){
+        if(min <= a && a <= max && min <= b && b <= max){
+            std::cout << get_number_of_digits(a + b) << std::endl;
+            ++i;
+        }
+    }
+    
+    return 0;
+}

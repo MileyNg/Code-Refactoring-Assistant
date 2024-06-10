@@ -1,0 +1,14 @@
+function stdin() {
+	var stdin = require("fs").readFileSync("/dev/stdin", "utf8");
+	return stdin.split(/\n\r?/);
+}
+
+stdin().every(function(line) {
+	var tmp = line.split(' '),
+		M = +tmp[0],
+		F = +tmp[1],
+		R = +tmp[2],
+		res = !(M+1) || !(F+1) ? 'F' : M+F >= 80 ? 'A' : M+F >= 65 ? 'B' : M+F >= 50 ? 'C' : M+F >= 30 ? R >= 50 ? 'C' : 'D' : 'F';
+
+	return !(M+1) && !(F+1) && !(R+1) ? false : !console.log(res);
+});

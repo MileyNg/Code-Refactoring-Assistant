@@ -1,0 +1,81 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<cstring>
+#include<queue>
+#include<map>
+using namespace std;
+
+int main()
+{
+  int n,m,l,k,a,h;
+  for(;cin>>n>>m>>l>>k>>a>>h,n;)
+    {
+      map<int,bool> freeze;
+      freeze[a]=true;
+      freeze[h]=true;
+      for(int i=0;i<l;i++)
+	{
+	  int tmp;
+	  cin>>tmp;
+	  freeze[tmp]=true;
+	}
+      int edge[n+1][n+1];
+      memset(edge,-1,sizeof(edge));
+      for(int i=0;i<k;i++)
+	{
+	  int x,y,t;
+	  cin>>x>>y>>t;
+	  edge[x][y]=t;
+	  edge[y][x]=t;
+	}
+      int ans=-1;
+      // time,freeze,now,Charge
+      priority_queue<pair<pair<int,int> ,pair<int,int> > > qu;
+      int closed[n+1];
+      for(int i=0;i<=n;i++)
+	closed[i]=-1;
+      qu.push(make_pair(make_pair(0,m),make_pair(h,0)));
+      while(!qu.empty())
+	{
+	  int time = - (qu.top().first.first);
+	  int fre = qu.top().first.second;
+	  int now = qu.top().second.first;
+	  int cha = qu.top().second.second;
+
+	  qu.pop();
+	  //  cout<<"qu "<<time<<" "<<fre<<" "<<now<<" "<<cha<<endl;
+	  if(0 > fre)
+	    continue;
+	  if(now==a)
+	    {
+	      ans=time+(cha-fre);
+	      break;
+	    }
+	  if(freeze[now])
+	    {
+	      // cout<<"fre old_fre,m="<<fre<<","<<m<<endl;
+	      cha+=m-fre;
+	      fre=m;
+	    }
+	  if(closed[now]>=fre)
+	    continue;
+	  closed[now]=fre;
+	  for(int i=0;i<=n;i++)
+	    {
+	      if(edge[now][i]!=-1)
+		{
+		  // cout<<"push "<<time+edge[now][i]
+		  //   <<" "<<fre-edge[now][i]<<" "<<i<<endl;
+		  qu.push(make_pair(make_pair(-(time+edge[now][i]),fre-edge[now][i]),make_pair(i,cha)));
+		}
+	    }
+	}
+
+      if(ans==-1)
+	cout<<"Help!"<<endl;
+      else
+	cout<<ans<<endl;
+    }
+
+}

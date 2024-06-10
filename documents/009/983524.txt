@@ -1,0 +1,57 @@
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#include <climits>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <cstring>
+#include <tuple>
+#include <bitset>
+#include <unordered_map>
+
+using namespace std;
+
+int main() {
+    int H, W;
+    while (cin >> H >> W && (H || W)) {
+        vector<string> tiles(H, string(W, ' '));
+        for (int i=0; i<H; ++i) {
+            for (int j=0; j<W; ++j) {
+                cin >> tiles[i][j];
+            }
+        }
+
+        int x = 0, y = 0;
+        int visited[101][101] = {false};
+        while ( ! visited[y][x]) {
+            visited[y][x] = true;
+            switch (tiles[y][x]) {
+                case '>':
+                    x ++;
+                    break;
+                case '<':
+                    x --;
+                    break;
+                case 'v':
+                    y ++;
+                    break;
+                case '^':
+                    y --;
+                    break;
+            }
+        }
+        if (tiles[y][x] == '.') {
+            cout << x << " " << y << endl;
+        } else {
+            cout << "LOOP" << endl;
+        }
+    }
+    return 0;
+}

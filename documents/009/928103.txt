@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define max 10000
+static int stack[max+1],p,k=-1;
+push(int v){
+  stack[p++]=v;
+}
+int pop(){
+  return stack[--p];
+}
+stackinit() {
+  p=0;
+}
+int stackempty(){
+  return !p;
+}
+main()
+{
+  char c[100];
+  int x,i;
+  stackinit();
+  while(scanf("%s",c)!=EOF)
+    {
+      if(c[0]=='+')x=pop()+pop();
+      else if(c[0]=='*')x=pop()*pop(); 
+      else if(c[0]=='-'){
+	if(stack[p-1]<stack[p-2]) x=k*(pop()-pop()); 
+	else x=pop()-pop();
+      }
+      else 
+       	x=atoi(c);
+      push(x);
+    }      
+  printf("%d\n",x);
+  return 0;
+}

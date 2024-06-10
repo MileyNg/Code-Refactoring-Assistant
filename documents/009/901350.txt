@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+int N, K;
+
+class SparseTable{
+public:
+    SparseTable(){}
+    SparseTable(int *a, int n){
+        init(a, n);
+    }
+    void init(int *a, int n){
+        size = n;
+
+        REP(i, size){
+            table[i][0] = a[i];
+        }
+
+        int step = 1, done = 1;
+        while(done < size){
+            for(int i=0;i+done<size;i++){
+                table[i][step] = table[i][step-1] + table[i+done][step-1];
+            }
+            ++step;
+            done *= 2;
+        }
+    }
+    int query(int l, int r){
+        int n = r - l, step = 0, res = 0;
+        while(n > 0){
+            if(n & 1){res += table[l][step]; l += 1 << step;}
+            n >>= 1;
+            ++step;
+        }
+        return res;
+    }
+private:
+    static const int MAX_N = 100000, MAX_LOG_N = 17;
+    int table[MAX_N][MAX_LOG_N+1], size;
+};
+
+SparseTable st;
+int A[100000];
+
+int main(){
+    while(std::cin >> N >> K, N){
+        REP(i, N){
+            std::cin >> A[i];
+        }
+        st.init(A, N);
+
+        int res = -INF;
+        for(int i=0;i+K<=N;i++){
+            res = std::max(res, st.query(i, i+K));
+        }
+
+        std::cout << res << std::endl;
+    }
+}

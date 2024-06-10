@@ -1,0 +1,11 @@
+while True:
+	L = int(raw_input())
+	if L == 0: break
+	M = [map(int, raw_input().split()) for i in range(12)]
+	for i in range(12):
+		L -= M[i][0] - M[i][1]
+		if L <= 0:
+			print i+1
+			break
+	else:
+		print "NA"

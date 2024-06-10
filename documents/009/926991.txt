@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define fr first
+#define sc second
+#define NON -1
+typedef pair < int , int > Pi;
+typedef pair < Pi , int > Pii;
+vector< Pii > memory; //セクタの状態
+void write( int l, int sum){ //書き込む
+  for(int i = 0; sum > 0 ; i++){
+    if(memory[i].sc != NON) continue;
+    int kazu = memory[i].fr.sc - memory[i].fr.fr + 1;
+    if(kazu <= sum){
+      memory[i].sc = l, sum -= kazu;
+    }else{
+      memory.insert( memory.begin() + i, Pii( Pi( memory[i].fr.fr, memory[i].fr.fr + sum - 1), l));
+      memory[++i].fr.fr = memory[i - 1].fr.sc + 1;
+      sum = 0;
+    }
+  }
+}
+void erase( int idx){ //消す
+  for(int i = 0; i < memory.size() ; i++){
+    if(memory[i].sc == idx) memory[i].sc = NON;
+  }
+}
+void read( int idx){ //読み込む
+  cout << (lower_bound(memory.begin(),memory.end(),Pii(Pi(idx,-1),-1))-1) -> sc << endl;
+  // while(memory[pos].fr.sc < idx) pos++;
+}
+
+
+int main(){
+  int n;
+  while(cin >> n, n){
+    memory.clear();
+    memory.push_back( Pii( Pi( 0, 1000000001), NON));
+    while(n--){
+      char buff;
+      cin >> buff;
+      if(buff == 'W'){ //write
+        int a, b;
+        cin >> a >> b;
+        write(a,b);
+      }else if(buff == 'D'){ //delete
+        int a;
+        cin >> a;
+        erase(a);
+      }else{ //read
+        int a;
+        cin >> a;
+        read(a);
+      }
+    }
+    cout << endl;
+  }
+}

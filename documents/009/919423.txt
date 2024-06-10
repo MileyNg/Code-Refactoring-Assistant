@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int main(void) {
+	int i, n, m;
+	int answer = -1e9;
+	int input[200000];
+
+	scanf("%d", &n);
+
+	for (i = 0; i < n; i++) {
+		scanf("%d", &input[i]);
+	}
+
+	m = input[0];
+
+	for (i = 1; i < n; i++) {
+
+		if (answer < (input[i] - m)) {
+			answer = input[i] - m;
+		}
+
+		if (input[i] < m) {
+			m = input[i];
+		}
+
+	}
+
+	printf("%d", answer);
+
+	return 0;
+}

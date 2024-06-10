@@ -1,0 +1,84 @@
+#include<iostream>
+#include<sstream>
+#include<algorithm>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+struct Maya{
+  vector<int> v;
+  Maya():v(5,0){
+  }
+  void fix(){
+    v[3]+=v[4]/20;
+    v[4]%=20;
+    v[2]+=v[3]/18;
+    v[3]%=18;
+    v[1]+=v[2]/20;
+    v[2]%=20;
+    v[0]+=v[1]/20;
+    v[1]%=20;
+    v[0]%=13;
+  }
+  void inc(){
+    v[4]++;
+    fix();
+  }
+};
+
+struct AD{
+  vector<int> v;
+  AD():v{2012,12,21}{
+  }
+  void inc(){
+    const static int dom[]={0,31,28,31,30,31,30,31,31,30,31,30,31};
+    v[2]++;
+    if(v[2]>dom[v[1]]+(v[1]==2&&(v[0]%400==0||v[0]%100!=0&&v[0]%4==0))){
+      v[2]=1;
+      v[1]++;
+      if(v[1]>12){
+	v[1]=1;
+	v[0]++;
+      }
+    }
+  }
+};
+    
+       
+int main(){
+  for(string s;getline(cin,s),s[0]!='#';){
+    replace(begin(s),end(s),'.',' ');
+    stringstream ss(s);
+    vector<int> v;
+    for(int i;ss>>i;){
+      v.push_back(i);
+    }
+    vector<int> ans;
+    if(v.size()==5){
+      Maya m;
+      AD a;
+      while(m.v!=v){
+	m.inc();
+	a.inc();
+      }
+      ans=a.v;
+    }else{
+      Maya m;
+      AD a;
+      while(v[0]-a.v[0]>400){
+	a.v[0]+=400;
+	m.v[4]+=400*365+97;
+	m.fix();
+      }
+      while(a.v!=v){
+	a.inc();
+	m.inc();
+      }
+      ans=m.v;
+    }
+    for(int i=0;i<ans.size();i++){
+      cout<<ans[i]<<((i+1==ans.size())?'\n':'.');
+    }
+  }
+}

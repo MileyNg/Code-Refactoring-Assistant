@@ -1,0 +1,123 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1<<28;
+const int H = 5;
+const int W = 5;
+
+struct State {
+  int g[H][W];
+  int x[2], y[2];
+  bool operator < (const State &s) const {
+    for(int i = 0, k = 0; i < H; ++i) {
+      for(int j = abs(2-i); j < W-abs(2-i); ++j) {
+        if(g[i][j] != s.g[i][j]) return g[i][j] < s.g[i][j];
+      }
+    }
+    return false;
+  }
+  bool operator == (const State &s) const {
+    return !(*this < s) && !(s < *this);
+  }
+};
+
+map<State,int> bfs1(State src) {
+  const static int dx[4] = {1,0,-1,0};
+  const static int dy[4] = {0,1,0,-1};
+  map<State,int> cost;
+  queue<State> que;
+  cost[src] = 0;
+  que.push(src);
+  while(que.size()) {
+    const State s = que.front();
+    que.pop();
+    if(cost[s] == 10) continue;
+    for(int k = 0; k < 2; ++k) {
+      for(int i = 0; i < 4; ++i) {
+        int nx = s.x[k] + dx[i];
+        int ny = s.y[k] + dy[i];
+        if(nx < 0 || nx >= W) continue;
+        if(ny < 0 || ny >= H) continue;
+        if(s.g[ny][nx] <= 0) continue;
+        State t = s;
+        swap(t.g[t.y[k]][t.x[k]], t.g[ny][nx]);
+        t.x[k] = nx;
+        t.y[k] = ny;
+        if(cost.count(t)) continue;
+        cost[t] = cost[s] + 1;
+        que.push(t);
+      }
+    }
+  }
+  return cost;
+}
+
+int bfs2(State src, map<State,int> rcost) {
+  const static int dx[4] = {1,0,-1,0};
+  const static int dy[4] = {0,1,0,-1};
+  if(rcost.count(src)) return rcost[src];
+  map<State,int> cost;
+  queue<State> que;
+  cost[src] = 0;
+  que.push(src);
+  int res = INF;
+  while(que.size()) {
+    const State s = que.front();
+    que.pop();
+    if(cost[s] == 10) continue;
+    for(int k = 0; k < 2; ++k) {
+      for(int i = 0; i < 4; ++i) {
+        int nx = s.x[k] + dx[i];
+        int ny = s.y[k] + dy[i];
+        if(nx < 0 || nx >= W) continue;
+        if(ny < 0 || ny >= H) continue;
+        if(s.g[ny][nx] <= 0) continue;
+        State t = s;
+        swap(t.g[t.y[k]][t.x[k]], t.g[ny][nx]);
+        t.x[k] = nx;
+        t.y[k] = ny;
+        if(cost.count(t)) continue;
+        cost[t] = cost[s] + 1;
+        que.push(t);
+        if(rcost.count(t)) {
+          res = min(res, cost[t] + rcost[t]);
+        }
+      }
+    }
+  }
+  return res;
+}
+
+int main() {
+  State src, dst;
+  fill(src.g[0], src.g[H], -1);
+  fill(dst.g[0], dst.g[H], -1);
+  for(int i = 0, k = 0, t = 0; i < H; ++i) {
+    for(int j = abs(2-i); j < W-abs(2-i); ++j) {
+      dst.g[i][j] = t % 12;
+      ++t;
+      if(dst.g[i][j] == 0) {
+        dst.x[k] = j;
+        dst.y[k] = j;
+        ++k;
+      }
+    }
+  }
+  while(1) {
+    for(int i = 0, k = 0; i < H; ++i) {
+      for(int j = abs(2-i); j < W-abs(2-i); ++j) {
+        cin >> src.g[i][j];
+        if(src.g[i][j] == -1) return 0;
+        if(src.g[i][j] == 0) {
+          src.x[k] = j;
+          src.y[k] = i;
+          ++k;
+        }
+      }
+    }
+    int res = bfs2(src, bfs1(dst));
+    if(res == INF) cout << "NA" << endl;
+    else cout << res << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,154 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+#include <cstdio>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+template <class T>
+void initvv(vector<vector<T> > &v,int a,int b, const T  &t = T()){
+	v.assign(a,vector<T>(b,t));
+}
+vector<string> vs;
+int n;
+vint ma1,ma2;
+vint ma3;
+ll ans;
+int cou;
+
+
+bool srtingexist(char c){
+	rep(i,n){
+		rep(j,vs[i].size()){
+			if(vs[i][j]==c) return true;
+		}
+	}
+	return false;
+
+}
+void stringconv(char c,char b){
+	rep(i,n){
+		rep(j,vs[i].size()){
+			if(vs[i][j]==c){
+				vs[i][j]=b;
+			}
+		}
+	}
+}
+
+void rec(int c){
+	//cout<<c<<endl;
+	int cc=cou-c;
+	bool f=true;
+	rep(i,n){
+		if(ma1[vs[i][vs[i].size()-1]-'a']==-1){
+			f=false;
+			break;
+		}
+	}
+	if(f){
+		int SUM=0;
+		rep(i,n-1) SUM+=ma1[vs[i][vs[i].size()-1]-'a'];
+		if(ma1[vs[n-1][vs[n-1].size()-1]-'a']!=SUM%10) return;
+	}	
+	if(c==0){
+		vector<string> tmp=vs;
+		vint t(vs.size());
+		rep(i,n){
+			rep(j,vs[i].size()){
+				tmp[i][j]=ma1[tmp[i][j]-'a']+'0';
+			}
+			// cout<<tmp[i]<<endl;
+		}
+		// cout<<endl;
+		rep(i,n){
+			stringstream ss;
+			ss<<tmp[i];
+			ss>>t[i];
+		}
+		int S=0;
+		rep(i,n-1){
+			S+=t[i];
+		}
+		if(S==t[n-1]) ans++;
+		//cout<<endl;
+		return;
+	}
+	rep(i,10){
+		if(ma3[i]){
+			//cout<<"hoge"<<endl;
+			if(i==0&&ma2[cc]==1) continue;
+			ma1[cc]=i;
+			ma3[i]=0;
+			rec(c-1);
+			ma3[i]=1;
+			ma1[cc]=-1;
+		}
+	}
+}
+
+int main(){
+	while(cin>>n,n){
+		vs.resize(n);
+		rep(i,n){
+			cin>>vs[i];
+		}
+		int count=0;
+		rep(i,'z'-'a'+1){
+			if(srtingexist(i+'A')){
+				stringconv('A'+i,'a'+count);
+				count++;
+
+			}
+		}
+		cou=count;
+		ans=0;
+		ma1.resize(cou);
+		ma2.resize(cou);
+		ma3.resize(10);
+		rep(i,cou){
+			ma1[i]=0;
+			ma2[i]=0;
+		}
+		rep(i,10) ma3[i]=0;
+		rep(i,n){
+			if(vs[i].size()!=1) ma2[vs[i][0]-'a']=1;
+		}
+		rep(i,cou){
+			ma1[i]=-1;
+		}
+		rep(i,10){
+			//ma1[i]=-1;
+			ma3[i]=1;
+		}
+		rec(count);
+		cout<<ans<<endl;
+
+
+	}
+}

@@ -1,0 +1,88 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <cmath>
+#include <limits>
+using namespace std;
+#define repeat(i,n) for (int i = 0; i < n; ++i)
+
+#ifdef DEBUG
+#include <cassert>
+#define debug(a) a
+#else
+#define debug(a)
+#endif
+
+class union_find {
+    vector<int> tree;
+public:
+    union_find() {}
+    union_find(int n) : tree(n, -1) {}
+    bool is_root(int a) { return tree[a] < 0; }
+    int find_root(int a) { return is_root(a) ? a : (tree[a] = find_root(tree[a])); }
+    int tree_size(int a) { return - tree[find_root(a)]; }
+    void union_tree(int a, int b) {
+        a = find_root(a); b = find_root(b);
+        if (a != b) {
+            if (not (tree_size(a) < tree_size(b))) swap(a,b);
+            tree[b] += tree[a];
+            tree[a] = b;
+        }
+    }
+    bool is_connected(int a, int b) { return find_root(a) == find_root(b); }
+    friend ostream & operator<<(ostream & output, const union_find & uf) { repeat (i, uf.tree.size()-1) output << uf.tree[i] << ' '; return output << uf.tree[uf.tree.size()-1]; }
+};
+
+struct pos3 { double x, y, z; };
+pos3 operator+(const pos3 & p, const pos3 & q) { return (pos3){p.x + q.x, p.y + q.y, p.z + q.z}; }
+pos3 operator-(const pos3 & p) { return (pos3){-p.x, -p.y, -p.z}; }
+pos3 operator-(const pos3 & p, const pos3 & q) { return p + (- q); }
+istream & operator>>(istream & input, pos3 & p) { return input >> p.x >> p.y >> p.z; }
+double sq(double a) { return a * a; }
+double length_squared(const pos3 & p) { return sq(p.x) + sq(p.y) + sq(p.z); }
+double length(const pos3 & p) { return sqrt(length_squared(p)); }
+
+struct circle { pos3 p; double r; };
+
+#define MAX_N 100
+#define MIN_X 0.0
+#define MAX_X 100.0
+int N;
+union_find tree;
+circle C[MAX_N];
+
+int main() {
+    while (true) {
+        cin >> N; if (not N) break;
+        tree = union_find(N);
+        repeat (i,N) {
+            cin >> C[i].p >> C[i].r;
+            repeat (j,i) if (length_squared(C[j].p - C[i].p) < sq(C[i].r + C[j].r)) {
+                tree.union_tree(i,j);
+            }
+        }
+        double sum = 0.0;
+        repeat (i,N) if (tree.is_root(i)) {
+            double inf = numeric_limits<double>::infinity();
+            int ix = -1;
+            repeat (j,N) if (tree.is_connected(i,j)) {
+                repeat (k,N) if (not tree.is_connected(i,k)) {
+                    double dist = length(C[j].p - C[k].p) - (C[j].r + C[k].r);
+                    if (dist < inf) {
+                        inf = dist; ix = k;
+                    }
+                }
+            }
+            if (ix == -1) break;
+            tree.union_tree(i, ix);
+            sum += inf;
+        }
+#ifdef DEBUG
+        int cnt = 0;
+        repeat (i,N) if (tree.is_root(i)) ++ cnt;
+        assert(cnt == 1);
+#endif
+        cout << setprecision(3) << fixed << sum << endl;
+    }
+    return 0;
+}

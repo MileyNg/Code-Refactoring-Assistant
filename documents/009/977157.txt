@@ -1,0 +1,25 @@
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+
+int main() {
+	int i,j,k,m,n;
+	double a,b,x,y,d[100][100],an[100],bn[100];
+	while(cin >> n >> m) {
+		if (n==0 && m==0) break;
+		for (i=0;i<n;i++) { an[i]=bn[i]=1; for (j=0;j<n;j++) cin >> d[i][j];}
+		for (k=0;k<m-1;k++) {
+			for (i=0;i<n;i++) { a=0; b=0; 
+			  for (j=0;j<n;j++) {
+				  x=an[i]*d[i][j]; y=bn[i]*d[i][j];
+			    if (x>a) a=x; if (y>a) a=y;
+			    if (y<b) b=y; if (x<b) b=x;
+			}
+			  an[i]=a; bn[i]=b;
+		  }
+	  }
+	  for (i=0,a=0;i<n;i++) a= a < an[i] ? an[i] : a;
+	  printf("%.2f\n",a);
+  }  			  
+  return 0;
+}

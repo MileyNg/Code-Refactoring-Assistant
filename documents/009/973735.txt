@@ -1,0 +1,17 @@
+#!ruby -nalrprime
+$F.map!(&:to_i)
+exit if $F.any?{|x| 0 == x}
+
+$F.map! do |x|
+  hoge = Prime.prime_division(x)
+  hoge.map!{|y| y[0]}
+  result = hoge.pop
+  result -= hoge.inject(:+) unless hoge.empty?
+  result
+end
+
+if $F[0] > $F[1]
+  puts 'a'
+else
+  puts 'b'
+end

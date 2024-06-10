@@ -1,0 +1,26 @@
+words = gets.chop.split(" ")
+
+count = {}
+max_len = 0
+max_len_w = ""
+
+for w in words
+  count[w] = (count[w].nil?) ? 1 : count[w] + 1
+
+  if max_len < w.length
+    max_len = w.length
+    max_len_w = w
+  end
+end
+
+max_c = 0
+max_c_w = ""
+
+count.each do |k, c|
+  if max_c < c
+    max_c = c
+    max_c_w = k
+  end
+end
+
+puts [max_c_w, max_len_w].join(" ")

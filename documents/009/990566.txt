@@ -1,0 +1,116 @@
+#include <cstdio>
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <cmath>
+#define rep(i,n) for(int i=0; i<n; ++i)
+using namespace std;
+typedef pair<int,int> P;
+
+const double INF = 10000000;
+struct Node{
+  int x,y;
+  vector<int> to;
+  vector<double> cost;
+  vector<int> root;
+};
+int N,M;
+int V;
+Node G[1001];
+int d[1001];
+bool visit[1001];
+
+inline double dist(Node a, Node b){
+  return sqrt((double)((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y)));
+}
+
+void init(){
+  for(int i=1; i<=1001; ++i){
+    G[i-1].root.clear();
+    d[i-1] = INF;
+    visit[i-1] = false;
+  }
+}
+void makeEdge(){
+  for(int i=1; i<=N; ++i){
+    G[i].to.clear();
+    G[i].cost.clear();
+    for(int j=1; j<=N; ++j){
+      if(i == j) continue;
+      if(dist(G[i],G[j]) <= 50){
+//        printf("%d -> %d dist::%d \n",i,j,dist(G[i],G[j]));
+        G[i].to.push_back(j);
+        G[i].cost.push_back(dist(G[i],G[j]));
+      }
+    }
+//    printf("%d\n",G[i].to.size());
+  }
+}
+
+void dijkstra(int e){
+  int cnt = 1;
+  while(cnt <= N){
+    double m = INF;
+    vector<int> m_r;
+//    printf("cnt:%d\n",cnt);
+    for(int i=1; i<=N; ++i){
+      if(visit[i] == false) continue;
+      for(int j=0;j<G[i].to.size();++j){
+        if(visit[G[i].to[j]] == true) continue;
+//        printf("%d->%d\n",i,G[i].to[j]);
+        if(d[i] + G[i].cost[j] < m){
+          m = d[i] + G[i].cost[j];
+          m_r.assign(G[i].root.begin(), G[i].root.end());;
+          m_r.push_back(G[i].to[j]);
+          
+        }
+      }
+    }
+    if(m == INF) break;
+    G[m_r.back()].root.assign(m_r.begin(), m_r.end());
+    d[m_r.back()] = m;
+    visit[m_r.back()] = true;
+//    printf("%d  (cost:%lf)\n",m_r.back(),m);
+
+    if(m_r.back() == e){
+      cout << G[m_r.back()].root[0];
+      for(int i=1; i<G[m_r.back()].root.size(); ++i){
+        cout << " " << G[m_r.back()].root[i];
+      }
+      cout << endl;
+      return;
+    }
+    cnt++;
+  }
+  cout << "NA " << endl;
+  return;
+}
+
+int main(){
+  while(cin >> N && N){
+    for(int i=1; i<=N; ++i){
+      int id;
+      cin >> id;
+      cin >> G[id].x >> G[id].y;
+    }
+    makeEdge();
+    
+    cin >> M;
+    
+    for(int i=1; i<=M; ++i){
+      init();
+      int s,e;
+      cin >> s >> e;
+      visit[s] = true;
+      d[s] = 0;
+      G[s].root.push_back(s);
+      dijkstra(e);
+    }
+    
+  }
+  return 0;
+}

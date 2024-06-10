@@ -1,0 +1,44 @@
+#include <iostream>
+using namespace std;
+
+int main(void) {
+  int n;
+  cin >> n;
+  while (n--) {
+    double x1, y1, x2, y2, x3, y3, x4, y4;
+    bool flag;
+    cin >> x1 >> y1 >> x2 >> y2
+	>> x3 >> y3 >> x4 >> y4;
+
+    if (x1 == x2) {
+      if (x3 == x4) {
+	flag = true;
+      } else {
+	flag = false;
+      }
+    } else if (x3 == x4) {
+      flag = false;
+    } else {
+      if ( (y2 - y1) / (x2 - x1) == (y4 - y3) / (x4 - x3) ) {
+	flag = true;
+      } else {
+	flag = false;
+      }
+    }
+    /*
+      if (x1 == x2 || x3 == x4) {
+      if (x1 == x2 && x3 == x4) flag = true;
+      } else {
+      ang1 = (y2 - y1) / (x2 - x1);
+      ang2 = (y4 - y3) / (x4 - x3);
+      if (ang1 == ang2) flag = true;
+      }
+    */
+    if (flag) {
+      cout << "YES" << endl;
+    } else {
+      cout << "NO" << endl;
+    }
+  }
+  return 0;
+}

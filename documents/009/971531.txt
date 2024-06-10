@@ -1,0 +1,39 @@
+#include<stdio.h>
+
+int main(){
+  int w[10];
+  int i;
+  int wt=512;
+  int n;
+
+  for(i=0;i<10;i++){
+    w[i]=wt;
+    wt=wt/2;
+  }
+
+  while(scanf("%d",&n)){
+    int a[10];
+    int f=0;
+    for(i=0;i<10;i++){
+      a[i]=0;
+    }
+    for(i=0;i<10;i++){
+      if(n>=w[i]){
+	n=n-w[i];
+	a[i]=1;
+      }
+    }
+    for(i=9;i>=0;i--){
+      if(a[i]==1){
+	if(f==1){
+	  printf(" ");
+	}
+	printf("%d",w[i]);
+	f=1;
+      }
+    }
+    printf("\n");
+  }
+
+  return 0;
+}

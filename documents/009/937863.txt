@@ -1,0 +1,51 @@
+#include <cstdio>
+
+char d[110][110];
+int k[100][100];
+int X, Y, r = 1;
+void search(int x, int y ,int t){
+
+    if(k[x][y] != -1 || d[x][y] != t)
+        return;
+    k[x][y] = r;
+    if(x - 1 >= 0){
+        search(x - 1, y, d[x][y]);
+    }
+    if(x + 1 < X){
+        search(x + 1, y, d[x][y]);
+    }
+    if(y - 1 >= 0){
+        search(x, y - 1, d[x][y]);
+    }
+    if(y + 1 < Y){
+        search(x, y + 1, d[x][y]);
+    }
+}
+
+int main(void)
+{
+
+    while(1){
+        r = 0;
+        scanf("%d %d", &X, &Y);
+        if(X == 0 && Y == 0)
+            break;
+        gets(d[0]);
+        for(int x = 0; x < X; x++){
+            gets(d[x]);
+            for(int y = 0; y < Y; y++){
+                k[x][y] = -1;
+            }
+        }
+        for(int x = 0; x < X; x++){
+            for(int y = 0; y < Y; y++){
+                if(k[x][y] != -1)
+                    continue;
+                search(x, y, d[x][y]);
+                r++;
+            }
+        }
+        printf("%d", r);
+    }
+    return 0;
+}

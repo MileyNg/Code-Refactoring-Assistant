@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <tuple>
+#include <numeric>
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define MT make_tuple
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+const int N = 10;
+
+int field[N][N];
+
+int dd[] = { 1, 1, 2 };
+bool drop(int val, int x, int y, int size){
+	rep(s, 3){
+		if (s != size) continue;
+		if (x - dd[s] < 0 || x + dd[s] >= N || y - dd[s] < 0 || y + dd[s] >= N) return false;
+
+		rep(k, 2) for (int i = y - dd[s]; i <= y + dd[s]; ++i){
+			for (int j = x - dd[s]; j <= x + dd[s]; ++j){
+				if (size == 1 || abs(x - j) + abs(y - i) <= dd[s]){
+					if (k) field[i][j] += val;
+					else if (field[i][j] + val < 0) return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+int dx[] = {0, 1, 0};
+int dy[] = {1, 1, 2};
+
+vector<tuple<int, int ,int>> ans;
+
+bool dfs(int x, int y, int n){
+	if (x == N) return dfs(0, y + 1, n);
+	if (y == N) return n == 0;
+
+	if (!field[y][x]) return dfs(x + 1, y, n);
+	for (int i = 2; i >= 0; --i){
+		bool b = drop(-1, x + dx[i], y + dy[i], i);
+		if (b && dfs(x, y, n-1)){
+			ans.push_back(MT(x+dx[i], y+dy[i], i + 1));
+			return true;
+		}
+		if(b) drop(1, x + dx[i], y + dy[i], i);
+	}
+	return false;
+}
+
+int main(){
+	ios::sync_with_stdio(false);
+	
+	int n;
+	cin >> n;
+	rep(i, N) rep(j, N) cin >> field[i][j];
+
+	dfs(0, 0, n);
+
+	for (auto t : ans){
+		int x, y, s;
+		tie(x, y, s) = t;
+		cout << x << ' ' << y << ' ' << s << '\n';
+	}
+
+	return 0;
+}

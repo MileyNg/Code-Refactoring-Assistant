@@ -1,0 +1,117 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <array>
+
+// BEGIN CUT HERE
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+// END CUT HERE 
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) begin(v), end(v)
+#define REV(v) rbegin(v), rend(v)
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define MP make_pair
+#define MT make_tuple
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef pair<int, int> P;
+typedef long long ll;
+
+string field[20];
+int id[20][20];
+int dist[11][11];
+int vis[20][20];
+
+const int dx[] = { -1, 0, 1, 0 };
+const int dy[] = { 0, 1, 0, -1 };
+
+int dp[11][1<<11];
+int n;
+int rec(int pos, int visit){
+	if (visit + 1 == 1 << n) return 0;
+
+	int &res = dp[pos][visit];
+	if (res >= 0) return res;
+
+	res = 1<<30;
+	for (int i = 1; i < n; ++i){
+		if (visit&(1 << i)) continue;
+		res = min(res, dist[pos][i] + rec(i, visit | (1 << i)));
+	}
+
+	return res;
+}
+
+int main(){
+	int w, h;
+	while (cin >> w >> h, w){
+		vector<string> v(h);
+		rep(i, h) cin >> v[i];
+
+		MEMSET(id, -1);
+		n = 1;
+		rep(i, h) rep(j, w){
+			if (v[i][j] == 'o') id[i][j] = 0, v[i][j] = '*';
+			else if (v[i][j] == '*') id[i][j] = n++;
+		}
+		MEMSET(dist, -1);
+		rep(i, h) rep(j, w){
+			if (v[i][j] != '*') continue;
+			P pos = MP(j, i);
+			queue<tuple<int, int, int>> q;
+			q.push(MT(j, i, 0));
+			MEMSET(vis, 0);
+			vis[i][j] = 1;
+			while (!q.empty()){
+				int x, y, d;
+				tie(x, y, d) = q.front();
+				q.pop();
+
+				if (id[y][x] >= 0) dist[id[i][j]][id[y][x]] = d;
+
+				rep(dir, 4){
+					int nx = x + dx[dir], ny = y + dy[dir];
+					if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+					if (v[ny][nx] == 'x') continue;
+					if (vis[ny][nx]) continue;
+					vis[ny][nx] = 1;
+					q.push(MT(nx, ny, d + 1));
+				}
+			}
+		}
+
+		rep(i, n) rep(j, n){
+			if (dist[i][j] < 0) goto NG;
+		}
+
+		MEMSET(dp, -1);
+		cout << rec(0, 1) << endl;
+
+		continue;
+	NG:
+		cout << -1 << endl;
+	}
+
+
+	return 0;
+}

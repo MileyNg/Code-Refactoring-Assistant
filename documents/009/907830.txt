@@ -1,0 +1,29 @@
+#include<stdio.h>
+
+typedef struct{
+  char name[10];
+  int t;
+}Process;
+
+Process data[100000];
+
+int main(){
+  int N,q,i;
+  scanf("%d %d",&N,&q);
+  for(i = 0; i < N; i++) scanf("%s %d",data[i].name, &data[i].t);
+  int done,pos,current;
+  for(done = pos = current = 0; done < N; pos=(pos+1)%N){
+    if(data[pos].t == 0) continue;
+
+    if(data[pos].t > q){
+      current += q;
+      data[pos].t -= q;
+    }else{
+      current += data[pos].t;
+      data[pos].t = 0;
+      done++;
+      printf("%s %d\n",data[pos].name, current);
+    }
+  }
+  return 0;
+}

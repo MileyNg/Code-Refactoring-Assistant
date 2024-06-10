@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+struct S{
+	int a, v;
+};
+
+bool operator<(S a, S b){
+	return a.v > b.v || (a.v == b.v&&a.a<b.a);
+}
+
+int main(){
+
+	int n, q, a, v;
+	vector<S> fish;
+	vector<S> sort_fish;
+	S av;
+	int max = 0, max_i = 1;
+
+	cin >> n >> q;
+
+	for (int i = 0; i < n; i++){
+		av.a = i + 1, av.v = 0;
+		fish.push_back(av);
+	}
+
+	while (q--> 0){
+		cin >> a >> v;
+		fish[a - 1].v += v;
+		if (v < 0){
+			if (a == max_i){
+				sort_fish = fish;
+			}
+			sort(sort_fish.begin(), sort_fish.end());
+			cout << sort_fish[0].a << " " << sort_fish[0].v << endl;
+			max = sort_fish[0].v, max_i = sort_fish[0].a;
+		}
+		else{
+			if (max < fish[a - 1].v || (max == fish[a - 1].v&&max_i >= a)) max = fish[a - 1].v, max_i = a;
+			cout << max_i << " " << max << endl;
+		}
+	}
+
+	return 0;
+}

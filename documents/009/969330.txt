@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+
+int main () {
+    unsigned long long M=0;
+    unsigned long long S[10][1001];
+    int m, n, s;
+    S[0][0] = 1;
+    for (m = 0; m <= 100; m++) {
+        for (s = 1000; s - m >= 0; s--) {
+            for (n = 9; n; n--) {
+                S[n][s] += S[n-1][s-m];
+                if (M<S[n][s]) M=S[n][s];
+            }
+        }
+        // printf(": %llu \n", M);
+    }
+    while ((scanf("%d %d", &n, &s)) == 2 && (n || s)) {
+        printf("%d\n", S[n][s]);
+    }
+
+    return 0;
+}

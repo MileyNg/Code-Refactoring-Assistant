@@ -1,0 +1,41 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		double x1, y1, x2, y2, x3, y3;
+		cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+		double c1 = (x1 + x2) / 2;
+		double c2 = (x1 + x3) / 2;
+		double d1 = (y1 + y2) / 2;
+		double d2 = (y1 + y3) / 2;
+		double k1, k2, px, py, r;
+		if (x1 != x2 && x1 != x3){
+			k1 = (y2 - y1) / (x2 - x1);
+			k2 = (y3 - y1) / (x3 - x1);
+			py = (c2 - c1 + k2 * d2 - k1 * d1) / (k2 - k1);
+			px = k1 * (d1 - py) + c1;
+		}
+		else{
+			if (x1 == x2){
+				py = d1;
+				px = c2;
+			}
+			else if (x1 == x3){
+				py = d2;
+				px = c1;
+			}
+		}
+		r = sqrt((px - x1)*(px - x1) + (py - y1)*(py - y1));
+
+		cout << setprecision(3);
+		cout << fixed;
+		cout << px << " " << py << " " << r << endl;
+	}
+	return 0;
+}

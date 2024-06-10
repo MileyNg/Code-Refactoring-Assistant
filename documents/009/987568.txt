@@ -1,0 +1,33 @@
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+#include <math.h>
+#include <utility>
+
+using namespace std;
+
+#define FOR(i,k,n) for(int i = (k); i < (n); i++)
+#define REP(i,n) FOR(i,0,n)
+
+int a, b, gcd, lcm;
+
+void GCD(int x, int y)
+{
+	if (x < y) swap(x, y);
+	x = x % y;
+	if (x != 0) GCD(x,y);
+	else gcd = y;
+}
+
+int main()
+{
+
+	while (cin >> a >> b)
+	{
+		GCD(a, b);
+		lcm = a / gcd*b;
+		cout << gcd << " " << lcm << endl;
+	}
+	return 0;
+}

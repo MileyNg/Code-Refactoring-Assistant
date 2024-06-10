@@ -1,0 +1,15 @@
+while 1:
+	try:
+		s,t = raw_input(),raw_input()
+		if len(s) < len(t): s,t = t,s
+		ans = 0
+		for L in range(len(t),0,-1):
+			for sp in range(len(t)-L):
+				if t[sp:sp+L] in s:
+					ans = L
+					break
+			if ans > 0:
+				break
+		print ans
+	except:
+		break

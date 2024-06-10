@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+int main()
+{
+    char cards[400] = {0};
+    char card_left[400] = {0};
+    char card_right[400] = {};
+    int m=0;
+    int h=0;
+    int i,j,k;
+    
+    while(1) {
+        
+        for(i=0; i<401; i++){
+            cards[i] = 0;
+            card_left[i] = 0;
+            card_right[i] = 0;
+        }
+        
+        
+        scanf("%s",&cards);
+        
+        if(cards[0] == '-'){
+            break;
+        }
+        scanf("%d",&m);
+        
+        for(i=0; i<m; i++){
+            
+            scanf("%d",&h);
+            
+            strncpy( card_right, cards, h );
+            strcpy( card_left, cards+h);
+            
+            for(j=0; j<401; j++){
+                cards[j] = 0;
+            }
+            
+            strcpy(cards, card_left);
+            strcat(cards, card_right);
+            
+            for(k=0; k<401; k++){
+                card_left[i] = 0;
+                card_right[i] = 0;
+            }
+        }
+        printf("%s\n",cards);
+    }
+    return 0;
+}

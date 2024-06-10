@@ -1,0 +1,45 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+
+int i,j,h,temp;
+int m[10];
+
+
+
+//入力
+for(i=0; i<10; i++){
+   cout << "height of mountain " << i+1 << "(0 <= height of mountain <= 10000):";
+   cin >> h;
+
+   if(h >= 0 and h <= 10000){
+       m[i]=h;
+   }else{
+   cout << "0 <= height of mountain <= 10000を満たしておりません。もう一度入力してください。\n";
+   i--;
+   }
+}
+
+
+
+//ソート
+    for (i = 0; i < 9; i++) {
+        for (j = 9; j > i; j--) {
+            if (m[j - 1] > m[j]) {  
+                temp = m[j];  
+                m[j] = m[j - 1];
+                m[j - 1] = temp;
+            }
+        }
+    }
+    
+    
+//出力
+cout << "result\n";
+for (i = 9; i > 6; i--) {
+   cout << m[i] << "\n";
+}
+
+    return 0;
+}

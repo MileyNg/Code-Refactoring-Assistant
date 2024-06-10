@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int wPoint;
+	int kPoint;
+	int i;
+	int val;
+	
+	int wBigPoint[3] = {0};
+	int kBigPoint[3] = {0};
+	
+	for( i = 0; i < 10; i++ )
+	{
+		scanf("%d", &val);
+		
+		if( wBigPoint[0] < val )
+		{
+			wBigPoint[2] = wBigPoint[1];
+			wBigPoint[1] = wBigPoint[0];
+			wBigPoint[0] = val;
+		}
+		else if( wBigPoint[1] < val )
+		{
+			wBigPoint[2] = wBigPoint[1];
+			wBigPoint[1] = val;
+		}
+		else if( wBigPoint[2] < val )
+		{
+			wBigPoint[2] = val;
+		}
+	}
+	for( i = 0; i < 10; i++ )
+	{
+		scanf( "%d", &val );
+		
+		if( kBigPoint[0] < val )
+		{
+			kBigPoint[2] = kBigPoint[1];
+			kBigPoint[1] = kBigPoint[0];
+			kBigPoint[0] = val;
+		}
+		else if( kBigPoint[1] < val )
+		{
+			kBigPoint[2] = kBigPoint[1];
+			kBigPoint[1] = val;
+		}
+		else if( kBigPoint[2] < val )
+		{
+			kBigPoint[2] = val;
+		}
+	}
+	
+	wPoint = wBigPoint[0] + wBigPoint[1] + wBigPoint[2];
+	kPoint = kBigPoint[0] + kBigPoint[1] + kBigPoint[2];
+	
+	printf( "%d %d\n", wPoint, kPoint );
+	
+	return (0);
+}

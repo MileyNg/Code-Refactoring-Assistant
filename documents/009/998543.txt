@@ -1,0 +1,111 @@
+<?php
+/*
+	AOJ 0199
+	title:
+	@kankichi573
+*/
+$chair = array();
+//itiban tikai hitono suwaru isu madeno kyori
+function  distance_neighbor($chair,&$ret,$n)
+{
+  $left=$n;
+  for($i=0;$i<$n;$i++)
+    if($chair[$i]=="#")
+      $ret[$i]=++$left;
+    else
+      $ret[$i]=$left=0;
+  $right=$n;
+  for($i=$n-1;$i>=0;$i--)
+    {
+      $right++;
+      if($chair[$i]=="#")
+	{
+	  if($right<$ret[$i])
+	    $ret[$i]=$right;
+	}
+      else
+	$ret[$i]=$right=0;
+    }
+  //fprintf(STDOUT,"%s\n",implode($ret));
+  return($right>=$n && $left>=$n);
+}
+function find_d($chair,$n)
+{
+  $ret=array();
+
+  $x=distance_neighbor($chair,$ret,$n);
+  
+  if($x)         //saisho
+    return(0);
+
+  $max_distance=max($ret);
+  for($i=0;$i<$n;$i++)
+    if($max_distance==$ret[$i])
+      return($i);
+  return(-1);
+}
+function sitdown(&$chair,$c,$n)
+{
+  if($c=="A")
+    for($i=0;$i<$n;$i++)	
+      if($chair[$i]=="#")
+	{
+	  $chair[$i]="A";
+	  return;
+	}
+  if($c=="B")
+    {
+      for($i=$n-1;$i>0;$i--)
+	if($chair[$i]=="#" && $chair[$i-1]!="A")
+	  {
+	    	$chair[$i]="B";
+		return;
+	  }
+      for($i=0;$i<$n;$i++)	
+	if($chair[$i]=="#")
+	  $chair[$i]="B";      
+    }
+  if($c=="C")
+    {
+       for($i=0;$i<$n;$i++)	
+	 if($chair[$i]!="#")
+	   {
+	     if($i>0 && $chair[$i-1]=="#")
+	       {
+		 $chair[$i-1]="C";      
+		 return;
+	       }
+	     if($i<$n-1 && $chair[$i+1]=="#")
+	       {
+		 $chair[$i+1]="C";      
+		 return;
+	       }
+	   }
+       if($n % 2)
+	 $chair[($n+1)/2-1]="C";
+       else
+	 $chair[$n/2]="C";
+    }
+ if($c=="D")
+   {
+     $chair[find_d($chair,$n)]="D";
+   }
+}
+while(fscanf(STDIN,"%d %d",$n,$m) && ($n || $m))
+  {
+    $chair=array();
+    for($i=0;$i<$n;$i++)
+      {
+	$chair[$i]="#";
+      }
+    
+    for($i=0;$i<$m;$i++)
+      {
+	fscanf(STDIN,"%s",$c);
+	sitdown($chair,$c,$n);
+      }
+    fprintf(STDOUT,"%s\n",implode($chair));		
+  }
+
+return(0);
+?>

@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+#include <ctype.h>
+
+int mystrcmp(char* a, char* b) {
+	while(1) {
+		if(*a == '\0' && *b == '\0') {
+			return 0;
+		} else if(toupper(*a)!=toupper(*b)){
+			return -1;
+		}
+		a++;
+		b++;
+	}
+}
+
+int main(void) {
+	char keyword[100];
+	char buff[1024];
+	char* ptr;
+	int count=0;
+	
+	gets(keyword);
+	while((gets(buff))!=NULL) {
+		ptr = strtok(buff, " \n");
+		while(ptr!=NULL) {
+			if(mystrcmp(ptr, "END_OF_TEXT") == 0) {
+				printf("%d\n", count);
+				return 0;
+			} else if(mystrcmp(ptr, keyword) == 0) {
+				count++;
+			}
+			ptr = strtok(NULL, " \n");
+		}
+	}
+	
+	return 0;
+}

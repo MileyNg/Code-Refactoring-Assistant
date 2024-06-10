@@ -1,0 +1,56 @@
+#include<iostream>
+#include<map>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+int p[101];
+vector<int> e[101];
+const int INF=1<<29;
+
+void dfs(int x,int i){
+  if(p[x]!=INF)return;
+  p[x]=i;
+  for(auto f:e[x]){
+    dfs(f,i);
+  }
+}
+
+int main(){
+  int N;
+  cin>>N;
+  string l[101];
+  map<string,vector<int> > m;
+  for(int i=0;i<N;i++){
+    string s;
+    cin>>s;
+    if(s=="goto"){
+      string t;
+      cin>>t;
+      t.pop_back();
+      m[t].push_back(i);
+    }else{
+      s.pop_back();
+      l[i]=s;
+    }
+  }
+  for(int i=0;i<N+1;i++){
+    if(!l[i].empty()){
+      e[i]=m[l[i]];
+    }
+    if(i&&!l[i-1].empty()){
+      e[i].push_back(i-1);
+    }
+    p[i]=INF;
+  }
+  dfs(N,0);
+  for(int i=1;p[0]==INF;i++){
+    for(int j=0;j<N;j++){
+      if(p[j+1]==i-1&&p[j]==INF){
+	dfs(j,i);
+      }
+    }
+  }
+  cout<<p[0]<<endl;
+}

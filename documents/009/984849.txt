@@ -1,0 +1,92 @@
+#include<cstdio>
+#include<cstring>
+#include<utility>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+const int INF=10000000;
+typedef struct N
+{
+	int x,y,c,p;
+}N;
+
+struct Order
+{
+	bool operator ()(N const& a, N const& b) const
+	{
+		return a.c>b.c;
+	}
+};
+
+
+typedef pair<int,int> P;
+int X,Y,nx[6]={0,2,3,4,5,1},a,b,mc[6][1005];
+vector<P> M[9];//y x
+
+int dis(N a,P b)
+{
+	return abs(a.y-b.first)+abs(a.x-b.second);
+}
+
+int f(int p)
+{
+	N tmp={M[0][0].second,M[0][0].first,0,p};
+	priority_queue<N,vector<N>,Order>Q;
+	for(int i=0;i<6;i++)
+		for(int j=0;j<M[i].size();j++)
+			mc[i][j]=INF;
+	Q.push(tmp);
+	while(!Q.empty())
+	{
+		tmp=Q.top();Q.pop();
+		if(tmp.p==6)
+			break;
+		if(nx[tmp.p]==p)
+		{
+			N ins={M[6][0].second,M[6][0].first,tmp.c+dis(tmp,M[6][0]),6};
+			Q.push(ins);
+		}
+		int np=nx[tmp.p];
+		for(int i=0;i<M[np].size();i++)
+		{
+			if(mc[np][i]>tmp.c+dis(tmp,M[np][i]))
+			{
+				mc[np][i]=tmp.c+dis(tmp,M[np][i]);
+				N ins={M[np][i].second,M[np][i].first,mc[np][i],np};
+				Q.push(ins);
+			}
+		}
+	}
+	if(tmp.p!=6)return -1;
+	return tmp.c;
+}
+
+int main()
+{
+	for(;scanf("%d%d\n",&X,&Y),X;)
+	{
+		for(int i=0;i<9;i++)M[i].clear();
+		for(int i=0;i<Y;i++)
+			for(int j=0;j<=X;j++)
+			{
+				char c;
+				c=getchar();
+				if(c=='S')M[0].push_back(make_pair(i,j));
+				if(48<c&&c<54)M[c-'0'].push_back(make_pair(i,j));
+				if(c=='G')M[6].push_back(make_pair(i,j));
+			}
+		a=INF;
+		for(int i=1;i<6;i++)
+		{
+			int t=f(i);
+			if(t!=-1&&a>t)
+			{
+				a=t;b=i;
+			}
+		}
+		if(a==INF)puts("NA");
+		else printf("%d %d\n",b,a);
+	}
+	return 0;
+}

@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main(void) {
+	int a, b, A, B, x, y, tem, max;
+	while(scanf("%d %d", &a, &b) != EOF){
+		if(a < b){
+			tem = a;
+			A = b;
+			B = tem;
+		}
+		else{
+			A = a;
+			B = b;
+		}
+		tem = 1;
+		while(tem != 0){
+			tem = A % B;
+			A = B;
+			B = tem;
+		}
+		x = A;
+		y = a / x * b;
+		printf("%d %d\n", x, y);
+	}
+	return 0;
+}

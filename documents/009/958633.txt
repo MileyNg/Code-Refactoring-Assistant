@@ -1,0 +1,43 @@
+#include <iostream>
+
+using namespace std;
+
+int calcGCD(int a, int b);
+
+int main(void)
+{
+    int a,b;
+    int GCD;
+    int LCM;
+    
+    while (cin >> a >> b) {
+        GCD = calcGCD(a, b);
+        if (GCD == -1) {
+            return -1;
+        }
+        
+        LCM = a / GCD * b;
+        cout << GCD << " " << LCM << endl;
+    }
+    
+    return 0;
+}
+
+int calcGCD(int a, int b)
+{
+    while (a > 0 && b > 0) {
+        if (a > b) {
+            a %= b;
+        } else {
+            b %= a;
+        }
+    }
+    
+    if (a == 0) {
+        return b;
+    } else if (b == 0){
+        return a;
+    } else {
+        return -1;
+    }
+}

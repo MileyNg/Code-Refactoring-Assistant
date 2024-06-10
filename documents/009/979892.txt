@@ -1,0 +1,56 @@
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#include <climits>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <cstring>
+#include <tuple>
+#include <bitset>
+#include <unordered_map>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+
+    int n;
+    cin >> n;
+    while (n --) {
+        vector<vector<int>> m(5, vector<int>(5, 0));
+        for (int i=0; i<5; ++i) {
+            for (int j=0; j<5; ++j) {
+                cin >> m[i][j];
+            }
+        }
+
+        int ans = 0;
+        for (int y1=0; y1<5; ++y1) for (int y2=y1; y2<5; ++y2) {
+            for (int x1=0; x1<5; ++x1) for (int x2=x1; x2<5; ++x2) {
+                bool ok = true;
+                for (int i=y1; i<=y2; ++i) {
+                    for (int j=x1; j<=x2; ++j) {
+                        if (m[i][j] == 0) {
+                            ok = false;
+                            goto jump;
+                        }
+                    }
+                }
+                if (ok) {
+                    ans = max(ans, (y2 - y1 + 1) * (x2 - x1 + 1));
+                }
+jump:;
+            }
+        }
+        cout << ans << endl;
+    }
+
+    return 0;
+}

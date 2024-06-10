@@ -1,0 +1,36 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	const int N = 10;
+	
+	int mountain[N];
+
+	for (int i = 0; i < N; i++){
+		cin >> mountain[i];
+	}
+
+	int _1st = 0;
+	int _2nd = 0;
+	int _3rd = 0;
+
+	for (int i = 0; i < N; i++){
+		if (mountain[i]>_1st){
+			_3rd = _2nd;
+			_2nd = _1st;
+			_1st = mountain[i];
+		}
+		else if (mountain[i] > _2nd){
+			_3rd = _2nd;
+			_2nd = mountain[i];
+		}
+		else if (mountain[i] > _3rd){
+			_3rd = mountain[i];
+		}
+	}
+	cout << _1st << endl;
+	cout << _2nd << endl;
+	cout << _3rd << endl;
+
+	return 0;
+}

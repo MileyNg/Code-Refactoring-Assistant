@@ -1,0 +1,47 @@
+function fourCard(hand) {
+	return hand.filter(function(n) {
+		return n == hand[2];
+	}).length == 4;
+}
+function fullHouse(hand) {
+	return threeCard(hand)
+		&& (hand[0] == hand[1] || hand[3] == hand[4]);
+}
+function straight(hand) {
+	return ((hand[4] - hand[3] == 1 && hand[3] - hand[2] == 1 && hand[2] - hand[1] == 1)
+		&& (hand[1] - hand[0] == 1 || hand[4] == 13 && hand[0] == 1));
+}
+function threeCard(hand) {
+	return hand.filter(function(n) {
+		return n == hand[2];
+	}).length == 3;
+}
+function twoPair(hand) {
+	return hand.filter(function(n) {
+		return n == hand[1];
+	}).length == 2
+	&& hand.filter(function(n) {
+		return n == hand[3];
+	}).length == 2;
+}
+function onePair(hand) {
+	return hand[0] == hand[1] || hand[1] == hand[2] || hand[2] == hand[3] || hand[3] == hand[4];
+}
+
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.trim().split('\n');
+
+var line;
+while (line = lines.shift()) {
+	var hand = line.split(',').map(function(n){return +n;}).sort(function(a,b){return a-b;});
+
+	var yaku = 'null';
+	if (fourCard(hand)) yaku = 'four card';
+	else if (fullHouse(hand)) yaku = 'full house';
+	else if (straight(hand)) yaku = 'straight';
+	else if (threeCard(hand)) yaku = 'three card';
+	else if (twoPair(hand)) yaku = 'two pair';
+	else if (onePair(hand)) yaku = 'one pair';
+
+	console.log(yaku);
+}

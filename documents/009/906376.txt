@@ -1,0 +1,37 @@
+#include <iostream>
+#include <list>
+
+int main()
+{
+	std::list<int> gets ;
+	int get ;
+
+	for( int i = 0 ; i < 5 ; i ++ )
+	{
+		std::cin >> get ;
+
+		if( gets.empty() )	gets.push_front( get ) ;
+		else
+		{
+			std::list<int>::iterator i = gets.begin() ;
+			while( i != gets.end() )
+			{
+				if( get >= *i )
+				{
+					gets.insert( i , get ) ;
+					break ;
+				}
+				else	*i ++ ;
+			}
+			if( i == gets.end() )	gets.push_back( get ) ;
+		}
+	}
+
+	for( std::list<int>::iterator i = gets.begin() ; i != gets.end() ; *i ++ )
+	{
+		std::cout << *i << " " ;
+	}
+	std::cout <<std::endl ;
+
+	return 0 ;
+}

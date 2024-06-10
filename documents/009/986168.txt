@@ -1,0 +1,26 @@
+### subroutines
+
+def pkg_fee(s, w)
+  return 600 if s <= 60 && w <= 2
+  return 800 if s <= 80 && w <= 5
+  return 1000 if s <= 100 && w <= 10
+  return 1200 if s <= 120 && w <= 15
+  return 1400 if s <= 140 && w <= 20
+  return 1600 if s <= 160 && w <= 25
+  0
+end
+
+### main
+
+while true
+  n = gets.strip.to_i
+  break if n == 0
+
+  total = 0
+  n.times.each do
+    x, y, h, w = gets.strip.split(' ').map{|s| s.to_i}
+    total += pkg_fee(x + y + h, w)
+  end
+
+  puts total
+end

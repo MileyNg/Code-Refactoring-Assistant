@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+
+#define rep_(v, f, l) for (int v = (f); v < (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, n) rep_(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+typedef pair<int, int> pii;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+
+int main()
+{
+    int p, q;
+    while (~scanf("%d %d", &p, &q)){
+        map<int, int> mod;
+        int index;
+        p *= 10;
+        for (index = 0; p % q; index++){
+            printf("%d", p / q);
+            p %= q;
+            if (mod.find(p) != mod.end()) break;
+            mod[p] = index;
+            p *= 10;
+        }
+        if (p % q == 0){
+            printf("%d\n", p / q);
+        }
+        else {
+            puts("");
+            rep(i, mod[p] + 1) printf(" ");
+            rep(i, index - mod[p]) printf("^");
+            puts("");
+        }
+    }
+
+	return (0);
+}

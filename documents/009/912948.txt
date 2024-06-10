@@ -1,0 +1,15 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    for(int z; cin>>z,z;){
+        int ans = 1e9;
+        for(int x=1; x*x*x<=z*z*z; x++){
+            for(int y=1; y*y*y + x*x*x <= z*z*z; y++){
+                ans = min(z*z*z - x*x*x - y*y*y, ans);
+            }
+        }
+        cout << ans << endl;
+    }
+}

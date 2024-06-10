@@ -1,0 +1,118 @@
+#include <algorithm>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
+
+const int N = 100;
+const int L = 20;
+const int INF = std::numeric_limits<int>::max();
+
+#define FOR(i, v) for(__typeof((v).begin()) i = (v).begin(); i != (v).end(); ++i)
+
+std::string s, t;
+int l, n;
+std::string a[N], b[N];
+std::set<char> charset;
+std::vector<std::string> set[L + 1];
+
+void insert(std::string & s) {
+	int n = s.size();
+	for (int i = 0; i < n; ++i) {
+		charset.insert(s[i]);
+		set[n - i].push_back(s.substr(i, n - i));
+	}
+}
+
+const int S = 202;
+std::map<std::string, int> at;
+int f[2][S][S];
+
+void floyd(int n, int f[S][S]) {
+	for (int k = 0; k < n; ++k) {
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < n; ++j) {
+				if (f[i][k] != INF && f[k][j] != INF) {
+					f[i][j] = std::min(f[i][j], f[i][k] + f[k][j]);
+				}
+			}
+		}
+	}
+}
+
+int gao() {
+	int x = 0, y = 1;
+	for (int i = 1; i <= l; ++i, std::swap(x, y)) {
+		at.clear();
+		int cur = set[i].size();
+		for (int j = 0; j < cur; ++j) {
+			at[set[i][j]] = j;
+			std::fill(f[y][j], f[y][j] + cur, INF);
+		}
+
+//		FOR(it, at[y])
+//		{
+//			std::cout << it->first << " ";
+//		}
+//		std::cout << std::endl;
+
+		for (int j = 0; j < n; ++j) {
+			if ((int) a[j].size() == l) {
+				int u = at[a[j]];
+				int v = at[b[j]];
+				f[y][u][v] = 1;
+			}
+		}
+
+		int pre = set[i - 1].size();
+		for (int u = 0; u < pre; ++u) {
+			for (int v = 0; v < pre; ++v) {
+				FOR(it, charset)
+				{
+					std::string s1 = "" + *it + set[i - 1][u];
+					std::string s2 = "" + *it + set[i - 1][v];
+					if (at.count(s1) && at.count(s2)) {
+						int i1 = at[s1];
+						int i2 = at[s2];
+						f[y][i1][i2] = std::min(f[y][i1][i2], f[x][u][v]);
+					}
+				}
+			}
+		}
+
+		floyd(cur, f[y]);
+	}
+	return f[x][at[s]][at[t]];
+}
+
+int main() {
+	int test = 1;
+	while (std::cin >> s && s != ".") {
+		std::cin >> t >> n;
+		l = s.size();
+		charset.clear();
+		for (int i = 0; i <= l; ++i) {
+			set[i].clear();
+		}
+		insert(s);
+		insert(t);
+		for (int i = 0; i < n; ++i) {
+			std::cin >> a[i] >> b[i];
+			if ((int) a[i].size() > l) {
+				continue;
+			}
+			insert(a[i]);
+			insert(b[i]);
+		}
+		int ans = gao();
+		if (ans == INF) {
+			std::cout << "Case " << test++ << ": No solution" << std::endl;
+		} else {
+			std::cout << "Case " << test++ << ": " << ans << std::endl;
+		}
+	}
+	return 0;
+}

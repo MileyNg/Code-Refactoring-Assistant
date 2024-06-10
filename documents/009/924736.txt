@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+#define N 410
+using namespace std;
+
+const int dx[5]={-1,0,1,0};
+const int dy[5]={0,1,0,-1};
+const char fa[5]={'N','E','S','W'};
+
+int dp[N][N][5];
+int h,w,ansx,ansy,ansf;
+long long ll;
+int map[N][N];
+int stackx[N*N*10];
+int stacky[N*N*10];
+int stackz[N*N*10];
+
+void tofind(int x,int y,int f,int rest)
+{
+	if (rest==0) { ansx=x,ansy=y,ansf=f; return;}
+	int tof=f;
+	while (map[x+dx[tof]][y+dy[tof]]==0)
+		tof=(tof+1)%4;
+	tofind(x+dx[tof],y+dy[tof],tof,rest-1);
+}
+
+void dfs(int x,int y,int f,int l)
+{
+	if (l==ll) { ansx=x,ansy=y,ansf=f; return;}
+	if (dp[x][y][f]) 
+	{ 
+		int loop= l-dp[x][y][f]; 
+		int rest=ll-dp[x][y][f]+1; 
+		//tofind(x,y,f,rest%loop-1);
+		ansx=stackx[dp[x][y][f]+rest%loop-1]; ansy=stacky[dp[x][y][f]+rest%loop-1]; ansf=stackz[dp[x][y][f]+rest%loop-1]; 
+		return;
+	};
+	stackx[l]=x; stacky[l]=y; stackz[l]=f;
+	dp[x][y][f]=l; int tof=f;
+	while (map[x+dx[tof]][y+dy[tof]]==0)
+		tof=(tof+1)%4;
+	dfs(x+dx[tof],y+dy[tof],tof,l+1);
+}
+
+int main()
+{
+	int sx,sy,sf;
+	char c;
+	while (scanf("%d%d%lld",&h,&w,&ll),h|w|ll)
+	{
+		//cout<<123123<<endl;
+		memset(map,0,sizeof map);
+		for (int i=1;i<=h;i++)
+		{
+			getchar();
+			for (int j=1;j<=w;j++)
+			{
+				scanf("%c",&c);
+				if (c=='.') map[i][j]=1;
+				else if (c=='N') map[i][j]=1,sx=i,sy=j,sf=0;
+				else if (c=='E') map[i][j]=1,sx=i,sy=j,sf=1;
+				else if (c=='S') map[i][j]=1,sx=i,sy=j,sf=2;
+				else if (c=='W') map[i][j]=1,sx=i,sy=j,sf=3;
+			}
+		}
+		//cout<<123123<<endl;
+		memset(dp,0,sizeof dp);
+		dfs(sx,sy,sf,0);
+		printf("%d %d %c\n",ansx,ansy,fa[ansf]);
+	}
+	return 0;
+}

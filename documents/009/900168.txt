@@ -1,0 +1,95 @@
+    #include <iostream>
+    #include <vector>
+    #include <string>
+    #include <sstream>
+     
+    class BigInteger {
+    	// use 18 digit a element
+    	std::vector<uint64_t> splited_num_;
+    public:
+    	BigInteger(std::string str) {
+    		set_data(str);
+    	}
+    	BigInteger(std::vector<uint64_t>&& splited_num) {
+    		splited_num_ = std::move(splited_num);
+    	}
+    	BigInteger operator+(const BigInteger& rhs) {
+    		return BigInteger(plus(splited_num_, rhs.get_data()));
+    	}
+    	std::vector<uint64_t> get_data() const {return splited_num_;}
+    	std::string to_string() const {
+    		std::string ret;
+    		const int size = splited_num_.size();
+    		for (int i = 0; i < size; ++i) {
+    			const int& n = splited_num_[size - i - 1];
+    			ret += n == 0 ? "000000000000000000" : std::to_string(n);
+    		}
+    		return ret;
+    	}
+    private:
+    	void set_data(const std::string& str) {
+    		std::string sub;
+    		int length = str.length();
+    		while (length >= 18) {
+    			int pos = length - 18;
+    			sub = str.substr(pos, 18);
+    			splited_num_.push_back(to_uint64(sub));
+    			length -= 18;
+    		}
+    		if (length > 0) {
+    			sub = str.substr(0, length);
+    			splited_num_.push_back(to_uint64(sub));
+    		}
+		}
+    	std::vector<uint64_t> plus(std::vector<uint64_t> lhs,
+    						       std::vector<uint64_t> rhs) const {
+    		std::vector<uint64_t> ret;
+     		uint64_t carry = 0;
+     		
+     		const int max = std::max(lhs.size(), rhs.size());
+     		const int min = std::min(lhs.size(), rhs.size());
+     		// ensure that lhs.sizs() is larger than rhs.size()
+     		if (lhs.size() < rhs.size()) {
+     			std::swap(lhs, rhs);
+     		}
+     		// fit container size
+     		for (int i = 0; i < (max - min); ++i) {
+     			rhs.push_back(0);
+     		}
+     		
+     		for (int i = 0; i < max; ++i) {
+     			uint64_t sum = lhs.at(i) + rhs.at(i) + carry;
+     			carry = sum / 1000000000000000000;
+     			sum = sum % 1000000000000000000;
+     			ret.push_back(sum);
+     		}
+     		if (carry > 0) {
+     			ret.push_back(carry);
+     		}
+     		return ret;
+    	}
+    	uint64_t to_uint64(const std::string& str) const {
+    		std::istringstream iss(str);
+    		uint64_t ret = 0;
+    		iss >> ret;
+    		return ret;
+    	}
+    };
+     
+    int main() {
+    	std::vector<BigInteger> ans_list;
+    	int n;
+    	std::cin >> n;
+    	for (int i = 0; i < n; ++i) {
+    		std::string str1, str2;
+    		std::cin >> str1;
+    		std::cin >> str2;
+    		BigInteger bi1(str1);
+    		BigInteger bi2(str2);
+    		ans_list.push_back(bi1 + bi2);
+    	}
+    	
+    	for (auto ans : ans_list) {
+    		std::cout << ans.to_string() << std::endl;
+    	}
+    }

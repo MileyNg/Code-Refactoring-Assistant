@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+vector<pair<char, int> > RLE(const string& S){
+  vector<pair<char, int> > res;
+  rep(i, S.size()){
+    int count = 0;
+    reps(j, i, S.size()){
+      if (S[i] != S[j]) break;
+      count++;
+    }
+    res.push_back(make_pair(S[i], count));
+    i += count - 1;
+  }
+  return res;
+}
+
+int main()
+{
+  string inp;
+  const char *table[] = {
+    "',.!?",
+    "abcABC",
+    "defDEF",
+    "ghiGHI",
+    "jklJKL",
+    "mnoMNO",
+    "pqrsPQRS",
+    "tuvTUV",
+    "wxyzWXYZ"
+  };
+  while (cin >> inp){
+    vector<pair<char, int> > rle;
+    rle = RLE(inp);
+    rep(i, rle.size()){
+      char c = rle[i].first;
+      int len = rle[i].second;
+      if (c == '0'){
+        rep(i, len - 1) putchar(' ');
+      }
+      else {
+        putchar(table[c - '1'][len - 1]);
+      }
+    }
+    puts("");
+  }
+  return 0;
+}

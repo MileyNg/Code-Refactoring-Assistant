@@ -1,0 +1,154 @@
+
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <map>
+#define INF 1000000
+ 
+using namespace std;
+typedef long long ll;
+ 
+bool checkmtpj(int m,int t,int p,int j){
+	if(m==0 && t==0 && p==0 && j==0) return true;
+	else return false;
+}
+
+int main(){
+	int M,T,P,R;
+	int mk[2000],tk[2000],pk[2000],jk[2000];
+
+
+	struct Teishutsu{
+		int team;
+		int ansN;
+		int time;
+		int problem[11];
+		bool flag;
+	};
+	
+
+	while(1){
+		cin>>M>>T>>P>>R;
+		Teishutsu juni[51],tmp;
+
+
+		for(int i=0;i<2000;i++){
+			mk[i]=0;
+			tk[i]=0;
+			pk[i]=0;
+			jk[i]=0;
+		}
+
+		for(int i=1;i<=R;i++){
+			cin>>mk[i]>>tk[i]>>pk[i]>>jk[i];
+		}
+		
+
+		/*-------------------構造体初期化処理-----------------*/
+		for(int i=1;i<=T;i++){
+			juni[i].team=i;
+			juni[i].ansN=0;
+			juni[i].time=0;
+			for(int j=1;j<=11;j++){
+				juni[i].problem[j]=0;
+			}
+			juni[i].flag=false;
+		}
+		/*-------------------------------------------------------*/
+
+		/*---------------------構造体への入力---------------------*/
+		for(int i=1;i<=R;i++){
+			if(jk[i]==0){
+				juni[tk[i]].ansN++;
+				juni[tk[i]].time+=mk[i];
+				if(juni[tk[i]].problem[pk[i]] != 0){
+					juni[tk[i]].time+=juni[tk[i]].problem[pk[i]]*20;
+				}
+			}else {
+				juni[tk[i]].problem[pk[i]]++;
+			}
+//cout<<tk[i]<<" "<<juni[tk[i]].ansN<<" "<<juni[tk[i]].time<<endl;
+		}
+		
+		/*----------------------------------------------------------*/
+		
+		for(int i=1;i<=T;i++){
+			for(int j=1;j<=T-i;j++){
+				if(juni[j].ansN<juni[j+1].ansN){
+					tmp.team=juni[j+1].team;
+					tmp.ansN=juni[j+1].ansN;
+					tmp.time=juni[j+1].time;
+					tmp.flag=juni[j+1].flag;
+					
+					juni[j+1].team=juni[j].team;
+					juni[j+1].ansN=juni[j].ansN;
+					juni[j+1].time=juni[j].time;
+					juni[j+1].flag=juni[j].flag;
+					
+					juni[j].team=tmp.team;
+					juni[j].ansN=tmp.ansN;
+					juni[j].time=tmp.time;
+					juni[j].flag=tmp.flag;
+				}
+			}
+		}
+
+		for(int i=1;i<=T;i++){
+			for(int j=1;j<=T-i;j++){
+				if(juni[j].time>juni[j+1].time && juni[j].ansN==juni[j+1].ansN){
+					tmp.team=juni[j+1].team;
+					tmp.ansN=juni[j+1].ansN;
+					tmp.time=juni[j+1].time;
+					tmp.flag=juni[j+1].flag;
+					
+					juni[j+1].team=juni[j].team;
+					juni[j+1].ansN=juni[j].ansN;
+					juni[j+1].time=juni[j].time;
+					juni[j+1].flag=juni[j].flag;
+
+					juni[j].team=tmp.team;
+					juni[j].ansN=tmp.ansN;
+					juni[j].time=tmp.time;
+					juni[j].flag=tmp.flag;
+				}else if(juni[j].time==juni[j+1].time && juni[j].ansN==juni[j+1].ansN){
+					juni[j].flag=true;
+					
+					if(juni[j].team<juni[j+1].team){
+						tmp.team=juni[j+1].team;
+						tmp.ansN=juni[j+1].ansN;
+						tmp.time=juni[j+1].time;
+						tmp.flag=juni[j+1].flag;
+					
+						juni[j+1].team=juni[j].team;
+						juni[j+1].ansN=juni[j].ansN;
+						juni[j+1].time=juni[j].time;
+						juni[j+1].flag=juni[j].flag;
+
+						juni[j].team=tmp.team;
+						juni[j].ansN=tmp.ansN;
+						juni[j].time=tmp.time;
+						juni[j].flag=tmp.flag;
+					}
+				}
+			}
+		}
+
+
+		for(int i=1;i<=T;i++){
+			if(i==1){}
+			else{
+				if(juni[i].flag) cout<<"=";
+				else cout<<",";
+			}
+			cout<<juni[i].team;
+			
+		}
+		cout<<endl;
+		if(checkmtpj(mk[R],tk[R],pk[R],jk[R])) break;
+	}
+}

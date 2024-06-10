@@ -1,0 +1,89 @@
+#include<algorithm>
+#include<iostream>
+#include<stack>
+
+using namespace std;
+
+struct Node{
+ Node *right;
+ Node *left;
+ Node *parent;
+ int key;
+public:
+ Node(Node *r,Node *l,Node *p,int k) : right(r), left(l), parent(p), key(k){};
+};
+
+class Tree{
+ Node *root;
+public:
+ Tree(){root = 0;}
+ void insert(int v){
+  Node *z = new Node(0,0,0,v);
+  Node *y = 0;
+  Node *x = root;
+  while(x != 0){
+   y = x;
+   if(z->key < x->key){
+    x = x->left;
+   }else{
+    x = x->right;
+   }
+  }
+  z->parent = y;
+  if( y == 0){
+   root = z;
+  }else if(z->key < y->key){
+   y->left = z;
+  }else{
+   y->right = z;
+  }
+ } 
+ void mainoutput(Tree tree){
+  outputInorder(tree.root); cout << endl;
+  outputPreorder(tree);
+ }
+ void outputPreorder(Tree tree){
+  stack<Node*> pre;
+  pre.push(tree.root);
+  while(!pre.empty()){
+   Node *buf = pre.top(); pre.pop();
+   cout <<" "<< buf->key;
+   if(buf->right != 0) pre.push(buf->right);
+   if(buf->left != 0) pre.push(buf->left);
+  }
+  cout << '\n';
+ }
+ void outputInorder(Node* node){
+  if(node->left != 0)
+   outputInorder(node->left);
+  cout << " " << node->key;
+
+  if(node->right != 0)
+   outputInorder(node->right);
+ }
+};
+
+
+int main(){
+ std::ios::sync_with_stdio(false);
+ std::cin.tie(0); 
+
+ Tree tree;
+
+ int n = 0;
+ cin >> n;
+
+ for(int i=0; i < n; i++){
+  string str = "";
+  int num = -1;
+  cin >> str >> num;
+  if(str == "insert"){
+   tree.insert(num); 
+  }else if(str == "print"){
+   tree.mainoutput(tree); 
+  }
+ }
+
+ 
+ return 0;
+}

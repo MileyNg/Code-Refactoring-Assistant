@@ -1,0 +1,75 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long long int ll;
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x);i>=0;i--)
+#define RFOR(i,c) for(__typeof((c).rbegin())i=(c).rbegin();i!=(c).rend();++i)
+
+class DP{
+public:
+	int cost, x, y, bits;
+	
+	DP(){}
+	DP(int xx, int yy, int b, int cc){
+		cost = cc;x=xx;y=yy;bits=b;
+	}
+	
+	bool operator< (const DP &opp) const {
+		return cost>opp.cost;
+	}
+};
+
+int dr[4][2] = {{1,0},{0,1},{-1,0},{0,-1}};
+unsigned int memo[1<<10][31][31];
+int Map[31][31];
+int W, H;
+main(){
+	int i,j;
+	while(cin >> W >> H, W){
+		memset(memo, -1, sizeof(memo));
+		memset(Map, -1, sizeof(Map));
+		int d = 0;
+		int sx, sy;
+		REP(i, H)REP(j, W){
+			char c;
+			cin >> c;
+			if(c == '.' || c=='o') Map[i+1][j+1] = 0;
+			if(c == '*') Map[i+1][j+1] = ++d;
+			if(c == 'o') sx = j+1, sy = i+1;
+		}
+		priority_queue<DP> dp;
+		DP S;
+		dp.push(DP(sx, sy, 0, 0));
+		while(!dp.empty()){
+			S = dp.top();
+			dp.pop();
+
+			if(S.bits == (1<<d)-1) break;
+			REP(i, 4){
+				DP T=S;
+				T.x += dr[i][0];
+				T.y += dr[i][1];
+				if(Map[T.y][T.x] == -1) continue;
+				if(Map[T.y][T.x]) T.bits |= 1 << (Map[T.y][T.x]-1);
+				T.cost ++;
+				if(memo[T.bits][T.x][T.y] <= T.cost) continue;
+				memo[T.bits][T.x][T.y] = T.cost;
+				dp.push(T);
+			}
+		}
+		if(S.bits == (1<<d)-1) cout << S.cost << endl;
+		else cout << -1 << endl;
+	}
+	return 0;
+}

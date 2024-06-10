@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define INF 1 << 29
+
+using namespace std;
+
+int n, m, s, g1, g2;
+int cost[100][100];
+
+int main(){
+
+  while(scanf("%d%d%d%d%d", &n, &m, &s, &g1, &g2) && n+m+s+g1+g2){
+    s--;g1--;g2--;
+    rep(i, n) rep(j, n) cost[i][j] = INF;
+    rep(i, n) cost[i][i] = 0;
+    int a, b, c;
+    rep(i, m){
+      scanf("%d%d%d", &a, &b, &c);
+      a--;b--;
+      cost[a][b] = cost[b][a] = c;
+    }
+
+    rep(i, n) rep(j, n) rep(k, n)
+      cost[j][k] = min(cost[j][k], cost[j][i] + cost[i][k]);
+
+    /*    rep(i, n){
+      rep(j, n) printf("%d ", cost[i][j]);
+      puts("");
+      } */  
+ 
+    int res = INF;
+    rep(i, n){
+      res = min(res, cost[s][i] + cost[i][g1] + cost[i][g2]);
+      //      printf("%d + %d + %d\n", cost[s][i], cost[i][g1], cost[i][g2]);
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

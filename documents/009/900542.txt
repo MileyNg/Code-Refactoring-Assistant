@@ -1,0 +1,13 @@
+if __FILE__ == $0
+  price_acc = 0
+  variation = 0
+  count_sum = 0
+  while line = gets
+    price, count = line.split(',').map{|i| i.to_i}
+    price_acc += price * count
+    variation += 1
+    count_sum += count
+  end
+  puts price_acc
+  puts (count_sum.to_f / variation.to_f).round
+end

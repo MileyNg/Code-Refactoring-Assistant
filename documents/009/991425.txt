@@ -1,0 +1,177 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstring>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
+using namespace std;
+typedef long long int ll;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+#include <complex>
+#include <cmath>
+#define REP(i,x) for(int i=0;i<(int)(x);i++)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define RREP(i,x) for(int i=(x)-1;i>=0;i--)
+#define RFOR(i,c) for(auto i=(c).rbegin();i!=(c).rend();++i)
+#define ALL(container) container.begin(), container.end()
+#define SZ(container) ((int)container.size())
+#define EPS 1.0e-10
+#define PI 3.1415926535897932384 
+
+
+template<class T> bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T> bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
+template<class T> ostream& operator<<(ostream &os, const vector<T> &t) {
+os<<"["; FOR(it,t) {if(it!=t.begin()) os<<","; os<<*it;} os<<"]"; return os;
+}
+template<class T> ostream& operator<<(ostream &os, const set<T> &t) {
+os<<"{"; FOR(it,t) {if(it!=t.begin()) os<<","; os<<*it;} os<<"}"; return os;
+}
+template<class S, class T> ostream& operator<<(ostream &os, const pair<S,T> &t) { return os<<"("<<t.first<<","<<t.second<<")";}
+
+
+// 実数の符号関数
+inline int signum(double x) { return (abs(x) < EPS ? 0 : x > 0 ? 1 : -1); }
+//XY座標
+#define X real()
+#define Y imag()
+// 点
+typedef complex<double> P;
+ 
+
+// 線分・半直線・直線
+struct L { P pos, dir; };
+ 
+// 多角形
+typedef vector<P> G;
+ 
+// 円
+struct C { P p; double r; };
+
+// std::norm はabs(p)*abs(p)なので遅い
+inline double norm(P p){
+	return p.X*p.X+p.Y*p.Y;
+}
+
+// 二つのベクトルの内積を計算する
+inline double inp(const P& a, const P& b) {
+	return (conj(a)*b).real();
+}
+ 
+// 二つのベクトルの外積を計算する
+inline double outp(const P& a, const P& b) {
+	return (conj(a)*b).imag();
+}
+
+inline int ccw(const P& p, const P& r, const P& s) {
+    P a(r-p), b(s-p);
+    int sgn = signum(outp(a, b));
+    if (sgn != 0)
+        return sgn;
+    if (a.real()*b.real() < -EPS || a.imag()*b.imag() < -EPS)
+        return -1;
+    if (norm(a) < norm(b) - EPS)
+        return 1;
+    return 0;
+}
+
+// ベクトルpをベクトルbに射影したベクトルを計算する
+inline P proj(const P& p, const P& b) {
+	return b*inp(p,b)/norm(b);
+}
+ 
+// 点pから直線lに引いた垂線の足となる点を計算する
+inline P perf(const L& l, const P& p) {
+	L m = {l.pos - p, l.dir};
+	return (p + (m.pos - proj(m.pos, m.dir)));
+}
+ 
+// 線分sを直線bに射影した線分を計算する
+inline L proj(const L& s, const L& b) {
+	 return (L){perf(b, s.pos), proj(s.dir, b.dir)};
+}
+
+bool ll_intersects(const L& l, const L& m) {
+    return (abs(outp(l.dir, m.dir)) > EPS || abs(outp(l.dir, m.pos-l.pos)) < EPS);
+}
+P line_cross(const L& l, const L& m) {
+    double num = outp(m.dir, m.pos-l.pos);
+    double denom = outp(m.dir, l.dir);
+    return P(l.pos + l.dir*num/denom);
+}
+bool ls_intersects(const L& l, const L& s) {
+    return (signum(outp(l.dir, s.pos-l.pos)) *
+            signum(outp(l.dir, s.pos+s.dir-l.pos)) <= 0);
+}
+bool sp_intersects(const L& s, const P& p) {
+    return ( abs(s.pos - p) + abs(s.pos + s.dir - p) - abs(s.dir) < EPS );
+}
+bool ss_intersects(const L& s, const L& t) {
+    return (ccw(s.pos, s.pos+s.dir, t.pos) *
+            ccw(s.pos, s.pos+s.dir, t.pos+t.dir) <= 0 &&
+            ccw(t.pos, t.pos+t.dir, s.pos) *
+            ccw(t.pos, t.pos+t.dir, s.pos+s.dir) <= 0);
+}
+
+double W, H;
+int N;
+main(){
+	while(cin >> W >> H >> N, W){
+		vector<P> g;
+		REP(i, 2*N){
+			double x, y;
+			cin >> x >> y;
+			g.push_back(P(x, y));
+		}
+		vector<double> cand;
+		cand.push_back(.0);
+		cand.push_back((double)H);
+		L l = (L){P(0, 0), P(0, H)};
+		vector<P> p = g;
+		p.push_back(P(W, 0));
+		p.push_back(P(W, H));
+		REP(i, p.size())REP(j, i){
+			L l2 = (L){p[j], p[i]-p[j]};
+//			printf("(%f, %f)  ", l2.pos.X, l2.pos.Y);
+//			printf("(%f, %f)\n", l2.dir.X, l2.dir.Y);
+			if(abs(l2.dir.X) > EPS){
+				double x = l2.pos.Y - l2.dir.Y*l2.pos.X/l2.dir.X;
+				if(0<x-EPS && x-EPS < H) cand.push_back(x-EPS);
+				if(0<x     && x < H    ) cand.push_back(x);
+				if(0<x+EPS && x+EPS < H) cand.push_back(x+EPS);
+			}
+		}
+		sort(ALL(cand));
+		cand.erase( unique(cand.begin(), cand.end()), cand.end() );
+		L l2 = (L){P(W+EPS, 0), P(W+EPS, H)};
+		vector<P> prot;
+		REP(i, cand.size()){
+			vector<double> tar;
+			REP(j, 2*N){
+				if(g[j].X < EPS){
+					if(cand[i] > g[j].Y) tar.push_back(-100);
+					else tar.push_back(2*H+100);
+				}else tar.push_back(cand[i]+(g[j].Y-cand[i])/(g[j].X+EPS)*(W));
+			}
+			sort(ALL(tar));
+//			cout << cand[i]  << " - tar Y: " << tar << endl;
+			prot.push_back(P(cand[i], max(min((double)H, tar[N]), 0.0) - max(min((double)H, tar[N-1]), 0.0)));
+		}
+//		cout << prot << endl;
+		double ans = 0;
+//		cout << prot << endl;
+		REP(i, (int)prot.size()){
+//			printf("(%f, %f)\n", prot[i].X, prot[i].Y);
+			if(i+1<prot.size()) ans += (prot[i].Y+prot[i+1].Y) * (prot[i+1].X-prot[i].X);
+		}
+		printf("%.11f\n", ans/(H*H*2));
+	}
+	return 0;
+}

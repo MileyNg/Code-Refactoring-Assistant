@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+
+#define reps(v, f, l) for (int v = (f), v##_ = (l); v < v##_; ++v)
+#define rep(v, n) reps(v, 0, n)
+#define lep(v, n) reps(v, 1, n + 1)
+
+using namespace std;
+
+typedef long long int lint;
+
+static inline int in(){ int x; scanf("%d", &x); return x; }
+static inline lint inl(){ lint x; scanf("%lld", &x); return x; }
+template<typename T> void show(T& a, char del='\n', char last='\n'){ rep(i, a.size() - 1) cout << a[i] << del; cout << a[a.size() - 1] << last; }
+
+struct Table {
+  Table(int len) : table(len, 0) { RLE(); }
+  void RLE(){
+    rep(i, table.size()){
+      if (table[i] < 0) continue;
+      int count = 0;
+      reps(j, i, table.size()){
+        if (table[j] >= 0) count++;
+        else break;
+      }
+      table[i] = count;
+    }
+  }
+  bool insert(int cid){
+    int len = cid % 5 == 1 ? 5 : 2;
+    int pos = -1;
+    rep(i, table.size()){
+      if (table[i] < 0) continue;
+      if (table[i] >= len){
+        pos = i;
+        break;
+      }
+    }
+    if (pos == -1) return false;
+    rep(i, len){
+      table[pos + i] = ~cid;
+    }
+    return true;
+  }
+  void remove(int cid){
+    rep(i, table.size()){
+      if (cid == ~table[i]) table[i] = 0;
+    }
+    RLE();
+  }
+  vector<int> table;
+};
+
+int main()
+{
+  Table table(17);
+  priority_queue<pair<int, int> > event;
+  queue<pair<int, int> > wait;
+  int ans[100] = {};
+  rep(i, 100){
+    int in_time = i * 5;
+    int out_time = in_time + (17 * (i % 2)) + (3 * (i % 3)) + 19;
+    event.push(make_pair(-in_time, i * 2));
+    event.push(make_pair(-out_time, i * 2 + 1));
+  }
+  while (!event.empty()){
+    int now_time = -event.top().first;
+    int cid = event.top().second;
+    event.pop();
+    bool is_in = cid % 2 == 0;
+    cid /= 2;
+    if (is_in){
+      wait.push(make_pair(cid, now_time));
+    }
+    else {
+      table.remove(cid);
+    }
+    while (!wait.empty()){
+      int wc = wait.front().first;
+      int wt = wait.front().second;
+      if (!table.insert(wc)) break;
+      ans[wc] = now_time - wt;
+      wait.pop();
+    }
+  }
+  int n;
+  while (~scanf("%d", &n)){
+    printf("%d\n", ans[n]);
+  }
+
+  return 0;
+}

@@ -1,0 +1,95 @@
+### constant
+
+MAX_D = 11
+GOAL = ' ABCDEFGHIJK '
+
+NEIGHBORS = [
+  [2],
+  [2, 5],
+  [0, 1, 3, 6],
+  [2, 7],
+  [5],
+  [1, 4, 6, 9],
+  [2, 5, 7, 10],
+  [3, 6, 8, 11],
+  [7],
+  [5, 10],
+  [6, 9, 11, 12],
+  [7, 10],
+  [10]
+]
+
+### subroutines
+
+def move(s, i, j)
+  s0 = s.clone
+  s0[i] = s0[j]
+  s0[j] = ' '
+  s0
+end
+
+def neighbors(s)
+  nbrs = []
+
+  for i in (0..12)
+    next if s[i] != ' '
+
+    for ni in NEIGHBORS[i]
+      nbrs << move(s, i, ni)
+    end
+  end
+
+  nbrs
+end
+
+### main
+
+gdists = {}
+gdists[GOAL] = 0
+queue = [GOAL]
+
+while ! queue.empty?
+  v = queue.shift
+
+  for nv in neighbors(v)
+    if gdists[nv].nil?
+      gd = gdists[nv] = gdists[v] + 1
+      queue << nv if gd <= MAX_D
+    end
+  end
+end
+
+while true
+  p1 = gets.strip.to_i
+  break if p1 == -1
+
+  ps = [p1]
+  4.times.each do
+    ps += gets.strip.split(' ').map{|s| s.to_i}
+  end
+
+  st = ps.map{|p| (p != 0) ? (p + 64).chr : ' '}.join('')
+
+  queue = [st]
+  dists = {}
+  dists[st] = 0
+
+  d = 'NA'
+
+  while ! queue.empty?
+    v = queue.shift
+    if ! gdists[v].nil?
+      d = dists[v] + gdists[v]
+      break
+    end
+
+    for nv in neighbors(v)
+      if dists[nv].nil?
+        dist = dists[nv] = dists[v] + 1
+        queue << nv if dist <= MAX_D
+      end
+    end
+  end
+
+  puts d
+end

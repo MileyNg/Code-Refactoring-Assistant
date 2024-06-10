@@ -1,0 +1,132 @@
+#include <algorithm>
+#include <bitset>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 30;
+
+typedef vector<string> vec;
+typedef vector< vec > mat;
+
+int n;
+
+mat mul(mat &a,mat &b){
+	mat c(n,vec(n));
+	rep(k,n)rep(i,n)rep(j,n){
+		if(a[i][k]!=""&&b[k][j]!=""){
+			if(c[i][j]=="")
+				c[i][j]=a[i][k]+b[k][j];
+			else
+				c[i][j]=min(c[i][j],a[i][k]+b[k][j]);
+		}
+	}
+	rep(i,n)rep(j,n){
+		if(a[i][j]!=""){
+			if(c[i][j]=="")
+				c[i][j]=a[i][j];
+			else
+				c[i][j]=min(c[i][j],a[i][j]);
+		}
+	}
+	return c;
+}
+
+mat pow(mat &a,int n){
+	mat b(n,vec(n));
+	rep(i,n)rep(j,n) b[i][j]="";
+	while(n){
+		if(n&1) b=mul(b,a);
+		a=mul(a,a);
+		n >>=1;
+		/*rep(i,n){
+			rep(j,n) cout << j << " " << b[i][j] << " ";
+			cout << endl;
+		}*/
+	}
+	return a;
+}
+
+int main(void){
+	while(cin >> n,n){
+		mat c(n,vec(n));
+		int a,s,g;
+		cin >> a >> s >> g;
+		rep(i,n)rep(j,n) c[i][j]="";
+		rep(i,a){
+			int f,t;
+			string tmp;
+			cin >> f >> t >> tmp;
+			if(c[f][t]=="")
+				c[f][t]=tmp;
+			else
+				c[f][t]=min(c[f][t],tmp);
+		}
+		/*rep(i,n){
+			rep(j,n) cout <<  j << " "  << c[i][j] <<" ";
+			cout << endl;
+		}*/
+		mat res=pow(c,n*n);
+		mat res2=mul(res,c);
+		/*cout << "res" << endl;
+		rep(i,n){
+			rep(j,n) cout <<  j << " "  << res[i][j] <<" ";
+			cout << endl;
+		}
+		cout << "res2" << endl;
+		rep(i,n){
+			rep(j,n) cout <<  j << " "  << res2[i][j] <<" ";
+			cout << endl;
+		}*/
+
+		if(res[s][g]!=""&&res[s][g]==res2[s][g])
+			cout << res[s][g] << endl; 
+		else
+			cout << "NO" << endl;
+	}
+	return 0;
+}

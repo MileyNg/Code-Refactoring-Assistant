@@ -1,0 +1,44 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<sstream>
+using namespace std;
+
+
+int counter(int num);
+string IntToString(int number);
+
+
+int main(){
+    int ans, num;
+    while(cin >> num, num){
+        ans = counter(num);
+        cout << ans << endl;
+    }
+    return 0;
+}
+
+
+int counter(int num){
+    int ans = 0;
+    string str;
+    
+    for( int i = num - 1; i > 0; i--){
+        num *= i;
+    }
+    
+    str = IntToString(num);
+    
+    for( int i = str.size() - 1; str[i] == '0'; i--){
+        ans++;
+    }
+    
+    return ans;
+}
+
+
+string IntToString(int number){
+    stringstream ss;
+    ss << number;
+    return ss.str();
+}

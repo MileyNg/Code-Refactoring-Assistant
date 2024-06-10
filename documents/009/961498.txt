@@ -1,0 +1,66 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+int all[8];
+int max, maxcnt;
+int res = 0;
+
+int gcm(int a, int b){
+	if (b == 0)return a;
+	else gcm(b, a%b);
+}
+
+int lcm(int a, int b){
+	int c = gcm(a, b);
+	return a / c*b / c*c;
+}
+
+bool ask(int p, int q, int pp, int qq){
+	return p*qq >= pp*q;
+}
+
+std::pair<int, int> hiku(int p, int q, int pp, int qq){
+
+	int g = lcm(std::max(q, qq), std::min(q, qq));
+	int a = (p*g / q) - (pp*g / qq), b = g;
+	int c = gcm(b, a);
+	a /= c; b /= c;
+	return std::make_pair(a, b);
+}
+
+void calc(int p, int q, int cnt){
+
+	int sum = 1;
+	for (int i = 1; i < cnt; i++)sum *= all[i];
+
+	if (sum > max || cnt > maxcnt)return;
+
+	if (p == 0)res++;
+
+	for (int i = all[cnt - 1]; i < max; i++){
+		if (ask(p, q, 1, i)){
+			all[cnt] = i;
+			std::pair<int, int> a = hiku(p, q, 1, i);
+			calc(a.first, a.second, cnt + 1);
+		}
+	}
+}
+
+
+int main(){
+
+	int p, q;
+	while (std::cin >> p >> q >> max >> maxcnt, p || q || max || maxcnt){
+
+		res = 0;
+		memset(all, 0, sizeof(all));
+
+		maxcnt++;
+
+		calc(p, q, 1);
+
+		std::cout << res << std::endl;
+	}
+	return 0;
+}

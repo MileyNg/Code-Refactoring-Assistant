@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <set>
+using namespace std;
+
+#define all(c) (c).begin(), (c).end()
+
+int main(){
+    int n;
+    cin>>n;
+    while(n--){
+        set<string> S;
+        string s; cin>>s;
+        S.insert(s);
+        for(int i=1; i<s.size(); i++){
+            string t = s.substr(0,i);
+            string u = s.substr(i);
+            S.insert(u+t);
+            S.insert(t+u);
+            reverse(all(t));
+            S.insert(t+u);
+            S.insert(u+t);
+            reverse(all(u));
+            S.insert(t+u);
+            S.insert(u+t);
+            reverse(all(t));
+            S.insert(t+u);
+            S.insert(u+t);
+        }
+        reverse(all(s));
+        S.insert(s);
+
+        cout << S.size() << endl;
+    }
+}

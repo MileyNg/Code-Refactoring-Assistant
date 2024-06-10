@@ -1,0 +1,70 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/18 23:38:15 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <climits>
+#define MP(a, b) make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+int answer(int A);
+int main(int argc, char *argv[])
+{
+  int i;
+  while(std::cin>>i){
+    if(i == 0){
+      break;
+    }
+    answer(i);
+  }
+  return 0;
+}
+int answer(int A)
+{
+  
+  int N = A;
+  float e = 1000000;
+  rep(i,A){
+    if(  std::abs(i*(i+1)*(i+2)/6-A) <= e  ){
+      e = std::abs(i*(i+1)*(i+2)/6-A);
+      N = i;
+    }else{
+      N+=2; // N+1でいいが。
+      break;
+    }
+  }
+
+  std::vector<int> s(N);
+  std::vector<int> dp(A+1,1000000000);
+  std::vector<int> dp2(A+1,1000000000);
+  dp[0] = 0;
+  dp2[0] = 0;
+  rep(i,N){
+    s[i] = i*(i+1)*(i+2)/6;
+  }
+
+  rep(i,A+1){
+    rep(j,s.size()){
+      if(i-s[j]>=0){
+	amin(dp[i],dp[i-s[j]]+1);
+      }
+      if(i-s[j]>=0 && s[j]%2 == 1){
+	amin(dp2[i],dp2[i-s[j]]+1);
+      }
+    }
+  }
+
+  std::cout<<dp[A]<<" "<<std::flush;
+  std::cout<<dp2[A]<<std::endl;
+  
+  return 0;
+}

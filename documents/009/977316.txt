@@ -1,0 +1,34 @@
+def readnums():
+    return map(int,raw_input().split())
+
+def makingpath(network,param='cost'):
+    N = len(network)
+    pinf = 3000*1000*1000
+    path = [[pinf for j in range(0,N)] for i in range(0,N)]
+    for i in range(1,N):
+        path[i][i] = 0
+        for j in range(i+1,N):
+            if j in network[i]:
+                path[i][j] = path[j][i] = network[i][j][param]
+    for k in range(1,N):
+        for i in range(1,N):
+            for j in range(i+1,N):
+                if path[i][j] > path[i][k] + path[k][j]:
+                    path[i][j] = path[j][i] = path[i][k] + path[k][j]
+    return path
+
+[n,m] = readnums()
+stations = [{} for i in range(0,m+1)]
+for i in range(0,n):
+    [a,b,cost,time] = readnums()
+    stations[a][b] = stations[b][a] = {'cost':cost, 'time':time }
+cp = makingpath(stations,'cost')
+tp = makingpath(stations,'time')
+
+[k] = readnums()
+for i in range(0,k):
+    [start,goal,inquiry] = readnums()
+    if inquiry == 0:
+        print cp[start][goal]
+    else:
+        print tp[start][goal]

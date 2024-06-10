@@ -1,0 +1,29 @@
+#include <stdio.h>
+int solve(int ,int);
+
+int n;
+int A[20];
+
+int main(void){
+  int q,i,judge=0;
+  int M[200];
+
+  scanf("%d",&n);
+  for(i=0; i<n; i++) scanf("%d",&A[i]);
+  scanf("%d",&q);
+  for(i=0; i<q; i++) scanf("%d",&M[i]);
+
+  for(i=0; i<q; i++){
+    judge = solve(0,M[i]);
+    if(judge == 0) printf("no\n");
+    else printf("yes\n");
+  }
+
+
+}
+
+int solve(int x,int M){
+  if(x == n && M == 0) return 1;
+  if(x == n && M != 0) return 0;
+  else return solve(x+1,M)+solve(x+1,M-A[x]);
+}

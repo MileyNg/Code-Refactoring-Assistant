@@ -1,0 +1,24 @@
+#include<iostream>
+#include<math.h>
+#include<stdio.h>
+
+#define FOR(i,j,k) for((i)=(j);(i)<(k);i++)
+
+using namespace std;
+
+int main(void)
+{
+	int n=0;
+	double x[20],y[20];
+	double ans=0;
+	while(scanf("%lf,%lf",&x[n],&y[n])!=EOF) n++;
+	for(int i=1;i<=n-2;i++){
+		double a=sqrt((x[0]-x[i])*(x[0]-x[i])+(y[0]-y[i])*(y[0]-y[i]));
+		double b=sqrt((x[i]-x[i+1])*(x[i]-x[i+1])+(y[i]-y[i+1])*(y[i]-y[i+1]));
+		double c=sqrt((x[i+1]-x[0])*(x[i+1]-x[0])+(y[i+1]-y[0])*(y[i+1]-y[0]));
+		double z=(a+b+c)/2;
+		double s=sqrt(z*(z-a)*(z-b)*(z-c));
+		ans+=s;
+	}
+	cout<<ans<<endl;
+}

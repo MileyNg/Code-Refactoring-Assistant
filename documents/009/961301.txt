@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+typedef vector<int> vi;
+typedef vector<string> vs;
+typedef complex<int> P;
+
+P d[4] = {
+    P(0,1),
+    P(0,-1),
+    P(1,0),
+    P(-1,0)
+};
+
+void f(vs& g, int i, int j){
+    stack<P> s;
+    s.push(P(i,j));
+    char init = g[i][j];
+    while(s.size()){
+        P t = s.top();
+        s.pop();
+        int x = t.imag();
+        int y = t.real();
+        if(x<0 || y<0 || x>=g[0].size() || y>=g.size()) continue;
+        if(g[y][x]==' ') continue;
+        if(g[y][x]!=init) continue;
+
+        g[y][x] = ' ';
+        rep(i,4) s.push(t+d[i]);
+    }
+}
+
+int main(){
+    int h,w;
+    while(cin>>h>>w, h|w){
+        vs g(h);
+        rep(i,h) cin>>g[i];
+        int ans=0;
+        rep(i,h)rep(j,w){
+            if(g[i][j]!=' ') ans++;
+            f(g,i,j);
+        }
+        cout << ans << endl;
+    }
+}

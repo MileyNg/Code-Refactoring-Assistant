@@ -1,0 +1,21 @@
+include<stdio.h>
+#define U 10000
+main(){
+  int i,j,S[U],T[U],Sn,Tn,count=0;
+  scanf("%d",&Sn);
+  for(i=0; i<Sn; i++){//入力したSnだけループ
+    scanf("%d",&S[i]);
+  }
+  scanf("%d",&Tn);
+  for(j=0; j<Tn; j++){
+    scanf("%d",&T[j]);
+  }
+  for(i=0; i<Sn; i++){
+    for(j=0; j<Tn; j++){
+      if(S[i]==T[j])count++;
+      break;//異なる整数なので見付けたらjのループをぬけてもOK
+    }
+  }
+  printf("%d\n",count);
+  return 0;
+}

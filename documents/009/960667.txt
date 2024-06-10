@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int k[50001] ={1};
+	int g,h;
+
+	k[1] = 1;
+	for (int i = 2; i < 50001; i++) {
+		if (k[i] == 0) {
+			for (int j = 2; j < (50000/i+1); j++) {
+				k[i*j] = 1;
+			}
+		}
+	}
+
+	while (cin >> g) {
+		if (g == 0) {
+			break;
+		}
+		int counter = 0;
+		for (int i = 2; i < 50001; i++) {
+			if (i > g/2) {
+				break;
+			} else {
+				if (k[i] == 0 && k[g-i] == 0) {
+					counter++;
+				}
+			}
+		}
+		cout << counter << endl;
+	}
+
+	return 0;
+}

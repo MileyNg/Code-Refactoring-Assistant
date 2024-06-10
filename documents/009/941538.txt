@@ -1,0 +1,46 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int num[100] = {0};
+	int tmp[100] = {0};
+	int big;
+	int n, i, j;
+	
+	while (scanf("%d", &n) != EOF){
+		num[n - 1]++;
+	}
+	
+	big = 0;
+	j = 0;
+	
+	for (i = 1; i < 100; i++){
+		if (num[i] > num[big]){
+			while (j > 0){
+				tmp[j] = 0;
+				j--;
+			}
+			big = i;
+		}
+		else if (num[i] == num[big]){
+			tmp[j] = big;
+			big = i;
+			j++;
+		}
+	}
+	
+	tmp[j] = 101;
+	
+	for (i = 0; i < 100; i++){
+		if (tmp[i] < tmp[i + 1]){
+			printf("%d\n", tmp[i] + 1);
+		}
+		else {
+			break;
+		}
+	}
+	
+	printf("%d\n", big + 1);
+	
+	return (0);
+}

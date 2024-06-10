@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+struct PLANT{
+	double income_raito;
+	int sum_bene;
+	int sum_time;
+	string L;
+	int P, A, B, C, D, E, F, S, M;
+
+	bool operator<( const PLANT & right ) const {
+		return (income_raito != right.income_raito ? income_raito > right.income_raito : L < right.L );
+	}
+};
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int N;
+	while (cin >> N, N ){
+		PLANT p[N];
+		rep (i, N ) p[i].income_raito = 0., p[i].sum_bene = 0, p[i].sum_time = 0;
+		rep (i, N ){
+			cin >> p[i].L >> p[i].P >> p[i].A >> p[i].B >> p[i].C >> p[i].D >> p[i].E >> p[i].F >> p[i].S >> p[i].M;
+			p[i].sum_time = p[i].A + p[i].B + p[i].C + p[i].M*(p[i].D + p[i].E);
+			p[i].sum_bene = p[i].M*p[i].F*p[i].S - p[i].P;
+			p[i].income_raito = (double)p[i].sum_bene/(double)p[i].sum_time;
+		} // end rep
+		sort (p, p+N );
+		rep (i, N ){
+			cout << p[i].L << endl;
+		} // end rep
+		cout << '#' << endl;
+	} // end while
+		
+	return 0;
+}

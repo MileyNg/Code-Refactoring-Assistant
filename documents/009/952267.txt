@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+int main(){
+  int dx[] = {-1,0,1,0}, dy[] = {0,1,0,-1};
+  int N, n, d;
+  while(scanf("%d", &N) && N){
+    vector<pair<int, int> >sq(N);
+    sq[0] = make_pair(0,0);
+    REP(i, 1, N){
+      scanf("%d%d", &n, &d);
+      sq[i] = make_pair(sq[n].F+dy[d], sq[n].S+dx[d]);
+    }
+    int xmax = 0, ymax = 0, xmin = INF, ymin = INF;
+    rep(i, N){
+      xmax = max(xmax, sq[i].S); xmin = min(xmin, sq[i].S);
+      ymax = max(ymax, sq[i].F); ymin = min(ymin, sq[i].F);
+    }
+    //    rep(i, N) printf("%d %d\n", sq[i].F, sq[i].S);
+    printf("%d %d\n", abs(xmax-xmin)+1, abs(ymax-ymin)+1);
+  }
+  return 0;
+}

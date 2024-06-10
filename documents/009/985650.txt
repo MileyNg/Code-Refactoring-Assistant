@@ -1,0 +1,94 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+inline bool isin(int x, int y, int w, int h)
+{
+	return 0 <= x && x < w && 0 <= y && y < h;
+}
+
+
+void dfs(int x, int y, int d, vector<vector<int> > &f, int &ans)
+{
+	int dxs[] = {-1, 0, 0, 1};
+	int dys[] = {0, -1, 1, 0};
+	int w = f.size(), h = f[0].size();
+	d += 1;
+	if(d > 10)
+		return;
+	//printf("debug: %d %d %d\n", x, y, d);
+
+	for(int dir = 0; dir < 4; ++dir) {
+
+		int cx = x, cy = y;
+		int dx = dxs[dir], dy = dys[dir];
+
+		if(!isin(x + dx, y + dy, w, h) || f[x + dx][y + dy] == 1)
+			continue;
+
+		while(true) {
+
+			int nx = cx + dx;
+			int ny = cy + dy;
+
+			if(!isin(nx, ny, w, h))
+				break;
+
+			if(f[nx][ny] == 3) {
+				ans = min(ans, d);
+				break;
+			}
+
+			if(f[nx][ny] == 1) {
+				f[nx][ny] = 0;
+				dfs(cx, cy, d, f, ans);
+				f[nx][ny] = 1;
+				break;
+			}
+
+			cx = nx;
+			cy = ny;
+		}
+	}
+}
+
+
+int main()
+{
+	while(true) {
+
+		int w, h;
+		vector<vector<int> > f;
+		int sx, sy;
+
+		scanf("%d%d", &w, &h);
+		if(w == 0)
+			break;
+
+		f.resize(w);
+		for(int i = 0; i < f.size(); ++i)
+			f[i].resize(h);
+
+		for(int y = 0; y < h; ++y) {
+			for(int x = 0; x < w; ++x) {
+				scanf("%d", &f[x][y]);
+				if(f[x][y] == 2) {
+					sx = x;
+					sy = y;
+				}
+			}
+		}
+
+		const int inf = 1000000;
+		int ans = inf;
+		dfs(sx, sy, 0, f, ans);
+		if(ans >= inf)
+			ans = -1;
+
+		printf("%d\n", ans);
+	}
+
+	return 0;
+}

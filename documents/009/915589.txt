@@ -1,0 +1,28 @@
+#include<iostream>
+#include<stdio.h>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int main() {
+	int place[3] = {0};
+	int moveint1,moveint2;
+	char move1,move2;
+	string hoge = "ABC";
+	int dummy;
+	
+	place[0] = 1;
+	while (~scanf("%c,%c",&move1,&move2)){
+		moveint1 = hoge.find(move1);
+		moveint2 = hoge.find(move2);
+		if ( moveint1 != -1 && moveint2 != -1 ) {
+			swap(place[moveint1],place[moveint2]);
+		}
+	}
+	
+	for ( int i = 0; i < 3; i++ ) {
+		if ( place[i] == 1 ) {
+			cout << hoge[i] << endl;
+		}
+	}
+}

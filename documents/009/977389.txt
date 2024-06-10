@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+  int N;
+  while (cin >> N) {
+    bool g[7][7] = {};
+    bool wf[7][7] = {};
+    for (int i = 0; i < N; ++i) {
+      int v;
+      cin >> v;
+      int x = v/10, y = v%10;
+      g[x][y] = wf[x][y] = true;
+      g[y][x] = wf[y][x] = true;
+    }
+    for (int k = 0; k < 7; ++k)
+      for (int i = 0; i < 7; ++i)
+	for (int j = 0; j < 7; ++j)
+	  if (wf[i][k] && wf[k][j])
+	    wf[i][j] = true;
+
+    int cnt[7] = {};
+    int odd = 0;
+    int use = 0;
+    for (int i = 0; i < 7; ++i) {
+      int adj = 0;
+      for (int j = 0; j < 7; ++j) {
+	if (i != j && g[i][j]) ++adj;
+	if (wf[i][j]) ++cnt[i];
+      }
+      if (adj % 2 == 1) ++odd;
+      if (adj > 0 || g[i][i]) ++use;
+    }
+    bool res = (odd == 0 || odd == 2);
+    for (int i = 0; i < 7; ++i) {
+      if (cnt[i] > 0 && cnt[i] != use) res = false;
+    }
+    cout << (res ? "Yes" : "No") << endl;
+  }
+}

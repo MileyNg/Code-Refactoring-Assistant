@@ -1,0 +1,82 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int h, w, s;
+    while (readf("%d %d %d\n", &h, &w, &s), h || w || s) {
+        int[][] u = new int[][h];
+        foreach (i; 0 .. h) {
+            u[i] = readln.chomp.split(" ").map!(to!int).array;
+        }
+
+        int[][] z = new int[][](h + 1, w + 1);
+        foreach (i; 0 .. w + 1) z[0][i] = 0;
+        foreach (i; 1 .. h + 1) {
+            int x = 0;
+            foreach (j; 1 .. w + 1) {
+                x += u[i - 1][j - 1];
+                z[i][j] = z[i - 1][j] + x;
+            }
+        }
+
+        int f(int sy, int sx, int gy, int gx) {
+            return z[gy][gx] - z[sy][gx] - z[gy][sx] + z[sy][sx];
+        }
+
+        struct A {
+            int c, r;
+            const int opCmp(const ref A a) const {
+                if (c == a.c) {
+                    return r - a.r;
+                }
+                return c - a.c;
+            }
+            string toString() {
+                return text(c, " ", r);
+            }
+        }
+
+        int L = z[h][w] - s;
+
+        auto cache = new A[][][][](h, w, h + 1, w + 1);
+        A dfs(int sy, int sx, int gy, int gx) {
+            //[sy, sx, gy, gx].writeln;
+            if (cache[sy][sx][gy][gx].c > 0) 
+                return cache[sy][sx][gy][gx];
+            auto ret = A(1, f(sy, sx, gy, gx) - L);
+            foreach (int y; sy .. gy) {
+                int z1 = f(sy, sx, y, gx);
+                if (z1 < L) continue;
+                int z2 = f(y, sx, gy, gx);
+                if (z2 < L) continue;
+                auto a = dfs(sy, sx, y, gx);
+                auto b = dfs(y, sx, gy, gx);
+                ret = max(ret, A(a.c + b.c, min(a.r, b.r)));
+            }
+            foreach (int x; sx .. gx) {
+                int z1 = f(sy, sx, gy, x);
+                if (z1 < L) continue;
+                int z2 = f(sy, x, gy, gx);
+                if (z2 < L) continue;
+                auto a = dfs(sy, sx, gy, x);
+                auto b = dfs(sy, x, gy, gx);
+                ret = max(ret, A(a.c + b.c, min(a.r, b.r)));
+            }
+            return cache[sy][sx][gy][gx] = ret;
+        }
+
+        dfs(0, 0, h, w).writeln;
+    }
+}

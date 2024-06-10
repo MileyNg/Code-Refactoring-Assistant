@@ -1,0 +1,54 @@
+<?php
+
+//最初の行の入力行を持ってくる
+$low = fgets(STDIN);
+//各要素に分ける
+$array = explode(" ",$low);
+
+$heightCount = $array[0];
+$widthCount = $array[1];
+$nowLine = rtrim($array[2]);
+//var_dump($nowLine);
+//var_dump($array[2]);
+
+
+//横線の本数回ゲームする
+for($i = 0; $i <= $array[1];$i++){
+
+	//入力された横線のデータ
+	$inputWidthData = fgets(STDIN);
+	
+	//各要素に分ける
+	$widthPropertyArray = explode(" ",$inputWidthData);
+	
+	//横線のデータを配列にいれる
+	$widthPropertyArrayArray[$i] = $widthPropertyArray;
+	
+}
+
+
+//最後の要素を削除(0.0.0)なので
+unset($widthPropertyArrayArray[count($widthPropertyArrayArray)-1]);
+
+//横線の高さの位置で並び替えたい
+foreach($widthPropertyArrayArray as $key => $val){
+	//
+	$foo[$key] = $val[0];
+}
+//多次元配列を並び替える
+array_multisort($foo,SORT_DESC,$widthPropertyArrayArray);
+
+
+//あみだくじを上から実行
+foreach($widthPropertyArrayArray as $key => $val){
+	
+	//現在いる位置に横線が書いてあったら移動
+	if($val[1] == $nowLine){
+		$nowLine = rtrim($val[2]);
+	}else if(rtrim($val[2]) == $nowLine){
+		$nowLine = $val[1];
+	}
+}
+
+//結果を出力
+echo($nowLine+"/n");

@@ -1,0 +1,31 @@
+#include<stdio.h>
+
+char *clas[8]={"AAA","AA","A","B","C","D","E","NA"};
+int rnk5[7]={3550,3750,4000,4300,5000,5500,7000};
+int rnk10[7]={7100,7700,8300,8900,10500,11600,14800};
+
+int judge(int i,int a5,int a10){
+  while(i<7){
+    if((a5<rnk5[i])&&(a10<rnk10[i])){
+      return i;
+    }
+    else{
+      i++;
+    }
+  }
+  return 7;
+}
+
+void doit(double x5,double x10){
+  int a5=(int)(100*x5);
+  int a10=(int)(100*x10);
+  printf("%s\n",clas[judge(0,a5,a10)]);
+}
+
+int main(){
+  double x5,x10;
+  while(scanf("%lf %lf",&x5,&x10)!=EOF){
+    doit(x5,x10);
+  }
+  return 0;
+}

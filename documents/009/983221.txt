@@ -1,0 +1,75 @@
+#include<iostream>
+using namespace std;
+
+int p,q,r;
+
+char perse(string x){
+  string tmp;
+  int n,c;
+  char op,a,b;
+  if(x[0] == '-'){
+    x.erase(x.begin());
+    return '0' + '2' - perse(x);
+  }
+  if(x[0] == '('){
+    tmp.clear();
+    n = 1;
+    c = 0;
+    while( c || (x[n] != '+' && x[n] != '*') ){
+      if(x[n] == '(')c++;
+      if(x[n] == ')')c--;
+      tmp.push_back(x[n]);
+      n++;
+    }
+    a = perse(tmp);
+    op = x[n];
+
+    tmp.clear();
+    n++;
+    while( c || x[n] != ')' ){
+      if(x[n] == '(')c++;
+      if(x[n] == ')')c--;
+      tmp.push_back(x[n]);
+      n++;
+    }
+    b = perse(tmp);
+
+    if(op == '+'){
+      if(a=='2' || b=='2')return '2';
+      else if(a=='1' || b=='1')return '1';
+      else return '0';
+    }else if(op == '*'){
+      if(a=='0' || b=='0')return '0';
+      else if(a=='1' || b=='1')return '1';
+      else return '2';
+    }
+  }
+
+  if(x[0] == 'P')return '0' + p;
+  if(x[0] == 'Q')return '0' + q;
+  if(x[0] == 'R')return '0' + r;
+
+  return x[0];
+}
+ 
+int main(){
+
+  int c;
+  string s;
+
+  while(1){
+    cin >> s;
+    if(s==".")break;
+
+    c = 0;
+    for(p=0;p<3;p++){
+      for(q=0;q<3;q++){
+	for(r=0;r<3;r++){
+	  if(perse(s) == '2')c++;
+	}
+      }
+    }
+
+    cout << c << endl;
+  }
+}

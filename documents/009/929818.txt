@@ -1,0 +1,28 @@
+
+#include<stdio.h>
+#include<string.h>
+  char ha[1<<21],k[256];
+int main(int argc,char *argv[]){
+  int flg;
+  int val,s,t;
+  char c;
+  k['T'] = 1;
+  k['G'] = 2;
+  k['C'] = 3;
+  k['A'] = 4;
+  
+  scanf("%d", &val);
+  getchar();
+  while (val--) {
+    s = 0;
+    t = 1;
+    flg = ( c = getchar() ) == 'i';
+    while ( ( c = getchar() ) != ' ' );
+    while ( ( c = k[getchar()] ) != 0 ) {
+      s += c * t;
+      t *= 4;
+    }
+    if (flg) ha[s] = 1; else puts( ha[s] ? "yes" : "no" );
+  }
+  return 0;
+}

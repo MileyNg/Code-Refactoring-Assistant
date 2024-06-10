@@ -1,0 +1,63 @@
+#include <iostream>
+#include <bitset>
+#include <string>
+
+class Baseball {
+    // 各ビットがそれぞれの塁のランナーの有無を表現する
+    std::bitset<4> runners;
+    u_int _out, _score;
+public:
+    Baseball() = default;
+    ~Baseball() = default;
+    void hit();
+    void homerun();
+    void out() { ++_out; }
+    void change();
+    bool is_change() { return _out == 3; }
+    u_int score() { return _score; }
+};
+
+void Baseball::hit() {
+    runners <<=1;   // ランナーを1つずつ進める
+    runners.set(0); // 一塁にランナーを置く
+    // ホームインしたかどうか
+    if (runners.test(3)) {
+        ++_score;
+        runners.reset(3);
+    }
+}
+
+void Baseball::homerun() {
+    _score += runners.count() + 1;
+    runners.reset(); // ランナーをリセット
+}
+
+void Baseball::change() {
+    _out = _score = 0;
+    runners.reset();
+}
+
+int main(void) {
+    u_int n;
+    std::string event;
+    Baseball game;
+
+    std::cin >> n;
+    for (u_int i = 0; i < n; ++i) {
+        do {
+            std::cin >> event;
+            if ("HIT" == event) {
+                game.hit();
+            } else if ("HOMERUN" == event) {
+                game.homerun();
+            } else if ("OUT" == event) {
+                game.out();
+            }
+        } while (!game.is_change());
+
+        std::cout << game.score() << std::endl;
+        game.change();
+    }
+
+    return 0;
+}

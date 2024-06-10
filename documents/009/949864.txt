@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cmath>
+#include <cstdio>
+using namespace std;
+
+int main()
+{
+    int n;
+    double x1,y1,x2,y2,x3,y3,x,y,r,d,dx1,dx2,dx3;
+    cin>>n;
+    while(n--)
+    {
+        cin>>x1>>y1>>x2>>y2>>x3>>y3;
+        d=2*(x1*(y2-y3)+x2*(y3-y1)+x3*(y1-y2));
+        dx=x1*x1+y1*y1;
+        dx2=x2*x2+y2*y2;
+        dx3=x3*x3+y3*y3;
+        x=(dx1*(y2-y3)+dx2*(y3-y3)+dx3*(y1-y2))/d;
+        y=(dx1*(x3-x2)+dx2*(x1-x3)+dx3*(x2-x1))/d;
+        r=sqrt(pow(x1-x,2)+pow(y1-y,2));
+        printf("%.3lf %.3lf %.3lf\n",x,y,r);
+    }
+    return 0;
+}

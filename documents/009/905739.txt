@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+
+// BEGIN CUT HERE
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+// END CUT HERE 
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) begin(v), end(v)
+#define REV(v) rbegin(v), rend(v)
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define f(x, y) ((y)*w+(x))
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+const int INF = 1e9;
+const int N = 12;
+int ch[N][N];
+int d[N*N][N*N];
+int dp[1 << N][N*N];
+
+int main(){
+	int h, w;
+	while (cin >> h >> w, h|w){
+		vector<int> v;
+		rep(i, h) rep(j, w){
+			cin >> ch[i][j];
+			if (ch[i][j]) v.push_back(f(j, i));
+		}
+
+		int n = h*w, t = v.size();
+		rep(i, n) rep(j, n) if (i != j) d[i][j] = INF;
+		rep(i, h) rep(j, w){
+			rep(k, 2){
+				int nx = j + k, ny = i + !k;
+				if (nx >= w || ny >= w) continue;
+				d[f(j, i)][f(nx, ny)] = d[f(nx, ny)][f(j, i)] = 1;
+			}
+		}
+		rep(i, n) rep(j, n) rep(k, n) d[j][k] = min(d[j][k], d[j][i] + d[i][k]);
+
+		rep(i, 1 << t) rep(j, n) dp[i][j] = INF;
+		rep(i, t) rep(j, n) dp[1 << i][j] = d[v[i]][j];
+		rep(i, 1 << t) rep(p, n) rep(q, n) for (int j = i; j > 0; j = (j - 1)&i) dp[i][p] = min(dp[i][p], dp[i^j][q] + dp[j][q] + d[p][q]);
+
+		int res = INF, all = (1 << t) - 1;
+		rep(i, 1 << t) rep(p, n) res = min(res, dp[i][p] + dp[all^i][p]);
+
+		if (res == INF) res = n;
+		else ++res;
+
+		cout << h * w - res << endl;
+	}
+
+	return 0;
+}

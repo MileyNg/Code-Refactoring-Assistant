@@ -1,0 +1,20 @@
+#include<iostream>
+using namespace std;
+int main(){
+  int n,x,y,b,p,total1,total2;
+  cin >> n;
+  for(int t=0;t<n;t++){
+    cin >> x >> y >> b >> p;
+
+    int ret = 100000000;
+    for(int i=b;i<10;i++){
+      int foo = x * i;
+      for(int j=p;j<10;j++){
+	int foo2 = foo + y * j;
+	if(i>=5&&j>=2)foo2 *= 0.8;
+	if(ret > foo2) ret = foo2;
+      }
+    }
+    cout << ret << endl;
+  }
+}

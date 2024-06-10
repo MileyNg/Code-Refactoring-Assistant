@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+ll StoLL(string s){
+  stringstream ss(s);
+  ll res;
+  ss >> res;
+  return res;
+}
+
+string s;
+ll parse(int l, int r){
+  if(s[l]!='['){
+    return StoLL(s.substr(l,r-l))/2 + 1;
+  }
+
+  vector<ll> ans;
+  int k = 0, prv = l;
+  for(int i=l;i<r;i++){
+    if(s[i] == '[')k++;
+    if(s[i] == ']')k--;
+    if(k==0){
+      ans.push_back(parse(prv+1,i));
+      prv = i+1;
+    }
+  }
+
+  sort(ans.begin(),ans.end());
+  ll res = 0;
+  for(int i=0;i<=(int)ans.size()/2;i++)res += ans[i];
+  return res;
+}
+      
+int main(){
+  int n;
+  cin >> n;
+  while(n--){
+    cin >> s;
+    cout << parse(1,s.size()-1) << endl;
+  }
+}
+	 

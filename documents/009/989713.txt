@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string abc = "abcdefghijklmnopqrstuvwxyz.?! ";
+	string b;
+	while (cin >> b) {
+		if (b.size() % 2 != 0) {
+			cout << "NA" << endl;
+		} else {
+			string a = "";
+			bool hantei = true;
+			for (int i = 0; i < b.size(); i++) {
+				int p = b[i] - '0';
+				int q = b[i+1] - '0';
+				if (p <= 0 || p > 6 || q <= 0 || q > 5) {
+					hantei = false;
+					break;
+				}
+				a += abc[5*(p-1)+q-1];
+				i++;
+			}
+			if (hantei) {
+				cout << a << endl;
+			} else {
+				cout << "NA" << endl;
+			}
+		}
+	}
+	return 0;
+}

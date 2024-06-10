@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+#define rall(c) (c).rbegin(), (c).rend()
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+
+int const N=1299709+10;
+vb isp;
+vi ps;
+void eratos(){
+    isp.assign(N,true);
+    ps.reserve(100000);
+    isp[0]=isp[1]=false;
+    ps.push_back(2);
+    for(int i=4;i<N;i+=2){
+        isp[i]=false;
+    }
+    for(int i=3;i<N;i++){
+        if(!isp[i]) continue;
+        ps.push_back(i);
+        for(int j=i+i;j<N;j+=i){
+            isp[j]=false;
+        }
+    }
+}
+
+int main(){
+    eratos();
+    int k;
+    while(cin>>k&&k){
+        auto lb=lower_bound(all(ps),k);
+        auto i=lb-1;
+        // cout << *lb << " " << *i << endl;
+        if(k==*lb){
+            cout << 0 << endl;
+        } else {
+            cout << *lb - *i  << endl;
+        }
+    }
+}

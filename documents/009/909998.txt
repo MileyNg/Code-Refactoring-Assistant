@@ -1,0 +1,29 @@
+#include <stdio.h>
+int main(void) {
+  int min, max, n, i, input;
+  int submax = 0, oldsubmax = 0;
+
+  scanf("%d", &n);
+
+  for (i = 0; i < n; i++) {
+    scanf("%d", &input);
+
+    if (i == 0) {
+      min = input;
+    }
+    if (input - min > submax) {
+      submax = input - min;
+    }
+    if (input < min) {
+      if (submax > oldsubmax) {
+	oldsubmax = submax;
+      }
+      min = input;
+    }
+    
+  }
+
+  printf("%d\n", oldsubmax > submax ? oldsubmax : submax);
+
+  return 0;
+}

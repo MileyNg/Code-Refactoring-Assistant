@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define EPS 1e-8
+double Deg_to_Rad(double a){
+  return a * M_PI / 180.0;
+}
+
+int main(){
+  int m, n;
+  while(cin >> m, m){
+    double a = 0, b = 0;
+
+    //半径を1として考える
+    //辺が長い方がBIGでは
+    int sum = 360;
+    for(int i = 0; i < m - 1; i++){
+      int v;
+      cin >> v;
+      sum -= v;
+      a += sin(Deg_to_Rad(v));
+    }
+    a += sin(Deg_to_Rad(sum));
+
+    cin >> n;
+    sum = 360;
+    for(int i = 0; i < n - 1; i++){
+      int v;
+      cin >> v;
+      sum -= v;
+      b += sin(Deg_to_Rad(v));
+    }
+    b += sin(Deg_to_Rad(sum));
+    if(fabs(a-b) < EPS) cout << 0 << endl;
+    else if(a > b) cout << 1 << endl;
+    else cout << 2 << endl;
+  }
+}

@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+long long int gcd(long long int a,long long int b){
+	if(b==0) return a;
+	return gcd(b,a%b);
+}
+
+vector<long long int> prime_factor(long long int x){
+	vector<long long int> result;
+	for(long long int i=1; i*i<=x; ++i){
+		if(x%i==0){
+			result.push_back(i);
+			if(i!=x/i) result.push_back(x/i);
+		}
+	}
+	sort(result.begin(),result.end());
+	return result;
+}
+
+long long int result(long long int l){
+	//a>=b
+	int ans=0;
+	vector<long long int> v=prime_factor(l);
+	for(auto it=v.begin(); it!=v.end(); ++it){
+		for(auto it_=v.begin(); *it_<=*it; ++it_){
+			if((*it)*(*it_)/gcd((*it),(*it_))==l) ++ans;
+		}
+	}
+	return ans;
+}
+
+int main(){
+	long long int L;
+	while(cin >> L&&L){
+		cout << result(L) << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,74 @@
+def read_field()
+  field = Array.new(8)
+  8.times do |idx|
+    field[idx] = gets.split('').to_a
+  end
+  return field
+end
+
+def check_field(field)
+  #File top left corner
+  topX = -1
+  topY = -1
+  field.each_with_index do |row, y|
+    row.each_with_index do |cell, x|
+      if cell == "1"
+        topX = x
+        topY = y
+        break
+      end
+    end
+    if topX != -1 && topY != -1
+      break
+    end
+  end
+  #Check A
+  if topX <= 6 && topY <= 6 &&
+    field[topY][topX + 1] == "1" &&
+    field[topY + 1][topX] == "1" &&
+    field[topY + 1][topX + 1] == "1"
+    puts "A"
+  elsif topY <= 4 &&
+    field[topY + 1][topX] == "1" &&
+    field[topY + 2][topX] == "1" &&
+    field[topY + 3][topX] == "1"
+    puts "B"
+  elsif topX <= 4 &&
+    field[topY][topX + 1] == "1" &&
+    field[topY][topX + 2] == "1" &&
+    field[topY][topX + 3] == "1"
+    puts "C"
+  elsif 1 <= topX  && topY <= 5 &&
+    field[topY + 1][topX] == "1" &&
+    field[topY + 1][topX - 1] == "1" &&
+    field[topY + 2][topX - 1] == "1"
+    puts "D"
+  elsif topX <= 5 && topY <= 6 &&
+    field[topY][topX + 1] == "1" &&
+    field[topY + 1][topX + 1] == "1" &&
+    field[topY + 1][topX + 2] == "1"
+    puts "E"
+  elsif topX <= 6 && topY <= 5 &&
+    field[topY + 1][topX] == "1" &&
+    field[topY + 1][topX + 1] == "1" &&
+    field[topY + 2][topX + 1] == "1"
+    puts "F"
+  elsif 1 <= topX && topX <= 6 && topY <= 6 &&
+    field[topY][topX + 1] == "1" &&
+    field[topY + 1][topX] == "1" &&
+    field[topY + 1][topX - 1] == "1"
+    puts "G"
+  else
+    raise "Unknown shape"
+  end
+end
+
+if __FILE__ == $0
+  while true
+    field = read_field()
+    check_field(field)
+    unless gets 
+      break
+    end
+  end
+end

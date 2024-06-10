@@ -1,0 +1,56 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	int n;
+	do	{
+		int** Mat;
+		cin >> n;
+		if (n == 0){
+			break;
+		}
+		Mat = new int*[n];
+		for (int i = 0; i < n; i++){
+			Mat[i] = new int[n];
+		}
+		for (int i = 0; i < n; i++){
+			for (int j = 0; j < n; j++){
+				cin >> Mat[i][j];
+			}
+		}
+
+		int sumrow;
+		int* sumcol;
+		sumcol = new int[n]();
+		int sum = 0;
+
+		for (int i = 0; i < n; i++){
+			sumrow = 0;
+			for (int j = 0; j < n; j++){
+				cout.width(5);
+				cout << Mat[i][j];
+				sumrow += Mat[i][j];
+				sumcol[j] += Mat[i][j];
+			}
+			cout.width(5);
+			cout << sumrow << endl;
+		}
+		for (int j = 0; j < n; j++){
+			cout.width(5);
+			cout << sumcol[j];
+			sum += sumcol[j];
+		}
+		delete[] sumcol;
+		cout.width(5);
+		cout << sum << endl;
+
+
+
+		//行列delete
+		for (int i = 0; i < n; i++){
+			delete[] Mat[i];
+		}
+		delete[] Mat;
+	} while (n != 0);
+
+}

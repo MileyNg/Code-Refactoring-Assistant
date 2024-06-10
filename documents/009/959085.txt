@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int dy[] = { 0, 1, 0, -1}, dx[] = { 1, 0, -1, 0};
+int H, W;
+
+bool isend(const string& str){
+  bool color;
+  for(int i = 0; i < 3; i++){
+    if(count( str.begin(), str.end(), "RGB"[i]) == H * W) return true;
+  }
+  return false;
+}
+int getx( int pos){
+  return pos % W;
+}
+int gety( int pos){
+  return pos / W;
+}
+int getpos( int y, int x){
+  return y * W + x;
+}
+
+string change( string str, char pre, char c){
+  if(pre == c) return str;
+  queue< int > que;
+  que.push(0);
+  str[0] = c;
+  while(!que.empty()){
+    int p = que.front(); que.pop();
+    for(int i = 0; i < 4; i++){
+      int ny = gety(p) + dy[i], nx = getx(p) + dx[i];
+      if(ny < 0 || ny >= H || nx < 0 || nx >= W) continue;
+      if(str[getpos(ny,nx)] != pre) continue;
+      str[getpos(ny,nx)] = c;
+      que.push(getpos(ny,nx));
+    }
+  }
+  return str;
+}
+
+int bfs(string str){
+  queue< string > que;
+  map< string, int > used;
+  que.push(str);
+  used[str] = 0;
+  while(!que.empty()){
+    string s = que.front(); que.pop();
+    if(isend(s)) return used[s];
+    for(int i = 0; i < 3; i++){
+      string newstr = change(s,s[0],"RGB"[i]);
+      if(used.find(newstr) != used.end()) continue;
+      used[newstr] = used[s] + 1;
+      que.push(newstr);
+    }
+  }
+}
+int main(){
+  while( cin >> W >> H, W){
+    string mas;
+    for(int i = 0; i < H; i++){
+      for(int j = 0; j < W; j++){
+        char c;
+        cin >> c;
+        mas += c;
+      }
+    }
+    cout << bfs(mas) << endl;
+  }
+}

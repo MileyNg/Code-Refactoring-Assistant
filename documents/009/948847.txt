@@ -1,0 +1,128 @@
+package Main;
+
+import java.applet.*;
+
+
+import java.awt.*;
+import java.awt.event.*;
+
+import utility.Environment;
+
+import Block.Block_I;
+
+import field.Field;
+
+public class Main extends Applet implements Runnable, KeyListener {
+
+	private static final long serialVersionUID = 1L;
+
+	private Graphics offG;
+	private Image img;
+	private Thread th;
+
+	Field field = new Field();
+	Block_I block = new Block_I();
+	Environment env = new Environment();
+
+	public void init() {
+		// ブラウザの大きさ
+		setSize(200, 270);
+		// レイアウト
+		setLayout(null);
+		// 描画イメージ
+		img = createImage(field.getWidth(), field.getHeight());
+		// オフスクリーンのイメージ
+		offG = img.getGraphics();
+
+		// キー入力をしたい
+		addKeyListener(this);
+		requestFocus();
+
+		// ブロックの初期落下位置
+		field.setNowBlockX(env.getDefoultPosition());
+	}
+
+	public void start() {
+		if (th == null) {
+			// 処理の流れを作る
+			th = new Thread(this);
+			th.start();
+		}
+	}
+
+	public void paint(Graphics G) {
+		// 画面表示処理
+		// 画面を初期状態に戻す
+		offG.clearRect(field.getMargin(), field.getMargin(), field.getWidth(),
+				field.getHeight());
+		// 背景色
+		offG.setColor(Color.gray);
+		// 背景の開始位置、と大きさを指定
+		offG.fillRect(field.getMargin(), field.getMargin(), field.getWidth(),
+				field.getHeight());
+
+		// ブロックの描画
+		offG.setColor(block.getColor());
+		for (int w = 0; w < block.getNowStone().length; w++) {
+			for (int h = 0; h < block.getNowStone()[0].length; h++) {
+
+				if (block.getNowStone()[w][h] == 1) {
+					offG.fillRect(field.getNowBlockX()
+							+ (field.getFieldPiece() * w), field.getNowBlockY()
+							+ (field.getFieldPiece() * h),
+							field.getFieldPiece(), field.getFieldPiece());
+				}
+			}
+		}
+
+		// 画面描画を開始
+		G.drawImage(img, 0, 0, this);
+	}
+
+	public void update(Graphics g) {
+		paint(g);
+	}
+
+	public void run() {
+		while (th == Thread.currentThread()) {
+			try {
+				Thread.sleep(env.getSpeed());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			repaint();
+			// ブロックが下に下がっていく処理
+			field.blockDownPosition();
+			// ブロックが下まで行ったら
+			if (field.getNowBlockY() == field.getHeight()) {
+				// 上からまたブロックが降ってくる
+				field.setNowBlockX(env.getDefoultPosition());
+				field.setNowBlockY(0);
+			}
+		}
+	}
+
+	// キー入力から、動きを決定
+	public void keyPressed(KeyEvent e) {
+		// 左←が押された場合
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			if (field.canMove(field.getNowBlockX(), block.getNowStone(),
+					field.getFieldPiece())) {
+				field.blockMoveLeft();
+			}
+		}
+		// 右→が押された場合
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			if (field.canMove(field.getNowBlockX(), block.getNowStone(),
+					field.getFieldPiece())) {
+				field.blockMoveRight();
+			}
+		}
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
+}

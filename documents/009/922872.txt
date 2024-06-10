@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Programminng
+{
+    class AOJ_Volume0009
+    {
+        public static void Main(string[] args)
+        {
+             int MAX = 1000000;
+             int[] prime = new int[MAX];
+
+             prime[0] = prime[1] = 0;
+             for (int i = 2; i < MAX; i++)
+             {
+                 prime[i] = 1;
+             }
+             for (int i = 2; i < 1001; i++)
+             {
+                 if (prime[i] == 1)
+                 {
+                     for (int j = 2 * i; j < MAX; j += i)
+                     {
+                         prime[j] = 0;
+                     }
+                 }
+             }
+            
+            
+            while (true)
+            {
+                var input = Console.ReadLine();
+                if (string.IsNullOrEmpty(input)) break;
+
+                int number = int.Parse(input);
+                int count = 0;
+
+                for (int i = 2; i <= number; i++)
+                {
+                    count += prime[i];
+                }
+                Console.WriteLine(count);
+            }
+        }
+    }
+}

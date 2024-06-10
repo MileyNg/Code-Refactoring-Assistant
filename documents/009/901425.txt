@@ -1,0 +1,42 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+string str;
+int cntw[255][255],cnth[255][255],cnta[255][255],cntb[255][255];
+int n;
+int t[255][255],ans;
+int main(){
+  while(cin>>n&&n){
+    ans=0;
+    for(int i=0;i<n;i++){
+      cin>>str;
+      for(int j=0;j<n;j++){
+	t[i][j]=str[j]-'0';
+	cntw[i][j]=cnth[i][j]=cnta[i][j]=cntb[i][j]=t[i][j];
+      }
+    }
+    for(int i=0;i<n;i++){
+      for(int j=0;j<n;j++){
+	if(t[i][j]==0)continue;
+	if(i>0){
+	  cnth[i][j]+=cnth[i-1][j];
+	}
+	if(j>0){
+	  cntw[i][j]+=cntw[i][j-1];
+	}
+	if(i>0&&j>0){
+	  cnta[i][j]+=cnta[i-1][j-1];
+	}
+	if(i>0&&j<n-1){
+	  cntb[i][j]+=cntb[i-1][j+1];
+	}
+	ans=max(ans,cnth[i][j]);
+	ans=max(ans,cntw[i][j]);
+	ans=max(ans,cnta[i][j]);
+	ans=max(ans,cntb[i][j]);
+      }
+    }
+    cout<<ans<<endl;
+  }
+  return 0;
+}

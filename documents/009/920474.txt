@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <stack>
+using namespace std;
+
+int main(){
+
+    while(1){
+        stack<char> s;
+        bool isBalance = true;
+        string input;
+
+        getline(cin, input);
+
+        if(input[0] == '.' && input[1] == '\0') break;
+
+        for(int i=0;i < input.length() ;i++){
+            if(input[i] == '.') break;
+            switch(input[i]){
+                case '[': s.push(input[i]);
+                          break;
+                case '(': s.push(input[i]);
+                          break;
+                case ']':
+                          if(s.empty()){ isBalance = false; break;}
+                          else if(s.top() != '['){isBalance = false; break;}
+                          else s.pop();
+                          break;
+                case ')':
+                          if(s.empty()){ isBalance = false; break;}
+                          else if(s.top() != '('){isBalance = false; break;}
+                          else s.pop();
+                          break;
+            }
+            if(!isBalance) break;
+        }
+        if(!isBalance || !s.empty()) cout << "no" << endl;
+        else cout << "yes" << endl;
+
+    }
+    return 0;
+}

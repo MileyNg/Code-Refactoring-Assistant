@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+typedef long long ll;
+#define mod 1000000007
+
+int n;
+ll dp[205][205];
+ll inv[205];
+string s[205];
+
+long long modpow(long long x,long long n){
+	long long res=1;
+	while(n>0){
+		if(n&1) res=res*x%mod;
+		x=x*x%mod;
+		n>>=1;
+	}
+	return res;
+}
+int main() {
+  cin >> n;
+  for(int i=1;i<=n;i++) cin >> s[i];
+  dp[0][0]=1;
+  for(int i=1;i<=200;i++) inv[i]=modpow(1ll*i,mod-2ll);
+  for(int i=0;i<n;i++){
+    for(int j=0;j<=n;j++){
+      if(!dp[i][j]) continue;
+      //cout << dp[i][j] <<" " << i << " " << j << endl;
+      if(s[i+1]=="-"){
+        dp[i+1][j] = (dp[i+1][j]+dp[i][j]*1LL*(n-i-j)*inv[n-i])%mod;
+      }
+      else if(s[i+1]=="D")
+      {
+  		dp[i+1][j] = (dp[i+1][j]+dp[i][j]*1LL*j*(n-i-j)*inv[n-i])%mod;
+  		if(j) dp[i+1][j-1] = (dp[i+1][j-1]+dp[i][j]*1LL*j*j*inv[n-i])%mod;
+      }
+      else
+      {
+      	dp[i+1][j] = (dp[i+1][j]+dp[i][j]*1LL*j*(n-i-j)*inv[n-i])%mod;
+        dp[i+1][j+1] = (dp[i+1][j+1]+dp[i][j]*1LL*(n-i-j)*(n-i-j-1)*inv[n-i])%mod;
+      }
+      
+    }
+  }
+  cout << dp[n][0] << endl;
+}

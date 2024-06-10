@@ -1,0 +1,59 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct{
+  int time;
+  char name[10];
+}process;
+
+
+int main(void){
+  int n,q,head=0,tail,cnt=0,cnt_time=0;
+  process *data,*out;
+  int i;
+
+  //n=プロセス数,q=クオンタム
+  scanf("%d %d",&n,&q);
+
+  //動的にプロセスを格納する配列を作る
+  data=(process *)malloc(sizeof(process)*(n+1));
+  out=(process *)malloc(sizeof(process)*n);
+
+  //ゆかいなプロセスたちを格納
+  for(i=0;i<n;i++){
+    scanf("%s %d",data[i].name,&data[i].time);
+  }
+
+  //メイン処理
+  tail=n;
+
+  while(head!=tail){
+    data[head].time-=q;
+
+    if(data[head].time>0){
+      data[tail]=data[head];
+      tail++;
+      if(tail>n) tail=0;
+      cnt_time+=q;
+    }
+    else{
+      cnt_time+=(q+data[head].time);
+      out[cnt]=data[head];
+      out[cnt].time=cnt_time;
+      cnt++;
+    }
+    
+    head++;
+    if(head>n) head=0;
+    
+  }
+
+  //出力
+  for(i=0;i<n;i++) printf("%s %d\n",out[i].name,out[i].time);
+
+  //配列を解放
+  free(data);
+  free(out);
+
+  return 0;
+}

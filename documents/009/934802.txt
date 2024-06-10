@@ -1,0 +1,251 @@
+
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Test2 {
+
+	public static void main(String[] args) {
+
+		// 入力
+		Scanner sc = new Scanner(System.in);
+		Stick2 st = new Stick2();
+		LikeZ2 lz = new LikeZ2();
+
+		// a以外の入力がある場合、ブロックを回転させたい
+		while (sc.hasNext()) {
+			if (sc.next().equals("a"))
+				break;
+
+			lz.out();
+			lz.round();
+		}
+	}
+	//
+
+}
+
+abstract class Block2 {
+
+	/**
+	 * 石座標
+	 */
+	String[][] stone;
+	/**
+	 * 色
+	 */
+	String color = "";
+	/**
+	 * 柄
+	 */
+	String mark = "";
+	
+	/**
+	 * 軸座標の高さの位置
+	 */
+	int shaft_height = 1;
+
+	/**
+	 * 軸座標の幅の位置
+	 */
+	int shaft_width = 1;
+
+	/**
+	 * 回転数
+	 */
+	private int roundCount = 4;
+	
+	/**
+	 * 動いたブロック
+	 */
+	String moved = "moved";
+	
+	/**
+	 * 
+	 * @param stone 
+	 * @param color 
+	 * @param mark 
+	 * @param shaft_height 
+	 * @param shaft_width 
+	 * @param roundCount 
+	 */
+	Block2(String[][] stone,String color,String mark,int shaft_height,int shaft_width,int roundCount){
+		
+		this.stone = stone;
+		this.color = color;
+		this.mark = mark;
+		this.shaft_height = shaft_height;
+		this.shaft_width = shaft_width;
+		this.roundCount = roundCount;
+	}
+
+	/**
+	 * 回転する
+	 */
+	public void round() {
+
+		// 軸にそってブロックを回転する
+		// まずはブロックの位置を把握
+		for (int h = 0; h < stone.length; h++) {
+			for (int w = 0; w < stone[0].length; w++) {
+				if (stone[h][w] == mark) {
+
+					// 軸座標とブロック位置が同じ位置の場合はブロックを動かさない
+					if (h == shaft_height
+							&& w == shaft_width) {
+
+					} else if (w == shaft_width) {
+						// 軸から見て、回転するブロックが縦の並列関係にある場合、ブロック座標の高さと幅を置き換える
+
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+
+						// ブロックを移動
+						stone[w][h] = moved;
+
+					} else if (h == shaft_height
+							&& w < shaft_width) {
+						// 軸から見て、回転するブロックが横の並列関係にあり、さらに軸ブロックより左側にある場合のブロック位置変化
+
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+
+						// ブロックを移動
+						stone[h + 1][w + 1] = moved;
+
+					} else if (h == shaft_height
+							&& w > shaft_width) {
+						// 軸から見て、回転するブロックが横の並列関係にあり、さらに軸ブロックより右側にある場合のブロック位置変化
+
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+
+						// ブロックを移動
+						stone[h - 1][w - 1] = moved;
+						
+					} else if((h != shaft_height && w != shaft_width)  &&( h < shaft_height && w < shaft_width)){
+						//軸ブロックと縦、横の関係になく、軸ブロックの左上にブロックが存在している場合
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+						
+						//ブロックを移動
+						stone[Math.abs(shaft_height-h)*2][w] = moved;
+						
+					} else if((h != shaft_height && w != shaft_width)  &&( h > shaft_height && w < shaft_width)){
+						//軸ブロックと縦、横の関係になく、軸ブロックの左下にブロックが存在している場合
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+						
+						//ブロックを移動
+						stone[h][Math.abs(shaft_height-h)*2] = moved;
+						
+					}else if((h != shaft_height && w != shaft_width)  &&( h > shaft_height && w > shaft_width)){
+						//軸ブロックと縦、横の関係になく、軸ブロックの右下にブロックが存在している場合
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+						
+						//ブロックを移動
+						stone[h-Math.abs(shaft_height-h)*2][w] = moved;
+						
+					}else if((h != shaft_height && w != shaft_width)  &&( h < shaft_height && w > shaft_width)){
+						//軸ブロックと縦、横の関係になく、軸ブロックの右下にブロックが存在している場合
+						// 元あった場所のブロックを、移動させるため消去
+						stone[h][w] = null;
+						
+						//ブロックを移動
+						stone[h][w-Math.abs(shaft_height-h)*2] = moved;
+					}
+					
+				}
+			}
+		}
+		
+		//すべてのブロックが置き換わったので、ブロックを具現化
+		for (int h = 0; h < stone.length; h++) {
+			for (int w = 0; w < stone[0].length; w++) {
+				if (stone[h][w] == moved) {
+					stone[h][w] = mark;
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * 移動する
+	 */
+	public void move() {
+	}
+	
+	/**
+	 * 出力する
+	 */
+	public void out() {
+		for (int i = 0; i < stone.length; i++) {
+			for (int j = 0; j < stone[0].length; j++) {
+				if (stone[i][j] == null) {
+					stone[i][j] = "  ";
+				}
+				System.out.print(stone[i][j]);
+			}
+			System.out.println("");
+		}
+	}
+
+}
+
+/**
+ * 棒 形++++
+ */
+class Stick2 extends Block2 {
+
+	// 初期状態を作る
+	Stick2() {
+
+		super(new String[4][4],"red","st",1,1,2);
+		
+		// パターン1（縦の状態）を作る
+		super.stone[0][1] = super.mark;
+		super.stone[1][1] = super.mark;
+		super.stone[2][1] = super.mark;
+		super.stone[3][1] = super.mark;
+	}
+}
+
+
+class LikeZ2 extends Block2 {
+	
+	LikeZ2() {
+
+		super(new String[3][3],"blue","lz",1,1,2);
+		//ブロックの形を登録
+		//++
+		// ++
+		super.stone[0][0] = super.mark;
+		super.stone[0][1] = super.mark;
+		super.stone[1][1] = super.mark;
+		super.stone[1][2] = super.mark;
+		
+	}
+
+}
+
+//class LikeReturnZ2 extends Block2 {
+//
+//}
+//
+//class LikeL2 extends Block2 {
+//
+//}
+//
+//class LikeReturnL2 extends Block2 {
+//
+//}
+//
+//class LikeT2 extends Block2 {
+//
+//}
+//class Square2 extends Block2 {
+//	
+//
+//}

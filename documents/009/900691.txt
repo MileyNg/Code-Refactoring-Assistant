@@ -1,0 +1,41 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <stack>
+using namespace std;
+
+double operate( double a, double b, string opc ) {
+  return (
+    opc == "+" ? a + b :
+    opc == "-" ? a - b :
+    opc == "*" ? a * b : a / b
+  );
+}
+
+int main() {
+  string line;
+  while( getline( cin, line ) ) {
+    istringstream iss( line );
+    stack<double>  st;
+    string item;
+    while( iss >> item ) {
+      if(
+          ( '0' <= item[ 0 ] && item[ 0 ] <= '9' ) ||
+          ( item[ 0 ] == '-' && item.size() >= 2 )
+      ) {
+        st.push( atoi( item.c_str() ) );
+      } else {
+        int b = st.top();
+        st.pop();
+        int a = st.top();
+        st.pop();
+        st.push( operate( a, b, item ) );
+      }
+    }
+    printf( "%.6f\n", st.top() );
+    st.pop();
+  }
+  return EXIT_SUCCESS;
+}

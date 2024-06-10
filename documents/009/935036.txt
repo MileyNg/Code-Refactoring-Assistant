@@ -1,0 +1,39 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <sstream>
+#include <string>
+using namespace std;
+
+string IntToString(int number)
+{
+    stringstream ss;
+    ss << number;
+    return ss.str();
+}
+
+int main(){
+    int n;
+    cin >> n;
+    for(int i=0; i < n; i++){
+        string ans;
+        string p, q;
+        cin >> p >> q;
+        if(p.size() < q.size()) swap(p, q);
+        int diff = p.size()-q.size();
+        for(int i=0; i < diff; i++){
+            q = '0' + q;
+        }
+        p = '0' + p; q = '0' + q;
+        int up = 0;
+        for(int i=p.size()-1; 0 <= i || up != 0; i--){
+            int m = atoi(p.substr(i,1).c_str()) + atoi(q.substr(i, 1).c_str());
+            ans = IntToString((m+up)%10) + ans;
+            up = (m+up)/10;
+        }
+        if(ans[0] == '0') ans = ans.substr(1, ans.size()-1);
+
+        if(80 < ans.size()) cout << "overflow" << endl;
+        else cout << ans << endl;
+    }
+}

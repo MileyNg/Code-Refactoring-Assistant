@@ -1,0 +1,31 @@
+import math,cmath
+def f(m):
+  b*=1j
+  c=math.acos(a/2)
+  p1=cmath.exp(b+c)+p0
+  p2=cmath.exp(b-c)+p0
+  s1,s2=0,0
+  for k in N:
+    if k==i or k==j:continue
+    if abs(p1-X[k])<=1:s1+=1
+    if abs(p2-X[k])<=1:s2+=1
+  if s1>m:m=s1
+  if s2>m:m=s2
+  return m
+
+while 1:
+  n=input()
+  if n==0:break
+  N=range(n)
+  X=[]
+  for i in range(n):
+    x,y=map(float,input())
+    X+=[complex(x,y)]
+  m=0
+  for i in N:
+    p0=X[i]
+    for j in N:
+      if i==j:continue
+      a,b=cmath.polar(p0-X[j])
+      if a<=2:m=f(m)
+  print m+2

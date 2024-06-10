@@ -1,0 +1,34 @@
+#include <stdio.h>
+int Partition(int *A,int p,int r){
+  int j,n1,n2,x,i;
+  x=A[r];
+  i=p-1;
+  for(j=p;j<r;j++){
+    if(A[j]<=x){
+      i=i+1;
+      n1=A[i];
+      A[i]=A[j];
+      A[j]=n1;
+    }
+  }
+  n2=A[i+1];
+  A[i+1]=A[r];
+  A[r]=n2;
+  return i+1;
+}
+
+main(){
+  int n,i,A[100000],x;
+  scanf("%d",&n);
+  for(i=1;i<=n;i++){
+    scanf("%d",&A[i]);
+  }
+  x=Partition(A,1,n);
+  for(i=1;i<=n;i++){
+    if(i!=x && i!=n)printf("%d ",A[i]);
+    else if (i==x)printf("[%d] ",A[i]);
+    else if(i== n) printf("%d",A[i]);
+  }
+  printf("\n");
+  return 0;
+}

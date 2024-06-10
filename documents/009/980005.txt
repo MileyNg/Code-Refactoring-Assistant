@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+long long int side[1002][1002], ver[1002][1002];
+
+int main() {
+
+  string input, s;
+
+  long long int h, w;
+
+  while( true ) {
+
+    cin >> h >> w;
+
+    if ( h == 0 ) break;
+
+    vector< string > map;
+    s = "**";
+    for ( long long int i = 0; i < w; i++ ) {
+      s += "*";
+    }
+    map.push_back( s );
+    for ( long long int i = 0; i < h; i++ ) {
+      cin >> input;
+      input = "*" + input + "*";
+      map.push_back( input );
+    }
+    map.push_back( s );
+    for ( long long int i = 0; i <= h+1; i++ ) {
+      long long int cnt_s = 0;
+      for ( long long int j = 0; j <= w+1; j++ ) {
+	if ( map[i][j] == '*' ) {
+	  cnt_s = 0;
+	}else {
+	  cnt_s++;
+	}
+	side[i][j] = cnt_s;
+      }
+    }
+    for ( long long int i = 0; i <= w+1; i++ ) {
+      long long int cnt_v = 0;
+      for ( long long int j = 0; j <= h+1; j++ ) {
+	if ( map[j][i] == '*' ) {
+	  cnt_v = 0;
+	}else {
+	  cnt_v++;
+	}
+	ver[j][i] = cnt_v;
+      }
+    }
+    long long int ans = 0;
+    for ( long long int i = 1; i <= h; i++ ) {
+      for ( long long int j = 1; j <= w; j++ ) {
+	if ( map[i][j] == '.' ) {
+	  long long int cnt_v = h;
+	  for ( long long int k = 0; true; k++ ) {
+	    if ( map[i][j+k] == '*' ) break;
+	    cnt_v = min( cnt_v, ver[i][j+k] );
+	    ans = max( ans, (k+1) * cnt_v );
+	  }
+	}
+      }
+    }
+
+    cout << ans << endl;
+
+  }
+
+  return 0;
+
+}

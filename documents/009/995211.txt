@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+const string INF = "~";
+
+int n, a, s, g;
+vector<vector<string>> cost;
+
+bool operator<(const string& s1, const string& s2) {
+    for(int i = 0; i < min(s1.size(), s2.size()); ++i) if(s1[i] != s2[i]) return s1[i] < s2[i];
+    return s1.size() < s2.size();
+}
+
+string BellmanFord() {
+    vector<string> memo(n, INF);
+    memo[g] = "";
+    for(int i = 0; i <= 12 * n; ++i) {
+        for(int u = 0; u < n; ++u) {
+            for(int v = 0; v < n; ++v) {
+                if(cost[v][u] + memo[u] < memo[v]) {
+                    memo[v] = cost[v][u] + memo[u];
+                    if(v == s && i >= 6 * n) return INF;
+                }
+            }
+        }
+    }
+    return memo[s];
+}
+
+int main() {
+    while(cin >> n >> a >> s >> g, n | a | s | g) {
+        cost.clear();
+        cost.resize(n);
+        for(auto& c: cost) c.resize(n, INF);
+        for(int i = 0; i < a; ++i) {
+            int x, y;
+            string lab;
+            cin >> x >> y >> lab;
+            if(lab < cost[x][y]) cost[x][y] = lab;
+        }
+        string answer = BellmanFord();
+        cout << (answer != INF ? answer : "NO") << endl;
+
+    }
+}

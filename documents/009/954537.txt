@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, pair<int, int> > pii;
+
+int M, T, P, R;
+
+bool cmp(const pii &a, const pii &b){
+  if(a.S.F != b.S.F) return a.S.F > b.S.F;
+  if(a.S.S != b.S.S) return a.S.S < b.S.S;
+  return a.F > b.F;
+}
+
+int main(){
+  while(scanf("%d%d%d%d",&M, &T, &P, &R) && M+T+P+R){
+    vector<vector<int> >pe(T, vector<int>(P));
+    rep(i, T) rep(j, P) pe[i][j] = 0;
+    vector<pii>team(T); // team, ac, penalty
+    rep(i, T) team[i] = make_pair(i, make_pair(0, 0));
+
+    int m, t, p, j;
+    rep(i, R){
+      scanf("%d%d%d%d", &m, &t, &p, &j); t--; p--;
+      if(j){
+	pe[t][p]++;
+      }else{
+	team[t].S.F++;
+	team[t].S.S += m + (20 * pe[t][p]);
+      }
+    }
+    //    rep(i, T) printf("%d %d %d\n", team[i].F+1, team[i].S.F, team[i].S.S);
+    sort(team.begin(), team.end(), cmp);
+
+    //    rep(i, T) printf("%d ", team[i].F+1); puts("");
+    rep(i, T) printf(i?team[i-1].S.F==team[i].S.F&&team[i-1].S.S==team[i].S.S?"=%d":",%d":"%d", team[i].F+1); puts("");
+  }
+  return 0;
+}

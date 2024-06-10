@@ -1,0 +1,62 @@
+### constant
+
+DELTA = 1.0e-8
+
+### subroutines
+
+def cross(l1, l2)
+  x1, y1 = l1[0..1]
+  x2, y2 = l1[2..3]
+  x3, y3 = l2[0..1]
+  x4, y4 = l2[2..3]
+
+  d = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
+  return nil if d.abs < DELTA
+
+  k = (y4 - y3) * (x4 - x1) - (x4 - x3) * (y4 - y1)
+  e = -(y2 - y1) * (x4 - x1) + (x2 - x1) * (y4 - y1)
+
+  s = k / d
+  t = e / d
+  return nil if s < 0 || s > 1 || t < 0 || t > 1
+
+  [(x2 - x1) * s + x1, (y2 - y1) * s + y1]
+end
+
+def eqpt(p1, p2)
+  (p2[0] - p1[0]).abs < DELTA && (p2[1] - p1[1]).abs < DELTA
+end
+
+### main
+
+while true
+  line = gets.strip
+  break if line == '0 0 0 0'
+
+  l1 = line.split(' ').map{|s| s.to_f}
+  l2 = gets.split(' ').map{|s| s.to_f}
+  l3 = gets.split(' ').map{|s| s.to_f}
+
+  c1 = cross(l1, l2)
+  c2 = cross(l2, l3)
+  c3 = cross(l3, l1)
+
+  if c1.nil? || c2.nil? || c3.nil? ||
+      eqpt(c1, c2) || eqpt(c2, c3) || eqpt(c3, c1)
+    puts 'kyo'
+  else
+    v1 = [c2[0] - c1[0], c2[1] - c1[1]]
+    v2 = [c3[0] - c1[0], c3[1] - c1[1]]
+    s = (v1[0] * v2[1] - v1[1] * v2[0]).abs / 2
+
+    if s >= 1900000
+      puts 'dai-kichi'
+    elsif s >= 1000000
+      puts 'chu-kichi'
+    elsif s >= 100000
+      puts 'kichi'
+    else
+      puts 'syo-kichi'
+    end
+  end
+end

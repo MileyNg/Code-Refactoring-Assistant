@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+void merge(int *a, int n){
+	if(n <= 1)return;
+	int i, mid = n / 2;
+	merge(a, mid);
+	merge(a + mid, n - mid);
+	int tmp[n];
+	int lp = 0, rp = mid;
+	for(i = 0;i < n;i++){
+		if(lp == mid){
+			tmp[i] = a[rp++];
+		}
+		else if(rp == n){
+			tmp[i] = a[lp++];
+		}
+		else if(a[lp] < a[rp]){
+			tmp[i] = a[lp++];
+		}
+		else{
+			tmp[i] = a[rp++];
+		}
+	} 
+	for(i = 0;i < n;i++){
+		a[i] = tmp[i];
+	}
+}
+           
+int n;
+int a[1080000];
+
+int main(){
+	int i;
+	scanf("%d", &n);
+	for(i = 0;i < n;i++)scanf("%d", &a[i]);
+	
+	merge(a, n);
+	
+	for(i = 0;i < n;i++){
+		if(i)printf(" ");
+		printf("%d", a[i]);
+	}	
+	puts("");
+	return 0;
+}

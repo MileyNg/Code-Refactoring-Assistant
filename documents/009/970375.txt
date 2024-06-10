@@ -1,0 +1,20 @@
+ps = []
+time = 0
+cnt, q = gets.split.map(&:to_i)
+
+cnt.times do
+  n, t = gets.split
+  ps << {name: n, time: t.to_i}
+end
+
+while !ps.empty?
+  p = ps.shift
+  if p[:time] <= q
+    time += p[:time]
+    puts "#{p[:name]} #{time}"
+  else
+    time += q
+    p[:time] -= q
+    ps << p
+  end
+end

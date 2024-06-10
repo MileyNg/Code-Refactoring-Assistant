@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+int qq(const void *a, const void *b)
+{
+    return *(int*)a - *(int*)b;
+}
+int qqq(const void *c, const void *d)
+{
+    return *(int*)c - *(int*)d;
+}
+int main()
+{
+    int i,j;
+    int count=0;
+    int n,q;
+    int n1[100001]={0},q1[50001]={0};
+    scanf("%d",&n);
+    for(i=0; i<n; i++){
+        scanf("%d",&n1[i]);
+    }
+    scanf("%d",&q);
+    for(i=0; i<q; i++){
+        scanf("%d",&q1[i]);
+    }
+    qsort(n1,n,sizeof(int),qq);
+    qsort(q1,q,sizeof(int),qqq);
+    for(j=0; j<q; j++){
+        for(i=0; i<n; i++){
+            if(q1[j] == n1[i]){
+                count++;
+                break;
+            }
+        }
+    }
+    printf("%d\n",count);
+    return 0;
+}

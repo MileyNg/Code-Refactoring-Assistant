@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<string.h>
+int H,W,i,j,sh,sw;
+char P[30][30];
+
+int dfs(int ph,int pw)
+{
+	int m[5]={0,1,0,-1,0},i,r=0;
+	P[ph][pw]='#';
+	for(i=0;i<4;i++)
+	{
+		if(P[ph+m[i]][pw+m[i+1]]=='.')
+			r+=dfs(ph+m[i],pw+m[i+1])+1;
+	}
+	return r;
+}
+
+int main()
+{
+	for(;scanf("%d%d\n",&W,&H),H;)
+	{
+		memset(P,0,sizeof(P));
+		for(i=1;i<=H;i++)
+			for(j=1;j<=W+1;j++)
+			{
+				P[i][j]=getchar();
+				if(P[i][j]=='@')sh=i,sw=j,P[i][j]='.';
+			}
+		printf("%d\n",dfs(sh,sw)+1);
+	}
+	return 0;
+}

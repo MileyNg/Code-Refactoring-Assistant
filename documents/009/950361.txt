@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+struct koma{
+	int x01, y01, x11, y11;
+};
+
+int main(){
+	int n;
+	int max = 0;
+	int head;
+	int end_of_line;
+	vector<koma> k(n);
+	while( 1 ){
+		cin >> n;
+		if( n == 0 ) break;
+		//input/////////////////////////
+		for( int i = 0; i < n; i++ ){
+			cin >> k[i].x01 >> k[i].y01 >> k[i].x11 >> k[i].y11;
+			if( max < k[i].x11 ){
+				max = k[i].x11;
+			}
+		}
+		//the most right point//////////
+		int min = max;
+		for( int i = 0; i < n; i++ ){
+			if( min > k[i].x01 ){
+				min = k[i].x01;
+				head = i;
+			}
+		}
+		//about the end of line/////////
+		end_of_line = max;
+		for( int i = 0; i < n; i++ ){
+			if( k[i].y01 < k[head].y11 && k[i].y11 > k[head].y11 ){
+				if( end_of_line > k[i].x01 ){
+					end_of_line = k[i].x01;
+				}
+			}
+		}
+		vector<koma>::iterator it;
+		it = k.begin();
+		while( it != k.end() ){
+			/*if( it.y11 <= k[head].y11 && it.x11 <= end_of_line ){
+				cout << it << endl;
+				//k.erase(i); k.insert(i, max);
+				it++;
+			}*/
+		}
+	}
+	return 0;
+}

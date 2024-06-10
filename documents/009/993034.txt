@@ -1,0 +1,50 @@
+### main
+
+while true
+  line = gets.strip
+  break if line == '0'
+
+  bds = []
+  bds << line.split('')
+
+  bds << gets.strip.split('')
+  bds << gets.strip.split('')
+
+  draw = true
+
+  for y in (0..2)
+    ch = bds[y][0]
+    if ch != '+' && ch == bds[y][1] && ch == bds[y][2]
+      puts ch
+      draw = false
+      break
+    end
+  end
+  next if ! draw
+
+  for x in (0..2)
+    ch = bds[0][x]
+    if ch != '+' && ch == bds[1][x] && ch == bds[2][x]
+      puts ch
+      draw = false
+      break
+    end
+  end
+  next if ! draw
+
+  ch = bds[0][0]
+  if ch != '+' && ch == bds[1][1] && ch == bds[2][2]
+    puts ch
+    draw = false
+    next
+  end
+
+  ch = bds[0][2]
+  if ch != '+' && ch == bds[1][1] && ch == bds[2][0]
+    puts ch
+    draw = false
+    next
+  end
+
+  puts 'NA'
+end

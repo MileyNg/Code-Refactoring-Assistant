@@ -1,0 +1,72 @@
+$MAX_DAY = 3_652_425
+
+def read arr, index
+  sum = 0
+  i = index
+  while i > 0
+    sum += arr[i]
+    i = i & (i - 1)
+  end
+  sum
+end
+
+def update arr, index, value
+  max = arr.size
+  i = index
+  while i < max
+    arr[i] += value
+    i += (i & -i)
+  end
+end
+
+def bsearch arr, value
+  si = 0
+  ei = arr.size - 1
+  p = 0
+  score = 0
+  while si <= ei
+    p = si + (ei - si) / 2
+    score = read(arr, p) + p
+    if value > score
+      si = p + 1
+    elsif value < score and si != ei
+      ei = p
+    else
+      break
+    end
+  end
+
+  if score < value
+    p = -1
+  end
+  p
+end
+
+def main
+  n,q = gets.chomp.split(' ').map(&:to_i)
+  days = Array.new($MAX_DAY + 1, 0)
+
+  n.times do
+    w,t,x = gets.chomp.split(' ').map(&:to_i)
+    recover_day = bsearch(days, w)
+    if recover_day == -1
+      puts 'Many years later'
+      next
+    end
+    puts recover_day
+
+    index = 0
+    x.times do |i|
+      index = recover_day + 1 + i
+      break if index > $MAX_DAY
+      update(days, index, (i+1) ** t)
+    end
+  end
+
+  q.times do
+    target = gets.chomp.to_i
+    puts read(days, target) + target
+  end
+end
+
+main

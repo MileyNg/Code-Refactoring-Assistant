@@ -1,0 +1,83 @@
+#include <stdio.h>
+void dr (int);  
+int n,i,j,id[100000],parent[100000],d[100000],cn[100000];
+int c[10000][10000];
+void dr(int k){
+  for(i=0;i<cn[k];i++){
+    d[i]=d[parent[i]]+1;
+    if(cn[i]!=0) {
+      for(j=0;j<cn[i];j++){
+	dr(c[i][j]);
+      }
+    }
+  }
+}
+int main(){
+  scanf("%d",&n);
+  for(i=0;i<n;i++){
+    scanf("%d",&id[i]);
+    scanf("%d",&cn[id[i]]);
+    if(cn[id[i]]==0) c[i][0]=0 ;
+    else {
+      for(j=0;i<cn[id[i]];j++){
+	scanf("%d",&c[id[i]][j]);
+	parent[c[id[i]][j]]=id[i];
+      }
+    }
+  }
+  for(i=0;i<n;i++){
+    if(parent[i]=='\0'){
+      d[i]=0;
+      parent[i]=-1;
+      for(j=0;j<cn[i];j++){
+	dr(c[i][j]);
+      }
+    }
+  }
+  
+  for(i=0;i< n-1;i++){
+    printf("node %d: ",i);
+    printf("parent = %d, ",parent[i]);
+    printf("depth = %d " ,d[i]);
+    if(parent[i]==-1 && cn[i] !=0) {
+      printf("root, [");
+      for(j=0;j< cn[i]-1 ;j++){
+	printf("%d, ",c[i][j]);
+      }
+      printf("%d]\n",c[i][j]);
+    }
+    else if(parent[i]!= -1 && cn[i]!=0) {
+      printf("internal node, [");
+      for(j=0;j< cn[i]-1 ;j++){
+	printf("%d, ",c[i][j]);
+      }
+      printf("%d]\n",c[i][j]);
+    }
+    
+    else if(cn[i]==0){
+      printf(" leaf, []\n");
+    }
+  }
+  printf("node %d: ",i);
+  printf("parent = %d, ",parent[i]);
+  printf("depth = %d " ,d[i]);
+  if(parent[i]==-1 && cn[i] !=0) {
+      printf("root, [");
+      for(j=0;j< cn[i]-1 ;j++){
+	printf("%d, ",c[i][j]);
+      }
+      printf("%d]",c[i][j]);
+  }
+  else if(parent[i]!= -1 && cn[i]!=0) {
+    printf("internal node, [");
+    for(j=0;j< cn[i]-1 ;j++){
+      printf("%d, ",c[i][j]);
+    }
+    printf("%d]",c[i][j]);
+  }
+  
+  else if(cn[i]==0){
+    printf(" leaf, []");
+  }
+  return 0;
+}

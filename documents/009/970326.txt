@@ -1,0 +1,44 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const char mark[4] = {'R', 'D', 'L', 'U'};
+const int dir[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
+int main(void) {
+    bool w[5][9];
+    for (int i = 0; i < 9; i++) {
+        int x = 4 + i % 2;
+        for (int j = 0; j < x; j++) {
+            char c;
+            cin >> c;
+            w[j][i] = (c == '1');
+        }
+    }
+    int x = 0, y = 0, d = 0;
+    do {
+        int dx, dy, _x, _y;
+        d--;
+        if (d < 0) d += 4;
+        for (int i = 0; i < 4; i++) {
+            dx = dir[d][0];
+            dy = dir[d][1];
+            _x = x + dx;
+            _y = y + dy;
+            if (_x >= 0 && _x <= 4 && _y >= 0 && _y <= 4) {
+                if (d % 2 == 0 && w[min(x, _x)][y * 2]) break;
+                if (d % 2 == 1 && w[x][min(y, _y) * 2 + 1]) break;
+            }
+            d++;
+            d %= 4;
+        }
+        x = _x;
+        y = _y;
+        cout << mark[d];
+    } while (!(x == 0 && y == 0));
+
+    cout << endl;
+
+    return 0;
+}

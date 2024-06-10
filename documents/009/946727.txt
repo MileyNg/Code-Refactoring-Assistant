@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define all(c) (c).begin(), (c).end()
+
+
+int main(){
+    int n, m; cin >> n >> m;
+    map<pair<int, int>, int> ps;
+    rep(i, m){
+        int x, y, c; cin >> x >> y >> c;
+        x--, y--, c++;
+        ps[make_pair(x, y)] = c;
+    }
+
+    int ans = 0;
+    vector<int> prev(2);
+
+    loop(i, 1, n){
+        vector<int> cur(i + 2);
+        rep(j, i + 1){
+            cout << i << j << endl;
+            int t = -100;
+            if (j - 1 >= 0) t = max(t, prev[j - 1] - 1);
+            if (j < i + 1) t = max(t, prev[j] - 1);
+            cout << i << j << endl;
+            t = max(t, ps[make_pair(i, j)]);
+            cur[j] = t;
+            ans += t!=0;
+
+        }
+        prev = cur;
+    }
+
+    cout << ans << endl;
+}

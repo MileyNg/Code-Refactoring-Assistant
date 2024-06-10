@@ -1,0 +1,19 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main(){
+	long long int n;
+	
+	while(cin>>n,n){
+		long long int max=0;
+		long long int sum[n];
+		for(int i=0;i<n;i++){
+			long long int num;
+			cin>>num;			
+			sum[i]=num;
+			for(int j=0;j<i;j++){sum[j]+=num;if(max<sum[j])max=sum[j];}
+		}
+		cout<<max<<endl;
+	}
+}

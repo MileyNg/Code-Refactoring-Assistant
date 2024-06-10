@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int main() {
+
+  string in, l;
+
+  while( true ) {
+    if ( cin.eof() ) break;
+
+    getline( cin, l );
+    if ( l.size() == 0 ) break;
+
+    stack<double> s;
+    stringstream st(l);
+
+    while( st >> in ) {
+
+      if ( in == "+" || in == "-" || in == "*" || in == "/" ) {
+	double a, b;
+	a = s.top();
+	s.pop();
+	b = s.top();
+	s.pop();
+	if ( in == "+" ) {
+	  //cout << b << " + " << a << endl;
+	  b += a;
+	}else if ( in == "-" ) {
+	  //cout << b << " - " << a << endl;
+	  b -= a;
+	}else if ( in == "*" ) {
+	  //cout << b << " * " << a << endl;
+	  b *= a;
+	}else if ( in == "/" ) {
+	  //cout << b << " / " << a << endl;
+	  b /= a;
+	}
+	s.push( b );
+      }else {
+	double s_in;
+	stringstream ss(in);
+	ss >> s_in;
+	s.push( s_in );
+      }
+
+    }
+
+    cout << fixed << setprecision( 10 ) << s.top() << endl;
+
+  }
+
+  return 0;
+
+}

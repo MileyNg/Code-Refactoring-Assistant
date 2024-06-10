@@ -1,0 +1,29 @@
+#include<iostream>
+#include<algorithm>
+#include <string.h>
+
+using namespace std;
+
+int comp(const void *a, const void *b){
+	return strcmp((char*)a,(char*)b);
+}
+
+int main(){
+	int s[100000],t;
+	int i,j,sn,tn,n=0;
+	cin>>sn;
+	for(i=0;i<sn;i++){
+		cin>>s[i];
+	}
+	sort(s,s+sn);
+	cin>>tn;
+	for(i=0;i<tn;i++){
+		cin>>t;
+		if(bsearch(&t,s,sn,sizeof(int), comp)!= NULL){
+			n++;
+		}
+	}
+	cout<<n<<endl;
+	while(1);
+	return 0;
+}

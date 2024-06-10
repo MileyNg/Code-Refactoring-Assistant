@@ -1,0 +1,32 @@
+#include <cstring>
+#include <iomanip>
+#include <iostream>
+
+using namespace std;
+
+/** Problem0086 : Patrol **/
+int main()
+{
+	int edge[110]={0};
+	int a, b, odd;
+	
+	while (cin >> a >> b) {
+		if (a != 0 && b != 0) {
+			edge[a]++;
+			edge[b]++;
+		} else {
+			odd=0;
+			for (int i=0; i<110; i++) {
+				if (edge[i] % 2 == 1) {
+					odd++;
+				}
+			}
+			if (odd == 2 || odd == 0) {
+				cout << "OK" << endl;
+				cout << "NG" << endl;
+			}
+			memset(edge, 0, sizeof(edge));
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef long long int ll;
+const int MAX=100;
+
+struct S{
+	ll x1,x2,y1,y2,z1,z2;
+	bool isIn(ll x,ll y, ll z){
+		if(x1<=x&&x<x2&&y1<=y&&y<y2&&z1<=z&&z<z2) return true;
+		return false;
+	}
+};
+
+int N,K;
+vector<S> vec;
+vector<ll> X;
+vector<ll> Y;
+vector<ll> Z;
+int grid[MAX][MAX][MAX]={};
+
+void input(){
+	cin >> N >> K;
+	for(int i=0; i<N; ++i){
+		S s;
+		cin >> s.x1 >> s.y1 >> s.z1 >> s.x2 >> s.y2 >> s.z2;
+		vec.push_back(s);
+		X.push_back(s.x1);
+		X.push_back(s.x2);
+		Y.push_back(s.y1);
+		Y.push_back(s.y2);
+		Z.push_back(s.z1);
+		Z.push_back(s.z2);
+	}
+}
+
+int main(){
+	input();
+	sort(X.begin(),X.end());
+	sort(Y.begin(),Y.end());
+	sort(Z.begin(),Z.end());
+	X.erase(unique(X.begin(),X.end()),X.end());
+	Y.erase(unique(Y.begin(),Y.end()),Y.end());
+	Z.erase(unique(Z.begin(),Z.end()),Z.end());
+	for(int i=0; i<vec.size(); ++i){
+		for(int xin=0; xin<X.size()-1; ++xin){
+			for(int yin=0; yin<Y.size()-1; ++yin){
+				for(int zin=0; zin<Z.size()-1; ++zin){
+					if(vec[i].isIn(X[xin],Y[yin],Z[zin])) ++grid[xin][yin][zin];
+				}
+			}
+		}
+	}
+	ll ans=0;
+	for(int xin=0; xin<X.size()-1; ++xin){
+		for(int yin=0; yin<Y.size()-1; ++yin){
+			for(int zin=0; zin<Z.size()-1; ++zin){
+				if(grid[xin][yin][zin]>=K) ans+=((X[xin+1]-X[xin])*(Y[yin+1]-Y[yin])*(Z[zin+1]-Z[zin]));
+			}
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

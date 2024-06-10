@@ -1,0 +1,14 @@
+while (line = gets)
+  a, b, n = line.chop.split(" ").map{|s| s.to_i }
+
+  s = 0
+  a %= b
+
+  n.times do
+    a *= 10
+    s += (a.to_f / b).floor % 10
+    a %= b
+  end
+
+  puts s
+end

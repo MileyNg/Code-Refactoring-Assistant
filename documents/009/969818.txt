@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  while(1){
+    vector<pair<int,int>> v;
+    int n;
+    cin>>n;
+    if(!n)break;
+    REP(i,n){
+      int c,m1,s1,m2,s2,m3,s3,m4,s4;
+      cin>>c>>m1>>s1>>m2>>s2>>m3>>s3>>m4>>s4;
+      v.push_back(make_pair(m1*60+s1+m2*60+s2+m3*60+s3+m4*60+s4,c));
+    }
+    sort(begin(v),end(v));
+    cout<<v[0].second<<endl;
+    cout<<v[1].second<<endl;
+    cout<<v[v.size()-2].second<<endl;
+  }
+  return 0;
+}

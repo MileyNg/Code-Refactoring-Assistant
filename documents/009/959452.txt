@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+
+result = 0
+
+def dfs(num, dem, k, cur_num, p, q, a, n):
+    global result
+    #print num, dem, k, cur_num
+    #time.sleep(0.5)
+    if (num * q) == (dem * p):
+        result += 1
+        #print "result: " + str(result)
+        return
+
+    if k == n:
+        return
+
+    if (num * q) > (dem * p):
+        return
+
+    i = cur_num
+    while i * dem <= a:
+        dfs((num * i) + dem, dem * i, k + 1, i, p, q, a, n)
+        i += 1
+
+    return
+
+def func():
+    while True:
+        global result
+        p, q, a, n = map(int, raw_input().split())
+
+        if p == 0 and q == 0 and a == 0 and n == 0:
+            break
+
+        result = 0
+        dfs(0, 1, 0, 1, p, q, a, n)
+        print result
+        
+    return None
+
+if __name__ == '__main__':
+    func()
+    

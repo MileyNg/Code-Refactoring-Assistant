@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <string>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <map>
+#include <queue>
+#include <list>
+#include <utility>
+
+using namespace std;
+
+string str[505];
+
+int rank[30];
+
+int c(char x)
+{
+    return x-'a';
+}
+bool is_ok(int x,int y)
+{
+    while(y!=rank[y])
+    if(rank[y]==x)
+        return false;
+    else y=rank[y];
+    if(y==x)
+        return false;
+    return true;
+}
+bool check(char x1,char x2)
+{
+    int t1=c(x1),t2=c(x2);
+    if(!is_ok(t1,t2))
+        return false;
+    int tmp=rank[t1];
+    rank[t1]=t2;
+    rank[t2]=tmp;
+    return true;
+}
+int main()
+{
+    int n;
+    while(cin>>n,n)
+    {
+        cin>>str[0];
+        int maxlen=str[0].size();
+        bool ok=true;
+        for(int i=1;i<n;i++)
+        {
+            cin>>str[i];
+            int len=str[i].size();
+            maxlen=max(maxlen,len);
+            if(str[i-1]!=str[i]&&str[i-1].find(str[i])==0)
+                ok=false;
+        }
+
+        if(!ok) {cout<<"no"<<endl;continue;}
+
+        for(int i=0;i<30;i++) rank[i]=i;
+
+        int i;
+        for(i=0;i<maxlen;i++)
+        {
+            char tmp1=0,tmp2=0;
+            bool ok1=true;
+            for(int j=0;j<n;j++)
+            {
+                if(i<str[j].size())
+                {
+                    if(!tmp1)
+                        tmp1=str[j][i];
+                    else if(!tmp2)
+                    {
+                        if(str[j][i]!=tmp1)
+                            tmp2=str[j][i];
+                    }
+                    else
+                    {
+                        if(!check(tmp1,tmp2))
+                        {
+                            ok1=false; break;
+                        }
+                        tmp1=tmp2=0;
+                    }
+                }
+
+            }
+            if(!ok1) break;
+        }
+        if(i==maxlen) cout<<"yes"<<endl;
+        else cout<<"no"<<endl;
+    }
+    return 0;
+}

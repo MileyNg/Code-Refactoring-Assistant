@@ -1,0 +1,32 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+using namespace std;
+
+int main(){
+	ostringstream out;
+
+	int N,M,Q,n;
+	while(cin >> N >> Q, N|Q){
+		vector<int> date(100);
+		for(int i=0;i<N;i++){
+			cin >> M;
+			for(int j=0;j<M;j++){
+				cin >> n;
+				date[n]++;
+			}
+		}
+		n=0;
+		for(int i=1;i<date.size();i++)
+			if(date[i]>=Q&&date[n]<date[i]){
+				n=i;
+				if(date[i==N])
+					break;
+			}
+		out << n << endl;
+	}
+
+	cout << out.str();
+
+	return 0;
+}

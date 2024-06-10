@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<(b)?(a=b,1):0)
+#define chmin(a,b) (a>(b)?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef pair<int,int> pii;
+typedef long long ll;
+
+ll p[10000];
+ll c[10000];
+ll dp[10001];
+
+int main() {
+  int n,m,d,x;
+  while(cin>>n>>m>>d>>x) {
+    REP(i,n) {
+      cin >> p[i];
+    }
+    REP(i,m) {
+      int a, b;
+      cin >> a >> b;
+      if (b > 0) {
+        // y = (x-a) + b = 0
+        // x = a - b
+        c[i] = a-b;
+      } else {
+        // y = -(x-a) + b = 0
+        // x = a + b
+        c[i] = a+b;
+      }
+    }
+    sort(c,c+m);
+    int id = 0;
+    REP(i,n) dp[i] = LLONG_MAX;
+    dp[0] = 0;
+    REP(i,n-1) {
+      while(id<m && c[id]+i < p[i]) ++id;
+      for (int j=i+1; j<n; ++j) {
+        chmin(dp[j], dp[i]+(p[j]-p[i])*(m-id));
+      }
+    }
+    cout << dp[n-1] << endl;
+  }
+}

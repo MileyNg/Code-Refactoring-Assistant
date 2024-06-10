@@ -1,0 +1,16 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+int main(){
+    long long int n;
+    while(cin >> n, n){
+        long long int ans = 100000;
+        for(long long int i=1; pow(i,3) <= pow(n, 3); i++){
+            for(long long int j=1; pow(i,3)+pow(j,3) <= pow(n,3); j++){
+                long long int m = pow(n,3)-pow(i, 3)-pow(j, 3);
+                if(ans > m) ans = m;
+            }
+        }
+     

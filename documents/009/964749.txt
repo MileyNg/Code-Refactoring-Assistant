@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool isUruu(int y){
+    if(y%4 != 0) return false;
+    else {
+        if(y%400 == 0) return true;
+        else if(y%100 == 0) return false;
+        else return true;
+    }
+}
+
+int getDay(int y, int m){
+    if(!isUruu(y)){
+        switch(m){
+            case 2:
+                return 28;
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+                break;
+            default:
+                return 31;
+                break;
+        }
+    }
+    else {
+        switch(m){
+            case 2:
+                return 29;
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+                break;
+            default:
+                return 31;
+                break;
+        }
+    }
+}
+
+int main(){
+    int y1, m1, d1, y2, m2, d2;
+    while(cin >> y1 >> m1 >> d1 >> y2 >> m2 >> d2, y1+m1+d1+y2+m2+d2 != -6){
+        int ans = 0;
+        ans = d2-d1;
+        if(!(y1 == y2 && m1 == m2)) ans += getDay(y1, m1);
+        m1++;
+        if(12 < m1){y1++; m1=1;}
+        while(1){
+            if(y1 == y2 && m1 >= m2) break;
+            ans += getDay(y1, m1);
+            m1++;
+            if(12 < m1){y1++, m1 = 1;}
+        }
+        cout << ans << endl;
+    }
+}

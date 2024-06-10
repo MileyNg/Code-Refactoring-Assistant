@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INF 100000
+
+int V, E, dist[15][15];
+unsigned short *dist_memo;
+
+inline int unvisited(int flag, int vertex) {
+    return flag & (1 << vertex);
+}
+
+inline int visit(int flag, int vertex) {
+    return flag & ~(1 << vertex);
+}
+
+int travel(int vertex, int unvisited_vertex) {
+    int v, d, idx, min_dist = INF;
+    idx = (vertex * (1<<V)) + unvisited_vertex;
+    d = dist_memo[idx];
+    if (d != 0) return d;
+
+    for (v = 0; v < V; v++) {
+        if (dist[vertex][v] <= 0) {
+            continue;
+        }
+        if (unvisited(unvisited_vertex, v)) {
+            if (v == 0) {
+                if (visit(unvisited_vertex, 0) == 0) {
+                    min_dist = dist[vertex][v];
+                }
+            }
+            else {
+                d = travel(v, visit(unvisited_vertex, v))
+                    + dist[vertex][v];
+                if (d < min_dist) {
+                    min_dist = d;
+                }
+            }
+        }
+    }
+    dist_memo[idx] = min_dist;
+    return min_dist;
+}
+
+int main() {
+    int i, j, s, t, d, distance, unvisited_vertex;
+
+
+    scanf("%d %d", &V, &E);
+    for (i = 0; i < V; i++) {
+        for (j = 0; j < V; j++) {
+            dist[i][j] = 0;
+        }
+    }
+    for (i = 0; i < E; i++) {
+        scanf("%d %d %d", &s, &t, &d);
+        dist[s][t] = d;
+    }
+
+    dist_memo = (unsigned short *)calloc(V * (1<<V), sizeof(unsigned short));
+
+    unvisited_vertex = 0;
+    for (i = 0; i < V; i++) {
+        unvisited_vertex |= 1 << i;
+    }
+    distance = travel(0, unvisited_vertex);
+    if (distance >= INF) {
+        distance = -1;
+    }
+    printf("%d\n", distance);
+
+    return 0;
+}

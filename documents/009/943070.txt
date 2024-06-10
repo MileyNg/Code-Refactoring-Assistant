@@ -1,0 +1,95 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int MAX_N = 55;
+
+class C{
+  public:
+    int x1, x2, y1, y2, d1, d2;
+    C(int _x1, int _x2, int _y1, int _y2, int _d1, int _d2){
+      x1 = _x1; x2 = _x1;
+      y1 = _y1; y2 = _y1;
+      d1 = _d1; d2 = _d1;
+    }
+    C(){}
+};
+
+vector<int> X, Y, D;
+int f[MAX_N * 2][MAX_N * 2][MAX_N * 2];
+
+int main() {
+  int N, K; cin >>N >>K;
+  vector<C> v(N);
+  set<int> xs, ys, ds;
+  REP(i, N){
+    cin >>v[i].x1 >>v[i].y1 >>v[i].d1 >>v[i].x2 >>v[i].y2 >>v[i].d2;
+    xs.insert(v[i].x1); xs.insert(v[i].x2);
+    ys.insert(v[i].y1); ys.insert(v[i].y2);
+    ds.insert(v[i].d1); ds.insert(v[i].d2);
+    //X[i * 2] = v[i].x1;
+    //X[i * 2 + 1] = v[i].x2;
+    //Y[i * 2] = v[i].y1;
+    //Y[i * 2 + 1] = v[i].y2;
+    //D[i * 2] = v[i].d1;
+    //D[i * 2 + 1] = v[i].d2;
+  }
+  X = vector<int>(xs.begin(), xs.end());
+  Y = vector<int>(ys.begin(), ys.end());
+  D = vector<int>(ds.begin(), ds.end());
+
+  map<int, int> dex, dey, ded;
+  REP(i, X.size()) dex[X[i]] = i;
+  REP(i, Y.size()) dey[Y[i]] = i;
+  REP(i, D.size()) ded[D[i]] = i;
+
+  //for(map<int, int>::iterator it = dex.begin(); it != dex.end(); ++it) cout <<it->first <<", " <<it->second <<endl;
+
+  REP(i, v.size()){
+    int nowx1 = dex[v[i].x1]; int nowx2 = dex[v[i].x2];
+    int nowy1 = dey[v[i].y1]; int nowy2 = dey[v[i].y2];
+    int nowd1 = ded[v[i].d1]; int nowd2 = ded[v[i].d2];
+    FOR(x, nowx1, nowx2)
+      FOR(y, nowy1, nowy2)
+        FOR(d, nowd1, nowd2) f[x][y][d] += 1;
+  }
+
+  long long int ans = 0;
+  REP(x, X.size()){
+    REP(y, Y.size()){
+      REP(d, D.size()){
+        if (f[x][y][d] < K) continue;
+        //cout <<"========" <<endl;
+        //cout <<x <<", " <<y <<", " <<d <<endl;
+        long long int dx = X[x + 1] - X[x];
+        long long int dy = Y[y + 1] - Y[y];
+        long long int dd = D[d + 1] - D[d];
+        //cout <<dx <<", " <<dy <<", " <<dd <<endl;
+        ans += dx * dy * dd;
+      }
+    }
+  }
+  cout <<ans <<endl;
+  return 0;
+}

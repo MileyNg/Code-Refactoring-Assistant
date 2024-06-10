@@ -1,0 +1,59 @@
+#include<stdio.h>
+
+#define max 500001
+
+int heap[max],heapsize;
+
+int left(int i){
+  return 2*i;
+}
+
+int right(int i){
+  return 2*i+1;
+}
+
+void maxheapify(int A[],int i){
+  int largest,leftN,rightN,tmp;
+  leftN=left(i);
+  rightN=right(i);
+  if(leftN<=heapsize && A[leftN]>A[i]){
+    largest=leftN;
+  }
+  else {
+    largest=i;
+  }
+  if(rightN<=heapsize && A[rightN]>A[largest]){
+    largest=rightN;
+  }
+  if(largest!=i){
+    tmp=A[largest];
+    A[largest]=A[i];
+    A[i]=tmp;
+    maxheapify(A,largest);
+  }
+}
+
+void Buildmaxheap(int A[]){
+  int i;
+  for(i=heapsize/2;i>=1;i--){
+    maxheapify(A,i);
+  }
+}
+
+int main(){
+  int i;
+  
+  scanf("%d",&heapsize);
+  for(i=1;i<=heapsize;i++){
+    scanf("%d",&heap[i]);
+  }
+  
+  Buildmaxheap(heap);
+  
+  for(i=1;i<=heapsize;i++){
+    printf(" %d",heap[i]);
+  }
+  printf("\n");
+  
+  return 0;
+}

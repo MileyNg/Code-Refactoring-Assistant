@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+
+int main( )
+{
+	int n, y, m, d, total;
+	cin >> n;
+	for(int i = 0; i < n; i++){
+		cin >> y>> m >> d;
+		total = 0;
+		//1年1月1日から誕生年の前年までの日数
+		for (int j = 1; j < y; j++){
+			if(j % 3 == 0)
+				total += 20 * 10;
+			else
+				total += 20 * 5 + 19 * 5;
+		}
+		//誕生年までの日数
+		if(y % 3 == 0){
+			total += (m - 1) * 20 + d;
+		}
+		else{
+			for(int j = 1; j < m; j++){
+				if(j % 2 == 0)
+					total += 19;
+				else 
+					total += 20;
+			}
+			total += d;
+		}
+		cout << 196471 - total << endl;
+			
+	}
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<string>
+using namespace std;
+int order[30],n,cnt;
+string a,b;
+int num[30],num1[30];
+bool solve()
+{
+    int la,lb,ax,bx;
+    bool flag=true;
+    for(int i=2;i<=n;i++)
+    {
+        cin>>b;
+        if(!flag)continue;
+        la=a.size(),lb=b.size();
+        ax=bx=0;
+        while(ax<la&&bx<lb)
+        {
+            int p=a[ax]-'a',q=b[bx]-'a';
+            if(order[p]<0&&order[q]<0)
+            {
+                if(p==q){ax++,bx++;continue;}
+                cnt+=30;order[p]=cnt;
+                if(p!=q){cnt+=30;order[q]=cnt;break;}
+            }
+            else if(order[p]>=0&&order[q]<0){num1[p]++;order[q]=order[p]+num1[p];break;}
+            else if(order[p]<0&&order[q]>=0){num[q]--;order[p]=order[q]-num[q];break;}
+            if(order[p]<order[q])break;
+            else if(order[p]>order[q]){flag=false;break;}
+            ax++,bx++;
+        }
+        if(bx==lb&&la>lb){flag=false;}
+        a=b;
+    }
+    if(flag)return true;
+    return false;
+}
+int main()
+{
+    //freopen("in.txt","r",stdin);
+    while(scanf("%d",&n)!=EOF&&n)
+    {
+        cin>>a;
+        int len=a.size();
+        memset(order,-1,sizeof(order));
+        for(int i=0;i<=30;i++)num[i]=30;
+        memset(num1,0,sizeof(num1));
+        cnt=0;
+        if(solve())printf("yes\n");
+        else printf("no\n");
+    }
+    return 0;
+}

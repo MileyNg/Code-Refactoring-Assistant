@@ -1,0 +1,37 @@
+#include <iostream>
+#include <bitset>
+#include <string>
+
+int main(void) {
+    u_int n;
+    std::string event;
+
+    std::cin >> n;
+    for (u_int i = 0; i < n; ++i) {
+        // 各ビットがそれぞれの塁のランナーの有無を表現する
+        std::bitset<4> runner;
+        u_int out = 0, score = 0;
+
+        do {
+            std::cin >> event;
+            if ("HIT" == event) {
+                runner <<= 1;   // ランナーを1つずつ進める
+                runner.set(0);  // 一塁にランナーを置く
+                // ホームインしたかどうか
+                if (runner.test(3)) {
+                    ++score;
+                    runner.reset(3);
+                }
+            } else if ("HOMERUN" == event) {
+                score += runner.count() + 1;
+                runner.reset(); // ランナーをリセット
+            } else if ("OUT" == event) {
+                ++out;
+            }
+        } while (out != 3);
+
+        std::cout << score << std::endl;
+    }
+
+    return 0;
+}

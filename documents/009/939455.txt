@@ -1,0 +1,21 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int main(void){
+	
+	string in;
+	int cnt=0;
+
+	cin>>in;
+
+	for(int i=0;i<=in.size()/2-1;i++){
+		if(!(in[i]=='i'&&in[in.size()-1-i]=='i'||in[i]=='w'&&in[in.size()-1-i]=='w'||in[i]==')'&&in[in.size()-1-i]=='('||in[i]=='('&&in[in.size()-1-i]==')')) cnt++;
+	}
+	if(in.size()%2==1&&(in[in.size()/2]=='('||in[in.size()/2]==')')) cnt++;
+
+	cout<<cnt<<endl;
+
+	return 0;
+}

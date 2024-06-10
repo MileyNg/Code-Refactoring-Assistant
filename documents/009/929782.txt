@@ -1,0 +1,58 @@
+#include<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include<string.h>
+
+#define MAX 1001
+int main() {
+    
+    char input[MAX];
+    int i; int k=0;
+    
+    char color[MAX];
+    
+    int card_num;
+    int card_num2;
+    
+    scanf("%d",&card_num);
+    char box[card_num][MAX];
+    int num[card_num];
+
+    while(1){
+        scanf("%s",&input);
+        
+        if(strcmp(input,"quit") == 0){
+            break;
+            
+            
+        }else if(strcmp(input,"push") == 0){
+            scanf("%d",&card_num);
+            scanf("%s",&box[card_num-1][num[card_num]-1]);
+            
+            num[card_num]++;
+            
+            
+        }else if(strcmp(input,"pop") == 0){
+            scanf("%d",&card_num);
+            color[k] = box[card_num-1][num[card_num]-2];
+            
+            num[card_num]--;
+            k++;
+            
+            
+        }else if(strcmp(input,"move") == 0){
+            scanf("%d",&card_num);
+            scanf("%d",&card_num2);
+            
+            box[card_num2-1][num[card_num2]-1] = box[card_num-1][num[card_num]-2];
+            
+            num[card_num]--;
+            num[card_num2]++;
+        }
+        
+    }
+    for(i=0; i<k; i++){
+        printf("%c\n",color[i]);
+    }
+    return 0;
+}

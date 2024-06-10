@@ -1,0 +1,115 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef pair<int,int> ii;
+
+int H,W;
+int G[11][11],INDEX[11][11],ep_bitmask,sp,V;
+int dx[] = {0,1,0,-1};
+int dy[] = {1,0,-1,0};
+vector<int> edges[25][4];
+map<ii,int> memo;
+
+bool isValid(int x,int y) { return 0 <= x && x < W && 0 <= y && y < H; }
+
+inline void INIT(){
+  memo.clear();
+  ep_bitmask = 0, sp = -1;
+  rep(i,11) rep(j,11) INDEX[i][j] = -1;
+  rep(i,25) rep(j,4) edges[i][j].clear();
+}
+
+inline void make_edges(){
+  rep(i,H) rep(j,W) if( G[i][j] != 0 ) {
+    int x = j, y = i;
+    rep(k,4){
+      int nx = x + dx[k], ny = y + dy[k];
+      while( isValid(nx,ny) ){
+        if( G[ny][nx] == 1 ) edges[INDEX[i][j]][k].push_back(INDEX[ny][nx]);
+        nx += dx[k], ny += dy[k];
+      }
+    }
+  }
+}
+
+inline void calc_last_point(int x,int y){
+  rep(i,4) {
+    int nx = x + dx[i], ny = y + dy[i];
+    while( isValid(nx,ny) ){
+      if( G[ny][nx] != 0 ) {
+        ep_bitmask |= (1<<INDEX[ny][nx]);
+        break;
+      }
+      nx += dx[i], ny += dy[i];
+    }
+  }
+}
+
+bool check(int cur,int visited){
+  bool used[V];
+  rep(i,V) used[i] = ((visited>>i)&1);
+  deque<int> deq;
+  deq.push_back(cur);
+  used[cur] = true;
+  while( !deq.empty() ){
+    int p = deq.front(); deq.pop_front();
+    if( (ep_bitmask>>p) & 1 ) return true;
+    rep(i,4){
+      rep(j,edges[p][i].size()){
+        int np = edges[p][i][j];
+        if( used[np] ) continue;
+        used[np] = true;
+        deq.push_back(np);
+      }
+    }
+  }
+  return false;
+}
+
+int dfs(int cur,int visited,int remain,int ep_remain){
+
+  if( ep_remain == 0 && remain != 0 ) return 0;
+
+  if( remain <= 0 ) return ( (ep_bitmask>>cur) & 1 );
+
+
+  if( memo.find(ii(cur,visited)) != memo.end() ) return memo[ii(cur,visited)];
+
+  int ret = 0;
+  rep(k,4){
+    rep(i,edges[cur][k].size()){
+      int next = edges[cur][k][i];
+      assert(next>=0);
+      if( (visited>>next) & 1 ) break;
+      ret += dfs(next,visited|(1<<next),remain-(next!=sp),ep_remain-((ep_bitmask>>next)&1));
+    }
+  }
+  if( ret >= 100 ) memo[ii(cur,visited)] = ret;
+
+  return ret;
+}
+
+int main(){
+  while( cin >> W >> H, H|W ){
+    INIT();
+    int idx = 0,remain = 0,sx,sy;
+    rep(i,H) rep(j,W) {
+      cin >> G[i][j];
+      if( G[i][j] == 1 ) INDEX[i][j] = idx++, remain++;
+      if( G[i][j] == 2 ) sx = j, sy = i;
+    }
+    sp = INDEX[sy][sx] = idx++;
+    make_edges();
+
+    calc_last_point(sx,sy);
+    assert(remain <= 23);
+    V = remain;
+    cout << dfs(sp,(1<<INDEX[sy][sx]),remain,__builtin_popcount(ep_bitmask)) << endl;
+
+  }
+  return 0;
+}

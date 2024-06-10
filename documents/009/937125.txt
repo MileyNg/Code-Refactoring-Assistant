@@ -1,0 +1,100 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+#include <complex>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+
+
+struct Part {
+	int no, pos;
+	
+	Part (int no_, int pos_) : no(no_), pos(pos_) {}
+};
+
+int MAX = 1000000;
+vector<Part> segpart;	// winner : segpart[0]
+
+
+void init(int n) {
+	segpart.assign(3*n, Part(MAX+1, 0));
+	for_(k, 0, n + 1) {
+		int k_ = k + n - 1;
+		segpart[k_].no = k;
+	}
+}
+
+Part maxpart(Part p1, Part p2) {
+	if (p1.pos < p2.pos) return p2;
+	else if (p1.pos > p2.pos) return p1;
+	
+	// p1.pos == p2.pos
+	if (p1.no > p2.no) return p2;
+	return p1;
+}
+
+void add(int n, int k, int v) {
+	k += n-1;
+	segpart[k].pos += v;
+	
+	while (k > 0) {
+		k = (k-1)/2;
+		segpart[k] = maxpart(segpart[k*2+1], segpart[k*2+2]);
+	}
+}
+
+int main() {
+	int n, q; cin >> n >> q;
+	
+	init(n);
+	
+	for_(i, 0, q) {
+		int a, v; cin >> a >> v;
+		add(n, a, v);
+		cout << segpart[0].no << " " << segpart[0].pos << endl;
+	}
+	
+	return 0;	
+}

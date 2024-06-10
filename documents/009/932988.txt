@@ -1,0 +1,68 @@
+#include <cstdio>
+#include <climits>
+using namespace std;
+
+int n;
+int con[21][21];
+int cost[21];
+bool used[21];
+
+int dijkstra(int stt, int end) {
+  int a, b, c, d;
+
+  for (int i=1; i<=n; i++) cost[i] = INT_MAX;
+  for (int i=1; i<=n; i++) used[i] = false;
+
+  cost[stt] = 0;
+  used[stt] = true;
+  a = stt;
+  while (1) {
+    for (int i=1; i<=n; i++) {
+      if (con[a][i]) {
+        b = cost[a] + con[a][i];
+        if (b < cost[i]) {
+          cost[i] = b;
+        }
+      }
+    }
+    c = INT_MAX;
+    d = 0;
+    for (int i=1; i<=n; i++) {
+      if (!used[i] && cost[i] < c) {
+        c = cost[i];
+        d = i;
+      }
+    }
+    if (!d) break;
+    used[d] = true;
+    a = d;
+  }
+
+  return cost[end];
+}
+
+int main() {
+  int m, a, b, c, d;
+  int stt, end, budget, pole, ans;
+
+  scanf("%d", &n);
+  scanf("%d", &m);
+
+  for (int i=1; i<=n; i++) {
+    for (int j=1; j<=n; j++) {
+      con[i][j] = 0;
+    }
+  }
+
+  for (int i=0; i<m; i++) {
+    scanf("%d,%d,%d,%d", &a, &b, &c, &d);
+    con[a][b] = c;
+    con[b][a] = d;
+  }
+  scanf("%d,%d,%d,%d", &stt, &end, &budget, &pole);
+
+  ans = budget - dijkstra(stt, end) - dijkstra(end, stt) - pole;
+  printf("%d\n", ans);
+
+  return 0;
+}

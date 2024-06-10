@@ -1,0 +1,33 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<cstdlib>
+using namespace std;
+typedef long long int ll;
+
+int main()
+{
+    int cost=0;
+    int l;
+	int m,n;
+	bool f;
+    for(;;){
+		cin >> l;
+		cost=0;
+		f=true;
+		if(l==0)break;
+		for(int i=0;i<12;i++){
+			cin >> m >> n;
+			cost+=m;
+			cost-=n;
+			if(cost>=l&&f){
+				printf("%d\n",i+1);
+				f=false;
+			}
+		}
+		if(f)printf("NA\n");
+	}
+    return 0;
+}

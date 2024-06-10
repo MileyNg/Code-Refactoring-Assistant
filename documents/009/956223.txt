@@ -1,0 +1,44 @@
+
+#include<iostream>
+using namespace std;
+
+const int INF = 11000000;
+bool num[INF+1] = {false};	//素数ならfalse
+
+int prime4[1000];
+
+void devide( int n )
+{
+	int i,j;
+	for( i = 2; i*i <= n;i++ ){
+		for( j = i*2; j <= n; j += i ){
+			num[j] = true;
+		}
+	}
+}
+int GetPrime4( int n )
+{
+	int i,cnt = 0;
+	for( i = 2; i <= n-8; i++ ){
+		if( num[i] == false && num[i+2] == false && num[i+6] == false && num[i+8] == false ){
+			prime4[cnt] = i+8;
+			cnt++;
+		}
+	}
+	return cnt;
+}
+
+int main(){
+	int cnt;
+	devide( INF );
+	cnt = GetPrime4( INF );
+	int n,i;
+
+	while( cin >> n ){
+		if( n == 0 )
+			break;
+		for( i = 0;prime4[i] <= n;i++ );
+		cout << prime4[i-1] << endl;
+	}
+	return 0;
+}

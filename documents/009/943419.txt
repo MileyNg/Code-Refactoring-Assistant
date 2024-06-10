@@ -1,0 +1,43 @@
+while 1
+
+
+tmp=gets.chomp.split(" ")
+tmp.map!{|x| x.to_i}
+
+
+
+
+n=0
+m=0
+a=[0]
+b=[0]
+c=[0]
+solve = -1
+
+n = tmp[0]
+m = tmp[1]
+
+a=gets.chomp.split(" ")
+b=gets.chomp.split(" ")
+c=gets.chomp.split(" ")
+
+for x in 1..m
+	if b.length == 1 then
+		solve = x-1
+		break
+	else
+		t = b[b.length-1]
+		if a[a.length-1] < t then
+			a.push(t)
+			b.pop
+		elsif c[c.length-1] < t then
+			c.push(t)
+			b.pop
+		end
+	end	
+end
+
+puts solve
+
+
+end

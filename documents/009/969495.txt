@@ -1,0 +1,54 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+
+
+int main(){
+
+
+  while(1){
+
+    string s;
+    int i;
+    stack <char> stack;
+    bool ans = 1;
+   //cin テ」ツ?ッテァツゥツコテァツ卍ステ」ツ?ァテァツオツづ」ツつ湘」ツつ?
+
+    getline(cin, s);
+    if(s == ".") break;
+    
+    stack.push('a');
+
+    for(i = 0 ; i < s.size(); i++){
+      if(s[i] == '(' || s[i] == '['){
+	stack.push(s[i]);
+      }
+      if(s[i] == ')'){
+	//	cout << "IN ";
+	if(stack.top() == '('){
+	  //	  cout << "IN "<< stack.top();
+	  stack.pop();
+	}else{
+	  ans = 0;
+	  break;
+	}
+      }
+      if(s[i] == ']'){ 
+      	if(stack.top() == '['){
+	  stack.pop();
+	}else{
+	  ans = 0;
+	  break;
+	}
+      }      
+    }
+    
+    if(stack.top() != 'a') ans = 0;
+
+    if(ans == 1 ) cout << "yes" << endl;
+    else cout << "no" << endl;  
+    
+  }
+  return 0;
+}

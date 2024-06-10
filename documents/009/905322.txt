@@ -1,0 +1,105 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define IINF (INT_MAX)
+
+using namespace std;
+
+typedef long long ll;
+
+enum FACE { TOP, BOTTOM, FRONT, BACK, LEFT, RIGHT };
+template <class T>
+class Dice {
+public:
+  Dice() {
+    id[TOP] = 0; id[FRONT] = 1; id[LEFT] = 2;
+    id[RIGHT] = 3; id[BACK] = 4; id[BOTTOM] = 5;
+  }
+  T& operator[] (FACE f) { return var[id[f]]; }
+  const T& operator[] (FACE f) const { return var[id[f]]; }
+  bool operator==(const Dice<T>& b) const {
+    const Dice<T> &a = *this;
+    return a[TOP] == b[TOP] && a[BOTTOM] == b[BOTTOM] &&
+      a[FRONT] == b[FRONT] && a[BACK] == b[BACK] &&
+      a[LEFT] == b[LEFT] && a[RIGHT] == b[RIGHT];
+  }
+  void roll_x() { roll(TOP, BACK, BOTTOM, FRONT); }
+  void roll_y() { roll(TOP, LEFT, BOTTOM, RIGHT); }
+  void roll_z() { roll(FRONT, RIGHT, BACK, LEFT); }
+
+private:
+  void roll(FACE a, FACE b, FACE c, FACE d) {
+    T tmp = id[a];
+    id[a] = id[b]; id[b] = id[c];
+    id[c] = id[d]; id[d] = tmp;
+  }
+  T var[6];
+  int id[6];
+};
+
+FACE face[] = {TOP,BOTTOM,FRONT,BACK,LEFT,RIGHT};
+
+inline int toInt(char c){ return ((c=='B')?0:((c=='E')?1:((c=='R')?2:3))); }
+char F[3][3];
+char initial_color[] = {'W','W','R','R','B','B'};
+int mincost;
+int dx[] = {1,0,-1,0}; // R, B, L, T
+int dy[] = {0,1,0,-1};
+
+inline void swap_dice(Dice<char> dice[3][3],int x1,int y1,int x2,int y2,int type){
+  if( type == 0 ) rep(i,3)dice[y2][x2].roll_y();
+  if( type == 1 ) rep(i,3)dice[y2][x2].roll_x();
+  if( type == 2 ) dice[y2][x2].roll_y();
+  if( type == 3 ) dice[y2][x2].roll_x();
+  swap(dice[y1][x1],dice[y2][x2]);
+}
+
+inline int finish(Dice<char> dice[3][3]){
+  int diff = 0;
+  rep(i,3)rep(j,3)if( dice[i][j][TOP] != F[i][j] ) diff++;
+  return diff;
+}
+
+void dfs(Dice<char> dice[3][3],int x,int y,int cost,int pre){
+
+  if( cost >= mincost) return;
+
+  int tmp;
+  if( ( tmp = finish(dice) ) == 0 ){
+    mincost = min(mincost,cost);
+    return;
+  }
+
+  if( tmp )tmp--;
+  if( cost + tmp >= mincost ) return;
+
+  rep(i,4){
+    if( i == pre ) continue;
+    int nx = x + dx[i], ny = y + dy[i];
+    if( !( 0 <= nx && nx < 3 && 0 <= ny && ny < 3 ) ) continue;
+    swap_dice(dice,x,y,nx,ny,i);
+    dfs(dice,nx,ny,cost+1,(i+2)%4);
+    swap_dice(dice,nx,ny,x,y,(i+2)%4);
+  }
+}
+
+int main(){
+
+  int x,y;
+  while(scanf("%d%d",&x,&y),x|y){
+    x--,y--;
+    mincost = 31;
+    rep(i,3)rep(j,3)cin >> F[i][j];
+
+    Dice<char> dice[3][3];
+    rep(i,3)rep(j,3)rep(k,6)dice[i][j][face[k]] = ((i==y&&j==x)?'E':initial_color[k]);
+
+    dfs(dice,x,y,0,-1);
+
+    if( mincost == 31 ) puts("-1");
+    else                printf("%d\n",mincost);
+
+  }
+  return 0;
+}

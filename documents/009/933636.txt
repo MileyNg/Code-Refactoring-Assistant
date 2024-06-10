@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int n;
+  while(cin >> n && n) {
+    vector<int> v(n);
+    for(int i = 0; i < n; ++i) cin >> v[i];
+    int num = 32;
+    int p = 0;
+    while(num) {
+      int d = (num - 1) % 5;
+      assert(d);
+      num -= d;
+      cout << num << endl;
+      if(num) {
+        num -= v[p];
+        num = max(num, 0);
+        p = (p + 1) % v.size();
+        cout << num << endl;
+      }
+    }
+  }
+  return 0;
+}

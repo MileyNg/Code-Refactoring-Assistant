@@ -1,0 +1,143 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+#include <complex>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+
+
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) : x(a), y(b) {}
+};
+
+double dist2D(const Point2D& a, const Point2D& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) ); }
+
+
+
+typedef double Weight;
+
+struct Edge {
+	int from, to;
+	Weight weight;
+	Edge(int f, int t, double w) : from(f), to(t), weight(w) { }
+};
+
+bool operator < (const Edge& e, const Edge& f) {
+	return e.weight != f.weight ? e.weight > f.weight : 
+			e.from != f.from ? e.from < f.from : e.to < f.to;
+}
+
+typedef vector<Edge> Edges;
+typedef vector<Edges> Graph;
+
+void Dijkstra(const Graph& g, int s, vector<Weight>& dist, vector<int>& prev) {
+	int n = (int)g.size();
+	dist.assign(n, iINF); dist[s] = 0;
+	prev.assign(n, -1);
+	priority_queue<Edge> q; q.push(Edge(-2, s, 0));
+	
+	while (!q.empty()) {
+		Edge e = q.top(); q.pop();
+		if (prev[e.to] != -1) continue;
+		prev[e.to] = e.from;
+		
+		FOR (it, g[e.to]) {
+			if (dist[it->to] > e.weight + it->weight) {
+				dist[it->to] = e.weight + it->weight;
+				q.push(Edge(it->from, it->to, e.weight + it->weight));
+			}
+		}
+	}
+}
+
+vector<int> buildPath(const vector<int>& prev, int t) {
+	vector<int> path;
+	for (int u = t; u >= 0; u = prev[u]) path.pb(u);
+	reverse(all(path));
+	return path;
+}
+
+int main() {
+
+	while (1) {
+		int n; cin >> n;
+		if (n==0) break;
+		
+		vector<Point2D> bils(n + 1, Point2D());
+		for_(i, 0, n) {
+			int b; cin >> b;
+			cin >> bils[b].x >> bils[b].y;
+		}
+		
+		Graph graph(n + 1, Edges());
+		for_(i, 1, n + 1) {
+			for_(j, 1, n + 1) {
+				if (i==j) continue;
+				Edge e(i, j, dist2D(bils[i], bils[j]));
+				if (e.weight <= 50.0) graph[i].pb(e);
+			}
+		}
+		
+		int m; cin >> m;
+		for_(rep, 0, m) {
+			int s, g; cin >> s >> g;
+		
+			vector<Weight> dist;
+			vector<int> prev;
+			Dijkstra(graph, s, dist, prev);
+		
+			if (dist[g] == iINF) cout << "NA" << endl;
+			else {
+				vector<int> path = buildPath(prev, g);
+				int ps = (int)path.sz;
+				for_(i, 0, ps-1) {
+					cout << path[i] << " ";
+				}
+				cout << path[ps-1] << endl;
+			}
+		}
+	}
+	
+	
+	
+	return 0;
+}

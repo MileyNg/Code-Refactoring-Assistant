@@ -1,0 +1,25 @@
+#include<math.h>
+int isprim();
+int main()
+{
+  int a,b[10000],i,l,m=0;
+  scanf("%d",&a);
+  for(l=0;l<a;l++){
+      scanf("%d",&b[l]);
+    }
+  for(i=0;i<a;i++){
+    if(isprim(b[i])==1)m++;
+  }
+    printf("%d\n",m);
+    return 0;
+ }
+int isprim(x){
+    int i;
+    if(x==2) return 1;
+    else if(x<2||x%2==0) return 0;
+    i=3;
+    while(i<=sqrt(x)){
+      if(x%i==0) return 0;
+      i=i+2;
+    }
+} 

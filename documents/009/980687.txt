@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+
+const int LIM = 60000000;
+bool notprime[LIM];
+
+void take_prime(){
+    notprime[0] = notprime[1] = true;
+    int m = 2;
+    while( m < 10000 ){
+        if( !notprime[m] ){
+            int j = m*m;
+            while(j < LIM){
+                notprime[j] = true;
+                j += m;
+            }
+        }
+        m++;
+    }
+}
+
+int main(){
+    take_prime();
+    short N, cnt = 0;
+    cin >> N;
+    while(N-- > 0){
+        short a;
+        cin >> a;
+        if( !notprime[a] ){
+            cnt++;
+        }
+    }
+    cout << cnt << endl;
+    return 0;
+}

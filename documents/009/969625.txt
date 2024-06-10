@@ -1,0 +1,42 @@
+#include <iostream>
+#include <algorithm>
+
+#define range(i,a,b) for(int (i)=a;(i)<(b);(i)++)
+#define rep(i,n) range(i,0,n)
+
+using namespace std;
+
+char table[30][30];
+
+int dw[4]={1,0,-1,0};
+int dh[4]={0,1,0,-1};
+
+void dfs(int w,int h){
+	table[h][w]='@';
+	rep(i,4){
+		int nw=w+dw[i];
+		int nh=h+dh[i];
+		if(table[nh][nw]=='.')
+			dfs(nw,nh);
+	}
+}
+
+int main(void){
+	int w,h;
+	while(cin >> w >> h,w|h){
+		int sw,sh;
+		rep(i,30)rep(j,30) table[i][j]='#';
+		range(i,1,h+1) range(j,1,w+1){
+			cin >> table[i][j];
+			if(table[i][j]=='@'){
+				sh=i;
+				sw=j;
+			}
+		}
+		dfs(sw,sh);
+		int ans=0;
+		range(i,1,h+1) range(j,1,w+1) if(table[i][j]=='@') ans++;
+		cout << ans << endl;
+	}
+	return 0;
+}

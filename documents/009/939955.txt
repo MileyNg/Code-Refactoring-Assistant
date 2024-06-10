@@ -1,0 +1,96 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+using namespace std;
+#define INF	1000000000000
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define sec second
+#define lb lower_bound
+#define ub upper_bound
+#define SS stringstream
+#define rep(i,n) for(int i = 0; i < n; i++)
+#define sz(x) ((int)(x).size())
+#define SORT(x) sort((x).begin(), (x).end())
+#define RSORT(x) sort((x).begin(), (x).end(), greater<int>() )
+#define clr(a,b) memset((a),(b),sizeof(a))
+typedef pair<int, int> P;
+typedef long long int ll;
+typedef vector<int> Vi;
+typedef vector<ll> Vll;
+typedef vector<P> Vp;
+typedef priority_queue<P, vector<P>, greater<P> > PQ;
+
+int n, m, r;
+ll land[200][200], sea[200][200], dp[1000][200];
+
+int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	while(cin >> n >> m){
+		if(n == 0 && m == 0) break;
+		int x,y,t; char sl;
+		rep(i,n) rep(j,n){ land[i][j] = INF; sea[i][j] = INF; }
+		rep(i,n){ land[i][i] = 0; sea[i][i] = 0;}
+		rep(i,m){
+			cin >> x >> y >> t >> sl;
+			x--; y--;
+			if(sl == 'L'){
+				if(land[x][y] > t){ land[x][y] = t; land[y][x] = t; }
+			} else{
+				if(sea[x][y] > t){ sea[x][y] = t; sea[y][x] = t; }
+			}
+		}
+		cin >> r;
+		Vi z(r);
+		rep(i,r){
+			cin >> z[i];
+			z[i]--;
+		}
+		rep(i,r) rep(j,n) dp[i][j] = INF;
+		
+		rep(k,n) rep(i,n) rep(j,n){
+			land[i][j] = min(land[i][j], land[i][k]+land[k][j]);
+			sea[i][j] = min(sea[i][j], sea[i][k]+sea[k][j]);
+		}
+		
+		dp[1][z[0]] = land[z[0]][z[1]];
+		rep(i,n){
+			rep(j,n){
+				if(i == j) continue;
+				//cout << i << " " << j << " " << land[z[0]][i]+sea[i][j]+land[j][z[1]] << endl;
+				dp[1][j] = min(dp[1][j],land[z[0]][i]+sea[i][j]+land[j][z[1]]);
+			}
+		}
+		for(int i = 2; i < r; i++){
+			rep(j,n) dp[i][j] = min(dp[i][j],dp[i-1][z[i-1]]+land[z[i-1]][z[i]]);
+			rep(j,n){
+				rep(k,n){
+					dp[i][k] = min(dp[i][k], dp[i-1][j]+land[z[i-1]][j]+sea[j][k]+land[k][z[i]]);
+				}
+			}
+		}
+		/*
+		for(int i = 1; i < n; i++){
+			rep(j,n){
+				cout << dp[i][j] << " ";
+			}
+			cout << endl;
+		}
+		*/
+		cout << *min_element(dp[n-1], dp[n-1]+n) << endl;
+	}
+}

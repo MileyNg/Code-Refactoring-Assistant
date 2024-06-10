@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+struct List{
+  int x;
+  struct List *next;
+  struct List *prev;
+};
+typedef struct List *ListPointer;
+ListPointer head;
+ListPointer tail;
+
+
+ListPointer listSearch(int x){
+  ListPointer n;
+  for(n=head->next; n->next!=NULL; n=n->next){
+    if(n->x==x)return n;
+  }
+  return NULL;
+}
+
+
+void insert(int x){
+  ListPointer n;
+  n=malloc(sizeof(struct List));
+  n->x=x;
+  n->prev=head;
+  n->next=head->next;
+  head->next->prev=n;
+  head->next=n;
+}
+
+void delete(int x){
+  ListPointer n;
+  n=listSearch(x);
+  if(n != NULL){
+    n->prev->next=n->next;
+    n->next->prev=n->prev;
+    free(n);
+  }
+}
+
+void deleteFirst(int x){
+  ListPointer n;
+  n=head->next;
+  head->next=n->next;
+  n->next->prev=head;
+  free(n);
+}
+
+void deleteLast(int x){
+  ListPointer n;
+  n=tail->prev;
+  n->prev->next=tail;
+  tail->prev=n->prev;
+  free(n);
+}
+
+
+int main(){
+  int n,i,flag;
+  char com[20];
+  int key;
+  ListPointer P;
+  int np = 0, nd = 0,size=0;
+  head=malloc(sizeof(struct List));
+  tail=malloc(sizeof(struct List));
+  head->next=tail;
+  head->prev=NULL;
+  tail->next=NULL;
+  tail->prev=head;
+  scanf("%d", &n);
+  for ( i = 0; i < n; i++ ){
+    scanf("%s%d", com, &key);
+    if ( com[0] == 'i' ) {insert(key); np++; size++;}
+    else if ( com[0] == 'd' ) {
+      if (strlen(com) > 6){
+	if ( com[6] == 'F' ) deleteFirst(key);
+	else if ( com[6] == 'L' ) deleteLast(key);
+      } else {
+	delete(key); nd++; 
+      }
+      size--;
+    }
+  }
+  for(P=head->next; P->next!=NULL; P=P->next){
+      if(P != head->next) printf(" ");
+      printf("%d", P->x);
+    }
+  printf("\n");
+
+  return 0;
+}

@@ -1,0 +1,37 @@
+#include<iostream>
+using namespace std;
+
+#define M "MISS"
+#define H "HIT"
+
+int main() {
+	int mx, my, mz;
+	int ex, ey, ez;
+	int bx[3], by[3], bz[3];
+	cin >> mx >> my >> mz;
+	cin >> ex >> ey >> ez;
+	for(int i=0; i<3; ++i) cin >> bx[i] >> by[i] >> bz[i];
+	for(int i=1; i<3; ++i) bx[i] -= bx[0], by[i] -= by[0], bz[i] -= bz[0];
+	
+	int Ay = bx[1]*(my-ey) - by[1]*(mx-ex), Az = bx[1]*(mz-ez) - bz[1]*(mx-ex);
+	int By = bx[2]*(my-ey) - by[2]*(mx-ex), Bz = bx[2]*(mz-ez) - bz[2]*(mx-ex);
+	int Cy = (mx-ex)*(by[0]-ey) - (my-ey)*(bx[0]-ex), Cz = (mx-ex)*(bz[0]-ez) - (mz-ez)*(bx[0]-ex);
+	int a1 = Cy*Bz - Cz*By, b1 = -(Cy*Az - Cz*Ay);
+	int D = Ay*Bz - Az*By;
+	if(D<0) {
+		a1 *= -1; b1 *= -1; D *= -1;
+	}
+	int t1 = D*(bx[0]-ex)+a1*bx[1] + b1*bx[2], t0 = D*(mx-ex);
+	if(t0<0) {
+		t0 *= -1; t1 *= -1;
+	}
+	if(t1 < 0 || t0 < t1) {
+		cout << H << endl;
+	}else if(0<=a1 && a1<=D && 0<=b1 && b1<=D && 0<=a1+b1 && a1+b1<=D) {
+		cout << M << endl;
+	}else {
+		cout << H << endl;
+	}
+	
+	return 0;
+}

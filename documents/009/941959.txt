@@ -1,0 +1,28 @@
+import itertools
+def prdct(array):
+	ref = 1
+	for a in array: ref *= a
+	return ref
+
+while 1:
+	n,m = map(int,raw_input().split())
+	if n == 0: break
+	p = sorted(map(int,raw_input().split()))
+	if 1 in p:
+		print 0.0
+		continue
+	for i in range(len(p)-1,0,-1):
+		for j in range(i):
+				while p[i] != p[j] and p[i]%p[j] == 0:
+					p[i] /= p[j]
+				if p[i] == p[j]:
+					del p[i]
+					break
+	d = sum(pi*(n/pi*(n/pi+1))/2 for pi in p)
+	m = sum(n/pi for pi in p)
+	q = []
+	for i in range(2,len(p)+1):
+		q += [prdct(element) for element in itertools.combinations(p,i)]
+	d -= sum(qi*(n/qi*(n/qi+1))/2 for qi in q)
+	m -= sum(n/qi for qi in q)
+	print (n*(n+1)/2-d)*1.0/(n-m) if n-m > 0 else 0.0

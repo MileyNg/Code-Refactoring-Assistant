@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 1000
+void push(int);
+int pop(void);
+int dtoi(char);
+int stack[N];
+int a;
+
+
+int main()
+{
+  int x,i;
+  char s[100];
+
+  for(i=0;i<N;i++ )
+    {
+      
+      s[i]=getchar();
+      
+      if( s[i] == '+' )
+	{
+	  push(pop()+pop());
+	}
+      else if ( s[i] == '-' )
+	{
+	  push(pop()-pop());
+	}
+      else if ( s[i] == '*' )
+	{
+	  push(pop()*pop());
+	} 
+      else if(dtoi(s[i])==1)
+	{
+	  x = atoi(&s[i]);
+	  push(x);
+	
+	}
+      
+      if(s[i] == '\n')break;    
+
+    }
+  
+  
+    
+  printf("%d \n",pop());
+  return 0;
+    
+  
+}
+
+void push(int x)
+{
+  int i;
+  
+  stack[a]=x;
+  
+  ++a;
+}
+
+int pop(void)
+{
+
+  
+  --a;
+  
+  return stack[a];
+
+}
+
+int dtoi(char x)
+{
+
+  if(x >='0'&&  x<='9') return 1;
+
+}

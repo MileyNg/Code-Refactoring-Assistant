@@ -1,0 +1,66 @@
+#include<iostream>
+#include<bitset>
+#include<vector>
+#include<queue>
+using namespace std;
+const int pannels=16;
+const int bits=2<<pannels;
+int DP[bits+1][31]={};
+int main(){
+  while(true){
+  int n,c,tmp;
+  cin >> n >> c; 
+  if(n==0)
+    break;
+  queue<bitset<pannels> > qoo[2];
+  vector<bitset<pannels> > light;
+  vector<bitset<pannels> > push;
+  for(int i=0;i<bits;i++)
+    for(int j=0;j<31;j++)
+      DP[i][j]=0;
+
+  for(int i=0;i<n;i++){
+    light.push_back(bitset<pannels>(0));
+    for(int j=0;j<pannels;j++){
+    cin >> tmp;
+    light[i].set(j,tmp);
+    }
+  }
+  for(int i=0;i<c;i++){
+    push.push_back(bitset<pannels>(0));
+    for(int j=0;j<pannels;j++){
+    cin >> tmp;
+    push[i].set(j,tmp);
+    }
+  }
+  bitset<pannels> lig(0),score(0),get(0);
+  for(int i=0;i<c;i++){
+    lig=light[0]^(light[0]&push[i]);
+    get=light[0]&push[i];
+    // cout << lig << endl;
+    if(!DP[lig.to_ulong()][0]){
+      qoo[1].push(lig);
+    }
+    DP[lig.to_ulong()][0]=max((int)get.count(),DP[lig.to_ulong()][0]);
+  }
+  for(int i=1;i<n;i++){
+    while(!qoo[i%2].empty()){
+      score=qoo[i%2].front();
+      //  cout << score << endl;
+      qoo[i%2].pop();
+      for(int k=0;k<c;k++){
+	lig=(score|light[i])^(push[k]&(score|light[i]));
+	get=(score|light[i])&push[k];
+	if(DP[lig.to_ulong()][i])
+	  qoo[(i+1)%2].push(lig);
+	DP[lig.to_ulong()][i]=max((int)bitset<pannels>(get).count()+DP[score.to_ulong()][i-1],DP[lig.to_ulong()][i]);
+      }
+    }
+  }
+  int ans=0;
+  for(int i=0;i<bits;i++)
+      ans=max(ans,DP[i][n-1]);
+  cout << ans << endl;
+  }
+  return 0;
+}

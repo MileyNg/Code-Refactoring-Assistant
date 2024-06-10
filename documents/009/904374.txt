@@ -1,0 +1,26 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <queue>
+#define rep(i, j) FOR(i, 0, j)
+#define FOR(i, j, k) for(int i = j; i < k; ++i)
+
+using namespace std;
+
+int main(){
+  int n, m;
+  while(scanf("%d%d", &n, &m) && n && m){
+    queue<int>q;
+    rep(i, n) q.push(i+1);
+    int c = 1;
+    while(q.size() > 1){
+      int p = q.front(); q.pop();
+      if(c % m != 0) q.push(p);
+      c++;
+    }
+    printf("%d\n", q.front());
+  }
+  return 0;
+}

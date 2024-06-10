@@ -1,0 +1,27 @@
+#include<stdio.h>
+int main(void){
+  char f,s;
+  int a=1,b=0,c=0;
+  int w=0;
+
+  while(scanf("%c %c",&f,&s)!=EOF){
+    if(f=='A'&&s=='B' || s=='A'&&f=='B'){
+      w=a;
+      a=b;
+      b=w;
+    }else if(f=='A'&&s=='C' || s=='A'&&f=='C'){
+      w=a;
+      a=c;
+      c=w;
+    }else if(f=='C'&&s=='B' || s=='C'&&f=='B'){
+      w=b;
+      b=c;
+      c=w;
+    }
+  }
+  if(a==1)printf("A\n");
+  else if(b==1)printf("B\n");
+  else if(c==1)printf("C\n");
+  else printf("error");
+  return 0;
+}

@@ -1,0 +1,37 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+
+vector<int> primes;
+
+void allPrimes() {
+        vector<bool> isPrime(1000000, true);
+        for (int i = 2; i<1000000; i++) {
+                
+                if (isPrime[i]) {
+                        primes.push_back(i);
+                        for (int j=2*i; j<1000000; j += i) {
+                                isPrime[j] = false;
+                        }
+                }
+        }
+}
+
+int solver(int n) {
+        int minus = 0;
+        if (binary_search(primes.begin(), primes.end(), n)) minus = 1;
+        return upper_bound(primes.begin(), primes.end(), 2 * n) - lower_bound(primes.begin(), primes.end(), n) - minus;
+
+}
+
+int main() {
+        allPrimes();
+
+        while (1) {
+                int n; cin >> n; if (n==0) break;
+                cout << solver(n) << endl;
+        }
+}

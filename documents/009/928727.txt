@@ -1,0 +1,94 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+typedef int Weight;
+
+struct Edge {
+	int from, to;
+	Weight weight;
+	Edge(int f, int t, int w) : from(f), to(t), weight(w) { }
+};
+typedef vector<Edge> Edges;
+
+int solve(int n, Edges& es) {
+	int m = (int)es.sz;
+	
+	int dp[1<<n];
+	for_(s, 0, 1<<n) dp[s] = 1000000000;
+	
+	dp[0] = 0;
+	for_(s, 0, 1<<n) {
+		for_(i, 0, m) {
+			Edge e = es[i];
+			int ns = s|1<<e.from; ns = ns|1<<e.to;
+			dp[ns] = min(dp[ns], dp[s] + e.weight);
+		}
+	}
+
+	return dp[(1<<n) - 1];
+}
+
+int main() {
+	int n, m;
+	
+	while (1) {
+		cin >> n; if (n==0) break;
+		cin >> m;
+		
+		Edges es;
+		
+		int a, b, w;
+		for_(i, 0, m) {
+			scanf("%d,%d,%d", &a, &b, &w);
+			Edge e(a, b, w/100 - 1);
+			es.pb(e);
+		}
+		
+		cout << solve(n, es) << endl;
+	}
+	
+	return 0;
+}

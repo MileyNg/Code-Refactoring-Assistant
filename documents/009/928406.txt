@@ -1,0 +1,22 @@
+#include<stdio.h>
+
+int judge(int num){
+int i;
+if(num == 2) return 1;
+if(num % 2 == 0 || num == 1) return 0;
+for(i=3; i * i <= num; i = i+2){
+if(num % i == 0) return 0;
+}
+return 1;
+}
+
+int main(void){
+  int a, i,n,count=0;
+  scanf("%d",&n);
+  for (i=0; i<n; i++){
+    scanf("%d",&a);
+    if(judge(a) == 1) count++;
+  }
+  printf("%d\n",count);
+  return 0;
+}

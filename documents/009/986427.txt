@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <string.h>
+
+
+int main (void) {
+    int n, i, p, p2;
+    char buffer[20], b[20], color;
+    char pile[101][1000] = {};
+    int pidx[101] = {};
+
+    const char *command[] = {
+        "push",
+        "pop",
+        "move",
+        "quit"
+    };
+    enum {
+        PUSH = 0,
+        POP,
+        MOVE,
+        QUIT
+    };
+
+    scanf("%d\n", &n);
+
+    while (gets(buffer)) {
+        for (i = 0; i < 4; i++) {
+            if (strncmp(buffer, command[i], strlen(command[i])) == 0) break;
+        }
+
+        switch (i) {
+            case PUSH:
+                sscanf(buffer, "%s %d %c", b, &p, &color);
+                pile[p][pidx[p]++] = color;
+                break;
+            case POP:
+                sscanf(buffer, "%s %d", b, &p);
+                color = pile[p][--pidx[p]];
+                printf("%c\n", color);
+                break;
+            case MOVE:
+                sscanf(buffer, "%s %d %d", b, &p, &p2);
+                pile[p2][pidx[p2]++] = pile[p][--pidx[p]];
+                break;
+            default:
+                return 0;
+        }
+    }
+
+    return 0;
+}

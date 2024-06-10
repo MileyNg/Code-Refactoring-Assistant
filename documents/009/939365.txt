@@ -1,0 +1,85 @@
+#include<cstdio>
+#include<string>
+#include<iostream>
+using namespace std;
+
+string A(string str){
+  char tmp;
+  for(int i=0,j=str.length()-1;i<j;i++,j--){
+    tmp=str[i];
+    str[i]=str[j];
+    str[j]=tmp;
+  }
+  return str;
+}
+
+string J(string str){
+  char tmp;
+  tmp=str[str.length()-1];
+  for(int i=str.length()-1;i>0;i--)
+    str[i]=str[i-1];
+  str[0]=tmp;
+  return str;
+}
+
+string C(string str){
+  char tmp;
+  tmp=str[0];
+  for(int i=0;i<str.length()-1;i++)
+    str[i]=str[i+1];
+
+  str[str.length()-1]=tmp;
+  return str;
+}
+
+string E(string str){
+  string tmp,str2;
+  if(str.length()%2){
+    tmp=str.substr(0,str.length()/2);
+    str2.assign(&str[str.length()/2+1],&str[str.length()]);
+    str2+=str[str.length()/2];
+    str2+=tmp;
+  }else{
+    tmp=str.substr(0,str.length()/2);
+    str2.assign(&str[str.length()/2],&str[str.length()]);
+    str2+=tmp;
+  }
+  return str2;
+}
+
+string P(string str){
+  string num=("9012345678");
+  for(int i=0;i<str.length();i++)
+    if(str[i]>=0x30 && str[i]<=0x39)
+      str[i]=num[str[i]-0x30];
+  return str;
+}
+
+string M(string str){
+  string num=("1234567890");
+  for(int i=0;i<str.length();i++)
+    if(str[i]>=0x30 && str[i]<=0x39)
+      str[i]=num[str[i]-0x30];
+  return str;
+}
+
+int main(){
+  int n;
+  string str1,str2;
+  scanf("%d",&n);
+  for(int i=0;i<n;i++){
+    cin>> str1 >>str2;
+    for(int i=str1.length()-1;i>=0;i--){
+      switch(str1[i]){
+      case 'A': str2=A(str2); break;
+      case 'J': str2=J(str2); break;
+      case 'C': str2=C(str2); break;
+      case 'E': str2=E(str2); break;
+      case 'P': str2=P(str2); break;
+      case 'M': str2=M(str2); break;
+      }
+    }
+    cout<< str2<< endl;
+  }
+  return 0;
+}

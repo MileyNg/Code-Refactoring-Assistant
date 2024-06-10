@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main(void){
+  int c1,c2;
+  int i,j;
+  int temp,ans;
+  int max_index;
+  int num[100001];
+
+  while(1){
+    scanf("%d %d",&c1,&c2);
+
+    if(c1 == 0 && c2 == 0){
+      break;
+    }
+
+    max_index = c1 - c2;
+    c1 -=1;
+
+    for(i = 0;i <= c1;i++){
+      scanf("%d",&num[i]);
+    }
+
+    ans = 0;    
+    for(i = 0;i <= max_index;i++){
+      temp = 0;
+      for(j = 0;j < c2;j++){
+	temp += num[i+j];
+      }
+      if(temp > ans){
+	ans = temp;
+      }
+    }
+    
+    printf("%d\n",ans);  
+  }
+  return 0;
+}

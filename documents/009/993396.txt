@@ -1,0 +1,100 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define all(a) (a).begin(),(a).end()
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+
+#define sz size()
+using namespace std;
+typedef vector<int> vi;
+typedef double D;
+typedef complex<D> P;
+typedef pair<D,vi> sol;
+
+const D EPS = 1e-8;
+const D INF = 1e9;
+
+namespace std{
+  bool operator<(const P &a,const P &b){
+    return EQ(imag(a),imag(b))?real(a)<real(b):imag(a)<imag(b);
+  }
+}
+
+sol dp[41][41][41]; //dp[prev][cur][point_num];
+vector<P> p,id;
+vector<D> area;
+vector<vi> vlist;
+
+inline D dot(const P &x, const P &y){return real(conj(x)*y);}
+inline D cross(const P &x, const P &y){return imag(conj(x)*y);}
+inline D tri_area(const P &a,const P &b,const P &c){ return cross(b-a,c-a)/2; }
+
+inline int ccw(const P &a,P b,P c){
+  b -= a;c -= a;
+  if (cross(b,c)>EPS) return 1;   //counter clockwise
+  if (cross(b,c)<-EPS) return -1; //clockwise
+  if (dot(b, c)<-EPS) return 2;   //c--a--b on line
+  if (abs(b)<abs(c)) return -2;   //a--b--c on line
+  return 0;                       //on segment
+}
+
+int main(){
+  int n,q,x,y;
+  
+  cin >> n;
+  p.resize(n); id.resize(n);
+  rep(i,n){
+    cin >> x >> y;
+    id[i] = p[i] = P(x,y);
+  }
+  sort(all(p));
+
+  area = vector<D>(n+1,INF);
+  vlist = vector<vi>(n+1,vi());
+
+  rep(init,n){
+    rep(i,n)rep(j,n)rep(k,n+1)dp[i][j][k] = sol(INF,vi());
+    for(int i=init+1;i<n;i++){
+      vi tmp(2); tmp[0] = init; tmp[1] = i;
+      dp[init][i][2] = sol(0,tmp);
+    }
+    for(int num=2;num<n;num++){
+      for(int cur=init+1;cur<n;cur++){
+	for(int nxt=init+1;nxt<n;nxt++){
+	  if(ccw(p[init],p[cur],p[nxt])!=1)continue;
+	  for(int prev=init;prev<n;prev++){
+	    if(cross(p[cur]-p[prev],p[nxt]-p[cur]) <= EPS)continue;
+
+	    D S = dp[prev][cur][num].first + tri_area(p[init],p[cur],p[nxt]);
+	    if(S +EPS < dp[cur][nxt][num+1].first){
+	      dp[cur][nxt][num+1].first = S;
+	      dp[prev][cur][num].second.push_back(nxt);
+	      dp[cur][nxt][num+1].second = dp[prev][cur][num].second;
+	      dp[prev][cur][num].second.pop_back();
+	    }
+	  }
+	}
+      }
+    }
+
+    rep(i,n)rep(j,n)rep(k,n+1){
+      if(area[k] > dp[i][j][k].first + EPS){
+	area[k] = dp[i][j][k].first;
+	vlist[k] = dp[i][j][k].second;
+      }
+    }
+  }
+
+  cin >> q;
+  while(q--){
+    cin >> x;
+    if(EQ(area[x],INF))cout << "NA\n";
+    else{
+      rep(i,vlist[x].sz)rep(j,n){
+	if(EQ(p[vlist[x][i]],id[j])){
+	  cout << j+1 << (i+1==(int)vlist[x].sz?"\n":" ");
+	  break;
+	}
+      }
+    }
+  }
+}

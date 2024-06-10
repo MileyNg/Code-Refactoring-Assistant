@@ -1,0 +1,56 @@
+#include<iostream>
+#include<vector>
+#include<set>
+#include<queue>
+
+using namespace std;
+
+struct S{
+  vector<int> v;
+  int c,d,e;
+  S(const vector<int> &pv,int pc):v(pv),c(pc){
+    eval();
+  }
+  void eval(){
+    d=0;
+    for(int i=0;i<v.size();i++){
+      d+=v[i]!=i+1;
+    }
+    e=c+(d+1)/2;
+  }    
+  void swap(int a,int b){
+    c++;
+    std::swap(v[a],v[b]);
+    eval();
+  }
+  bool operator<(const S &s)const{
+    return e>s.e;
+  }
+};
+
+int main(){
+  int N;
+  cin>>N;
+  vector<int> v(N);
+  for(auto &e:v){
+    cin>>e;
+  }
+  S is(v,0);
+  priority_queue<S> que;
+  que.push(is);
+  set<vector<int> > s;
+  for(;;){
+    S c=que.top();
+    if(c.d==0)break;
+    que.pop();
+    if(!s.insert(c.v).second)continue;
+    for(int i=0;i<N;i++){
+      for(int j=i+1;j<N;j++){
+	S n=c;
+	n.swap(i,j);
+	que.push(n);
+      }
+    }
+  }
+  cout<<que.top().c<<endl;
+}

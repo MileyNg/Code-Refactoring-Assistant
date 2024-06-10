@@ -1,0 +1,69 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+vector<int> cc[30];
+char a[510][32];
+int n;
+bool vis[26], can[26];
+
+bool init()
+{
+    memset(vis, 0, sizeof(vis));
+    memset(can, 0, sizeof(can));
+    for(int i = 0; i < 26; ++ i) cc[i].clear();
+    for(int i = 1; i < n; ++ i)
+    {
+        int j, len = min(strlen(a[i]), strlen(a[i-1]));
+        for(j = 0; j < len; ++ j)
+            if(a[i][j] != a[i-1][j]) break;
+        if(strlen(a[i-1]) > strlen(a[i])  && j >= len) return false;
+        if(j < len) cc[a[i][j] - 'a'].push_back(a[i-1][j] - 'a');
+    }
+    for(int i = 0; i < 26; ++ i)
+    {
+        sort(cc[i].begin(), cc[i].end());
+        cc[i].erase(unique(cc[i].begin(), cc[i].end() ), cc[i].end());
+    }
+    return true;
+}
+
+bool dfs(int cur)
+{
+    vis[cur] = true;
+    if(can[cur]) return false;
+    can[cur] = true;
+    for(int i = 0; i < (int)cc[cur].size(); ++ i)
+        if(!dfs(cc[cur][i])) return false;
+    can[cur] = false;
+    return true;
+}
+
+int main()
+{
+    while(scanf("%d", &n) == 1 && n)
+    {
+        for(int i = 0; i < n; ++ i)
+            scanf("%s", a[i]);
+        if(!init())
+        {
+            puts("no");
+            continue;
+        }
+        bool flag = 1;
+        for(int i = 0; i < 26; i++)
+        {
+            if(!vis[i] && !dfs(i))
+            {
+                flag = 0;
+                break;
+            }
+        }
+        if(flag) puts("yes");
+        else puts("no");
+    }
+    return 0;
+}

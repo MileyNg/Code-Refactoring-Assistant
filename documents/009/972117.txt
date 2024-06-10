@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <array>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	while (true) {
+		int n;
+		cin >> n;
+
+		if (n == 0) break;
+
+		int head = 1;
+		int tail = 0;
+		long long sum = 1;
+		long long count = 0;
+
+		while (tail!=head) {
+			if (sum <= n) {
+				if (sum == n) ++count;
+				++head;
+				sum += head;
+			} else {
+				sum -= tail;
+				++tail;
+			}
+		}
+
+		cout << count << endl;
+	}
+}

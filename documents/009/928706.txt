@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+int n,found,buf_length;
+vector<string> word[30],buf;
+string sequence;
+char transfer[26];
+
+bool cmp(const string& a,const string& b){ return a.size() > b.size(); }
+
+void dfs(int cur,vector<char> table){
+
+  if( found >= 2 ) return;
+
+  if( cur >= buf_length ){
+    found++;
+    rep(i,26) transfer[i] = table[i];
+    return;
+  }
+
+  int len = buf[cur].size();
+  rep(i,word[len].size()){
+    vector<char> ntable = table;
+    bool error = false;
+    rep(j,len){
+      assert( buf[cur][j]-'A' < 26 );
+      assert( word[len][i][j]-'A' < 26 );
+      if( ntable[buf[cur][j]-'A'] == '?' && ntable[word[len][i][j]-'A'] == '?' ) {
+        ntable[buf[cur][j]-'A']     = word[len][i][j];
+        ntable[word[len][i][j]-'A'] = buf[cur][j];
+      } else if( !( ntable[buf[cur][j]-'A'] == word[len][i][j] && ntable[word[len][i][j]-'A'] == buf[cur][j] ) ) {
+        error = true;
+        break;
+      }
+    }
+    if( error ) continue;
+    dfs(cur+1,ntable);
+    if( found >= 2 ) return;
+  }
+  return ;
+}
+
+int main(){
+  while( cin >> n, n ){
+    string tmp;
+    found = 0;
+    buf.clear();
+    rep(i,26)transfer[i] = '?';
+    rep(i,30) word[i].clear();
+    rep(i,n){
+      cin >> tmp;
+      word[(int)tmp.size()].push_back(tmp);
+    }
+    cin.ignore();
+    getline(cin,sequence);
+    tmp = sequence.substr(0,(int)sequence.size()-1);
+    stringstream ss(tmp);
+    while( !( ss >> tmp ).fail() ) buf.push_back(tmp);
+
+    sort(buf.begin(),buf.end(),cmp);
+    buf_length = (int) buf.size();
+
+    dfs(0,vector<char>(26,'?'));
+
+    if( found == 1 ) {
+      rep(i,sequence.size()) cout << (isupper(sequence[i])?transfer[sequence[i]-'A']:sequence[i]);
+      puts("");
+    } else puts("-.");
+
+  }
+  return 0;
+}

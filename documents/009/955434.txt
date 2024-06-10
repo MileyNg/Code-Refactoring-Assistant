@@ -1,0 +1,61 @@
+#include <cstdio>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <iterator>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+int N, M;
+#define MN 20000
+#define MM 16
+int C[MN];
+int X[MM];
+bool input() {
+    cin >> N >> M;
+    if (N == 0 && M == 0) return false;
+    for (int i = 0; i < M; i++) cin >> X[i];
+    for (int i = 0; i < N; i++) cin >> C[i];
+    return true;
+}
+
+#define INF (1<<28)
+#define SQ(x) ((x) * (x))
+
+int F(int x) {
+    if (x < 0) return 0;
+    if (x > 255) return 255;
+    return x;
+}
+
+int Cache[MN][256];
+int dfs(int index, int x) {
+    if (index == N) return 0;
+    if (Cache[index][x] >= 0) return Cache[index][x];
+    int Ret = INF;
+    for (int i = 0; i < M; i++) {
+        Ret = min(Ret, dfs(index + 1, F(x + X[i])) + SQ(C[index] - x));
+    }
+    return Cache[index][x] = Ret;
+}
+
+void solve() {
+    memset(Cache, -1, sizeof(Cache));
+    int Ans = INF;
+    for (int i = 0; i < M; i++) {
+        Ans = min(Ans, dfs(0, F(128 + X[i])));
+    }
+    cout << Ans << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

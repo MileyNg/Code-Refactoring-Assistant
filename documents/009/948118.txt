@@ -1,0 +1,42 @@
+for r in range(input()):
+	msg = raw_input()
+	cur = 0
+	for rr in range(input()):
+		com = raw_input()
+		if   com == "forward char":
+			cur = min(len(msg),cur+1)
+			
+		elif com == "forward word":
+			flag = 0
+			while 1:
+				if cur == len(msg): break
+				if msg[cur] != " ": flag = 1
+				if flag and msg[cur] == " ": break
+				cur += 1
+				
+		elif com == "backward char":
+			cur = max(0,cur-1)
+			
+		elif com == "backward word":
+			flag = 0
+			while 1:
+				if cur == 0: break
+				if cur < len(msg) and msg[cur] != " ": flag = 1
+				if flag and msg[cur-1] == " ": break
+				cur -= 1
+				
+		elif com == "delete char":
+			msg = msg[:cur] + msg[cur+1:]
+			
+		elif com == "delete word":
+			flag = 0
+			while 1:
+				if cur == len(msg): break
+				if msg[cur] != " ": flag = 1
+				if flag and msg[cur] == " ": break 
+				msg = msg[:cur] + msg[cur+1:]
+				
+		elif com[:6] == "insert":
+			msg = msg[:cur] + com[8:-1] + msg[cur:]
+			cur += len(com[8:-1])
+	print msg[:cur] + "^" + msg[cur:]

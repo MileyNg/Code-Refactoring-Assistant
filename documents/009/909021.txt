@@ -1,0 +1,36 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main(){
+  int h, w, sum[500][500];
+  char mas[500][500];
+
+  while(cin >> h >> w, h){
+    for(int i = 0; i < h; i++){
+      for(int j = 0; j < w; j++){
+        cin >> mas[i][j];
+      }
+    }
+    for(int i = 0; i < h; i++){
+      int cnt = 0;
+      for(int j = w - 1; j >= 0; j--){
+        if(mas[i][j] == '.'){
+          sum[i][j] = cnt +++ 1;
+        }else{
+          sum[i][j] = cnt = 0;
+        }
+      }
+    }
+    int ret = 0;
+    for(int i = 0; i < h; i++){
+      for(int j = 0; j < w; j++){ //とりあえず起点を決める
+        int minw = w - j;
+        for(int k = i; k < h; k++){
+          minw = min( minw, sum[k][j]);
+          ret = max( ret, minw * (k - i + 1));
+        }
+      }
+    }
+    cout << ret << endl;
+  }
+}

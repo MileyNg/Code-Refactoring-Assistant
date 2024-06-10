@@ -1,0 +1,84 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+ 
+class TEST{
+	static void Main(){
+		while(true){
+			int n=int.Parse(Console.ReadLine());
+			if(n==0)break;
+			Sol mySol =new Sol(n);
+			mySol.Solve();
+		}
+	}
+}
+
+class Sol{
+	public void Solve(){
+		
+		long[] Weight=new long[N];
+		for(int i=0;i<N;i++)Weight[i]=0;
+		
+		
+		for(int i=0;i<N;i++){
+			long g=gcd(Mob[i][0],Mob[i][1]);
+			Mob[i][0]/=g;
+			Mob[i][1]/=g;
+			if(Mob[i][2]==0 && Mob[i][3]==0)Weight[i]=Mob[i][0]+Mob[i][1];
+		}
+		bool chk=true;
+		while(chk){
+			chk=false;
+			for(int i=0;i<N;i++){
+				if(Weight[i]!=0)continue;
+				if(Weight[i]==0){
+					if(Mob[i][2]!=0 && Mob[i][3]!=0){
+					if(Weight[Mob[i][2]-1]==0 &&Weight[Mob[i][3]-1]==0){
+						chk=true;
+						continue;
+					}
+					}
+				}
+				
+				long wl=1;
+				if(Mob[i][2]!=0 && Weight[Mob[i][2]-1]!=0)wl=Weight[Mob[i][2]-1];
+				long wr=1;
+				if(Mob[i][3]!=0 && Weight[Mob[i][3]-1]!=0)wr=Weight[Mob[i][3]-1];
+				
+				long lcm=wl*wr*Mob[i][0]*Mob[i][1]/gcd(wl*Mob[i][0],wr*Mob[i][1]);
+				long rl=lcm/(wl*Mob[i][0]);
+				long rr=lcm/(wr*Mob[i][1]);
+				Weight[i]=rl*wl+rr*wr;
+			}
+		}
+		
+		long Max=0;
+		for(int i=0;i<N;i++)if(Max<Weight[i])Max=Weight[i];
+		
+		Console.WriteLine("{0}",Max);
+		
+	}
+
+	int N;
+	long[][] Mob;
+	public Sol(int n){
+		N=n;
+		Mob=new long[N][];
+		for(int i=0;i<N;i++)Mob[i]=rla();
+	}
+
+	long gcd(long a,long b){
+		if(b==0)return a;
+		return gcd(b,a%b);
+	}
+
+
+	static String rs(){return Console.ReadLine();}
+	static int ri(){return int.Parse(Console.ReadLine());}
+	static long rl(){return long.Parse(Console.ReadLine());}
+	static double rd(){return double.Parse(Console.ReadLine());}
+	static String[] rsa(){return Console.ReadLine().Split(' ');}
+	static int[] ria(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>int.Parse(e));}
+	static long[] rla(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>long.Parse(e));}
+	static double[] rda(){return Array.ConvertAll(Console.ReadLine().Split(' '),e=>double.Parse(e));}
+}

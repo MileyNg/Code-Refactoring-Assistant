@@ -1,0 +1,12 @@
+d = 1e-11
+
+while (line = gets)
+  ax, ay, bx, by, cx, cy, dx, dy = line.chomp.split(" ").map{|s| s.to_f}
+
+  abx = bx - ax
+  aby = by - ay
+  cdx = dx - cx
+  cdy = dy - cy
+
+  puts ((abx * cdx + aby * cdy).abs < d) ? "YES" : "NO"
+end

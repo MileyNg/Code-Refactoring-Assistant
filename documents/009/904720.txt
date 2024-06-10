@@ -1,0 +1,41 @@
+import std.stdio,
+       std.string,
+       std.algorithm,
+       std.array,
+       std.format,
+       std.conv;
+
+double myRound(double base, int count){
+  auto str = appender!string;
+  formattedWrite(str, "%.*f", count - 1, base);
+  return str.data.to!double;
+}
+
+void main(){
+  string line;
+  string[] lines;
+  int i;
+  while (true){
+    if(stdin.eof()) break;
+    lines.length++;
+    lines[i] = readln();
+    i++;
+  }
+  foreach(eline; lines){
+    string[] inputs = eline.chomp.split;
+    double num[] = (string[] inputs){
+      double[] tmp;
+      tmp.length = inputs.length;
+      foreach(i, elem; inputs)
+        tmp[i] = elem.to!double;
+      return tmp;
+    }(inputs);
+
+    double answer[2];
+    answer[0] = (num[2] * num[4] - num[1] * num[5]) / (num[0] * num[4] - num[1] * num[3]);
+    answer[1] = (num[5] * num[0] - num[2] * num[3]) / (num[0] * num[4] - num[3] * num[1]);
+    if(answer[0] == cast(float)0)
+      answer[0] = cast(float)0;
+    writefln("%.3f %.3f",myRound(answer[0], 3), myRound(answer[1], 3));
+  }
+}

@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+int main(){
+	long long  d;
+	while( cin >> d, d ){
+		int n, m;
+		cin >> n;
+		cin >> m;
+		vector<int> store(n+1), dist(m);
+		store[0] = 0;
+		for( int i = 1; i < n; i++ ) cin >> store[i];
+		store[n] = d;
+		for( int i = 0; i < m; i++ ) cin >> dist[i];
+		sort( store.begin(), store.end() );
+		long long sum = 0;
+		for( int i = 0; i < m; i++ ){
+			//cout << "a" << endl;
+			int left = 0, right = n;
+			while( 1 ){
+				//cout << "b" << endl;
+				int next = (left + right) / 2;
+				if( next == left || next == right ) break;
+				if( dist[i] < store[next] ) right = next;
+				else left = next;
+			}
+			sum += min(abs(store[left]-dist[i]), abs(store[right]-dist[i]));
+			//cout << sum << endl;
+		}
+		cout << sum << endl;
+	}
+}

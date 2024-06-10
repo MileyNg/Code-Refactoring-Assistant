@@ -1,0 +1,137 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+struct Node{
+public:
+ Node* parent;
+ Node* left;
+ Node* right;
+ int value;
+
+ Node(Node* p = 0, Node* l = 0, Node* r = 0, int v = 0) : parent(p), left(l), right(r), value(v){};
+private:
+protected:
+};
+
+class Tree{
+private:
+ Node* root;
+ enum ORDER {PREORDER = 0, INORDER, POSTORDER};
+public:
+ Tree(){root = 0;};
+
+ void insert(int intz){
+  Node* z = new Node(0, 0, 0, intz);
+  insert(z);
+ };
+
+ void insert(Node* z){
+  Node* y = 0;
+  Node* x = root;
+  while(x != 0){
+   y = x;
+   if(z->value < x->value){
+    x = x->left;
+   }else{
+    x = x->right;
+   }
+  }
+  z->parent = y;
+  if(y == 0){
+   root = z;
+  }else if(z->value < y->value){
+   y->left = z;
+  }else{
+   y->right = z;
+  }
+  return ;
+ };
+
+ void find(int value){
+  Node* x = root;
+  
+  Node* z = new Node(0, 0, 0, value);
+
+  while(x != 0){
+   if(z->value < x->value){
+    x = x->left;
+   }else if(z->value > x->value){
+    x = x->right;
+   }else{
+    cout << "yes" <<endl;
+    return ;
+   }
+  }
+  cout << "no" << endl;
+  return ;
+ };
+
+ void print(){
+  print(INORDER);
+  print(PREORDER);
+ };
+ void print(ORDER order){
+  Node* cur = root;
+  Node* pre = cur->parent;
+
+  if(root == 0) return;
+
+  while(cur){
+   if(pre == cur->parent){
+    if(order == PREORDER) cout << " " << cur->value;
+    if(cur->left != 0){
+     pre = cur;
+     cur = cur->left;
+     continue;
+    }else{
+     pre = cur->left;
+    }
+   }
+
+   if(pre == cur->left){
+    if(order == INORDER) cout << " " << cur->value;
+    if(cur->right != 0){
+     pre = cur;
+     cur = cur->right;
+     continue;
+    }else{
+     pre = cur->right;
+    }
+   }
+
+   if(pre == cur->right){
+    if(order == POSTORDER) cout<< " " << cur->value;
+    pre = cur;
+    cur = cur->parent;
+   }
+  }
+  cout << endl;
+  return ;
+ };
+
+
+protected:
+};
+
+
+int main(){
+ Tree tree;
+ int n = 0; cin >> n;
+ for(int i = 0; i < n; i++){
+  string str = ""; cin >> str;
+
+  if(str == "insert"){
+   int x = 0; cin >> x; 
+   tree.insert(x);
+  }else if(str == "find"){
+   int value = 0; cin >> value;
+   tree.find(value);
+  }else if(str == "print"){
+   tree.print();
+  }
+ }
+
+ return 0;
+}

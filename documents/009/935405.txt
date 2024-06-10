@@ -1,0 +1,24 @@
+while s = gets do
+  hu = s.split(',').map(&:to_i)
+  cc = Array.new(13){0}
+  hu.each { |c| cc[c-1] += 1 }
+  st = cc.join
+  cc.delete(0)
+
+  scr='null'
+  case cc.sort
+    when [1,4]
+      scr='four card'
+    when [2,3]
+      scr='full house'
+    when [1,1,1,1,1]
+      scr='straight' if st =~ /1{5}/ or st =~ /10{8}1{4}/
+    when [1,1,3]
+      scr='three card'
+    when [1,2,2]
+      scr='two pair'
+    when [1,1,1,2]
+      scr='one pair'
+  end
+  puts scr
+end

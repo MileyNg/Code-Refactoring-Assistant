@@ -1,0 +1,103 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+int main() {
+
+  int n , a , b;
+
+  char mark;
+
+  int T[4][14], value;
+
+  cin >> n;
+
+  for(int i=0;i<4;i++)
+    for(int j=0;j<14;j++)
+      T[i][j] = 0;
+
+  for(int i = 0; i < n; i++) {
+
+    cin >> mark >> b;
+
+    switch(mark) {
+
+    case 'S':
+
+      a = 0;
+
+      break;
+
+    case 'H':
+
+      a = 1;
+
+      break;
+
+    case 'C':
+
+      a = 2;
+
+      break;
+
+    case 'D':
+
+      a = 3;
+
+      break;
+
+    }
+
+    T[a][b] = 1;
+
+  }
+
+  for(int i = 0; i < 4 ; i++) {
+
+    for(int j = 1; j < 14; j++) {
+
+      if(T[i][j] == 1) {
+
+	continue;
+
+      } else {
+
+	switch(i) {
+
+	case 0:
+
+	  cout << "S" << " " << j << "\n";
+ 
+	  break;
+
+	case 1 :
+
+          cout << "H" << " " << j << "\n";
+
+          break;
+
+	case 2:
+
+	  cout << "C" << " "  << j << "\n";
+
+	  break;
+
+	case 3:
+
+	  cout << "D" << " " << j << "\n";
+
+	default:
+
+	  break;
+
+	}
+
+      }
+
+    }
+
+  }
+
+  return 0;
+
+}

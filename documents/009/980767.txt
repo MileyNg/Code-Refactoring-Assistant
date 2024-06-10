@@ -1,0 +1,42 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+  int i,t,n,m,pc,c,g,lt,lc,f,pk[2][10],pn[2][10],pt[100];
+  queue<int> qu,st;
+  while(cin >> m >> n ) {
+	  if (m+n==0) break;
+	  for (i=0;i<m;i++) { pk[0][i]=pk[1][i]=-1; pn[0][i]=pn[1][i]=-1;}
+	  for (i=0;i<n;i++) cin >> pt[i];
+	   	  t=0; pc=0;
+	   	  qu.push(1);
+	   	  while(!qu.empty() || pc>0) {
+			  if (t % 10==0 && t/10<n && t>0) qu.push(t/10+1);  
+	          for (i=0;i<m;i++) {
+				  if (pk[0][i]==t) { 
+					  pc--; st.push(pn[0][i]); pk[0][i]=pn[0][i]=-1;
+					  if (pk[1][i]>0) { if (pk[1][i]<=t) { pc--; st.push(pn[1][i]); }
+					   else { pk[0][i]=pk[1][i]; pn[0][i]=pn[1][i]; } }
+					   pk[1][i]=pn[1][i]=-1;
+				  }
+			  }
+			  f=1;
+			  while(f==1 && pc<m*2 && !qu.empty()) {
+			     f=0; lt=lc=9999; g=t+pt[qu.front()-1];
+			     for (i=0;i<m;i++) if (pk[0][i]==-1) { lc=i; f=1; break; } 
+				 if (f==0) for (i=0;i<m;i++) if (pk[0][i]>0 && pk[0][i]>=g && lt>pk[0][i]-g && pk[1][i]==-1) { lt=pk[0][i]-g; lc=i; f=1;}
+				 if (f==0) for (i=0;i<m;i++) if (pk[0][i]>0 && pk[0][i]<g && lt>g-pk[0][i] && pk[1][i]==-1) { lt=g-pk[0][i]; lc=i; f=1;}
+				 if (f==1) { c=qu.front(); qu.pop();
+				             if (pk[0][lc]>0) { pk[1][lc]=pk[0][lc]; pn[1][lc]=pn[0][lc]; }
+				             pc++; pk[0][lc]=g; pn[0][lc]=c;
+						 }
+					 }
+					 t++;
+				   }
+			c=st.front(); cout << c; st.pop();
+			while(!st.empty()) { cout << ' ' << st.front(); st.pop();}
+			cout << endl;
+		} 	                  		  
+	return 0;
+}

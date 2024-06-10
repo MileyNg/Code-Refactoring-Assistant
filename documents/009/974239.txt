@@ -1,0 +1,31 @@
+import math
+
+
+def sieve_of_erastosthenes(target_list):
+    for num in target_list:
+        input_list = [False if i % 2 == 0 or i % 3 == 0 or i % 5 == 0 else True for i in range(num)]
+        input_list[0] = input_list[1] = False
+        input_list[2] = input_list[3] = input_list[5] = True
+        sqrt = math.sqrt(num)
+
+        for serial in range(3, num, 2):
+            
+            if serial >= sqrt:
+                print(sum(input_list))
+                break
+
+            for s in range(serial ** 2, num, serial): 
+                input_list[s] = False
+
+
+
+if __name__ == '__main__':
+    target_list = []
+
+    while True:
+        try:
+            target_list.append(int(input()))
+        except:
+            break
+
+    sieve_of_erastosthenes(target_list)

@@ -1,0 +1,89 @@
+#include<stdio.h>
+#define N 100000
+#define NIL -1
+
+typedef struct{
+  int par;
+  int left;
+  int right;
+}node_tree;
+
+node_tree T[N];
+int deep;
+int left_h,right_h;
+
+int Deep(int u){
+  int d;
+  if(T[u].left!=NIL){
+    d++;
+    Deep(T[u].par);
+  }
+  return d;
+}
+
+
+  
+int Degree(int u){
+    if (T[u].left == NIL && T[u].right == NIL)return 0;
+    else if(T[u].left != NIL && T[u].right != NIL)return 2;
+    else  return 1;
+}
+
+//兄弟
+int Sibling(int u){
+  if(T[u].par == NIL) return NIL;//親がいなければNILをかえす。
+  else if(T[T[u].par].left==u)return T[T[u].par].right;
+  else return T[T[u].par].left;
+
+}
+  
+
+
+
+int Hight(int u){
+  int left_h = 0, right_h = 0;
+  if(T[u].left!=NIL) {
+    left_h = 1+Hight(T[u].left);//左側
+  }
+  if(T[u].right!=NIL){
+    right_h =1+Hight(T[u].right);//右側
+  }
+  if(left_h < right_h) return right_h;
+  else return left_h;//大小比較して大きいほうを返す
+}
+  
+  
+  
+void print(int u){
+  printf("node %d, parent = %d,sibling = %d,degree = %d, depth = %d, height = %d, ",u,T[u].par,Sibling(u),Degree(u),Deep(u),Hight(u));
+  
+  if(T[u].par == NIL)printf("root\n");
+  else if(T[u].left==NIL&&T[u].right==NIL)printf("leaf\n");
+  else if(T[u].left!=NIL||T[u].right!=NIL)printf("internal node\n");
+}
+  
+  
+main(){
+  int i,j,deg,ver,ch,l,n,tmp;
+      
+    scanf("%d", &n);
+      
+    for ( i=0;i<n;i++) {
+      T[i].par=NIL;
+      T[i].left=NIL;
+      T[i].right=NIL;
+    }
+    for (i=0;i<n;i++){
+      scanf("%d %d %d",&ver,&deg,&ch);
+             T[deg].par=ver;
+	     T[ch].par=ver;
+             T[ver].left=deg;
+             T[ver].right=ch;
+	     
+    }
+    for (i =0;i<n;i++){
+      print(i);
+    }
+
+    return 0;
+}

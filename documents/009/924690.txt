@@ -1,0 +1,18 @@
+#include<stdio.h>
+#include<vector>
+using namespace std;
+int s[1000000];
+int main()
+{
+	int   i,j,k,n,u;
+	s[0]=2;k=1;
+	for(i=3;i<100000;i++)
+	{for(j=0;j<k;j++)
+	if(i%s[j]==0)break;
+	if(j==k)s[k++]=i;}
+	while(~scanf("%d",&u))
+	{for(j=0;j<k;j++)
+	if(u<s[j])break;
+	printf("%d\n",j);}
+	return 0;
+}

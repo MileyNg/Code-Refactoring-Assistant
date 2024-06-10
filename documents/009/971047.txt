@@ -1,0 +1,117 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(x,b) ((0)<=(x)&&(x)<(b))
+#define F first
+#define S second
+#define INF 1 << 30
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef queue<int> qi;
+typedef long long ll;
+
+vii card(5, vi(4));
+int N, dy[4] = {-1,0,1,1}, dx[4] = {1,1,1,0};
+
+vii narrow(vii c){
+  int t;
+  rep(i, 5) rep(j, 4){
+    if(j){
+      if(c[i][j-1] != -1) continue;
+      t = c[i][j-1]; 
+      c[i][j-1] = c[i][j];
+      c[i][j] = t;
+    }else{
+      if(i == 0) continue;
+      if(c[i-1][3] != -1) continue;
+      t = c[i-1][3];
+      c[i-1][3] = c[i][j];
+      c[i][j] = t;
+    }
+  }
+  rep(i, 5) rep(j, 4){
+    if(j){
+      if(c[i][j-1] != -1) continue;
+      t = c[i][j-1];
+      c[i][j-1] = c[i][j];
+      c[i][j] = t;
+    }else{
+      if(i == 0) continue;
+      if(c[i-1][3] != -1) continue;
+      t = c[i-1][3];
+      c[i-1][3] = c[i][j];
+      c[i][j] = t;
+    }
+  }
+  return c;
+}
+
+int csize(vii origin){
+  int ret = 0;
+  rep(i, 5) rep(j, 4) if(origin[i][j] != -1) ret++;
+  return ret;
+}
+
+int main(){
+  scanf("%d", &N);
+  while(N--){
+    rep(i, 5) rep(j, 4) scanf("%d", &card[i][j]);
+
+    map<vii, bool> m; // memo map 
+    queue<vii>q;
+    int res = 20;
+    q.push(card);
+    m[card] = true;
+    while(!q.empty()){
+      int qsize = (int)q.size();
+      //      fprintf(stderr, "%d\n", qsize);
+      //      if(qsize  > 1) break;
+      rep(i, qsize){
+	vii c = q.front(); q.pop();
+
+	rep(j, 5) rep(k, 4) rep(d, 4){
+	  vii n = c;
+	  //	  if(n[j][k] == -1){ j = 5; k = 4; break;}
+	  //	  fprintf(stderr, "%d %d %d\n", j, k, d);
+	  int ny = j + dy[d], nx = k + dx[d];
+	  //	  fprintf(stderr, "%d %d\n", ny, nx);
+	  //	  if(!BW(ny, 5) || !BW(nx, 4) || n[ny][nx] == -1 || n[j][k] == -1 || n[ny][nx] != n[j][k]) continue;
+	  if(!BW(ny, 5) || !BW(nx, 4) || n[ny][nx] != n[j][k]) continue;
+	  n[ny][nx] = n[j][k] = -1;
+	  //	  fprintf(stderr,"%d %d\n", ny, nx);
+	  n = narrow(n);
+	  res = min(res, csize(n));
+	  if(m.count(n) == 0){
+	    m[n] = true;
+	    q.push(n);
+	  }
+
+	  /*	  rep(i, 5){
+	    rep(j, 4) printf("%d ", n[i][j]);
+	    puts("");
+	    }puts("");*/
+
+	}
+      }
+    }
+    printf("%d\n", res);
+  }
+  return 0;
+}

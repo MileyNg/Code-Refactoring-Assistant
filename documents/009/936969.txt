@@ -1,0 +1,39 @@
+class BitSet
+  def initialize(size)
+    words_size = ((size - 1) >> 6) + 1
+    @words = Array.new(words_size, 0)
+  end
+
+  def <<(bit_index)
+    @words[bit_index >> 6] |= 1 << (bit_index & 63)
+  end
+
+  def [](bit_index)
+    (@words[bit_index >> 6] & (1 << (bit_index & 63))) != 0
+  end
+end
+
+bound = 1000
+sieve_size = (bound - 1) % 6 < 4 ? bound / 6 * 2 + 1 : (bound + 1) / 3
+sieve = BitSet.new(sieve_size)
+limit = (bound ** 0.5).to_i
+loop.with_index(1).each do |_, i|
+  unless sieve[i]
+    p = i * 3 + (i & 1) + 1
+    break if p > limit
+    (p * 2 + i    ).step(sieve_size, p * 2) {|j| sieve << j }
+    (p * 2 - i - 1).step(sieve_size, p * 2) {|j| sieve << j }
+  end
+end
+
+@primes = (1...sieve_size).select {|i| !sieve[i] }.map {|i| i * 3 + (i & 1) + 1 }
+
+def f(n)
+  return 0 if n < 2
+  return 1 if n == 2
+  @primes.find_index {|x| x > n } + 2
+end
+
+while line = gets
+  puts f(line.to_i)
+end

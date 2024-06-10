@@ -1,0 +1,62 @@
+#include <stdio.h>
+typedef struct {/*parent,left child ,right sibling*/
+int p,l,r;
+} node;
+node T[27];
+int Preorder(int );
+int Inorder(int );
+int Postorder(int );
+int main()
+{
+int n,i,id,l,r;
+scanf("%d",&n);
+ 
+for(i=0;i<n;i++)
+{
+T[i].p = T[i].l = T[i].r = -1;
+}
+ 
+for(i=0;i<n;i++)
+{
+scanf("%d%d%d",&id,&l,&r);
+T[id].l = l;
+T[id].r = r;
+T[l].p = id;
+T[r].p = id;
+}
+ 
+printf("Preorder\n");
+Preorder(0);
+printf("\n");
+printf("Inorder\n");
+Inorder(0);
+printf("\n");
+printf("Postorder\n");
+Postorder(0);
+printf("\n");
+return 0;
+}
+
+int Preorder(int id)
+{
+printf(" %d",id);
+if(id == -1) return 0;
+if(T[id].l != -1) Preorder(T[id].l);
+if(T[id].r != -1) Preorder(T[id].r);
+}
+
+int Inorder(int id)
+{
+if(id == -1) return 0;
+if(T[id].l != -1) Inorder(T[id].l);
+printf(" %d",id);
+if (T[id].r != -1) Inorder(T[id].r);
+}
+
+int Postorder(int id)
+{
+if(id == -1) return 0;
+if(T[id].l != -1) Postorder(T[id].l);
+if (T[id].r != -1) Postorder(T[id].r);
+printf(" %d",id);
+}

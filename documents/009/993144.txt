@@ -1,0 +1,269 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+namespace EGraph{
+	typedef int Cost;Cost CINF=1<<28;
+	struct Edge{
+		int from,to;Cost cost;;
+		Edge(int from,int to,Cost cost)
+		: from(from),to(to),cost(cost){};
+	};
+	typedef vector<vector<Edge> >  Graph;
+}
+using namespace EGraph;
+
+
+struct UnionFind{
+    vector<int> par; // 親
+    vector<int> rank; // 木の深さ
+    vector<int> ss;//xの属する集合のサイズ
+    int size;//集合の個数
+    UnionFind(int n){
+        REP(i,n) par.push_back(i);
+        rank = vector<int>(n);ss=vector<int>(n,1);size=n;
+    }
+    int root(int x){
+        if(par[x] == x)return x;
+        return par[x] = root(par[x]);
+    }
+    bool same(int x,int y){
+        return root(x) == root(y);
+    }
+    void unite(int x,int y){
+        x = root(x);y = root(y);
+        if(x==y)return;
+        if(rank[x] < rank[y]){
+            par[x] = y;ss[y]+=ss[x];
+        }else{
+            par[y] = x;ss[x]+=ss[y];
+        }
+        if(rank[x] == rank[y]) rank[x]++;
+        size--;
+    }
+    int getS(int x){
+        return ss[root(x)];
+    }
+};
+
+
+vector<int> hs;
+
+int col(const Edge &e){
+	return min(hs[e.from],hs[e.to]);
+}
+	
+class CompTDesc{
+public:
+	bool operator () (const Edge & l,const Edge & r){
+		return col(l)>col(r);
+	}
+};
+
+class CompTAsc{
+public:
+	bool operator () (const Edge & l,const Edge & r){
+		return col(l)<col(r);
+	}
+};
+
+class CompC{
+public:
+	bool operator () (const Edge & l,const Edge & r){
+		return l.cost> r.cost;
+	}
+};
+
+
+int INF=1<<28;
+
+class Main{
+public:
+
+	Graph g;
+	vector<Edge> es;
+	bool input(istream &cin){
+		cin >> N >> M;if(N==0 && M==0)return false;
+		hs=vector<int>(N);
+		REP(i,N){
+			cin >> hs[i];
+		}
+		g=Graph(N);
+
+		es=vector<Edge>();
+		REP(i,M){
+			int a,b,c;cin >> a >> b >> c;a--;b--;
+			es.push_back(Edge(a,b,c));
+			es.push_back(Edge(b,a,c));
+		}
+		return true;
+	}
+	int N,M;
+	void run(){
+		ofstream cout("out");
+		ifstream cin("in");
+
+		while(input(cin)){
+
+			
+			vector<int> ts;REP(i,N)ts.push_back(hs[i]);
+			ts.push_back(0);
+			sort(ALL(ts),greater<int>());
+
+			sort(ALL(es),CompTDesc());
+			UnionFind uf(N);
+
+			int endT=-INF;
+			{
+				int i=0;
+				REP(ti,ts.size()){
+					while(i<es.size() && ts[ti]<=col(es[i])){
+						uf.unite(es[i].from,es[i].to);i++;
+					}
+					//check
+					bool ok=true;
+					REP(j,N)REP(k,N)if(ts[ti]<=hs[j] && ts[ti]<=hs[k] &&  !uf.same(j,k)){
+						ok=false;
+					}
+					if(ok && endT==-INF){
+						endT=ts[ti];
+					}else if(!ok){
+						endT=-INF;
+					}
+				}				
+			}
+			if(endT==-INF){
+				cout << 0 <<endl;
+				continue;
+			}
+			
+			Cost res=0;
+			UnionFind ufc(N);
+			priority_queue<Edge,vector<Edge>,CompC> que;
+			
+			int T=endT;
+			//end
+			int i=0;
+			for(;i<es.size();i++){
+				if(T<=col(es[i]))que.push(es[i]);
+				else break;
+			}
+			//cruskal
+			while(!que.empty()){
+				Edge e=que.top();que.pop();
+				if(!ufc.same(e.from,e.to)){
+					ufc.unite(e.from,e.to);
+					res+=e.cost;
+				}
+			}
+
+			//reflesh
+			for(;i<es.size();i++){
+				T=col(es[i]);
+				que.push(es[i]);
+				i++;
+				while(i<es.size() && T==col(es[i])){
+					que.push(es[i]);i++;
+				}
+				i--;
+				//cruskal
+				while(!que.empty()){
+					Edge e=que.top();que.pop();
+					if(!ufc.same(e.from,e.to)){
+						ufc.unite(e.from,e.to);
+						res+=e.cost;
+					}
+				}		
+			}
+			cout <<res<<endl;
+		}
+	}
+};
+
+ int main(){
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

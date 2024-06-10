@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INITIAL_VALUE ((1 << 31) - 1)
+#define OUT_LINE_SIZE 11
+
+int *a;
+int N;
+
+inline int min(int a, int b) {
+    return a < b ? a: b;
+}
+
+int _find(int m, int n, int i, int l, int r) {
+    if (m >= r || l >= n)
+        return INITIAL_VALUE;
+    if (m <= l && r <= n)
+        return a[i];
+    return min(_find(m, n, i*2, l, (l+r)>>1),
+               _find(m, n, i*2+1, (l+r)>>1, r));
+}
+
+void find(int s, int t) {
+    printf("%d\n", _find(s, t+1, 1, 0, N));
+}
+
+void update(int i, int x) {
+    i += N;
+    a[i] = x;
+    while (i) {
+        i = i >> 1;
+        a[i] = min(a[i*2], a[i*2+1]);
+    }
+}
+
+
+int main() {
+    int n, q, com, x, y, i;
+    void (*f[2])(int, int);
+    char *outbuf;
+
+    f[0] = update;
+    f[1] = find;
+
+    scanf("%d %d", &n, &q);
+    for (i = 1, N = 1<<1; n > N; ++i, N = 1<<i);
+    
+    a = (int*)malloc(sizeof(int) * N * 2);
+    for (i = 0; i < N*2; i++) {
+        a[i] = INITIAL_VALUE;
+    }
+
+    outbuf = (char*)malloc(sizeof(char) * OUT_LINE_SIZE * q);
+    setvbuf(stdout, outbuf, _IOFBF, OUT_LINE_SIZE * q);
+    
+    for (; q--;) {
+        scanf("%d %d %d", &com, &x, &y);
+        f[com](x, y);
+    }
+
+    free(a);
+
+    return 0;
+}

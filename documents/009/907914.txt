@@ -1,0 +1,153 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<sstream>
+using namespace std;
+int dx[4]={0,1,0,-1};
+int dy[4]={-1,0,1,0};
+int INF=(1<<24);
+int c2i(char ch){return ch-'a';}
+int str2i(string str){
+  stringstream ss;
+  int res;
+  ss<<str;
+  ss>>res;
+  return res-1;  
+}
+
+int M,N,D,ns,nc,nj,Sy,Sx,Gy,Gx;
+int t[20][20][4];
+int k[20][20];
+
+bool u[20][20][101][4];
+bool vd[20][20][101][4];
+
+void input();
+void init();
+void solve();
+void dijkstra();
+
+int main(){
+  while(1){
+    cin>>N>>M;
+    if(M==0&&N==0)break;
+    cin>>D;
+    init();
+    input();
+    solve();
+  }
+  return 0;
+}
+
+void dijkstra(){
+  int Y,X,Z,dir,ny,nx,nz;
+  u[Sy][Sx][0][1]=true;
+
+  while(1){
+    Y=X=-1;
+    for(int a=0;a<101;a++)
+      for(int b=0;b<N;b++)
+	for(int c=0;c<M;c++)
+	  for(int d=0;d<4;d++)
+	    if(u[b][c][a][d]&&!vd[b][c][a][d]&&Y==-1&&X==-1){Y=b;X=c;Z=a;dir=d;}
+    if(Y==-1&&X==-1)break;
+    vd[Y][X][Z][dir]=true;
+    //cout<<Y<<' '<<X<<' '<<Z<<' '<<dir<<endl;
+    if(k[Y][X]>0&&dir%2==1&&(Z/k[Y][X])%2==0)continue;
+    if(k[Y][X]>0&&dir%2==0&&(Z/k[Y][X])%2==1)continue;
+    for(int i=0;i<4;i++){  
+      ny=Y+dy[i];nx=X+dx[i];nz=Z+t[Y][X][i];
+      if((dir+2)%4==i)continue;
+      if(ny<0||ny>=N||nx<0||nx>=M||nz>100)continue;
+      u[ny][nx][nz][i]=true; 
+      //if(ny==1&&nx==3)cout<<Y<<'-'<<X<<'-'<<Z<<'-'<<dir<<endl;
+    }
+    
+    
+  }//while
+}
+
+void solve(){
+  dijkstra();
+  for(int i=0;i<101;i++){
+    for(int j=0;j<4;j++){
+      if(!vd[Gy][Gx][i][j])continue;
+      cout<<i<<endl;
+      return;
+    }
+  }
+}
+
+void input(){
+  string str;
+  int y,x,Y,X,d;
+
+  cin>>ns;
+  for(int i=0;i<ns;i++){
+    cin>>str;
+    y=c2i(str[0]);
+    x=str2i(str.substr(2));
+    cin>>k[y][x];
+  }
+  cin>>nc;
+
+  for(int i=0;i<nc;i++){
+    cin>>str;
+    y=c2i(str[0]);
+    x=str2i(str.substr(2));
+    cin>>str;
+    Y=c2i(str[0]);
+    X=str2i(str.substr(2));
+    for(int j=0;j<4;j++){
+      if(y+dy[j]==Y&&x+dx[j]==X){
+	t[y][x][j]=INF;
+	t[Y][X][(j+2)%4]=INF;
+	break;
+      }
+    }
+  }
+
+  cin>>nj;
+  for(int i=0;i<nj;i++){
+    cin>>str;
+    y=c2i(str[0]);
+    x=str2i(str.substr(2));
+    cin>>str;
+    Y=c2i(str[0]);
+    X=str2i(str.substr(2));
+    cin>>d;
+    for(int j=0;j<4;j++){
+      if(y+dy[j]==Y&&x+dx[j]==X){
+	t[y][x][j]+=d;
+	t[Y][X][(j+2)%4]+=d;
+	break;
+      }
+    }
+  }
+  
+  cin>>str;
+  Sy=c2i(str[0]);
+  Sx=str2i(str.substr(2));
+  cin>>str;
+  Gy=c2i(str[0]);
+  Gx=str2i(str.substr(2));
+
+}
+
+void init(){
+  for(int i=0;i<20;i++){
+    for(int j=0;j<20;j++){
+      for(int K=0;K<4;K++){
+	t[i][j][K]=D;
+      }
+      k[i][j]=0;
+      for(int K=0;K<101;K++){
+	for(int l=0;l<4;l++){
+	  u[i][j][K][l]=false;
+	  vd[i][j][K][l]=false;
+	}
+      }
+    }
+  }
+  
+}

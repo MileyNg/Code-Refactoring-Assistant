@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <set>
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,j) FOR(i,0,j)
+#define mp std::make_pair
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef std::pair<int,int> P;
+typedef std::pair<int,P> State;
+
+const int INF = 1001001001;
+
+// S N E W(南北東西)
+const int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1}, dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+int N, Q;
+int C[300000];
+
+int main(){
+    std::cin >> N >> Q;
+
+    REP(i, N){
+        std::cin >> C[i];
+    }
+    std::sort(C, C+N);
+
+    REP(i, Q){
+        int q;
+        std::cin >> q;
+
+        int res = -1;
+        for(int k=0;k<=300000;k+=q){
+            int index = std::lower_bound(C, C+N, k) - C - 1; 
+            if(0 <= index && index < N){
+                res = std::max(res, C[index] % q);
+            }
+        }
+
+        std::cout << res << std::endl;
+    }
+}

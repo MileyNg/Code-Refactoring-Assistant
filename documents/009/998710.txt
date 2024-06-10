@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i, j;
+	char str[7], block[1001], pop[1001];
+	
+	i = 0;
+	j = 0;
+	
+	while (1){
+		gets(str);
+		
+		if (strncmp(str, "quit", 4) == 0){
+			break;
+		}
+		else if (strncmp(str, "push", 4) == 0){
+			block[i] = str[5];
+			i++;
+		}
+		else if (strncmp(str, "pop", 3) == 0){
+			pop[j] = block[i - 1];
+			block[i - 1] = '\0';
+			j++;
+			i--;
+		}
+	}
+	
+	i = 0;
+	while (1){
+		if (pop[i] >= 'a' && pop[i] <= 'z'){
+			printf("%c\n", pop[i]);
+		}
+		else {
+			break;
+		}
+		i++;
+	}
+	
+	return (0);
+}

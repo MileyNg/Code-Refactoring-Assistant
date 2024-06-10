@@ -1,0 +1,25 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int q,C,A,N;
+	cin >> q;
+	for(int i=0;i<q;i++){
+		int team=0;
+		cin >> C >> A >> N;
+		int x=min(C,min(A,N));
+		team+=x;
+		C-=x;
+		A-=x;
+		N-=x;
+		x=min(C/2,A);
+		team+=x;
+		C-=x*2;
+		A-=x;
+		x=C/3;
+		team+=x;
+		cout << team << endl;
+	}
+	return 0;
+}

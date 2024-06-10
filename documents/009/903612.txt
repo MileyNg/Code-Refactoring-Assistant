@@ -1,0 +1,78 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+
+static const D = false;
+
+char isDigit(char c) {
+    return '0' <= c && c <= '9';
+}
+
+string rmSpace(string s) {
+    string ret;
+    foreach (c; s) {
+        if (c == ' ') continue;
+        ret ~= c;
+    }
+    return ret;
+}
+
+void main() {
+    string _;
+    while (_ = readln.chomp, _ != "#") {
+        struct Parser {
+            int index;
+            string s;
+            static const ulong C = 1000000007;
+            this(string s) {
+                this.s = s;
+                this.index = cast(int)s.length - 1;
+            }
+            ulong expr() {
+                ulong x = term();
+                if (index == -1 || s[index] == '<') return x;
+                assert(s[index] == '>'); index--;
+                assert(s[index] == '>'); index--;
+                ulong y = expr();
+                //writeln("expr(): ", y, " ", x);
+                if (x > 70) return 0;
+                return y >> x;
+            }
+            ulong term() {
+                static if (D) "term".writeln(index);
+                if (s[index] == '>') {
+                    index--;
+                    ulong x = expr();
+                    assert(s[index] == '<'); index--;
+                    assert(s[index] == 'S'); index--;
+                    return x * x % C;
+                } else {
+                    assert(s[index].isDigit);
+                    return number();
+                }
+            }
+            ulong number() {
+                assert(s[index].isDigit);
+                int i = index - 1;
+                while (i >= 0 && s[i].isDigit) i--;
+                //s[i + 1 .. index + 1].writeln;
+                ulong ret = to!ulong(s[i + 1 .. index + 1]);
+                index = i;
+                return ret % C;
+            }
+        }
+        auto parser = Parser(rmSpace(_));
+        parser.expr().writeln;
+    }
+}

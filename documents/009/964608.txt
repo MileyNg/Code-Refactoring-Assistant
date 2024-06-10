@@ -1,0 +1,49 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+typedef long long ll;
+bool sol(vector<ll> v) {
+    int d = v[1] - v[0];
+    for (int i = 0; i < v.size(); i++) {
+        if (v[i] != v[0]+d*i) return false;
+    }
+    return true;
+}
+int main() {
+    while(1) {
+        int n;
+        cin >> n;
+        if (!n) break;
+        ll d[200];
+        vector<ll> vv;
+        vector<ll> v[200];
+        for (int i = 0; i <= n; i++) {
+            cin >> d[i];
+            vv.push_back(d[i]);
+            for (int j = 0; j <= n; j++) {
+                if (i == j) continue;
+                v[j].push_back(d[i]);
+            }
+        }
+        assert(!sol(vv));
+        for (int i = 0; i <= n; i++) {
+            if (sol(v[i])) {
+                cout << d[i] << endl;
+                //break;
+            }
+        }
+    }
+    return 0;
+}

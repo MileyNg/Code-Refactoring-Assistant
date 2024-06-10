@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+using namespace std;
+
+typedef vector<int> Set;
+Set sets[5];
+Set U;
+string input;
+int index;
+
+void Print(const Set& s) {
+  for (int i = 0; i < s.size(); ++i) {
+    if (i != 0) cout << " ";
+    cout << s[i];
+  }
+  cout << endl;
+}
+
+Set Union(const Set& a, const Set& b) {
+  Set r;
+  set_union(a.begin(), a.end(), b.begin(), b.end(), back_inserter(r));
+  return r;
+}
+
+Set Intersection(const Set& a, const Set& b) {
+  Set r;
+  set_intersection(a.begin(), a.end(), b.begin(), b.end(), back_inserter(r));
+  return r;
+}
+
+Set Diff(const Set& a, const Set& b) {
+  Set r;
+  set_difference(a.begin(), a.end(), b.begin(), b.end(), back_inserter(r));
+  return r;
+}
+
+Set SymDiff(const Set& a, const Set& b) {
+  Set r;
+  set_symmetric_difference(a.begin(), a.end(), b.begin(), b.end(), back_inserter(r));
+  return r;
+}
+
+string bin_ops = "uids";
+Set Fact();
+Set Exp() {
+  Set val = Fact();
+  while (index < input.size() && bin_ops.find(input[index]) != string::npos) {
+    char op = input[index++];
+    Set b = Fact();
+    switch (op) {
+    case 'u': val = Union(val, b); break;
+    case 'i': val = Intersection(val, b); break;
+    case 'd': val = Diff(val, b); break;
+    case 's': val = SymDiff(val, b); break;
+    }
+  }
+  return val;
+}
+
+Set Fact() {
+  char op = input[index++];
+  Set r;
+  if (op == 'c') {
+    r = Diff(U, Fact());
+  } else if (op == '(') {
+    r = Exp();
+    ++index;
+  } else {
+    r = sets[op - 'A'];
+  }
+  return r;
+}
+
+int main() {
+  char name;
+  int num;
+  while (cin >> name >> num) {
+    for (Set& s : sets) s.clear(); U.clear();
+    do {
+      for (int i = 0; i < num; ++i) {
+	int v;
+	cin >> v;
+	sets[name - 'A'].push_back(v);
+      }
+    } while (cin >> name >> num && name != 'R');
+    for (Set& s : sets) {
+      sort(s.begin(), s.end());
+      U = Union(U, s);
+    }
+    cin >> input;
+    index = 0;
+    Set res = Exp();
+    Print(res);
+  }
+}

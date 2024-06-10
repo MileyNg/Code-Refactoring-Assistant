@@ -1,0 +1,73 @@
+#include <iostream>
+
+int main(int argc, char const* argv[])
+{
+  while (true) {
+    int N;
+    std::cin >> N;
+    if (N == 0) {
+      break;
+    }
+    int grid[21][21];
+    for (int i = 0; i < 21; ++i) {
+      for (int j = 0; j < 21; ++j) {
+        grid[i][j] = 0;
+      }
+    }
+    for (int i = 0; i < N; ++i) {
+      int x, y;
+      std::cin >> x >> y;
+      ++grid[x][y];
+    }
+    int M;
+    std::cin >> M;
+    int cur_x = 10, cur_y = 10;
+    for (int j = 0; j < M; ++j) {
+      char d; int i;
+      std::cin >> d >> i;
+      switch (d) {
+        case 'N':
+          // y+
+          for (int k = 0; k < i; ++k) {
+            ++cur_y;
+            grid[cur_x][cur_y] = 0;
+          }
+          break;
+        case 'E':
+          // x+
+          for (int k = 0; k < i; ++k) {
+            ++cur_x;
+            grid[cur_x][cur_y] = 0;
+          }
+          break;
+        case 'S':
+          // y-
+          for (int k = 0; k < i; ++k) {
+            --cur_y;
+            grid[cur_x][cur_y] = 0;
+          }
+          break;
+        case 'W':
+          // x-
+          for (int k = 0; k < i; ++k) {
+            --cur_x;
+            grid[cur_x][cur_y] = 0;
+          }
+          break;
+      }
+    }
+
+    for (int k = 0; k < 21; ++k) {
+      for (int l = 0; l < 21; ++l) {
+        if (grid[k][l] > 0) {
+          std::cout << "No" << std::endl;
+          goto finish;
+        }
+      }
+    }
+    std::cout << "Yes" << std::endl;
+finish:
+    ++M;
+  }
+  return 0;
+}

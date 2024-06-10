@@ -1,0 +1,32 @@
+#include<iostream>
+#include<cmath>
+#include<cstring>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+int gcd(int x,int y)
+{
+  if(y==0)
+    return x;
+  return gcd(y,x%y);
+}
+
+int lcm(int x,int y)
+{
+    return x/gcd(x,y)*y;
+}
+
+int main()
+{
+    //freopen("in.txt","r",stdin);
+    //freopen("out.txt","w",stdout);
+    int a,b;
+    while(scanf("%d%d",&a,&b)!=EOF)
+    {
+      printf("%d %d\n",gcd(a,b),lcm(a,b));
+    }
+    //fclose(stdin);
+    //fclose(stdout);
+    return 0;
+}

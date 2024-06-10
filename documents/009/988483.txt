@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int numOfWords[1000] = {0};
+	int lenOfWords[1000] = {0};
+	int mostWord = 0;
+	int mostWordIndex;
+	int longWord = 0;
+	int longWordIndex;
+	char words[1000][1001];
+	char word[1001];
+	int i;
+	int tailIndex = 0;
+	
+	while( scanf("%s", word) != EOF )
+	{
+		for( i = 0; i < tailIndex; i++ )
+		{
+			if( strcmp( words[i], word ) == 0 )
+			{
+				numOfWords[i]++;
+				lenOfWords[i] = strlen( word );
+			}
+		}
+		if( i == tailIndex )
+		{
+			strcpy( words[tailIndex], word );
+			numOfWords[tailIndex]++;
+			lenOfWords[tailIndex] = strlen( word );
+			tailIndex++;
+		}
+	}
+	
+	for( i = 0; i < 1000; i++ )
+	{
+		if( numOfWords[i] > mostWord )
+		{
+			mostWord = numOfWords[i];
+			mostWordIndex = i;
+		}
+		if( lenOfWords[i] > longWord )
+		{
+			longWord = lenOfWords[i];
+			longWordIndex = i;
+		}
+	}
+	printf( "%s %s\n", words[mostWordIndex], words[longWordIndex] );
+	
+	return (0);
+}

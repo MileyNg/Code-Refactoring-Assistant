@@ -1,0 +1,39 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define N_MAX 10000
+int main()
+{
+  
+  int n, fact[N_MAX + 1];
+  bool prime[N_MAX + 1] = {};
+  set< int > digit;
+
+  int mul[N_MAX * 1];
+
+  for(int i = 1; i <= N_MAX; i++){
+    fact[i] = i * i;
+  }
+
+  while(cin >> n, n){
+    fill_n( mul, n + 1, 0);
+
+    for(int i = 1; i< n; i++){
+      digit.insert(fact[i] % n);
+    }
+    for(__typeof digit.begin() it = digit.begin(); it != digit.end(); it++){
+      for(__typeof digit.begin() iitt = digit.begin(); iitt != digit.end(); iitt++){
+        if(it == iitt) continue;
+
+        int calc = *it - *iitt;
+        if(calc < 0) calc += n;
+        if((n - 1) / 2 < calc) calc = n - calc;
+        mul[calc]++;
+      }
+    }
+
+    for(int i = 1; i <= (n - 1) / 2; i++){
+      printf("%d\n", mul[i]);
+    }
+    digit.clear();
+  }
+}

@@ -1,0 +1,70 @@
+#include<iostream>
+#include<queue>
+#include<sstream>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+struct Edge{int to, d;};
+struct Status{
+  int cal, pos, bit;
+  bool operator<(const Status &s) const {return cal > s.cal;}
+};
+
+template<class A, class B> B convert(A a) {
+  stringstream ss;
+  B b;
+  ss << a;
+  ss >> b;
+  return b;
+}
+
+int main() {
+  while (true) {
+    int m, n, k, d;
+    cin >> m >> n >> k >> d;
+    if (m == 0) break;
+    int c[m];
+    rep (i, m) cin >> c[i];
+    vector<Edge> edge[2 + m + n];
+    rep (i, d) {
+      string a, b;
+      int dis;
+      cin >> a >> b >> dis;
+      int aa, bb;
+      if (a == "H") aa = 0;
+      else if (a == "D") aa = 1;
+      else if (a[0] == 'C') aa = convert<string, int>(a.substr(1)) + 1;
+      else aa = convert<string, int>(a.substr(1)) + 1 + m;
+      if (b == "H") bb = 0;
+      else if (b == "D") bb = 1;
+      else if (b[0] == 'C') bb = convert<string, int>(b.substr(1)) + 1;
+      else bb = convert<string, int>(b.substr(1)) + 1 + m;
+      edge[aa].push_back((Edge){bb, dis * k});
+      edge[bb].push_back((Edge){aa, dis * k});
+    }
+    priority_queue<Status> que;
+    que.push((Status){0, 0, 0});
+    int dis[1 << m][2 + m + n];
+    rep (i, 1 << m) rep (j, 2 + m + n) dis[i][j] = 1e9;
+    while (!que.empty()) {
+      Status now = que.top();
+      que.pop();
+      if (dis[now.bit][now.pos] <= now.cal) continue;
+      dis[now.bit][now.pos] = now.cal;
+      rep (i, edge[now.pos].size()) {
+	Edge e = edge[now.pos][i];
+	if (2 <= e.to && e.to < 2 + m) {
+	  if (now.bit & (1 << (e.to - 2))) continue;
+	  que.push((Status){now.cal + e.d - c[e.to - 2], e.to, now.bit | (1 << (e.to - 2))});
+	} else {
+	  que.push((Status){now.cal + e.d, e.to, now.bit});
+	}
+      }
+    }
+    int res = 1e9;
+    rep (i, 1 << m) res = min(res, dis[i][1]);
+    cout << res << endl;
+  }
+}

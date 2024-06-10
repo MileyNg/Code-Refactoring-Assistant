@@ -1,0 +1,60 @@
+#include<iostream>
+using namespace std;
+
+enum Tile{
+    RIGHT, LEFT, UP,DOWN, FINISH,UNKOEN
+};
+
+void MagicTile(int width, int height){
+    int x=0,y=0,i=0,j=0;
+    string string;
+    Tile t;
+    Tile *map = new Tile[width * height];
+    
+    for(i=0;i<height;i++){
+        cin >> string;
+        //cout <<string <<endl;
+        for(j=0;j<width;j++){
+            switch (string[j]){
+                case '>': t = RIGHT;break;
+                case '<': t = LEFT;break;
+                case '^': t = UP;break;
+                case 'v': t = DOWN;break;
+                case '.': t = FINISH;break;
+                //default: t = UNKOEN;
+            }
+            map[j+i*width] = t;
+        }
+        
+    }
+    int count=0,total=width*height;
+    while(map[x+y*width]!=FINISH){
+        switch (map[x+y*width]){
+            case RIGHT: x++;break;
+            case LEFT: x--;break;
+            case UP: y--;break;
+            case DOWN: y++;break;
+            case FINISH: break;
+        }
+        count++;
+        if(total<=count) break;
+    }
+    if(count==total){
+        cout <<"LOOP"<<endl;
+    }
+    else {
+        cout << x <<" "<< y << endl;
+    }
+}
+
+
+int main(){
+    int m,n;
+    cin >> m >> n;
+    cin.ignore();
+    while(!(m==0 && n==0)){
+        MagicTile(n,m);
+        cin >> m >> n;
+    }
+    return 0;
+}

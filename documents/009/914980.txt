@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <stack>
+#include <cstdio>
+
+using namespace std;
+
+double first, second;
+stack<double> stk;
+
+void keisan() {
+	second = stk.top();
+	stk.pop();
+	first = stk.top();
+	stk.pop();
+	return;
+}
+
+int main() {
+	int a;
+	string b;
+	while (getline(cin, b)) {
+		a = 0;
+		for (int i = 0; i < b.size(); i++) {
+			if ('0' <= b[i] && b[i] <= '9') {
+				int c;
+				a *= 10;
+				stringstream ss;
+				ss << b[i];
+				ss >> c;
+				a += c;
+			} else if (b[i] == '+') {
+				keisan();
+				stk.push(first+second);
+			} else if (b[i] == '-') {
+				if ('0' <= b[i+1] && b[i+1] <= '9') {
+					a = -(b[i+1]-'0');
+					i++;
+				} else {
+					keisan();
+					stk.push(first-second);
+				}
+			} else if (b[i] == '*') {
+				keisan();
+				stk.push(first*second);
+			} else if (b[i] == '/') {
+				keisan();
+				stk.push(first/second);
+			} else {
+				if (a != 0) {
+					stk.push((double)a);
+					a = 0;
+				}
+			}
+		}
+		double dd = stk.top();
+		stk.pop();
+		printf("%.6f\n", dd);
+	}
+	return 0;
+}

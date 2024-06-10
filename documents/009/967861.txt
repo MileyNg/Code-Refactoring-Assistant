@@ -1,0 +1,53 @@
+#include<iostream>
+#include<iterator>
+#include<sstream>
+#include<vector>
+#include<cstdio>
+const int A_SIZE=26;
+using namespace std;
+bool is_the(string str){
+  if(str.size()!=3){return false;}
+  if((str[0]-str[1]+A_SIZE)%A_SIZE!=('t'-'h'+A_SIZE)%A_SIZE){return false;}
+  if((str[1]-str[2]+A_SIZE)%A_SIZE!=('h'-'e'+A_SIZE)%A_SIZE){return false;}
+  return true;
+}
+bool is_that(string str){
+  if(str.size()!=4){return false;}
+  if((str[0]-str[1]+A_SIZE)%A_SIZE!=('t'-'h'+A_SIZE)%A_SIZE){return false;}
+  if((str[1]-str[2]+A_SIZE)%A_SIZE!=('h'-'a'+A_SIZE)%A_SIZE){return false;}
+  if((str[2]-str[3]+A_SIZE)%A_SIZE!=('a'-'t'+A_SIZE)%A_SIZE){return false;}
+  return true;
+}
+bool is_this(string str){
+  if(str.size()!=4){return false;}
+  if((str[0]-str[1]+A_SIZE)%A_SIZE!=('t'-'h'+A_SIZE)%A_SIZE){return false;}
+  if((str[1]-str[2]+A_SIZE)%A_SIZE!=('h'-'i'+A_SIZE)%A_SIZE){return false;}
+  if((str[2]-str[3]+A_SIZE)%A_SIZE!=('i'-'s'+A_SIZE)%A_SIZE){return false;}
+  return true;
+}
+bool is_clue(string str){
+  return is_the(str) || is_that(str) || is_this(str);
+}
+
+int main(){
+  char str[80];
+  while(cin.getline(str,80)!=0){
+    istringstream iss{str};
+    vector<string> strs;
+    copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter(strs));
+    int offset=0;
+    for(string a : strs){
+      if(is_clue(a)){
+	offset = 't'-a[0];
+	break;
+      }
+    }
+    for(char c : str){
+      if(c=='\0'){putchar('\n');break;}
+      if(c<'a'||c>'z'){putchar(c);}
+      else if(c+offset>'z'){putchar(c+offset-A_SIZE);}
+      else if(c+offset<'a'){putchar(c+offset+A_SIZE);}
+      else{putchar(c+offset);}
+    }
+  }
+}

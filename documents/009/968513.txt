@@ -1,0 +1,62 @@
+#include<iostream>
+#include<set>
+
+typedef std::pair<int, int> P;
+
+int main(){
+
+	int n, m;
+	while (std::cin >> n, n){
+
+		P kyori[200];
+		std::set<P>stars;
+
+		P Gmin(10000000, 10000000);
+		P def;
+		for (int i = 0; i < n; i++){
+			P p;
+			std::cin >> p.first >> p.second;
+
+			Gmin.first = (Gmin.first, p.first);
+			Gmin.second = (Gmin.second, p.second);
+
+			if (i == 0){
+				def = p;
+				kyori[0] = P(0, 0);
+			}
+			else{
+				kyori[i].first = p.first - def.first;
+				kyori[i].second = p.second - def.second;
+			}
+		}
+
+		std::cin >> m;
+		for (int i = 0; i < m; i++){
+			P p;
+			std::cin >> p.first >> p.second;
+			stars.insert(p);
+		}
+
+		std::set<P>::iterator it = stars.begin();
+		while (it != stars.end()){
+			bool flg = true;
+			int x = it->first, y = it->second;
+			P min(10000000, 10000000);
+			for (int i = 0; i < n; i++){
+				int nx = x + kyori[i].first, ny = y + kyori[i].second;
+
+				min.first = (min.first, nx);
+				min.second = (min.second, ny);
+
+				if (stars.find(P(nx, ny)) == stars.end())flg = false;
+			}
+			if (flg){
+				std::cout << min.first - Gmin.first << " " << min.second - Gmin.second << std::endl;
+			}
+			it++;
+		}
+
+	}
+
+	return 0;
+}

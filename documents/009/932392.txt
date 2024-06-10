@@ -1,0 +1,27 @@
+import math,cmath
+while 1:
+  n=input()
+  if n==0:break
+  X=[]
+  for i in range(n):
+    x,y=input()
+    X.append(complex(x,y))
+  m=0
+  for i in range(n):
+    p0=X[i]
+    for j in range(n):
+      if i==j:continue
+      a,b=cmath.polar(p0-X[j])
+      if a<=2:
+          dx=a/2.0
+          dy=(1-dx**2)**.5
+          p1=complex(dx,dy)*cmath.exp(1j*b)+p0
+          p2=complex(dx,-dy)*cmath.exp(1j*b)+p0
+          s1,s2=0,0
+          for k in range(n):
+            if k==i or k==j:continue
+            if abs(p1-X[k])<=1.06:s1+=1
+            if abs(p2-X[k])<=1.06:s2+=1
+          if s1>m:m=s1
+          if s2>m:m=s2
+  print m+2

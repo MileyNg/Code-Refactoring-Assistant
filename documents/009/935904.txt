@@ -1,0 +1,35 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int n;
+	while (cin >> n) {
+		int nae[100][2] = {0};
+		int kari;
+		if (n == 0) {
+			break;
+		}
+		for (int i = 0; i <= n; i++) {
+			cin >> nae[i][0];
+			if (i != 0) {
+				nae[i-1][1] = nae[i][0] - nae[i-1][0];
+				if (i != 1 && nae[i-1][1] != nae[i-2][1]) {
+					kari = i-1;
+				}
+			}
+		}
+		if (kari != n-1) {
+			cout << nae[kari-1][0] << endl;
+		} else {
+			if (nae[0][1] == nae[kari-1][1]) {
+				cout << nae[n][0] << endl;
+			} else if (nae[0][1] == nae[kari-2][1]) {
+				cout << nae[n-1][0] << endl;
+			} else {
+				cout << nae[n-2][0] << endl;
+			}
+		}
+	}
+	return 0;
+}

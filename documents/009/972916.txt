@@ -1,0 +1,41 @@
+def get_k_diff(ws, p)
+  k = 1
+  rest = p
+  diffs = []
+  _ws = ws.clone
+
+  while (w = _ws.shift)
+    after_rest = rest - w
+
+    if after_rest < 0
+      k += 1
+      rest = p - w
+      diffs << after_rest * -1
+    elsif after_rest == 0
+      rest = 0
+    else
+      rest -= w
+    end
+  end
+  [k, diffs.min]
+end
+
+n, k = gets.split.map(&:to_i)
+ws = []
+n.times do
+  ws << gets.to_i
+end
+
+sum = ws.inject(:+)
+p = [sum / k, ws.max].max
+
+while res = get_k_diff(ws, p)
+  _k, _diff = res
+  if _k == k
+    break
+  else
+    p += _diff
+  end
+end
+
+puts p

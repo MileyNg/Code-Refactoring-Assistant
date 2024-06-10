@@ -1,0 +1,79 @@
+
+#include<iostream>
+using namespace std;
+
+int prime[730000] = {2};
+int prime4[900];
+int GetPrime( int n );
+int GetPrime4( int pcnt );
+
+int main(){
+	int i,n;
+	int pcnt,p4cnt;
+	pcnt = GetPrime( 10000000 );
+	//cout << pcnt << endl;
+	p4cnt = GetPrime4( pcnt );
+	//cout << p4cnt << endl;
+	while( cin >> n ){
+		if( n == 0 )
+			break;
+		//2分探索
+		int start = 0,last = p4cnt-1,medi;
+		while( start <= last )
+		{
+			medi = (start+last) >> 1;
+			if( prime4[medi] == n ){
+				break;
+			}
+			if( prime4[medi] > n )
+			{
+				last = medi-1;
+			}
+			if( prime4[medi] < n )
+			{
+				if( prime4[medi+1] > n )break;
+				if( prime4[medi+1] == n ){
+					medi++;
+					break;
+				}
+				start = medi+1;
+			}
+		}
+		cout << prime4[medi] << endl;
+	}
+	return 0;
+}
+
+int GetPrime(int n){
+	int i,j;
+
+	int cnt = 1;
+	for( i = 3;i <= n;i+=2 ){
+		for( j = 1;j < cnt;j++ ){
+			if( i%prime[j] == 0 )
+				break;
+			if( prime[j] * prime[j] > i ){
+				j = cnt;
+				break;
+			}
+		}
+		if( j == cnt ){
+			prime[cnt] = i;
+			cnt++;
+		}
+	}
+	return cnt;
+}
+
+int GetPrime4( int pcnt ){
+	int i;
+	int cnt = 0;
+	for( i = 0;i < pcnt-3;i++ ){
+		if( prime[i+1] - prime[i] == 2 && prime[i+2] - prime[i+1] == 4 && prime[i+3] - prime[i+2] == 2 ){
+			prime4[cnt] = prime[i+3];
+			cnt++;
+			i++;
+		}
+	}
+	return cnt;
+}

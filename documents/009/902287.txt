@@ -1,0 +1,73 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+typedef long long ll;
+#define INF 1000000000
+#define EPS 0.000001
+#define MAX_N 2000
+
+int n;
+
+char str[1001];
+char check[] = "Hoshino";
+void solve();
+int counter(char str[]);
+
+int main(){
+
+	cin >> n;
+
+	for(int i = 0; i <= n; i++){
+		gets(str);
+		solve();
+	}
+ 
+	return 0;
+ 
+}
+ 
+int counter(){
+
+	int ans = 0;
+	for(; ; ans++){
+		if(str[ans] == '\n'){
+			break;
+		}
+	}
+
+	return ans;
+
+}
+
+void solve(){
+
+	int L = counter();
+	int C = 0;
+	for(int i = 0; i < L-6; i++, C = 0){
+		for(int j = i; C < 7; j++){
+			if(str[j] == check[C]){
+				C++;
+			}
+			else
+				break;
+		}
+		if(C==7){
+			str[i+C-1] = 'a';
+		}
+	}
+
+	printf("%s\n", str);
+
+}

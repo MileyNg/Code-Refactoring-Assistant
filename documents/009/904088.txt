@@ -1,0 +1,29 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+  int n;
+  cin>>n;
+  for(;n--;)
+    {
+      int h,s;
+      char buf;
+      cin>>h>>buf>>s;
+      //cout<<h<<" "<<s<<endl;
+      double hr=h*(360/12.0)+s*(30/60.0);
+      double sr=s*(360/60.0);
+      //      cout<<hr<<" "<<sr<<endl;
+      if(hr<sr)
+	swap(hr,sr);
+      double diff=min(hr-sr,360-hr+sr);
+      //      cout<<diff<<endl;
+      if(diff<30)
+	cout<<"alert"<<endl;
+      else if(diff>=90)
+	cout<<"safe"<<endl;
+      else
+	cout<<"warning"<<endl;
+    }
+
+}

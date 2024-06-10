@@ -1,0 +1,14 @@
+#include<stdio.h>
+#include<stdlib.h>
+int c(int *a,int *b){return *a-*b;}
+int main()
+{
+	int N,A[20000],i,j,r=-1000000005;
+	scanf("%d",&N);
+	for(i=0;i<N;i++)scanf("%d",&A[i]);
+	for(i=0;i<N-1;i++)
+		for(j=i+1;j<N;j++)
+			r=A[j]-A[i]>r?A[j]-A[i]:r;
+	printf("%d\n",r);
+	return 0;
+}

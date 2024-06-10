@@ -1,0 +1,32 @@
+#include<stdio.h>
+
+void longest(int n,int pl,int dl){
+  int p,d1,d2;
+  if(n!=0){
+    scanf("%d %d %d",&p,&d1,&d2);
+    if((pl==0)||(dl<d1+d2)){
+      longest(n-1,p,d1+d2);
+    }
+    else{
+      longest(n-1,pl,dl);
+    }
+  }
+  else{
+    printf("%d %d\n",pl,dl);
+  }
+}
+
+void doit(){
+  int n;
+
+  scanf("%d",&n);
+  if(n!=0){
+    longest(n,0,0);
+    doit();
+  }
+}
+
+int main(){
+  doit();
+  return 0;
+}

@@ -1,0 +1,52 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+
+int i,d,n1,n2,sum,c;
+
+
+   cout << "データセットの数を入力してください。(データセットの数 <= 200):";
+   cin >> d;
+   while(d <= 0 or d >= 200){
+       cout << "データセットの数 <= 200を満たしておりません。もう一度入力してください。\n";  
+       cout << "データセットの数を入力してください。(データセットの数 <= 200):";
+       cin >> d;
+   }
+
+int a[d],b[d];
+
+
+
+//入力
+for(i=0; i<d; i++){
+   cout << "整数a,bを入力してください。(0<=a,b<=1000000):";
+   cin >> n1 >> n2;
+   
+   if(n1 >= 0 and n1 <= 1000000 and n2 >= 0 and n2 <= 1000000){
+       a[i]=n1;
+       b[i]=n2;
+   }else{
+   cout << "入力した整数が条件をを満たしておりません。もう一度入力してください。\n";
+   i--;
+   }
+}
+
+
+    
+//出力
+cout << "データセット数は" << d <<"\n";
+
+cout << "result\n";
+for (i = 0; i < d; i++) {
+     c=0;
+     sum=a[i]+b[i];
+     while((sum/10)!=0){
+         c++;
+         sum=sum/10;
+     }
+   cout << c+1 << "\n";
+}
+
+    return 0;
+}

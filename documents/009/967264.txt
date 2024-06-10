@@ -1,0 +1,46 @@
+#include<stdio.h>
+#define MAX1 2000
+#define MAX2 2000
+
+int a[MAX1],n,s;
+
+int solve(int,int);
+main(){
+  int q;
+  int i,j;
+  int m[MAX2];
+
+  scanf("%d",&n);
+
+  for(i=0; i<n; i++){
+
+    scanf("%d",&a[i]);
+
+  }
+
+  scanf("%d",&q);
+
+  for(i=0; i<q; i++){
+    scanf("%d",&m[i]);
+  }
+
+  for(i=0; i<q; i++){
+    s = m[i];
+    if(1 == solve(0,m[i]))printf("yes\n");
+    else printf("no\n");
+  }
+
+return 0;
+}
+int solve(int f,int t){
+
+  if(t == 0) return 1;
+
+  if(f == n) return 0;
+
+  if(t == a[f]) return 1;
+
+  if(solve(f+1,t-a[f]) == 1)return 1;
+
+  if(solve(f+1,t) == 1)return 1;
+}

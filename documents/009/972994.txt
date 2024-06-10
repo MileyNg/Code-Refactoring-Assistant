@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+
+using namespace std;
+
+struct list {
+	char c;
+	struct list *front;
+	struct list *back;
+};
+
+list *make_list(char c,list *f, list *b) {
+	list* l = (list*)malloc(sizeof (list));
+	l->c = c;
+	l->front = f;
+	l->back = b;
+	return l;
+}
+
+int main() {
+	int n;
+	string b;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		list* train = (list*)malloc(sizeof (list));
+		cin >> b;
+		list** t;
+		train->c = b[0];
+		train->front = NULL;
+		train->back = NULL;
+		for (int j = 1; j < b.size(); j++) {
+			if (b[j] == '-') {
+			} else if (b[j] == '>') {
+				if (train->back == NULL) {
+					train->back = make_list(b[j+1], train, NULL);
+				}
+				train = train->back;
+				j++;
+			} else if (b[j] == '<') {
+				if (train->front == NULL) {
+					train->front = make_list(b[j+2], NULL, train);
+				}
+				train = train->front;
+				j+=2;
+			} 
+		}
+		while (train->front != NULL) {
+			train = train->front;
+		}
+		while (train->back != NULL) {
+			cout << train->c;
+			train = train->back;
+		}
+		cout << train->c << endl;
+	}
+	return 0;
+}

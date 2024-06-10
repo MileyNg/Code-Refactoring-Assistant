@@ -1,0 +1,42 @@
+#include <stdio.h>
+int gcd(int a, int b);
+int lcm(int a, int b);
+
+int main(void)
+{
+	int s_gcd, s_lcm;
+	int a, b;
+	
+	scanf("%d %d", &a, &b);
+	
+	s_gcd = gcd(a, b);
+	s_lcm = lcm(a, b);
+	
+	printf("%d %d\n", s_gcd, s_lcm);
+	
+	return (0);
+}
+
+int gcd(int a, int b)
+{
+    int c;
+
+    if (a < b) {
+        a += b;
+		b = a - b;
+		a -= b;
+    }
+	
+    while (b != 0) {
+        c = a % b;
+        a = b;
+        b = c;
+    }
+	
+    return (a);
+}
+
+int lcm(int a, int b)
+{
+	return a / gcd(a, b) * b;
+}

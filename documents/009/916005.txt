@@ -1,0 +1,29 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+int a[15];
+
+bool solve(int n, int A, int B) {
+	if (n == 10) return true;
+	if (A < a[n] && solve(n+1, a[n], B)) return true;
+	if (B < a[n] && solve(n+1, A, a[n])) return true;
+	return false; 
+}
+
+int main() {
+	int N;
+	scanf("%d", &N);
+	while (N--) {
+		int i;
+		for (i = 0; i < 10; i++) {
+			scanf("%d", &a[i]);
+		}
+		if (solve(0, -1, -1)) cout << "YES" << endl;
+		else cout << "NO" << endl;
+	}
+	return 0;
+}

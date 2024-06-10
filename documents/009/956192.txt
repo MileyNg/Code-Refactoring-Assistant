@@ -1,0 +1,92 @@
+var Point = function(x,y) {
+	this.x = x;
+	this.y = y;
+};
+
+Point.prototype = {
+	vec:function(p) {
+		return new Point(this.x-p.x,this.y-p.y);
+	},
+	norm:function(){
+		return this.x*this.x+this.y*this.y;
+	},
+	len:function() {
+		return Math.sqrt(this.norm());
+	},
+};
+
+var Line = function(a,b) {
+	this.a = a;
+	this.b = b;
+};
+
+Line.prototype = {
+	vec:function() {return this.b.vec(this.a);}
+};
+
+var Geo = {
+	P:function(x,y) {
+		return new Point(x,y);
+	},
+	L:function(a,b) {
+		return new Line(a,b);
+	},
+	FRONT:1,
+	RIGHT:2,
+	BACK:4,
+	LEFT:8,
+	ON:16,
+	eps:1e-9,
+	cross:function(a,b) {
+		return a.x*b.y-a.y*b.x;
+	},
+	dot:function(a,b) {
+		return a.x*b.x+a.y*b.y;
+	},
+	eq:function(a,b) {
+		return Math.abs(a-b)<Geo.eps;
+	},
+	sig:function(a) {
+		return a<-Geo.eps ? -1 : (a>Geo.eps) ? 1 : 0;
+	},
+	ccw:function(s,p) {
+		var a = s.vec();
+		//console.log(a);
+		p = p.vec(s.a);
+		var cr = Geo.cross(a,p);
+		if( Geo.eq(cr,0) ) {
+			if(Geo.sig(Geo.dot(a,p)) < 0) return Geo.BACK;
+			if(Geo.sig(a.norm()-p.norm()) < 0) return Geo.FRONT;
+			return Geo.ON;
+		}
+		return (cr > 0) ? Geo.LEFT : Geo.RIGHT;
+	},
+	iI2_1:function(a,b) {
+		return ((Geo.ccw(a,b.a)|Geo.ccw(a,b.b))&(ccw(b,a.a)|ccw(b,a.b))) == (Geo.LFET|Geo.RIGHT);
+	},
+	iI2_2:function(a,b) {
+		var cwa = Geo.ccw(a,b.a) | Geo.ccw(a,b.b);
+		var cwb = Geo.ccw(b,a.a) | Geo.ccw(b,a.b);
+		return ((cwa | cwb) & Geo.ON) || ((cwa & cwb) == (Geo.LEFT | Geo.RIGHT));
+	},
+	iPoL2:function(a,b) {
+		return a.a.vec(b).len()+b.vec(a.b).len() < a.a.vec(a.b).len() + Geo.eps;
+	},
+};
+
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', function (chunk)
+{
+	var sc = chunk.trim().split("\n");
+	//console.log(sc);
+	var q = parseInt(sc.shift());
+	//console.log(q);
+	while( q-- > 0 ) {
+		var d = sc.shift().trim().split(" ");
+		for( var i in d ) d[i] = parseInt(d[i]);
+		var l1 = Geo.L(Geo.P(d[0],d[1]),Geo.P(d[2],d[3]));
+		var l2 = Geo.L(Geo.P(d[4],d[5]),Geo.P(d[6],d[7]));
+		console.log(Geo.iI2_2(l1,l2)?1:0);
+	}
+});

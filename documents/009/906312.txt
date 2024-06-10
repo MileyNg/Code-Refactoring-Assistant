@@ -1,0 +1,90 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <tuple>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+typedef tuple<int, int, int> T;
+#include <algorithm>
+
+//0-indexed overflow-> max:Height*MOD sum's comment out:2*MOD
+template <class T, int SIZE, T MOD>
+struct BinaryIndexedTree {
+    using uint = unsigned int;
+    T seg[SIZE];
+    
+    inline void init() {
+        fill_n(seg, SIZE, 0);
+    }
+
+    inline void add(uint i, T x) {
+        while (i < SIZE) {
+            seg[i] += x;
+            if (MOD) seg[i] %= MOD;
+            i += (i+1) & ~i;
+        }
+    }
+    //[0, i)
+    inline T sum(uint i) {
+        T s = 0;
+        uint d = 1;
+        while (i >= d) {
+            i -= d;
+            s += seg[i];
+            //if (MOD) s %= MOD;
+            d = (i+1) & ~i;
+        }
+        if (MOD) s = (s % MOD + MOD) % MOD;
+        return s;
+    }
+    //[a, b)
+    inline T sum(uint a, uint b) {
+        T d = sum(b) - sum(a);
+        if (MOD) {
+            d = (d + MOD) % MOD;
+        }
+        return d;
+    }
+};
+const int MN = 100010;
+BinaryIndexedTree<ll, MN, 0> b;
+ll a[MN];
+int main() {
+    b.init();
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < n-1; i++) {
+        scanf("%lld", a+i);
+        a[i] %= 100000;
+    }
+    int u = 0;
+    for (int i = 0; i < m; i++) {
+        int c;
+        scanf("%d", &c);
+        int u1 = u, u2 = u+c;
+        u = u2;
+        if (u1 > u2) swap(u1, u2);
+        b.add(u1, 1);
+        b.add(u2, -1);
+    }
+    ll r = 0;
+    for (int i = 0; i < n-1; i++) {
+        r += b.sum(i+1)*a[i];
+        r %= 100000;
+    }
+    printf("%lld\n", r);
+    return 0;
+}

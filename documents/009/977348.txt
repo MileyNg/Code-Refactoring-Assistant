@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+void func(double a ,double b,double c,double d,double e,double f,double* x,double* y){
+	double temp;
+	*y=(c*d-a*f)/(b*d-a*e)+0.00001;
+	temp=*y;
+	*x=(c-b*temp)/a+0.00001;
+}
+
+int main(void){
+	double a,b,c,d,e,f,j,k;
+	double *x=&j;
+	double *y=&k;
+	while(scanf("%lf %lf %lf %lf %lf %lf",&a,&b,&c,&d,&e,&f) != EOF){
+		//y=func(a,b,c,d,e,f);
+		//x=(c-b*y)/a+0.00001;
+		func(a,b,c,d,e,f,x,y);
+		printf("%.3lf %.3lf\n",*x,*y);
+	}
+	return 0;
+}

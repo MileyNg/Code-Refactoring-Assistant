@@ -1,0 +1,24 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+
+int main(){
+	std::stack<int> switching_rail;
+	std::queue<int> out_number;
+	int in_number;
+	//Input
+	while(std::cin >> in_number){
+		if(in_number == 0){
+			out_number.push(switching_rail.top());
+			switching_rail.pop();
+		}else{
+			switching_rail.push(in_number);
+		}
+	}
+	//Output
+	while(!out_number.empty()){
+		std::cout << out_number.front() << std::endl;
+		out_number.pop();
+	}
+	return 0;
+}

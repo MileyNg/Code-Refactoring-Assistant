@@ -1,0 +1,25 @@
+#include<stdio.h>
+
+int m[10][10],c,x,y,N=10;
+
+int main(){
+  for(x=0;x<10;x++){
+    for(y=0;y<10;y++){
+      m[x][y]=x?m[x-1][y+1]+1:y?m[x][y-1]+y:1;
+    }
+  }
+  for(;scanf("%d",&N),N;){
+    printf("Case %d:\n",++c);
+    for(x=0;x<N;x++){
+      for(y=0;y<N;y++){
+        if(x+y<N){
+            printf("%3d",(x+y)%2?m[x][y]:m[y][x]);
+        }
+        else{
+            printf("%3d",N*N+1-((x+y)%2?m[N-1-x][N-1-y]:m[N-1-y][N-1-x]));
+        }
+      }
+      printf("\n");
+    }
+  }
+}

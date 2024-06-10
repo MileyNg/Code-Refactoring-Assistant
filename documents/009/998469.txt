@@ -1,0 +1,66 @@
+#include <iostream>
+#include <deque>
+#include <string>
+#include <cstdio>
+#define loop(i,a,b) for(int i=a; i<int(b); i++)
+#define rep(i,n) loop(i,0,n)
+
+using namespace std;
+
+int main(){
+    int n;
+    double h;
+    int count[7] = {};
+    cin >> n;
+    int i, j;
+
+    for (i = 0; i < n; i++){
+        cin >> h;
+        if (h < 165){
+            count[1]++;
+        }
+        if (h < 170 && h >= 165){
+            count[2]++;
+        }
+        if (h<175 && h >= 170){
+            count[3]++;
+        }
+        if (h<180 && h >= 175){
+            count[4]++;
+        }
+        if (h<185 && h >= 180){
+            count[5]++;
+        }
+        if (h>=185){
+            count[6]++;
+        }
+    }
+
+    for (int i = 1; i <= 6; i++){
+        cout << i << ":";
+        for (int j = 0; j < count[i]; j++)putchar('*');
+        puts("");
+    }
+}
+
+    //    {
+   
+    //        for (i = 0; i < n; i++){
+    //            if (hight[0] < 165)
+    //                count++;
+    //    }
+    //        for (i = 0; i < count; i++){
+    //            printf("1:%d", *);
+    //        }
+
+    //        for (j = 1; j <= 6; j++){
+    //            for (i = 0; i < n; i++){
+    //                if (hight[i] >= 165+i && hight[i]<175+i)
+    //                    count++;
+    //            }
+    //            for (i = 2; i <= count; i++){
+    //                printf("%d:%d", j, *);
+    //            }
+    //            i += 5;
+    //        }
+    //}

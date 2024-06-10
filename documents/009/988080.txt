@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef vector<vector<int>> Mat;
+struct ArticulationPoint {
+    vector<int> ord, low, art;
+    int cnt;
+    //vector<pair<int, int> > bridge;
+
+    ArticulationPoint(const Mat&G) {
+        int n = G.size();
+        cnt = 0;
+        ord.assign(n, -1); low.assign(n, 0); art.assign(n, 0);
+        for (int i=0; i<n; i++) {
+            if (ord[i] == -1) {
+                dfs(G, i, -1);
+                if (art[i]) art[i]--;
+            }
+        }
+    }
+
+    void dfs(const Mat&G, int v, int p) {
+        ord[v] = low[v] = cnt++;
+        for (int i=0; i<(int)G[v].size(); i++) {
+            int w = G[v][i];
+            if (ord[w] == -1) {
+                dfs(G, w, v);
+                low[v] = min(low[v], low[w]);
+                if (ord[v] <= low[w]) art[v]++;
+                //if (ord[v] < low[w]) bridge.push_back(make_pair(min(v, w), max(v, w)));
+            } else if (w != p) low[v] = min(low[v], ord[w]);
+        }
+    }
+
+    // {v, w} must be an edge
+
+    bool is_bridge(int v, int w) { return ord[v] < low[w] || ord[w] < low[v]; }
+
+    // the number of increasing CC
+
+    int is_art(int v) { return art[v]; }
+};
+
+vector<int> G[100000];
+
+int main(){
+    int v,e;
+    cin >> v >> e;
+    vector<int> a(e),b(e);
+    for(int i = 0; i < e; i++){
+        cin >> a[i] >> b[i];
+        G[a[i]].push_back(b[i]);
+        G[b[i]].push_back(a[i]);
+    }
+
+    Mat M;
+    for(int i = 0; i < v; i++) M.push_back(G[i]);
+
+    ArticulationPoint art(M);
+    for(int i = 0; i < v; i++) for(int j = i + 1; j < v; j++) if(art.is_bridge(i, j)) printf("%d %d\n", i, j);
+    return 0;
+}

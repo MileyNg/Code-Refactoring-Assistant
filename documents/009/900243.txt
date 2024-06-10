@@ -1,0 +1,35 @@
+class Vector
+  attr_accessor :x, :y
+  def initialize(x, y)
+    @x = x
+    @y = y
+  end
+
+  def length()
+    Math.sqrt(@x**2 + @y**2)
+  end
+
+  def self.minus(v1, v2)
+    return Vector.new(v1.x - v2.x, v1.y - v2.y)
+  end
+end
+
+
+if __FILE__ == $0
+  n = gets.to_i
+  n.times do 
+    xa, ya, ra, xb, yb, rb = gets.split.map{|i| i.to_f}
+    v1 = Vector.new(xa, ya)
+    v2 = Vector.new(xb, yb)
+    dist = Vector.minus(v1, v2).length()
+    if (dist + rb) < ra
+      puts "2"
+    elsif (dist + ra) < rb
+      puts "-2"
+    elsif dist == (ra + rb)
+      puts "1"
+    else
+      puts "0"
+    end
+  end
+end

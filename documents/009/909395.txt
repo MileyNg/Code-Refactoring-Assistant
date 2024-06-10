@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long lli;
+
+string s;
+int p;
+const lli mod = 1000000007LL;
+vector<pair<lli,lli> > dp;
+
+pair<lli,lli> exp();
+pair<lli,lli> term();
+pair<lli,lli> fact();
+
+pair<lli,lli> exp() {
+  vector<pair<lli,lli> > v;
+  v.push_back(term());
+  while(s[p] == '|') {
+    ++p;
+    v.push_back(term());
+  }
+  lli all = 1, f = 1;
+  for(int i = 0; i < v.size(); ++i) {
+    all = (all * (v[i].first+v[i].second)) % mod;
+    f = (f * (v[i].second)) % mod;
+  }
+  lli a = ((all - f) % mod + mod) % mod;
+  lli b = f;
+  return make_pair(a, b);
+}
+
+pair<lli,lli> term() {
+  vector<pair<lli,lli> > v;
+  v.push_back(fact());
+  while(s[p] == '&') {
+    ++p;
+    v.push_back(fact());
+  }
+  lli all = 1, t = 1;
+  for(int i = 0; i < v.size(); ++i) {
+    all = (all * (v[i].first+v[i].second)) % mod;
+    t = (t * (v[i].first)) % mod;
+  }
+  lli a = t;
+  lli b = ((all - t) % mod + mod) % mod;
+  return make_pair(a, b);
+}
+
+pair<lli,lli> fact() {
+  if(s[p] == '(') {
+    ++p;
+    pair<lli,lli> tmp = exp();
+    ++p;
+    return tmp;
+  } else if(s[p] == '~') {
+    ++p;
+    pair<lli,lli> tmp = fact();
+    swap(tmp.first, tmp.second);
+    return tmp;
+  } else if(s[p] == 'x') {
+    ++p;
+    while(isdigit(s[p])) ++p;
+    return make_pair(1LL, 1LL);
+  } else {
+    assert(false);
+  }
+}
+
+int main() {
+  cin >> s;
+  s += '$';
+  p = 0;
+  cout << exp().first << endl;
+  return 0;
+}

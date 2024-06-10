@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+typedef long long LL;
+
+class LowerEnvelope{ typedef long long LL; int s, t; vector<LL> deq_a; vector<LL> deq_b; inline bool check(LL a1, LL b1, LL a2, LL b2, LL a3, LL b3) const { return (a2 - a1) * (b3 - b2) >= (b2 - b1) * (a3 - a2); } public: LowerEnvelope(int n) : s(0), t(0), deq_a(n), deq_b(n) {} void push(LL a, LL b){ while(s + 1 < t && check(deq_a[t - 2], deq_b[t - 2], deq_a[t - 1], deq_b[t - 1], a, b)) t--; deq_a[t] = a; deq_b[t++] = b; } LL minimum(LL x){ assert(s < t); while(s + 1 < t && deq_a[s] * x + deq_b[s] >= deq_a[s + 1] * x + deq_b[s + 1]) s++; return deq_a[s] * x + deq_b[s]; } }; 
+LL INF = 10000000000000000LL;
+
+int main(){
+    int N, M, D, X;
+    cin >> N >> M >> D >> X;
+    vector<int> p(N);
+    REP(i, N) cin >> p[i];
+    vector<vector<int>> right(D);
+    for(int i = 0; i < M; i++){
+        int a, b;
+        cin >> a >> b;
+        int x = a;
+        int y = abs(b);
+        for(int d = 0; d < D; d++){
+            right[d].push_back(x - y);
+            x += X;
+        }
+    }
+    REP(d, D) sort(right[d].begin(), right[d].end());
+    int memo[101][1001];
+    auto w = [&](int d, int i) -> int {
+        if(memo[d][i] != -1) return memo[d][i];
+        auto itr = lower_bound(right[d].begin(), right[d].end(), p[i]);
+        return memo[d][i] = M - (itr - right[d].begin());
+    };
+    vector<LL> cur(N, INF);
+    cur[0] = 0;
+    for(int d = 0; d < D; d++){
+        vector<LL> next(N, INF);
+        LowerEnvelope lowenv(N);
+        for(int i = 0; i < N; i++){
+            if(cur[i] < INF){
+                lowenv.push(w(d, p[i]), cur[i] - (long long)w(d, i) * p[i]);
+            }
+            next[i] = lowenv.minimum(p[i]);
+        }
+        cur.swap(next);
+    }
+    cout << cur[N - 1] << endl;
+    return 0;
+}

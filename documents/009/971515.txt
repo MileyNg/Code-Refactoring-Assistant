@@ -1,0 +1,18 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(){
+	string s;
+	while(cin>>s){
+		string win = "d";
+		for(int i=0;i<3;i++){
+			if(s[3*i+0]==s[3*i+1]&&s[3*i+1]==s[3*i+2])win=s[i*3];
+			if(s[i]==s[i+3]&&s[i+3]==s[i+6])win=s[i];
+		}
+		if(s[0]==s[4]&&s[4]==s[8])win=s[4];
+		if(s[2]==s[4]&&s[4]==s[6])win=s[4];
+		cout<<win<<endl;
+	}
+	return 0;
+}

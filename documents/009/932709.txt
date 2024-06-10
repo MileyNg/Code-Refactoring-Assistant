@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Edge {
+  int src, dst;
+  double w;
+};
+
+typedef vector<vector<Edge> > Graph;
+typedef pair<double,int> Pair;
+
+const double inf = 1e20;
+
+vector<int> dijkstra(int src, int dst, const Graph &g) {
+  int n = g.size();
+  priority_queue< Pair,vector<Pair>,greater<Pair> > que;
+  vector<double> cost(n, inf);
+  vector<int> prev(n);
+  cost[src] = 0;
+  que.push(Pair(0, src));
+  while(que.size()) {
+    const Pair s = que.top();
+    que.pop();
+    if(cost[s.second] < s.first) continue;
+    if(s.second == dst) {
+      vector<int> path;
+      int p = dst;
+      while(1) {
+        path.push_back(p);
+        if(p == src) break;
+        p = prev[p];
+      }
+      reverse(path.begin(), path.end());
+      return path;
+    }
+    for(int i = 0; i < g[s.second].size(); ++i) {
+      const Edge &e = g[s.second][i];
+      Pair t(s.first + e.w, e.dst);
+      if(cost[t.second] <= t.first) continue;
+      que.push(t);
+      cost[t.second] = t.first;
+      prev[t.second] = s.second;
+    }
+  }
+  return vector<int>();
+}
+
+int main() {
+  int n;
+  while(cin >> n && n) {
+    map<int,int> id, rid;
+    vector<int> x(n), y(n);
+    for(int i = 0; i < n; ++i) {
+      int b;
+      cin >> b >> x[i] >> y[i];
+      id[b] = i;
+      rid[i] = b;
+    }
+    Graph g(n);
+    for(int i = 0; i < n; ++i) {
+      for(int j = i+1; j < n; ++j) {
+        int cost = (x[i]-x[j])*(x[i]-x[j]) + (y[i]-y[j])*(y[i]-y[j]);
+        if(cost <= 50*50) {
+          g[i].push_back((Edge){i,j,sqrt(cost)});
+          g[j].push_back((Edge){j,i,sqrt(cost)});
+        }
+      }
+    }
+    int m;
+    cin >> m;
+    while(m--) {
+      int src, dst;
+      cin >> src >> dst;
+      vector<int> v = dijkstra(id[src], id[dst], g);
+      if(v.empty()) {
+        cout << "NA" << endl;
+      } else {
+        for(int i = 0; i < v.size(); ++i) {
+          if(i) cout << " ";
+          cout << rid[v[i]];
+        }
+        cout << endl;
+      }
+    }
+  }
+  return 0;
+}

@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main(void){
+	int w,n,i,a,b;
+	scanf("%d\n%d", &w, &n);
+	int *row = (int *)malloc(sizeof(int) * w);
+	for(i = 0; i < w; i++){
+		row[i] = i + 1;
+	}
+	for(i = 0; i < n; i++){
+		scanf("%d,%d", &a, &b);
+		int tmp = row[a - 1];
+		row[a - 1] = row[b - 1];
+		row[b - 1] = tmp;
+	}
+	for(i = 0; i < w; i++){
+		printf("%d\n", row[i]);
+	}
+	return 0;
+}

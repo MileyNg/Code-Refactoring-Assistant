@@ -1,0 +1,123 @@
+#include<cstdio>
+#include<queue>
+using namespace std;
+typedef pair<int, int> P;
+
+const int INF=9999999;
+char map[1005][1005];
+int d[1005][1005];
+int n, m, xx;
+int res;
+int sx, sy;
+int gx, gy;
+int x[10];
+int y[10];
+int dx[]={-1,0,1,0};
+int dy[]={0,-1,0,1};
+queue<P> s;
+int bfs()
+{
+    while(!s.empty()){
+        s.pop();
+    }
+    for(int i=0; i<n; i++)
+        for(int j=0; j<m; j++)
+          d[i][j]=INF;
+    s.push(P(sx, sy));
+    d[sx][sy]=0;
+    while(!s.empty())
+    {
+        P tmp= s.front();
+        s.pop();
+        if(tmp.first==gx && tmp.second==gy)
+        {
+            break;
+        }
+        for(int i=0; i<4; i++)
+        {
+            int nx = tmp.first+dx[i];
+            int ny = tmp.second+dy[i];
+            if(nx>=0 && nx<n && ny>=0 && ny<m && map[nx][ny]!='X' &&d[nx][ny]==INF)
+            {
+                s.push(P(nx, ny));
+                d[nx][ny]=d[tmp.first][tmp.second]+1;
+            }
+        }
+    }
+    return d[gx][gy];
+}
+
+int main()
+{
+    while(scanf("%d%d%d", &n, &m, &xx)!=EOF)
+    {
+        for(int i=0; i<n; i++)
+            scanf("%s", map[i]);
+        for(int i=0; i<n; i++)
+            for(int j=0; j<m; j++)
+            {
+              if(map[i][j]=='S')
+              {
+                  sx=i; sy=j;
+              }
+              if(map[i][j]=='1')
+              {
+                  x[1]=i;
+                  y[1]=j;
+              }
+              if(map[i][j]=='2')
+              {
+                  x[2]=i;
+                  y[2]=j;
+              }
+              if(map[i][j]=='3')
+              {
+                  x[3]=i;
+                  y[3]=j;
+              }
+              if(map[i][j]=='4')
+              {
+                  x[4]=i;
+                  y[4]=j;
+              }
+              if(map[i][j]=='5')
+              {
+                  x[5]=i;
+                  y[5]=j;
+              }
+              if(map[i][j]=='6')
+              {
+                  x[6]=i;
+                  y[6]=j;
+              }
+              if(map[i][j]=='7')
+              {
+                  x[7]=i;
+                  y[7]=j;
+              }
+              if(map[i][j]=='8')
+              {
+                  x[8]=i;
+                  y[8]=j;
+              }
+              if(map[i][j]=='9')
+              {
+                  x[9]=i;
+                  y[9]=j;
+              }
+
+            }
+            res=0;
+            gx=x[1]; gy=y[1];
+            res+=bfs();
+            for(int i=2; i<=xx; i++)
+            {
+                sx=gx; sy=gy;
+                gx=x[i]; gy=y[i];
+                res+=bfs();
+            }
+        printf("%d\n", res);
+
+    }
+    return 0;
+}

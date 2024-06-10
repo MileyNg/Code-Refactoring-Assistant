@@ -1,0 +1,10 @@
+w = gets.to_i
+swaps = []
+gets.to_i.times { swaps << gets.split(",").map {|x| x.to_i - 1 } }
+def swap(xs, i, j)
+  tmp = xs[i]
+  xs[i] = xs[j]
+  xs[j] = tmp
+  xs
+end
+puts swaps.reduce((1..w).to_a) {|acc, x| swap(acc, x[0], x[1]) }

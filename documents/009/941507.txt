@@ -1,0 +1,103 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#include<complex>
+#include<set>
+#include<map>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int M = 24;
+const int INF = 1000000000;
+const int C = 5;
+
+typedef pair<int,int> pii;
+
+int n;
+int x[M];
+int y[M];
+int r[M];
+int c[M];
+
+vector<pii> colpair;
+vector<int> on[M];
+map<int,int> memo;
+
+bool ok(int state, pii& p){
+	bool ret = (state&(1<<p.first))==0 && (state&(1<<p.second))==0;
+	if(ret==false)return ret;
+	
+	rep(i,on[p.first].size()){
+		if((state&(1<<on[p.first][i]))==0)ret = false;
+	}
+	rep(i,on[p.second].size()){
+		if((state&(1<<on[p.second][i]))==0)ret = false;
+	}
+	return ret;
+}
+
+int saiki(int state){
+	if(memo.find(state)!=memo.end())return memo[state];
+	
+	int ans = 0;
+	rep(i,colpair.size()){
+		if(ok(state, colpair[i])){
+			int v = saiki(state | (1<<colpair[i].first) | (1<<colpair[i].second));
+			ans = max(ans, v+2);
+		}
+	}
+	
+	return memo[state]=ans;
+}
+
+void init(){
+	memo.clear();
+	rep(i,n)on[i].clear();
+	colpair.clear();
+	
+	rep(i,n)reps(j,i+1,n){
+		if(c[i]==c[j])colpair.push_back(pii(i,j));
+	}
+	
+	rep(i,n){
+		rep(j,i){
+			int dx = x[i]-x[j];
+			int dy = y[i]-y[j];
+			int r2 = r[i]+r[j];
+			
+			if(dx*dx + dy*dy < r2*r2){
+				on[i].push_back(j);
+			}
+		}
+	}
+	/*
+	rep(i,colpair.size()){
+		printf("%d %d\n",colpair[i].first, colpair[i].second);
+	}
+	rep(i,n){
+		printf("on ");
+		rep(j,on[i].size())printf("%d ",on[i][j]);puts("");
+	}*/
+}
+int solve(){
+	rep(i,n)cin>>x[i]>>y[i]>>r[i]>>c[i];
+	init();
+	
+	return saiki(0);
+}
+
+
+int main(){
+	while(1){
+		cin>>n;
+		if(n==0)break;
+		printf("%d\n",solve());
+		//break;
+	}
+}

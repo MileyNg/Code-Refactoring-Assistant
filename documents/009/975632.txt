@@ -1,0 +1,43 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// bad knowhow
+#define REP(i,n) for(long long i=0;i<(long long)n;++i)
+
+#define INF 10000001
+#define MAX_SIZE 101
+long long g_d[MAX_SIZE][MAX_SIZE];
+void warshall_floyd(int v) {
+	REP(k, v) REP(i, v) REP(j,v) g_d[i][j] = min(g_d[i][j], g_d[i][k]+g_d[k][j]);
+}
+
+int main() {
+	//freopen("Text.txt", "r", stdin);
+
+	while (true) {
+		int n,m,s,g1,g2;
+		cin >> n >> m >> s >> g1 >> g2;
+		--s; --g1; --g2;
+		if (n==0) break;
+
+		// memsetはシングルバイトのみ
+		fill(*g_d, *g_d + MAX_SIZE*MAX_SIZE, INF);
+		REP(i, MAX_SIZE) g_d[i][i] = 0;
+
+		REP(i, m) {
+			int b1,b2;
+			cin >> b1 >> b2;
+			--b1; --b2;
+			cin >> g_d[b1][b2];
+		}
+
+		warshall_floyd(n);
+
+		long long cost = INF;
+		REP(i, n) cost = min(cost, g_d[s][i] + g_d[i][g1] + g_d[i][g2]);
+
+		cout << cost << endl;
+	}
+}

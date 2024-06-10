@@ -1,0 +1,130 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+#include <complex>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template <class T> int __builtin_popcount(T n) { return n ? 1 + __builtin_popcount(n & (n - 1)) : 0; }
+
+typedef long long ll;
+typedef double D;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+// define eps
+double EPS = 1e-10;
+
+// Point2D & Vector2D
+struct Point2D { 
+	double x, y;
+	Point2D (double a=0, double b=0) : x(a), y(b) {}
+};
+typedef Point2D Vector2D;
+
+// Point2D's and Vector2D's operator
+Point2D operator + (Point2D a, Point2D b) { return Point2D(a.x + b.x, a.y + b.y); }
+Point2D operator - (Point2D a, Point2D b) { return Point2D(a.x - b.x, a.y - b.y); }
+Point2D operator * (Point2D a, double d) { return Point2D(a.x * d, a.y * d); }
+Point2D operator / (Point2D a, double d) { return Point2D(a.x / d, a.y / d); }
+
+bool operator < (const Point2D& a, const Point2D& b) { return a.x != b.x ? a.x < b.x : a.y < b.y; }
+bool operator > (const Point2D& a, const Point2D& b) { return b.x != a.x ? b.x < a.x : b.y < a.y; }
+bool operator == (const Point2D& a, const Point2D& b) { return fabs(a.x-b.x)<EPS && fabs(a.y-b.y)<EPS; }
+
+// basic function
+double norm(Point2D a) { return a.x*a.x + a.y*a.y; }
+double dot2D(const Vector2D& a, const Vector2D& b) { return a.x * b.x + a.y * b.y; }
+double cross2D(const Vector2D& a, const Vector2D& b) { return a.x*b.y - a.y*b.x; }
+double dist2D(const Point2D& a, const Point2D& b) { return sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) ); }
+
+bool is_vertical(const Vector2D& a, const Vector2D& b) { return fabs(dot2D(a, b))<EPS; }
+bool is_parrallel(const Vector2D& a, const Vector2D& b) { return fabs(cross2D(a, b))<EPS; }
+
+
+
+// Line
+struct Line {
+	Point2D s, e;	// start, end
+	#define sx s.x
+	#define sy s.y
+	#define ex e.x
+	#define ey e.y
+	
+	Line (double _x=0, double _y=0, double x_=0, double y_=0) { s.x = _x; s.y = _y; e.x = x_; e.y = y_; }
+};
+
+bool is_cross(const Line& a, const Line& b) {
+	return ( cross2D(a.e-a.s, b.s-a.s)*cross2D(a.e-a.s, b.e-a.s) < EPS ) &&
+			( cross2D(b.e-b.s, a.s-b.s)*cross2D(b.e-b.s, a.e-b.s) < EPS);
+}
+bool is_parrallel(const Line& a, const Line& b) { return is_parrallel(a.s-a.e, b.s-b.e); }
+
+// 線分の交点
+Point2D crossPoint(const Line& l1, const Line& l2) {
+	Point2D b = l2.e - l2.s;
+	double d1 = fabs(cross2D(b, l1.s-l2.s));
+	double d2 = fabs(cross2D(b, l1.e-l2.s));
+	double t = d1/(d1+d2);	
+	return l1.s + (l1.e-l1.s)*t;
+}
+
+// 点と線の距離
+double point_line_dist(const Point2D& A, const Line& l) {
+	double a = (l.s.y-l.e.y)/(l.s.x-l.e.x);
+	double c = (-1)*a*l.s.x - l.s.y;
+	return fabs(a*A.x + A.y + c)/sqrt(a*a + 1.0);
+}
+
+// 点Aの線分lにおける線対称
+Point2D line_symmetry(const Point2D& A, const Line& l) {
+	complex<D> p1(l.sx, l.sy), p2(l.ex, l.ey), q(A.x, A.y);
+	complex<D> r = p1 + polar(abs(q-p1), 2*arg(p2-p1)-arg(q-p1));
+	Point2D ret(r.real(), r.imag());
+	return ret;
+}
+
+int main() {
+	Point2D A;
+	Line l;
+	char c;
+	
+	while (cin>>l.sx>>c>>l.sy>>c>>l.ex>>c>>l.ey>>c>>A.x>>c>>A.y) {
+		Point2D ans = line_symmetry(A, l);
+		printf("%lf %lf", ans.x, ans.y);
+	}
+	
+	return 0;
+}

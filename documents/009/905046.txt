@@ -1,0 +1,82 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 100
+
+int par[MAX],rank[MAX];
+int V,E;
+
+struct edge{
+  int u,v,cost;
+};
+
+bool comp(const edge &e1,const edge &e2){
+  return e1.cost < e2.cost;
+}
+
+void init(){
+  for(int i = 0 ; i < V ; i++){
+    par[i] = i;
+    rank[i] = 0;
+  }
+}
+
+int find(int x){
+  if(par[x] == x){
+    return x;
+  }else{
+    return par[x] = find(par[x]);
+  }
+}
+
+void unite(int x,int y){
+  x = find(x);
+  y = find(y);
+
+  if(x == y) return;
+
+  if(rank[x] < rank[y]){
+    par[x] = y;
+  }else{
+    par[y] = x;
+    if(rank[x] == rank[y]){
+      rank[x]++;
+    }
+  }
+}
+
+bool same(int x,int y){
+  return find(x) == find(y);
+}
+
+edge es[MAX*MAX];
+
+int kruskal(){
+  init();
+  sort(es,es+E,comp);
+
+  int res = 0;
+  for(int i = 0 ; i < E ; i++){
+    edge e = es[i];
+    if(!same(e.u,e.v)){
+      res += e.cost;
+      unite(e.u,e.v);
+    }
+  }
+  return res;
+}
+
+int main(){
+  while(cin >> V >> E , (V | E)){
+    int a,b,c;
+    for(int i = 0 ; i < E ; i++){
+      cin >> a >> b >> c;
+      es[i] = (edge){a,b,c};
+    }
+    cout << kruskal() << endl;
+  }
+
+  return 0;
+}

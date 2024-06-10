@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <limits.h>
+#include <cctype>
+
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+#define Max INT_MAX
+#define Inf INT_MIN
+
+
+#define rep(i, n) for(int i = 0; i < n; i++)
+#define repi(i,l,n) for(int (i)=(int)(l);(i)<(int)(n);(i)++)
+// s <= x < g ?
+#define IN(x,s,g) ((x) >= (s) && (x) < (g))
+// 0 <= x < w && 0 <= y < h ?
+#define ISIN(x,y,w,h) (IN((x),0,(w)) && IN((y),0,(h)))
+
+int par[1000*1000];
+int rank[1000*1000];
+
+int W,H;
+
+
+int p(int x, int y){
+    return y*1000 + x;
+}
+
+void initTree(int W, int H){
+    rep(i,H) { 
+        rep(j,W){
+            par[p(j,i)] = p(j,i); 
+            rank[p(j,i)] = 0;
+        }
+    }
+    return;
+}
+
+int find(int x){
+    if( par[x] == x ){
+        return x;
+    } else { 
+        return par[x] = find(par[x]);
+    }
+}
+
+void unite(int x, int y){
+    x = find(x);
+    y = find(y);
+    if (x == y) { return; }
+
+    if(rank[x] < rank[y]){
+        par[x] = y;
+    }else if( rank[y] < rank[x] ){
+        par[y] = x;
+    } else {
+        par[y] = x;
+        rank[x]++;
+    }
+    return;
+}
+
+bool same(int x,int y) {
+    //cout << "first line in same "<< endl;
+    x = find(x);
+    y = find(y);
+    //cout << "find x" << find(x) << endl;
+    //cout << "find y" << find(y) << endl;
+    return find(x) == find(y);
+}
+
+
+char grid[1000][1000];
+int dx[] = {0,1,0,-1};
+int dy[] = {1,0,-1,0};
+void around_unite(int x,int y){
+    rep(i,4){
+        if( grid[ y+dy[i] ][ x+dx[i] ] != '#' ) {
+            if( IN(x+dx[i] , 0 , W) && IN(y+dy[i], 0, H ) ) 
+            //if( 0 <= x+dx[i] && x+dx[i] < W &&
+            //    0 <= y+dy[i] && y+dy[i] < H ) 
+            { 
+                unite( p(x,y), p(x+dx[i], y+dy[i]) );
+            }
+        }
+    }
+    return;
+}
+    
+
+
+
+
+int main()
+{
+    char tmp;
+    cin >> W >> H;
+    int gx,gy;
+    initTree(W,H);
+
+
+    rep(i,H){
+        rep(j,W){
+            char tmp;
+            cin >> tmp;
+            grid[i][j] = tmp;
+            if(tmp == 't'){ 
+                gy = i;
+                gx = j;
+            }
+        }
+    }
+
+    
+    rep(i,H){
+        rep(j,W){
+            if(grid[i][j] != '#'){
+                around_unite(j, i);
+            }
+        }
+    }
+    //rep(i,H){
+    //    rep(j,W){
+    //        cout << find(p(j,i)) << " ";
+    //    }
+    //    cout << endl;
+    //}
+
+    if( same( p(gx,gy), p(0,0) )){
+        cout << 0 << endl;
+        return 0;
+    }
+
+    int n_time;
+    cin >> n_time;
+    rep(i,n_time){
+        int a,b;
+        cin >> a >> b;
+        if ( grid[b][a] == '#' ){
+            grid[b][a] = '.';
+            around_unite(a,b);
+        } 
+
+        if( same( p(gx,gy), p(0,0) )){
+                cout << i + 1 << endl;
+                return 0;
+                //break;
+        }
+        //if( i + 1  == n_time ) { cout << -1 << endl; }
+    }
+    cout << -1 << endl;
+
+    return 0;
+}

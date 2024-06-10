@@ -1,0 +1,27 @@
+def get_k(ws, p)
+  k = 0
+  rest = 0
+  ws.each do |w|
+    if rest < w
+      k += 1
+      rest = p
+    end
+    rest -= w
+  end
+  k
+end
+
+n, k = gets.split.map(&:to_i)
+ws = []
+n.times do
+  ws << gets.to_i
+end
+sws = ws.sort
+
+p = sws.pop
+
+while k < get_k(ws, p)
+  p += sws.shift
+end
+
+puts p

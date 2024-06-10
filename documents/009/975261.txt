@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+ostream& operator<<(ostream& os, vi const& v){
+  rep(i,v.size()){
+    os << v[i] << " ";
+  }
+  return os;
+}
+
+int main(){
+  int n;
+  while(cin >> n,n){
+
+    vector<set<int>> vs(n);
+    rep(i,n){
+      int k; cin>>k;
+      rep(j,k){
+	int t;
+	cin >> t; t--;
+	vs[i].insert(t);
+      }
+      // cout << vs[i] << endl;
+    }
+
+    int k; cin >> k;
+    vi s(k);
+    rep(i,k){
+      int x; cin >> x;
+      x--;
+      s[i] = x;
+    }
+  
+    vi ans;
+    rep(i,n){
+      bool ok = true;
+      rep(j,k){
+	if(vs[i].count(s[j])==1) continue;
+	ok = false;
+	break;
+      }
+      if(ok) ans.push_back(i);
+    }
+
+    if(ans.size()==1){
+      cout << ans[0]+1 << endl;
+    } else {
+      cout << -1 << endl;
+    }
+  }
+  
+}

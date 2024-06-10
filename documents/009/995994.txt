@@ -1,0 +1,66 @@
+/*
+ * Main.cpp
+ *
+ *  Created on:
+ *      Author: KC
+ */
+/*
+ ID: chancha4
+ PROG: packrec
+ LANG: C++
+ */
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cstdio>
+#include <string>
+#include <cstring>
+#include <sstream>
+#include <math.h>
+#include <vector>
+#include <time.h>
+#include<stack>
+#include <set>
+#include <limits>
+#include<map>
+#include<utility>
+
+using namespace std;
+
+int res = 0;
+int w, h;
+char s[130][130];
+char cursign = '0';
+void bfs(int x, int y){
+    s[x][y] = '0';
+    for(int i = -1; i<= 1; i++){
+        if(x + i >= 0 && x + i < h &&  s[x + i][y] == cursign) bfs(x + i, y);
+    }
+    for(int i = -1; i<= 1; i++){
+        if(y + i >= 0 && y + i < w &&  s[x][y + i] == cursign) bfs(x, y + i);
+    }
+
+}
+int main(){
+    int count = 0;
+    while(true){
+
+        scanf("%d %d", &w, &h);
+        if(w == 0 && h == 0) break;
+        count++;
+        for(int i = 0; i < h; i++) scanf("%s", s + i);
+        int x, y;
+        res = 0;
+        for(int i = 0; i < h; i++)
+            for(int j = 0; j < w; j++){
+                if(s[i][j] == '@' || s[i][j] == '#' || s[i][j] == '*'){
+                    cursign = s[i][j];
+                    bfs(i, j);
+                    res++;
+                }
+            }
+        printf("%d\n", res);
+    }
+
+    return 0;
+}

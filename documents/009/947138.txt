@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+#include <list>
+using namespace std;
+
+class bigdata
+{
+public:
+  list < int >data;
+  string to_str ()
+  {
+    string str (data.size (), '0');
+    int i = 0;
+    auto it = data.begin ();
+    while (it != data.end ())
+      {
+	string buf = to_string (*it);
+	  str[i] = buf[0];
+	  it++;
+	  i++;
+      }
+    return str;
+  }
+  bigdata & operator= (string str)
+  {
+    for (int i = 0; i < str.length (); i++)
+      data.push_back (stoi (str.substr (i, 1)));
+  }
+  bigdata & operator+ (bigdata & obj)
+  {
+    if (this->data.size () < obj.data.size ())
+      {
+	int buf = obj.data.size () - this->data.size ();
+	for (int i = 1; i <= buf; i++)
+	  this->data.push_front (0);
+      }
+    if (this->data.size () > obj.data.size ())
+      {
+	int buf = this->data.size () - obj.data.size ();
+	for (int i = 1; i <= buf; i++)
+	  obj.data.push_front (0);
+      }
+    this->data.push_front (0);
+    obj.data.push_front (0);
+
+    auto it_a = this->data.begin ();
+    auto it_b = obj.data.begin ();
+
+    while (it_a != this->data.end ())
+      {
+	*it_a += *it_b;
+	auto bufit = it_a;
+	for (int i = 0; i < this->data.size () - 1; i++)
+	  {
+	    if (*bufit >= 10)
+	      {
+		bufit--;
+		*bufit += 1;
+		++bufit;
+		*bufit -= 10;
+		bufit--;
+	      }
+	  }
+	it_a++;
+	it_b++;
+      }
+    it_a = this->data.begin ();
+    if (*it_a == 0)
+      this->data.pop_front ();
+    return *this;
+  }
+};
+
+int
+main ()
+{
+  string s1, s2;
+  int loop;
+  cin >> loop;
+  while (loop-- > 0)
+    {
+      cin >> s1 >> s2;
+      bigdata data1, data2;
+      data1 = s1;
+      data2 = s2;
+      data1 = data1 + data2;
+      if ((data1.to_str().length()) > 80)
+	cout << "overflow" << endl;
+      else
+	cout << data1.to_str () << endl;
+    }
+}

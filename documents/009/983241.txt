@@ -1,0 +1,112 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <map>
+#include <ctime>
+using namespace std;
+
+#define rep(i,n) for(int (i)=0;(i)<(n);(i)++)
+#define pb push_back
+
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+
+const int inf=1<<29;
+
+
+struct node{
+	int to;
+	int cost;
+};
+vector<node> graph[50010];
+
+
+int n;
+int cost[8][8];
+
+map<int,string> iconvert;
+map<string,int> sconvert;
+
+int dist[50010];
+int index=0;
+
+void make_graph(){
+	int tar[8];
+	rep(i,n) tar[i]=i+1;
+
+	do{
+		string add="";
+		rep(i,n) add+=(tar[i]+'0');
+		iconvert[index]=add;
+		sconvert[add]=index;
+		index++;
+
+	}while(next_permutation(tar,tar+n));
+
+//	clock_t start,end;
+//	start=clock();
+
+	rep(i,index){
+		string cur=iconvert[i];
+		rep(j,n)rep(k,n){
+			if(j==k) continue;
+			string next=cur;
+			int a=next[j]-'0'-1;
+			int b=next[k]-'0'-1;
+			swap(next[j],next[k]);
+			struct node in;
+			in.to=sconvert[next];in.cost=cost[a][b];
+			graph[i].pb(in);
+		}
+	}
+
+//	end=clock();
+//	cout << (double)(end-start)/CLOCKS_PER_SEC << endl;
+	return ;
+}
+
+void dijkstra(){
+	rep(i,index) dist[i]=inf;
+	priority_queue <pii,vector<pii>,greater<pii> > q;
+	pii init;
+	init.first=0;
+	init.second=0;
+	dist[0]=0;
+	q.push(init);
+	while(!q.empty()){
+		pii cur=q.top(); q.pop();
+
+		if(dist[cur.first] < cur.second)
+			continue;
+
+		//cout << iconvert[cur.first] << " "<< cur.second << endl;
+
+		rep(i,graph[cur.first].size()){
+			pii next;
+			next.first=graph[cur.first][i].to;next.second=cur.second+graph[cur.first][i].cost;
+			if(dist[next.first] > next.second){
+				dist[next.first]=next.second;
+				q.push(next);
+			}
+		}
+
+	}
+	return ;
+}
+
+
+int main(void){
+	cin >> n;
+	rep(i,n) rep(j,n) cin >> cost[i][j];
+	
+	make_graph();
+	dijkstra();
+	int ans=0;
+	
+	rep(i,index) ans=max(dist[i],ans);
+
+	cout << ans << endl;
+	return 0;
+}

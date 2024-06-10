@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+	int i, j, x, num, same;
+	int count[1000] = {0}, big, place;
+	int l_count[1000] = {0}, l_place;
+	char c;
+	char words[1000][32], l_word[1000][32];
+	
+	j = 0;
+	i = 0;
+	num = 0;
+	
+	while (1){
+		scanf("%c", &c);
+		
+		if (c == '\n'){
+			break;
+		}
+		else if (c == ' '){
+			if (num != 0){
+				same = 0;
+				for (x = 0; x < num; x++){
+					if (strcmp(l_word[x], words[j]) == 0){
+						l_count[x]++;
+						same = 1;
+						break;
+					}
+				}
+				
+				if (same != 1) {
+					strcpy(l_word[num], words[j]);
+					l_count[num]++;
+					num++;
+				}
+				
+			}
+			else {
+				strcpy(l_word[0], words[0]);
+				l_count[num]++;
+				num++;
+			}
+			
+			i = 0;
+			j++;
+			
+		}
+		else {
+			words[j][i] = c;
+			i++;
+			count[j]++;
+		}
+		
+	}
+	
+	big = 0;
+	place = 0;
+	
+	for (i = 0; count[i] != 0; i++){
+		if (count[i] > big){
+			big = count[i];
+			place = i;
+		}
+	}
+	
+	big = 0;
+	l_place = 0;
+	
+	for (i = 0; l_count[i] != 0; i++){
+		if (l_count[i] > big){
+			big = l_count[i];
+			l_place = i;
+		}
+	}
+	
+	printf("%s %s\n", words[l_place], words[place]);
+	
+	return (0);
+}

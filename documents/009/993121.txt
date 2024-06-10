@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <array>
+#include <vector>
+
+using namespace std;
+
+void makePrimes( int limit, vector<int> & primes ) {
+
+  vector<bool> isPrime( limit + 1 );
+  fill( isPrime.begin(), isPrime.end(), true );
+  isPrime[ 0 ] = isPrime[ 1 ] = false;
+  const int loopMax = (int)sqrt( limit );
+  for ( int i = 2; i <= loopMax; i++ ) {
+	if ( isPrime[ i ] ) {
+	  for ( int j = i * i; j <= limit; j += i ) {
+		isPrime[ j ] = false;
+	  }
+	}
+  }
+  for ( int i = 2; i <= limit; i++ ) {
+	if ( isPrime[ i ] ) {
+	  primes.push_back( i );
+	}
+  }
+}
+
+int main() {
+  vector<int> primes;
+  makePrimes( 10000, primes );
+  const int size = primes.size();
+  
+  vector<int> cum( size );
+  vector<int> count( 10001 );
+
+  int sum = 0;
+  for ( int i = 0; i <= size; i++ ) {
+	cum[ i ] = sum;
+	sum += primes[ i ];
+  }
+  
+  fill( count.begin(), count.end(), 0 );
+  for ( int i = 0; i <= size; i++ ) {
+	for ( int j = i + 1; j <= size; j++ ) {
+	  const int n = cum[ j ] - cum[ i ];
+	  if ( n <= 10000 ) {
+		count[ n ]++;
+	  }
+	}
+  }
+  
+  while ( true ) {
+	int n;
+	cin >> n;
+	if ( n == 0 ) break;
+	cout << count[ n ] << endl;
+  }  
+}

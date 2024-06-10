@@ -1,0 +1,33 @@
+YES, NO = 0, 1
+@memo = Hash.new
+def dfs(subset, last = nil)
+  return @memo[[subset, last]] = YES if subset.empty?
+  return @memo[[subset, last]] if @memo[[subset, last]]
+
+  subset.each do |domino|
+    if !last || last == domino[0]
+      return @memo[[subset, last]] = YES if dfs(subset - [domino], domino[1]) == YES
+    end
+    if !last || last == domino[1]
+      return @memo[[subset, last]] = YES if dfs(subset - [domino], domino[0]) == YES
+    end
+  end
+
+  @memo[[subset, last]] = NO
+end
+
+while gets
+  subset = gets.split.sort.map{|d| d.chars.map(&:to_i)}
+  count = Array.new(7){0}
+  subset.each do |domino|
+    domino.each do |n| count[n] += 1 end
+  end
+  single = count.select{|n| n == 1}
+
+  if single.size > 2
+    puts "No"
+    next
+  end
+
+  puts dfs(subset) == YES ? "Yes" : "No"
+end

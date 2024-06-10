@@ -1,0 +1,36 @@
+//============================================================================
+// Name        : aoj0076.cpp
+// Author      : afterCmidday
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <utility>
+#include <cmath>
+#define sqr(x) (x) * (x)
+using namespace std;
+
+int main() {
+	int n;
+	pair<double,double> l, v, w;
+	while(true){
+		cin >> n;
+		if(n == -1){
+			break;
+		}
+		l = make_pair(1,1); // 現在の位置
+		v = make_pair(1,0);
+		w = make_pair(0,1);
+		for(int i = 0;i < n - 2;i++){
+			v = make_pair(v.first + w.first,v.second + w.second);
+			w = make_pair(-v.second,v.first);
+			w = make_pair(w.first / sqrt(sqr(w.first) + sqr(w.second)),w.second / sqrt(sqr(w.first) + sqr(w.second)));
+			l = make_pair(l.first + w.first,l.second + w.second);
+
+		}
+		cout << l.first << endl << l.second << endl;
+	}
+	return 0;
+}

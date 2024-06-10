@@ -1,0 +1,51 @@
+#include<iostream>
+#include<stdlib.h>
+#include<math.h>
+using namespace std ;
+
+int main(){
+	
+	int a[100]={} , b[100]={} ;
+	int n , m ;
+	int x , y , min ;
+	
+	while(1){
+		cin >> n >> m ;
+		if( n==0 && m==0 ) break;
+		
+		int sum[2] = {} ;
+		
+		for( int i=0 ; i<n ; i++ ){
+			cin >> a[i] ;
+			sum[0] += a[i] ;
+		}
+		for( int i=0 ; i<m ; i++ ){
+			cin >> b[i] ;
+			sum[1] += b[i] ;
+		}
+		
+		if( ( sum[0] + sum[1] ) % 2 == 1 ) cout << -1 << endl ;
+		else {
+			x = -1 ;
+			y = -1 ;
+			min = 1000 ;
+			
+			for( int i=0 ; i<n ; i++ ){
+				for( int j=0 ; j<m ; j++ ){
+					if( sum[0] - a[i] + b[j] == sum[1] - b[j] + a[i] ){
+						if( min > a[i] + b[j] ){
+							x = a[i] ;
+							y = b[j] ;
+							min = a[i] + b[j] ;
+						}
+					}
+				}
+			}
+			
+			if( x==-1 && y==-1 ) cout << -1 << endl ;
+			else cout << x << ' ' << y <<endl ;
+		}
+	}
+	
+return 0;
+}

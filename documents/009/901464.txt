@@ -1,0 +1,56 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <bitset>
+#define INF	100000000
+#define pb	push_back
+#define fi first
+#define sec second
+#define SS stringstream
+using namespace std;
+typedef pair<int, int> P;
+typedef long long int	ll;
+
+int sosuu[60001] = {false};
+
+int main(){
+	int a = 60000;
+	int n;
+	int x;
+	x = floor(sqrt(a));
+	for(long long int i = 2; i < x+1; i++){
+		if(sosuu[i] == true){
+			continue;
+		}
+		for(long long int j = 2*i; j < a+1; j = j+i){
+			sosuu[j] = true;
+		}
+	}
+	while(cin >> n){
+		int s, l;
+		for(int i = 1;; i++){
+			if(sosuu[n-i] == false){
+				s = n-i;
+				break;
+			}
+		}
+		for(int i = 1;; i++){
+			if(sosuu[n+i] == false){
+				l = n+i;
+				break;
+			}
+		}
+		cout << s << " " << l << endl;
+	}
+}

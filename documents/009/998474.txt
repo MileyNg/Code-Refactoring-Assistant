@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+int gcd(int x, int y){
+    if( x < y ){
+        int t = x;
+        x = y;
+        y = t;
+    }
+    while( x%y ){
+        int t = x%y;
+        x = y;
+        y = t;
+    }
+    return y;
+}
+
+int main(){
+    int a, b;
+    while( cin >> a >> b ) cout << gcd(a, b) << endl;
+    return 0;
+}

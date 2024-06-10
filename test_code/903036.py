@@ -1,0 +1,1 @@
+print sum([max(8,input()/5) for i in [1]*5])

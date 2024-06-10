@@ -1,0 +1,15 @@
+loop do
+  n = gets.chomp.to_i
+  break if n==0
+  mi,ma = 1e10,-1
+  sum = 0
+  n.times do |i|
+    t = gets.chomp.to_i
+    sum += t
+    mi = [t, mi].min
+    ma = [t, ma].max
+  end
+  sum -= mi
+  sum -= ma
+  puts sum/(n-2)
+end

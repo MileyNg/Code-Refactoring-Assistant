@@ -1,0 +1,22 @@
+loop do
+    n,s = gets.split.map(&:to_i)
+    if n==0 && s == 0
+        break
+    end
+    r = Array.new(n)
+    n.times do |i|
+        r[i] = gets.to_i
+    end
+    r.sort!
+    count = 0
+    for i in 0...n
+        if r[i] > s
+            count += n-i-1
+            next
+        end
+        t = r[i+1...n].bsearch {|x| r[i]+x>s}
+        index = r.index(t)
+        count += (index)? n - index : 0
+    end
+    puts count
+end

@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+#include<string.h>
+using namespace std;
+
+int main(){
+
+  int n,ten=0,rui=0,j,i;
+  char str[2000];
+
+  scanf("%d",&n);
+
+  for(i=0;i<n;i++){
+    for(j=0;j<3;){
+
+      scanf("%s",str);
+
+      if(strcmp(str,"HIT")==0){
+	rui++;
+      }
+      else if(strcmp(str,"HOMERUN")==0){
+	ten+=1+rui;
+	rui=0;
+      }
+      else {
+	j++;
+      }
+      if(rui==4){
+	ten++;
+	rui=3;
+      }
+    }
+    printf("%d\n",ten);
+    ten=0;
+    rui=0;
+  }
+
+  return 0;
+}

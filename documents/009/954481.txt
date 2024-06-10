@@ -1,0 +1,44 @@
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<double, double> P;
+
+/** Problem0233 : Book Arrangement **/
+int main() {
+	int n;
+	while (cin>>n, n) {
+		string ans;
+		while (1) {
+			int t = n%10;
+			n/=-10;
+			if (t>=0)
+				ans+='0'+t;
+			else {
+				ans+='0'+(t+10);
+				n++;
+			}
+			if (n==0)
+				break;
+		}
+		reverse(ans.begin(), ans.end());
+		cout << ans << endl;
+	}
+	return 0;
+}

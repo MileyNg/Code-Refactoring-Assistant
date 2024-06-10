@@ -1,0 +1,62 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+bool done(int m[], int a, int b) {
+    bool z = true, res;
+    for (int i = 1; i <= 9; i++) {
+        if (m[i] > 0) z = false; else continue;
+        if (m[i] >= 3) {
+            m[i] -= 3;
+            res = done(m, a, b - 1);
+            m[i] += 3;
+            if (res) return true;
+        }
+        if (m[i] >= 2) {
+            m[i] -= 2;
+            res = done(m, a - 1, b);
+            m[i] += 2;
+            if (res) return true;
+        }
+        if (i <= 7 && m[i] > 0 && m[i + 1] > 0 && m[i + 2] > 0) {
+            m[i]--;
+            m[i + 1]--;
+            m[i + 2]--;
+            res = done(m, a, b - 1);
+            m[i]++;
+            m[i + 1]++;
+            m[i + 2]++;
+            if (res) return true;
+        }
+    }
+    if (z && a == 0 && b == 0) return true;
+    return false;
+}
+
+int main(void) {
+    int m[11];
+    char c;
+    while (true) {
+        memset(m, 0, sizeof(m));
+        for (int i = 0; i < 13; i++) {
+            cin >> c;
+            m[(int)(c - '0')]++;
+        }
+        if (cin.eof()) break;
+        bool f = true;
+        for (int i = 1; i <= 9; i++) {
+            if (m[i] >= 4) continue;
+            m[i]++;
+            if (done(m, 1, 4)) {
+                if (f) f = false;
+                else cout << " ";
+                cout << i;
+            }
+            m[i]--;
+        }
+        if (f) cout << 0;
+        cout << endl;
+    }
+    return 0;
+}

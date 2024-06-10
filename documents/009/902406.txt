@@ -1,0 +1,65 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <string>
+#include <cmath>
+#include <cassert>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<b?(a=b,1):0)
+#define chmin(a,b) (a>b?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+const int INF = 1<<29;
+const double EPS = 1e-8;
+const double PI = acos(-1);
+typedef long long ll;
+typedef pair<int,int> pii;
+
+int g[500][500];
+int l[500],r[500];
+int dp[500];
+
+bool cmp(int i, int j) {
+  return r[i] < r[j];
+}
+
+int main() {
+  int n,s;
+  while(cin >> n >> s) {
+    s--;
+    vector<int> id(n);
+    REP(i,n) {
+      cin >> l[i] >> r[i];
+      id[i] = i;
+    }
+    sort(ALL(id),cmp);
+    REP(i,n) REP(j,n) cin >> g[i][j];
+    REP(k,n)REP(i,n)REP(j,n)g[i][j]=min(g[i][j],g[i][k]+g[k][j]);
+    REP(i,n) dp[i] = max(0,r[i]-max(l[i],g[s][i]));
+    REP(i,n) {
+      int a = id[i];
+      REP(j,n) {
+        int b = id[j];
+        if (r[a]+g[a][b]<=r[b]) {
+          chmax(dp[b], dp[a] + max(0,r[b]-max(l[b],r[a]+g[a][b])));
+        }
+      }
+    }
+    cout << *max_element(dp,dp+n) << endl;
+  }
+}

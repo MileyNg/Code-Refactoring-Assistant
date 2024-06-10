@@ -1,0 +1,91 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+
+int MAX, N;
+
+void valid_check(vector<bool> &isValid, vector< vector<int> > &g){
+  isValid[0] = true;
+  REP(now, N + 1){
+    if(!isValid[now]) continue;
+    REP(i, g[now].size()) isValid[g[now][i]] = true;
+  }
+}
+
+bool dfs(int now, vector<bool> &visited, vector< vector<int> > &g, vector<int> &v){
+  //cout <<"now = " <<v[now] <<endl;
+  if(v[now] == 0) return true;
+  if(visited[now]) return false;
+  int next = g[now][0];
+  visited[next] = true;
+  return dfs(next, visited, g, v);
+}
+
+int main() {
+  while(cin >>MAX && MAX){
+    cin >>N;
+    vector<int> v(N + 2, 0); FOR(i, 1, N + 1) cin >>v[i];
+    vector< vector<int> > g(N + 2, vector<int>());
+    REP(i, N + 1){
+      if(v[i] == 0){
+        FOR(j, i + 1, min(N + 1, i + MAX) + 1) g[i].push_back(j);
+      } else if(v[i] < 0){
+        int next = max(0, i + v[i]);
+        g[i].push_back(next);
+      } else {
+        int next = min(N + 1, i + v[i]);
+        g[i].push_back(next);
+      }
+    }
+    //REP(i, g.size()){
+    //  cout <<i <<": ";
+    //  REP(j, g[i].size()) cout <<g[i][j] <<" ";
+    //  cout <<endl;
+    //}
+    vector<bool> isValid(N + 2, false);
+    valid_check(isValid, g);
+
+    bool isOK = true;
+    REP(i, N + 1){
+      if(!isValid[i]) continue;
+      if(v[i] == 0){
+        bool f = false;
+        REP(j, g[i].size()){
+          vector<bool> visited(N + 2, false);
+          dfs(g[i][j], visited, g, v);
+          if(!visited[i]) f = true;
+        }
+        if(!f) isOK = false;
+      } else{
+        vector<bool> visited(N + 2, false);
+        bool tmp = dfs(i, visited, g, v);
+        if(!tmp) isOK = false;
+      }
+      //REP(i, visited.size()) cout <<visited[i] <<" "; cout <<endl;
+      //cout <<i <<" (" <<v[i] <<") : ";
+    }
+    cout <<(isOK ? "OK" : "NG") <<endl;
+  } return 0;
+}

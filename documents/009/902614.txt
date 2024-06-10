@@ -1,0 +1,115 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <stack>
+#include <deque>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i <= ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 1, n )
+
+typedef long long ll;
+typedef pair< int, int > P;
+
+void DecodeJ( string& );
+void DecodeC( string& );
+void DecodeE( string& );
+void DecodeA( string& );
+void DecodeP( string& );
+void DecodeM( string& );
+
+int main()
+{
+	int n;  cin >> n;
+	while( n-- ) {
+		char order[ 7 ];
+		stack< char > stc;
+		string message;
+		cin >> order;
+		cin >> message;
+		for( int i = 0; order[ i ] != '\0'; ++i ) stc.push( order[ i ] );
+		while( !stc.empty() ) {
+			char fool = stc.top();  stc.pop();
+			switch( fool ) {
+			case 'J' : DecodeJ( message ); break;
+			case 'C' : DecodeC( message ); break;
+			case 'E' : DecodeE( message ); break;
+			case 'A' : DecodeA( message ); break;
+			case 'P' : DecodeP( message ); break;
+			case 'M' : DecodeM( message ); break;
+			};
+		}
+		cout << message << endl;
+	}
+	return 0;
+}
+
+void DecodeJ( string& message ) {
+	int size = message.size();
+	string tmp;
+	tmp += message[ size - 1 ];
+	tmp += message.substr( 0, size - 1 );
+	message = tmp;
+}
+
+void DecodeC( string& message ) {
+	int size = message.size();
+	string tmp;
+	tmp += message.substr( 1, size - 1 );
+	tmp += message[ 0 ];
+	message = tmp;
+}
+
+void DecodeE( string& message ) {
+	int size = message.size();
+	string tmp;
+	if( size % 2 ) {
+		tmp += message.substr( size / 2 + 1, size / 2 );
+		tmp += message[ size / 2 ];
+		tmp += message.substr( 0, size / 2 );
+	}
+	else {
+		tmp += message.substr( size / 2, size / 2 );
+		tmp += message.substr( 0, size / 2 );
+	}
+	message = tmp;
+}
+
+void DecodeA( string& message ) {
+	string tmp;
+	string::reverse_iterator rit = message.rbegin();
+	for( ; rit != message.rend(); ++rit ) tmp += *rit;
+	message = tmp;
+}
+
+void DecodeP( string& message ) {
+	string tmp;
+	string::iterator it = message.begin();
+	for( ; it != message.end(); ++it ) {
+		char ch = *it;
+		if( ch == '0' ) tmp += '9';
+		else if( '1' <= ch && ch <= '9' ) tmp += ( char )( ch - 1 );
+		else tmp += ch;
+	}
+	message = tmp;
+}
+
+void DecodeM( string& message ) {
+	string tmp;
+	string::iterator it = message.begin();
+	for( ; it != message.end(); ++it ) {
+		char ch = *it;
+		if( ch == '9' ) tmp += '0';
+		else if( '0' <= ch && ch <= '8' ) tmp += ( char )( ch + 1 );
+		else tmp += ch;
+	}
+	message = tmp;
+}

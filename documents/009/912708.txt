@@ -1,0 +1,74 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+int x2,y2;
+bool iti[21][21]={false,};
+bool hantei(char ,int ,bool [21][21]);
+
+int main(){
+	int N;
+	int M;
+	char dist;
+	int cnt=0;
+	while(cin>>N&&N){
+		bool houseki[21][21]={false,};
+		int x=0,y=0;
+		for(int i=0;i<N;i++){
+			cin>>x>>y;
+			houseki[x-1][y-1]=true;
+		}
+		x2=10;
+		y2=10;
+		
+		cin>>M;
+
+		for(int j=0;j<M;j++){
+			int kyori;
+			iti[x2-1][y2-1]=false;
+			cin>>dist>>kyori;
+			switch (dist)
+			{
+			case 'N':
+				for(int i=0;i<=kyori;i++)
+					if(houseki[x2-1][y2-1+i]==true){
+					cnt++;
+					houseki[x2-1][y2-1+i]=false;
+				}
+				y2+=kyori;
+				break;
+			case 'E':
+				for(int i=0;i<=kyori;i++)
+					if(houseki[x2-1+i][y2-1]==true){
+						cnt++;
+						houseki[x2-1+i][y2-1]=false;
+					}
+				x2+=kyori;
+				break;
+			case 'S':
+				for(int i=0;i<=kyori;i++)
+					if(houseki[x2-1][y2-1-i]==true){
+					cnt++;
+					houseki[x2-1][y2-1-i]=false;
+					}	
+				y2-=kyori;
+				break;
+			case 'W':
+				for(int i=0;i<=kyori;i++)
+					if(houseki[x2-1-i][y2-1]==true){
+						cnt++;
+						houseki[x2-1-i][y2-1]=false;
+					}
+				x2-=kyori;
+				break;
+			}
+				
+		}
+
+		cout<<(N==cnt?"YES":"NO")<<endl;
+
+		for(int i=0;i<20;i++)
+			fill(iti[i],iti[i]+20,false);
+	}
+	return 0;
+}

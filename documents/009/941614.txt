@@ -1,0 +1,58 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#include<complex>
+#include<set>
+#include<map>
+#include<algorithm>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int main(){
+	
+	A:;
+	int n,m;
+	cin>>n>>m;
+	if(n==0)return 0;
+	
+	const int N = 111;
+	const int INF = 1000000000;
+	
+	int dpcost[N][N];
+	int dptime[N][N];
+	rep(i,N)rep(j,N)dpcost[i][j]=dptime[i][j]=INF;
+	rep(i,N)dpcost[i][i]=dptime[i][i]=0;
+	
+	rep(i,n){
+		int a,b,c,d;
+		cin>>a>>b>>c>>d;
+		dpcost[a][b]=c;
+		dpcost[b][a]=c;
+		dptime[a][b]=d;
+		dptime[b][a]=d;
+	}
+	
+	
+	reps(k,1,n+1)reps(i,1,n+1)reps(j,1,n+1){
+		dpcost[i][j] = min(dpcost[i][j], dpcost[i][k]+dpcost[k][j]);
+		dptime[i][j] = min(dptime[i][j], dptime[i][k]+dptime[k][j]);
+	}
+	
+	
+	int r;
+	cin>>r;
+	
+	rep(i,r){
+		int a,b,c;
+		cin>>a>>b>>c;
+		if(c==0)printf("%d\n",dpcost[a][b]);
+		if(c==1)printf("%d\n",dptime[a][b]);
+	}
+	
+	goto A;
+}

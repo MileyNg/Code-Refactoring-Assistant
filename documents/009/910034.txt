@@ -1,0 +1,30 @@
+#include<stdio.h>
+
+int judge(long);
+
+int main(void){
+  long work;
+  int cnt=0,N;
+  int i;
+
+  scanf("%d",&N);
+
+  for(i=0;i<N;i++){
+    scanf("%d",&work);
+    if(judge(work)==1) cnt++;
+  }
+
+  printf("%d\n",cnt);
+
+  return 0;
+}
+
+
+int judge(long work){
+  long i;
+
+  for(i=2;i*i<=work;i++){
+    if(work%i==0) return -1;
+  }
+  return 1;
+}

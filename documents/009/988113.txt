@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <map>
+using namespace std;
+
+typedef pair<int,int> P;
+
+int main() {
+  for(int N, Q; cin >> N >> Q, N || Q; ) {
+    map<string, P> database;
+    for(int i = 0; i < N; i++) {
+      string ename; int eyear, wyear;
+      cin >> ename >> eyear >> wyear;
+      if(database.count(ename)) {
+        database[ename] = P(wyear - eyear + 1, max(database[ename].second, wyear));
+      }
+      else {
+        database[ename] = P(wyear - eyear + 1, wyear);
+      }
+    }
+    while(Q--) {
+      int y; cin >> y;
+      bool ok = false;
+      for(pair<string, P> item : database) {
+        if(item.second.first <= y && y <= item.second.second) {
+          ok = true;
+          cout << item.first << ' ' << (y - item.second.first + 1) << endl;
+        }
+      }
+      
+      if(!ok) {
+        cout << "Unknown" << endl;
+      }
+    }
+  }
+}

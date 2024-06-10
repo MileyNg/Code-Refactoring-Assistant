@@ -1,0 +1,40 @@
+#include<stdio.h>
+#define INF -2000000001
+
+int A[500001],n;
+
+int left(int i){return i*2;}
+int right(int i){return i*2+1;}
+void exchange(int *a,int *b){
+  int tmp=*a;
+  *a=*b;
+  *b=tmp;
+}
+
+void maxHeapify(int i){
+  int l=left(i);
+  int r=right(i);
+  int largest;
+
+  if(l<=n&&A[l]>A[i])largest=l;
+  else largest=i;
+
+  if(r<=n&&A[r]>A[largest])largest=r;
+
+  if(largest!=i){
+    exchange(&A[i],&A[largest]);
+    maxHeapify(largest);
+  }
+
+}
+
+int main(){
+  int i;
+  scanf("%d",&n);
+  for(i=1;i<=n;i++)scanf("%d",&A[i]);
+  for(i=n+1;i<500001;i++)A[i]=INF;
+  for(i=n/2;i>=1;i--)maxHeapify(i);
+  for(i=1;i<=n;i++)printf(" %d",A[i]);
+  printf("\n");
+  return 0;
+}

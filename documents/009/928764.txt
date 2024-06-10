@@ -1,0 +1,134 @@
+#include<iostream>
+#include<cstdlib>
+#include<string>
+using namespace std;
+
+struct DLList
+{
+        int val;
+        struct DLList* prev;
+        struct DLList* next;
+};
+
+class doubleLinkedList
+{
+        struct DLList* head;
+        struct DLList* tail;
+public:
+        doubleLinkedList();
+        void insert(int a);
+        void del(int a);
+        void delFirst();
+        void delLast();
+        void print();
+};
+
+doubleLinkedList::doubleLinkedList()
+{
+        head = new struct DLList;
+        head->val = 0;
+        head->prev = NULL;
+        head->next = NULL;
+        tail = head;
+}
+
+void doubleLinkedList::insert(int a)
+{
+ 
+        struct DLList* tmp;
+        tail->val = a;
+        tail->next = new struct DLList;
+        tmp = tail;
+        tail = tail->next;
+        tail->prev = tmp;
+        tail->val = 0;
+        tail->next = NULL;
+}
+
+void doubleLinkedList::del(int a)
+{
+       if( tail->prev == NULL ){
+                cout << "Error:List is empty.\n";
+                exit(1);
+        }
+
+       struct DLList* cur;
+        cur = head;
+
+        while(cur != NULL ){
+                if( cur->val == a){
+                        if( cur == head ){
+                                delFirst();
+                                return ;
+                        }else if( cur == tail ){
+                                delLast();
+                                return ;
+                        }else{
+                                cur->prev->next = cur->next;
+                                cur->next->prev = cur->prev;
+                                delete cur;
+                                return ;
+                        }
+                }else{
+                        cur = cur->next;
+                }
+        }
+}
+
+void doubleLinkedList::delFirst()
+{
+        struct DLList* tmp;
+        tmp = head;
+        head = head->next;
+        head->prev = NULL;
+        delete tmp;
+}
+
+void doubleLinkedList::delLast()
+{
+        struct DLList* tmp;
+        tmp = tail;
+        tail = tail->prev;
+        tail->val = 0;
+        tail->next = NULL;
+        delete tmp;
+}
+
+void doubleLinkedList::print()
+{
+        struct DLList* cur;
+        cur = tail->prev;
+        while( cur != NULL )
+        {
+                cout  << cur->val << " ";
+                cur = cur->prev;
+        }
+        cout << endl;
+}
+
+int main()
+{
+        string s;
+        int n, v;
+        doubleLinkedList dl;
+        cin >> n;
+
+        for(int i=0; i<n; i++){
+                cin >> s;
+                if( s == "insert"){
+                        cin >> v;
+                        dl.insert(v);
+                }else if( s == "delete" ){
+                        cin >> v;
+                        dl.del(v);
+                }else if( s == "deleteFirst" ){
+                        dl.delFirst();
+                }else if( s == "deleteLast" ){
+                        dl.delLast();
+                }
+        }
+
+        dl.print();
+
+        return 0;
+}

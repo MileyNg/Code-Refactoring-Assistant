@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MIN(a,b) (((a)<(b)) ? (a) : (b))
+#define MAX(a,b) (((a)>(b)) ? (a) : (b))
+#define N 1000
+
+void overflow()
+{
+  printf("overflow");
+}
+int main(){
+  int h,n;
+  scanf("%d",&n);
+  for(h=0;h<n;h++)
+    {
+      char s1[N],s2[N];
+      int sum[N],g;
+      for(g=0;g<N;g++) sum[g]=0;
+      scanf("%s %s",s1,s2);
+      int l1, l2;
+      l1 = strlen(s1);
+      l2 = strlen(s2);
+      if(MAX(l1,l2)>80) overflow();
+      else 
+	{
+	  int i,j=l1,k=l2;
+	  for(i=0;i<MAX(l1,l2);i++)
+	    {
+	      int tmp;
+	      if(j>0 && k>0) tmp = s1[--j] + s2[--k] - 2 * '0';
+	      else if(j==0) tmp = s2[--k] - '0';
+	      else if(k==0) tmp = s1[--j] - '0';
+	      if(tmp+sum[i] > 9) sum[i+1]++;
+	      sum[i] = (sum[i]+tmp)%10;
+	    }
+	  if(sum[80]>0) overflow();
+	  else 
+	    {
+	      int m = 80;
+	      while(sum[--m]==0);
+	      for(;m>=0;m--) printf("%d",sum[m]);
+	    }
+	}
+      printf("\n");
+    }
+  return 0;
+}

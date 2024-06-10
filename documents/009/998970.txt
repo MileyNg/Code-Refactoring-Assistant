@@ -1,0 +1,52 @@
+def path(edge, start, goal)
+  q = [[[start], []]]
+  until q.empty?
+    p, used = q.shift
+    return p if p.last == goal
+    next if used[p.last]
+    used[p.last] = true
+    edge[p.last].each do |v|
+      q << [p + [v], used]
+    end
+  end
+  nil
+end
+
+def FordFulkerson(edge, m, n)
+  source = m + n
+  sink = m + n + 1
+
+  result = 0
+
+  while p = path(edge, source, sink)
+    result += 1
+    p.each_cons(2) do |u, v|
+      edge[u].delete(v)
+      edge[v] << u
+    end
+  end
+
+  result
+end
+
+until (m, n = gets.split.map(&:to_i)).all?(&:zero?)
+  source = m + n
+  sink = m + n + 1
+  size = m + n + 2
+
+  b = Array.new
+  r = Array.new
+  b += gets.split.map(&:to_i) until b.size == m
+  r += gets.split.map(&:to_i) until r.size == n
+
+  edge = Array.new(size){Array.new}
+  m.times do |u|
+    n.times do |v|
+      edge[u] << m + v unless b[u].gcd(r[v]) == 1
+    end
+  end
+  m.times do |u| edge[source] << u end
+  n.times do |v| edge[m + v] << sink end
+
+  p FordFulkerson(edge, m, n)
+end

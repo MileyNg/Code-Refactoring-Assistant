@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using AOJ;
+
+namespace AOJ
+{
+  static class Problem0038
+  {
+    public static void Main(string[] args)
+    {
+      Console.WriteLine(
+          string.Join(Environment.NewLine,
+            ReadInput()
+              .Select(s => s.Split(','))
+              .Select(arr => arr.Select(int.Parse))
+              .Select(x => x.ToArray())
+              .Select(Judge)
+      ));
+    }
+
+    static IEnumerable<string> ReadInput()
+    {
+      string s;
+      while ((s = Console.ReadLine()) != null)
+        yield return s;
+    }
+
+    static string Judge(int[] hand)
+    {
+      var work = Enumerable.Repeat(0, 14).ToArray();
+      foreach (var x in hand)
+      {
+        if (x == 1)
+        {
+          ++work[0];
+          ++work[13];
+        }
+        else
+        {
+          ++work[x - 1];
+        }
+      }
+      if (work.Any(x => x == 4))
+        return "four card";
+      if (work.Any(x => x == 3) && work.Any(x => x == 2))
+        return "full house";
+      foreach (var arr in work.EachCons(5))
+        if (arr.All(x => x == 1))
+          return "straight";
+      work[13] = 0;
+      if (work.Any(x => x == 3))
+        return "three card";
+      if (work.Count(x => x == 2) == 2)
+        return "two pair";
+      if (work.Any(x => x == 2))
+        return "one pair";
+      return "null";
+    }
+  }
+
+  public static class EnumerableEx
+  {
+    public static IEnumerable<IEnumerable<T>> EachCons<T>(this IEnumerable<T> source, int count)
+    {
+      foreach (var i in Enumerable.Range(0, source.Count() - count + 1))
+        yield return source.Skip(i).Take(count);
+    }
+  }
+}

@@ -1,0 +1,108 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+
+using namespace std;
+
+// difine
+typedef pair<int, int> pii;
+
+int dx[4] = {0, 1, 0, -1};
+int dy[4] = {1, 0, -1, 0};
+
+// input
+int m, n;
+bool prime[1010][1010];
+int map[1010][1010];
+
+int med = 1010/2;
+int MAX = (int)1e6;
+
+// method
+bool isPrime(int x) {
+	for (int i=2; i*i<=x; i++) if (x%i==0) return false;
+	return x>1;
+}
+
+void make_map() {
+	memset(map, 0, sizeof(map));
+	
+	int num = 1, d = 0;
+	int x = med, y = med;
+	
+	for (int i=1; i<=MAX; i++) {
+		map[y][x] = num;
+		prime[y][x] = isPrime(num);
+		
+		if (map[y + dy[(d+1)%4]][x + dx[(d+1)%4]]==0) d = (d+1)%4;
+		x += dx[d]; y += dy[d];
+		num++;
+	}
+	
+	/*
+	for (int i=med - 5; i<med + 5; i++) {	
+		for (int j=med-5; j<med + 5; j++) {
+			printf("%3d ", map[i][j]);
+		}
+		cout << endl;
+	}
+	*/
+}
+
+pii dp[1010][1010];
+
+void solve() {
+	for (int i=0; i<1010; i++) for (int j=0; j<1010; j++) {
+		dp[i][j] = make_pair(-1, 0);
+		if (map[i][j] == n && prime[i][j]) dp[i][j] = make_pair(1, n);
+		else if (map[i][j] == n) dp[i][j] = make_pair(0, 0);
+	}
+	
+	for (int i=0; i<1009; i++) {
+		for (int j=0; j<1009; j++) {
+			if (dp[i][j].first < 0) continue;
+			
+			if (map[i+1][j-1] <= m) {
+				if (prime[i+1][j-1]) {
+					pii nxt(dp[i][j].first + 1, map[i+1][j-1]);
+					dp[i+1][j-1] = max(dp[i+1][j-1], nxt);
+				} else {
+					dp[i+1][j-1] = max(dp[i+1][j-1], dp[i][j]);
+				}
+			}
+			
+			if (map[i+1][j] <= m) {
+				if (prime[i+1][j]) {
+					pii nxt(dp[i][j].first + 1, map[i+1][j]);
+					dp[i+1][j] = max(dp[i+1][j], nxt);
+				} else {
+					dp[i+1][j] = max(dp[i+1][j], dp[i][j]);
+				}
+			}
+			
+			if (map[i+1][j+1] <= m) {
+				if (prime[i+1][j+1]) {
+					pii nxt(dp[i][j].first + 1, map[i+1][j+1]);
+					dp[i+1][j+1] = max(dp[i+1][j+1], nxt);
+				} else {
+					dp[i+1][j+1] = max(dp[i+1][j+1], dp[i][j]);
+				}
+			}
+		}
+	}
+	
+	pii ans(-1, 0);
+	for (int i=0; i<1010; i++) for (int j=0; j<1010; j++) ans = max(ans, dp[i][j]);
+	cout << ans.first << " " << ans.second << endl;
+}
+
+int main() {
+	make_map();
+	
+	while (1) {
+		cin >> m >> n; if (m==0 && n==0) break;
+		solve();
+	}
+	
+	return 0;
+}

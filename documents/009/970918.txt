@@ -1,0 +1,48 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+typedef pair<int, int> P;
+
+/** Problem1159 : Next Mayor **/
+int main()
+{
+	int n, get[50], stone;
+
+	
+	while (cin >> n >> stone, n||stone) {
+		fill(get, get+50, 0);
+		int i=0;
+		while (1) {
+			if (stone>0) {
+				stone--;
+				get[i%n]++;
+			} else {
+				bool flg=true;
+				rep(j, n) {
+					if (j!=i%n && get[j]>0) {
+						flg=false;
+						break;
+					}
+				}
+				if (flg) {
+					cout << i%n << endl;
+					goto end;
+				} else {
+					stone = get[i%n];
+					get[i%n] = 0;
+				}
+			}
+			i++;
+		}
+	end:;
+	}
+	return 0;
+}

@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+#include "../geometry.h"
+int main(){
+    const double W = 50;
+    const double H = 94;
+    int N, D;
+    cin >> N >> D;
+    vector<C> c(N);
+    REP(i, N){
+        double x, y, r;
+        cin >> x >> y >> r;
+        c[i] = {{x, y}, r};
+    }
+    const P start(W / 2, 0);
+    const P goal (W / 2, H);
+    vector<L> st, gt;
+    for(int i = 0; i < N; i++){
+        vector<L> sv = tangents_through_point(c[i], start);
+        vector<L> gv = tangents_through_point(c[i], goal );
+        st.insert(st.end(), sv.begin(), sv.end());
+        gt.insert(gt.end(), gv.begin(), gv.end());
+    }
+    const double INF = 1e9;
+    double ans = INF;
+
+    // 直線で進んだとき
+    {
+        L shortest(start, goal);
+        int cnt = 0;
+        for(int i = 0; i < N; i++){
+            if(iCS(c[i], shortest)) cnt++;
+        }
+        if(cnt <= D){
+            ans = abs(shortest.vector());
+        }
+    }
+
+    // 円を接するときの経路
+    for(L sl : st){
+        for(L gl : gt){
+            if(paralell(sl, gl)) continue;
+            P cp = pLL(sl, gl);
+            if(!(sign(0, cp.real()) <= 0 && sign(cp.real() ,W) <= 0)) continue;
+            if(!(sign(0, cp.imag()) <= 0 && sign(cp.imag(), H) <= 0)) continue;
+            L sm(start, cp);
+            L gm(cp, goal);
+            // cout << sm[0] << " -> " << sm[1] << endl;
+            // cout << gm[0] << " -> " << gm[1] << endl;
+            int cnt = 0;
+            for(int i = 0; i < N; i++){
+                if(iCS(c[i], sm) && sign(dSP(sm, c[i].p), c[i].r) != 0) cnt++;
+                if(iCS(c[i], gm) && sign(dSP(gm, c[i].p), c[i].r) != 0) cnt++;
+                if(contains(c[i], cp) == IN) cnt--;
+            }
+            if(cnt <= D){
+                double d = abs(sm.vector()) + abs(gm.vector());
+                ans = min(ans, d);
+            }
+        }
+    }
+
+    if(ans == INF) {
+        printf("-1\n");
+    } else {
+        printf("%.12f\n", ans);
+    }
+    return 0;
+}

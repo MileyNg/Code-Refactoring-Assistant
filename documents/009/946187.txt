@@ -1,0 +1,45 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int n;
+  for(;cin>>n,n;)
+    {
+      int data[n][n];
+      int max=-1;
+      int max_i=-1;
+      bool flag=true;
+      for(int i=0;i<n;i++)
+	{
+	  int sum=0;
+	  for(int j=0;j<n;j++)
+	    {
+	      cin>>data[i][j];
+	      sum+=data[i][j];
+	    }
+	  if(sum>max)
+	    {
+	      max=sum;
+	      max_i=i;
+	    }
+	  else if(sum==max)
+	    flag=false;
+	}
+      int min=9999;
+      int min_j=-1;
+      for(int j=0;j<n;j++)
+	{
+	  if(min>data[max_i][j])
+	    {
+	      min=data[max_i][j];
+	      min_j=j;
+	    }
+	  else if(min==data[max_i][j])
+	    flag=false;
+	}
+      if(!flag)
+	data[max_i][min_j]=0;
+      cout<<data[max_i][min_j]<<endl;
+    }
+}

@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <set>
+#include <map>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <cstdio>
+#include <istream>
+#include <sstream>
+#include <iomanip>
+#include <iterator>
+#include <climits>
+using namespace std;
+
+typedef ostringstream OSS;
+typedef istringstream ISS;
+
+typedef vector<int> VI;
+typedef vector< VI > VVI;
+typedef vector<bool> VB;
+typedef vector< VB > VVB;
+
+typedef long long LL;
+
+typedef pair<int, int> PII;
+typedef vector<PII> VPII;
+
+#define X first
+#define Y second
+
+const LL MOD = 1000000007;
+
+template<typename T>
+void dump(T a, int n) { for (int i = 0; i < n; i++) cout << a[i] << (i == n - 1 ? '\n' : ' '); }
+
+template<typename T>
+void dump(T a) { dump<T>(a, a.size()); }
+
+const int dx[] = {0, 1, 1, 0, -1, -1};
+const int dy[] = {1, 1, 0, -1, -1, 0};
+const int D = 6;
+const int offset = 150;
+const int N = 300;
+
+int main(void) {
+	int T, M;
+	while(cin >> T >> M, T || M) {
+		VVI area(N, VI(N, -1));
+		VVB wall(N, VB(N, false));
+		PII S;
+		for (int i = 0; i < M; i++) {
+			PII p;
+			cin >> p.X >> p.Y;
+			wall[p.Y + offset][p.X + offset] = true;
+		}
+		cin >> S.X >> S.Y;
+		S.X += offset;
+		S.Y += offset;
+
+		// bfs
+		queue<PII> q;
+		q.push(S);
+		area[S.Y][S.X] = T;
+		while (q.size()) {
+			PII p = q.front();
+			q.pop();
+			int t = area[p.Y][p.X] - 1;
+
+			if (t == -1) { // walk end
+				break;
+			}
+
+			for (int i = 0; i < D; i++) {
+				PII n(p);
+				n.X += dx[i];
+				n.Y += dy[i];
+				
+				if (!wall[n.Y][n.X] && t > area[n.Y][n.X]) {
+					q.push(n);
+					area[n.Y][n.X] = t;
+				}
+			}
+		}
+
+		// count walked area
+		int ans = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				int x = area[i][j];
+				ans += x >= 0;
+			}
+		}
+
+		cout << ans << endl;
+	}
+
+	return 0;
+}

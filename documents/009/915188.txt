@@ -1,0 +1,88 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int gcd(int a,int b){
+	if(a<b) swap(a,b);
+	if(b==0) return a;
+	gcd(b,a%b);
+}
+
+int main(){
+
+	int n,m;
+	int inp;
+	int buse[500],ruse[500];
+	vector<int> b,r;
+	vector<int> gb[500],gr[500];
+	bool f;
+	int cnt;
+
+	while(1){
+
+		cin>>n>>m;
+		if(n==0&&m==0) break;
+
+		if(!b.empty()) b.clear();
+		if(!r.empty()) r.clear();
+		for(int i=0;i<500;i++) if(!gb[i].empty()) gb[i].clear();
+		for(int i=0;i<500;i++) if(!gr[i].empty()) gr[i].clear(); 
+		for(int i=0;i<500;i++) buse[i]=0,ruse[i]=0;
+
+		for(int i=0;i<n;i++){
+			cin>>inp;
+			b.push_back(inp);
+		}
+
+		for(int i=0;i<m;i++){
+			cin>>inp;
+			r.push_back(inp);
+		}
+
+		for(int i=0;i<n;i++){
+			for(int j=0;j<m;j++){
+				if(gcd(b[i],r[j])!=1){
+					gb[i].push_back(j);
+					gr[j].push_back(i);
+				}
+			}
+		}
+
+		cnt=0;
+		for(int i=1;i<500;){
+			f=true;
+			for(int j=0;j<n;j++){
+				if(gb[j].size()==i&&buse[j]==0){
+					for(int k=0;k<gb[j].size();k++){
+						if(ruse[gb[j][k]]==0){
+							buse[j]=1;
+							ruse[gb[j][k]]=1;
+							cnt++;
+							f=false;
+							break;
+						}
+					}
+				}
+			}
+			for(int j=0;j<m;j++){
+				if(gr[j].size()==i&&ruse[j]==0){
+					for(int k=0;k<gr[j].size();k++){
+						if(buse[gr[j][k]]==0){
+							ruse[j]=1;
+							buse[gr[j][k]]=1;
+							cnt++;
+							f=false;
+							break;
+						}
+					}
+				}
+			}
+			if(f) i++;
+		}
+		cout<<cnt<<endl;
+	}
+
+	return 0;
+}

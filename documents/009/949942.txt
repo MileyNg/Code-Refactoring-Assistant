@@ -1,0 +1,143 @@
+#include <iostream>
+#include <vector>
+#include <valarray>
+#include <queue>
+
+using namespace std;
+
+typedef long long LL;
+const int INF = 10000000;
+
+template<class Flow, class Cost>
+struct Edge {
+    int from, to;
+    Flow capacity, flow;
+    Cost cost;
+    Edge *back;
+    Edge(int from, int to, Flow c, Cost d, Edge *b) : from(from), to(to), capacity(c), flow(0), cost(d), back(b) {}
+};
+
+template<class Flow, class Cost>
+void make_edge(vector<vector<Edge<Flow,Cost>*>> &g, int src, int dst, Flow c, Cost d) {
+    auto *e = new Edge<Flow,Cost>(src, dst, c, d, nullptr);
+    auto *back = e->back = new Edge<Flow,Cost>(dst, src, 0, -d, e);
+    g[src].push_back(e);
+    g[dst].push_back(back);
+}
+
+template<class Flow, class Cost>
+pair<Flow, Cost> primal_dual(vector<vector<Edge<Flow,Cost>*>> &g, int src, int sink, int max_flow) {
+    const int N = g.size();
+    pair<Flow, Cost> res;
+    vector<Cost> h(N), dist(N);
+    vector<Edge<Flow,Cost>*> parent(N);
+    for(Flow f = max_flow; f > 0; ) {
+        fill(dist.begin(), dist.end(), INF);
+        dist[src] = 0;
+        fill(parent.begin(), parent.end(), nullptr);
+        priority_queue<pair<Cost,int>> q;
+        q.push(make_pair(0, src));
+        while(!q.empty()) {
+            const int n = q.top().second;
+            const Cost c = -q.top().first;
+            q.pop();
+            if(dist[n] < c) {
+                continue;
+            }
+            for(auto e : g[n]) {
+                if(e->capacity - e->flow > 0) {
+                    const Cost c2 = c + e->cost + h[n] - h[e->to];
+                    if(c2 < dist[e->to]) {
+                        dist[e->to] = c2;
+                        parent[e->to] = e;
+                        q.push(make_pair(-c2, e->to));
+                    }
+                }
+            }
+        }
+        if(parent[sink] == nullptr) {
+            break;
+        }
+
+        Flow to_push = f;
+        for(int i = sink; i != src; i = parent[i]->from) {
+            auto e = parent[i];
+            to_push = min(to_push, e->capacity - e->flow);
+        }
+        for(int i = sink; i != src; i = parent[i]->from) {
+            auto e = parent[i];
+            res.second += to_push * e->cost;
+            e->flow += to_push;
+            e->back->flow -= to_push;
+        }
+        f -= to_push;
+        res.first += to_push;
+        for(int i = 0; i < N; ++i) {
+            h[i] += dist[i];
+        }
+    }
+    return res;
+}
+
+bool solve() {
+    int N, M, L;
+    if(!(cin >> N >> M >> L)) return false;
+    if(!N && !M && !L) return false;
+
+    vector<vector<LL>> dist(N, vector<LL>(N, -1));
+    for(int i = 0; i < M; ++i) {
+        int u, v, d;
+        cin >> u >> v >> d;
+        dist[u][v] = dist[v][u] = d;
+    }
+    for(int k = 0; k < N; ++k) {
+        for(int i = 0; i < N; ++i) {
+            for(int j = 0; j < N; ++j) {
+                if(dist[i][k] == -1 || dist[k][j] == -1) continue;
+                const int d = dist[i][k] + dist[k][j];
+                if(dist[i][j] == -1 || dist[i][j] >= d) dist[i][j] = d;
+            }
+        }
+    }
+
+    vector<vector<Edge<int,int>*>> graph(L*2+2);
+    const int SRC = L*2;
+    const int SINK = SRC+1;
+    vector<pair<LL,int>> queries(L);
+    for(int i = 0; i < L; ++i) {
+        cin >> queries[i].second >> queries[i].first;
+    }
+    sort(queries.begin(), queries.end());
+    for(int i = 0; i < L; ++i) {
+        const int in_node = i*2;
+        const int out_node = i*2+1;
+        make_edge(graph, SRC, in_node, 1, 0);
+        make_edge(graph, in_node, out_node, 1, 0);
+        make_edge(graph, out_node, SINK, INF, 0);
+        const int ni = queries[i].second;
+        for(int j = i+1; j < L; ++j) {
+            const int nj = queries[j].second;
+            if(dist[ni][nj] != -1 && queries[j].first - queries[i].first >= dist[ni][nj]) {
+                //cout << queries[i].second << ' ' << queries[j].second << endl;
+                make_edge(graph, out_node, j*2, 1, -1);
+            }
+        }
+    }
+    make_edge(graph, SRC, SINK, INF, 0);
+    const auto res = primal_dual(graph, SRC, SINK, L);
+    cout << L + res.second << endl;
+    for(auto &row : graph) {
+        for(auto e : row) {
+            delete e;
+        }
+    }
+    return true;
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    while(solve()) ;
+    return 0;
+}

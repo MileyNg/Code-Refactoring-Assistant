@@ -1,0 +1,115 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<vector>
+
+using namespace std;
+
+int mp[30][30],du[30],vis[30],have[30],tot;
+
+char s[505][15];
+
+inline void add(char a,char b)
+{
+    tot++;
+    mp[a-'a'][b-'a'] = 1;
+    have[a-'a'] = 1;have[b-'a'] = 1;
+    //printf("a=%d,b=%d\n",a-'a',b-'a');
+    du[b-'a']++;
+}
+
+bool dfs(int x)
+{
+    //printf("x=%d\n",x);
+    if(vis[x])
+        return 1;
+    vis[x] = 1;
+    for(int i=0;i<26;i++)
+    {
+        if(mp[x][i]==0)
+            continue;
+        if(dfs(i))
+            return 1;
+    }
+    return 0;
+}
+
+int q[30],bdu[30];
+bool topo()
+{
+    if(tot==0)
+        return 1;
+    memcpy(bdu,du,sizeof(du));
+    int front = 1,tail = 0;
+    for(int i=0;i<26;i++)
+    {
+        if(have[i]&&du[i]==0)
+            q[++tail] = i;
+    }
+    while(tail>=front)
+    {
+        int t =q[front++];
+        for(int i=0;i<26;i++)
+        {
+            if(mp[t][i])
+            {
+                bdu[i]--;
+                if(bdu[i]==0)
+                    q[++tail] =i;
+            }
+        }
+    }
+    for(int i=0;i<26;i++)
+        if(bdu[i])
+            return 0;
+    return 1;
+}
+bool bi(int a,int b)
+{
+    //printf("b=%d,now\n",b);
+    int la = strlen(s[a]);
+    int lb = strlen(s[b]),dif=0;
+    for(int i=0;i<min(la,lb);i++)
+    {
+        if(s[a][i]!=s[b][i])
+        {
+            dif = 1;
+            add(s[a][i],s[b][i]);
+            break;
+        }
+    }
+    if(la>lb&&dif==0)
+        return 1;
+    if(topo())
+        return 0;
+    return 1;
+}
+
+int main()
+{
+    int n;
+    while(scanf("%d",&n)&&n)
+    {
+        memset(du,0,sizeof(du));tot = 0;
+        memset(mp,0,sizeof(mp));
+        memset(have,0,sizeof(have));
+        for(int i=0;i<n;i++)
+        {
+            scanf("%s",*(s+i));
+        }
+        int flag =0;
+        for(int i=1;i<n;i++)
+        {
+            if(bi(i-1,i))
+            {
+                flag = 1;
+                break;
+            }
+        }
+        if(flag)
+            puts("no");
+        else
+            puts("yes");
+    }
+}

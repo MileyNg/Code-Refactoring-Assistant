@@ -1,0 +1,48 @@
+#include<iostream>
+#include<string>
+#include<sstream>
+
+std::string toString(int a){
+	std::stringstream z;
+	std::string s;
+
+	z << a;
+	z >> s;
+
+	return s;
+}
+
+void calc(std::string &str){
+
+	std::string newstr;
+	char bef=str[0];
+	int cnt = 1;
+
+	for (int i = 1; i <= str.size(); i++){
+		if (i == str.size() || str[i] != bef){
+			newstr += toString(cnt) + bef;
+			cnt = 1;
+		}
+		else cnt++;
+
+		bef = str[i];
+	}
+	str = newstr;
+}
+
+int main(){
+
+	int n;
+
+	while (std::cin >> n,n){
+
+		std::string str;
+		std::cin >> str;
+
+		for (int i = 0; i < n; i++)calc(str);
+
+		std::cout << str << std::endl;
+	}
+
+	return 0;
+}

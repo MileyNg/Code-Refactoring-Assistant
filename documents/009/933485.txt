@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+typedef long long LL;
+
+// count # (<= X)
+LL check(LL N, LL X){
+    LL right = N;
+    LL p2 = 1;
+    LL res = 0;
+    // printf("n = %lld x = %lld\n", N, X);
+    while(right > 1){
+        // [left, right]
+        LL left = right / 3 + 1;
+        if(left <= 1) left = 2;
+
+        // [left, mid] (mid, right]
+        LL mid = X / p2;
+        if(mid > right) mid = right;
+        // printf("left = %lld mid = %lld right = %lld\n", left, mid, right);
+
+        if(left <= 2 && 2 <= mid){
+            res++;
+        }
+
+        // [left, mid]のうち奇数の個数
+        if(left % 2 == 0) left++;
+        if(mid % 2 == 0) mid--;
+        if(left <= mid){
+            res += (mid - left) / 2 + 1;
+        }
+
+        right = right / 3;
+        p2 *= 2;
+    }
+
+    // printf("-> %lld\n\n", res);
+    return res;
+}
+
+LL solve(LL N, LL K){
+    if(K > (N + 1) / 2) return -1;
+    if(N % 2 == 0) N--;
+    LL lb = 0;
+    LL ub = N;
+    while(ub - lb > 1){
+        LL x = (ub + lb) / 2;
+        if(check(N, x) >= K){
+            ub = x;
+        }else{
+            lb = x;
+        }
+    }
+    return ub;
+}
+
+int main(){
+    int C;
+    cin >> C;
+    while(C--){
+        LL N, K;
+        cin >> N >> K;
+        cout << solve(N, K) << endl;
+    }
+    return 0;
+}

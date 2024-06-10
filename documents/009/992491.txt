@@ -1,0 +1,36 @@
+#include<cstdio>
+#include<cmath>
+#include<algorithm>
+#include<iostream>
+using namespace std;
+
+int main(){
+
+  int N,thita,thita2;
+  while(1){
+    double s1=0,s2=0;
+    thita2=0;
+    cin>>N;
+    if(N==0) break;
+    for(int i=0;i<N-1;i++){
+      cin>>thita;
+      thita2+=thita;
+      s1+=abs( sin(thita) );
+    }
+
+    s1+=abs( sin(360-thita2));
+    thita2=0;
+    cin>>N;
+    for(int i=0;i<N-1;i++){
+      cin>>thita;
+      s2+=abs( sin(thita) );
+      thita2+=thita;
+    }
+
+    s2+=abs( sin(360-thita2));
+    if(s1>s2) cout<<1<<endl;
+    else if(s1<s2) cout<<2<<endl;
+    else cout<<0<<endl;
+  }
+  return 0;
+}

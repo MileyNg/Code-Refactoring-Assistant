@@ -1,0 +1,83 @@
+#include <cstdio>
+#define MAXN 105
+#define MAXM 105
+
+char G[MAXN][MAXM];//'V' biao shi yi fang wen guo le 
+char Vec[4][2]={{0,1},{-1,0},{0,-1},{1,0}};
+char ttmp;
+int n,m;
+
+void DFS(int i,int j)
+{
+
+// 	for (int ni=0;ni<n+2;++ni)
+// 	{
+// 		for (int mi=0;mi<m+2;++mi)
+// 		{
+// 			printf("%c ",G[ni][mi]);
+// 		}
+// 		printf("\n");
+// 	}
+// 	printf("%c\n",ttmp);
+// 
+// 
+	if (G[i][j]=='V')
+	{
+		return ;
+	}
+	G[i][j]='V';
+	for (int ii=0;ii<4;++ii)
+	{
+		if (G[i+Vec[ii][0]][j+Vec[ii][1]]==ttmp)
+		{
+			DFS(i+Vec[ii][0],j+Vec[ii][1]);
+		}
+	}
+	return ;
+}
+
+int main()
+{
+	while (scanf("%d%d",&n,&m),n)
+	{
+		int res=0;
+		for (int kkn=0;kkn<n+2;++kkn)
+		{
+			G[kkn][0]=G[kkn][m+1]='V';
+		}
+		for (int kkm=0;kkm<m+2;++kkm)
+		{
+			G[0][kkm]=G[n+1][kkm]='V';
+		}
+		for (int nii=0;nii<n;++nii)
+		{
+			for (int mii=0;mii<m;++mii)
+			{
+				while(scanf("%c",&G[nii+1][mii+1]),G[nii+1][mii+1]=='\n'){};
+			}
+		}
+// 		for (int ni=0;ni<n+2;++ni)
+// 		{
+// 			for (int mi=0;mi<m+2;++mi)
+// 			{
+// 				printf("%c ",G[ni][mi]);
+// 			}
+// 			printf("\n");
+// 		}
+		for (int qn=0;qn<n;++qn)
+		{
+			for (int qm=0;qm<m;++qm)
+			{
+				if (G[qn+1][qm+1]!='V')
+				{
+					++res;
+					ttmp=G[qn+1][qm+1];
+					DFS(qn+1,qm+1);
+				}
+			}
+		}
+		printf("%d\n",res);
+		n=m=0;
+	}
+	return 0;
+}

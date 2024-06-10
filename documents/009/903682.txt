@@ -1,0 +1,126 @@
+#include<bits/stdc++.h>
+
+#define rep(i,a) for(int i=0;i<(int)(a);i++)
+#define INIT(a) memset(a,0,sizeof(a))
+#define pb push_back
+#define sz size()
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> P;
+
+struct edge{
+  ll from,to,cost,cap,rev;
+};
+
+const ll INF = 1LL<<50;
+const ll INF2 = 1LL<<60;
+const ll V = 1000;
+vector<edge> G[V];
+
+void AddEdge(ll s,ll g,ll c,ll p){
+  G[s].pb((edge){s,g,c,p,(ll)G[g].sz});
+  G[g].pb((edge){g,s,-c,0,(ll)G[s].sz-1});
+}
+
+ll d[V];
+ll h[V],pv[V],pe[V];
+ll v;
+bool use[V];
+
+ll MinCostFlow(ll s,ll t,ll f){
+  ll res = 0;
+  fill(h,h+v,0);
+  while(f>0){
+    fill(d,d+v,INF2);
+    memset(use,0,sizeof(use));
+    d[s] = 0;
+
+    while(true){
+      int u = -1;
+      rep(i,v){
+	if(!use[i] && (u<0 || d[u] > d[i]))u = i;
+      } 
+
+      if(u<0 || d[u] == INF2)break;
+      use[u] = true;
+
+      rep(i,G[u].sz){
+	edge &e = G[u][i];
+	if(e.cap>0 && d[e.to] > d[u] + e.cost + h[u] - h[e.to]){
+	  d[e.to] = d[u] + e.cost + h[u] - h[e.to];
+	  pv[e.to] = u; pe[e.to] = i;
+	}
+      }	  
+    }
+
+    if(d[t]==INF2)return -1;
+    rep(u,v)h[u] += d[u];
+
+    ll x = f;
+    for(int u=t;u!=s;u=pv[u])x = min(x,G[pv[u]][pe[u]].cap);
+    f -= x;
+    res += x*h[t];
+    for(int u=t;u!=s;u=pv[u]){
+      edge &e = G[pv[u]][pe[u]];
+      e.cap -= x; G[u][e.rev].cap += x;
+    }
+  }
+  return res;
+}
+
+
+ll dp[10][1<<16][10];
+
+int main(){
+  ll d,k,l;
+  ll c[10][10];
+  ll n,m,p;
+  ll r[220][10], t[220][10];
+
+  while(scanf("%lld%lld%lld",&d,&k,&l),d){
+    rep(i,d)rep(j,k)scanf("%lld",&c[i][j]);
+    scanf("%lld%lld%lld",&m,&n,&p);
+    rep(i,m)rep(j,k)scanf("%lld",&r[i][j]);
+    rep(i,p)rep(j,k)scanf("%lld",&t[i][j]);
+
+    rep(i,d+1)rep(j,1<<(2*k))rep(x,l+1)dp[i][j][x] = INF;
+    dp[0][0][0] = 0;
+
+    rep(i,d)rep(j,1<<(2*k))rep(x,l+1){
+      if(dp[i][j][x]==INF)continue;
+      dp[i+1][j][0] = min(dp[i+1][j][0], dp[i][j][x]);
+      
+      if(x==l)continue;
+      rep(y,k){
+	if( ((j>>(2*y))&3) >= 2 )continue;
+	ll& nxt2 = dp[i][j+(1<<(2*y))][x+1];
+	nxt2 = min(nxt2, dp[i][j][x] + c[i][y]);
+      }
+    }
+
+    v = p+m+3;
+    rep(i,v)G[i].clear();
+
+    rep(i,p)rep(j,m){
+      int dif[10];
+      rep(x,k)dif[x] = r[j][x] - t[i][x];
+      if(*min_element(dif,dif+k)<0)continue;
+      int need = 0;
+      rep(x,k)need |= dif[x] << (2*x);
+      if(dp[d][need][0] == INF)continue;
+      AddEdge(i,p+1+j,dp[d][need][0],1);
+    }
+    rep(j,m){
+      int need = 0;
+      rep(x,k)need |= r[j][x] << (2*x);
+      if(dp[d][need][0] == INF)continue;
+      AddEdge(p,p+1+j,dp[d][need][0],1);
+    }
+
+    rep(i,p)AddEdge(v-2,i,0,1);
+    AddEdge(v-2,p,0,INF);
+    rep(j,m)AddEdge(p+1+j,v-1,0,1);
+
+    cout << MinCostFlow(v-2,v-1,n) << endl;
+  }
+}

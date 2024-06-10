@@ -1,0 +1,77 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<cstdlib>
+using namespace std;
+typedef long long int ll;
+
+int main()
+{
+    int n,m;
+	int a[1000],b[1000],cost[1000],time[1000];
+	int k;
+	int p,q,r;
+	int cos[100][100];
+	int tim[100][100];
+	scanf("%d%d",&n,&m);
+	for(int i=0;i<m;i++){
+		for(int j=0;j<m;j++){
+			cos[i][j]=1000000;
+			tim[i][j]=1000000;
+		}
+	}
+	for(int i=0;i<n;i++){
+		scanf("%d%d%d%d",&a[i],&b[i],&cost[i],&time[i]);
+		cos[a[i]-1][b[i]-1]=cost[i];
+		cos[b[i]-1][a[i]-1]=cost[i];
+		tim[a[i]-1][b[i]-1]=time[i];
+		tim[b[i]-1][a[i]-1]=time[i];
+	}
+	scanf("%d",&k);
+	for(int i=0;i<k;i++){
+		scanf("%d%d%d",&p,&q,&r);
+		p--;
+		q--;
+		if(r==0){
+			int d[110];
+			d[101]=1000000;
+			bool used[100];
+			fill(used,used+m,false);
+			d[p]=0;
+			while(true){
+				int v=101;
+				for(int u=0;u<m;u++){
+					if(!used[u]&&(v==101||d[u]<d[v]))v=u;
+				}
+				if(v==101)break;
+				used[v]=true;
+				for(int u=0;u<m;u++){
+					d[u]=min(d[u],d[v]+cos[v][u]);
+				}
+			}
+			printf("%d\n",d[q]);
+		}
+		else{
+			int d[110];
+			d[101]=1000000;
+			bool used[100];
+			d[p]=0;
+			fill(used,used+m,false);
+			while(true){
+				int v=101;
+				for(int u=0;u<m;u++){
+					if(!used[u]&&(v==101||d[u]<d[v]))v=u;
+				}
+				if(v==101)break;
+				used[v]=true;
+				for(int u=0;u<m;u++){
+					d[u]=min(d[u],d[v]+tim[v][u]);
+				}
+			}
+			printf("%d\n",d[q]);
+		}
+	}
+    return 0;
+}

@@ -1,0 +1,79 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+
+string str;
+ll memo[1000];
+ll memo2[1000];
+ll t[1000];
+ll n,num;
+ll INF = 10000000001LL;
+ll L,R;
+bool xu,xd,flg;
+
+ll rec(int);
+ll rec2(int);
+
+int main(){
+  while(cin>>n&&n){
+    xu=xd=flg=false;
+    for(int i=0;i<n;i++){
+      cin>>str;
+      if(str=="x"){
+	t[i]=INF;
+      }else{
+	num=0;
+	for(int j=0;j<(int)str.size();j++){
+	  num*=10;
+	  num+=(str[j]-'0');
+	}
+	t[i]=num;
+      }
+    }
+    L=-INF;
+    R=INF;
+    for(int i=0;i<1000;i++)memo[i]=memo2[i]=INF;
+    for(int i=0;i<n;i++){
+      if(t[i]==INF){
+	if(i%2){
+	  L=max(L, max(rec(i-1),rec(i+1))+1);
+	}else{
+	  R=min(R, min(rec2(i-1),rec2(i+1))-1);
+	}
+      }else{
+	if(i>0&&t[i-1]!=INF){
+	  if(i%2==1&&t[i-1]>=t[i])flg=true;
+	  if(i%2==0&&t[i-1]<=t[i])flg=true;
+	}
+	if(i<n-1&&t[i+1]!=INF){
+	  if(i%2==1&&t[i]<=t[i+1])flg=true;
+	  if(i%2==0&&t[i]>=t[i+1])flg=true;
+	}
+      }
+    }
+    //cout<<L<<' '<<R<<endl;
+    //cout<<"flg "<<flg<<endl;
+    if(L==R)cout<<L<<endl;
+    else if(L<R&&xd==false&&xu==false&&flg==false)cout<<"ambiguous"<<endl;
+    else cout<<"none"<<endl;
+  }
+
+  return 0;
+}
+
+ll rec(int x){ 
+  if(x==-1||x==n)return -INF;
+  if(memo[x]!=INF)return memo[x];
+  if(t[x]!=INF)return memo[x]=t[x];
+  xu=true;
+  return -INF;
+}
+
+ll rec2(int x){
+  if(x==-1||x==n)return INF;
+  if(memo[x]!=INF)return memo[x];
+  if(t[x]!=INF)return memo[x]=t[x];
+  xd=true;
+  return INF;
+}

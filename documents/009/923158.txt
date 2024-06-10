@@ -1,0 +1,100 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <set>
+#include <cstring>
+ 
+using namespace std;
+ 
+#define loop(i,a,b) for(int i=(a); i<(int)(b); i++)
+#define rep(i,b) loop(i,0,b)
+ 
+typedef vector<int> vi;
+ 
+struct state {
+    int v[8];
+    int step, x, y;
+};
+ 
+const int dx[] = { 1, 0, -1, 0 };
+const int dy[] = { 0, 1, 0, -1 };
+ 
+inline bool in(int x, int y){
+    return 0 <= x && x < 4 && 0 <= y && y < 2;
+}
+ 
+int hashh(const int v[8]){
+    int res = 0;
+    rep(i, 8){
+        res <<= 3;
+        res |= v[i];
+    }
+    return res;
+}
+ 
+void disp(state s){
+    rep(i, 2){
+        rep(j, 4){
+            cout << s.v[i * 2 + j];
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+ 
+bool dp[1 << 24] = {};
+ 
+int main(){
+    int fin = 0;
+    rep(i, 8){
+        fin <<= 3; fin |= i;
+    }
+ 
+    while (1){
+        memset(dp, 0, sizeof(dp));
+        state s;
+        s.step = 0;
+        rep(i, 8){
+            if (!(cin >> s.v[i])) return 0;
+            if (s.v[i] == 0){
+                s.x = i % 4;
+                s.y = i / 4;
+            }
+        }
+ 
+        queue<state> q;
+        q.push(s);
+        int ans = -1;
+        while (q.size()){
+            state s = q.front();
+            q.pop();
+ 
+            int h = hashh(s.v);
+            if (dp[h]) continue;
+            dp[h] = true;
+ 
+            // disp(s);
+ 
+            if (h == fin){
+                ans = s.step;
+                break;
+            }
+ 
+            rep(i, 4){
+                int xx = s.x + dx[i];
+                int yy = s.y + dy[i];
+                if (in(xx, yy)){
+                    state next = s;
+                    next.x = xx;
+                    next.y = yy;
+                    int n_space = xx + 4 * yy;
+                    swap(next.v[n_space], next.v[s.x + s.y * 4]);
+                    next.step++;
+                    q.push(next);
+                }
+            }
+        }
+ 
+        cout << ans << endl;
+    }
+}

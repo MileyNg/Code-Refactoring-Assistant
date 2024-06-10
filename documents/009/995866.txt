@@ -1,0 +1,95 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+#define MAX 30
+#define INF 10000000.0
+struct S{
+	int e,s,b;
+};
+
+struct S2{
+	int d,c,to;
+};
+
+int main(){
+
+	int n,m;
+	int s,g;
+	int x,y,d,c;
+	int min;
+	int size;
+	double cost[MAX+1][MAX+1][MAX+1];
+	S point,tmp;
+	int pe,ps,pb,psj;
+	S2 nod;
+	vector<S2> ed[MAX+1];
+	int edd,edc,edt;
+	queue<S> no;
+
+	while(1){
+
+		cin>>n>>m;
+		if(n==0&&m==0) break;
+
+		for(int i=1;i<=n;i++){
+			if(!ed[i].empty()) ed[i].clear();
+		}
+
+		for(int i=0;i<=30;i++){
+			for(int j=0;j<=30;j++){
+				for(int k=0;k<=30;k++){
+					cost[i][j][k]=INF;
+				}
+			}
+		}
+
+		cin>>s>>g;
+		point.e=s,point.s=0,point.b=0;
+		cost[0][s][0]=0;
+
+		for(int i=0;i<m;i++){
+			cin>>x>>y>>d>>c;
+			nod.c=c,nod.d=d,nod.to=y;;
+			ed[x].push_back(nod);
+			nod.to=x;
+			ed[y].push_back(nod);
+		}
+
+		no.push(point);
+		while(!no.empty()){
+			point=no.front();
+			no.pop();
+			ps=point.s,pb=point.b,pe=point.e;
+			size=ed[pe].size();
+			for(int i=0;i<size;i++){
+				edd=ed[pe][i].d,edc=ed[pe][i].c,edt=ed[pe][i].to;
+				if(pb!=edt){
+					for(int j=-1;j<=1;j++){
+						psj=ps+j;
+						if(psj>0&&psj<=edc){
+							if(cost[psj][edt][pe]>cost[ps][pe][pb]+(double)edd/psj){
+								cost[psj][edt][pe]=cost[ps][pe][pb]+(double)edd/psj;
+								tmp.e=edt;
+								tmp.s=psj;
+								tmp.b=pe;
+								no.push(tmp);
+							}
+						}
+					}
+				}
+			}
+		}
+		min=0;
+		for(int i=1;i<=30;i++){
+			if(cost[1][g][i]<cost[1][g][min]) min=i;
+		}
+		if(min==0) printf("unreachable\n");
+		else printf("%.5f\n",cost[1][g][min]);
+	}
+
+}

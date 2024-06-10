@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+#define MAX 50
+
+int main(){
+
+	int N,K;
+	int m,bi;
+	int R;
+	int p,q;
+	int cnt=0;
+	vector<int> e[MAX+1];
+	vector<int> b;
+	bool f[MAX+1];
+
+	for(int i=0;i<=MAX;i++) f[i]=false;
+
+	cin>>N>>K;
+	for(int i=0;i<K;i++){
+		cin>>m;
+		for(int j=0;j<m;j++){
+			cin>>bi;
+			b.push_back(bi);
+		}
+		for(int j=0;j<b.size();j++){
+			for(int k=0;k<b.size();k++){
+				if(b[j]!=b[k]){
+					e[b[j]].push_back(b[k]);
+					e[b[k]].push_back(b[j]);
+				}
+			}
+		}
+		if(!b.empty()) b.clear();
+	}
+
+	cin>>R;
+
+	for(int i=0;i<R;i++){
+		cin>>p>>q;
+		for(int i=0;i<e[p].size();i++){
+			if(e[p][i]==q){
+				f[p]=true;
+				f[q]=true;
+			}
+		}
+	}
+
+	for(int i=1;i<=N;i++){
+		if(f[i]==true) cnt++;
+	}
+
+	cout<<cnt<<endl;
+
+	return 0;
+}

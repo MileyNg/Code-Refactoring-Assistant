@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <memory.h>
+
+int main(void) {
+	const char DIR[4] = {'L', 'U', 'R', 'D'};
+	const int MOVE[4][2] = {{0,-1}, {-1,0}, {0,1}, {1,0}};
+	int i, j, n;
+	int r, c, s, d;
+	char buff[128][128];
+	int elem[128][128][4];
+	
+	memset(buff, 0x00, sizeof(buff));
+	memset(elem, 0x00, sizeof(elem));
+
+	n = 1;
+	while(scanf("%s\n", &buff[n][1]) == 1) n++;
+	
+	// 入力値を格子に変換
+	for(i=1,s=strlen(&buff[2][1]);i<=n/2;i++) {
+		for(j=1;j<=s;j++) {
+			elem[i-1][j-1][0] = buff[i*2-1][j-1]=='1';	// 左
+			elem[i-1][j-1][1] = buff[i*2-2][j]=='1';	// 上
+			elem[i-1][j-1][2] = buff[i*2-1][j]=='1';	// 右
+			elem[i-1][j-1][3] = buff[i*2][j]=='1';		// 下
+//			printf("%d %d %d %d\n", elem[i-1][j-1][0], elem[i-1][j-1][1], elem[i-1][j-1][2], elem[i-1][j-1][3]);
+		}
+	}
+	
+	r = c = 0;
+	d = 2;
+	do {
+		if(elem[r][c][(d+3)%4]==1) {	// 左
+			d = (d+3) % 4;
+		} else if(elem[r][c][d]==1) {	// 正面
+			;
+		} else if(elem[r][c][(d+1)%4]==1) {	// 右
+			d = (d+1) % 4;
+		} else if(elem[r][c][(d+2)%4]==1) {	// 背後
+			d = (d+2) % 4;
+		}
+		r += MOVE[d][0];
+		c += MOVE[d][1];
+		printf("%c", DIR[d]);
+		if(r==0 && c==0) break;
+	} while(1);
+	printf("\n");
+	
+	return 0;
+}

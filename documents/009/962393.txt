@@ -1,0 +1,24 @@
+#include <iostream>
+#include <string>
+
+int main(){
+	int num;
+	std::string str;
+	const std::string wrong_word("Hoshino");
+	const std::string right_word("Hoshina");
+	std::cin >> num;
+	std::cin.ignore();
+	
+	while(num != 0){
+		std::getline(std::cin, str);
+		std::string::size_type pos = str.find(wrong_word);
+		
+		while(pos != std::string::npos){
+			str.replace(pos, wrong_word.length(), right_word);
+			pos = str.find(wrong_word);
+		}
+		
+		std::cout << str << std::endl;
+		--num;
+	}
+}

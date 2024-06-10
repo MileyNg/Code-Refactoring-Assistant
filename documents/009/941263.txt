@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+static const int ABSENCE = -1;
+
+int CountWays(int n, int x) {
+	int count = 0;
+	for (int i = 1; i <= n; i++) {
+		for (int j = i + 1; j <= n; j++) {
+			for (int k = j + 1; k <= n; k++) {
+				if ((i + j + k) == x) {
+					count++;
+				}
+			}
+		}
+	}
+	return count;
+}
+
+int main(void) {
+	int n = 0, x = 0;
+	
+	for (;;) {
+		scanf("%d %d", &n, &x);
+		if ((n == 0) && (x == 0)) {
+			break;
+		}
+		printf("%d\n", CountWays(n, x));
+	}
+	return 0;
+}

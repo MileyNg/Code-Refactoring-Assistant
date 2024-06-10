@@ -1,0 +1,55 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+#define P complex<double>
+#define x real()
+#define y imag()
+const int N = 3;
+
+int main() {
+  int Q, tmp[N][3];
+  REP(i, 2) REP(j, 2) cin >>tmp[i][j];
+  cin >>Q;
+  REP(q, Q){
+    P p[N];
+    REP(i, 2) p[i] = P(tmp[i][0], tmp[i][1]);
+    cin >>tmp[2][0] >>tmp[2][1];
+    p[2] = P(tmp[2][0], tmp[2][1]);
+    p[1] -= p[0]; p[2] -= p[0];
+    //cout <<p[1] <<", " <<p[2] <<endl;
+    double lp1 = abs(p[1]), lp2 = abs(p[2]);
+    double a = abs(imag(conj(p[1]) * p[2])) / 2.0;
+    //cout <<abs(imag(conj(p[1]) * p[2])) <<endl;
+    double lp2t = 2 * a / lp1;
+    double lt = sqrt(lp2 * lp2 - lp2t * lp2t);
+    p[1] = p[1] * (lt / lp1);
+    //cout <<"lp1 = " <<lp1 <<", lp2 = " <<lp2 <<", a = " <<a <<", lp2t = " <<lp2t <<", lt = " <<lt <<endl;
+    double ansy = (p[1] + p[0]).y;
+    double ansx = (p[1] + p[0]).x;
+    if(p[2].y < p[0].y) ansy *= -1;
+    if(p[2].x < p[0].x) ansx *= -1;
+    printf("%.9f %.9f\n", ansx, ansy);
+  }
+  return 0;
+}

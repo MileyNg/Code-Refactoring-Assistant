@@ -1,0 +1,38 @@
+#include<stdio.h>
+int main(void){
+    int n;
+
+    for(scanf("%d",&n);n>0;n--){
+        char a[8],w;
+        int b[8],s[8],i,j,k,x,y,work;
+        scanf("%s",a);
+
+        for(i=0;i<7;i++){
+            for(j=i+1;j<8;j++){
+                if(a[i]<a[j]){
+                    w=a[i];
+                    a[i]=a[j];
+                    a[j]=w;
+                }
+            }
+        }
+        for(i=0;i<8;i++){
+            b[i]=a[i]-'0';
+        }
+        for(i=0;i<8;i++){
+            s[i]=b[7-i];
+        }
+        
+        for(i=7;i>=0;i--){
+            b[i]-=s[i];
+            if(b[i]<0){
+                b[i]+=10;
+                b[i-1]--;
+            }
+        }
+        for(i=0;i<8;i++)printf("%d",b[i]);
+        puts("");
+
+    }
+    return 0;
+}

@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+const double EPS = 1e-8;
+typedef double D;
+
+struct P {
+  D x, y;
+  P(D xs, D ys) : x(xs), y(ys) { }
+  P() { }
+};
+
+P operator -(P a, P b) { return P(a.x - b.x, a.y - b.y); }
+
+struct L {
+  P a, b;
+  L(P as, P bs) : a(as), b(bs) { }
+};
+
+int sign(D a, D b = 0.0) {
+  if(a < b - EPS) return -1;
+  if(a > b + EPS) return +1;
+  return 0;
+}
+
+P vec(P from, P to) { return to - from; }
+D inp(P a, P b) { return a.x*b.x + a.y*b.y; }
+D outp(P a, P b) { return a.x*b.y - a.y*b.x; }
+
+bool iLL(L l, L m) {
+  return sign(outp(vec(l.a, l.b), vec(m.a, m.b))) != 0 || // テ・ツケツウティツ。ツ古」ツ?ァテ」ツ?ェテ」ツ??
+    sign(outp(vec(l.a, l.b), vec(l.a, m.a))) == 0;   // テ・ツ青古」ツ?佚ァツ崢エテァツキツ?
+}
+
+int main() {
+  int N; cin >> N;
+  while(N--) {
+    double x1, y1, x2, y2, x3, y3, x4, y4;
+    cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
+    if(iLL(L(P(x1,y1), P(x2,y2)), L(P(x3,y3),P(x4,y4))) == 0) {
+      cout << "YES" << endl;
+    }
+    else {
+      cout << "NO" << endl;
+    }
+  }
+}

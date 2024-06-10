@@ -1,0 +1,21 @@
+if __FILE__ == $0
+  while line = gets
+    cards = (1..10).to_a
+    c1, c2, c3 = line.split.map{|i| i.to_i}
+    cards.delete(c1)
+    cards.delete(c2)
+    cards.delete(c3)
+    rest = 20 - (c1 + c2)
+    matchCards = 0
+    cards.each do |c|
+      if c <= rest
+        matchCards += 1
+      end
+    end
+    if (matchCards.to_f / cards.length.to_f) >= 0.5
+      puts "YES"
+    else
+      puts "NO"
+    end
+  end
+end

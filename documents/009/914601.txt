@@ -1,0 +1,14 @@
+#include<stdio.h>
+
+main(){
+  int a, b, rest;
+  scanf("%d%d", &a, &b);
+
+  rest = a % b;
+  while(rest != 0){
+    a = b;
+    b = rest;
+    rest = a % b;
+  }
+  printf("%d\n", b);
+}

@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+
+int main(void) {
+    int N, c[10000];
+    int l, u, l1, u1, l2, u2, c1, c2, i, j, color, score, min_score;
+    while (scanf("%d\n", &N) != EOF && N) {
+        for (i = 0; i < N; i++) {
+            scanf("%d", &c[i]);
+        }
+        min_score = N;
+        for (i = 0; i < N; i++) {
+            for (j = 1; j <= 2; j++) {
+                color = (c[i] - 1 + j) % 3 + 1;
+                l = u = i;
+                l1 = u1 = l2 = i;
+                u2 = i + 1;
+                while (1) {
+                    for (; l1 > 0; l1--) {
+                        if (c[l1-1] != color) break;
+                    }
+                    for (; u2 < N; u2++) {
+                        if (c[u2] != color) break;
+                    }
+                    if (u1 - l1 + u2 - l2 < 4) break;
+                    l = l1;
+                    u = u2;
+                    color = c[u2];
+                    u1 = l1;
+                    l2 = u2;
+                }
+                score = N - (u - l);
+                if (score < min_score) min_score = score;
+            }
+            
+        }
+        printf("%d\n", min_score);
+    }
+    return 0;
+}

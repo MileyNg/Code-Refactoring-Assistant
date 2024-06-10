@@ -1,0 +1,122 @@
+#include<stdio.h>
+#define NIL -1
+
+typedef struct{
+  int parent,sibling,leftgaki,rightgaki,degree;
+}Node;
+
+Node tree[100001];
+int count=0,count3=0; //再帰関数、子供表示用
+int count2[100001];
+int n;
+int retdepth(int id){ //再帰で根っこまでの長さを計る
+  if (tree[id].parent==NIL){
+    return count;
+  } else {
+    count++;
+    return retdepth(tree[id].parent);
+  }
+}
+
+void retheight(int id,int countid){ //逆に葉っぱまでの長さを返す
+  int i,newcountid;
+  for (i=1;i<n;i++){
+    if (count2[i]==0){
+      newcountid=i;
+      break;
+    }
+  }
+  //printf("->tree[%d]search. countid=%d, newcountid=%d, left=%d,right=%d.height=%d\n",id,countid,newcountid,tree[id].leftgaki,tree[id].rightgaki,count2[countid]);
+  if (tree[id].leftgaki!=NIL && tree[id].rightgaki!=NIL){
+    count2[countid]++;
+    count2[newcountid]++;
+    retheight(tree[id].leftgaki,countid);
+    retheight(tree[id].rightgaki,newcountid);
+  } else if (tree[id].leftgaki!=NIL){
+    count2[countid]++;
+    retheight(tree[id].leftgaki,countid);
+
+  } else if (tree[id].rightgaki!=NIL){
+    count2[countid]++;
+    retheight(tree[id].rightgaki,countid);
+
+  } else {
+    count3=countid;
+  }
+
+}
+
+int returnheight(int id){
+  int i,ret=0;
+  for (i=0;i<n;i++){
+    count2[i]=0;
+  }
+  retheight(id,0);
+  for(i=0;i<count3+1;i++){
+    if(ret<count2[i]){
+      ret = count2[i];
+    }
+  }
+  return ret;
+
+}
+
+/*
+void dispdegree(int id){
+  if (id!=NIL){
+    if (count!=0){
+      printf(", ");
+    }
+    printf("%d",id);
+    count++;
+    dispdegree(tree[id].right);
+  }
+}
+*/
+
+int main(){
+  int i,j,nownode,deg,leftgaki,rightgaki;
+
+  scanf("%d",&n);
+  for (i=0;i<n;i++){
+    tree[i].parent=tree[i].degree=tree[i].sibling=tree[i].leftgaki=tree[i].rightgaki=NIL;
+    //NILで初期化を行う
+    count2[i]=0;
+  }
+
+  for (i=0; i<n; i++){
+    scanf("%d",&nownode);
+    scanf("%d%d",&leftgaki,&rightgaki);
+    count=0;
+    if (leftgaki!=-1){
+      tree[leftgaki].parent=nownode;
+      tree[leftgaki].sibling=rightgaki;
+      tree[i].leftgaki=leftgaki;
+      count++;
+    }
+    if (rightgaki!=-1){
+      tree[rightgaki].parent=nownode;
+      tree[rightgaki].sibling=leftgaki;
+      tree[i].rightgaki=rightgaki;
+      count++;
+    }
+    tree[i].degree=count;
+  }
+
+  //---------------------
+  //表示部分
+  
+  for(i=0; i<n; i++){
+    count=count3=0;
+    printf("node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d, ",i,tree[i].parent,tree[i].sibling,tree[i].degree,retdepth(i),returnheight(i));
+    if(tree[i].parent == NIL){
+      printf("root\n");
+    } else if(tree[i].leftgaki == NIL && tree[i].rightgaki == NIL){
+      printf("leaf\n");
+    } else {
+      printf("internal node\n");
+    }
+  }
+  
+  return 0;
+}

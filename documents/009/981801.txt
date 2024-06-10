@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+	double x, y;
+	int walk, roll;
+	int now_roll;
+	
+	x = y = 0.0;
+	now_roll = 90.0;
+	scanf("%d,%d", &walk, &roll);
+	while (walk != 0 || roll != 0){
+		x += walk * cos(now_roll * M_PI / 180);
+		y += walk * sin(now_roll * M_PI / 180);
+		now_roll = (now_roll - roll + 360) % 360;
+		
+		scanf("%d,%d", &walk, &roll);
+	}
+	
+	printf("%d\n", (int)x);
+	printf("%d\n", (int)y);
+	
+	return 0;
+}

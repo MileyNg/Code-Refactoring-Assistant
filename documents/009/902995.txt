@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <bitset>
+using namespace std;
+const int DAY = 30;
+int main(){
+  int n;
+  while(cin >> n, n!=0){
+    vector<long long > sison(n+1,1);
+    for(int i = 0;i < n;i++){
+      int f;cin >> f;
+      for(int j = 0;j < f;j++){
+	long long tmp;
+	cin >> tmp;
+	tmp = 1 << tmp;
+	sison[i] = (sison[i] | (tmp));
+      }
+      //      cout << bitset<10>(sison[i]) << endl;
+    }    
+    vector<vector<long long > > dp(DAY+1,vector<long long >(n,0));
+    for(int i = 0;i < n;i++){
+      long long tmp = 1;
+      tmp = tmp << (i+1);
+      dp[0][i] = tmp;
+      dp[0][i] = (dp[0][i] | 1);
+      //cout << (dp[0][i]) << "ddddddddddddd" << endl;
+    }
+    int flag =0;
+    int ans = -1;
+    //    cout << all << endl;
+    for(int i = 1;i <= DAY;i++){
+      for(int j = 0;j < n;j++){
+	dp[i][j] = dp[i-1][j];
+      }
+      for(int j = 0;j < n;j++){
+	for(int k = 0;k < n;k++){
+	  long long tmp = 1;
+	  tmp = (tmp<<i);
+	  if(((sison[j] & sison[k] & tmp) == tmp) && k != j){
+	    dp[i][j] = dp[i][j] | dp[i][k];
+	    //    cout << bitset<6>(dp[i][j]) << "$$$$$$$$$$$$$$$$$" << endl;
+	    //cout << "ddddd" << i << "ddd" << j << "ddd" <<k<<endl;
+	  }
+	}
+      }
+      for(int j = 0;j < n;j++){
+	//cout << (dp[i][j]) << endl;
+	long long tmp = 1;
+	tmp = ((tmp<<(n+1))-1);
+	if(dp[i][j] == tmp){
+	  ans =  i;
+	  flag = 1;
+	  break;
+	}
+      }
+      if(flag == 1)break;
+    }
+    cout << ans << endl;
+  }
+  return 0;
+}

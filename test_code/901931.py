@@ -1,0 +1,1 @@
+print sum([input() for i in [0]*10])

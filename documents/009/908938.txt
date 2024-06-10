@@ -1,0 +1,37 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n,q;
+	int ey,wy;
+	string en;
+	map<pair<int,int>, string>::iterator it;
+
+	while(1){
+		cin>>n>>q;
+		if(n+q==0) break;
+
+		map<pair<int,int>, string> mp;
+		for(int i1=0;i1<n;i1++){
+			cin>>en>>ey>>wy;
+			mp[make_pair(wy-ey+1,wy)]=en;
+		}
+
+		for(int i1=0;i1<q;i1++){
+			cin>>ey;
+			for(it=mp.begin();it!=mp.end();it++){
+				if((*it).first.first <= ey && (*it).first.second >= ey) {
+					cout<<(*it).second<<" "<<ey-(*it).first.first+1<<endl;
+					break;
+				}
+			}
+			if(it==mp.end()) cout<<"Unknown"<<endl;
+		}
+	}
+
+	return 0;
+}

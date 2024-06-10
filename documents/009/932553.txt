@@ -1,0 +1,40 @@
+# 線路の情報の数, 駅の数
+n, m = gets.split.map(&:to_i)
+m += 1
+
+# 線路の情報
+graph = Array.new(m) { [] }
+costs = {}
+times = {}
+n.times do
+  a, b, cost, time = gets.split.map(&:to_i)
+  graph[a] << b; graph[b] << a
+  costs[[a,b]] = costs[[b,a]] = [cost,costs[[a,b]]].compact.min
+  times[[a,b]] = times[[b,a]] = [time,times[[a,b]]].compact.min
+end
+
+# ワーシャルフロイト法
+inf = 1000000000
+dp = {}
+m.times do |i|
+  next if i == 0
+  m.times do |j|
+    next if j == 0
+    dp[[i,j,0]] = i == j ? 0 : costs[[i,j]] || inf
+    dp[[i,j,1]] = i == j ? 0 : times[[i,j]] || inf
+  end
+end
+
+m.times do |k|
+  next if k == 0
+  m.times do |i|
+    next if i == 0
+    m.times do |j|
+      next if j == 0
+      dp[[i,j,0]] = [dp[[i,j,0]], dp[[i,k,0]]+dp[[k,j,0]]].min
+      dp[[i,j,1]] = [dp[[i,j,1]], dp[[i,k,1]]+dp[[k,j,1]]].min
+    end
+  end
+end
+
+gets.to_i.times { puts dp[gets.split.map(&:to_i)] }

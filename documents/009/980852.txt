@@ -1,0 +1,55 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <cstring>
+#include <cmath>
+#include <deque>
+#include <set>
+
+#define rep_(v, f, l) for (auto v = (f); v != (l); ++v)
+#define rep(v, n) rep_(v, 0, n)
+#define lep(v, o) rep_(v, o.begin(), o.end())
+
+using namespace std;
+
+typedef long long int lint;
+
+const int MOD = 10007;
+
+template<typename T> inline bool in(T& x){ return cin >> x; }
+template<typename T> inline T in(){T x; cin >> x; return x; }
+
+int main()
+{
+	int N;
+	string need;
+
+	in(N), in(need);
+
+	int joi_map[255];
+	joi_map['J'] = 1;
+	joi_map['O'] = 2;
+	joi_map['I'] = 4;
+
+	int dp[N + 1][8];
+	rep(i, N + 1) rep(j, 8) dp[i][j] = 0;
+
+	dp[0][1] = 1;
+	rep_(i, 1, N + 1)
+		rep(j, 8)
+			rep(k, 8)
+				if ((j & joi_map[need[i]]) && (j & k))
+					(dp[i][j] += dp[i - 1][k]) %= MOD;
+
+	int ans = 0;
+	rep(i, 8)
+		(ans += dp[N][i]) %= MOD;
+	printf("%d\n", ans);
+
+	return (0);
+}

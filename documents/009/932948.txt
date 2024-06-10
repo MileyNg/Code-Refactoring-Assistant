@@ -1,0 +1,82 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int w, h;
+string field[21];
+
+void print_field() {
+    for (int i = 0; i < h; i++) {
+        cout << field[i] << endl;
+    }
+}
+
+void shoot(int x, int y) {
+    int dx, dy;
+    switch (field[y][x]) {
+        case '^': dx = 0; dy = -1; break;
+        case 'v': dx = 0; dy = 1; break;
+        case '<': dx = -1; dy = 0; break;
+        case '>': dx = 1; dy = 0; break;
+    }
+    while (1) {
+        x += dx;
+        y += dy;
+        if (x < 0 || w <= x || y < 0 || h <= y || field[y][x] == '#') {
+            return;
+        }
+        if (field[y][x] == '*') {
+            field[y][x] = '.';
+            return;
+        }
+    }
+}
+
+void solve() {
+    int x, y;
+    cin >> h >> w;
+    for (int i = 0; i < h; i++) {
+        cin >> field[i];
+        for (int j = 0; j < field[i].size(); j++) {
+            char c = field[i][j];
+            if (c == '<' || c == '^' || c == '>' || c == 'v') {
+                x = j; y = i;
+            }
+        }
+    }
+    int n;
+    string s;
+    cin >> n >> s;
+    for (char c : s) {
+        if (c == 'S') shoot(x, y);
+        else {
+            int dx, dy;
+            char mark;
+            switch (c) {
+                case 'U': dx = 0; dy = -1; mark = '^'; break;
+                case 'D': dx = 0; dy = 1; mark = 'v'; break;
+                case 'L': dx = -1; dy = 0; mark = '<'; break;
+                case 'R': dx = 1; dy = 0; mark = '>'; break;
+            }
+            int nx = x + dx;
+            int ny = y + dy;
+            field[y][x] = mark;
+            if (0 <= nx && nx < w && 0 <= ny && ny < h && field[ny][nx] == '.') {
+                field[y][x] = '.';
+                field[ny][nx] = mark;
+                x = nx;
+                y = ny;
+            }
+        }
+    }
+    print_field();
+}
+
+int main() {
+    int t;
+    for (cin >> t; t; t--) {
+        solve();
+        if (t != 1) cout << endl;
+    }
+    return 0;
+}

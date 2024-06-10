@@ -1,0 +1,66 @@
+#include <iostream>
+#include <map>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <math.h>
+
+using namespace std;
+
+#define T 800
+
+int main(int argc, char const *argv[])
+{
+	int N,M;
+	int r;
+	int t,n,m,s;
+	int q;
+	int ts,te;
+	int ans;
+
+	while(1){
+		cin>>N>>M;
+		if(N+M==0) break;
+
+		map<int,vector<int> > lio;
+
+		for(int i1=0;i1<M;i1++){
+			vector<int> v(T);
+			fill(v.begin(), v.end(),0);
+			lio[i1]=v;
+		}
+
+		cin>>r;
+		for(int i1=0;i1<r;i1++){
+			cin>>t>>n>>m>>s;
+			vector<int> v=lio[m-1];
+			if(s==1) v[t-540]=1;
+			else v[t-540]=-1;
+			lio[m-1]=v;
+		}
+
+		for(int i1=0;i1<M;i1++){
+			vector<int> v=lio[i1];
+			for(int i2=1;i2<T;i2++){
+				v[i2]=v[i2-1]+v[i2];
+			}
+			lio[i1]=v;
+		}
+
+		cin>>q;
+		for(int i1=0;i1<q;i1++){
+			cin>>ts>>te>>m;
+
+			vector<int> v=lio[m-1];
+			ans=0;
+			for(int i2=ts-540;i2<te-540;i2++){
+				if(v[i2]>0) ans++;
+			}
+			cout<<ans<<endl;
+		}
+
+
+
+	}
+	return 0;
+}

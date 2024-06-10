@@ -1,0 +1,227 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define IINF (INT_MAX)
+#define MAX_N 110
+#define MAX_T 1010
+#define EPS (1e-7)
+#define equals(a,b) (fabs((a)-(b))<EPS)
+#define pow2(a) ((a)*(a))
+
+using namespace std;
+
+const bool DEBUG = false;
+
+struct Data{
+  int robot_1,robot_2;
+  double t;
+  Data(int robot_1=IINF,int robot_2=IINF,double t=IINF):robot_1(robot_1),robot_2(robot_2),t(t){}
+  bool operator < (const Data& a)const{
+    return t < a.t;
+  }
+  bool operator == (const Data& a)const{
+    return equals(t,a.t) && robot_1 == a.robot_1 && robot_2 == a.robot_2;
+  }
+};
+
+typedef pair<int,int> ii;
+typedef pair<double,double> dd;
+
+int N,T,limit[MAX_N];
+double R,t[MAX_N][MAX_T],sx[MAX_N][MAX_T],sy[MAX_N][MAX_T],vx[MAX_N][MAX_T],vy[MAX_N][MAX_T];
+string nickname[MAX_N];
+
+inline bool isValid(dd a,dd b){ return !( b.second < a.first || a.second < b.first ); }
+
+inline double getDist(double x,double y){ return sqrt(pow2(x)+pow2(y)); }
+
+void compute(){
+
+  vector<Data> buf;
+
+  rep(i,N){
+    REP(j,i+1,N){
+      if( i == j ) continue;
+      if(DEBUG)cout << endl << "check " << nickname[i] << "," << nickname[j] << " ----------------" << endl; 
+      // rang [pos_,pos_+1]
+      int pos_i = 0,pos_j = 0;
+      dd range_i = dd(0,t[i][1]);
+      dd range_j = dd(0,t[j][1]);
+      while( pos_i+1 < limit[i] && pos_j+1 < limit[j] ){
+	if(DEBUG)cout << "start range [" << range_i.first << "," << range_i.second << "] [" << range_j.first << "," << range_j.second << "]" << endl;
+	while( pos_i < limit[i] && pos_j < limit[j] && !isValid(range_i,range_j) ){
+	  if( range_i.second < range_j.second ){
+	    if( pos_i+2 >= limit[i] )break;
+	    range_i = dd(t[i][pos_i+1],t[i][pos_i+2]);
+	    pos_i++;
+	  } else{
+	    if( pos_j+2 >= limit[j] )break;
+	    range_j = dd(t[j][pos_j+1],t[j][pos_j+2]);
+	    pos_j++;
+	  }
+	}
+
+	if(DEBUG)cout << "adjust range [" << range_i.first << "," << range_i.second << "] [" << range_j.first << "," << range_j.second << "]" << endl;
+
+	if( !isValid(range_i,range_j) )break;
+
+	double xi = sx[i][pos_i], yi = sy[i][pos_i];
+	double vxi = vx[i][pos_i], vyi = vy[i][pos_i];
+
+	double xj = sx[j][pos_j], yj = sy[j][pos_j];
+	double vxj = vx[j][pos_j], vyj = vy[j][pos_j];
+
+	double dx = xi - xj, dy = yi - yj, dvx = vxi - vxj, dvy = vyi - vyj;
+	double a = pow2(dvx) + pow2(dvy), b = 2*dx*dvx+2*dy*dvy, c = pow2(dx)+pow2(dy)-pow2(R);
+
+	if(DEBUG){
+	cout << "information about robot [[" << nickname[i] << "]]" << endl;
+	cout << "coordinator : (" << xi << "," << yi << ") to (" << sx[i][pos_i+1] << "," << sy[i][pos_i+1] << ")" << endl;
+	cout << "velocity    : (" << vxi << "," << vyi << ")" << endl;
+	cout << "information about robot [[" << nickname[j] << "]]" << endl;
+	cout << "coordinator : (" << xj << "," << yj << ") to (" << sx[j][pos_j+1] << "," << sy[j][pos_j+1] << ")" << endl;
+	cout << "velocity    : (" << vxj << "," << vyj << ")" << endl;
+	cout << "dx : " << dx << " dy : " << dy << " dvx : " << dvx << " dvy : " << dvy << endl;
+	cout << a << "t^2 + " << b << "t + " << c << endl;
+	}
+
+	vector<double> ans_t;
+	if( equals(a,0.0)){
+	  if( !equals(b,0.0) ) ans_t.push_back(-c/b);
+	} else {
+	  double D = b*b - 4*a*c;
+	  if( equals(D,0.0) || D > 0 ){
+	    double tmp_t = ( -b - sqrt( D ) ) / ( 2.0 * a ); 
+	    if( equals(tmp_t,0.0) || tmp_t > 0 ) ans_t.push_back(tmp_t);
+	    tmp_t = ( -b + sqrt( D ) ) / ( 2.0 * a ); 
+	    if( equals(tmp_t,0.0) || tmp_t > 0 ) ans_t.push_back(tmp_t);
+	  }
+	}
+
+	dd range_t;
+	dd cmp_range_i = range_i;
+	dd cmp_range_j = range_j;
+	if( ans_t.empty() ) goto Increment;
+
+	if( ans_t.size() >= 2 && ans_t[0] > ans_t[1] ) swap(ans_t[0],ans_t[1]);
+
+	range_t = dd(ans_t[0],ans_t.back());
+	if(DEBUG)cout << "range_t = (" << range_t.first << "," << range_t.second << ")" << endl;
+	if(DEBUG)cout << "isValid ??? [" << range_i.first << "," << range_i.second << "] [" << range_t.first << "," << range_t.second << "] " << isValid(range_i,range_t)  << endl;
+	if(DEBUG)cout << "isValid ??? [" << range_j.first << "," << range_j.second << "] [" << range_t.first << "," << range_t.second << "] " << isValid(range_j,range_t) << endl;
+	cmp_range_i.second -= cmp_range_i.first, cmp_range_i.first = 0;
+	cmp_range_j.second -= cmp_range_j.first, cmp_range_j.first = 0;
+	if( isValid(cmp_range_i,range_t) && isValid(cmp_range_j,range_t) ){
+	  if(DEBUG)cout << "STORE ::::::::::::: the answer" << endl;
+	  buf.push_back(Data(i,j,ans_t[0]));
+	  if( ans_t.size() >= 2 ) buf.push_back(Data(i,j,ans_t[1]));
+	}
+
+	Increment:;
+
+	if(DEBUG){
+	if( ans_t.empty() ) cout << "no answer" << endl;
+	else if( ans_t.size() == 1 ) cout << "answer : " << ans_t[0] << endl;
+	else cout << "answer : " << ans_t[0] << "," << ans_t[1] << endl;
+	}
+
+	if( range_i.second < range_j.second ){
+	  if( pos_i+2 >= limit[i] )break;
+	  range_i = dd(t[i][pos_i+1],t[i][pos_i+2]);
+	  pos_i++;
+	} else{
+	  if( pos_j+2 >= limit[j] )break;
+	  range_j = dd(t[j][pos_j+1],t[j][pos_j+2]);
+	  pos_j++;
+	}
+
+	if(DEBUG){
+	cout << "next range [" << range_i.first << "," << range_i.second << "] [" << range_j.first << "," << range_j.second << "]" << endl;
+	cout << endl;
+	}
+      }
+
+    }
+  }
+
+  if(DEBUG)cout << endl << endl;
+  sort(buf.begin(),buf.end());
+  if(DEBUG){
+  rep(i,buf.size()){
+    cout << nickname[buf[i].robot_1] << "," << nickname[buf[i].robot_2] << " IN " << buf[i].t << endl;
+  }
+  }
+
+  bool *informer = new bool[N];
+  rep(i,N)informer[i] = false;
+  informer[0] = true;
+  REP(i,1,N){
+    double dist = getDist(sx[0][0]-sx[i][0],sy[0][0]-sy[i][0]);
+    if( equals(dist,R) || dist < R ) informer[i] = true;
+  }
+
+  int idx=0;
+  while( idx < buf.size() ){
+    double timeline = buf[idx].t;
+    vector<ii> vec;
+    while( idx < buf.size() && equals(buf[idx].t,timeline) ){
+      vec.push_back(ii(buf[idx].robot_1,buf[idx].robot_2));
+      idx++;
+    }
+
+    bool update = true;
+    while(update){
+      update = false;
+      rep(j,vec.size()){
+	int a = vec[j].first, b = vec[j].second;
+	if(  informer[a] &&  informer[b] ) continue;
+	if( !informer[a] && !informer[b] ) continue;
+	informer[a] = informer[b] = update = true;
+      }
+    }
+
+  }
+
+  vector<string> answer;
+  rep(i,N)if(informer[i])answer.push_back(nickname[i]);
+  sort(answer.begin(),answer.end());
+  rep(i,answer.size())cout << answer[i] << endl;
+
+  delete [] informer;
+
+}
+
+int main(){
+  while(cin >> N >> T >> R, N|T|(int)R){
+    rep(i,N){
+      int dex = 1;
+      cin >> nickname[i];
+      cin >> t[i][0] >> sx[i][0] >> sy[i][0];
+      while(true){
+	cin >> t[i][dex] >> vx[i][dex-1] >> vy[i][dex-1];
+	sx[i][dex] = sx[i][dex-1] + ( t[i][dex]-t[i][dex-1] ) * vx[i][dex-1];
+	sy[i][dex] = sy[i][dex-1] + ( t[i][dex]-t[i][dex-1] ) * vy[i][dex-1];
+	++dex;
+	if( t[i][dex-1] == T ) break;
+      }
+      limit[i] = dex;
+    }
+
+    if(DEBUG){
+    rep(i,N){
+      cout << "information about " << i << " -th robot " << nickname[i] << endl;
+      cout << "limit = " << limit[i] << endl;
+      rep(j,limit[i]){
+	cout << "time " << t[i][j] << endl;
+	cout << "start position (" << sx[i][j] << "," << sy[i][j] << ") " << endl;
+	cout << "velocity (" << vx[i][j] << "," << vy[i][j] << ")" << endl;
+	cout << endl;
+      }
+      cout << endl;
+    }
+    }
+    compute();
+  }
+  return 0;
+}

@@ -1,0 +1,59 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+void push(int[], int);
+int pop(int[]);
+int stackEmpty(int[]);
+int add(int[]);
+int top = 0;
+
+int main(){
+  int x, n[100];
+  char s[100];
+
+  while( scanf("%s", s) != EOF ){
+    if ( s[0] == '+' ){
+      x = add(n);
+      pop(n);
+      pop(n);
+      push(n, x);
+    } else if ( s[0] == '-' ){
+      pop(n);
+
+    } else if ( s[0] == '*' ){
+      pop(n);
+
+    } else {
+      x = atoi(s);
+      push(n, x);
+    }
+  }
+  printf("%d\n", pop(n));
+  return 0;
+}
+
+void push(int n[], int x){
+  n[top] = x;
+  top += 1;
+}
+
+int pop(int n[]){
+  top -= 1 ;
+  return n[top + 1];
+}
+
+int stackEmpty(int n[]){
+  if (n[top] == 0){
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int add(int n[]){
+  int x, y, z;
+  x = pop(n);
+  y = pop(n);
+  z = x + y;
+  return z;
+}

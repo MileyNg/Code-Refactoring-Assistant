@@ -1,0 +1,43 @@
+#include<iostream>
+
+int main(){
+	int input, cardnumber;
+	char design;
+	bool cards[4][13] = { false };
+
+	std::cin >> input;
+	for (int i = 0; i < input; i++){
+		std::cin >> design >> cardnumber;
+		if (design == 'S')
+			cards[0][cardnumber - 1] = true;
+		else if (design == 'H')
+			cards[1][cardnumber - 1] = true;
+		else if (design == 'C')
+			cards[2][cardnumber - 1] = true;
+		else if (design == 'D')
+			cards[3][cardnumber] = true;
+	}//input
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 13; j++){
+			if (cards[i][j] == false){
+				if (i == 0){
+					std::cout << "S";
+					std::cout << " " << j + 1 << std::endl;
+				}
+				else if (i == 1){
+					std::cout << "H";
+					std::cout << " " << j + 1 << std::endl;
+				}
+				else if (i == 2){
+					std::cout << "C";
+					std::cout << " " << j + 1 << std::endl;
+				}
+				else if (i == 3){
+					std::cout << "D";
+					std::cout << " " << j + 1 << std::endl;
+				}
+			}
+		}
+	}
+	return 0;
+}

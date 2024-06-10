@@ -1,0 +1,36 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/19 02:14:24 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <set>
+#include <bitset>
+#include <climits>
+#define MP(a, b) make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+std::bitset<10000000> b;
+
+int main(int argc, char *argv[])
+{
+  int n;
+  std::cin>>n;
+  int s,q,t = 0;
+  rep(i,n) std::cin>>s,b[s] = 1;
+  std::cin>>q;
+  rep(i,q) std::cin>>s,t+=b[s];
+  std::cout<<t<<std::endl;
+
+  return 0;
+}

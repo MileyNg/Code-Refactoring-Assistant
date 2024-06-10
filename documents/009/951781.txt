@@ -1,0 +1,94 @@
+#include <cassert>
+#include <cctype>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+
+#include <algorithm>
+#include <bitset>
+#include <deque>
+#include <functional>
+#include <iterator>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+#include <iomanip>
+
+using namespace std;
+
+typedef pair<int, int> pint;
+typedef vector<int> vint;
+typedef long long ll;
+
+#define ALL(c) (c).begin(),(c).end()
+#define RALL(c) (c).rbegin(),(c).rend()
+#define SORT(c) sort(ALL(c))
+
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n)  for(int i=0;i<(n);++i)
+
+#define NEXTP(c) next_permutation(ALL(c))
+#define SUM(c) accumulate(ALL(c),0)
+#define MP( a, b ) make_pair( ( a ), ( b ) )
+
+#define DUMP(x)  cerr << #x << " = " << (x) << endl;
+
+#define INF 1000000000 // 10^9
+const double EPS = 1e-10;
+
+int H,W;
+int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+vector<string> board;
+
+//Template End
+void dfs(int x,int y, char f){
+    board[x][y]='x';
+    REP(i, 4){
+        int nx=x+dx[i],ny=y+dy[i];
+        if (0<=nx&&nx<H&&
+            0<=ny&&ny<W&&
+            board[nx][ny]==f) {
+            dfs(nx, ny, f);
+        }
+    }
+}
+
+int main(){
+    while (1) {
+        cin>>H>>W;
+        
+        if (H==0&&W==0) break;
+        
+        board.clear();
+        board.resize(H);
+        
+        REP(i, H)cin>>board[i];
+        
+        int ret = 0;
+
+        REP(i,H){
+            REP(j, W){
+                if(board[i][j]!='x'){
+                    ret++;
+                    dfs(i,j,board[i][j]);
+                }
+            }
+        }
+        cout<<ret<<endl;
+    }
+    return 0;
+}

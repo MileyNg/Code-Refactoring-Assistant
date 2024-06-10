@@ -1,0 +1,66 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+typedef vector<vector<int> > MAT;
+
+int M;
+
+MAT make_mat(int x){
+  return MAT(x,vector<int>(x));
+}
+
+MAT operator*(const MAT &a,const MAT &b){
+  const int n=a.size();
+  MAT r=make_mat(n);
+  for(int i=0;i<n;i++){
+    for(int j=0;j<n;j++){
+      for(int k=0;k<n;k++){
+	r[i][j]=(r[i][j]+a[i][k]*b[k][j])%M;
+      }
+    }
+  }
+  return r;
+}
+
+MAT pow(MAT m,int x){
+  const int n=m.size();
+  MAT r=make_mat(n);
+  for(int i=0;i<n;i++){
+    r[i][i]=1;
+  }
+  for(;x;x>>=1,m=m*m){
+    if(x%2){
+      r=r*m;
+    }
+  }
+  return r;
+}
+
+int main(){
+  for(int n,a,b,c,t;cin>>n>>M>>a>>b>>c>>t,n;){
+    MAT m=make_mat(n);
+    for(int i=0;i<n;i++){
+      for(int j=0;j<n;j++){
+	m[i][j]=(i-1==j)?a:
+	  (i==j)?b:
+	  (i+1==j)?c:0;
+      }
+    }
+    m=pow(m,t);
+    vector<int> s(n);
+    for(int i=0;i<n;i++){
+      cin>>s[i];
+    }
+    for(int i=0;i<n;i++){
+      int ans=0;
+      for(int j=0;j<n;j++){
+	ans=(ans+m[i][j]*s[j])%M;
+      }
+      cout<<ans<<((i==n-1)?'\n':' ');
+    }
+  }
+}
+
+    

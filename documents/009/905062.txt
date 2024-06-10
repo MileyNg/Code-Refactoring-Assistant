@@ -1,0 +1,28 @@
+#!/bin/ruby
+$str=""
+$x=0
+def rec
+  if $str[$x]=='[' then
+    a=[]
+    $x+=1
+    while $str[$x]!=']'
+      a<< rec
+    end
+    $x+=1
+    return a.sort[0...a.size/2+1].reduce(&:+)
+  else
+    d=0
+    while $str[$x]!=']'
+      d=d*10+$str[$x].ord-'0'.ord
+      $x+=1
+    end
+    return d/2+1
+  end
+end
+    
+n=gets.to_i
+n.times do
+  $str=gets
+  $x=0
+  puts rec
+end

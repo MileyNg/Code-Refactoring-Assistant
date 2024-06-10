@@ -1,0 +1,99 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+#define DEBUG(x) cerr << #x << " = " << x << endl
+
+int main() {
+  int S,T,U,N,O,D; cin >> S >> T >> U >> N >> O >> D;
+  int tcost[T], tvalue[T];
+  int dcost[N], dvalue[N];
+  for(int i = 0; i < T; ++i) {
+    cin >> tcost[i] >> tvalue[i];
+  }
+  for(int i = 0; i < N; ++i) {
+    cin >> dvalue[i] >> dcost[i];
+  }
+  int tdp[T][U+1][S+1];
+  for(int i = 0; i < T; ++i)
+    for(int j = 0; j < U + 1; ++j)
+      for(int k = 0; k < S + 1; ++k)
+        tdp[i][j][k] = -1;
+  for(int i = 0; i < T; ++i) {
+    tdp[i][0][0] = 0;
+  }
+
+  for(int s = 0; s <= S; ++s) {
+    if(s >= tcost[0]) {
+      tdp[0][1][s] = tvalue[0];
+    }
+    else {
+      tdp[0][1][s] = -1;
+    }
+  }
+  for(int i = 1; i < T; ++i) {
+    for(int j = 1; j <= U; ++j) {
+      for(int k = 0; k <= S; ++k) {
+        int m = tdp[i - 1][j][k];
+        if(k >= tcost[i]) {
+          int n = tdp[i - 1][j - 1][k - tcost[i]];
+          if(n != -1) {
+            m = max(m, n + tvalue[i]);
+          }
+        }
+        tdp[i][j][k] = m;
+      }
+    }
+  }
+  // tdp[T-1][U][hp]
+  for(int i = 0; i <= S; ++i) {
+    // cerr << "Training(" << i << ") = " << tdp[T-1][U][i] << endl;
+  }
+
+  int ddp[N][U*100+1];
+  for(int i = 0; i <= U*100; ++i) {
+    ddp[0][i] = i / dcost[0] * dvalue[0];
+  }
+  for(int i = 1; i < N; ++i) {
+    for(int j = 0; j <= U*100; ++j) {
+      int m = ddp[i-1][j];
+      if(j >= dcost[i]) {
+        m = max(m, ddp[i][j - dcost[i]] + dvalue[i]);
+      }
+      ddp[i][j] = m;
+    }
+  }
+  // ddp[N-1][cal]
+  for(int i = 0; i <= 15; ++i) {
+    // cerr << "Donuts(" << i << ") = " << ddp[N-1][i] << endl;
+  }
+
+  int fdp[D][S+1];
+  for(int s = 0; s <= S; ++s) {
+    int m;
+    if(tdp[T-1][U][s] == -1) {
+      m = -1;
+    } else {
+      m = ddp[N-1][tdp[T-1][U][s]];
+    }
+    fdp[D-1][s] = m;
+    // cerr << "d = " << D-1 << ", s = " << s << ", fdp[d][s] = " << fdp[D-1][s] << endl;
+  }
+  for(int d = D - 2; d >= 0; d--) {
+    for(int s = 0; s <= S; ++s) {
+      int m = -1;
+      for(int x = 1; x <= s; ++x) {
+        int a = tdp[T-1][U][x];
+        int b = fdp[d+1][min(S, s - x + O)];
+        if(a == -1) continue;
+        if(b == -1) continue;
+        // DEBUG(tdp[T-1][U][x]);
+        // DEBUG(ddp[N-1][tdp[T-1][U][x]]);
+        m = max(m, b+ddp[N-1][a]);
+      }
+      fdp[d][s] = m;
+      // cerr << "d = " << d << ", s = " << s << ", fdp[d][s] = " << fdp[d][s] << endl;
+    }
+  }
+  cout << fdp[0][S] << endl;
+}

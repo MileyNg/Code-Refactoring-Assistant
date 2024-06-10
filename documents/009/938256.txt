@@ -1,0 +1,15 @@
+while 1:
+	n = raw_input()[::-1]
+	if n == "0": break
+	ans = ""
+	m = 1 if n[-1] == "-" else 0
+	for i in range(0, len(n) - m, 2):
+		if int(n[i]) > 0:
+			if i < len(n) - 1 - m:
+				ans += str(10 - int(n[i])) + str(int(n[i + 1]) + 1)
+			else:
+				ans += str(10 - int(n[i])) + "1"
+		else:
+			ans += "0" + n[i + 1]
+	ans = int("2"+"0"*len(n)) - int(ans[::-1]) if m == 0 else int(ans[::-1])
+	print ans

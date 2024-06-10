@@ -1,0 +1,99 @@
+
+#include<iostream>
+#include<map>
+#include<vector>
+#include<list>
+#include<algorithm>
+#include<cmath>
+#include<iomanip>
+#include<numeric>
+#include<climits>
+#include<ctime>
+#include<cstring>
+
+//FUNCTION
+#define ALL(v) (v).begin(),(v).end()
+#define REP(i,p,n) for(int i=p;i<(int)(n);++i)
+#define rep(i,n) REP(i,0,n)
+#define rep_split(tok,a_str,re) for(char *tok = strtok((char *)a_str.c_str(),re); tok != NULL; tok = strtok(NULL,re))
+
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
+
+//CONSTANT
+#define INF 2000000000000
+#define MAX 246912
+
+//DEBUG
+#define BAR() cout << "----------------------------" << endl;
+#define DUMP(v) (cerr << #v << ": " << v << endl)
+#define PRINT(list) cout << "{ "; for(auto nth : list){ cout << nth << " "; } cout << "}" << endl;
+
+using namespace std;
+
+typedef struct team 
+{
+	int tID;
+	int accept;
+	int pena;
+
+	bool operator<(const team& right) const {
+			if (accept == right.accept) {
+				if (pena == right.pena) {
+					return tID < right.tID;
+				}
+				else {
+					return pena < right.pena;
+				}
+			}
+			else {
+				return accept > right.accept;
+			}
+		}
+
+} Team;
+
+
+int main()
+{
+	int t=0, p=0, r=0;
+	
+	int tID, pID, time;
+	string message;
+
+	while(cin >> t >> p >> r && t && p && r)
+	{
+		int miss[t][p];
+		bool isCorrect[t][p];
+		Team team[t+1];
+
+		REP(x, 1, t+1){
+			team[x].accept=0;
+			team[x].pena=0;
+			team[x].tID=x;
+			rep(y,p){ miss[x][y]=0; isCorrect[x][y] = false; }
+		}
+
+		rep(i,r)
+		{
+			cin >> tID >> pID >> time >> message;
+
+			if(message == "CORRECT"){
+				if(!isCorrect[tID][pID])
+				{
+					team[tID].accept++;
+					team[tID].pena += miss[tID][pID]*1200+time;
+					isCorrect[tID][pID] = true;
+				}
+			}else{
+				miss[tID][pID]++;
+			}
+		}
+		
+		sort(team+1,team+t+1);
+		REP(i,1,t+1)
+		{
+			cout << team[i].tID << " "  << team[i].accept << " "<< team[i].pena << endl;
+		}
+	}
+
+}

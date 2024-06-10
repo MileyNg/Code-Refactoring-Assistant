@@ -1,0 +1,77 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+
+int W, H, N;
+vector<string> flr;
+int tx, ty;
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+
+
+struct State {
+	int x, y;
+	State(int _x, int _y) : x(_x), y(_y) {}
+};
+
+bool bfs(vector<string> map) {
+	queue<State> q;
+	q.push(State(0, 0));
+	map[0][0] = 'o';
+	
+	while (!q.empty()) {
+		State s = q.front(); q.pop();
+		
+		if (s.x == tx && s.y == ty) return true;
+		
+		for (int d=0; d<4; d++) {
+			int nx = s.x + dx[d], ny = s.y + dy[d];
+			if (!(0<=nx && nx<W && 0<=ny && ny<H)) continue;
+			if (map[ny][nx]=='#' || map[ny][nx]=='o') continue;
+			map[ny][nx] = 'o';
+			q.push(State(nx, ny));
+		}
+	}
+	return false;
+}
+
+int main() {
+	cin >> W >> H;
+	tx = -1; ty = -1;
+	for (int i=0; i<H; i++) {
+		string lin; cin >> lin;
+		flr.push_back(lin);
+		for (int j=0; j<(int)lin.size() && tx==-1; j++) {
+			if (lin[j]=='t') {
+				tx = j;
+				ty = i;
+			}
+		}
+	}
+	
+	cin >> N;
+	int ans = -1;
+	
+	if (bfs(flr)) {
+		cout << 0 << endl;
+		return 0;
+	}
+	
+	for (int i=0; i<N; i++) {
+		int x, y; cin >> x >> y;
+		flr[y][x] = '.';
+		if (bfs(flr)) {
+			ans = i+1;
+			break;
+		}
+	}
+	
+	cout << ans << endl;
+	
+	return 0;
+}

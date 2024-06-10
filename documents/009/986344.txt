@@ -1,0 +1,49 @@
+/*
+  AOJ 0136
+  Title:Frequency Distribution of Height
+  @kankichi573
+*/
+#include <stdio.h>
+#include <float.h>
+int n;
+int dist[7];
+double height[40];
+int min_;
+display_graph()
+{
+  int i,j;
+  for(i=1;i<=6;i++)
+    {
+      printf("%d:",i);
+      for(j=0;j<dist[i];j++)
+	printf("*");
+      printf("\n");
+    }
+
+}
+main()
+{
+  int i;
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {
+      scanf("%lf",&height[i]);
+    }
+  for(i=0;i<n;i++)
+    {
+      if(height[i]<165.0)
+	dist[1]++;
+      else if(height[i]<170.0)
+	dist[2]++;
+      else if(height[i]<175.0)
+	dist[3]++;
+      else if(height[i]<180.0)
+	dist[4]++;
+      else if(height[i]<185.0)
+	dist[5]++;
+      else if(height[i]>=185.0)
+	dist[6]++;
+    }
+  display_graph();
+  return(0);
+}

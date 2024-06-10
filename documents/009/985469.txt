@@ -1,0 +1,131 @@
+#include<stdio.h>
+#include<math.h>
+#include<algorithm>
+using namespace std;
+struct Pt{
+	double x,y;
+	Pt(){x=y=0;}
+	Pt(double X,double Y){x=X;y=Y;}
+};
+Pt rot(Pt a){
+	Pt ret=Pt(cos(0.01)*a.x+sin(0.01)*a.y,-sin(0.01)*a.x+cos(0.01)*a.y);
+	return ret;
+}
+inline bool operator<(const Pt&a,const Pt&b){return a.x<b.x;}
+Pt c[200];
+Pt d[200];
+int sz;
+int S[11000];
+double dp[11000];
+double EPS=1e-9;
+Pt r[11000];
+inline double dist(Pt a,Pt b){
+	return sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
+}
+int main(){
+	int a,b;
+	while(scanf("%d%d",&a,&b),a){
+		for(int i=0;i<a;i++){
+			double x,y;
+			scanf("%lf%lf",&x,&y);
+			c[i]=Pt(x,y);
+		}
+		for(int i=0;i<b;i++){
+			double x,y;
+			scanf("%lf%lf",&x,&y);
+			d[i]=Pt(x,y);
+		}
+		for(int i=0;i<a;i++)c[i]=rot(c[i]);
+		for(int i=0;i<b;i++)d[i]=rot(d[i]);
+		std::sort(d,d+b);
+		sz=0;
+		for(int i=0;i<a-1;i++){
+			if(c[i].x<c[i+1].x){
+				for(int j=0;j<b;j++){
+					if(c[i].x>d[j].x||c[i+1].x<d[j].x)continue;
+					double ey=c[i].y+(c[i+1].y-c[i].y)*(d[j].x-c[i].x)/(c[i+1].x-c[i].x);
+					if(ey>d[j].y){
+			//			printf("%d R\n",j*2);
+						if(sz>0&&S[sz-1]==j*2){
+							sz--;
+						}else{
+							S[sz++]=j*2;
+						}
+					}else{
+			//			printf("%d R\n",j*2+1);
+						if(sz>0&&S[sz-1]==j*2+1){
+							sz--;
+						}else{
+							S[sz++]=j*2+1;
+						}
+					}
+				}
+			}else{
+				for(int j=b-1;j>=0;j--){
+					if(c[i+1].x>d[j].x||c[i].x<d[j].x)continue;
+					double ey=c[i].y+(c[i+1].y-c[i].y)*(d[j].x-c[i].x)/(c[i+1].x-c[i].x);
+					if(ey>d[j].y){
+			//			printf("%d L\n",j*2);
+						if(sz>0&&S[sz-1]==j*2){
+							sz--;
+						}else{
+							S[sz++]=j*2;
+						}
+					}else{
+			//			printf("%d L\n",j*2+1);
+						if(sz>0&&S[sz-1]==j*2+1){
+							sz--;
+						}else{
+							S[sz++]=j*2+1;
+						}
+					}
+				}
+			}
+		}
+		r[0]=c[0];
+		r[sz+1]=c[a-1];
+		for(int i=0;i<sz;i++){
+			r[i+1]=d[S[i]/2];
+		}
+	//	for(int i=0;i<sz;i++){
+	//		printf("%d ",S[i]);
+//		}printf("\n");
+		for(int i=0;i<sz+2;i++)dp[i]=999999999;
+		dp[0]=0;
+		
+		for(int i=1;i<sz+2;i++){
+			if(dist(r[i],r[i-1])<EPS){
+				dp[i]=dp[i-1];
+				continue;
+			}
+			double L=-999999999;
+			double R=999999999;
+			for(int j=i-1;j>=0;j--){
+			//	printf("%d, %d: (%f, %f)\n",j,i,L,R);
+				if(dist(r[j],r[i])<EPS)break;
+				double f=(r[j].y-r[i].y)/(r[j].x-r[i].x);
+				if(L+EPS<f&&f+EPS<R){
+			//		printf("%d %d\n",j,i);
+					dp[i]=min(dp[i],dp[j]+dist(r[i],r[j]));
+				}
+				if(j){
+					if(S[j-1]%2){
+						if(r[i].x<r[j].x){
+							R=min(f,R);
+						}else{
+							L=max(L,f);
+						}
+					}else{
+						if(r[i].x<r[j].x){
+							L=max(L,f);
+						}else{
+							R=min(R,f);
+						}
+					}
+				}
+				if(L+EPS>R)break;
+			}
+		}
+		printf("%.12f\n",dp[sz+1]);
+	}
+}

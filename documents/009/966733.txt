@@ -1,0 +1,48 @@
+#include<stdio.h>
+#define AMAX 2000
+#define MMAX 2000
+
+void solve(int,int);
+ 
+int A[AMAX];
+int n,judge=0;
+
+int main()
+{
+  int q,M[MMAX];
+  int i,j;
+
+  scanf("%d",&n);
+
+  for(i = 0; i < n ;i ++)
+    {
+      scanf("%d",&A[i]);
+    }
+
+
+  scanf("%d",&q);
+
+  for(i = 0; i < q ;i ++)
+    {
+      scanf("%d",&M[i]);
+    }
+  
+  for(i = 0; i < q; i ++)
+    {
+      solve(0,M[i]);
+      if(judge == 0) printf("no\n");
+      else  printf("yes\n");
+      judge = 0;
+    }
+  return 0;
+}
+
+void solve(int i,int m)
+{
+  if(m == 0) judge = 1;
+  else if(i != n)
+    {
+      solve(i+1, m-A[i]);
+      solve(i+1, m);
+    }
+}

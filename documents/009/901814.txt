@@ -1,0 +1,144 @@
+#include <algorithm>
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+#include <vector>
+#include <queue>
+#include <cstdio>
+#include <cmath>
+#include <stack>
+#define PI acos(-1.0)
+#define inf 0x3f3f3f3f
+#define E exp(double(1))
+#define maxn 100
+#define eps 1e-7
+using namespace std;
+
+#ifdef __int64
+    typedef __int64 LL;
+#else
+    typedef long long LL;
+#endif
+
+char tmp[maxn];
+char w[maxn];
+
+struct node{
+    int len;
+    char q[100];
+    bool operator < (const node a)const {
+        return len>a.len;
+    }
+    char operator [](const int a)const{
+        return q[a];
+    }
+}t[maxn],s[maxn];
+
+int mp[30],cnt,n,ans;
+
+int p[30];
+
+int from[maxn];
+
+void dfs(int tp,int sp){
+    if(ans>1){
+        return;
+    }
+    if(sp == cnt){
+        ans++;
+        if(ans==1){
+            memcpy(p,mp,sizeof p);
+        }
+        return;
+    }
+    if(tp == n)return;
+    if(t[tp].len < s[sp].len)return;
+    if(t[tp].len > s[sp].len){
+        dfs(tp+1,sp);
+        return ;
+    }
+    int tt[30];
+    memcpy(tt,mp,sizeof mp);
+    bool ok=true;
+    for(int i=0;i<t[tp].len;i++){
+
+        int u = t[tp][i] - 'A';
+        int v = s[sp][i] - 'A';
+        if(mp[u]==v&&mp[v]==u)continue;
+
+        if(mp[u]==-1&&mp[v]==-1){
+            mp[u]=v; mp[v]=u;
+        }else if(mp[u]!=v || mp[v]!=u){
+            memcpy(mp,tt,sizeof mp);
+            ok=false;
+            break;
+        }
+    }
+    if(ok){
+        dfs(from[tp],sp+1);
+        memcpy(mp,tt,sizeof mp);
+    }
+    dfs(tp+1,sp);
+}
+
+int main(){
+    int i,j,k;
+
+    while(scanf("%d",&n)!=EOF,n){
+//        memset(t,0,sizeof t);
+//        memset(s,0,sizeof s);
+//        memset(from,0,sizeof from);
+//        memset(p,0,sizeof p);
+//        memset(w,0,sizeof w);
+        cnt = 0;
+        for(i=0;i<n;i++){
+            scanf("%s",t[i].q);
+            t[i].len=strlen(t[i].q);
+        }
+        sort(t,t+n);
+
+        getchar();
+        gets(tmp);
+        int now = 0;
+
+        for(i=0;tmp[i];i++){
+            if(tmp[i]=='.'||tmp[i]==' '&&i&&tmp[i-1]!=' '){
+                w[now]=0;
+                strcpy(s[cnt].q,w);
+                s[cnt].len=now;
+                cnt++;
+                now = 0;
+            }else if(tmp[i]!=' '){
+                w[now++]=tmp[i];
+            }
+        }
+
+        sort(s,s+cnt);
+
+        for(i=0;i<n;i++){
+            if(i==0||s[i].len!=s[i-1].len)from[i]=i;
+            else from[i]=from[i-1];
+        }
+
+        memset(mp,-1,sizeof mp);
+
+        ans=0;
+
+        dfs(0,0);
+
+        if(ans!=1){
+            puts("-.");
+        }else{
+            for(i=0;tmp[i];i++){
+                if(tmp[i]>='A'&&tmp[i]<='Z'){
+                    printf("%c",p[tmp[i]-'A']+'A');
+                }else{
+                    printf("%c",tmp[i]);
+                }
+            }
+            puts("");
+        }
+
+    }
+    return 0;
+}

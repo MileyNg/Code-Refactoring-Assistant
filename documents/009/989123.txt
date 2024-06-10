@@ -1,0 +1,70 @@
+// -*- coding: utf-8 -*-
+// Last-Updated : <2014/06/19 05:56:06 by samui>
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <climits>
+#include <set>
+#include <bitset>
+
+#define MP(a, b) make_pair(a, b)
+#define X first
+#define Y second
+#define rep(i,n) for(int (i) = 0; (i) < (int)(n); ++(i))
+#define rer(i,l,n) for(int (i) = l; (i) <= (int)(n); ++(i))
+#define reu(i,l,n) for(int (i) = l; (i) < (int)(n); ++(i))
+template<typename T,typename U> inline void amin(T &x,U y){ if(y<x) x = y;}
+template<typename T,typename U> inline void amax(T &x,U y){ if(x<y) x = y;}
+template<typename TYPE,std::size_t SIZE>
+std::size_t len(const TYPE (&array)[SIZE]){return SIZE;}
+
+int main(int argc, char *argv[])
+{
+  std::string inp;
+  int s;
+  std::string op;
+  std::vector<int> t;
+  int s1,s2;
+  //std::cin >> op;
+  getline(std::cin,op);
+  for(auto it = op.begin(); it!=op.end();++it){
+    inp = *it;
+    
+    if(inp == " ")
+      continue;
+    if(t.size()>=2){
+      s1 = t[t.size()-1];
+      s2 = t[t.size()-2];
+    }
+    if(inp == "+" )
+      {
+	t.pop_back();
+	t.pop_back();
+	t.push_back(s1+s2);
+      }
+    else if(inp == "-")
+      {
+	t.pop_back();
+	t.pop_back();
+	t.push_back(s2-s1);
+
+      }
+    else if(inp == "*")
+      {
+	t.pop_back();
+	t.pop_back();
+	t.push_back(s1*s2);
+      }
+    else
+      {
+	t.push_back(std::stoi(inp));
+      }
+    
+  }
+  std::cout<<t[t.size()-1]<<std::endl;
+
+  return 0;
+}

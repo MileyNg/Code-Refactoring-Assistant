@@ -1,0 +1,23 @@
+
+rtimes = []
+
+24.times.each do
+  rn, rt = gets.strip.split(" ")
+  rtimes << [rn, rt.to_f]
+end
+
+semifinals = []
+rests = []
+
+for t in (0..2)
+  race = rtimes[(t * 8), 8].sort{|a, b| a[1] <=> b[1]}
+  semifinals << race.shift
+  semifinals << race.shift
+  rests += race
+end
+
+rests.sort!{|a, b| a[1] <=> b[1]}
+semifinals << rests.shift
+semifinals << rests.shift
+
+semifinals.each{|rn, rt| printf("%s %.2f\n", rn, rt)}

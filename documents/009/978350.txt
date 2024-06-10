@@ -1,0 +1,98 @@
+#include <iostream>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define iter(it,c) for(auto it=c.begin(); it!=c.end(); ++it)
+#define all(c) (c).begin(), (c).end()
+
+typedef vector<string> vs;
+typedef unsigned uint;
+
+string s;
+int p;
+
+#define cur s[p]
+
+bool equ();
+bool formula();
+
+bool equ(){
+    bool l=formula();
+    p++; // =
+    bool r=formula();
+    // cout << l << " " << r << endl;
+    return l==r;
+}
+
+bool formula(){
+    bool res;
+    if(cur=='T'){
+        p++; // T
+        res = true;
+    }
+    else if(cur=='F'){
+        p++; // F
+        res = false;
+    }
+    else if(cur=='-'){
+        p++; // -
+        res = !formula();
+    } else {
+        p++; // (
+        bool l=formula();
+
+        char op=cur;
+
+        p++; // +,*,-
+        if(op=='-') p++; // >
+
+        bool r = formula();
+
+        if(op=='*') res = l&r;
+        if(op=='+') res = l|r;
+        if(op=='-') res = (!l)|r;
+
+        p++; // )
+    }
+    return res;
+}
+
+inline bool solve(vs const& v){
+    bool res = true;
+    rep(i,v.size()){
+        s=v[i];
+        p=0;
+        // cout << s << endl;
+        if(!equ()){
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
+int main(){
+    string s;
+    while(cin>>s && s!="#"){
+        vs ss(1<<11);
+        rep(i,1<<11){
+            string t=s;
+            rep(j,t.size()){
+                if(t[j]=='T' || t[j]=='F') continue;
+                if(isalpha(t[j])) t[j] = "TF"[(i>>(t[j]-'a')&1)];
+            }
+            ss[i] = t;
+        }
+        sort(all(ss));
+        ss.erase(unique(all(ss)),ss.end());
+        bool id = solve(ss);
+        if(id) cout << "YES";
+        else cout << "NO";
+        cout << endl;
+    }
+}

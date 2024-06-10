@@ -1,0 +1,64 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+using namespace std;
+typedef long long int lli;
+typedef pair<int,int> P;
+const int INF=100000000;
+const long long int INF_=1000000000000000000;
+ 
+int N,Cost[20][20],Count[20];
+vector<int> T[20];
+bool Done[20];
+
+int dfs(int v){
+	int result=0;
+	Done[v]=true;
+	for(int i=0; i<T[v].size(); ++i){
+		if(Count[T[v][i]]>1&&!Done[T[v][i]]&&Cost[v][T[v][i]]!=INF){
+			int tmp=Cost[v][T[v][i]];
+			Cost[v][T[v][i]]=INF;
+			result=max(result,tmp+dfs(T[v][i]));
+		}
+	}
+	return result;
+}
+
+int main(){
+	cin.tie(0);
+    ios::sync_with_stdio(0);
+    while(cin >> N&&N){
+		for(int i=0; i<N; ++i) T[i].clear();
+        memset(Done,0,sizeof(Done));
+        memset(Count,0,sizeof(Count));
+        fill_n((int*)Cost,20*20,INF);
+        int sum=0;
+        for(int i=0; i<N-1; ++i){
+            int a,b,t;
+            cin >> a >> b >> t;
+            --a; --b;
+            T[a].push_back(b);
+            T[b].push_back(a);
+            Cost[a][b]=Cost[b][a]=t;
+            ++Count[a];
+            ++Count[b];
+        }
+        for(int i=1; i<N; ++i){
+			if(Count[i]>1){
+				for(int j=0; j<T[i].size(); ++j){
+					if(Count[T[i][j]]>1||j==0){
+						sum+=Cost[i][T[i][j]];
+					}
+				}
+			}
+		}
+		
+		for(int i=0; i<T[0].size(); ++i){
+			if(Count[T[0][i]]>1) sum+=Cost[0][T[0][i]];
+		}
+        cout << sum-dfs(0) << endl;
+    }
+    return 0;
+}

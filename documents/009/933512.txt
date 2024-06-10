@@ -1,0 +1,162 @@
+/*
+&#39064;意：7数&#30721;&#38382;&#39064;。在2×4的棋&#30424;上，&#25670;有7个棋子，&#27599;个棋子上&#26631;有1至7的某一数字，不同棋子上&#26631;的数字不相同。棋&#30424;上&#36824;有一个空格（用0表示），与空格相&#37051;（上下左右）的棋子可以移到空格中，&#35813;棋子原先位置成&#20026;空格。&#32473;出一个初始状&#24577;（保&#35777;可以&#36716;移到最&#32456;状&#24577;），找出一&#31181;从初始状&#24577;&#36716;&#21464;成&#32473;定最&#32456;状&#24577;的移&#21160;棋子&#27493;数最少的移&#21160;&#27493;&#39588;。
+
+&#36755;入：多&#32452;&#36755;入，&#27599;&#32452;8个数，表示初始状&#24577;前四个数&#20026;第一行从左到右，后四个数&#20026;第二行从左到右。 
+
+&#36755;出：至少需要多少&#27493;可以从&#36755;入状&#24577;到&#36798;最&#32456;状&#24577;（0 1 2 3 4 5 6 7）
+*/ 
+// 
+// Input
+// 1つ目のパズルの状態(整数;空白区切り)
+// 2つ目のパズルの状態(整数;空白区切り)
+// :
+// :
+// 与えられるパズルの数は1000以下です。
+// 
+// Output
+// 1つ目のパズルの状態から最終状態へ移行する最小手数(整数)
+// 2つ目のパズルの状態から最終状態へ移行する最小手数(整数)
+// :
+// :
+// Sample Input
+// 0 1 2 3 4 5 6 7
+// 1 0 2 3 4 5 6 7
+// 7 6 5 4 3 2 1 0
+// Output for the Sample Input
+// 0
+// 1
+// 28
+#include <cstdio>
+#include <queue>
+#include <string>
+#include <iostream>
+#define INF 1000000
+using namespace std;
+
+void debug()
+{
+	freopen("AOJ-0121-in.txt","r",stdin);
+	freopen("AOJ-0121-out.txt","w",stdout);
+}
+
+int Jie[8]={0,1,2,6,24,120,720,5040};
+int Step[42000];
+
+int J(const string &s8)
+{
+	int res=0;
+	for (int i=0;i<7;++i)
+	{
+		int k=s8[i]-'0';
+		for (int kk=0;kk<i;++kk)
+		{
+			if (s8[kk]<s8[i])
+			{
+				--k;
+			}
+		}
+		res+=k*Jie[7-i];
+	}
+	return res;
+}
+
+int main()
+{
+// 	debug();
+// 
+// 	int e=1;
+// 	for (int i=1;i<9;++i)
+// 	{
+// 		e*=i;	printf ("%d\n",e);
+// 
+// 	}
+// 		1
+// 		2
+// 		6
+// 		24
+// 		120
+// 		720
+// 		5040
+// 		40320
+	for (int si=0;si<42000;++si)
+	{
+		Step[si]=INF;
+	}
+
+	queue<string> q;
+	string sa="01234567";
+	q.push (sa);
+	Step[J(sa)]=0;
+	while (q.size ())
+	{
+		string ss=q.front ();
+		q.pop ();
+		int stp=Step[J(ss)];
+		int i0=0;
+		for (;i0<8;++i0)
+		{
+			if (ss[i0]=='0')
+			{
+				break;
+			}
+		}
+		if (i0!=3&&i0!=7)
+		{
+			string p=ss;
+			p[i0]=p[i0+1];
+			p[i0+1]='0';
+			int ssss=J (p);
+			if (Step[J(p)]>stp+1)
+			{
+				q.push(p);
+				Step[J(p)]=stp+1;
+			}
+		}
+		if (i0!=0&&i0!=4)
+		{
+			string p=ss;
+			p[i0]=p[i0-1];
+			p[i0-1]='0';
+			if (Step[J(p)]>stp+1)
+			{
+				q.push (p);
+				Step[J(p)]=stp+1;
+			}
+		}
+		if (i0<4)
+		{
+			string p=ss;
+			p[i0]=p[i0+4];
+			p[i0+4]='0';
+			if (Step[J(p)]>stp+1)
+			{
+				q.push (p);
+				Step[J(p)]=stp+1;
+			}
+		}
+		else 
+		{
+			string p=ss;
+			p[i0]=p[i0-4];
+			p[i0-4]='0';
+			if (Step[J(p)]>stp+1)
+			{
+				q.push (p);
+				Step[J(p)]=stp+1;
+			}
+		}
+	}
+	while(getline(cin,sa))
+	{
+		string str;
+		for (int i=0;i<sa.size ();++i)
+		{
+			if (sa[i]>='0'&&sa[i]<='7')
+			{
+				str+=sa[i];
+			}
+		}
+		printf ("%d\n",Step[J(str)]);
+	}
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class UnionFind {
+    public:
+        vector<int> data;
+        UnionFind(int size) : data(size,-1){}
+        void make(int x){
+             data[x] =x;
+        }
+        bool unite(int x, int y) {
+            x = root(x); 
+            y = root(y);
+            if (x != y){
+                data[x]=y;
+            }
+            return x != y;
+        }
+        bool find(int x, int y) {
+            return root(x) == root(y);
+        }
+        int root(int x) {
+            if(data[x]==x)
+                return x;
+            else{
+                data[x] = root(data[x]);
+                return data[x];
+            }
+        }
+};
+int main(){
+    int n, q;
+    int c, x, y;
+    cin>>n;
+    UnionFind* tree = new UnionFind(n);
+    for(int i=0;i<n;i++)
+        tree->make(i);
+    cin>>q;
+    for(int i=0;i<q;i++){
+        cin>>c>>x>>y;
+        if(c==0){
+            tree->unite(x,y);
+        }else{
+            if(tree->find(x,y)){
+                cout<<1<<endl;
+            }else{
+                cout<<0<<endl;
+            }
+        }
+    }
+    delete tree;
+    return 0;
+}

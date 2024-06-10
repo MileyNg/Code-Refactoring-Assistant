@@ -1,0 +1,94 @@
+#include<bits/stdc++.h>
+
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define all(c) (c).begin(),(c).end()
+#define mp make_pair
+#define pb push_back
+#define each(i,c) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++)
+#define dbg(x) cerr<<__LINE__<<": "<<#x<<" = "<<(x)<<endl
+
+using namespace std;
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef pair<int,int> pi;
+const int inf = (int)1e9;
+const double INF = 1e12, EPS = 1e-9;
+
+int n, d[100], a[100], mxd;
+int dp[110][7*6*5*4*3*2 + 1];
+
+int hash(vi ord){
+	int res = 0;
+	rep(i, ord.size()){
+		res *= ord.size() - i;
+		res += ord[i];
+		for(int j = i + 1; j < ord.size(); j++)
+		if(ord[j] > ord[i]) ord[j]--;
+	}
+	return res;
+}
+vi tov(int hash){
+	vi res;
+	rep(i, mxd){
+		res.pb(hash % (mxd - i));
+		hash /= mxd - i;
+	}
+	rep(i, mxd) for(int j = i + 1; j < mxd; j++)
+	if(res[i] <= res[j]) res[j]++;
+	
+	return res;
+}
+
+int main(){
+	
+	cin >> n;
+	rep(i, n) cin >> d[i];
+	rep(i, n) cin >> a[i];
+	
+	mxd = min(n, 7);
+	vi ord;
+	int f = 1;
+	
+	rep(i, mxd) ord.pb(i), f *= i + 1;
+	
+	do{
+		int tmp = 0;
+		rep(i, mxd) rep(j, mxd)
+		if(ord[j] < ord[i] && abs(j - i) <= d[j]) tmp += a[j];
+		
+		dp[mxd - 1][hash(ord)] = tmp;
+		
+	}while(next_permutation(all(ord)));
+	
+	
+	for(int i = mxd; i < n; i++) rep(j, f) rep(k, mxd){
+		
+		vi ord = tov(j);
+		int del = ord[0];
+		int nxt = dp[i - 1][j];
+		
+		ord.erase(ord.begin());
+		rep(l, mxd) if(ord[l] >= del) ord[l]--;
+		rep(l, mxd){
+			if(ord[l] >= k){
+				ord[l]++;
+				if(mxd - l <= d[i - mxd + l]) nxt += a[i - mxd + l];
+			}
+			else{
+				if(mxd - l <= d[i]) nxt += a[i];
+			}
+		}
+		ord.pb(k);
+		
+		int nj = hash(ord);
+		dp[i][nj] = max(dp[i][nj], nxt);
+	}
+	
+	int ans = 0;
+	rep(i, f) ans = max(ans, dp[n - 1][i]);
+	
+	cout << ans << endl;
+	
+	return 0;
+}

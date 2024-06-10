@@ -1,0 +1,87 @@
+$drops = [
+  [[0, 0], [-1, 1], [0, 1], [1, 1], [0, 2]],
+  [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [2, 2], ],
+  [[0, 0], [-1, 1], [0, 1], [1, 1], [-2, 2], [-1, 2], [0, 2], [1, 2], [2, 2],
+   [-1, 3], [0, 3], [1, 3], [0, 4]]
+]
+
+$areas = [5, 9, 13]
+
+$cnts = [[0, 1], [1, 1], [0, 2]]
+
+### subroutines
+
+def dropped?(x, y, d, pl)
+  $drops[d].each do |v|
+    x0 = x + v[0]
+    y0 = y + v[1]
+    if x0 >= 0 && x0 <= 9 && y0 >= 0 && y0 <= 9 && pl[y0][x0] == 0
+      return false
+    end
+  end
+
+  return true
+end
+
+def paint(x, y, d, c, pl)
+  $drops[d].each do |v|
+    x0 = x + v[0]
+    y0 = y + v[1]
+    if x0 >= 0 && x0 <= 9 && y0 >= 0 && y0 <= 9
+      pl[y0][x0] += c
+    end
+  end
+end
+
+def check_pl(x, y, n, cs, pl, pts = [])
+  if n == 0
+    if cs == 0
+      pts.each{|p| puts p.join(" ")}
+      return true
+    end
+    return false
+  end
+
+  while pl[y][x] == 0
+    x += 1
+    if x > 9
+      x = 0
+      y += 1
+    end
+  end
+
+  for d in (0...$drops.length)
+    if dropped?(x, y, d, pl)
+      xc = x + $cnts[d][0]
+      yc = y + $cnts[d][1]
+      pts.push [xc, yc, d + 1]
+      paint(x, y, d, -1, pl)
+
+      if check_pl(x, y, n - 1, cs - $areas[d], pl, pts)
+        return true
+      end
+
+      paint(x, y, d, 1, pl)
+      pts.pop
+    end
+  end
+
+  return false
+end
+
+### main
+
+while (line = gets)
+  n = line.chomp.to_i
+
+  pl = []
+  cs = 0
+
+  10.times.each do
+    hl = gets.chomp.split(" ").map{|s| s.to_i}
+    pl.push hl
+    hl.each {|c| cs += c}
+  end
+
+  check_pl(0, 0, n, cs, pl)
+end

@@ -1,0 +1,56 @@
+#include<stdio.h>
+#define N 2000
+
+void solve(int, int);
+int A[N];
+int n;
+int flag=0;
+int j=0;
+
+void solve(int i,int m){
+
+  int sum=0;
+
+  if(i != n){
+  
+      solve(i+1,m);
+      solve(i+1,m - A[i]);
+      
+    
+  }
+  
+  else if(m == 0){
+    flag = 1;
+    
+  }
+  
+}
+
+int main(){
+
+  int M[N],q,i;
+  
+  scanf("%d",&n);
+  
+  for(i = 0; i < n; i++){
+    scanf("%d",&A[i]);
+  }
+  
+  scanf("%d",&q);
+  
+  for(i = 0; i < q; i++){
+    flag = 0;
+    scanf("%d",&M[i]);
+    solve(0,M[i]);
+
+    if(flag == 1) printf("yes ");
+    else printf("no ");
+  }
+  
+  printf("\n");
+  
+
+
+
+  return 0;
+}

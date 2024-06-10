@@ -1,0 +1,40 @@
+def get_k_diff(ws, max_p)
+  k = 1
+  rest = max_p
+  diffs = []
+
+  ws.each do |w|
+    after_rest = rest - w
+
+    if after_rest < 0
+      k += 1
+      rest = max_p - w
+      diffs << after_rest * -1
+    elsif after_rest == 0
+      rest = 0
+    else
+      rest -= w
+    end
+  end
+  [k, diffs.min]
+end
+
+n, k = gets.split.map(&:to_i)
+ws = []
+n.times do
+  ws << gets.to_i
+end
+
+sum = ws.inject(:+)
+max_p = [sum / k, ws.max].max
+
+while res = get_k_diff(ws, max_p)
+  _k, _diff = res
+  if _k == k
+    break
+  else
+    max_p += _diff
+  end
+end
+
+puts max_p

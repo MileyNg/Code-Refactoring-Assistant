@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair< int, int > Pi;
+typedef pair< Pi, int > Pii;
+#define dp second
+const int INF = 1 << 30;
+
+int dist( Pi a, Pi b){
+  return abs( a.first - b.first) + abs( a.second - b.second);
+}
+
+
+int main()
+{
+  int w, h;
+  Pi goal;
+
+  while( cin >> w >> h, w){
+    vector< Pii > num[2500];
+    int size = 0, hoge;
+
+    for(int i = 0; i < h; i++){
+      for(int j = 0; j < w; j++){
+        string str;
+        cin >> str;
+        if(str != ".") {
+          if(str == "S") num[0].push_back( Pii( Pi( i, j), 0));
+          else if(str == "G") goal = Pi( i, j);
+          else {
+            num[hoge = atoi(str.c_str())].push_back( Pii( Pi( i, j), INF));
+            size = max( hoge, size);
+          }
+        }
+      }
+    }
+    num[++size].push_back( Pii( goal, INF));
+
+    for(int idx = 1; idx <= size; idx++){ // 今の位置
+      for(int i = num[idx].size() - 1; i >= 0; i--){ // いまどこ
+        for(int j = num[idx - 1].size() - 1 ; j >= 0; j--){ // まえどこ
+          num[idx][i].dp = min( num[idx][i].dp, num[idx - 1][j].dp + dist( num[idx - 1][j].first, num[idx][i].first));
+        }
+      }
+    }
+    cout << num[size][0].dp << endl;
+  }
+  return(0);
+}

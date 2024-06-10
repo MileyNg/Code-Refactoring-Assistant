@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+typedef long long int ll;
+ll M, rd, rr, cd, cr;
+
+ll exc(ll rate, ll c) {
+    ll r = 0, l = 1000000000000000;
+    while (l - r - 1 > 0) {
+        ll m = (r + l) / 2;
+        ll y = rate * m / 100;
+        if (y < c) {
+            r = m;
+        }
+        else {
+            l = m;
+        }
+    }
+    return r + 1;
+}
+
+int main() {
+    cin >> M >> rd >> rr >> cd >> cr;
+    ll a = exc(rd, cd);
+    ll b = exc(rr, cr);
+    ll r = M - a - b;
+    if (r < 0) {
+        cout << -1 << endl;
+        return 0;
+    }
+    cout << r << endl;
+    return 0;
+}

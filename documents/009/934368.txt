@@ -1,0 +1,114 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cassert>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <list>
+#include <set>
+#include <map>
+#include <bitset>
+#include <functional>
+#include <iterator>
+
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define iter(c) __typeof__((c).begin())
+#define foreach(i,c) for(iter(c) i=(c).begin();i!=(c).end();++i)
+#define all(c) (c).begin(),(c).end()
+#define mp make_pair
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+typedef pair<int,int> pii;
+
+const int INFTY=1<<29;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+pii expr(const string& s,int i,int cp,const vi& pri)
+{
+	if(cp==0){
+		if(s[i]=='('){
+			pii p=expr(s,i+1,10,pri);
+			p.second++;
+			return p;
+		}
+		else{
+			assert(isdigit(s[i]));
+			int x=0;
+			for(;i<s.size() && isdigit(s[i]);i++)
+				x=x*10+s[i]-'0';
+			return mp(x,i);
+		}
+	}
+	else{
+		pii p=expr(s,i,cp-1,pri);
+		while((i=p.second)<s.size() && pri[i]==cp){
+			char op=s[i++];
+			pii q=expr(s,i,cp-1,pri);
+			if(op=='*') p.first=p.first*q.first;
+			if(op=='+') p.first=p.first+q.first;
+			if(op=='-') p.first=p.first-q.first;
+			if(op=='/'){
+				if(q.first==0) throw "zero division";
+				else           p.first=p.first/q.first;
+			}
+			p.second=q.second;
+		}
+		return p;
+	}
+}
+
+int main()
+{
+	for(string s;getline(cin,s),s!="#";){
+		vi ops;
+		rep(i,s.size()) if(strchr("*+-/",s[i]))
+			ops.push_back(i);
+		vi res;
+		do{
+			vi pri(10);
+			rep(i,ops.size()) pri[ops[i]]=i+1;
+			try{
+				int x=expr(s,0,10,pri).first;
+				res.push_back(x);
+			}
+			catch(...){
+				// do nothing
+			}
+		}while(next_permutation(all(ops)));
+		
+		cout<<set<int>(all(res)).size()<<endl;
+	}
+}

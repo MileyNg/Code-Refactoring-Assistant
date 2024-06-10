@@ -1,0 +1,33 @@
+#include<iostream>
+using namespace std;
+
+void swap(int &a,int &b){
+	int tmp;
+	tmp = a;
+	a = b;
+	b = tmp;
+}
+
+int main(){
+	int w;
+	int n;
+	char c;
+	cin >> w;
+	cin >> n;
+	int a[n],b[n];
+	for(int i=0;i<n;i++)
+		cin >> a[i] >> c >> b[i];
+	
+	int num[w];
+	int tmp;
+	for(int i=0;i<w;i++)
+		num[i] = i+1;
+	
+	for(int i=0;i<n;i++){
+	cout << a[i] <<b[i]<<endl;
+	swap(num[a[i]-1],num[b[i]-1]);
+	}
+	
+	for(int i=0;i<w;i++)
+		cout << num[i] <<endl;
+}

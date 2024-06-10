@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <ctype.h>
+int main(){
+	int g;
+	char mozi;
+	for(g=0; g<=1199;g++){
+		scanf("%c", &mozi);
+		
+		if(isupper(mozi) != 0){
+			mozi=tolower(mozi);
+		}else{
+			mozi=toupper(mozi);
+		
+		}
+		printf("%c", mozi);
+		if(mozi == '\n')break;
+	}
+//	for(g=0;g<1000;g++){
+//
+//	}
+	return 0;
+}

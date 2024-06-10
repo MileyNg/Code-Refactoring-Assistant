@@ -1,0 +1,47 @@
+#include<stdio.h>
+#define compile 0
+#define LENGTH 21
+void func_init(char str[]);
+void func_reverse(char str[]);
+main()
+{
+	char str[LENGTH];
+	func_init(str);
+	//scanf("%s", str);
+	gets(str);
+	func_reverse(str);
+	return 0;
+}
+void func_init(char str[])
+{
+	int i = 0;
+	while(i < LENGTH)
+	{
+		str[i] = 0x00;
+		i++;
+	}
+}
+void func_reverse(char str[])
+{
+	int i = 0;
+	while(str[i + 1] != 0x00)
+	{
+		i++;
+#if compile == 1
+		printf("i = %d\n", i);
+		printf("acii code of str[%d] = 0x%x\n", i, str[i]);
+#endif
+	}
+	while(i >= 0)
+	{
+		if(i == 0)
+		{
+			printf("%c\n", str[i]);
+		}
+		else
+		{
+			printf("%c", str[i]);
+		}
+		i--;
+	}
+}

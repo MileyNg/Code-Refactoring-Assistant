@@ -1,0 +1,44 @@
+/*
+  AOJ 0137
+  Title:Middle-Square Method
+  @kankichi573
+*/
+#include <stdio.h>
+#include <string.h>
+char buf[9];
+char buf2[5];
+int n,s;
+
+isempty(char *buf,int len)
+{
+  int i;
+  for(i=0;i<len;i++)
+    if(isdigit(buf[i]))
+      return(0);
+  return(-1);
+}
+main()
+{
+  int i,j;
+
+  scanf("%d",&n);
+  for(i=1;i<=n;i++)
+    {
+      printf("Case %d:\n",i);
+      scanf("%d",&s);
+      for(j=0;j<10;j++)
+	{
+	  sprintf(buf,"%8d",s*s);
+	  //printf("::%s\n",buf);
+	  memset(buf2,5,0);
+	  strncpy(buf2,buf+2,4);
+	  //printf("*:%s\n",buf2);
+	  if(isempty(buf2,5))
+	    s=0;
+	  else
+	    sscanf(buf2,"%d",&s);
+	  printf("%d\n",s);
+	}
+    }
+  return(0);
+}

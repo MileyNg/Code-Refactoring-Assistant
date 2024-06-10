@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+
+using namespace std;
+
+void tol(string& str){
+  const int len = str.length();
+
+  for(int i = 0; i < len; i++){
+    if(islower(str[i])){
+      str[i] = toupper(str[i]);
+    }
+  }
+}
+
+int main(void){
+  string w, sw;
+  const string end = "END_OF_TEXT";
+  int cnt;
+  
+  cin >> w;
+
+  tol(w);
+
+  cnt = 0;
+
+  while(true){
+    cin >> sw;
+
+    if(sw == end){
+      break;
+    }
+
+    tol(sw);
+    
+    if (sw == w){
+      cnt++;
+    }
+  }
+
+  cout << cnt << endl;
+
+  return 0;
+}

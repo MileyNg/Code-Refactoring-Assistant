@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+#define INF 999999999
+
+int v[100000];
+int memo[100000];
+int N;
+int ans;
+
+void dfs(int pos, int step, int count, queue<int>& Que)
+{
+	int next = pos + step;
+	if(next >= N - 1)
+	{
+		ans = min(ans, count);
+		return;
+	}
+	if(memo[next] <= count)
+	{
+		return;
+	}
+	memo[next] = count;
+	if(v[next] == 0)
+	{
+		Que.push(next);
+	}
+	else
+	{
+		dfs(next, v[next], count, Que);
+	}
+}
+
+void solve()
+{
+	cin >> N;
+	for(int i = 0; i < N; ++i)
+	{
+		cin >> v[i];
+		memo[i] = INF;
+	}
+	ans = INF;
+	memo[0] = 0;
+	queue<int> Que;
+	Que.push(0);
+	while(!Que.empty())
+	{
+		int pos = Que.front();
+		Que.pop();
+		for(int step = 1; step <= 6; ++step)
+		{
+			dfs(pos, step, memo[pos] + 1, Que);
+		}
+	}
+	cout << ans << endl;
+}
+
+int main()
+{
+	solve();
+	return(0);
+}

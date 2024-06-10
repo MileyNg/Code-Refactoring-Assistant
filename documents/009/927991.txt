@@ -1,0 +1,69 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define FL 100005
+
+int main(void){
+  int i,time[FL+1],cpu=0,n,q,head=0,tail,ent[FL+1],j,count;
+  char ko[FL+1][15],en[FL+1][15];
+
+  scanf("%d %d",&n,&q);
+
+  for(i=0;i<n;i++){
+    scanf("%s",ko[i]);
+    scanf("%d",&time[i]);
+  }
+
+  tail=i;
+
+  j=0;
+  i=0;
+  count=0;
+  while(1){
+
+    if(time[i]<q){
+      cpu+=time[i];
+    }
+    else if(time[i]>=q){
+      cpu+=q;
+    }
+
+    time[i]=time[i]-q;
+
+    if(time[i]<=0){
+      ent[j]=cpu;
+      strcpy(en[j],ko[i]);
+      j++;
+      count++;
+    }
+
+    else if(time[i]>0){
+      if(tail<FL){
+      strcpy(ko[tail],ko[i]);
+      time[tail]=time[i];
+      tail++;
+      }
+      else{
+	tail=head;
+	strcpy(ko[tail],ko[i]);
+	time[tail]=time[i];
+	tail++;
+      }
+    }
+
+    i++;
+    if(i>=FL){
+      i=head;
+    }
+
+    if(count==n) break;
+  }
+      
+  for(i=0;i<n;i++){
+    printf("%s ",en[i]);
+    printf("%d\n",ent[i]);
+  }
+
+  return 0;
+  
+}

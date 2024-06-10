@@ -1,0 +1,45 @@
+// Enjoy your stay.
+
+#include <bits/stdc++.h>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(auto it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define mt make_tuple
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)(x).size())
+
+using namespace std;
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<ll,ll> pi;
+typedef stringstream sst;
+typedef vector<ll> vi;
+
+int N,a[22];
+double dp[22][200010];
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	cin>>N;
+	rep(i,N)cin>>a[i];
+	rep(i,N+1)rep2(j,1,200001)dp[i][j] = i ? INF : 0;
+	rep(i,N)rep2(j,1,200001){
+		for(int k = j; k <= 200000; k += j){
+			dp[i+1][k] = min(dp[i+1][k], max(dp[i][j], fabs(a[i] - k)/a[i]));
+		}
+	}
+	double ans = INF;
+	rep2(j,1,200001)ans=min(ans,dp[N][j]);
+	cout<<fixed<<setprecision(16)<<ans<<endl;
+}

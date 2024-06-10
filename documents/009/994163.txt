@@ -1,0 +1,38 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int prime[200000];
+bool is_prime[200000];
+int sieve(int n);
+vector<int> prime_prime;
+int main(){
+  sieve(200000);
+  int n,p;
+  int count=0;
+  while(cin>>n>>p){
+    count=0;
+    prime_prime.clear();
+    if(n==-1 && p==-1)break;
+    while(prime[count]<=n)count++;
+    for(int i=count;i<p+count;i++)
+      for(int j=i;j<p+count;j++)
+	prime_prime.push_back(prime[i]+prime[j]);
+    sort(prime_prime.begin(),prime_prime.end());
+    //for(int i=0;i<num;i++)cout<<prime_prime[i]<<endl;    
+    cout<<prime_prime[p-1]<<endl;
+  }
+  return 0;
+}
+
+int sieve(int n){
+  int p = 0;
+  for(int i = 0;i<=n;i++)is_prime[i] = true;
+  is_prime[0] = is_prime[1] = false;
+  for(int i = 2;i<=n;i++){
+    if(is_prime[i]){
+      prime[p++]=i;
+      for(int j=2*i;j<=n;j+=i)is_prime[j]=false;
+    }
+  }
+  return p;
+}

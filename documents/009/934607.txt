@@ -1,0 +1,97 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <utility>
+#include <cctype>
+#include <numeric>
+#include <complex>
+using namespace std;
+
+#define rep(i,n) for(int (i)=0; (i)<(int)(n); ++(i))
+#define foreach(c,i) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++)
+#define all(a) (a).begin(),(a).end()
+
+int N;
+
+typedef complex<double> P;
+
+P in[102];
+
+vector<P> getCross(int i, int j) {
+  double dist = abs(in[i] - in[j]);
+  if (dist > 2.0) {
+    return vector<P>();
+  }
+  if ((dist - 2.0) < 1e-10) {
+    P center = in[i] + in[j];
+    return vector<P>(1, P(center.real()/2, center.imag()/2));
+  }
+  // 円i, jの中心点を結ぶベクトル
+  P ij = in[j] - in[i];
+  // ベクトルの大きさ
+  double ijAbs = abs(ij);
+  // ij の単位法線ベクトル
+  P ijN0 = (ij * P(0, 1)) / ijAbs;
+  P ijN1 = (ij * P(0,-1)) / ijAbs;
+  // ij の中点までのベクトル
+  P ijHalf = in[i] + P(ij.real()/2, ij.imag());
+  // 三角形の高さ
+  double height = 1 - pow(ijAbs / 2, 2);
+  // 交点までのベクトル
+  P p0 = ijHalf + ijN0 * height;
+  P p1 = ijHalf + ijN1 * height;
+  vector<P> ret;
+  ret.push_back(p0);
+  ret.push_back(p1);
+  return ret;
+}
+
+int main() {
+
+  while (cin >> N, N) {
+    rep(i,N) {
+      double x, y;
+      char camma;
+      cin >> x >> camma >> y;
+      in[i] = P(x, y);
+      // cin >> in[i].real() >> in[i].imag();
+    }
+    int ans = 1;
+    for (int i = 0; i < N; i++) {
+      for(int j = i+1; j < N; j++) {
+        vector<P> cross = getCross(i, j);
+        if (cross.size() == 0)
+          continue;
+        for (int k = 0; k < cross.size(); k++) {
+          P cur = cross[k];
+          int cnt = 2;
+          for (int l = 0; l < N; l++) {
+            if (l == i || l == j) continue;
+            double dist = abs(cur - in[l]);
+            if ((dist - 1.0) < 1e-10) {
+              ++cnt;
+            }
+          }
+          // ans = max(ans, cnt);
+          if (ans < cnt) {
+            ans = cnt;
+            // printf("%d, %d : value %d\n", i+1, j+1, ans);
+          }
+        }
+      }
+    }
+    printf("%d\n", ans);
+  }
+  return 0;
+}

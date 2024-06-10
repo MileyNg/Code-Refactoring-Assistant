@@ -1,0 +1,72 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define INF (1<<29)
+#define EPS (1e-10)
+#define make_pair mp
+#define pb push_bacck
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef pair<int,int> pii;
+
+int dx[] = {0,1,0,-1}, dy[] = {1,0,-1,0};
+int bx[7][4] = {
+							{0,1,0,1},
+							{0,0,0,0},
+							{0,1,2,3},
+							{1,0,1,0},
+							{0,1,1,2},
+							{0,0,1,1},
+							{1,2,0,1}};
+int by[7][4] = {
+							{0,0,1,1},
+							{0,1,2,3},
+							{0,0,0,0},
+							{0,1,1,2},
+							{0,0,1,1},
+							{0,1,1,2},
+							{0,0,1,1}};
+
+int main(){
+	string board[8];
+	string line;
+	int l = 0;
+	while (cin >> line) {
+		board[l] = line;
+		if (++l == 8) {
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+					for (int k = 0; k < sizeof(bx); k++) {
+						bool ok = true;
+						for (int l = 0; l < 4; l++) {
+							int x = j+bx[k][l], y = i+by[k][l];
+							if (x < 0 || 8 <= x || y < 0 || 8 <= y || board[y][x] != '1'){
+								ok = false;
+								break;
+							}
+						}
+						if (ok) {
+							cout << char('A'+k) << endl;
+							goto end;
+						}
+					}
+				}
+			}
+			end:;
+			l = 0;
+		}
+	}
+}

@@ -1,0 +1,75 @@
+#include <cmath>
+#include <cstdio>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+struct point{
+    double x;
+    double y;
+    double z;
+    double r;
+};
+
+point p[100];
+double d[100][100];
+
+double get_dist(point a, point b){
+    double tmp = sqrt(pow(a.x - b.x, 2.0) + pow(a.y - b.y, 2.0) + pow(a.z - b.z, 2.0));
+    return max(tmp - (a.r + b.r), 0.0);
+}
+
+void calc_dist(int n){
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            double dist = get_dist(p[i], p[j]);
+            d[i][j] = dist;
+            d[j][i] = dist;
+        }
+    }
+}
+
+double prim(int n){
+    bool used[100];
+    double mincost[100];
+    double inf = 100000.0;
+    for (int i = 0; i < n; i++) {
+        used[i] = false;
+        mincost[i] = inf;
+    }
+    mincost[0] = 0.0;
+    double res = 0.0;
+    
+    while (true) {
+        int v = -1;
+        for (int u = 0; u < n; u++) {
+            if (!used[u] && (v == -1 || mincost[u] < mincost[v]))
+                v = u;
+        }
+        if (v == -1) break;
+        used[v] = true;
+        res += mincost[v];
+        for (int u = 0; u < n; u++) {
+            mincost[u] = min(mincost[u], d[v][u]);
+        }
+    }
+    return res;
+}
+
+int main()
+{
+    int n;
+    while (true) {
+        cin >> n;
+        if (n == 0) {
+            break;
+        }
+        for (int i = 0; i < n; i++) {
+            cin >> p[i].x >> p[i].y >> p[i].z >> p[i].r;
+        }
+        calc_dist(n);
+        printf("%.3f\n",prim(n));
+    }
+    
+    return 0;
+}

@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+char *search(char *p,char *str)
+{
+  char *tmp;
+
+  for(tmp=p;tmp<=p+strlen(p)-strlen(str);tmp++){
+    if(strncmp(tmp,str,strlen(str))==0)
+      return tmp;
+  }
+  return NULL;
+}
+
+void shift(char *p,char *str,char *key)
+{
+  char buf[1000];
+  char *tmp=search(p,str);
+  //printf("%s",tmp);
+  while(tmp!=NULL){
+    strcpy(buf,tmp+strlen(str));
+    *tmp='\0';
+    strcat(tmp,key);
+    strcat(tmp,buf);
+    tmp=search(tmp+strlen(str),str);
+  }
+}
+
+int main(void)
+{
+  int n,i;
+  char **str1,buf[1000];
+  char str[]="Hoshino",key[]="Hoshina";
+  scanf("%d",&n);
+  str1=malloc(sizeof(char *)*n);
+  for(i=0;i<n;i++)
+    str1[i]=malloc(sizeof(char)*1000);
+
+  for(i=0;i<n;i++){
+    //printf("%d:\n",i);
+    rewind(stdin);
+    fgets(str1[i],sizeof(char)*1000,stdin);
+    rewind(stdin);
+  }
+  //printf("suc\n");
+  for(i=0;i<n;i++){
+    shift(str1[i],str,key);
+  }
+  //printf("suc\n");
+  for(i=0;i<n;i++){
+    printf("%s",str1[i]);
+  }
+  
+
+  return 0;
+}

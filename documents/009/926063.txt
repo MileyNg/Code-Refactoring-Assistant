@@ -1,0 +1,42 @@
+#include<iostream>
+#include<string>
+#include<cstdio>
+#include<queue>
+#include<sstream>
+#include<cstring>
+using namespace std;
+
+int main(){
+  int n;
+  string str="";
+  queue<string> questr;
+  stringstream ss;
+
+  cin>>n;
+  for(int i=0;i<n;i++){
+	 for(;;){
+		getline(cin,str);
+		if(str!="") break;
+	 }
+	 ss<<str;str="";
+	 for(;;){
+		ss>>str;
+		if(str=="") break;
+		if(str=="Hoshino") str="Hoshina";
+		questr.push(str);
+		str="";
+	 }
+
+	 cout<<questr.front();questr.pop();
+	 while(!questr.empty()){
+		cout<<" "<<questr.front();
+		questr.pop();
+	 }
+	 cout<<endl;
+
+	 ss.str("");
+	 ss.clear(stringstream::goodbit);
+	 while(!questr.empty()) questr.pop();
+  }
+  return 0;
+}

@@ -1,0 +1,52 @@
+
+//=====================================================
+// 
+// (setq backup-inhibited t)
+// (setq auto-save-default nil)
+// 
+// (column-number-mode t)
+// (setq-default tab-width 2 indent-tabs-mode nil)
+// 
+// (global-set-key "\C-h" 'delete-backward-char)
+// 
+// (setq indent-line-function 'indent-relative-maybe)
+// (global-set-key "\C-m" 'newline-and-indent)
+// 
+//=====================================================
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int main() {
+  while(1){
+    string s;
+    string t;
+    cin >> s;
+    cin >> t;
+    vector<vector<int>> dp(4000, vector<int>(4000));
+    if(!cin) break;
+    set<string> st;
+    int ml = 0;
+    for (int i = 0; i < s.size(); ++i) {
+      for (int j = 0; j < t.size(); ++j) {
+        if (i > 0 && j > 0 && s[i] == t[j])
+          dp[i][j] = dp[i-1][j-1] + 1;
+        else if(s[i] == t[j])
+          dp[i][j] = 1;
+        else
+          dp[i][j] = 0;
+        ml = max(ml, dp[i][j]);
+      }
+    }
+    cout << ml << endl;
+  }
+  return 0;
+}

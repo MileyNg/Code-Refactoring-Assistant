@@ -1,0 +1,39 @@
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MP (999983)
+
+int memo[MP+2];
+bool isPrime(int x) {
+  if(x < 2) return 0;
+  for(int i=2; i*i<=x; i++) {
+    if(x % i == 0) return memo[x] = 0;
+  }
+  
+  return memo[x] = 1;
+}
+
+int main() {
+  
+  memset(memo, -1, sizeof(memo));
+  
+  
+  int N;
+  while(cin >> N && N) {
+    int X = 0;
+    for(int i=0; i<N; i++) {
+      int p, m; cin >> p >> m;
+      int L = max(p-m, 0), R = min(p+m, MP);
+      int cnt = 0;
+      for(int i=L; i<=R; i++) cnt += isPrime(i);
+      //if(cnt == 0) cnt --;
+      cnt --;
+      X += cnt;
+    }
+    cout << X << endl;
+  }
+  
+  return 0;
+}

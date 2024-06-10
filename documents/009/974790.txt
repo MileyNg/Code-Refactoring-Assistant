@@ -1,0 +1,38 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+struct S{
+	int a, v;
+};
+
+bool operator<(S a, S b){
+	return a.v > b.v;
+}
+
+int main(){
+
+	int n, q, a, v;
+	vector<S> fish;
+	vector<S> sort_fish;
+	S av;
+
+	cin >> n >> q;
+
+	for (int i = 0; i < n; i++){
+		av.a = i + 1, av.v = 0;
+		fish.push_back(av);
+	}
+
+	while (q --> 0){
+		cin >> a >> v;
+		fish[a-1].v += v;
+		sort_fish = fish;
+		sort(sort_fish.begin(), sort_fish.end());
+		cout << sort_fish[0].a << " " << sort_fish[0].v << endl;
+	}
+
+	return 0;
+}

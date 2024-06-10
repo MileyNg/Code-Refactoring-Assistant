@@ -1,0 +1,86 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <map>
+#include <bitset>
+#include <sstream>
+#include <istream>
+#include <cmath>
+#include <cstdio>
+
+using namespace std;
+
+#define vci vector<int>
+#define vcs vector<string>
+#define pb push_back
+#define sz size()
+#define mapii map<int, int>
+#define mapci map<char, int>
+#define mapsi map<string, int>
+#define all(x) x.begin(), x.end()
+#define minit(a, i) memset(a, i, sizeof(a));
+
+#define for_(i, a, b) for (int i=(int)a; i<(int)b; i++)
+#define for_d(i, a, b) for (int i=(int)a-1; i>=b; i--)
+#define for_r(i, a, b, c) for (int i=(int)a; i<(int)b; i += c)
+#define for_dr(i, a, b, c) for (int i=(int)a-1; i>=b; i -= c)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+typedef long long ll;
+
+const int iINF = 2147483647;
+const ll lINF = 9223372036854775807;
+
+template <class T> inline void dbg(T t) { cout << t << endl; }
+
+
+
+int dp[2][10000010];
+
+int main() {
+	int casenum = 0;
+	int W, n;
+	
+	while (1) {
+		cin >> W;
+		if (W==0) break;
+		
+		casenum++;
+		
+		cin >> n;
+		vci v(n), w(n); char c;
+		for_(i, 0, n) cin >> v[i] >> c >> w[i];
+		
+		minit(dp, 0);
+		
+		dp[0][w[0]] = v[0];
+		for_(i, 1, n) {
+			int now = i%2, nxt = (i+1)%2;
+			for_(j, 0, W+1) {
+				if (j+w[i]<=W) {
+					dp[now][j+w[i]] = max(dp[now][j+w[i]], dp[nxt][j] + v[i]);
+				}
+			}
+		}
+		
+		int maxv = 0, maxw = 0;
+		for_(j, 0, W+1) {
+			if (maxv < dp[(n+1)%2][j]) {
+				maxv = dp[(n+1)%2][j];
+				maxw = j;
+			}
+		}
+		
+		cout << "Case " << casenum << ":" << endl;
+		cout << maxv << endl << maxw << endl;
+	}
+	
+	return 0;
+}

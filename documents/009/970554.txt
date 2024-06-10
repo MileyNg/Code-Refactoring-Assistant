@@ -1,0 +1,66 @@
+#include<iostream>
+#include<map>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+int n,m,G;
+vector<int> t[30];
+int u[30];
+
+map<int,int> dp;
+
+void printbit(int x){
+  int y=x;
+  for(int i=0;i<n;i++){
+    cout<<x%2;
+    x/=2;
+  }
+  cout<<' '<<y<<endl;
+}
+
+
+int solve(int S){
+  if(S==G)return 0;
+  if(dp[S]>0)return dp[S];
+
+  int k;
+  for(k=0;k<n;k++){
+    if( (S>>k)&1 )continue;
+    break; 
+  }
+
+  int res=100;
+  for(int i=0;i<(int)t[k].size();i++){
+    int w=t[k][i];
+    res=min(res, solve(S|u[w])+1 );
+  }
+  return dp[S]=res;
+}
+
+
+int main(){
+  int a,b;
+  while(cin>>n>>m){
+    if(n==0&&m==0)break;
+    dp.clear();
+    for(int i=0;i<m;i++){
+      cin>>a>>b;
+      t[a].push_back(b);
+      t[b].push_back(a);
+    }
+
+    for(int i=0;i<n;i++){
+      u[i]=(1<<i);
+      for(int j=0;j<(int)t[i].size();j++){
+	u[i]+=(1<<t[i][j]);
+      }
+      //printbit(u[i]);
+    }
+
+    G=(1<<n)-1;			      
+    //printbit(G);
+    cout<<solve(0)<<endl;
+  }
+  return 0;
+}

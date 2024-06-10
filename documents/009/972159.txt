@@ -1,0 +1,32 @@
+#include<stdio.h>
+main(){
+
+  int tmp,i,j,tr[10000],ans[10]={};
+
+  for(i=0;;i++){
+    if(scanf("%d",&tr[i]) == EOF){
+      break;
+    }
+  }
+
+  tmp=i;
+
+  for(i=0;i<tmp;i++){
+    if(tr[i]==0){
+      for(j=i-1;j>=0;j--){
+	if(tr[j]!=0){
+	  ans[i]=tr[j];
+	  tr[j]=0;
+	  break;
+	}
+      }
+    }
+  }
+
+  for(i=0;i<10;i++){
+    if(ans[i]!=0){
+      printf("%d\n",ans[i]);
+    }
+  }
+  return 0;
+}

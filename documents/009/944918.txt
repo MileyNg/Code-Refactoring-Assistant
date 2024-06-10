@@ -1,0 +1,112 @@
+// 3:15~
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+struct Board{
+	ull data[4];
+	Board():data{}{}
+	int get(int i,int j){
+		return data[i]>>j*8&0xff;
+	}
+	void set(int i,int j,int x){
+		(data[i]&=~(0xffull<<j*8))|=(ull)x<<j*8;
+	}
+};
+bool operator==(const Board& a,const Board& b){
+	rep(i,4) if(a.data[i]!=b.data[i]) return false;
+	return true;
+}
+namespace std{
+	template<>
+	struct hash<Board>{
+		size_t operator()(const Board& x)const{
+			const char* p=(const char*)&x;
+			size_t res=2166136261;
+			rep(i,sizeof(x)) (res^=*p++)*=16777619;
+			return res;
+		}
+	};
+}
+
+int solve()
+{
+	Board b0;
+	rep(i,4) repi(j,1,8){
+		int x; cin>>x;
+		if(x%10==1) b0.set(x/10-1,0,x);
+		else        b0.set(i,j,x);
+	}
+	Board bz;
+	rep(i,4) rep(j,7) bz.set(i,j,(i+1)*10+j+1);
+	
+	queue<Board> q; q.push(b0);
+	int res=0;
+	for(;;res++){
+		queue<Board> q2;
+		unordered_set<Board> vis;
+		while(q.size()){
+			Board cur=q.front(); q.pop();
+			if(cur==bz) return res;
+			if(vis.count(cur)) continue;
+			vis.insert(cur);
+			
+			vector<pii> f(48);
+			rep(i,4) rep(j,8) if(cur.get(i,j)) f[cur.get(i,j)]=mp(i,j);
+			
+			rep(i,4) repi(j,1,8) if(cur.get(i,j)==0){
+				int left=cur.get(i,j-1);
+				if(left==0 || left%10==7) continue;
+				Board next=cur;
+				int x=left+1;
+				next.set(f[x].first,f[x].second,0);
+				next.set(i,j,x);
+				q2.push(next);
+			}
+		}
+		if(q2.empty())
+			return -1;
+		swap(q,q2);
+	}
+}
+
+int main()
+{
+	int n; cin>>n;
+	rep(_,n) cout<<solve()<<endl;
+}

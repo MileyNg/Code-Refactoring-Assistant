@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+int main(){
+  
+  int house[4][3][10];
+  int b,f,r,v;
+  int i,j;
+  
+  for(b=0;b<4;b++){
+
+    for(f=0;f<3;f++){
+
+      for(r=0;r<10;r++){
+
+	house[b][f][r] = 0;
+
+      }
+
+    }
+
+  }
+  
+  cin >>i;
+  
+  for(j=0;j<i;j++){
+    
+    cin >>b >>f >>r >>v ;
+
+    house[b-1][f-1][r-1] = v;
+
+    if(house[b-1][f-1][r-1] < 0)
+      house[b-1][f-1][r-1] = 0; 
+
+    if(house[b-1][f-1][r-1] > 9)
+      house[b-1][f-1][r-1] = 9;  
+  
+  }
+  
+  for(b=0;b<4;b++){
+    
+    for(f=0;f<3;f++){
+      
+      for(r=0;r<10;r++){
+	
+	if(r==9){
+	  cout <<" " <<house[b][f][9] <<"\n";
+	  
+	}else{
+	  cout <<" " <<house[b][f][r]  ;
+	}
+      }
+      if(b ==0||b==1||b==2){
+	if(f == 2)
+	  cout <<"####################" <<"\n";
+      }
+    }
+  }
+  return 0;
+}

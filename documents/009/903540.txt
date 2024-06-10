@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <cctype>
+#include <string>
+#include <cassert>
+#include <algorithm>
+using namespace std;
+string S;
+int cur = 0;
+int number();
+int parse();
+int sen();
+int main(){
+  int n;cin >> n;
+  for(int i = 0;i < n;i++){
+    cur = 0;
+    cin >> S;
+    cout << parse() << endl;
+  }
+  return 0;
+}
+int parse(){
+  assert(S[cur] == '[');
+  cur++;
+  int tmp =  sen();
+  cur++;
+  return tmp;
+}
+
+int sen(){
+  int num;
+  if(S[cur] >= '0' && S[cur] <= '9'){
+    num = number();
+    //cur++;
+    return num/2+1;
+  }
+  assert(S[cur] == '[');
+  vector<int> tmp;
+  while(S[cur] == '['){
+    tmp.push_back(parse());
+  }
+  sort(tmp.begin(),tmp.end());
+  int s = tmp.size();
+  int ans = 0;
+  for(int i =0 ;i <= s/2;i++){
+    ans += tmp[i];
+  }
+  return ans;
+}
+int number(){
+  assert(isdigit(S[cur]));
+  int num = 0;
+  while(isdigit(S[cur])){
+    num = num*10 + (S[cur]-'0');
+    cur++;
+  }
+  return num;
+}

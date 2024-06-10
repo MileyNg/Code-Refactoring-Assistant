@@ -1,0 +1,80 @@
+#include<stdio.h>
+#define NUMBER 1000
+#define SWITCH 0
+//prototype
+int sigma(int code, int sum);
+
+main()
+{
+	char x[NUMBER];
+	int x_code[NUMBER];
+	int sum = 0, i = 0;
+	
+	gets(x);
+	
+	while(x[0] != '0')
+	{
+		i = 0;
+		while(x[i] != '\0')
+		{
+			x_code[i] = x[i];
+			sum = sigma(x_code[i], sum);
+			i++;
+		}
+		printf("%d\n", sum);
+		sum = 0;
+		gets(x);
+	}
+	return 0;
+}
+
+int sigma(int code, int sum)
+{
+	switch(code)
+	{
+	case 48:
+		sum += 0;
+		//printf("%d\n", sum);
+		break;
+	case 49:
+		sum += 1;
+		//printf("%d\n", sum);
+		break;
+	case 50:
+		sum += 2;
+		//printf("%d\n", sum);
+		break;
+	case 51:
+		sum += 3;
+		//printf("%d\n", sum);
+		break;
+	case 52:
+		sum += 4;
+		//printf("%d\n", sum);
+		break;
+	case 53:
+		sum += 5;
+		//printf("%d\n", sum);
+		break;
+	case 54:
+		sum += 6;
+		//printf("%d\n", sum);
+		break;
+	case 55:
+		sum += 7;
+		//printf("%d\n", sum);
+		break;
+	case 56:
+		sum += 8;
+		//printf("%d\n", sum);
+		break;
+	case 57:
+		sum += 9;
+		//printf("%d\n", sum);
+		break;
+	}
+	#if SWITCH == 1
+	printf("%d\n", sum);
+	#endif
+	return sum;
+}

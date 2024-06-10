@@ -1,0 +1,75 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class Point {
+public:
+    int y, x;
+    Point(int i = -1, int j = -1) :y(i), x(j) {}
+    bool operator==(Point& p) {return y == p.y && x == p.x;}
+};
+
+Point NEXT[4] = {
+    Point(1, 0),
+    Point(0, 1),
+    Point(-1, 0),
+    Point(0, -1),
+};
+Point NEXT_OTHER[8][4] = {
+    {Point(1, 0), Point(0, 1), Point(-1, 0), Point(0, -1),},
+    {Point(0, 1), Point(-1, 0), Point(0, -1), Point(1, 0),},
+    {Point(-1, 0), Point(0, -1), Point(1, 0), Point(0, 1),},
+    {Point(0, -1), Point(1, 0), Point(0, 1), Point(-1, 0),},
+    {Point(1, 0), Point(0, -1), Point(-1, 0), Point(0, 1),},
+    {Point(0, -1), Point(-1, 0), Point(0, 1), Point(1, 0),},
+    {Point(-1, 0), Point(0, 1), Point(1, 0), Point(0, -1),},
+    {Point(0, 1), Point(1, 0), Point(0, -1), Point(-1, 0),},
+};
+
+bool clear(vector<vector<int>> &r) {
+    for(auto& line: r) for(auto& v: line) if(v) return false;
+    return true;
+}
+
+bool dfs(vector<vector<int>>& r, Point Tatsuya, Point Kazuya, int direction) {
+    r[Tatsuya.y][Tatsuya.x] = r[Kazuya.y][Kazuya.x] = 0;
+    if(clear(r)) return true;
+    for(int i = 0; i < 4; ++i) {
+        Point next_Tatsuya(Tatsuya.y + NEXT[i].y, Tatsuya.x + NEXT[i].x);
+        Point next_Kazuya(Kazuya.y + NEXT_OTHER[direction][i].y, Kazuya.x + NEXT_OTHER[direction][i].x);
+        if(!r[next_Tatsuya.y][next_Tatsuya.x]) continue;
+        if(!r[next_Kazuya.y][next_Kazuya.x]) continue;
+        if(next_Tatsuya == next_Kazuya) continue;
+        if(dfs(r, next_Tatsuya, next_Kazuya, direction)) return true;
+    }
+    return false;
+}
+
+bool solve(vector<vector<int>>& r) {
+    int h = r.size();
+    int w = r[0].size();
+    Point Tatsuya, Kazuya;
+    for(int i = 0; i < h; ++i) for(int j = 0; j < w; ++j) {
+        if(!r[i][j]) continue;
+        Tatsuya = Point(i, j);
+        for(int i = 0; i < h; ++i) for(int j = 0; j < w; ++j) {
+            if(!r[i][j]) continue;
+            Kazuya = Point(i, j);
+            if(Tatsuya == Kazuya) continue;
+            for(int direction = 0; direction < 8; ++direction) {
+                vector<vector<int>> dup(r);
+                if(dfs(dup, Tatsuya, Kazuya, direction)) return true;
+            }
+        }
+    }
+    return false;
+}
+
+int main() {
+    int w, h;
+    while(cin >> w >> h, w | h) {
+        vector<vector<int>> r(h + 2, vector<int>(w + 2, 0));
+        for(int i = 1; i <= h; ++i) for(int j = 1; j <= w; ++j) cin >> r[i][j];
+        cout << (solve(r) ? "YES" : "NO") << endl;
+    }
+}

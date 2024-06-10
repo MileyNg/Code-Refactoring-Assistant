@@ -1,0 +1,61 @@
+while true
+    n = gets.to_i
+    if n == 0
+        break
+    end
+    a = Array.new(n).map{Array.new(4)}
+    for k in 0..n-1 do
+        t = gets.split.map(&:to_i)
+        a[k][0] = t[0]
+        a[k][1] = t[1]
+        a[k][2] = t[2]
+        a[k][3] = t[3]
+    end
+
+    #sort
+    a.sort! do |p, q|
+        (q[2] <=> p[2]).nonzero? ||
+        (p[3] <=> q[3]).nonzero? ||
+        (p[0] <=> q[0])
+    end
+
+   # p a
+
+    #qualification
+    h = Hash.new
+    count = 0
+
+    a.each do |k|
+        if count < 10
+            if h.member?(k[1])
+                if h[k[1]] < 3
+                    h[k[1]] = h[k[1]] + 1
+                    puts k[0]
+                end
+            else
+                h[k[1]] = 1
+                puts k[0]
+            end
+        elsif count < 20
+            if h.member?(k[1])
+                if h[k[1]] < 2
+                    h[k[1]] = h[k[1]] + 1
+                    puts k[0]
+                end
+            else
+                h[k[1]] = 1
+                puts k[0]
+            end
+        elsif count < 26
+            if !h.member?(k[1])
+                puts k[0]
+                h[k[1]] = 1
+            end
+        end
+     #   p h
+    end
+
+
+
+
+end

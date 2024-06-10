@@ -1,0 +1,77 @@
+#include <vector>
+#include <iostream>
+#include <set>
+#include <cstdio>
+#include <queue>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <algorithm>
+#include <limits>
+#include <map>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> P;
+const int MN = 400;
+
+int main() {
+    while(1) {
+        int m, n;
+        int d[MN] = {};
+        bool used[MN][2] = {};
+        vector<int> rd[MN];
+
+        cin >> m;
+        if (!m) break;
+        cin >> n; n++;
+        for (int i = 1; i < n; i++) {
+            cin >> d[i];
+            d[i] += i;
+            d[i] = max(d[i], 0);
+            d[i] = min(d[i], n);
+            rd[d[i]].push_back(i);
+        }
+        rd[0].push_back(0);
+        d[n] = n;
+        rd[n].push_back(n);
+        queue<P> q;
+        q.push(P(n, 0));
+        q.push(P(n, 1));
+        while (!q.empty()) {
+            P p = q.front(); q.pop();
+            int u, f;
+            tie(u, f) = p;
+            if (used[u][f]) continue;
+            //cout << u << endl;
+            used[u][f] = true;
+            if (!f) {
+                for (int i = max(0, u-m); i < u; i++) {
+                    q.push(P(i, 1));
+                }                
+            } else {
+                for (int i: rd[u]) {
+                    q.push(P(i, 0));
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            //printf("%d %d %d\n", i, used[i][0], used[i][1]);
+        }
+        bool f = true;
+        for (int i = 1; i <= min(n, m); i++) {
+            if (!used[i][0]) {
+                //cout << i << endl;
+                f = false;
+            }
+        }
+        if (f) {
+            printf("OK\n");
+        } else {
+            printf("NG\n");
+        }
+    }
+    return 0;
+}

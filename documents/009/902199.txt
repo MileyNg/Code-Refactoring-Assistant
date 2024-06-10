@@ -1,0 +1,52 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int N, M;
+    while (readf("%d %d\n", &N, &M), N || M) {
+        int[] h = new int[N],
+              w = new int[M];
+        int[] sN = new int[N + 1];
+        int[] sM = new int[M + 1];
+        int[] c;
+        foreach (i; 0 .. N) {
+            readf("%d\n", &h[i]);
+        }
+        foreach (i; 0 .. M) {
+            readf("%d\n", &w[i]);
+        }
+        sN[0] = 0;
+        foreach (i; 0 .. N) {
+            sN[i + 1] = sN[i] + w[i];
+        }
+        sM[0] = 0;
+        foreach (i; 0 .. M) {
+            sM[i + 1] = sM[i] + w[i];
+        }
+        foreach (i; 0 .. M) {
+            foreach (j; i + 1 .. M + 1) {
+                c ~= sM[j] - sM[i];
+            }
+        }
+        c = c.sort.array;
+        int ans = 0;
+        foreach (i; 0 .. N) {
+            foreach (j; i + 1 .. N + 1) {
+                ans += c.assumeSorted.equalRange(sN[j] - sN[i]).length;
+            }
+        }
+        ans.writeln;
+    }
+}

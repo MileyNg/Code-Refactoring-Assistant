@@ -1,0 +1,26 @@
+while 1:
+	n,k=map(int,raw_input().split())
+	if n==0:break
+	a=sorted([int(raw_input()) for i in range(k)])
+	ans=L=1
+	if a[0]==0:
+		for i in range(1,k-1):
+			if a[i]+1!=a[i+1]:
+				sp=i
+				break
+		for i in range(sp,k-1):
+			if a[i]+1==a[i+1]:
+				L+=1
+			else:
+				ans=max(ans,L+i+2-sp)
+				sp=i
+				L=1
+	else:
+		for i in range(k-1):
+			if a[i]+1==a[i+1]:
+				L+=1
+			else:
+				ans=max(ans,L)
+				L=1
+	print ans
+	

@@ -1,0 +1,101 @@
+#include <bitset>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define BINARY(x) cerr << #x << "=" << static_cast<bitset<16> >(x) << endl;
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+int dx[4]={1, 0, -1, 0}, dy[4]={0, 1, 0, -1};
+using namespace std;
+typedef long long  ll;
+
+/** Problem0178 : TETORIS **/
+bool board[5][5000];
+
+int main()
+{
+	int n, d, p, q;
+	while (cin>>n, n) {
+		rep(x, 5) rep(y, 5000) board[x][y]=false;
+		rep(k, n) {
+			cin >> d >> p >> q;
+			q--;
+			
+			int dx=1, dy=0;
+			if (d==2) {
+				dx=0; dy=1;
+			}
+			
+			vector<int> low;
+			for (int ii=0; ii<p; ii++) {
+				for (int i=4999; i>=0; i--) {
+					if (board[q+ii][i]) {
+						low.push_back(i+1);
+						goto end;
+					}
+				}
+				low.push_back(0);
+			end:;
+				if (d==2) break;
+			}
+
+			int m=0;
+			rep(j, low.size()) {
+				m = max(m, low[j]);
+			}
+			
+			board[q][m]=true;
+			rep(j, p-1) {
+				q+=dx;m+=dy;
+				board[q][m] = true;
+			}
+			
+			rep(y, 5000) {
+				bool flg = true;
+				rep(x, 5) {
+					flg &= board[x][y];
+				}
+				if (flg) {
+					for (int yy=y; yy<5000; yy++) {
+						for (int xx=0; xx<5; xx++) {
+							board[xx][yy] = board[xx][yy+1];
+						}
+					}
+					for (int xx=0; xx<5; xx++) {
+						board[xx][4999] = false;
+					}
+					y--;
+				}
+			}
+			/**
+			rep(y, 10) {
+				rep(x, 5) {
+					cout << (board[x][9-y]?"#":"0");
+				}
+				cout << endl;
+			}
+			cout << endl; **/
+		}
+		int ans=0;
+		rep(y, 5000) {
+			rep(x, 5) {
+				if (board[x][y])
+					ans++;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

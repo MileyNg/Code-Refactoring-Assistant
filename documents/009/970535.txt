@@ -1,0 +1,25 @@
+c2n = {
+  "M" => 1000, "D" => 500, "C" => 100, "L" => 50,
+  "X" => 10, "V" => 5, "I" => 1
+}
+
+### main
+
+while (line =gets)
+  chs = line.chomp.split("")
+
+  sum = 0
+
+  for i in (0...chs.length)
+    n0 = c2n[chs[i]] || 0
+    n1 = c2n[chs[i + 1]] || 0
+
+    if n0 < n1
+      sum -= n0
+    else
+      sum += n0
+    end
+  end
+
+  puts sum
+end

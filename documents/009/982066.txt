@@ -1,0 +1,76 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<cstring>
+#include<map>
+using namespace std;
+int main()
+{
+  int n,m,p,a,b;
+  for(;cin>>n>>m>>p>>a>>b,n;)
+    {
+      int t[n];
+      for(int i=0;i<n;i++)
+	cin>>t[i];
+      int edge[m+2][m+2];
+      memset(edge,-1,sizeof(edge));
+      for(int i=0;i<p;i++)
+	{
+	  int x,y,z;
+	  cin>>x>>y>>z;
+	  edge[x][y]=z;
+	  edge[y][x]=z;
+	}
+      //time,now,bit
+      priority_queue< pair<double,pair<int,int > >, vector<pair<double,pair<int,int > > >,greater<pair<double,pair<int,int > > > >qu;
+      qu.push(make_pair(0.0,make_pair(a,0)));
+      map<pair<int,int>,bool> hash;
+      bool flag=true;
+      while(!qu.empty())
+	{
+	  double time=qu.top().first;
+	  int now=qu.top().second.first;
+	  int bit=qu.top().second.second;
+	  qu.pop();
+	  //	  cout<<"now: "<<time<<" "<<now<<" "<<bit<<endl;
+	  if(now==b)
+	    {
+	      flag=false;
+	      cout<<time<<endl;
+	      break;
+	    }
+	  if(hash.count(make_pair(now,bit))!=0)
+	    continue;
+	  hash[make_pair(now,bit)]=true;
+	  for(int i=0;i<=m;i++)
+	    {
+	      if(edge[now][i]!=-1)
+		{
+		  //		  cout<<"edge:"<<now<<"->"<<i<<endl;
+		  for(int j=0;j<n;j++)
+		    {
+		      //		      cout<<"bit ;"<<bit<<" "<< (1<<j)<<endl;
+		      //		      cout<<(bit & (1<<j))<<endl;
+		      //		      cout<<(hash.count(make_pair(i,bit|(1<<j))))<<endl;
+		      if(((bit & (1<<j)) == 0) &&
+			 (hash.count(make_pair(i,bit|(1<<j))) == 0))
+			{
+			  ///	  cout<<"IN"<<endl;
+			  qu.push(make_pair(time+(double(edge[now][i])/t[j]),make_pair(i,bit|(1<<j))));
+			}
+		      /*
+		      else
+			{
+			  cout<<"OUT"<<endl;
+			  cout<<(bit & (1<<j) == 0)<<endl;
+			  cout<<(hash.count(make_pair(i,bit|(1<<j))))<<endl;
+			}
+		      */
+		    }
+		}
+	    }
+	}
+      if(flag)
+	cout<<"Impossible"<<endl;
+    }
+}

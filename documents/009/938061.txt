@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int B[10];
+
+bool solve() {
+    vector<int> a, b;
+    a.push_back(0);
+    b.push_back(0);
+    for (int i = 0; i < 10; i++) {
+        if (a.back() < B[i]) {
+            a.push_back(B[i]);
+        } else if (b.back() < B[i]) {
+            b.push_back(B[i]);
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    int N; cin >> N;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < 10; j++) {
+            cin >> B[j];
+        }
+        cout << (solve() ? "YES" : "NO") << endl;
+    }
+    return 0;
+}

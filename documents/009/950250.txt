@@ -1,0 +1,33 @@
+#include<stdio.h>
+int main(void){
+    int dis[10];
+    double out,out2;
+    while(scanf("%d",&dis[0])!=EOF){
+        int line[100000],speed1,speed2,i,j,cnt;
+        cnt=0;
+        for(i=0;i<10;i++){
+            if(i>=1)scanf(",%d",&dis[i]);
+            for(j=0;j<dis[i];j++){
+                line[j+cnt]=i+1;
+            }
+            //printf("%d %d %d\n",cnt,i,cnt+j);
+            cnt+=dis[i];
+        }
+        //printf("\n%d\n",cnt);
+        scanf(",%d,%d",&speed1,&speed2);
+        //printf("***%d\n",speed1);
+        /*for(i=0;i<=cnt;i++){
+            printf("%d ",i);
+        }
+        puts("");
+        for(i=0;i<cnt;i++){
+            printf("%d ",line[i]);
+        }*/
+        out=(double)cnt*((double)speed1/(double)(speed1+speed2));
+        //printf("...%d %d %d\n",(double)(speed1+speed2),(double)speed1/(double)(speed1+speed2),1);
+        out2 = (double)(int)out;
+        if(out-out2<0.00000001)out-=1.0;
+        printf("%d\n",line[(int)out]);
+    }
+    return 0;
+}

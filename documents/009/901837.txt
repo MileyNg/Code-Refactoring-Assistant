@@ -1,0 +1,20 @@
+#include <cstdio>
+#include <iostream>
+using namespace std;
+int N = 60;
+int f(int t){
+	int c=t% N;
+	t/=N;
+	printf("%02d:%02d:%02d\n",t/N,t%N,c);
+	return 0;
+}
+int main(){
+	while (1){
+		int h,m,s,t;
+		cin>>h>>m>>s;
+		if (h==-1&&m==-1&&s==-1)break;
+		t=7200-(h*N+m)*N-s;
+		f(t);
+		f(t*3);
+	}
+}

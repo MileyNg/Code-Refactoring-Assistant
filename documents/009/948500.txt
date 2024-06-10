@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long double ld;
+
+const ld EPS = 1e-9;
+const ld INF = 1e10;
+const ld PI = M_PI;
+
+struct Point{
+  ld x, y;
+  Point(ld x, ld y):x(x), y(y){}
+  Point(){}
+};
+
+Point operator+(const Point &a, const Point &b){
+  return Point(a.x + b.x, a.y + b.y);
+}
+Point operator-(const Point &a, const Point &b){
+  return Point(a.x - b.x, a.y - b.y);
+}
+Point operator*(const Point &a, const ld b){
+  return Point(a.x * b, a.y * b);
+}
+Point operator*(const Point &a, const Point &b){
+  return Point(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);
+}
+Point operator/(const Point &a, const ld b){
+  return Point(a.x / b, a.y / b);
+}
+
+ld cross(const Point &a, const Point &b){
+  return a.x*b.y - a.y*b.x;
+}
+
+ld dot(const Point &a, const Point &b){
+  return a.x*b.x + a.y*b.y;
+}
+
+ld norm(const Point &a){
+  return dot(a, a);
+}
+
+struct Line:vector<Point>{
+  Line(Point a = Point(0, 0), Point b = Point(0, 0)){
+    this->push_back(a);
+    this->push_back(b);
+  }
+};
+
+typedef vector<Point> Polygon;
+
+Point next(const Polygon &a, int x){
+  return a[(x+1)%a.size()];
+}
+
+ld area(const Polygon &a){
+  ld ret = 0.0;
+  for(int i = 0 ; i < (int)a.size() ; i++){
+    ret += cross(a[i], next(a, i));
+  }
+  return abs(ret) * .5;
+}
+
+int main(){  
+  int q;
+  cin >> q;
+  Polygon poly;
+  while(q--){
+    Point p;
+    cin >> p.x >> p.y;
+    poly.push_back(p);
+  }
+  ld ans = area(poly);
+  printf("%.10Lf\n", ans);
+  
+  return 0;
+}

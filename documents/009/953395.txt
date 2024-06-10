@@ -1,0 +1,76 @@
+#include<iostream>
+#include<queue>
+#include<map>
+using namespace std;
+
+struct node 
+{
+  int step;
+  int tx,ty;
+  int kx,ky;
+  node(int s,int ttx,int tty,int kkx,int kky):
+    step(s),tx(ttx),ty(tty),kx(kkx),ky(kky){} 
+};
+  
+int main()
+{
+  int x,y;
+  for(;cin>>x>>y,x;)
+    {
+      bool data[52][52];
+      int tx,ty,kx,ky;
+      cin>>tx>>ty>>kx>>ky;
+      memset(data,false,sizeof(data));
+      for(int i=1;i<=x;i++)
+	for(int j=1;j<=y;j++)
+	  {
+	    char tmp;
+	    cin>>tmp;
+	    data[j][i]=(tmp=='0');
+	  }
+      queue<node> qu;
+      qu.push(node(0,tx,ty,kx,ky));
+      map< pair<pair<int,int>,pair<int,int> > ,bool >hash;      
+      int ans=-1;
+      int dx[]={0,0,1,-1};
+      int dy[]={1,-1,0,0};
+      while(!qu.empty())
+	{
+	  node tmp=qu.front();
+	  qu.pop();
+	  //	  cout<<tmp.step<<" "<<tmp.tx<<" "<<tmp.ty<<" "<<tmp.kx<<" "<<tmp.ky<<endl;
+	  if(hash[make_pair(make_pair(tmp.tx,tmp.ty),make_pair(tmp.kx,tmp.ky))])
+	    continue;
+	  if(tmp.tx==tmp.kx &&tmp.ty==tmp.ky)
+	    {
+	      ans=tmp.step;
+	      break;
+	    }
+	  if(tmp.step>=99)
+	    continue;
+	  hash[make_pair(make_pair(tmp.tx,tmp.ty),make_pair(tmp.kx,tmp.ky))]=true;
+	  for(int i=0;i<4;i++)
+	    {
+	      int ttx=tmp.tx,tty=tmp.ty,tkx=tmp.kx,tky=tmp.ky;
+	      if(data[ttx+dx[i]][tty+dy[i]])
+		{
+		  ttx+=dx[i];
+		  tty+=dy[i];
+		}
+	      if(data[tkx-dx[i]][tky-dy[i]])
+		{
+		  tkx-=dx[i];
+		  tky-=dy[i];
+		}
+	      //cout<<"make"<<ttx<<" "<<tkx<<" "<<tty<<" "<<tty<<endl;	      
+	      if(!hash[make_pair(make_pair(ttx,tty),make_pair(tkx,tky))])
+		qu.push(node(tmp.step+1,ttx,tty,tkx,tky));
+	    }
+	}
+      if(ans==-1)
+	cout<<"NA"<<endl;
+      else
+	cout<<ans<<endl;
+
+    }
+}

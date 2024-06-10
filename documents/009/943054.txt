@@ -1,0 +1,23 @@
+loop do
+    n,s = gets.split.map(&:to_i)
+    if n==0 && s == 0
+        break
+    end
+    r = Array.new(n)
+    n.times do |i|
+        r[i] = gets.to_i
+    end
+    r.sort!
+    p r
+    count = 0
+    for i in 0...n
+        if r[i] > s
+            count += n-i-1
+            next
+        end
+        index = r[i+1...n].index {|x| r[i]+x>s}
+        puts index
+        count += (index)? n - index - i -1: 0
+    end
+    puts count
+end

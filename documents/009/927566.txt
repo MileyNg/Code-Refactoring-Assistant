@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+typedef long long ll;
+const ll LLINF = LLONG_MAX;
+int N,len[110];
+
+int main(){
+  while(cin>>N,N){
+    vector<ll> buf[N];
+    rep(i,N){
+      int cur;
+      cin >> len[i] >> cur;
+      buf[i].resize(len[i]);
+      rep(j,len[i]) cin >> buf[i][(cur+j)%len[i]];
+    }
+
+    ll ans = 0;
+    rep(i,len[0]){
+      ll cost = buf[0][i];
+      REP(j,1,N){
+        set<int> used;
+        int cur = i % len[j];
+        ll tmp_max = buf[j][cur];
+        while(true){
+          if( used.find(cur) != used.end() ) break;
+          used.insert(cur);
+          tmp_max = max(tmp_max,buf[j][cur]);
+          ( cur += len[0] )  %= len[j];
+        }
+        cost += tmp_max;
+      }
+      ans = max(ans,cost);
+    }
+    cout << ans << endl;
+  }
+  return 0;
+}

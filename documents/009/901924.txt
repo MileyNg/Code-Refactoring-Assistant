@@ -1,0 +1,33 @@
+def solve(input)
+  ss = input.split("\n")
+
+  nss = []
+  while true
+    n = ss.shift.to_i
+    break if n == 0
+
+    ns = []
+    n.times{ns.push(ss.shift.to_i)}
+    nss.push(ns)
+  end
+
+  a = []
+  nss.each do |ns|
+    b = []
+    b[0] = nil
+    ns.each_with_index do |n, i|
+      b[i+1] = [n, n]
+      1.upto(i) do |k|
+        b[k] = [b[k][0]+n, [b[k][0]+n, b[k][1]].max]
+      end
+    end
+    max = 0
+    1.upto(b.size-1) do |i|
+      max = b[i][1] if max < b[i][1]
+    end
+    a.push(max)
+  end
+  a
+end
+
+solve(gets(nil)).each {|a| puts a}

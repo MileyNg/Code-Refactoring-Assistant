@@ -1,0 +1,197 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<queue>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 555;
+const int INF = 1000000000;
+
+int n,e,q;
+
+
+int flow[N][N];
+int edge[N][N];
+
+bool init(){
+	rep(i,N)rep(j,N)flow[i][j]=edge[i][j]=0;
+	cin>>n>>e>>q;
+	rep(i,e){
+		int a,b;
+		cin>>a>>b;
+		edge[a][b]=1;
+		edge[b][a]=1;
+	}
+}
+
+int update_edge(int a,int b,int c){
+	int ret = 0;
+	if(a==1){
+		edge[b][c]++;
+		edge[c][b]++;
+	}
+	if(a==2){
+		edge[b][c]--;
+		edge[c][b]--;
+		ret = max(ret, flow[b][c]-edge[b][c]);
+		ret = max(ret, flow[c][b]-edge[c][b]);
+		flow[b][c] = min(flow[b][c], edge[b][c]);
+		flow[c][b] = min(flow[c][b], edge[c][b]);
+	}
+	return ret;
+}
+
+void printflow(){
+	printf("flow:\n");
+	rep(i,n+2){
+		rep(j,n+2){
+			printf("%2d ",flow[i][j]);
+		}puts("");
+	}
+	printf("edge\n");
+	rep(i,n+2){
+		rep(j,n+2){
+			if(edge[i][j]==INF)printf("oo ");
+			else printf("%2d ",edge[i][j]);
+		}puts("");
+	}puts("\n");
+}
+int visit[N];
+int flowrec(int pos, int en, int f){
+	if(visit[pos]==1)return 0;
+	visit[pos]=1;
+	
+	if(pos==en)return f;
+	
+	rep(i,N){
+		int f1 = edge[pos][i] - flow[pos][i];
+		int f2 = flow[i][pos];
+		
+		if(f1!=0 && f2==0){
+			int val = flowrec(i, en, min(f,f1));
+			if(val!=0){
+				//printf("flow %d %d\n",pos,i);
+				flow[pos][i]+=val;
+				return val;
+			}
+		}
+		if(f2!=0){
+			int val = flowrec(i, en, min(f,f2));
+			if(val!=0){
+				//printf("rflow %d %d\n",i,pos);
+				flow[i][pos]-=val;
+				return val;
+			}
+		}
+	}
+	return 0;
+}
+int flowing(int st, int en){
+	int ret = 0;
+	while(1){
+		rep(i,N)visit[i]=0;
+		
+		int val = flowrec(st, en, INF);
+		if(val==0)break;
+		ret += val;
+	}
+	return ret;
+}
+
+int reflowrec(int pos,int en,int f){
+	if(visit[pos]==1)return 0;
+	visit[pos]=1;
+	
+	if(pos==en)return f;
+	
+	rep(i,N){
+		int f1 = flow[i][pos];
+		if(f1!=0){
+			int val = reflowrec(i, en, min(f,f1));
+			if(val!=0){
+				flow[i][pos]-=val;
+				return val;
+			}
+		}
+	}
+	
+	return 0;
+}
+void reflowing(bool bc, int st, int en, int b, int c){
+	if(bc){
+		//printf("flow[%d][%d] %d\n",b,c,flow[b][c]);
+		int val = flowing(b,c);
+		if(val==0){
+			//printf("* val=0\n");
+			rep(i,N)visit[i]=0;
+			reflowrec(b, st, 1);
+			
+			rep(i,N)visit[i]=0;
+			reflowrec(en, c, 1);
+		}
+	}else{
+		//printf("flow[%d][%d] %d\n",c,b,flow[c][b]);
+		int val = flowing(c,b);
+		
+		if(val==0){
+			//printf("* val=0\n");
+			rep(i,N)visit[i]=0;
+			reflowrec(c, st, 1);
+			
+			rep(i,N)visit[i]=0;
+			reflowrec(en, b, 1);
+		}
+	}
+}
+
+void setflow(){
+	edge[0][1]=INF;
+	edge[n][n+1]=INF;
+}
+void solve(){
+	
+	setflow();
+	int st = 0;
+	int en = n+1;
+	
+	int retsum = 0;
+	
+	retsum += flowing(st, en);
+	//printflow();
+	
+	rep(i,q){
+		int a,b,c;
+		cin>>a>>b>>c;
+		
+		bool bc = flow[b][c]>0;
+		
+		int dec = update_edge(a,b,c);
+		retsum -= dec;
+		
+		if(a==1){
+			retsum += flowing(st, en);
+		}
+		if(a==2){
+			if(dec!=0){
+				//printf("dec!=0\n");
+				reflowing(bc, st, en, b, c);
+			}
+		}
+		
+		printf("%d\n",flow[n][n+1]);
+		//printflow();
+	}
+}
+
+int main(){
+	init();
+	solve();
+}

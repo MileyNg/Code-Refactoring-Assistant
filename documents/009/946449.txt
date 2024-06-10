@@ -1,0 +1,73 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+typedef struct _List{
+	_List* front;
+	_List* rear;
+	int data;
+}List;
+
+int main(void){
+	std::ios_base::sync_with_stdio(false);
+	int n;
+	string s;
+	int d;
+	cin >> n;
+	List* top;
+	List* end;
+	List a;
+	a.front = NULL;
+	a.rear = NULL;
+	a.data = 0;
+	top = &a;
+	end = &a;
+
+	for(int i=0; i<n; i++){
+		cin >> s;
+		if(s == "insert"){
+			cin >> d;
+			List* temp = new List;
+			
+			temp->data = d;
+			temp->rear = top;
+			temp->front = NULL;
+			top->front = temp;
+			top = temp;
+		}else if(s == "delete"){
+			cin >> d;
+			List* t = top;
+
+			while(t != NULL && t->rear != NULL){
+				if(t->data == d){
+					if(t->front != NULL)(t->front)->rear = (t->rear);
+					else top = t->rear;
+					if(t->rear != NULL)(t->rear)->front = (t->front);
+					break;
+				}
+				t = t->rear;
+			}
+		}else if(s == "deleteFirst"){
+			if(top->rear != NULL)(top->rear)->front = NULL;
+			top = top->rear;
+		}else if(s == "deleteLast"){
+			List* t = end;
+
+			t = t->front;
+			t = t->front;
+			if(t != NULL)t->rear = end;
+			else top = end;
+			end->front = t;
+		}
+	}
+
+	List* t = top;
+	while(t->rear != NULL){
+		if(t != top) cout << " ";
+		cout << t->data;
+		t = t->rear;
+	}
+	cout << endl;
+
+	return 0;
+}

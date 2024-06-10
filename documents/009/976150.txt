@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int h,w,c;
+int panel[10][10], sub[10][10];
+vector<int> seq;
+bool vis[10][10];
+const int dy[] = {-1,0,1,0}, dx[] = {0,1,0,-1};
+
+int dfs(int y, int x, int col){
+  if(vis[y][x])return 0;
+  vis[y][x] = true;
+
+  int res = 1;
+  for(int i=0;i<4;i++){
+    int ny = y+dy[i], nx = x+dx[i];
+    if(ny<0 || nx<0 || ny>=h || nx>=w)continue;
+    if(vis[ny][nx] || panel[ny][nx] != panel[0][0])continue;
+    res += dfs(ny,nx,col);
+  }
+
+  panel[y][x] = col;
+  return res;
+}
+
+int sim(void){
+  int res = 0;
+  for(int i=0;i<5;i++){
+    memset(vis,0,sizeof(vis));
+    dfs(0,0,seq[i]);
+  }
+  memset(vis,0,sizeof(vis));
+  return dfs(0,0,0);
+}
+
+int rec(int depth){
+  if(depth == 5){
+    if(seq[depth-1] != c)return 0;
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++)panel[i][j] = sub[i][j];
+    }
+    int res = sim();
+    return res;
+  }
+
+  int res = 0;
+  for(int i=1;i<=6;i++){
+    seq.push_back(i);
+    res = max(res, rec(depth+1));
+    seq.pop_back();
+  }
+  return res;
+}
+
+int main(){
+  while(cin >> h >> w >> c, h){
+    for(int i=0;i<h;i++){
+      for(int j=0;j<w;j++)cin >> sub[i][j];
+    }
+    cout << rec(0) << endl;
+  }
+}

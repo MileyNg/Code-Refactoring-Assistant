@@ -1,0 +1,88 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+struct P
+{
+	int x,y,l;
+};
+
+int main(){
+	int w,h;
+	int dx[]={0,0,-1,1};
+	int dy[]={-1,1,0,0};
+
+	while(cin >> w >> h, w|h){
+
+		vector< vector<bool> > map;
+		vector<bool>b;
+
+		for(int ix=0;ix<w*2-1+2;ix++)
+			b.push_back(true);
+		map.push_back(b);
+
+		for(int iy=0;iy<h*2-1;iy++){
+			b.clear();
+			b.push_back(true);
+			if(iy%2==0){
+				for(int ix=0;ix<w*2-1;ix++){
+					bool t=0;
+					if(ix%2==1)
+						cin >> t;
+					b.push_back(t);
+				}
+			}else{
+				for(int ix=0;ix<w*2-1;ix++){
+					bool t=0;
+					if(ix%2==0)
+						cin >> t;
+					b.push_back(t);
+				}
+			}
+			b.push_back(true);
+			map.push_back(b);
+		}
+		b.clear();
+		for(int ix=0;ix<w*2-1+2;ix++)
+			b.push_back(true);
+		map.push_back(b);
+
+		queue<P> que;
+		que.push((P){1,1,0});
+		int path=0;
+		while(!que.empty()){
+
+			P p=que.front();que.pop();
+			if(p.x==w*2-1&&p.y==h*2-1){
+				path=p.l+1;
+				break;
+			}
+
+			/*
+			cout << endl;
+			for(int iy=0;iy<map.size();iy++){
+				for(int ix=0;ix<map.at(iy).size();ix++)
+				if(p.x!=ix||p.y!=iy)
+					cout << map[iy][ix];
+				else
+					cout << X;
+				cout << endl;
+			}
+			cout << endl;
+			*/
+
+			if(!(p.x+p.y))path++;
+			map[p.y][p.x]==true;
+			for(int i=0;i<4;i++){
+				if(!map[p.y+dy[i]][p.x+dx[i]]){
+					map[p.y+dy[i]][p.x+dx[i]]=true;
+					que.push((P){p.x+dx[i]*2,p.y+dy[i]*2,p.l+1});
+				}
+			}
+		}
+		cout << path << endl;
+	}
+
+	return 0;
+}

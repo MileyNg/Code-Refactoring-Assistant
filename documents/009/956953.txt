@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define REP(i,n) for(int i = 0; i < (int)(n); i++)
+
+using namespace std;
+
+int main(){
+  for(int i = 0; i < 1 ;i++){
+    int n, m;
+    cin >> n >> m;
+    if(n==0 && m==0) { break; }
+
+    int count[100];
+    REP(i, m) {count[i] = 0;}
+    REP(i, n){
+      for(int j = 0; j < m; j++){
+	int tmp; cin >> tmp;
+	count[j]+=tmp;
+      }
+    }
+    vector<pair<int, int> > ranking;
+    REP(i,m) ranking.push_back(make_pair(count[i],-(i+1)));
+    sort(ranking.begin(), ranking.end());
+    reverse(ranking.begin(), ranking.end());
+    for(auto r : ranking){
+      cout << -r.second << " ";
+    }
+    cout << endl;
+  }
+}

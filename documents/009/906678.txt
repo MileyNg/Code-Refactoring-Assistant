@@ -1,0 +1,21 @@
+#include<iostream>
+#include<math.h>
+#include<stdio.h>
+
+using namespace std;
+
+int main(void)
+{
+	double q;
+	while(1){
+		cin>>q;
+		if(q==-1) break;
+		double x=q/2;
+		while(1){
+			x=x-((x*x*x-q)/(3*x*x));
+			if(fabs(x*x*x-q)<0.00001*q) break;
+		}
+		printf("%.6lf\n",x);
+	}
+	return 0;
+}

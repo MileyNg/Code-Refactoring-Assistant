@@ -1,0 +1,87 @@
+#include<iostream>
+#include<cstring>
+#include<string>
+#include<queue>
+#include<vector>
+using namespace std;
+const int MAXN = 30;
+const int MAXM = 1000;
+int N;
+string str[MAXM];
+int arr[MAXN][MAXN];
+int to[MAXN];
+int is_app[MAXN];
+int topsort()
+{
+    queue<int> que;
+    int vis[MAXN];
+    memset(vis, 0, sizeof(vis));
+    for(int i = 0; i < MAXN; i++)
+        if(to[i]==0 && is_app[i]){
+            que.push(i);
+            vis[i] = 1;
+        }
+    while(!que.empty()){
+        int u = que.front();
+        que.pop();
+
+        for(int i = 0; i < MAXN; i++) if(arr[u][i] && !vis[i] && is_app[i]) {
+            to[i]--;
+            if(to[i] == 0) {
+                que.push(i);
+                vis[i] = 1;
+            }
+        }
+    }
+    /*for(int i = 0; i < MAXN; i++)
+        cout<<is_app[i]<<endl;*/
+    for(int i = 0; i < MAXN; i++) {
+        if(is_app[i])
+            return 0;
+    }
+    return 1;
+}
+int main()
+{
+    while(cin>>N && N) {
+        int flag = 1;
+        memset(is_app, 0, sizeof(is_app));
+        memset(arr, 0, sizeof(arr));
+        memset(to, 0, sizeof(to));
+        for(int i = 1; i <= N; i++) {
+            cin>>str[i];
+        }
+        if(N==1){
+            cout<<"yes"<<endl;
+            continue;
+        }
+        for(int i = 1; i <= N-1; i++) {
+            string a = str[i], b = str[i+1];
+            int len_1 = a.length(), len_2 = b.length();
+            int j;
+            for(j = 0; j<len_1 && j<len_2; j++) {
+                if(a[j] != b[j]) {
+                    is_app[a[j]-'a'] = 1;
+                    is_app[b[j]-'a'] = 1;
+                    if(arr[a[j]-'a'][b[j]-'a']==0) {
+                        arr[a[j]-'a'][b[j]-'a'] = 1;
+                        to[b[j]-'a']++;
+                    }
+                    break;
+                }
+            }
+            if(j == len_2 && j< len_1){
+                flag = 0;
+            }
+        }
+        if(flag == 0){
+            cout<<"no"<<endl;
+            continue;
+        }
+        if(topsort())
+            cout<<"yes"<<endl;
+        else
+            cout<<"no"<<endl;
+    }
+    return 0;
+}

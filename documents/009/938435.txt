@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <queue>
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+#include <string.h>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+#define MAX 1005
+int father[MAX];   /* father[x]陦ィ遉コx逧?宛闃らせ*/
+int Rank[MAX];     /*Rank[x]陦ィ遉コx逧?キア蠎ヲ*/
+struct Edge{
+    int from,to,c;
+}edge[10005];
+int Tot;
+void Make_Set(int x)
+{
+	father[x] = x; //譬ケ謐ョ螳樣刔諠??謖?ョ夂噪辷カ闃らせ蜿ッ蜿伜喧
+	Rank[x] = 0;   //譬ケ謐ョ螳樣刔諠??蛻晏ァ句喧遘ゥ荵滓怏謇?序蛹?}
+
+/* 譟・謇セx蜈?エ?園蝨ィ逧?寔蜷?蝗樊コッ譌カ蜴狗シゥ霍ッ蠕?/
+int Find_Set(int x)
+{
+	if (x != father[x])
+	{
+		father[x] = Find_Set(father[x]); //霑吩クェ蝗樊コッ譌カ逧?視郛ゥ霍ッ蠕?弍邊セ蜊?	}
+	return father[x];
+}
+/*
+
+謖臥ァゥ蜷亥ケカx,y謇?惠逧?寔蜷?
+荳矩擇逧?ぅ荳ェif else扈捺桷荳肴弍扈晏ッケ逧?シ悟?菴捺?謐ョ諠??蜿伜喧
+
+菴?弍?悟ョ玲葎譏ッ荳榊序逧?叉?梧潔遘ゥ蜷亥ケカ?悟ョ樊慮譖エ譁ー遘ゥ縲?
+*/
+
+void Union(int x, int y)
+{
+	x = Find_Set(x);
+	y = Find_Set(y);
+	if (x == y) return;
+	if (Rank[x] > Rank[y])
+	{
+		father[y] = x;
+	}
+	else
+	{
+		if (Rank[x] == Rank[y])
+		{
+			Rank[y]++;
+		}
+		father[x] = y;
+	}
+}
+
+int cmp(Edge a,Edge b)
+{
+    return a.c<b.c;
+}
+int ans[1005],k;
+bool Kruskal(int N,int &mst)
+{
+    int i,x,y;
+    int count=0;//譛?ー冗函謌先焚譚??諤サ蜥鯉シ御ク主キイ豺サ蜉?せ
+    mst=0;
+    for(i=0;i<N;++i)//蛻晏ァ句喧髮?粋
+    Make_Set(i);
+    sort(edge,edge+Tot,cmp);
+    for(i=0;i<Tot;++i)
+    {
+        if(count==N-1)
+        return true;//莉・謇セ蛻ー譛?ー冗函謌先?
+        x=Find_Set(edge[i].from);
+        y=Find_Set(edge[i].to);
+        if(x!=y)
+        {
+            Union(x,y);
+            //mst+=edge[i].c;
+            ans[k++]=edge[i].c;
+            ++count;
+        }
+    }
+    return false;
+}
+int main()
+{
+    //freopen("a.txt","r",stdin);
+    int n,m;
+    int u,v,c;
+    while(~scanf("%d%d",&n,&m)&&n+m)
+    {
+        k=0;
+        for(int i=0;i<m;++i)
+        {
+            scanf("%d%d%d",&u,&v,&c);
+            edge[i].from=u;
+            edge[i].to=v;
+            edge[i].c=c;
+        }
+        Tot=m;
+        Kruskal(n,c);
+        printf("%d\n",ans[(n>>1)-1]);
+    }
+    return 0;
+}

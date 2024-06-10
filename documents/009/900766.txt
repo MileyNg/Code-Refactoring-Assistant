@@ -1,0 +1,120 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <climits>
+#include <cfloat>
+#include <functional>
+using namespace std;
+
+void minDist(const vector<string>& plane, char wall, int y0, int x0, vector<vector<int> >& dist)
+{
+    int dy[] = {0, 0, -1, 1};
+    int dx[] = {-1, 1, 0, 0};
+
+    int h = plane.size();
+    int w = plane[0].size();
+    dist.assign(h, vector<int>(w, -1));
+
+    queue<pair<int, int> > q;
+    q.push(make_pair(y0, x0));
+    dist[y0][x0] = 0;
+    int n = 1;
+    while(!q.empty()){
+        queue<pair<int, int> > q1;
+        while(!q.empty()){
+            int y = q.front().first;
+            int x = q.front().second;
+            q.pop();
+            for(int i=0; i<4; ++i){
+                int y1 = y + dy[i];
+                int x1 = x + dx[i];
+                if(0 <= y1 && y1 < h && 0 <= x1 && x1 < w && plane[y1][x1] != wall && dist[y1][x1] == -1){
+                    q1.push(make_pair(y1, x1));
+                    dist[y1][x1] = n;
+                }
+            }
+        }
+        ++ n;
+        q = q1;
+    }
+}
+
+int main()
+{
+    int h, w, d, n;
+    cin >> h >> w >> d >> n;
+
+    int sy, sx;
+    vector<string> t(h, string(w, ' '));
+    for(int y=0; y<h; ++y){
+        for(int x=0; x<w; ++x){
+            cin >> t[y][x];
+            if(t[y][x] == 'D'){
+                sy = y;
+                sx = x;
+            }
+        }
+    }
+    vector<vector<int> > dist;
+    minDist(t, '#', sy, sx, dist);
+
+    vector<int> r(d+2);
+    for(int i=1; i<=d; ++i)
+        cin >> r[i];
+    r[0] = -1;
+    r[d+1] = INT_MAX;
+
+    vector<int> ax(n), ay(n), s(n);
+    for(int i=0; i<n; ++i)
+        cin >> ax[i] >> ay[i] >> s[i];
+
+    bool ok = false;
+    bool ng = false;
+    for(int y=0; y<h; ++y){
+        for(int x=0; x<w; ++x){
+            if(t[y][x] == '#')
+                continue;
+
+            bool isTreasure = true;
+            for(int i=0; i<n; ++i){
+                int squareSize = max(abs(y - ay[i]), abs(x - ax[i]));
+                if(!(r[s[i]] < squareSize && squareSize <= r[s[i]+1]))
+                    isTreasure = false;
+            }
+            if(isTreasure){
+                if(dist[y][x] != -1)
+                    ok = true;
+                else
+                    ng = true;
+            }
+        }
+    }
+
+    if(ok){
+        if(ng)
+            cout << "Unknown" << endl;
+        else
+            cout << "Yes" << endl;
+    }
+    else{
+        if(ng)
+            cout << "No" << endl;
+        else
+            cout << "Broken" << endl;
+    }
+
+    return 0;
+}

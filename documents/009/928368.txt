@@ -1,0 +1,125 @@
+/* stack構造を用いて逆ポーランド記法を行うプログラム */
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 100
+
+/* プロトタイプ宣言 */
+void Push(int[], int);
+int Pop(int[]);
+
+/* グローバル変数宣言 */
+int cnt = 0;
+
+int main(){
+
+  /* 変数宣言 */
+  int x, y;
+  int val1=0, val2=0, val3=0;
+  int i=0;
+
+  /* 数字か演算子か調べる配列を宣言 */
+  char s[N];
+
+
+  /* 重要！！ stack配列を宣言 */
+  int stack_Arr[N];
+
+
+  /* 標準入力がEOFになるまでループ */
+  while( scanf("%s", s) != EOF )
+    {
+
+    /* もし入力されたものが演算子 + ならば */
+    if ( s[0] == '+' ){
+
+      /* Pop関数で数字を２つ引っこ抜いて足し算 */
+      val1 = Pop(stack_Arr);
+      val2 = Pop(stack_Arr);
+      val3 = val1 + val2;
+
+      /* 新しくできた数字をまた詰めなおす */
+      Push(stack_Arr, val3);
+    } 
+    
+
+    /* もし入力されたものが演算子 - ならば */
+    else if ( s[0] == '-' ){
+
+      /* Pop関数で数字を２つ引っこ抜いて引き算 */
+      val1 = Pop(stack_Arr);
+      val2 = Pop(stack_Arr);
+      val3 = val2 - val1;
+      
+      /* 新しくできた数字をまた詰めなおす */
+      Push(stack_Arr, val3);
+	} 
+    
+
+    /* もし入力されたものが演算子 * ならば */
+    else if ( s[0] == '*' ){
+
+      /* Pop関数で数字を２つ引っこ抜いてかけ算 */
+      val1 = Pop(stack_Arr);
+      val2 = Pop(stack_Arr);
+      val3 = val1 * val2;
+      
+      /* 新しくできた数字をまた詰めなおす */
+      Push(stack_Arr, val3);
+	} 
+
+    
+    /* もし演算子でなければ入力された値をint型にしてxに代入する */
+    else {
+      x = atoi(s);
+      
+      /* Push関数で数字を詰める */
+      Push(stack_Arr, x);
+    }
+    }
+
+
+  printf("%d\n", stack_Arr[cnt]);
+ 
+  return 0;
+}
+
+
+
+/* Push関数 
+ * 
+ * Stack_Arrに数字を詰めていく関数
+ */
+void Push(int s_A[], int x)
+{
+  int i;//カウンター変数
+
+  s_A[cnt+1] = x;
+  cnt++;
+
+  return;
+}
+
+
+
+/* Pop関数
+ *
+ * Stack_Arrから数字を抜き出す関数
+ */
+int Pop(int s_A[]) 
+{
+  int i;
+  int x;//格納用
+
+  if(cnt == 0) {
+    printf("under flow\n");
+    exit(1);  
+    } 
+
+    else {
+    x = s_A[cnt];
+    cnt--;
+    return x;
+    }
+}

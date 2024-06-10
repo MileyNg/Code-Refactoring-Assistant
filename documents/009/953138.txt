@@ -1,0 +1,37 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#define MAX 2000
+int main(){
+	int A[MAX], M[MAX],a,b,i,j,k,f=0;
+
+	scanf("%d",&a);
+	for (i = 0; i < a;i++){
+		scanf("%d",&A[i]);
+	}
+	scanf("%d",&b);
+
+	for (i = 0; i < b;i++){
+		scanf("%d",&M[i]);
+	}
+
+	for (i = 0; i < b;i++){
+		for (j = 0,f=0; j < a - 1;j++){
+			for (k = 1; k < a;k++){
+				if (k != j){
+					if (A[j] == M[i] || A[k] == M[i]){
+						printf("yes\n");
+						goto out;
+					}
+					if (A[j] + A[k] == M[i]){
+						printf("yes\n");
+						goto out;
+					}
+				}
+			}
+		}
+		printf("no\n");
+	out:;
+	}
+	return 0;
+
+}

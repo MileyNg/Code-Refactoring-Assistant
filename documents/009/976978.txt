@@ -1,0 +1,64 @@
+using namespace std;
+
+void sum80(int* a, int* b);
+int get80(string str, int* num);
+
+int main(void){
+	string a80, b80;
+	int a[81], b[81];
+	int i, N;
+	cin>>N;
+	i=0;
+	while(i<N){
+		cin>>a80;
+		cin>>b80;
+		if(get80(a80, a)<0 || get80(b80, b)<0){
+			cout<<"overflow"<<endl;
+		}else{
+			sum80(a, b);
+		}
+		i++;
+	}
+	return 0;
+}
+
+int get80(string str, int* num){
+	int d=str.length();
+	if(d<=80){
+		for(int i=0; i<d; i++){
+			num[i]=str[d-1-i]-'0';
+		}
+		for(int i=d;i<81; i++){
+			num[i]=0;
+		}
+		return d;
+	}else{
+		return -1;
+	}
+
+}
+
+void sum80(int* a, int* b){
+	int s[81], amari;
+	amari=0;
+	for(int i=0; i<81; i++){
+		s[i]=(a[i]+b[i]+amari)%10;
+		if(a[i]+b[i]+amari>=10){
+			amari=1;
+		}else{
+			amari=0;
+		}
+	}
+	if(s[80]!=0){
+		cout<<"overflow"<<endl;
+	}else{
+		bool flag=false;
+		for(int i=79; i>=0; i--){
+			if(flag==true || s[i]!=0){
+				flag=true;
+				cout<<s[i];
+			}
+		}
+		cout<<endl;
+	}
+}

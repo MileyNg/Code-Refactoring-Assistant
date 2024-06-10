@@ -1,0 +1,89 @@
+$lines1 = []
+$lines2 = []
+loop{
+	$lines1 = []
+	$lines2 = []
+	num = gets
+	
+	num = num.to_i()
+	if num == 0 then
+		break
+	end
+
+	lnum = gets.to_i()
+	line = gets
+	sp = line.split(nil)
+
+	x = sp[0].to_i()
+	y = sp[1].to_i()
+	$lines1.push([0,0])
+		
+	for i in 1..lnum-1 do
+		line = gets
+		sp = line.split(nil)
+		nx = sp[0].to_i() - x
+		ny = sp[1].to_i() - y
+		$lines1.push([nx,ny])
+	end
+	lx = $lines1[lnum-1][0]
+	ly = $lines1[lnum-1][1]
+
+	for pos in $lines1.reverse do
+		$lines2.push([pos[0]-lx,pos[1]-ly]) 
+	end
+
+	for j in 1..num do
+		llnum = gets.to_i()
+		
+		if llnum != lnum then
+			for i in 1..llnum do
+				a = gets
+			end
+			next;
+		end
+		line = gets
+		sp = line.split(nil)
+		x = sp[0].to_i()
+		y = sp[1].to_i()
+		flag = [[1,1],[1,1],[1,1],[1,1]]
+		for i in 1..llnum-1 do
+			line = gets
+			sp = line.split(nil)
+			nx = sp[0].to_i() - x
+			ny = sp[1].to_i() - y
+			if !($lines1[i][0] == nx and $lines1[i][1] == ny) then
+				flag[0][0] = 0
+			end
+			if !($lines1[i][0] == -nx and $lines1[i][1] == -ny) then
+				flag[1][0] = 0
+			end
+			if !($lines1[i][0] == ny and $lines1[i][1] == -nx) then
+				flag[2][0] = 0
+			end
+			if !($lines1[i][0] == -ny and $lines1[i][1] == nx) then
+				flag[3][0] = 0
+			end
+			
+			if !($lines2[i][0] == nx and $lines2[i][1] == ny) then
+				flag[0][1] = 0
+			end
+			if !($lines2[i][0] == -nx and $lines2[i][1] == -ny) then
+				flag[1][1] = 0
+			end
+			if !($lines2[i][0] == ny and $lines2[i][1] == -nx) then
+				flag[2][1] = 0
+			end
+			if !($lines2[i][0] == -ny and $lines2[i][1] == nx) then
+				flag[3][1] = 0
+			end
+		end
+		
+		flag.each do |f1,f2|
+			if f1 == 1 or f2 == 1 then
+				print j
+				print("\n")
+			end
+		end
+	end
+	print("+++++\n")
+}

@@ -1,0 +1,34 @@
+ #include<iostream>
+ #include<limits>
+ using namespace std;
+
+ int main()
+ {
+     while(1){
+         int n;
+         cin >> n;
+         if( !n ) break;
+
+         int a;
+         long long  max = numeric_limits<long long>::min();
+         long long  sum = numeric_limits<long long>::min();
+         for(int i=0; i<n; i++){
+             cin >> a;
+
+             if( max<0 && a<0 && max<a ) { max = a; continue; }
+             else if( max<0 && a<0 && max>a){ continue; }
+
+             if( a>0 ){
+                 if( sum<0 ) sum = a;
+                 else sum += a;
+             }else{
+                 if( sum+a>0 ) sum += a;
+                 else sum = a;
+             }
+             if( sum > max ) max = sum;
+         }
+         cout << max << endl;
+    }
+
+    return 0;
+}

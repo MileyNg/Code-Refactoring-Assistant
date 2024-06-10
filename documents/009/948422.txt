@@ -1,0 +1,104 @@
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0037 : Path on a Grid **/
+int main()
+{
+	string s, ds="LRUD";
+	bool grid[5][5][4]={0};
+	int y=0;
+	rep(k, 9) {
+		cin>>s;
+		if (k%2==0) {
+			for (int i=0; i<4; i++) {
+				if (s[i] == '1') {
+					grid[i][y][1]=true;
+					grid[i+1][y][0]=true;
+				}
+			}
+		} else {
+			for (int i=0; i<5; i++) {
+				if (s[i] == '1') {
+					grid[i][y][3]=true;
+					grid[i][y+1][2]=true;
+				}
+			}
+			y++;
+		}
+	}
+	int d=1, x=0; y=0;
+	while (1) {
+		switch (d) {
+			case 1:
+				if (grid[x][y][2]) {
+					y--; d=2;
+					cout << "U";
+				} else if (grid[x][y][1]) {
+					x++; d=1;
+					cout << "R";
+				} else if (grid[x][y][3]) {
+					y++; d=3;
+					cout << "D";
+				} else {
+					x--; d=0;
+					cout << "L";
+				} break;
+				
+			case 3:
+				if (grid[x][y][1]) {
+					x++; d=1;
+					cout << "R";
+				} else if (grid[x][y][3]) {
+					y++; d=3;
+					cout << "D";
+				} else if (grid[x][y][0]) {
+					x--; d=0;
+					cout << "L";
+				} else {
+					y--; d=2;
+					cout << "U";
+				} break;
+				
+			case 0:
+				if (grid[x][y][3]) {
+					y++; d=3;
+					cout << "D";
+				} else if (grid[x][y][0]) {
+					x--; d=0;
+					cout << "L";
+				} else if (grid[x][y][2]) {
+					y--; d=2;
+					cout << "U";
+				} else {
+					x++; d=1;
+					cout << "R";
+				} break;
+				
+			case 2:
+				if (grid[x][y][0]) {
+					x--; d=0;
+					cout << "L";
+				} else if (grid[x][y][2]) {
+					y--; d=2;
+					cout << "U";
+				} else if (grid[x][y][1]) {
+					x++; d=1;
+					cout << "R";
+				} else {
+					y++; d=3;
+					cout << "D";
+				} break;
+		}
+		if (x==0 && y==0)
+			break;
+	}
+	cout << endl;
+	return 0;
+}

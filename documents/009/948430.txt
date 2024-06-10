@@ -1,0 +1,27 @@
+# your code goes here
+words = gets().split(" ")
+hash = {}
+long_word = ""
+
+words.each do |word|
+	if long_word.length < word.length
+		long_word = word
+	end
+
+	if hash.key?(word)
+		hash[word] = hash[word] + 1
+	else
+		hash[word] = 1
+	end
+end
+
+count = 0
+count_word = ""
+hash.each do |k, v|
+	if count < v
+		count = v
+		count_word = k
+	end
+end
+
+puts count_word + " " + long_word

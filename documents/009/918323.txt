@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<stdlib.h>
+ 
+int main(){
+  int i,j,N,A[200000],min,sa=-1;
+ 
+  scanf("%d",&N);
+  if(N<2||N>200000){
+    printf("N ha 2-200000 desu!\n");
+    exit(1);
+  }
+ 
+  for (i=0;i<N;i++){
+    scanf("%d",&A[i]);
+  }
+  for (i=0;i<N;i++){
+    if (A[i]<1||A[i]>1000000000){
+      printf("DEKASUGIUCHI\n");
+      exit(2);
+    }
+  }
+ 
+  min=A[0];
+  if(A[1]-A[0]>0){
+    sa=A[1]-A[0];
+  }
+  for (i=1;i<N;i++){
+    if(A[i]-min>sa){
+      sa=A[i]-min;
+    }
+    if(A[i]<min){
+      min=A[i];
+    }
+  }
+  if (sa==-1){
+    printf("0\n");
+  } else {
+    printf("%d\n",sa);
+  }
+  return 0;
+}

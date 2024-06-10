@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef pair<int, int> point;
+#define X first
+#define Y second
+
+constexpr int NUMBER_OF_COLORS = 6;
+constexpr int dx[] = {1, -1, 0, 0};
+constexpr int dy[] = {0, 0, 1, -1};
+
+int h, w, c;
+
+inline bool out(int x, int y) {
+	return x < 0 || x >= w || y < 0 || y >= h;
+}
+
+int calc(const vector<vector<int>> &panel) {
+	queue<point> que;
+	que.push({0, 0});
+
+	const int color = panel[0][0];
+	vector<vector<bool>> visited(h, vector<bool>(w, false));
+	visited[0][0] = true;
+	int res = 0;
+
+	while(!que.empty()) {
+		const auto cp = que.front();
+		que.pop();
+
+		++res;
+
+		for(int d = 0; d < 4; ++d) {
+			const int nx = cp.X + dx[d];
+			const int ny = cp.Y + dy[d];
+
+			if(out(nx, ny) || visited[ny][nx]) continue;
+			if(panel[ny][nx] == color) {
+				visited[ny][nx] = true;
+				que.push({nx, ny});
+			}
+		}
+	}
+
+	return res;
+}
+
+vector<vector<int>> change(const vector<vector<int>> &panel, int to) {
+	const int from = panel[0][0];
+	vector<vector<int>> res(panel);
+	if(from == to) return res;
+
+	queue<point> que;
+	que.push({0, 0});
+	res[0][0] = to;
+
+	while(!que.empty()) {
+		const auto cp = que.front();
+		que.pop();
+
+		for(int d = 0; d < 4; ++d) {
+			const int nx = cp.X + dx[d];
+			const int ny = cp.Y + dy[d];
+
+			if(out(nx, ny)) continue;
+			if(res[ny][nx] == from) {
+				res[ny][nx] = to;
+				que.push({nx, ny});
+			}
+		}
+	}
+
+	return res;
+}
+
+int rec(const vector<vector<int>> &panel, int rest) {
+	if(rest == 1) return calc(change(panel, c));
+
+	int res = 0;
+	for(int i = 0; i < NUMBER_OF_COLORS; ++i) {
+		res = max(res, rec(change(panel, i), rest - 1));
+	}
+	return res;
+}
+
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	while(cin >> h >> w >> c && h) {
+		--c;
+		vector<vector<int>> panel(h, vector<int>(w));
+		for(auto &row : panel) for(auto &e : row) cin >> e, --e;
+		cout << rec(panel, 5) << endl;
+	}
+
+	return EXIT_SUCCESS;
+}

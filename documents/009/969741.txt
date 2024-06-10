@@ -1,0 +1,85 @@
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <string>
+
+#define range(i,a,b) for(int (i)=a;(i)<(b);(i)++)
+#define rep(i,n) range(i,0,n)
+
+using namespace std;
+
+const int imax=1234567;
+
+int n;
+string S;
+size_t cur=0;
+
+int digit();
+int number();
+string expression();
+
+int digit(){
+	return S[cur++]-'0';
+}
+
+int number(){
+	int res=digit();
+	while(isdigit(S[cur])){
+		res=res*10+digit();
+	}
+	return res;
+}
+
+
+
+string expression(void){
+	string rec="";
+	while(cur < n){
+		//cout << cur << endl;
+		if(rec.size()>=imax)
+			return rec;
+
+		if(isupper(S[cur])){
+		
+			rec+=S[cur++];
+
+		}else if(isdigit(S[cur])){
+
+			int r=number();
+			string c="";
+
+			if(S[cur]=='('){
+				cur++;
+				c=expression();
+			}else
+				c=S[cur++];
+
+			rep(i,r){
+				if(rec.size()>=imax)
+					return rec;
+				rec+=c;
+			}
+		}else if(S[cur]==')'){
+			cur++;
+			return rec;
+		}
+
+	}
+	return rec;
+}
+
+int main(void){
+	int i;
+	while(cin >> S >> i){
+		if(S=="0")
+			break;
+		n=S.size();
+		cur=0;
+		string res=expression();
+		if(i>=res.size())
+			cout << 0 << endl;
+		else
+			cout << res[i] << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,103 @@
+#include <iostream>
+#include<cstdio>
+#include<cstring>
+
+using namespace std;
+struct In
+{
+    int x1;
+    int y1;
+    int di;
+} diy[11111];
+char a[111][111];
+int visit[111][111][4];
+//int ha_sh3[][]
+int dir[4][2]= {-1,0,   0,1, 1,0,  0,-1}; // n
+int ha_sh(char  ch)
+{
+    if(ch=='N')
+        return 0;
+    if(ch=='E')
+        return 1;
+    if(ch=='S')
+        return 2;
+    if(ch=='W')
+        return 3;
+}
+char  ha_sh2(int t)
+{
+    char d[]="NESW";
+
+    return  d[t];
+}
+int h,w;
+long long l;
+int main()
+{
+    while(scanf("%d%d%lld",&h,&w,&l))
+    {
+
+        if(h==0 && w==0 && l==0)
+            break;
+        memset(a,'\0',sizeof(a));
+        memset(visit,-1,sizeof(visit));
+        // memset(diy,0,sizeof(diy));
+        int i=0;
+        int j=0;
+        char ch;
+        int x;
+        int y;
+        for(i=0; i<h; i++)
+        {
+
+
+            scanf("%s",a[i]);
+
+            for(j=0; j<w; j++)
+            {
+                if(a[i][j]!='.' && a[i][j]!='#')
+                {
+                    ch=a[i][j];
+                    x=i;
+                    y=j;
+                    int temp_ch=ha_sh(ch);
+                    // cout<<a[i][j]<<endl;
+                    visit[i][j][temp_ch]=0;
+                }
+            }
+
+        }
+        int t=ha_sh(ch);
+        long long k=0;
+        int  cnt=0;
+        long long  cir=0;
+        int flag=0;
+        for(k=l; k>=1; k--)
+        {
+            while( (x+dir[t][0]<0 )
+                    || (x+dir[t][0]>h-1)||(y+dir[t][1]<0)
+                    ||(y+dir[t][1]>w-1 )|| a[x+dir[t][0]][y+dir[t][1]] =='#' )
+            {
+                t=(t+1)%4;
+            }
+            if( visit[x+dir[t][0]][y+dir[t][1]][t]!=-1)
+            {
+
+                cir=cnt+1-visit[x+dir[t][0]][y+dir[t][1]][t];
+                k=k%cir;
+                if(!k)
+                    break;
+
+            }
+            cnt++;
+            x=x+dir[t][0];
+            y=y+dir[t][1];
+            visit[x][y][t]=cnt;
+        }
+
+
+        printf("%d %d %c\n",x+1,y+1,ha_sh2(t));
+
+    }
+    return 0;
+}

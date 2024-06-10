@@ -1,0 +1,63 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define EQ(a,b) (abs((a)-(b))<EPS)
+using namespace std;
+typedef long double D;
+typedef complex<D> P;
+const D EPS = 1e-8;
+const D PI = acos(-1);
+
+int n,r,q;
+P p[30];
+int cur;
+
+inline D dot(P x, P y){return real(conj(x)*y);}
+
+inline P rotate(P v, D s){
+  return P(real(v)*cos(s) - imag(v)*sin(s), real(v)*sin(s) + imag(v)*cos(s) );
+}
+
+inline D arg(P a,P b,P c){return acos(dot(b-a,c-a)/(abs(b-a)*abs(c-a)));}
+
+inline D rot_seta(int end){
+  D dis = abs(p[end]-p[cur]);
+  D seta = acos( (2*r*r - dis*dis)/(2*r*r) );
+  P nxt = rotate(p[cur],-seta);
+  return arg(p[cur],p[end],nxt);
+}
+
+int main(){
+  
+  while(cin >> n >> r >> q, n){
+    rep(i,n){
+      D x,y;
+      cin >> x >> y;
+      p[i] = P(x,y);
+      if(EQ(abs(p[i]),r))cur = i;
+    }
+    
+    vector<int> nxt(n,-1);
+    
+    rep(i,q){
+      int id = -1;
+      D min_s = PI;
+      if(nxt[cur]>=0)id = nxt[cur];
+      else{
+	rep(j,n){
+	  if(cur==j)continue;
+	  D s = rot_seta(j);
+	  if(id<0 || s+EPS < min_s)id = j, min_s = s;
+	}
+	nxt[cur] = id;
+      }
+
+      D seta = rot_seta(id);
+      rep(i,n){
+	if(i==cur)continue;
+	p[i] = rotate(p[i]-p[cur],seta) + p[cur];
+      }
+      cout << fixed << setprecision(10) << p[id].real() << " " << p[id].imag() << endl;
+      cur = id;
+    }
+  }
+}

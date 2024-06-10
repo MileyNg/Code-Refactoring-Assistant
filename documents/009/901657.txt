@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+int main(){
+    int n;
+    while(cin >> n && n){
+        vector<int> a(n);
+        vector<bool> c(n);
+        REP(i, n) {
+            string s;
+            cin >> s;
+            if(s == "x"){
+                c[i] = true;
+            }else{
+                a[i] = stoi(s);
+            }
+        }
+        set<int> ans;
+        REP(j, n){
+            REP(dx, 5){
+                int x = a[j] + dx - 2;
+                REP(i, n) if(c[i]) a[i] = x;
+                bool ok = true;
+                REP(i, n - 1){
+                    if(i % 2 == 0 && a[i] >= a[i + 1]) ok = false;
+                    if(i % 2 == 1 && a[i] <= a[i + 1]) ok = false;
+                }
+                if(ok){
+                    ans.insert(x);
+                }
+            }
+        }
+        if(ans.size() == 1) cout << *ans.begin() << endl;
+        else if(ans.size() == 0) cout << "none" << endl;
+        else cout << "ambiguous" << endl;
+    }
+    return 0;
+}

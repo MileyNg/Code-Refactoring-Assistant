@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+	char string[201], first[201], secound[201];
+	int h, i, j, k, m;
+	while(1){
+		scanf("%s", string);
+		if(strcmp(string, "-") == 0) break;
+		scanf("%d", &m);
+		
+		for(i=0; i<m; i++){
+			scanf("%d", &h);
+			
+			strncpy(first, string, h);
+			first[h] = '\0';
+			strcpy(secound, string + h);
+
+			strcpy(string, secound);
+			strcat(string, first);
+		}
+		puts(string);
+	}	
+	return 0;
+}

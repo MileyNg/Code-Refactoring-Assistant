@@ -1,0 +1,40 @@
+# coding: utf-8
+
+import math
+
+def sieve_of_erastosthenes(input_list):
+
+    for num in input_list:
+        if 2 > num:
+            return 0
+
+        serial_number_list = [r for r in range(2, num + 1)]
+        multiple_list = []
+                
+        while math.sqrt(num) >= serial_number_list[0]:
+            i = 1
+
+            serial_number = serial_number_list[0]
+      
+            multiple_list.append(serial_number)
+                        
+            while serial_number_list[len(serial_number_list) - 1] >= serial_number * i:
+        
+                if serial_number * i in serial_number_list:
+                    
+                    serial_number_list.pop(serial_number_list.index(serial_number * i))
+
+                i += 1
+
+        print(len(multiple_list + serial_number_list))
+
+if __name__ == '__main__':
+    input_list = []
+
+    while True:
+        try:
+            input_list.append(int(input()))
+        except:
+            break
+
+    sieve_of_erastosthenes(input_list)

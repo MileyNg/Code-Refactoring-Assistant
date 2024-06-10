@@ -1,0 +1,47 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <climits>
+#include <cfloat>
+#include <functional>
+using namespace std;
+
+int main()
+{
+    string aidu = "AIDUNYAN";
+    string aizu = "AIZUNYAN";
+    sort(aidu.begin(), aidu.end());
+
+    string s;
+    cin >> s;
+    int n = s.size();
+    int i = 0;
+    while(i < n){
+        string t = s.substr(i, aidu.size());
+        sort(t.begin(), t.end());
+
+        if(t == aidu){
+            s.replace(i, aizu.size(), aizu);
+            i += aidu.size();
+        }
+        else{
+            ++ i;
+        }
+    }
+    cout << s << endl;
+
+    return 0;
+}

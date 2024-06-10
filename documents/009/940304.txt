@@ -1,0 +1,113 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cassert>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <list>
+#include <set>
+#include <map>
+#include <bitset>
+#include <functional>
+#include <iterator>
+
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define iter(c) __typeof__((c).begin())
+#define foreach(i,c) for(iter(c) i=(c).begin();i!=(c).end();++i)
+#define all(c) (c).begin(),(c).end()
+#define mp make_pair
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+typedef pair<int,int> pii;
+
+const int INFTY=1<<29;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+const int di[]={-1,-1,0,0,1,1};
+const int dj[]={-1,0,-1,1,0,1};
+
+bool test(const vvi& b,int i,int j,int c,vvi& vis)
+{
+	if(i<0 || b.size()<=i || j<0 || i<j || vis[i][j]) return true;
+	if(b[i][j]==0) return false;
+	if(b[i][j]!=c) return true;
+	vis[i][j]=1;
+	bool res=true;
+	rep(k,6) res&=test(b,i+di[k],j+dj[k],c,vis);
+	return res;
+}
+
+void remove(vvi& b,int i,int j,int c)
+{
+	if(i<0 || b.size()<=i || j<0 || i<j || b[i][j]!=c) return;
+	b[i][j]=0;
+	rep(k,6) remove(b,i+di[k],j+dj[k],c);
+}
+
+int calc(const vvi& b,int c)
+{
+	int n=b.size();
+	vvi vis(n); rep(i,n) vis[i].resize(i+1);
+	vvi b2=b;
+	rep(i,n) rep(j,i+1){
+		if(!b[i][j] || vis[i][j]) continue;
+		if(test(b,i,j,b[i][j],vis)) remove(b2,i,j,b[i][j]);
+		//dump(mp(i,j)); dump(vis); dump(b2);
+	}
+	int res=0;
+	rep(i,n) rep(j,i+1) if(b[i][j]!=b2[i][j])
+		if(b[i][j]==c) res--;
+		else           res++;
+	return res;
+}
+
+int main()
+{
+	for(int n,c;cin>>n>>c && n|c;){
+		vvi board(n);
+		rep(i,n){
+			board[i].resize(i+1);
+			rep(j,i+1) cin>>board[i][j];
+		}
+		int res=-INFTY;
+		rep(i,n) rep(j,i+1) if(board[i][j]==0){
+			board[i][j]=c;
+			res=max(res,calc(board,c));
+			board[i][j]=0;
+		}
+		cout<<res<<endl;
+	}
+}

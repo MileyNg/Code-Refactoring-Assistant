@@ -1,0 +1,40 @@
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+
+/** Problem0208 : Room Numbers of a Hospital **/
+int main()
+{
+	string list="01235789";
+	int n;
+	while (cin >> n, n) {
+		string ans;
+		while (1) {
+			ans+=(n%8)+'0';
+			n/=8;
+			if (n == 0) break;
+		}
+		reverse(ans.begin(), ans.end());
+		rep(i, ans.length()) {
+			cout << list[ans[i]-'0'];
+		}
+		cout << endl;
+	}
+	return 0;
+}

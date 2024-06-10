@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Edge {
+public:
+	int to, weight;
+	Edge(int t, int w) : to(t), weight(w) {}
+};
+
+int memo[100001] = {0};
+
+inline int height(const vector< vector<Edge> > &Graph, const int root) {
+	if (memo[root]) return memo[root];
+	int ret = 0;
+	for (int i=0; i<(int)Graph[root].size(); ++i) {
+		ret = max(ret, Graph[root][i].weight + height(Graph, Graph[root][i].to));
+	}
+	return memo[root] = ret;
+}
+
+inline int diameter(const vector< vector<Edge> > &Graph, const int root) {
+	int ret = 0;
+	int h1 = 0, h2 = 0;
+	for (int i=0; i<(int)Graph[root].size(); ++i) {
+		int h = Graph[root][i].weight + height(Graph, Graph[root][i].to);
+		if (h1 < h) {
+			h2 = h1;
+			h1 = h;
+		} else if (h2 < h) {
+			h2 = h;
+		}
+		ret = max(ret, diameter(Graph, Graph[root][i].to));
+	}
+	ret = max(ret, h1 + h2);
+	return ret;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	int n, s, t, w;
+	cin >> n;
+	vector< vector<Edge> > Graph(n + 1);
+	for (int i=1; i<=n-1; ++i) {
+		cin >> s >> t >> w;
+		Graph[s].push_back(Edge(t, w));
+	}
+	cout << diameter(Graph, 0) << endl;
+
+	return 0;
+}

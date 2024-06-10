@@ -1,0 +1,105 @@
+#include <iostream>
+#include <set>
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <vector>
+
+
+
+#define MAX_N 10000
+#define INF   100000
+
+using namespace std;
+
+
+int par[MAX_N];  //parent 0f node
+int rank[MAX_N]; //depth of node
+
+int fib[MAX_N];
+
+
+
+//n個ので初期化、
+void init(int n) { 
+    for (int i=1; i <= n; i++){
+        par[i] = i;
+        rank[i] = 0;
+    }
+}
+
+//代表ノードの親は自分自身
+int find(int x) { 
+    if (par[x] == x) {
+        return x;
+    } else {
+        par[x] = find(par[x]);
+        return par[x];
+    }
+}
+
+void unite(int x, int y){
+    x = find(x);
+    y = find(y);
+    if (x==y) { return; }
+    else if (rank[x] < rank[y]) { 
+        par[x] = y;
+    }
+    else if (rank[y] < rank[x]) { 
+        par[y] = x;
+    }
+    else {
+        par[y] = x;
+        rank[x]++;
+    }
+}
+
+void init_fib(){
+    for( int i = 0; i<MAX_N; i++){
+        fib[i] = INF;
+    }
+}
+
+int f(int n){
+    if(n == 0 || n==-1) { return 1;} 
+    else if(fib[n] != INF ) {return fib[n];}
+    else { return fib[n] = (  f(n-1) + f(n-2) ) ; }
+}
+
+void print_fib(){
+    for ( int i = 1; i<=10 ; i++ ) {
+        cout << f(i) << " " ;
+    }
+    cout << endl;
+}
+
+
+int main()
+{
+    //cout << INF << endl;
+    init_fib();
+    //print_fib();
+
+    int V,d;
+    while( cin >> V >>d ){
+       if( V==0 && d==0){ break;}
+       init(MAX_N);
+       for( int i=1; i<=V; i++ ){
+           for( int j=i + 1; j<=V; j++ ){
+               if( abs( f(i) - f(j) ) < d ){
+                   //cout << "unite(" << i << "," << j << ")" << endl;
+                   //cout << f(i) << "-" << f(j) << " = " <<  abs( f(i) - f(j) ) << endl;
+                   unite(i,j);
+               }
+           }
+       }
+
+       set<int> count;
+       for( int i=1; i<=V; i++){
+           //cout << "count = " << find(i) << endl;
+           count.insert( find(i) );
+       }
+       cout << count.size() << endl;
+    }
+    return 0;
+}

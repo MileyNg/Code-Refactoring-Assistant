@@ -1,0 +1,67 @@
+#include <algorithm>
+#include <cctype>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+pair<string, int> parse(const string &letter) {
+	int idx = 0;
+	while(isalpha(letter[idx])) ++idx;
+	return make_pair(letter.substr(0, idx), stoi(letter.substr(idx)));
+}
+
+void print(int idx, const vector<int> &next) {
+	while(next[idx] != idx) {
+		cout << idx + 1 << "\n";
+		idx = next[idx];
+	}
+	cout << idx + 1 << "\n";
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	for(int n; cin >> n && n;) {
+		unordered_map<string, int> jump;
+		vector<int> next(n);
+
+		iota(next.begin(), next.end(), 0);
+
+		for(int i = 0; i < n; ++i) {
+			string letter;
+			cin >> letter;
+
+			if(letter == "-") {
+				print(i, next);
+			}
+			else {
+				const bool re_mark = letter.back() == 'v';
+				if(re_mark) {
+					next[i + 1] = i;
+					letter.erase(letter.begin() + letter.size() - 1);
+				}
+
+				if(letter.size() > 1) {
+					const auto cur = parse(letter);
+
+					if(jump.count(cur.first)) {
+						const int dest_idx = jump.at(cur.first);
+						next[i] = dest_idx;
+						if(cur.second == 1) jump.erase(cur.first);
+					}
+
+					if(cur.second > 1) {
+						jump.insert(make_pair(cur.first, i));
+					}
+					else if(!re_mark) {
+						print(i, next);
+					}
+				}
+			}
+		}
+	}
+
+	return EXIT_SUCCESS;
+}

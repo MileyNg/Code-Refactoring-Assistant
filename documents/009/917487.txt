@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct Edge{int to, idx;};
+struct State{
+  int t, used, pos;
+  bool operator < (const State& st) const{
+    if(t != st.t) return t < st.t;
+    return used < st.used;
+  }
+  
+  bool operator > (const State& st) const {
+    return st < *this;
+  }
+};
+
+const int MAX = 1001;
+const int INF = (1<<28);
+State T[2][MAX];
+int N;
+vector<Edge> G[MAX], rG[MAX];
+
+void solve(int from, int to){
+  
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < MAX; j++) T[i][j] = (State){INF, -1, -1};
+  
+
+  priority_queue<State, vector<State>, greater<State> > Q;
+  Q.push((State){0, -1, from});
+  
+  while(!Q.empty()){
+    const State st = Q.top();
+    Q.pop();
+
+    const int used = (st.used==-1?0:1);
+    if(T[used][st.pos] < st) continue;
+    
+    if(used==0){
+      for(int i = 0; i < (int)rG[st.pos].size(); i++){
+	State nex = st;
+	nex.t++;
+	nex.pos = rG[st.pos][i].to;
+	nex.used = rG[st.pos][i].idx;
+	if(nex < T[1][nex.pos]){
+	  T[1][nex.pos] = nex;
+	  Q.push(nex);
+	}
+      }
+    }
+
+    for(int i = 0; i < (int)G[st.pos].size(); i++){
+      State nex = st;
+      nex.t++;
+      nex.pos = G[st.pos][i].to;
+      if(nex < T[used][nex.pos]){
+	T[used][nex.pos] = nex;
+	Q.push(nex);
+      }
+    }      
+  }
+  
+  State ans = min(T[0][to], T[1][to]);
+  cout << ans.t << " " << ans.used+1 << endl;
+}
+
+int main(){
+  
+  cin >> N;
+  int s,t;
+  cin >> s >> t;
+  int M;
+  cin >> M;
+  for(int i = 0; i < M; i++){
+    int a, b;
+    cin >> a >> b;
+    a--; b--;
+    G[a].push_back((Edge){b,i});
+    rG[b].push_back((Edge){a,i});
+  }
+  solve(s-1,t-1);
+  return 0;
+}

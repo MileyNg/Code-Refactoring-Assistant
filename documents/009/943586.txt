@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+ 
+struct node{
+  int key;
+  struct node *next;
+};
+int l=0;
+ 
+typedef struct node * NodePointer;
+NodePointer head;
+NodePointer make_1node(int key,NodePointer p){
+  NodePointer n;
+  if((n=malloc(sizeof(struct node)))==NULL){
+    printf("Error in memory allocation");
+    exit(1);
+  }
+  n->key=key;
+  n->next=p;
+  return n;
+}
+ 
+NodePointer listSearch(int key){
+  NodePointer n;
+  for(n=head;n->next!=NULL;n=n->next){
+    if(n->next->key==key){
+      return n;   
+    }
+  }
+  return NULL;
+}
+ 
+ 
+ 
+void printList(){
+  NodePointer  n ;
+  int s=0;
+  for(n= head->next;n!=NULL;n=n->next){
+     
+    printf("%d",n->key);
+    s++;
+    if(s<l) printf(" ");
+  }
+  printf("\n");
+}
+ 
+ 
+ 
+ 
+NodePointer delete(int key){
+  NodePointer n,delnode;
+  if((n= listSearch(key))!=NULL){
+    delnode=n->next;
+    n->next=delnode->next;
+    free(delnode);
+    return n;
+  }
+  else return NULL;
+
+}
+ 
+ 
+NodePointer insert(int key){
+  NodePointer x;
+  if(listSearch(key)==NULL){
+    x=make_1node(key,head->next);
+    head->next=x;
+    return x;
+}
+  else return NULL;
+}
+ 
+void deleteFirst(){
+ 
+  delete(head->next->key);
+ 
+}
+void deleteLast(){
+  NodePointer n;
+  for(n=head->next;n->next!=NULL;n=n->next){
+}
+  delete(n->key);
+ 
+}
+int main(){
+  int key, n, i;
+  char com[20];
+  head=make_1node(0,NULL);
+  scanf("%d", &n);
+   
+  for ( i = 0; i < n; i++ ){
+    scanf("%s%d", com, &key);
+    if ( com[0] == 'i' ) {
+      insert(key);
+      l++;
+    }
+    else if ( com[0] == 'd' ) {
+      if (strlen(com) > 6){
+    if ( com[6] == 'F' ) deleteFirst();
+        else if ( com[6] == 'L' ) deleteLast();
+      } else {
+    delete(key);
+      }l--;
+    }
+  }
+  printList();
+  return 0;
+}

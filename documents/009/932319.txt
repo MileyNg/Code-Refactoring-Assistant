@@ -1,0 +1,67 @@
+#include <iostream>
+#include <stdlib.h>
+#include <stack>
+using namespace std;
+
+int r[1050000],rp[2][1050000],sw[2][1050000],rb[2],bf;
+
+int main() {
+	int a,i,j,k,g,m,n,s,t,f,f2,rl[16][16],rs[16][16],sn[16],lc[16],p=65536;
+	stack<int> an,bn; 
+	while(cin >> n >> m) {
+		if (n==0) break;
+		for (i=0;i<1050000;i++) r[i]=-1;
+		for (i=0;i<16;i++) sn[i]=lc[i]=0;
+		for (i=0;i<m;i++) { cin >> s >> t; rl[s-1][lc[s-1]++]=t-1; rl[t-1][lc[t-1]++]=s-1; }
+		rb[0]=1; f=0; bf=0; sw[0][0]=0;
+		for (i=0;i<n;i++) { cin >> j; f+=(1 << i)*j; }
+		r[f]=0; rp[0][0]=f;
+		for (i=0;i<n;i++) {
+			cin >> k; sn[i]=0;
+			if (k>0) for (j=0;j<k;j++) {cin >> rs[i][sn[i]++]; rs[i][sn[i]-1]--;}
+		}
+		f2=f=0;
+		while(f==0) {
+	    f=1; rb[1-bf]=0;
+	      for (i=0;i<rb[bf];i++) {
+			s=rp[bf][i]/p; t=(p-1) & rp[bf][i];
+			if (s==n-1) f2=1;
+			for (g=0;g<lc[s];g++) {
+				  if ((t & (1 << rl[s][g]))>1 && r[rl[s][g]*p+t]==-1) {
+					     f=0;
+						 r[rl[s][g]*p+t]=s*p+t;
+						 sw[1-bf][rb[1-bf]]=0; 
+						 rp[1-bf][rb[1-bf]++]=rl[s][g]*p+t;
+						 } 
+					  }
+			if (sn[s]==0) continue;		  					 
+ 			for (k=sw[bf][i];k<sn[s];k++) {
+				 a=rp[bf][i] ^ (1 << rs[s][k]);
+				 if (r[a]==-1) { f=0; r[a]=rp[bf][i]; sw[1-bf][rb[1-bf]]=k+1; rp[1-bf][rb[1-bf]++]=a;}
+			 } 
+	 }			
+	 bf=1-bf;
+     }
+     s=(n-1)*p+(1 << (n-1));
+     if (f2==0) { cout << "Help me!"<< endl;  continue;}
+     if (r[s]==-1) { cout << "You can not switch off all light." << endl; continue;}
+     while (r[s]!=0) {
+		 if (s/p!=r[s]/p) { an.push(s/p); bn.push(0);} else {
+			 for (k=0;k<15;k++) {
+				 if ((s & (1 << k))>0 && (r[s] & (1 << k))==0) { an.push(k); bn.push(1);}
+				 if ((s & (1 << k))==0 && (r[s] & (1 << k))>0) { an.push(k); bn.push(2);}
+			 } 
+		  }
+	 s=r[s];
+ } 
+	 cout << "You can go home in " << an.size() << " steps." << endl;
+	 while(!an.empty()) {
+		 if (bn.top()==0) cout << "Move to room ";
+		 if (bn.top()==1) cout << "Switch on room ";
+		 if (bn.top()==2) cout << "Switch off room ";
+		 cout << an.top()+1 << '.' << endl;
+		 an.pop(); bn.pop();
+	 } 
+	}			 	
+ return 0;
+}

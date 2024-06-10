@@ -1,0 +1,59 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+#define NMAX 100
+#define NO 0
+#define YES 1
+
+int main(){
+
+	int N,M,Mi,K,li;
+	int data[NMAX+1][NMAX+1];
+	vector<int> ans,out;
+	bool f;
+
+	while(1){
+
+		cin>>N;
+		if(N==0) break;
+
+		if(!ans.empty()) ans.clear();
+		if(!out.empty()) out.clear();
+
+		for(int i=0;i<=N;i++){
+			for(int j=1;j<=N;j++){
+				data[i][j]=NO;
+			}
+		}
+
+		for(int i=1;i<=N;i++){
+			cin>>M;
+			for(int j=0;j<M;j++){
+				cin>>Mi;
+				data[i][Mi]=YES;
+			}
+		}
+
+		cin>>K;
+
+		for(int i=0;i<K;i++){
+			cin>>li;
+			out.push_back(li);
+		}
+
+		for(int i=1;i<=N;i++){
+			f=true;
+			for(int j=0;j<K;j++){
+				if(data[i][out[j]]==NO) f=false;
+			}
+			if(f) ans.push_back(i);
+		}
+
+		if(ans.empty()||ans.size()>=2) cout<<"-1"<<endl;
+		else cout<<ans[0]<<endl;
+
+	}
+
+}

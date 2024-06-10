@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<numeric>
+
+#define pb push_back
+#define sz size()
+#define clr clear()
+#define rep(i,a) for(int i=0;i<(int)(a);i++)
+
+using namespace std;
+
+typedef vector<double> vec;
+typedef vector<vec> mat;
+const double EPS = 1e-8;
+
+vec gauss_jordan(const mat& A, const vec& b){
+  int n = A.size();
+  mat B(n,vec(n+1));
+  rep(i,n)rep(j,n)B[i][j] = A[i][j];
+  rep(i,n)B[i][n] = b[i];
+
+  rep(i,n){
+    int p = i;
+    for(int j=i;j<n;j++)
+      if(abs(B[j][i]) > abs(B[p][i]))p = j;
+    swap(B[i],B[p]);
+    
+    if(abs(B[i][i]) < EPS)return vec();
+    
+    for(int j=i+1;j<=n;j++)B[i][j] /= B[i][i];
+    rep(j,n)
+      if(i != j)
+	for(int k=i+1;k<=n;k++)B[j][k] -= B[j][i] * B[i][k];
+  }
+  vec x(n);
+  rep(i,n)x[i] = B[i][n];
+  return x;
+}
+
+int main(){
+  mat m(3,vec(3));
+  vec v(3),x(3);
+  
+  rep(i,3)cin >> x[i];
+  rep(i,3){
+    cin >> v[i]; v[i] -= x[i];
+  }
+  rep(i,3)rep(j,3){
+    cin >> m[j][i]; m[j][i] -= x[j];
+  }
+  
+  vec s = gauss_jordan(m,v);
+  bool f = false;
+  rep(i,3)if(s[i]<-EPS)f = true;
+  if(accumulate(s.begin(),s.end(),0.0)+EPS<1.0)f = true;
+  cout << (f?"HIT":"MISS") << endl;
+}

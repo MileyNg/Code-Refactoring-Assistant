@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+
+#define REP(i,n) for( int i = 0; i < n; i++ )
+
+
+using namespace std;
+
+/*
+ より多くの問題に正解したチームを上位とする．
+ 正解した問題数が同じ場合は，所要時間合計の少ないチームを上位とする．
+ 複数のチームが同数の問題に正解し，所要時間合計も同じなら，それらのチームを同順位とする．
+ */
+
+struct team{
+	int ans,time,name;
+    int q[50]={0};
+    
+	team() : ans(0), time(0), name(0) {}
+    
+    bool operator <( const team& Right )const {
+        return  ans != Right.ans ? ans < Right.ans :
+        time != Right.time ? time > Right.time :
+        name <  Right.name;
+    }
+};
+
+
+int main()
+{
+	int M,T,P,R;
+	// Mは，コンテストの始まりから終わりまでの時間である． Tは，チーム数である． Pは，問題数である． Rは，提出記録の数である
+	while( cin >> M >> T >> P >> R )
+	{
+		int m,t,p,k;
+		vector<team> team_array(T+1);
+		if( T == 0 ) return 0;
+		for( int i = 1; i <= T; i++)
+			team_array[i].name = i;
+		// mkは，経過時間である． tkは，チーム番号である． pkは，問題番号である． jkは，判定結果を表す（0なら正解，0以外なら不正解）
+		REP(i,R)
+		{
+			cin >> m >> t >> p >> k;
+			team &tm = team_array[t];
+			if( !k ){
+				tm.ans++;
+				tm.time += m;
+                if( tm.q[p] )
+                    tm.time += 20 * tm.q[p];
+			}
+            else{
+                tm.q[p]++;
+            }
+            
+		}
+		
+        sort( team_array.begin() + 1 , team_array.end() );
+		
+        for( int i = T; i > 0; i-- )
+        {
+            char c;
+            if( i == 1 ){
+                cout << team_array[i].name << endl;
+                continue;
+            }
+            else if ( team_array[i].ans == team_array[i-1].ans &&
+                team_array[i].time == team_array[i-1].time) {
+                c = '=';
+            }
+            else{
+                c = ',';
+            }
+			cout << team_array[i].name << c;
+        }
+        
+	}
+	return 0;
+}

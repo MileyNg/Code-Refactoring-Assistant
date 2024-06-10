@@ -1,0 +1,166 @@
+//ヘッダファイル
+#include<stdio.h>
+#include<string.h>
+
+//マクロ定義
+#define MAX 300
+
+#define compile 0
+
+//プロトタイプ宣言
+void func_init(char array[]);
+void func_cal(char input1[] , char input2[], char output[]);
+void func_output(char array[], int n);
+
+main()
+{
+	int a = 0, b = 0;
+	int n = 0, i = 0, j = 0;
+	scanf("%d", &n); //データセットの個数を入力
+	
+	char input1[n][MAX], input2[n][MAX]; //入力用配列の宣言
+	char result[n][MAX]; //結果代入用の配列
+	
+	for(i = 0; i < n; i++) //結果代入用の配列の初期化
+	{
+		func_init(result[i]);
+	}
+	
+	for(i = 0; i < n; i++)
+	{
+		func_init(input1[i]); //input1を初期化
+		scanf("%s\n", input1[i]); //整数文字列1を読み取り
+		
+		a = 0;
+		while(input1[i][a] != 0x00) //input1の最後の要素まで要素番号iを進める
+		{
+			if(81 < a) //input1におけるoverflow判定
+			{
+				func_output(input1[i], a);
+				break;
+			}
+			a++;
+		}
+		
+		func_init(input2[i]); //input2を初期化
+		scanf("%s", input2[i]); //整数文字列2を読み取り
+		
+		b = 0;
+		while(input2[i][b] != 0x00) //input2の最後の要素まで要素番号jを進める
+		{
+			if(81 < b)
+			{
+				func_output(input2[i], b);
+				break;
+			}
+			b++;
+		}
+		
+		func_cal(input1[i], input2[i], result[i]);
+	}
+	
+	return 0;
+}
+
+void func_init(char array[])
+{
+	int i = 0;
+	for(i = 0; i < MAX; i++)
+	{
+		array[i] = 0x00;
+	}
+}
+
+void func_cal(char input1[] , char input2[], char result[])
+{
+	int i = 0, j = 0; //入力配列の要素番号
+	int r = 0; //結果格納用の配列の要素番号
+	int x = 0; //input1の要素を数値変換した際に代入
+	int y = 0; //input2の要素を数値変換した際に代入
+	int sum = 0; //x + yの結果を代入
+	int up = 0; //桁の繰上げに使用
+	
+	while(input1[i] != 0x00) //input1の最後の要素まで要素番号iを進める
+	{
+		i++;
+	}
+	
+	while(input2[j] != 0x00) //input2の最後の要素まで要素番号jを進める
+	{
+		j++;
+	}
+	i--;
+	j--;
+	
+	while((i >= 0) || (j >= 0))
+	{
+		if(i >= 0)
+		{
+			x = input1[i] - 0x30;
+			i--;
+		}
+		else
+		{
+			x = 0;
+		}
+		
+		if(j >= 0)
+		{
+			y = input2[j] - 0x30;
+			j--;
+		}
+		else
+		{
+			y = 0;
+		}
+		
+		sum = x + y + up;
+		
+		if(10 <= sum)
+		{
+			sum -= 10;
+			up = 1;
+		}
+		else
+		{
+			up = 0;
+		}
+		
+		result[r] = sum;
+		r++;
+	}
+	if(up != 0)
+	{
+		result[r] = up;
+		r++;
+	}
+	
+	func_output(result, r - 1);
+}
+void func_output(char array[], int n)
+{
+	int i = n;
+#if compile == 1
+	printf("i = %d\n", i);
+#endif
+	if(79 < i)
+	{
+		printf("overflow\n");
+	}
+	else
+	{
+		while(i >= 0)
+		{
+			if(i == 0)
+			{
+				printf("%d\n", array[i]);
+				i--;
+			}
+			else
+			{
+				printf("%d", array[i]);
+				i--;
+			}
+		}
+	}
+}

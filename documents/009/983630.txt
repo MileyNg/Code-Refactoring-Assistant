@@ -1,0 +1,147 @@
+#include<iostream>
+
+using namespace std;
+
+#define VAR 201
+
+struct S{
+	int U,D,R,L,F,B,h,x,y;
+};
+
+int main(){
+
+	int field[VAR][VAR][VAR];
+	int n;
+	int t,f;
+	int tmp;
+	int cnt[7];
+	S dice;
+
+	while(1){
+
+		cin>>n;
+		if(n==0) break;
+
+		for(int i=0;i<VAR;i++){
+			for(int j=0;j<VAR;j++){
+				for(int k=0;k<VAR;k++){
+					field[i][j][k]=-1;
+				}
+			}
+		}
+
+		for(int i=0;i<n;i++){
+			cin>>t>>f;
+			dice.U=t;
+			dice.D=7-t;
+			dice.F=f;
+			dice.B=7-f;
+			if(t==1&&f==2) dice.R=3,dice.L=4;
+			if(t==1&&f==3) dice.R=5,dice.L=2;
+			if(t==1&&f==4) dice.R=2,dice.L=5;
+			if(t==1&&f==5) dice.R=4,dice.L=3;
+			if(t==2&&f==1) dice.R=4,dice.L=3;
+			if(t==2&&f==3) dice.R=1,dice.L=6;
+			if(t==2&&f==4) dice.R=6,dice.L=1;
+			if(t==2&&f==6) dice.R=3,dice.L=4;
+			if(t==3&&f==1) dice.R=2,dice.L=5;
+			if(t==3&&f==2) dice.R=6,dice.L=1;
+			if(t==3&&f==5) dice.R=1,dice.L=6;
+			if(t==3&&f==6) dice.R=5,dice.L=2;
+			if(t==4&&f==1) dice.R=5,dice.L=2;
+			if(t==4&&f==2) dice.R=1,dice.L=6;
+			if(t==4&&f==5) dice.R=6,dice.L=1;
+			if(t==4&&f==6) dice.R=2,dice.L=5;
+			if(t==5&&f==1) dice.R=3,dice.L=4;
+			if(t==5&&f==3) dice.R=6,dice.L=1;
+			if(t==5&&f==4) dice.R=1,dice.L=6;
+			if(t==5&&f==6) dice.R=4,dice.L=3;
+			if(t==6&&f==2) dice.R=4,dice.L=3;
+			if(t==6&&f==3) dice.R=2,dice.L=5;
+			if(t==6&&f==4) dice.R=5,dice.L=2;
+			if(t==6&&f==5) dice.R=3,dice.L=4;
+			dice.h=VAR-1;
+			dice.x=VAR/2,dice.y=VAR/2;
+
+			while(1){
+				while(dice.h!=0&&field[dice.h-1][dice.y][dice.x]==-1) dice.h--;
+				int dir=-1; 
+				int dirmax=-1;
+				if(dice.h!=0&&field[dice.h-1][dice.y][dice.x+1]==-1){
+					if(dirmax<dice.R&&dice.R>=4){
+						dir=3;
+						dirmax=dice.R;
+					}
+				}
+				if(dice.h!=0&&field[dice.h-1][dice.y][dice.x-1]==-1){
+					if(dirmax<dice.L&&dice.L>=4){
+						dir=4;
+						dirmax=dice.L;
+					}
+				}
+				if(dice.h!=0&&field[dice.h-1][dice.y+1][dice.x]==-1){
+					if(dirmax<dice.B&&dice.B>=4){
+						dir=2;
+						dirmax=dice.B;
+					}
+				}
+				if(dice.h!=0&&field[dice.h-1][dice.y-1][dice.x]==-1){
+					if(dirmax<dice.F&&dice.F>=4){
+						dir=1;
+						dirmax=dice.F;
+					}
+				}
+				if(dir==-1){
+					field[dice.h][dice.y][dice.x]=dice.U;
+					break;
+				}
+				if(dir==1){
+					dice.y--;
+					tmp=dice.U;
+					dice.U=dice.B;
+					dice.B=dice.D;
+					dice.D=dice.F;
+					dice.F=tmp;
+				}
+				if(dir==2){
+					dice.y++;
+					tmp=dice.U;
+					dice.U=dice.F;
+					dice.F=dice.D;
+					dice.D=dice.B;
+					dice.B=tmp;
+				}if(dir==3){
+					dice.x++;
+					tmp=dice.U;
+					dice.U=dice.L;
+					dice.L=dice.D;
+					dice.D=dice.R;
+					dice.R=tmp;
+				}if(dir==4){
+					dice.x--;
+					tmp=dice.U;
+					dice.U=dice.R;
+					dice.R=dice.D;
+					dice.D=dice.L;
+					dice.L=tmp;
+				}
+			}
+		}
+		for(int i=0;i<7;i++) cnt[i]=0;
+		for(int i=0;i<VAR;i++){
+			for(int j=0;j<VAR;j++){
+				for(int k=0;k<=VAR;k++){
+					if(k==VAR||field[k][i][j]==-1){
+						if(k!=0){
+							cnt[field[k-1][i][j]]++;
+						}
+						break;
+					}
+				}
+			}
+		}
+		for(int i=1;i<6;i++) cout<<cnt[i]<<" ";
+		cout<<cnt[6]<<endl;
+	}
+
+}

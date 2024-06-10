@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    int ver,hor;
+    int a,b;
+    int i,tmp;
+    char c;
+    cin >> ver;
+    cin >> hor;
+
+    vector<int> v;
+    for(i=0;i<ver;i++)
+        v.push_back(i+1);
+    for(i=0;i<hor;i++)
+    {
+        cin >> a >> c >> b;
+        tmp = v[a-1];
+        v[a-1] = v[b-1];
+        v[b-1] = tmp;
+    }
+    for(i=0;i<ver;i++)
+        cout << v[i] << endl;
+    cout << endl;
+    return 0;
+}

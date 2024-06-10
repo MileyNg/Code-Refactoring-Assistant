@@ -1,0 +1,157 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+char t[2000000];
+int ts;
+
+char u[1000000];
+int us;
+
+char ch;
+int pos;
+
+void input();
+void funcA();
+void funcE();
+void funcP();
+void funcN();
+void funcF();
+void funcB();
+void funcD();
+void funcK();
+void funcY();
+
+int main(){
+
+  input();
+  pos=0;
+
+  while(1){
+    cin>>ch;
+    if(ch=='a')funcA();
+    else if(ch=='e')funcE();
+    else if(ch=='p')funcP();
+    else if(ch=='n')funcN();
+    else if(ch=='f')funcF();
+    else if(ch=='b')funcB();
+    else if(ch=='d')funcD();
+    else if(ch=='k')funcK();
+    else if(ch=='y')funcY();
+    else break;
+    /*
+    cout<<ch<<' '<<pos<<endl;
+    for(int i=0;i<ts;i++){
+      cout<<t[i];
+    }
+    cout<<endl;
+    */
+  }
+    for(int i=0;i<ts;i++){
+      cout<<t[i];
+    }
+
+  return 0;
+}
+
+void funcA(){
+  for(int i=pos-1;;i--){
+    if(i<=0){pos=0;return;}
+    if(t[i]=='\n'){pos=i+1;return;}
+  }
+}
+
+void funcE(){
+  for(int i=pos;;i++){
+    if(i>=ts){pos=ts-1;return;}
+    if(t[i]=='\n'){pos=i;return;}
+  }
+}
+
+void funcP(){
+  funcA();
+  if(pos==0)return;
+  pos--;
+  funcA();
+}
+
+void funcN(){ 
+  funcE();
+  if(pos==ts-1){
+    funcA();
+    return;
+  }else{
+    pos++;
+  }
+}
+
+void funcF(){ 
+  if(pos+1<ts)pos++;
+}
+
+void funcB(){
+  if(pos>0)pos--;
+}
+
+void funcD(){
+  if(pos==ts-1)return;
+  ts--;
+  for(int i=pos;i<ts;i++){
+    t[i]=t[i+1];
+  }
+}
+
+void funcK(){
+  if(pos==ts-1)return;
+
+  if(t[pos]=='\n'){
+    us=1;
+    u[0]='\n';
+    funcD();
+    return;
+  }
+  us=0;
+  int c=0;
+  for(int i=pos;;i++){
+    if(t[i]=='\n')break;
+    u[us++]=t[i];
+    c++;
+  }
+  ts-=c;
+  for(int i=pos;i<ts;i++){
+    t[i]=t[i+c];
+  }
+}
+
+void funcY(){
+  if(us==0)return;
+  if(u[0]=='\n'&&us==1){
+    ts++;
+    for(int i=ts-1;i>pos;i--)t[i]=t[i-1];
+    t[pos]='\n';
+    pos++;return;
+  }
+  
+  ts+=us;
+  for(int i=ts-1;i>=pos+us;i--){
+    t[i]=t[i-us];
+  }
+  for(int i=pos;i<pos+us;i++){
+    t[i]=u[i-pos];
+  }
+  pos+=us;
+}
+
+void input(){
+  ts=us=0;
+  string str;
+  while(1){
+    getline(cin,str);
+    if(str=="END_OF_TEXT")break;
+    for(int i=0;i<(int)str.size();i++)
+      t[ts++]=str[i];
+    t[ts++]='\n';
+  }
+
+}

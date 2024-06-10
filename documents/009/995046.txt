@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		vvi q(n);
+		rep(i,n){
+			int d,t; cin>>d>>t;
+			q[i].resize(d);
+			rep(j,d) cin>>q[i][(t+j)%d];
+		}
+		
+		vvi dp(n);
+		rep(i,n) dp[i].resize(q[i].size());
+		dp[0]=q[0];
+		
+		repi(i,1,n){
+			int g=__gcd(dp[i-1].size(),dp[i].size());
+			rep(j,q[i].size()) for(int k=j%g;k<q[i-1].size();k+=g)
+				dp[i][j]=max(dp[i][j],q[i][j]+dp[i-1][k]);
+		}
+		
+		cout<<*max_element(all(dp.back()))<<endl;
+	}
+}

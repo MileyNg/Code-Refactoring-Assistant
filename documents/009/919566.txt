@@ -1,0 +1,47 @@
+#include<vector>
+#include<algorithm>
+#include<iostream>
+#include<cstdio>
+using namespace std;
+struct UnionFind{
+  vector<int> root;
+  UnionFind(int size) : root(size, -1) {}
+  bool unite(int x, int y){
+    x = find(x);
+    y = find(y);
+    if(x == y){
+      return 0;
+    }
+    if(root[y] < root[x]){
+      swap(x, y);
+    }
+    root[x] += root[y];
+    root[y] = x;
+    return 1;
+  }
+  bool same(int x, int y){
+    return find(x) == find(y);
+  }
+  int find(int x){
+    return root[x] < 0 ? x : root[x] = find(root[x]);
+  }
+  int size(int x){
+    return -root[find(x)];
+  }
+};
+
+int main(){
+  int n, q, com, x, y;
+  cin >> n >> q;
+  UnionFind uf(n);
+  for(int i = 0; i < q; ++i){
+    scanf("%d %d %d", &com, &x, &y);
+    if(com == 0){
+      uf.unite(x, y);
+    }
+    else{
+      cout << (uf.same(x, y) ? 1 : 0) << endl;
+    }
+  } 
+  return 0;
+}

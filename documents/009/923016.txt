@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+#define rep(i,n) for(int i=0;i<n;++i)
+#define rep1(i,n) for(int i=1;i<=n;++i)
+#define ALL(c) (c).begin(),(c).end()
+int main(){
+	while(true){
+		int n,r,a[50]={},b[50]={};
+		cin >> n >> r;
+		if(n==0) break;
+		rep(i,n) a[i]=n-i;
+		rep(i,r){
+			int p,c;
+			cin >> p >> c;
+			rotate(a,a+p-1,a+p+c-1);
+		}
+		cout << a[0] << endl;
+	}
+	return 0;
+}

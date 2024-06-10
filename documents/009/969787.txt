@@ -1,0 +1,82 @@
+#include<cstdio>
+#include<array>
+using namespace std;
+void center(array<int, 100> &a, int x, int y){
+  a[y*10+x]++;
+}
+void left(array<int, 100> &a, int x, int y){
+  if(x>0){a[y*10+x-1]++;}
+}
+void right(array<int, 100> &a, int x, int y){
+  if(x<9){a[y*10+x+1]++;}
+}
+void up(array<int, 100> &a, int x, int y){
+  if(y>0){a[(y-1)*10+x]++;}
+}
+void down(array<int, 100> &a, int x, int y){
+  if(y<9){a[(y+1)*10+x]++;}
+}
+void leftup(array<int, 100> &a, int x, int y){
+  if(x>0&&y>0){a[(y-1)*10+x-1]++;}
+}
+void rightup(array<int, 100> &a, int x, int y){
+  if(x<9&&y>0){a[(y-1)*10+x+1]++;}
+}
+void rightdown(array<int, 100> &a, int x, int y){
+  if(x<9&&y<9){a[(y+1)*10+x+1]++;}
+}
+void leftdown(array<int, 100> &a, int x, int y){
+  if(x>0&&y<9){a[(y+1)*10+x-1]++;}
+}
+void leftleft(array<int, 100> &a, int x, int y){
+  if(x>1){a[y*10+x-2]++;}
+}
+void rightright(array<int, 100> &a, int x, int y){
+  if(x<8){a[y*10+x+2]++;}
+}
+void upup(array<int, 100> &a, int x, int y){
+  if(y>1){a[(y-2)*10+x]++;}
+}
+void downdown(array<int, 100> &a, int x, int y){
+  if(y<8){a[(y+2)*10+x]++;}
+}
+
+void small(array<int, 100> &a,int x,int y){
+  center(a,x,y);
+  left(a,x,y);
+  right(a,x,y);
+  up(a,x,y);
+  down(a,x,y);
+}
+void med(array<int, 100> &a,int x,int y){
+  small(a,x,y);
+  leftup(a,x,y);
+  rightup(a,x,y);
+  rightdown(a,x,y);
+  leftdown(a,x,y);
+}
+void large(array<int, 100> &a,int x,int y){
+  med(a,x,y);
+  leftleft(a,x,y);
+  rightright(a,x,y);
+  upup(a,x,y);
+  downdown(a,x,y);
+}
+
+int main(){
+  array<int, 100> a{};
+  int x,y,size;
+  while(scanf("%d,%d,%d",&x,&y,&size)>0){
+    switch(size){
+    case 1:small(a,x,y);break;
+    case 2:med(a,x,y);break;
+    case 3:large(a,x,y);break;
+    }
+  }
+  int zero=0,max=0;
+  for(int i=0;i<100;i++){
+    if(max<a[i]) max=a[i];
+    if(a[i]==0) zero++;
+  }
+  printf("%d\n%d\n",zero,max);
+}

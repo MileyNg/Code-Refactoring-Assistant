@@ -1,0 +1,151 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define INF (int)(1e9)
+
+int mb[10];
+int ms[10];
+int m[10][100];
+int mk;
+int mmb[10];
+int mms[10];
+int mm[10][100];
+int mmk;
+int n[10][100];
+
+vector<pair<int,int> > isi[150];
+
+int main()
+{
+	while(1)
+	{
+		int nn,mn;
+		scanf("%d %d",&nn,&mn);
+		if(nn == 0 && mn == 0)
+		{
+			break;
+		}
+		for(int i = 0; i < nn; i++)
+		{
+			int k;
+			scanf("%d",&k);
+			for(int ii = 0; ii < k; ii++)
+			{
+				int x,d;
+				scanf("%d %d",&x,&d);
+				isi[i].push_back(make_pair(x,d));
+			}
+		}
+		for(int i = 0; i < isi[0].size(); i++)
+		{
+			mb[i] = isi[0][i].first;
+			ms[i] = 0;
+			mmb[i] = isi[0][i].first;
+			mms[i] = 0;
+			for(int ii = 0; ii <= mn; ii++)
+			{
+				m[i][ii] = 0;
+				mm[i][ii] = 0;
+			}
+		}
+		mk = isi[0].size();
+		mmk = isi[0].size();
+		for(int i = 0; i < nn; i++)
+		{
+			if(i == 1)
+			{
+				for(int ii = 0; ii < isi[i].size(); ii++)
+				{
+					for(int iii = 0; iii <= mn; iii++)
+					{
+						mm[ii][iii] = 0;
+					}
+					mmb[ii] = isi[i][ii].first;
+					mms[ii] = isi[i][ii].second;
+				}
+				mmk = isi[i].size();
+			}
+			for(int ii = 0; ii < isi[i].size(); ii++)
+			{
+				for(int iii = 0; iii <= mn; iii++)
+				{
+					int min = INF;
+					for(int j = 0; j < mk; j++)
+					{
+						if(min > m[j][iii] + (ms[j] + isi[i][ii].second) * abs(mb[j] - isi[i][ii].first))
+						{
+							min = m[j][iii] + (ms[j] + isi[i][ii].second) * abs(mb[j] - isi[i][ii].first);
+						}
+					}
+					n[ii][iii] = min;
+				}
+				for(int iii = 0; iii < mn; iii++)
+				{
+					int min = INF;
+					for(int j = 0; j < mk; j++)
+					{
+						if(min > mm[j][iii] + (mms[j] + isi[i][ii].second) * abs(mmb[j] - isi[i][ii].first))
+						{
+							min = mm[j][iii] + (mms[j] + isi[i][ii].second) * abs(mmb[j] - isi[i][ii].first);
+						}
+					}
+					if(n[ii][iii + 1] > min)
+					{
+						n[ii][iii + 1] = min;
+					}
+				}
+			}
+			for(int ii = 0; ii < mk; ii++)
+			{
+				for(int iii = 0; iii <= mn; iii++)
+				{
+					mm[ii][iii] = m[ii][iii];
+				}
+				mmb[ii] = mb[ii];
+				mms[ii] = ms[ii];
+			}
+			mmk = mk;
+			for(int ii = 0; ii < isi[i].size(); ii++)
+			{
+				for(int iii = 0; iii <= mn; iii++)
+				{
+					m[ii][iii] = n[ii][iii];
+				}
+				mb[ii] = isi[i][ii].first;
+				ms[ii] = isi[i][ii].second;
+			}
+			mk = isi[i].size();
+		}
+		int allmin = INF;
+		for(int i = 0; i < mmk; i++)
+		{
+			for(int ii = 0; ii < mn; ii++)
+			{
+				if(allmin > mm[i][ii])
+				{
+					allmin = mm[i][ii];
+				}
+			}
+		}
+		for(int i = 0; i < mk; i++)
+		{
+			for(int ii = 0; ii <= mn; ii++)
+			{
+				if(allmin > m[i][ii])
+				{
+					allmin = m[i][ii];
+				}
+			}
+		}
+		printf("%d\n",allmin);
+		for(int i = 0; i < nn; i++)
+		{
+			isi[i].clear();
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,40 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+const string AIZU = "AIZUNYAN";
+string s;
+
+bool check(int& n){
+  int A=0, I=0, D=0, U=0, N=0, Y=0;
+  for(int i=n; i<n+8; ++i){
+    if(s[i] == 'A') ++A;
+    if(s[i] == 'I') ++I;
+    if(s[i] == 'D') ++D;
+    if(s[i] == 'U') ++U;
+    if(s[i] == 'N') ++N;
+    if(s[i] == 'Y') ++Y;
+  }
+  return (A==2 && I==1 && D==1 && U==1 && N==2 && Y==1);
+}
+
+void solve(){
+  if(s.size()<8) return;
+  for(int i=0; i<s.size()-7; ){
+    if(check(i)){
+      s.replace(i, 8, AIZU);
+      i+=8;
+    }else{
+      ++i;
+    }
+  }
+}
+
+int main(){
+  cin >> s;
+  solve();
+  cout << s << endl;
+  return 0;
+}

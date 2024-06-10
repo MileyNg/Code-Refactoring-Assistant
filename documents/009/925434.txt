@@ -1,0 +1,110 @@
+#include<bits/stdc++.h>
+#define MAXN 105
+#define PI acos(-1.0)
+#define MOD 1000000007
+#define REP(i,n) for(int i=0; i<n; i++)
+#define FOR(i,s,t) for(int i=s; i<=t; i++)
+#define mem(a,b)  memset(a,b,sizeof(a))
+#define show(x) { cerr<<">>>"<<#x<<" = "<<x<<endl; }
+#define show2(x,y) { cerr<<">>>"<<#x<<"="<<x<<"  "<<#y<<" = "<<y<<endl; }
+using namespace std;
+
+int ansx,ansy,ansdir;
+int vis[MAXN][MAXN][4];
+int H,W,L;
+bool G[MAXN][MAXN];
+
+int dx[4] = {0, -1, 0, 1};
+int dy[4] = {-1, 0, 1, 0};
+
+bool out(int x,int y)
+{
+    if(x < 0 && x >= H) return true;
+    if(y < 0 && y >= W) return true;
+    return false;
+}
+
+void dfs(int x,int y,int dir,int d)
+{ //show2(x, y); show2(dir,d); printf("\n");
+    if(L == d)
+    {
+        ansx = x, ansy = y, ansdir = dir; // cout<<ansdir<<endl;
+        return;
+    }
+    for(int i=0; i<4; i++)
+    {
+        int xx = x + dx[dir];
+        int yy = y + dy[dir];
+
+        if(out(xx,yy) || !G[xx][yy])
+        {
+            dir = (dir+1)%4;
+            continue;
+        }
+        else
+        {
+            x = xx, y = yy; d++;
+            break;
+        }
+    }
+    if(vis[x][y][dir])
+    {
+        int diff = d - vis[x][y][dir];
+        L = ( L-d ) % diff + 1;
+        mem(vis,0);
+        d = 1;
+        dfs(x, y, dir, d);
+    }
+    else
+    {
+        vis[x][y][dir] = d;
+        dfs(x, y, dir, d);
+    }
+
+}
+
+int mymap[100];
+
+int main()
+{
+    //freopen("E:\\acm\\input.txt","r",stdin);
+    //freopen("E:\\acm\\output.txt","w",stdout);
+    mymap['W'] = 0; mymap['N'] = 1;
+    mymap['E'] = 2; mymap['S'] = 3;
+    mymap['.'] = 4;
+    while(cin>>H>>W>>L)
+    {
+        if(H == 0 && W == 0 && L == 0) break;
+        mem(G, 0);
+        int sx, sy, dir;
+        REP(i, H)
+        {
+            char str[MAXN]; scanf("%s", str);
+            REP(j, W)
+            {
+                if(str[j] != '#')
+                {
+                    G[i][j] = 1;
+                    if(mymap[str[j]] != 4)
+                    {
+                        sx = i; sy = j;
+                        dir = mymap[str[j]];
+                    }
+                }
+            }
+        } //show2(sx, sy); show(dir);
+        mem(vis, 0); L ++;
+        dfs(sx, sy, dir, 1);
+
+        char ch;
+        switch(ansdir)
+        {
+            case 0: ch = 'W'; break;
+            case 1: ch = 'N'; break;
+            case 2: ch = 'E'; break;
+            case 3: ch = 'S'; break;
+        }
+        cout<<ansx+1<<" "<<ansy+1<<" "<<ch<<endl;
+    }
+
+}

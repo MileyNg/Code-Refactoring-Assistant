@@ -1,0 +1,58 @@
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+#define NMAX 20
+
+struct point{
+	int x,y;
+};
+
+int main(){
+
+	int N,M;
+	char dir;
+	string dirdata("WSNE");
+	int dx[]={-1,0,0,1};
+	int dy[]={0,-1,1,0};
+	int x,y,dis;
+	point robo,juel[NMAX];
+	int cnt;
+
+	while(1){
+
+		cin>>N;
+		if(N==0) break;
+
+		robo.x=10,robo.y=10;
+		cnt=0;
+
+		for(int i=0;i<N;i++){
+			cin>>x>>y;
+			if(x==10&&y==10) cnt++,x=-1,y=-1;
+			juel[i].x=x,juel[i].y=y;
+		}
+
+		cin>>M;
+		for(int i=0;i<M;i++){
+			cin>>dir>>dis;
+			for(int i=0;i<dis;i++){
+				robo.x+=dx[dirdata.find(dir)];
+				robo.y+=dy[dirdata.find(dir)];
+				for(int j=0;j<N;j++){
+					if(robo.x==juel[j].x&&robo.y==juel[j].y){
+						cnt++;
+						juel[j].x=-1,juel[j].y=-1;
+					}
+				}
+			}
+		}
+		if(cnt==N) puts("Yes");
+		else puts("No");
+	}
+
+
+	return 0;
+}

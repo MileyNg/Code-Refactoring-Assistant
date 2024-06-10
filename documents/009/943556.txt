@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+    int i,j,n;
+    char s[6];
+    
+    scanf("%d",&n);
+    
+    int st[n][1001];
+    
+    for(i=0;i<n;i++){
+        st[i][0]=0;
+    }
+    
+    while(1){
+        scanf("%s",s);
+        
+        if (!strcmp(s, "quit")) {
+            break;
+        }
+        
+        if(!strcmp(s,"push")){
+            scanf("%d %s",&i,s);
+            st[i-1][0]++;
+            st[i-1][st[i-1][0]]=(int)s[0];
+        }
+        else if(!strcmp(s,"pop")){
+            scanf("%d",&i);
+            printf("%c\n",st[i-1][st[i-1][0]]);
+            st[i-1][0]--;
+        }
+        else if(!strcmp(s,"move")){
+            scanf("%d %d",&i,&j);
+            st[j-1][0]++;
+            st[j-1][st[j-1][0]]=st[i-1][st[i-1][0]];
+            st[i-1][0]--;
+        }
+        
+    }
+    
+    return 0;
+}

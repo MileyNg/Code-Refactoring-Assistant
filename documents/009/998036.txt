@@ -1,0 +1,56 @@
+#include <iostream>
+
+using namespace std;
+
+
+void search(int h, int w, int tairu[22][22], int check[22][22]){
+    if(check[h][w]==1)return;
+    if(tairu[h][w]==0)return;
+    
+    check[h][w]=1;
+    search(h+1,w,tairu,check);
+    search(h-1,w,tairu,check);
+    search(h,w+1,tairu,check);
+    search(h,w-1,tairu,check);
+}
+
+
+
+
+
+
+int main()
+{
+
+    int H,W;
+    while(cin>>W>>H){
+        int tairu[22][22]={0};
+        int start_w, start_h;
+        for(int i=1; i<=H; i++){
+            for(int j=1; j<=W; j++){
+                char input;
+                cin>>input;
+                if(input=='.')tairu[i][j]=1;
+                if(input=='@'){
+                    tairu[i][j]=1;
+                    start_w=j;
+                    start_h=i;
+                }
+            }
+        }
+        //
+        
+        int check[22][22]={0};
+        search(start_h, start_w, tairu, check);
+        int ans=0;
+        for(int i=1; i<=H; i++){
+            for(int j=1; j<=W; j++){
+                ans+=check[i][j];
+            }
+        }
+        cout<<ans<<endl;
+        
+        
+        
+    }
+}

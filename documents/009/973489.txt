@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+#include <iterator>
+#include <bitset>
+#include <random>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+#include <ctime>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+#define MP make_pair
+#define umap unordered_map
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<int, int> P;
+typedef unsigned int uint;
+
+map<tuple<int, int, int, int, int>, double> dp;
+
+int table[4][4];
+int v[101];
+
+double EPS = 1e-7;
+
+int L, A, B;
+double rec(int n, int acc, int prv, int comb, int pnt){
+	if (n == L) return pnt == 100;
+
+	auto t = make_tuple(n, acc, prv, comb, pnt);
+	if (dp.count(t)) return dp[t];
+	double &res = dp[t];
+
+	res = 0;
+
+	res = rec(n + 1, 0, 4, v[n] ? 0 : comb, pnt);
+	if(v[n] != 0) for (int i = 0; i < 4; ++i){
+		if (v[n] == 2 && i < 2) continue;
+		if (v[n] == 1 && i >= 2) continue;
+		int ip;
+		if (prv == 4) ip = 10;
+		else ip = max(0, (table[prv][i] - 10) + acc);
+		double p = ip / 10.;
+
+		double tmp = 0;
+		if(p > EPS) tmp += p*rec(n + 1, ip, i, comb+1, min(100, pnt+A+B*min(comb, 10)));
+		if(1-p > EPS) tmp += (1 - p)*rec(n + 1, ip, i, 0, pnt);
+		res = max(res, tmp);
+	}
+
+	return res;
+}
+
+int main(){
+	cout.setf(ios::fixed);
+	cout.precision(10);
+	while (1){
+		rep(i, 4) rep(j, 4){
+			cin >> table[i][j];
+			if (table[i][j] < 0) goto end;
+		}
+		cin >> L;
+		rep(i, L) cin >> v[i];
+		cin >> A >> B;
+		A /= 100, B /= 100;
+
+		dp.clear();
+		cout << rec(0, 0, 4, 0, 0) << endl;
+	}
+
+end:
+	return 0;
+}

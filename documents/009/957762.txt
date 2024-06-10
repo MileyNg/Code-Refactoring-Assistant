@@ -1,0 +1,32 @@
+# 外積を利用した三角形の内外判定
+def sub_vector(a, b)
+  return [a[0] - b[0], a[1] - b[1]]
+end
+
+while nums = gets
+  ax, ay, bx, by, cx, cy, px, py = nums.split.map(&:to_f)
+
+  a = [ax, ay]
+  b = [bx, by]
+  c = [cx, cy]
+  p = [px, py]
+
+  ab = sub_vector(b, a)
+  bp = sub_vector(p, b)
+
+  bc = sub_vector(c, b)
+  cp = sub_vector(p, c)
+
+  ca = sub_vector(a, c)
+  ap = sub_vector(p, a)
+
+  c1 = ab[0] * bp[1] - ab[1] * bp[0]
+  c2 = bc[0] * cp[1] - bc[1] * cp[0]
+  c3 = ca[0] * ap[1] - ca[1] * ap[0]
+
+  if (c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0)
+    puts 'YES'
+    next
+  end
+  puts 'NO'
+end

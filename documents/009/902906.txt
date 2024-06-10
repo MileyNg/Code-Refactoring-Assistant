@@ -1,0 +1,37 @@
+import std.stdio;
+import std.c.stdio;
+import std.range;
+import std.array;
+import std.functional;
+import std.algorithm;
+import std.conv;
+import std.container;
+import std.math;
+import std.numeric;
+import std.string;
+import std.c.string;
+import std.regex;
+import std.typecons;
+ 
+void main() {
+    int N; readf("%d\n", &N);
+    string s = readln.chomp;
+    static const int C = 10007;
+    int[char] m = ['J': 0, 'O': 1, 'I': 2];
+
+    int cache[8][1001];
+    memset(cast(void*)cache, -1, cache.sizeof);
+    int dfs(int p, int n) {
+        if (n == N) return 1;
+        if (cache[p][n] >= 0) return cache[p][n];
+        int ret = 0;
+        for (int i = 1; i <= 7; i++) {
+            if ((i & p) && (i & (1 << m[s[n]]))) {
+                ret = (ret + dfs(i, n + 1)) % C;
+            }
+        }
+        return cache[p][n] = ret;
+    }
+
+    dfs(1, 0).writeln;
+}

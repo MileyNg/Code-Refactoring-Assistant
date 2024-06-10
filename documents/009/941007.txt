@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void){
+
+	int m, f, r, mandf;
+	char score[1];
+
+	for(;;){
+		scanf("%d %d %d", &m, &f, &r);
+		if(m == -1 && f == -1 && r == -1)	break;
+		mandf = m + f;
+		if(m == -1 || f == -1){
+			score[0] = 'F';
+		}else if(mandf >= 80){
+			score[0] = 'A';
+		}else if(mandf >= 65 && mandf < 80){
+			score[0] = 'B';
+		}else if(mandf >= 50 && mandf < 65){
+			score[0] = 'C';
+		}else if(mandf >= 30 && mandf < 50){
+			score[0] = 'D';
+		}else if(mandf < 30){
+			score[0] = 'F';
+		}else if(mandf >= 30 && mandf < 50 && r >= 50){
+			score[0] = 'C';
+		}
+		printf("%c\n", score[0]);
+	}
+	return 0;
+}

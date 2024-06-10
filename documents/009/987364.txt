@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    int topn=1,bottomn=6,northn=5,southn=2,eastn=3,westn=4,tempn;
+    int sum[10000];
+    int repeat=1;
+    int inpn,inpm,inpcount=0,outp=0;
+    char input[6];
+    while(repeat==1){
+        scanf("%d",&inpn);
+        
+        sum[inpcount]=1;
+        topn=1,bottomn=6,northn=5,southn=2,eastn=3,westn=4;
+        
+        if(inpn!=0){
+            for(inpm=inpn;inpm>=1;inpm--){
+                scanf("%s",input);
+                
+                if(!strcmp(input,"North")){
+                    tempn=topn;
+                    topn=southn;
+                    southn=bottomn;
+                    bottomn=northn;
+                    northn=tempn;
+                }
+                if(!strcmp(input,"East")){
+                    tempn=topn;
+                    topn=westn;
+                    westn=bottomn;
+                    bottomn=eastn;
+                    eastn=tempn;
+                }
+                if(!strcmp(input,"West")){
+                    tempn=topn;
+                    topn=eastn;
+                    eastn=bottomn;
+                    bottomn=westn;
+                    westn=tempn;
+                }
+                if(!strcmp(input,"South")){
+                    tempn=topn;
+                    topn=northn;
+                    northn=bottomn;
+                    bottomn=southn;
+                    southn=tempn;
+                }
+                if(!strcmp(input,"Right")){
+                    tempn=northn;
+                    northn=westn;
+                    westn=southn;
+                    southn=eastn;
+                    eastn=tempn;
+                }
+                if(!strcmp(input,"Left")){
+                    tempn=northn;
+                    northn=eastn;
+                    eastn=southn;
+                    southn=westn;
+                    westn=tempn;
+                }
+                
+                sum[inpcount]+=topn;
+            }
+        }
+        
+        if(inpn==0)repeat=0;
+        inpcount++;
+    }
+    while(sum[outp+1]!=0){
+        printf("%d\n",sum[outp]);
+        outp++;
+    }
+    return 0;
+}

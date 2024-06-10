@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+	int i,size,m,h;
+	char c[200],cc[200];
+	
+	while (1){
+		scanf("%s",&c);
+		if (c[0]=='-') break;
+		
+		size=strlen(c);
+		scanf("%d",&m);
+		while (m--){
+			scanf("%d",&h);
+			for (i=size-h;i<size;i++){
+				cc[i-(size-h)]=c[i];
+			}
+			for (i=size-h-1;i>-1;i--){
+				c[i+h]=c[i];
+			}
+			for (i=0;i<h;i++){
+				c[i]=cc[i];
+			}
+		}
+		printf("%s\n",c);
+	}
+  return 0;
+}

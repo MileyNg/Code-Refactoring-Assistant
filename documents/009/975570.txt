@@ -1,0 +1,47 @@
+#include<iostream>
+#include<algorithm>
+
+#define INF 10000000
+
+using namespace std;
+
+main(){
+
+  int node, edge, source, dst1, dst2;
+  
+  while(cin >> node >> edge >> source >> dst1 >> dst2){
+    if(node == 0)break;
+    source--;
+    dst1--;
+    dst2--;
+    
+    int d[node][node];
+    fill(&d[0][0], &d[node-1][node], INF);
+
+    for(int i=0; i<node; i++){
+      d[i][i] = 0;
+    }
+
+    for(int i=0; i<edge; i++){
+      int f, t;
+      cin >> f >> t;
+      cin >> d[f-1][t-1];
+    }
+
+    for(int i=0; i<node; i++){
+      for(int j=0; j<node; j++){
+	for(int k=0; k<node; k++){
+	  d[j][k] = min(d[j][k], d[j][i] + d[i][k]);
+	}
+      }
+    }
+
+    int ans = INF;
+
+    for(int i=0; i<node; i++){
+      ans = min(ans, d[source][i] + d[i][dst1] + d[i][dst2]);
+    }
+
+    cout << ans << endl;
+  }
+}

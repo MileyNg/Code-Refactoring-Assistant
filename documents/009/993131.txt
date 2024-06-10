@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <array>
+#include <vector>
+
+using namespace std;
+
+bool exists( pair<int, int> p, vector<pair<int, int>> &vs, vector<pair<int, int>> &ms ){
+  for ( auto v : vs ) {
+	if ( find( ms.begin(), ms.end(), make_pair( p.first + v.first, p.second + v.second ) ) == ms.end() ) {
+	  return false;
+	}
+  }
+  return true;
+
+}
+
+int main() {
+
+  while ( true ) {
+	int n;
+	cin >> n;
+	if ( n == 0 ) break;
+	
+	vector<pair<int, int>> vs( n );
+	for ( int i = 0; i < n; i++ ) {
+	  int x, y;
+	  cin >> x >> y;
+	  vs[ i ] = make_pair( y, x );
+	}
+	auto center = vs[ n - 1 ];
+	for ( int i = 0; i < n; i++ ) {
+	  vs[ i ].second -= vs[ n - 1 ].second;
+	  vs[ i ].first -= vs[ n - 1 ].first;
+	}
+
+	int m;
+	cin >> m;
+	vector<pair<int, int>> ps( m );
+	for ( int i = 0; i < m; i++ ) {
+	  int x, y;
+	  cin >> x >> y;
+	  ps[ i ] = make_pair( y, x );
+	}
+
+	for ( auto p : ps ) {
+	  if ( exists( p, vs, ps ) ) {
+		cout << p.second - center.second << " " << p.first - center.first << endl;
+	  }
+	}
+  }  
+}

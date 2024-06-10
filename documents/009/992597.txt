@@ -1,0 +1,125 @@
+#include <algorithm>
+#include <sstream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+struct Q {
+    string Relation, Name1, Name2;
+    Q(const string& Relation, const string& Name1, const string& Name2) 
+        : Relation(Relation), Name1(Name1), Name2(Name2) {}
+};
+ostream& operator<<(ostream& os, const Q& q) {
+    os << "(" << q.Relation << ", " << q.Name1 << ", " << q.Name2 << ")";
+    return os;
+}
+
+int N, M;
+vector<int> Parent;
+vector<Q> Queries;
+map<string, int> Id;
+vector<int> Prev;
+
+int CountPrefixSpaces(const string& s) {
+    int i;
+    for (i = 0; i < s.size() && s[i] == ' '; i++) ;
+    return i;
+}
+
+bool input() {
+    string l;
+    getline(cin, l);
+    istringstream is; is.str(l);
+    is >> N >> M;
+    is.clear();
+    if (N == 0 && M == 0) return false;
+    Parent.resize(N, -1);
+    Queries.clear();
+    Id.clear();
+    Prev.resize(N, -1);
+    for (int i = 0; i < N; i++) {
+        getline(cin, l);
+        is.str(l);
+        string Name;
+        is >> Name;
+        is.clear();
+        Id[Name] = i;
+        int C = CountPrefixSpaces(l);
+        Prev[C] = i;
+        if (C != 0) {
+            Parent[i] = Prev[C - 1];
+        }
+    }
+    for (int i = 0; i < M; i++) {
+        getline(cin, l);
+        is.str(l);
+        string Name1, Relation, Name2;
+        string _;
+        is >> Name1;
+        for (int k = 0; k < 2; k++) is >> _;
+        is >> Relation;
+        is >> _;
+        is >> Name2;
+        Name2 = Name2.substr(0, Name2.size() - 1);
+        is.clear();
+        Queries.push_back(Q(Relation, Name1, Name2));
+    }
+    return true;
+}
+
+void solve() {
+    for (int i = 0; i < M; i++) {
+        string& Relation = Queries[i].Relation,
+                Name1 = Queries[i].Name1,
+                Name2 = Queries[i].Name2;
+        int x = Id[Name1], y = Id[Name2];
+        if (Relation == "child") {
+            cout << (y == Parent[x] ? "True" : "False") << endl;
+        } else if (Relation == "parent") {
+            cout << (x == Parent[y] ? "True" : "False") << endl;
+        } else if (Relation == "sibling") {
+            cout << (Parent[x] == Parent[y] ? "True" : "False") << endl;
+        } else if (Relation == "descendant") {
+            while (x >= 0) {
+                if (y == x) {
+                    cout << "True" << endl;
+                    goto fin1;
+                }
+                x = Parent[x];
+            }
+            cout << "False" << endl;
+            fin1:;
+        } else if (Relation == "ancestor") {
+            while (y >= 0) {
+                if (y == x) {
+                    cout << "True" << endl;
+                    goto fin2;
+                }
+                y = Parent[y];
+            }
+            fin2:;
+        } else {
+            assert(0);
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

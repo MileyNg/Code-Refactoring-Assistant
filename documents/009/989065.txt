@@ -1,0 +1,86 @@
+
+#include <stdio.h>
+ 
+main(){
+
+  int i,j,n,id,k,p,c1,c2,count;
+
+  int C[100001][3]; 
+
+  scanf("%d",&n);
+ 
+  for(i=0;i<n;i++){
+    for(j=0;j<3;j++){
+      C[i][j]=-1;
+    }
+  }
+   
+  for(i=0;i<n;i++){
+
+    scanf("%d %d",&id,&k);
+
+    if(k>0){
+      int array[k];
+      for(j=0;j<k;j++){
+        if(j==0){ 
+
+      scanf("%d",&array[j]);
+      C[id][1]=array[j]; 
+          C[array[j]][0]=id;
+    }
+        else {
+      scanf("%d",&array[j]);
+          C[array[j-1]][2]=array[j];
+      C[array[j]][0]=id;
+    }
+      }
+    }
+  }
+   
+    
+  for(i=0;i<n;i++){
+    printf("node %d: parent = %d, ",i,C[i][0]);
+     
+    p=C[i][0];
+
+    count=0;
+
+    while(1){
+      if(p==-1) break;
+      p=C[p][0];
+      count++;
+       
+    }   
+
+    printf("depth = %d, ",count);
+ 
+    if(C[i][0]==-1) printf("root, ");
+    else if(C[i][1]==-1){
+      printf("leaf, []\n");
+      continue;
+    }
+    else printf("internal node, ");
+    
+ 
+    if(C[i][1]!=-1){
+ 
+      c1=C[i][1];
+      if(C[c1][2]!=-1)printf("[%d, ",C[i][1]);
+      else printf("[%d",C[i][1]);
+ 
+      c2=C[C[i][1]][2];
+       
+      while(1){ 
+        if(C[c2][2]==-1) printf("%d",c2); 
+    else if(c2==-1) break;
+
+    else printf("%d, ",c2);
+        c2=C[c2][2];
+      }
+      printf("]\n");
+    }
+    else printf("[]\n");
+  }
+  return 0;
+}
+ 

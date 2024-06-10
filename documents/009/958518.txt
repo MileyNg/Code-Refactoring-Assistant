@@ -1,0 +1,22 @@
+#include<stdio.h>
+int main(){
+	long a,b,c,tmp;
+	long d;
+	while(scanf("%ld%ld",&a,&b)!=EOF){
+	d=a*b;
+	if(a<b){
+		tmp=a;
+		a=b;
+		b=tmp;
+	}
+	while(1){
+		c=a%b;
+		if(c==0)break;
+		a=b;
+		b=c;
+	}
+	c=d/b;
+	printf("%ld %ld\n",b,c);
+	}
+	return 0;
+}

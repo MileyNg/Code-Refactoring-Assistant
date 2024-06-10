@@ -1,0 +1,31 @@
+int main(){
+    
+    char ch;
+    int count[26] = {0};
+    int num=0;
+    int i=0;
+    
+    while (scanf("%c", &ch) != EOF ){ //ファイルの最後まで
+        if((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){ //文字の判別用
+            
+            if(ch >= 'a' && ch <= 'z'){ //大文字か小文字か
+                num = ch - 'a';
+                count[num]++;
+                
+            }else {
+                num = ch - 'A';
+          
+                count[num]++;
+            }
+        } //endif  文字の判別用
+    }
+    
+    //出力部
+    for(i=0; i<26; i++){
+        printf("%c : %d\n",'a'+i,count[i]);
+    }
+    
+    
+    
+    return 0;
+}

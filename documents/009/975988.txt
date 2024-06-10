@@ -1,0 +1,125 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+int isccw(const vi& xs,const vi& ys)
+{
+	int sum=0;
+	rep(i,xs.size()){
+		int x1=xs[i],x2=xs[(i+1)%xs.size()];
+		int y1=ys[i],y2=ys[(i+1)%ys.size()];
+		sum+=x1*y2-y1*x2;
+	}
+	assert(sum);
+	return sum>0;
+}
+
+int solve(const vvi& g,int u,vi& color)
+{
+	int n=g.size();
+	if(u==n) return *max_element(all(color))+1;
+	int res=INF;
+	for(int c=0;c<n;c++){
+		bool ok=true;
+		for(int v:g[u])
+			if(color[v]==c){
+				ok=false;
+				break;
+			}
+		if(ok){
+			color[u]=c;
+			res=min(res,solve(g,u+1,color));
+			color[u]=-1;
+		}
+	}
+	return res;
+}
+
+int main()
+{
+	for(int n;cin>>n && n;){
+		map<string,int> ntoi;
+		const int h=1001,w=1001;
+		vvi grid(h,vi(w,-1));
+		rep(_,n){
+			string name; cin>>name;
+			ntoi.insert(mp(name,ntoi.size()));
+			int v=ntoi[name];
+			vi xs,ys;
+			for(int x,y;cin>>x && x!=-1;){
+				cin>>y;
+				xs.push_back(x);
+				ys.push_back(y);
+			}
+			if(!isccw(xs,ys)){
+				reverse(all(xs));
+				reverse(all(ys));
+			}
+			rep(i,xs.size()){
+				int x1=xs[i],x2=xs[(i+1)%xs.size()];
+				int y1=ys[i],y2=ys[(i+1)%ys.size()];
+				if(x1<x2 && y1==y2)
+					repi(x,x1,x2) grid[y1][x]=v;
+				if(x1>x2 && y1==y2)
+					peri(x,x2,x1) grid[y1-1][x]=v;
+				if(x1==x2 && y1<y2)
+					repi(y,y1,y2) grid[y][x1-1]=v;
+				if(x1==x2 && y1>y2)
+					peri(y,y2,y1) grid[y][x1]=v;
+			}
+		}
+		
+		n=ntoi.size();
+		vvi d(n,vi(n));
+		rep(i,h) rep(j,w) rep(k,4){
+			int ni=i+"\xff\x1\0\0"[k],nj=j+"\0\0\xff\x1"[k];
+			if(ni<0 || h<=ni || nj<0 || w<=nj) continue;
+			int u=grid[i][j],v=grid[ni][nj];
+			if(u!=-1 && v!=-1 && u!=v) d[u][v]=d[v][u]=1;
+		}
+		
+		vvi g(n);
+		rep(i,n) rep(j,n) if(d[i][j])
+			g[i].push_back(j);
+		
+		//rep(i,n) dump(g[i]);
+		
+		vi color(n,-1);
+		cout<<solve(g,0,color)<<endl;
+	}
+}

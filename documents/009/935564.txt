@@ -1,0 +1,58 @@
+int StackEmpty(int *);
+void Push(int *,int);
+
+int top=0;
+
+int main(){
+  int x=0,a=0,b=0,s2[100];
+  char s1[100];
+
+  while( scanf("%s",s1) != EOF ){
+    if ( s1[0] == '+' ){
+      a = Pop(s2);
+      b = Pop(s2);
+      Push(s2,a+b);
+
+    } 
+    else if ( s1[0] == '-' ){
+      a=Pop(s2);
+      b=Pop(s2);
+      Push(s2,b-a);
+    } 
+    else if ( s1[0] == '*' ){
+      a=Pop(s2);
+      b=Pop(s2);
+      Push(s2,a*b);
+    } 
+    else {
+      x = atoi(s1);
+      Push(s2,x);
+
+    }
+  }
+  printf("%d\n",s2[top-1]);
+
+  return 0;
+}
+
+int Pop(int s[]){
+  if(StackEmpty(s) == 1){
+    printf("underflow\n");
+  }
+  else{top--;
+	 return s[top];
+  }
+}
+
+int StackEmpty(int s[]){
+  if(top == 0) return 1;
+  else return 0;
+}
+
+
+void Push(int s[],int x){
+
+  
+  s[top] = x;
+  ++top;
+}

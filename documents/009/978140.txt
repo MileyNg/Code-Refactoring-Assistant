@@ -1,0 +1,68 @@
+import java.util.*;
+
+public class Main {
+	Scanner in = new Scanner(System.in);
+	public static void main(String[] args) {
+		new Main();
+	}
+
+	public Main() {
+		//		n 馬車券
+		//		m 都市数
+		//		p 都市間道路
+		//		a 出発地の都市番号
+		//		b 目的地の都市番号    a!=b
+		while(true){
+			int n = in.nextInt(),m = in.nextInt(),p = in.nextInt(),a = in.nextInt(),b = in.nextInt();
+			if(n+m+a+b+p==0)break;
+			new AOJ1138().doIt(n, m, p, a, b);
+		}
+	}
+
+	class AOJ1138{
+		double d[][];//頂点sからの最短距離
+		int V;//頂点数
+		int INF;
+
+		void dijkstra(int s){
+			INF = Integer.MAX_VALUE;
+			d = new double[V][(1 << n)+ 1];
+			for(int i=0;i<V;i++)Arrays.fill(d[i],INF);
+			int bit = 0;
+			for(int i=0;i<n;i++)bit += (1 << i);
+			d[s][bit] = 0;
+			int before = bit;
+			while(true){
+				int v=-1;
+				for(int u=0;u<V;u++){//まだ使われていない頂点のうち最小のものを探す
+					for(int i=0;i<(1<<n);i++)if(d[u][bit]==INF){
+						if(v==-1||d[u][i]<d[v][before])v = u;
+//						if(!used[u]&&(v==-1||d[u]<d[v]))v=u;
+					}
+				}
+				if(v==-1)break;
+				for(int u=0;u<V;u++){
+					d[u] = Math.min(d[u],d[v]+cost[v][u]);
+				}
+			}
+		}
+
+		int[] t;
+		int[][] cost;
+		int n;
+		void doIt(int n,int m,int p,int a,int b){
+			this.n = n;
+			this.V = m;
+			t = new int[n];
+			for(int i=0;i<n;i++)t[i] = in.nextInt();
+			cost = new int[m][m];
+			for(int i=0;i<p;i++){
+				int from = in.nextInt()-1;
+				int to = in.nextInt()-1;
+				cost[from][to] = cost[to][from] = in.nextInt();
+			}
+			dijkstra(a-1);
+		}
+	}
+
+}

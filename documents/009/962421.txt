@@ -1,0 +1,20 @@
+from collections import deque
+
+n = int(input())
+
+q = deque()
+for i in range(n):
+    cmd = input().strip().split()
+    try:
+        if cmd[0][0] == 'i':
+            q.appendleft(cmd[1])
+        elif cmd[0][-1] == 'e':
+            q.remove(cmd[1])
+        elif cmd[0][6] == 'F':
+            q.popleft()
+        else:
+            q.pop()
+    except:
+        pass
+
+print(' '.join(q))

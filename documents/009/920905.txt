@@ -1,0 +1,26 @@
+#include "stdio.h"
+#include <iostream>
+using namespace std;
+
+/** Problem0055 : Sequence **/
+int main()
+{
+	double input, sum, old;
+	
+	while (cin >> input) {
+		sum = input;
+		old = input;
+		for (int i=2; i<=10; i++) {
+			if (i%2==0) {
+				sum+=old*2;
+				old=old*2;
+			} else {
+				sum+=old/3;
+				old=old/3;
+			}
+		}
+		printf("%.8lf\n", sum);
+	}
+	
+	return 0;
+}

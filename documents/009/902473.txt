@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+ 
+using namespace std;
+ 
+#define FOR(i, a, b) for(int i = (a); i < (b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define in(x, y) (0 <= (x) && (x) < w && 0 <= (y) && y < h)
+#define f(x, y) (y*w+x)
+ 
+typedef pair<int, int> P;
+ 
+struct UnionFind{
+    vector<int> par;
+    UnionFind(int n){
+        par.resize(n);
+        rep(i, n) par[i] = i;
+    }
+    int find(int x){
+        if (x == par[x]) return x;
+        return par[x] = find(par[x]);
+    }
+    void unite(int x, int y){
+        par[find(x)] = find(y);
+    }
+    bool same(int x, int y){
+        return find(x) == find(y);
+    }
+};
+ 
+const int MAXN = 110;
+int e[MAXN], c[MAXN], h[MAXN], a[MAXN];
+ 
+int dp1[MAXN][MAXN]; // トレーニングの種類、消費体力あたりの消費カロリー
+int dp2[MAXN*MAXN]; // 摂取カロリーあたりの幸福度
+int dp3[MAXN];      // 体力あたりの幸福度
+int dp4[MAXN][MAXN]; // 日数、消費体力あたりの幸福度
+ 
+int main(){
+    int S, T, U, N, O, D;
+    cin >> S >> T >> U >> N >> O >> D;
+    rep(i, T) cin >> e[i] >> c[i];
+    rep(i, N) cin >> h[i] >> a[i];
+ 
+    const int INF = 1 << 29;
+ 
+    rep(i, MAXN) rep(j, MAXN) dp1[i][j] = -INF;
+    rep(i, MAXN*MAXN) dp2[i] = -INF;
+    rep(i, MAXN) dp3[i] = -INF;
+    rep(i, MAXN) rep(j, MAXN) dp4[i][j] = -INF;
+ 
+    //{
+    //  S = 100, T = 100, U = 100, N = 100, O = 100, D = 100;
+    //  for (int i = 0; i < 100; ++i) e[i] = 1;
+    //  for (int i = 0; i < 100; ++i) c[i] = 100;
+    //  for (int i = 0; i < 100; ++i) h[i] = 100;
+    //  for (int i = 0; i < 100; ++i) a[i] = 100;
+    //}
+ 
+ 
+    {
+        auto &dp = dp1;
+        dp[0][0] = 0;
+        rep(i, T) for (int j = U - 1; j >= 0; --j) rep(k, S){
+            if (k + e[i] > S) continue;
+            dp[j + 1][k + e[i]] = max(dp[j + 1][k + e[i]], dp[j][k] + c[i]);
+        }
+    }
+    {
+        auto &dp = dp2;
+        dp[0] = 0;
+        rep(i, N){
+            for (int j = 0; j <= 10000; ++j){
+                dp[j + a[i]] = max(dp[j + a[i]], dp[j] + h[i]);
+            }
+        }
+        FOR(i, 1, 10001){
+            dp[i] = max(dp[i], dp[i - 1]);
+        }
+    }
+    {
+        auto &dp = dp3;
+        for (int i = 0; i <= S; ++i){
+            if (dp1[U][i] < 0) continue;
+            dp[i] = dp2[dp1[U][i]];
+        }
+        //cout << S << endl;
+        //rep(i, S + 1) cout << i << " " << dp[i] << endl;
+    }
+    {
+        auto &dp = dp4;
+        dp[0][0] = 0;
+        rep(i, D) rep(j, S) rep(k, S+1) {   // i日目に消費体力がjのとき
+            if (j + k > S) continue;
+            dp[i + 1][max(0, j + k - O)] = max(dp[i + 1][max(0, j + k - O)], dp[i][j]+dp3[k]);
+        }
+        int ans = *max_element(dp[D], dp[D + 1]);
+        if (ans < 0) ans = -1;
+        cout << ans << endl;
+    }
+ 
+ 
+    return 0;
+}

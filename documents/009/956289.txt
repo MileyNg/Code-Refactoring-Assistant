@@ -1,0 +1,42 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+
+int main(){
+
+	int n;
+	std::cin >> n;
+
+	for (int i = 0; i < n; i++){
+		std::string str, str2, res;
+		std::cin >> str >> str2;
+
+		std::reverse(str.begin(), str.end());
+		std::reverse(str2.begin(), str2.end());
+
+		bool up = 0;
+		for (int i = 0; up || i < std::max(str.size(), str2.size()); i++){
+
+			int a = 0, b = 0;
+
+			if (str.size() > i)a = str[i] - '0';
+			if (str2.size() > i)b = str2[i] - '0';
+
+			if (up + a + b >= 10){
+				res += (up + a + b - 10 + '0');
+				up = 1;
+			}
+			else{
+				res += (up + a + b + '0');
+				up = 0;
+			}
+		}
+
+		std::reverse(res.begin(), res.end());
+
+		if (res.size() >= 80)std::cout << "overflow" << std::endl;
+		else std::cout << res << std::endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,111 @@
+#include<iostream>
+using namespace std;
+struct block{
+  bool right;
+  bool down;
+  bool left;
+  bool up;
+  block():right(false),down(false),left(false),up(false){}
+};
+void ud(block* b,string& s,int row){
+  for(int i=0;i<4;i++){
+    if(s[i]=='1'){
+      b[row*6+i+1].down=true;
+      b[(row+1)*6+i+1].up=true;
+    }
+  }
+}
+void lr(block* b,string& s,int row){
+  for(int i=0;i<5;i++){
+    if(s[i]=='1'){
+      b[row*6+i].right=true;
+      b[row*6+i+1].left=true;
+    }
+  }
+}
+enum direction{UP,RIGHT,DOWN,LEFT};
+
+int main(){
+  block b[36]{};
+  int p=1;
+  direction d=direction::RIGHT;
+  string s;
+  cin>>s; ud(b,s,0);
+  cin>>s; lr(b,s,1);
+  cin>>s; ud(b,s,1);
+  cin>>s; lr(b,s,2);
+  cin>>s; ud(b,s,2);
+  cin>>s; lr(b,s,3);
+  cin>>s; ud(b,s,3);
+  cin>>s; lr(b,s,4);
+  cin>>s; ud(b,s,4);
+  do{
+    switch(d){
+    case direction::UP:
+      cout<<"U";
+      if(b[p].up){
+	d=direction::LEFT;
+      }else{
+	p-=6;
+	if(!b[p].right){
+	  p+=1;
+	  d=direction::RIGHT;
+	  if(!b[p].down){
+	    p+=6;
+	    d=direction::DOWN;
+	  }
+	}
+      }
+      break;
+    case direction::RIGHT:
+      cout<<"R";
+      if(b[p].right){
+	d=direction::UP;
+      }else{
+	p+=1;
+	if(!b[p].down){
+	  p+=6;
+	  d=direction::DOWN;
+	  if(!b[p].left){
+	    p-=1;
+	    d=direction::LEFT;
+	  }
+	}
+      }
+      break;
+    case direction::DOWN:
+      cout<<"D";
+      if(b[p].down){
+	d=direction::RIGHT;
+      }else{
+	p+=6;
+	if(!b[p].left){
+	  p-=1;
+	  d=direction::LEFT;
+	  if(!b[p].up){
+	    p-=6;
+	    d=direction::UP;
+	  }
+	}
+      }
+      break;
+    case direction::LEFT:
+      cout<<"L";
+      if(b[p].left){
+	d=direction::DOWN;
+      }else{
+	p-=1;
+	if(!b[p].up){
+	  p-=6;
+	  d=direction::UP;
+	  if(!b[p].right){
+	    p+=1;
+	    d=direction::RIGHT;
+	  }
+	}
+      }
+      break;
+    }
+  }while(p!=1);
+  cout<<"\n";
+}

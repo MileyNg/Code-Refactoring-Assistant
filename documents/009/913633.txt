@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main( void ){
+    int m_Higher[10];
+    for( int i = 0;i < 10;i++ ) scanf( "%d",&m_Higher[i] );
+
+    bool Flg  = false;
+    while( true ) {
+        for( int i = 0;i < 10 - 1;i++ ){
+            if( m_Higher[i] < m_Higher[i+1] ){
+                int buf = m_Higher[i];
+                m_Higher[i] = m_Higher[i+1];
+                m_Higher[i+1] = buf;
+                Flg = true;
+            }
+        }
+        if( !Flg ) break;
+        Flg = false;
+    }
+
+    for( int i = 0;i < 3;i++ ) printf( "%d",m_Higher[i] );
+    return 0;
+}

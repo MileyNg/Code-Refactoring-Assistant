@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int H = 6000;
+const int W = 5;
+int G[H][W];
+
+int main() {
+  int n;
+  while(cin >> n && n) {
+    fill(G[0], G[H], 0);
+    while(n--) {
+      /*
+      for(int i = H-8; i < H; ++i) {
+        for(int j = 0; j < W; ++j) {
+          cout << G[i][j];
+        }
+        cout << endl;
+      }
+      cout << endl;
+      */
+      int d, p, q;
+      cin >> d >> p >> q;
+      --q;
+      vector<int> x;
+      if(d == 1) {
+        for(int j = 0; j < p; ++j) {
+          x.push_back(q+j);
+        }
+      } else {
+        x.push_back(q);
+      }
+      int y = H-1;
+      try {
+        for(int i = 0; i < H; ++i) {
+          for(int j = 0; j < x.size(); ++j) {
+            if(G[i][x[j]]) {
+              y = i-1;
+             throw 0;
+            }
+          }
+        }
+      } catch(...) {}
+      if(d == 1) {
+        for(int j = 0; j < x.size(); ++j) {
+          G[y][x[j]] = 1;
+        }
+      } else {
+        for(int j = 0; j < p; ++j) {
+          G[y-j][x[0]] = 1;
+        }
+      }
+      for(int i = H-1, y = H-1; i >= 0; --i, --y) {
+        bool allBlock = true;
+        for(int j = 0; j < W; ++j) {
+          if(!G[i][j]) {
+            allBlock = false;
+            break;
+          }
+        }
+        if(allBlock) {
+          ++y;
+        } else {
+          for(int j = 0; j < W; ++j) {
+            G[y][j] = G[i][j];
+            if(y != i) G[i][j] = 0;
+          }
+        }
+      }
+    }
+    int res = 0;
+    for(int i = 0; i < H; ++i) {
+      for(int j = 0; j < W; ++j) {
+        res += G[i][j];
+      }
+    }
+    cout << res << endl;
+  }
+  return 0;
+}

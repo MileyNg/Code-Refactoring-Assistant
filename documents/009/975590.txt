@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+bool check( vector< string > map, long long int n, long long int num ) {
+
+  bool flag = true;
+
+  while( flag ) {
+
+    if ( num == 0 ) return true;
+
+    flag = false;
+
+    bool map2[30][30] = {};
+
+    for ( long long int y = 0; y < map.size() - 1; y++ ) {
+      long long int cnt = 1;
+      char k = map[y][0];
+      for ( long long int x = 1; x < map[0].size(); x++ ) {
+	if ( map[y][x] != k ) {
+	  if ( cnt >= n && k != '.' ) {
+	    for ( long long int i = 1; i <= cnt; i++ ) {
+	      map2[y][x-i] = true;
+	    }
+	  }
+	  cnt = 1;
+	  k = map[y][x];
+	}else {
+	  cnt++;
+	}
+      }
+    }
+
+    for ( long long int x = 0; x < map[0].size() - 1; x++ ) {
+      long long int cnt = 1;
+      char k = map[0][x];
+      for ( long long int y = 1; y < map.size(); y++ ) {
+	if ( map[y][x] != k ) {
+	  if ( cnt >= n && k != '.' ) {
+	    for ( long long int i = 1; i <= cnt; i++ ) {
+	      map2[y-i][x] = true;
+	    }
+	  }
+	  cnt = 1;
+	  k = map[y][x];
+	}else {
+	  cnt++;
+	}
+      }
+    }
+
+    for ( long long int x = 0; x < map[0].size() - 1; x++ ) {
+
+      long long int z = map.size() - 2;
+
+      for ( long long int y = z; y >= 0; y-- ) {
+
+	if ( map2[y][x] ) {
+	  flag = true;
+	  num--;
+	  continue;
+	}else {
+	  map[z][x] = map[y][x];
+	  z--;
+	}
+
+      }
+      for ( long long int y = 0; y <= z; y++ ) {
+	map[y][x] = '.';
+      }
+    }
+
+  }
+
+  return false;
+
+}
+
+int main() {
+
+  long long int h, w, n;
+
+  cin >> h >> w >> n;
+
+  vector< string > map;
+
+  string input;
+
+  for ( long long int y = 0; y < h; y++ ) {
+
+    cin >> input;
+
+    map.push_back( input + '.' );
+
+  }
+
+  map.push_back( ".............................." );
+
+  long long int num = 0;
+
+  for ( long long int y = 0; y < h; y++ ) {
+    for ( long long int x = 0; x < w; x++ ) {
+      if ( map[y][x] != '.' ) num++;
+    }
+  }
+  for ( long long int y = 0; y < h; y++ ) {
+
+    for ( long long int x = 0; x < w - 1; x++ ) {
+
+      char k = map[y][x];
+      map[y][x] = map[y][x+1];
+      map[y][x+1] = k;
+      if ( check( map , n, num ) ) {
+	cout << "YES" << endl;
+	return 0;
+      }
+      k = map[y][x];
+      map[y][x] = map[y][x+1];
+      map[y][x+1] = k;
+
+    }
+
+  }
+
+  cout << "NO" << endl;
+
+  return 0;
+
+}

@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct _point {
+	int v;
+	int x;
+}point;
+
+int point_sort( const void * a , const void * b ) {
+	point p1 = *(point*)a;
+	point p2 = *(point*)b;
+  
+	if(p2.x == p1.x)
+		return p1.v - p2.v;
+	return p2.x - p1.x;
+}
+
+int main(void) {
+	point A[101];
+	int i, a, n;
+	
+	for(i=0;i<101;i++) {
+		A[i].v=0;
+		A[i].x=0;
+	}
+	
+	n=0;
+	while(scanf("%d\n", &a) == 1) {
+		A[a].v = a;
+		A[a].x++;
+		n++;
+	}
+	
+	qsort((void*)A , 101, sizeof(A[0]), point_sort);	
+	
+	printf("%d\n", A[0].v);
+	for(i=1;i<n;i++) {
+		if(A[0].x != A[i].x)
+			break;
+			
+		printf("%d\n", A[i].v);
+	}
+	
+	return 0;
+}

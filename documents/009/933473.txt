@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1<<28;
+
+int main() {
+  int n;
+  while(cin >> n && n) {
+    pair<int,int> A(INF,0), B(INF,0), C(-INF,0), D(-INF,0);
+    for(int i = 0; i < n; ++i) {
+      int id, a, b, c, d, e, f, g, h;
+      cin >> id >> a >> b >> c >> d >> e >> f >> g >> h;
+      pair<int,int> p(a*60+b + c*60+d + e*60+f + g*60+h, id);
+      if(p < A) {
+        B = A;
+        A = p;
+      } else if(p < B) {
+        B = p;
+      }
+      if(p > D) {
+        C = D;
+        D = p;
+      } else if(p > C) {
+        C = p;
+      }
+    }
+    cout << A.second << endl;
+    cout << B.second << endl;
+    cout << C.second << endl;
+  }
+  return 0;
+}

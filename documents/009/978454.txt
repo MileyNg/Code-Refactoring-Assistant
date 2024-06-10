@@ -1,0 +1,28 @@
+n = gets.strip.to_i
+
+n.times.each do
+  chs = gets.strip.gsub(/\-/, '').split("")
+
+  train = []
+  pos = -1
+
+  for ch in chs
+    case ch
+      when '>'
+      pos += 1
+      when '<'
+      pos -= 1
+      else
+      if pos < 0
+        train.unshift ch
+        pos += 1
+      elsif pos >= train.length
+        train.push ch
+      elsif train[pos] != ch
+        puts "train[#{pos}] != #{ch}"
+      end
+    end
+  end
+
+  puts train.join("")
+end

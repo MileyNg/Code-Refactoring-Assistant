@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <map>
+#include <string.h>
+
+#define loop(lp) for(int lp2 = 0; lp2 < lp; lp2 ++)
+#define ascent(i, a, b) for(int i = a; i < b; i ++)
+
+#define pb push_back
+
+using namespace std;
+
+int dp[2000][20000];
+
+int main() {
+  int w_max, count = 0;
+  while(cin >> w_max, w_max) {
+    count ++;
+    int n;
+    cin >> n;
+    
+    memset(dp, 0, sizeof(dp));
+
+    int v, w;
+    pair<int, int> w_sum;
+    w_sum = make_pair(0, 0);
+
+    ascent(i, 1, n+1) {
+      scanf("%d,%d", &v, &w);
+
+      ascent(j, 1, w_max+1) {
+	if(w <= j) {
+	  if(dp[i-1][j] < dp[i-1][j-w] + v) {
+	    dp[i][j] = dp[i-1][j-w] + v;
+
+	    if(w_sum.first < dp[i][j] || w_sum.first == dp[i][j] && j < w_sum.second) {
+	      w_sum = make_pair(dp[i][j], j); 
+
+	      //cout << "i = " << i << " " << "wsum = " << w_sum.second << endl;
+	    }
+	  }
+	  else {
+	    dp[i][j] = dp[i-1][j];
+	  }
+	}
+	else {
+	  dp[i][j] = dp[i-1][j];
+	}
+      }
+
+    }
+    /*   
+    ascent(i, 0, n+1) {
+      ascent(j, 0, w_max+1) {
+	printf("%3d ", dp[i][j]);
+      }
+      puts("");
+    }
+    */
+    cout << "Case " << count << ":" << endl;
+    cout << dp[n][w_max] << endl;
+    cout << w_sum.second << endl;
+    
+  }
+  return 0;
+}

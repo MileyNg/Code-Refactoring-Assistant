@@ -1,0 +1,59 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+
+int N;
+int W;
+vector<int> w, v;
+int main(void) {
+    int count = 1;
+    while (1) {
+        cin >> W;
+        if (W == 0) return 0;
+        cin >> N;
+        for (int i = 0; i < N; i++) {
+            int tmp, tmp2;
+            scanf("%d, %d", &tmp, &tmp2);
+            v.push_back(tmp);
+            w.push_back(tmp2);
+        }
+        // dp[i][j]はでjまでで重さがiまで選んでいるとき得られる最高の価値
+        long long dp[N+1][W+1];
+        for (int i = 0; i <= N; i++) {
+            for (int j = 0; j <= W; j++) {
+                dp[i][j] = 0;
+            }
+        }
+        for (int i = 1; i < N; i++) {
+            for (int j = 0; j <= W; j++) {
+                if (j - w[i] >= 0) {
+                    dp[i][j] = max(dp[i-1][j - w[i]] + v[i], dp[i][j]);
+                }
+            }
+        }
+        int topvalue = 0, indexweight = 0;
+        for (int j = 0; j <= W; j++) {
+            if (topvalue < dp[N-1][j]) {
+                topvalue = dp[N-1][j];
+                indexweight = j;
+            }
+        }
+        cout << "Case " << count << ":" << endl;
+        cout << topvalue << endl;
+        cout << indexweight << endl;
+        count++;
+    }
+    return 0;
+}

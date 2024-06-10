@@ -1,0 +1,117 @@
+#include<bits/stdc++.h>
+using namespace std ;
+int m, n ;
+int data[100][2][2] ; //[i][0]:上, [i][1]:下
+#define TIME 0
+#define NUM 1
+#define SITA 0
+#define UE 1
+
+void Clear( const int& posw, const int& posh) {
+  data[posw][posh][TIME] = -1 ;
+  data[posw][posh][NUM] = -1 ;
+  return ;
+}
+
+void doing(queue< int >& ans) {
+  for( int i = 0; i < m; i++) {
+    for(int j = 0; j < 2; j++) {
+      if( data[i][j][TIME] > 0) {
+        data[i][j][TIME]-- ;
+      }
+    }
+  }
+  
+  for(int i = 0; i < m; i++) {
+    if(data[i][SITA][TIME] == 0) {
+      ans.push( data[i][SITA][NUM]) ;
+      Clear( i, SITA) ;
+    }
+    if(data[i][UE][TIME] == 0 && data[i][SITA][TIME] == -1) {
+      ans.push( data[i][UE][NUM]) ;
+      Clear( i, UE) ;
+    }
+  }
+  return ;
+}
+
+bool find( const int& t, const int& num) {
+  for(int i = 0; i < m; i++) {
+    if( data[i][UE][TIME] == -1) {
+      data[i][UE][TIME] = t ;
+      data[i][UE][NUM] = num ;
+      return true ;
+    }
+  }
+
+  int ret = -1 ;
+  for(int i = 0; i < m; i++) {
+    if( data[i][SITA][TIME] != -1) continue ;
+    if( data[i][UE][TIME] < t) continue ;
+    if( ret == -1 || data[i][UE][TIME] < data[ret][UE][TIME]) {
+      ret = i ;
+    }
+  }
+  if( ret != -1) {
+    data[ret][SITA][TIME] = t ;
+    data[ret][SITA][NUM] = num ;
+    return true ;
+  }
+
+  for(int i = 0; i < m; i++){
+    if( data[i][SITA][TIME] != -1) continue ;
+    if( ret == -1 || data[i][UE][TIME] > data[ret][UE][TIME]) {
+      ret = i ;
+    }
+  }
+
+  if( ret != -1) {
+    data[ret][SITA][TIME] = t ;
+    data[ret][SITA][NUM] = num ;
+    return true ;
+  }
+
+  return false ;
+
+}
+
+int main(){
+  while( cin >> m >> n, m) {
+
+    fill_n( **data, 100 * 2 * 2, -1) ;
+    queue< int > que1, que2 ;
+    queue< int > ans ;
+    for(int i = 0; i < n; i++) {
+      int t ;
+      cin >> t ;
+      que1.push(t) ;
+      que2.push(i) ;
+      if( find( que1.front(), que2.front())) {
+        que1.pop() ;
+        que2.pop() ;
+      }
+      for(int j = 0; j < 10; j++) { //10分進める 
+        doing(ans) ; //進める
+        if(!que1.empty() && find(que1.front(), que2.front())) {
+          que1.pop() ;
+          que2.pop() ;
+        }
+      }
+    }
+    while(!que1.empty()) {
+      if( find(que1.front(), que2.front())) {
+        que1.pop() ;
+        que2.pop() ;
+        doing(ans) ;
+      }
+    }
+    while(ans.size() < n){
+      doing(ans) ;
+    }
+    for(int i = 0; i < n; i++) {
+      cout << ans.front() + 1 << (i == n - 1 ? "\n" : " ") ;
+      ans.pop() ;
+    }
+  }
+  return 0 ;
+}

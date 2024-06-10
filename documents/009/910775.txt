@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef vector<vector<int> > VVI;
+
+struct State{
+  int x, y;
+  State(int x, int y): x(x), y(y){}
+};
+
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+int H, W, c;
+int org[10][10];
+int field[10][10];
+VVI pattern;
+
+void dfs(vector<int> v, int color){  
+  v.push_back(color);
+  if(v.size() == 4){
+    pattern.push_back(v);
+    return;
+  }
+  for(int i = 1 ; i <= 6 ; i++){
+    dfs(v, i);
+  }
+}
+
+int bfs(vector<int> pat){
+  int tmp[10][10];
+  
+  int ret = 0;
+  
+  for(int i = 0 ; i < (int)pat.size() ; i++){
+    for(int j = 0 ; j < H ; j++)
+      for(int k = 0 ; k < W ; k++) tmp[j][k] = field[j][k];            
+
+    int color = tmp[0][0];    
+    tmp[0][0] = pat[i];
+    
+    queue<State> que;
+    que.push(State(0, 0));
+    bool used[10][10];
+    memset(used, false, sizeof(used));   
+    while(!que.empty()){
+      State q = que.front(); que.pop();    
+      
+      if(used[q.y][q.x]) continue;            
+      
+      used[q.y][q.x] = true;      
+      field[q.y][q.x] = pat[i];
+      for(int d = 0 ; d < 4 ; d++){
+	int nx = q.x + dx[d], ny = q.y + dy[d];
+	
+	if(nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+	if(color == tmp[ny][nx]) que.push(State(nx, ny));
+      }      
+    }
+  }
+  
+  queue<State> que;
+  que.push(State(0, 0));
+  bool used[10][10];
+  memset(used, false, sizeof(used));
+  while(!que.empty()){
+    State q = que.front(); que.pop();
+    if(used[q.y][q.x]) continue;
+    if(field[q.y][q.x] == c) ret++;
+    used[q.y][q.x] = true;
+    for(int i = 0 ; i < 4 ; i++){
+      int nx = q.x + dx[i], ny = q.y + dy[i];
+      if(nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+      if(field[ny][nx] == c) que.push(State(nx, ny));
+    }
+  }
+  return ret;  
+}
+
+void init(){
+  for(int i = 0 ; i < 10 ; i++)
+    for(int j = 0 ; j < 10 ; j++) org[i][j] = field[i][j] = 0;
+}
+
+int main(){ 
+  
+  vector<int> v;
+  for(int i = 1 ; i <= 6 ; i++) dfs(v, i);
+
+  while(cin >> H >> W >> c, H|W|c){
+    init();
+    
+    for(int i = 0 ; i < H ; i++)
+      for(int j = 0 ; j < W ; j++) cin >> org[i][j];        
+
+    int ans = 0;    
+    for(int i = 0 ; i < (int)pattern.size() ; i++){      
+      for(int j = 0 ; j < H ; j++)
+	for(int k = 0 ; k < W ; k++) field[j][k] = org[j][k];
+      
+      vector<int> pat = pattern[i];
+      pat.push_back(c);
+      
+      ans = max(ans, bfs(pat));
+    }
+    
+    cout << ans << endl;
+    
+  }  
+  return 0;
+}

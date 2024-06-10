@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <stack>
+#include <deque>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+
+#define FOR( i, k, n ) for ( int i = ( k ); i <= ( int )( n ); ++i )
+#define REP( i, n ) FOR( i, 1, n )
+
+typedef long long ll;
+typedef pair< int, int > P;
+
+#define MAX_N 100
+#define MAX_M 99
+
+int main() {
+	stack< int > nums;
+	char ch[ 100 ];
+	while( cin >> ch ) {
+		if( ch[ 0 ] == '+' || ch[ 0 ] == '-' || ch[ 0 ] == '*' ) {
+			int num1, num2, ans;
+			num2 = nums.top();  nums.pop();
+			num1 = nums.top();  nums.pop();
+			switch( ch[ 0 ] ) {
+			case '+' : ans = num1 + num2; break;
+			case '-' : ans = num1 - num2; break;
+			case '*' : ans = num1 * num2; break; 
+			};
+			nums.push( ans );
+		} else {
+			int num = atoi( ch );
+			nums.push( num );
+		}
+	}
+	cout << nums.top() << endl;
+	return 0;
+}

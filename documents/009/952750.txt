@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+#define MAX 200000
+
+int sum(int);
+void add(int);
+void solve(void);
+
+int n, a[MAX], bit[MAX];
+
+int main(){
+  int i;
+
+  scanf("%d" ,&n);
+  for(i = 0 ; i < n ; i++){
+    scanf("%d" ,&a[i]);
+  }
+  solve();
+
+  return 0;
+}
+
+int sum(int i){
+  int s = 0;
+
+  while(i > 0){
+    s += bit[i];
+    i -= i & -i;
+  }
+  return s;
+}
+
+void add(int i){
+  while(i <= n){
+    bit[i]++;
+    i += i & -i;
+  }
+}
+
+void solve(){
+  int i, ans = 0;
+
+  for(i = 0 ; i < n ; i++){
+    ans += i - sum(a[i]);
+    add(a[i]);
+  }
+  printf("%d\n" ,ans);
+}

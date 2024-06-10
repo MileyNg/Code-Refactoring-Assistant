@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<math.h>
+
+int koch(double x1,double y1,double x2,double y2,int n){
+  if(n==0){
+    printf("%f %f\n",x2,y2);
+    return 0;
+  }
+  double Sx,Sy,Tx,Ty,Ux,Uy;
+  Sx=(x2-x1)/3+x1;
+  Sy=(y2-y1)/3+y1;
+  Tx=(x2-x1)*2/3+x1;
+  Ty=(y2-y1)/3+y1;
+  Ux=(cos(M_PI/3)*(Tx-Sx)-sin(M_PI/3)*(Ty-Sy))+Sx;
+  Uy=(sin(M_PI/3)*(Tx-Sx)+cos(M_PI/3)*(Ty-Sy))+Sy;
+  koch(x1, y1, Sx, Sy, n-1);
+  koch(Sx, Sy, Ux, Uy, n-1);
+  koch(Ux, Uy, Tx, Ty, n-1);
+  koch(Tx, Ty, x2, y2, n-1);
+  
+
+
+}
+int main(){
+  int n;
+  double x1=0.0,y1=0.0;
+  double x2=100.0,y2=0.0;
+  scanf("%d",&n);
+  printf("0.00000000 0.00000000\n");
+  koch(x1,y1,x2,y2,n);
+  return 0;
+}

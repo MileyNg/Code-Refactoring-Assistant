@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+using namespace std;
+
+int main(){
+    while(true){
+        vector<pair<int, int> >term; //solved, time
+        int time[100][100];
+        int M, T, P, R;
+        cin >> M >> T >> P >> R;
+
+        if(M+R+P+R == 0) break;
+
+        for(int i=0; i < 100; i++)for(int j=0; j < 100; j++) time[i][j] = 0;
+
+        for(int i=0; i < T; i++){
+            term.push_back(pair<int, int>(0, 0));
+        }
+
+        for(int i=0; i < R; i++){
+            int m, t, p, j;
+            cin >> m >> t >> p >> j;
+            t--;
+            if(j == 0){
+                term[t].first = term[t].first - 1;
+                term[t].second = term[t].second + m + time[t][p];
+            }
+            else {
+                time[t][p] += 20;
+            }
+        }
+        vector<pair<int, int> > copyTerm = term;
+
+        sort(term.begin(), term.end());//, pairCompare);
+
+        for(int i=0; i < term.size(); i++){
+            for(int j=term.size()-1; j != -1; j--){
+                if(i != 0){
+                    if(term[i].first == copyTerm[j].first && term[i].second == copyTerm[j].second){
+                        if(term[i-1].first != term[i].first || term[i-1].second != term[i].second){
+                            cout << "," << j+1;
+                            copyTerm[j].first = 100000;
+                            break;
+                        }
+                        else {
+                            cout << "=" << j+1;
+                            copyTerm[j].first = 100000;
+                            break;
+                        }
+                    }
+                }
+                else if(term[i].first == copyTerm[j].first && term[i].second == copyTerm[j].second){
+                    cout << j+1;
+                    copyTerm[j].first = 1000000;
+                    break;
+                }
+            }
+        }
+        cout << endl;
+
+        term.clear();
+    }
+}

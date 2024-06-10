@@ -1,0 +1,175 @@
+#include <stdio.h>
+
+typedef struct _tree_t {
+    int id;
+    struct _tree_t *p, *l, *r;
+} tree_t;
+
+tree_t* tree_insert(tree_t* root, int id){
+    tree_t *y = NULL;
+    tree_t *x = root;
+    tree_t *z = (tree_t*)malloc(sizeof(tree_t));
+    z->id = id;
+    z->l = z->r = z->p = NULL;
+
+    while(x != NULL) {
+        y = x;
+        if(z->id < x->id) {
+            x = x->l;
+        } else { 
+            x = x->r;
+        }
+    }
+    z->p = y;
+    if(y == NULL) {
+        root = z;
+    } else if(z->id < y->id) {
+        y->l = z;
+    } else { 
+        y->r = z;
+    }
+    
+    return root;
+}
+
+void print_find(tree_t *tree, int id) {
+    if(tree==NULL) {
+        printf("no\n");
+        return;
+    }
+    
+    if(id == tree->id) {
+        printf("yes\n");
+        return;
+    } else if(id < tree->id) {
+        print_find(tree->l, id);
+    } else {
+        print_find(tree->r, id);
+    }
+}
+
+tree_t* find(tree_t *tree, int id) {
+    if(tree==NULL) {
+        return NULL;
+    }
+    
+    if(id == tree->id) {
+        return tree;
+    } else if(id < tree->id) {
+        return find(tree->l, id);
+    } else {
+        return find(tree->r, id);
+    }
+}
+
+/*節点xを根とする部分木の中で最小のキーを持つ節点を返す*/
+tree_t* tree_minimum(tree_t* x) {
+    while(x->l != NULL) {
+        x = x->l;
+    }
+    return x;
+}
+
+/*２分探索木の節点xに次節点がある場合はその次節点を返す*/
+/*ただし、木の中でxが最大のキーを持つ場合はNILを返す*/
+tree_t* tree_successor(tree_t* x) {
+    tree_t* y;
+    if(x->r != NULL) {
+        return tree_minimum(x->r);
+    }
+    y = x->p;
+    
+    while(y != NULL && x == y->r) {
+        x = y;
+        y = y->p;
+    }
+    return y;
+}
+
+tree_t* tree_delete(tree_t* T, tree_t* z) {
+	tree_t* y;
+	tree_t* x;
+	if(z==NULL) return T;
+	
+    /* 削除する節点yを決定する */
+    if(z->l == NULL || z->r == NULL) { 
+        y = z; /* zが子を最大１つ持つ場合は入力節点のz */
+    } else {
+        y = tree_successor(z); /* z が子を2つ持つ場合はzの次節点 */
+    }
+
+    /*xをyのNILではない子またはyが子を持たない場合はNILに設定 */
+    if(y->l != NULL) {
+        x = y->l;
+    } else {
+        x = y->r;
+    }
+
+    /*yの親とxのポインタを変更しyを削除する*/
+    /*xがNILまたはyが根のときの境界条件を処理*/
+    if(x != NULL) {
+        x->p = y->p; /*zが子を１つ持つ場合*/
+    }
+    if(y->p == NULL) {
+        T = x;
+    } else if(y == y->p->l) {
+        y->p->l = x;
+    } else {
+        y->p->r = x;
+    }
+
+    /* zの次節点が削除されたときにyの内容をzに移動する*/
+    if(y != z) {
+        z->id = y->id;
+    }
+    
+    return T;
+}
+
+void print_preorder(tree_t *tree) {
+    printf(" %d", tree->id);
+    if(tree->l != NULL) print_preorder(tree->l);
+    if(tree->r != NULL) print_preorder(tree->r);
+}
+
+void print_inorder(tree_t *tree) {
+    if(tree->r == NULL && tree->l == NULL) {
+        printf(" %d", tree->id);
+    } else if(tree->r == NULL) {
+        print_inorder(tree->l);
+        printf(" %d", tree->id);
+    } else if(tree->l == NULL) {
+        printf(" %d", tree->id);
+        print_inorder(tree->r);
+    } else {
+        print_inorder(tree->l);
+        printf(" %d", tree->id);
+        print_inorder(tree->r);
+    }
+}
+
+int main(void) {
+    int i, n, id;
+    char buff[100];
+    tree_t *root = NULL;
+    tree_t *z = NULL;
+    scanf("%d\n", &n);
+    for(i=0;i<n;i++) {
+        scanf("%s %d\n", buff, &id);
+        if(buff[0] == 'i') {
+            root = tree_insert(root, id);
+        } else if(buff[0] == 'f') {
+            print_find(root, id);
+        } else if(buff[0] == 'd') {
+        	z = find(root, id);
+        	root = tree_delete(root, z);
+        } else if(buff[0] == 'p') {
+            print_inorder(root);
+            printf("\n");
+            print_preorder(root);
+            printf("\n");
+        }
+    }
+    
+    return 0;
+}

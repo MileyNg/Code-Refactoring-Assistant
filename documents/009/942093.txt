@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <cctype>
+#include <string>
+#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>
+using namespace std;
+
+int main(){
+	vector<int> prime(1, 2);
+	for (int i = 3; i < 10000; i += 2){
+		bool b = true;
+		for (auto p = prime.begin(); *p <= sqrt(i); ++p){
+			if (i%*p == 0)
+				b = false;
+		}
+		if (b){
+			prime.push_back(i);
+		}
+	}
+	int N;
+	cin >> N;
+	vector<int> v(N);
+	for (int i = 0; i < N; i++){
+		cin >> v[i];
+	}
+	int kosu = 0;
+	bool b=true;
+	for (int i = 0; i < N; i++){
+		b = true;
+		for (auto p = prime.begin(); p != prime.end(); ++p){
+			if (v[i]==*p){
+				b = false;
+			}
+		}
+		if (!b)
+			kosu++;
+	}
+	cout << kosu<<endl;
+	return 0;
+}

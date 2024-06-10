@@ -1,0 +1,86 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define F first
+#define S second
+#define INF 1 << 30
+#define UNDER 1000
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int t[UNDER+10][5], n;
+
+int count(){
+  int res = 0;
+  rep(i, UNDER) rep(j, 5) if(t[i][j] == 1) res++;
+  return res;
+}
+
+void deleteblock(){
+  for(int y = UNDER-1; y >= 0; y--){
+    int f = 0;
+    rep(i, 5) if(t[y][i] == 0){ f = 1; break;}
+    if(f) continue;
+    rep(i, 5){
+      for(int c = y; c > 0; c--){
+	t[c][i] = t[c-1][i];
+      }
+    }
+    t[0][0] = t[0][1] = t[0][2] = t[0][3] = t[0][4] = 0;
+    y++;
+  }
+  return;
+}
+
+int main(){
+  while(scanf("%d", &n) && n){
+    int d, p, q;
+    memset(t, 0, sizeof(t));
+    rep(i, 5) t[UNDER][i] = 1;
+
+    rep(i, n){
+      scanf("%d%d%d", &d, &p, &q); q--;
+      if(d == 1){
+	rep(y, UNDER+1){
+	  int f = 0;
+	  REP(x, q, q+p) if(t[y][x] == 1) f = 1;
+	  if(!f) continue;
+	  REP(x, q, q+p) t[y-1][x] = 1;
+	  break;
+	}
+      }else{
+	rep(y, UNDER+1){
+	  if(!t[y][q]) continue;
+	  for(int c = y-1; c > y-p-1; c--) t[c][q] = 1;
+	  break;
+	}
+      }
+      deleteblock();
+      /*      REP(i, 990, UNDER+1){
+	rep(j, 5) printf("%d ", t[i][j]); puts("");
+	}*/
+    }
+
+    printf("%d\n", count());
+  }
+  return 0;
+}

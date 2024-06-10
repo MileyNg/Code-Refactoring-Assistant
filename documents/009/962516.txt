@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+#include <string>
+using namespace std;
+void k_cut(vector<int> &card,int k){
+  int n = card.size();
+  vector<int> tmp(card.size(),0);
+  for(int i = 0;i < n-k;i++){
+
+    tmp[i] = card[k+i];
+  }
+  for(int i =n-k;i < n;i++){
+    tmp[i] = card[i-(n-k)];
+
+  }
+
+  card = vector<int>(tmp);
+}
+void rihul(vector<int> &card){
+  int n = card.size();
+  vector<int> tmp(n,0);
+  for(int i =0;i < n;i++){
+    if(i%2 == 0)tmp[i] = card[i/2];
+    else{
+      tmp[i] = card[i/2+n/2];
+    }
+
+  }
+  card = vector<int>(tmp);
+}
+int main(){
+  int n;
+  cin >> n;
+  vector<int> card(n*2,0);
+  for(int i = 0;i < 2*n;i++){
+    card[i] = i+1;
+  }
+  int m;
+  cin >> m;
+  for(int i = 0;i < m;i++){
+    int k;
+    cin >> k;
+    if(k == 0){
+      rihul(card);
+    }else{
+      k_cut(card,k);
+    }
+  }
+  for(int i = 0;i < 2*n;i++){
+    cout << card[i] << endl;
+  }
+}
+vector<string> split(string str,string delim){
+  vector<string> items;
+  size_t dlm_idx;
+  if(str.npos == (dlm_idx = str.find_first_of(delim))){
+    items.push_back(str.substr(0,dlm_idx));
+  }
+  while(str.npos != (dlm_idx = str.find_first_of(delim))){
+    if(str.npos == str.find_first_not_of(delim)){
+      break;
+    }
+    items.push_back(str.substr(0,dlm_idx));
+    dlm_idx++;
+    str = str.erase(0,dlm_idx);
+    if(str.npos == str.find_first_of(delim) && "" != str){
+      items.push_back(str);
+      break;
+    }
+  }
+  return items;
+}

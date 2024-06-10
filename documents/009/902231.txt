@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+#include <tuple>
+
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+struct state{
+	int x, y, cx, cy, d;
+	bool operator<(const state &r) const{
+		return d > r.d;
+	}
+};
+
+int field[10][10];
+
+int dist[10][10][10][10];
+
+inline int &f(state &s){
+	return dist[s.x][s.y][s.cx][s.cy];
+}
+
+int w, h;
+inline bool ng(int x, int y){
+	if (x < 0 || x >= w || y < 0 || y >= h) return true;
+	return field[y][x] == 1;
+}
+
+int dx[] = { 0, 1, 0, -1 };
+int dy[] = { -1, 0, 1, 0, -1 };
+int main(){
+	while (cin >> w >> h, w|h){
+		state init;
+		int gx, gy;
+		rep(i, h) rep(j, w){
+			cin >> field[i][j];
+			if (field[i][j] == 2) init.cx = j, init.cy = i;
+			if (field[i][j] == 4) init.x = j, init.y = i;
+			if (field[i][j] == 3) gx = j, gy = i;
+		}
+
+		MEMSET(dist, 0x7f);
+		f(init) = 0;
+		init.d = 0;
+		priority_queue<state> q;
+		q.push(init);
+		bool ok = false;
+		while (!q.empty()){
+			state s = q.top();
+			q.pop();
+
+			if (f(s) < s.d) continue;
+			if (s.cx == gx && s.cy == gy){
+				ok = true;
+				cout << s.d << endl;
+				break;
+			}
+
+			rep(i, 4){
+				int nx = s.x + dx[i], ny = s.y + dy[i];
+				int ncx = s.cx, ncy = s.cy;
+				int d = 0;
+				if (nx == ncx && ny == ncy){
+					ncx += dx[i];
+					ncy += dy[i];
+					++d;
+				}
+				if (ng(nx, ny) || ng(ncx, ncy)) continue;
+				state nxt = {nx, ny, ncx, ncy, s.d+d};
+				if (f(nxt) <= nxt.d) continue;
+				f(nxt) = nxt.d;
+				q.push(nxt);
+			}
+		}
+		if (!ok) cout << -1 << endl;
+	}
+
+	return 0;
+}

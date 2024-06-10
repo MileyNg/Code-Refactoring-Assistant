@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <set>
+using namespace std;
+int cal_min(int t){
+  return t/100 * 60 + t%100;
+}
+int main(){
+  int n;
+  int st,ft;
+  while(cin >> n >> st >> ft && n){
+	vector<int> time(24*60+2,0);
+	for(int i = 0;i < n;i++){
+	  int q;
+	  cin >> q;
+	  for(int j = 0;j < q;j++){
+		int ts,tf;
+		cin >> ts >> tf;
+		time[cal_min(ts)]++;
+		time[cal_min(tf)]--;
+	  }
+	}
+	for(int i = cal_min(st);i < cal_min(ft);i++){
+	  time[i+1]+=time[i];
+	}
+	int ans = 0;
+	int cnt = 0;
+	for(int i = cal_min(st);i < cal_min(ft);i++){
+	  if(time[i] == n){
+		ans = max(ans,cnt);
+		cnt = 0;
+	  }
+	  else{
+		cnt++;
+	  }
+	}
+	ans = max(ans,cnt);
+	cout << ans << endl;
+
+	
+  }
+  return 0;
+}

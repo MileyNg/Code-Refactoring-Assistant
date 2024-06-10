@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstring>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+string changestr(string,string::size_type);
+
+int main(){
+  int n;
+  string str="";
+  string::size_type st;
+
+  cin>>n;
+  for(int i=0;i<n;i++){
+	 for(;;){
+		getline(cin,str);
+		if(str!="") break;
+	 }
+
+	 st=str.find("Hoshino");
+	 while(st!=string::npos){
+		str=changestr(str,st);
+		st=str.find("Hoshino");
+	 }
+	 cout<<str<<endl;
+  }
+  return 0;
+}
+
+string changestr(string str,string::size_type st){
+  string name="Hoshina";
+  for(int i=0;i<7;i++) str[st+i]=name[i];
+
+  return str;
+}

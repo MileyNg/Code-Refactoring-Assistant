@@ -1,0 +1,31 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+#define INF (1<<29)
+
+int dist[100][100];
+int main(){
+	int n;
+	cin>>n;
+	for(int i=0;i<n;i++)for(int j=0;j<n;j++)dist[i][j]=INF;
+	for(int i=0;i<n;i++)dist[i][i]=0;
+	for(int i=0;i<n;i++){
+		int r,k,t;
+		cin>>r>>k;
+		for(int j=0;j<k;j++){
+			cin>>t;
+			dist[r-1][t-1]=1;
+		}
+	}
+	for(int k=0;k<n;k++)for(int i=0;i<n;i++)for(int j=0;j<n;j++)
+		dist[i][j]=min(dist[i][j],dist[i][k]+dist[k][j]);
+	int p;
+	cin>>p;
+	for(int i=0;i<p;i++){
+		int s,d,v;
+		cin>>s>>d>>v;
+		if(dist[s-1][d-1]<v)cout<<dist[s-1][d-1]+1<<endl;
+		else cout<<"NA\n";
+	}
+	return 0;
+}

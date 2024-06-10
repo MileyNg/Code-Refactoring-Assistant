@@ -1,0 +1,149 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+#define DEBUG(x) cerr << #x << " = " << x << endl
+
+typedef double D;
+const D EPS = 1e-8;
+struct P {
+  D x, y;
+  P() { }
+  P(D x_, D y_) : x(x_), y(y_) { }
+};
+struct L {
+  P a, b;
+  L() { }
+  L(P a_, P b_) : a(a_), b(b_) { }
+};
+struct C {
+  P p; D r;
+  C() { }
+  C(P p_, D r_) : p(p_), r(r_) { }
+};
+P operator +(P a, P b) { return P(a.x + b.x, a.y + b.y); }
+P operator -(P a, P b) { return P(a.x - b.x, a.y - b.y); }
+P operator *(P a, D b) { return P(a.x * b, a.y * b); }
+P operator /(P a, D b) { return P(a.x / b, a.y / b); }
+P vec(P from, P to) { return to - from; }
+D inp(P a, P b) { return a.x*b.x + a.y*b.y; }
+D outp(P a, P b) { return a.x*b.y - a.y*b.x; }
+D norm(P p) { return inp(p, p); }
+D abs(P p) { return sqrt(norm(p)); }
+int sig(D a, D b) {
+  if(a < b - EPS) return -1;
+  if(a > b + EPS) return +1;
+  return 0;
+}
+P rot90(P p) { return P(-p.y, p.x); }
+P projection(L l, P p) { // 直線lに対する点pの写像
+  P a = vec(l.a, l.b);
+  P b = vec(l.a, p);
+  D t = inp(a, b) / norm(a);
+  return l.a + a * t;
+}
+D dLP(L l, P p) {
+  return abs(p - projection(l, p));
+}
+// 円と点
+// pがcの外側にあることを仮定している
+vector<P> tCP(C c, P p) {
+  D a = abs(c.p - p);
+  D rc = c.r*c.r/a;
+  D rs = max(0.0, sqrt(c.r*c.r - rc*rc));
+  P v = (p - c.p) / abs(p - c.p);
+  vector<P> res;
+  res.push_back(c.p + v*rc + rot90(v)*rs);
+  res.push_back(c.p + v*rc - rot90(v)*rs);
+  return res;
+}
+vector<L> tCCout(C a, C b) {
+  vector<L> res;
+  if(sig(a.r, b.r) == 0) {
+    P v = (b.p - a.p) / abs(b.p - a.p);
+    v = rot90(v);
+    res.emplace_back(a.p + v*a.r, b.p + v*b.r);
+    res.emplace_back(a.p - v*a.r, b.p - v*b.r);
+    return res;
+  }
+  P p = (a.p*b.r - b.p*a.r) / (b.r - a.r);
+  vector<P> at = tCP(a, p);
+  vector<P> bt = tCP(b, p);
+  res.emplace_back(at[0], bt[0]);
+  res.emplace_back(at[1], bt[1]);
+  return res;
+}
+vector<L> tCCin(C a, C b) {
+  vector<L> res;
+  if(sig(a.r + b.r, abs(a.p - b.p)) == 0) {
+    P v = (b.p - a.p) / abs(b.p - a.p);
+    res.emplace_back(a.p + v*a.r + rot90(v), a.p + v*a.r - rot90(v));
+    return res;
+  }
+  P p = (a.p*b.r + b.p*a.r) / (a.r + b.r);
+  vector<P> at = tCP(a, p);
+  vector<P> bt = tCP(b, p);
+  res.emplace_back(at[0], bt[0]);
+  res.emplace_back(at[1], bt[1]);
+  return res;
+}
+
+void dcircle(double x, double y, double r) {
+  cout << "circle(" << x*50+1000 << "," << y*50+1000 << "," << r*50 << ");" << endl;
+}
+void dline(double x, double y, double a, double b) {
+  cout << "line(" << x*50+1000 << "," << y*50+1000 << "," << a*50+1000 << "," << b*50+1000 << ");" << endl;
+}
+
+int main() {
+  for(int N; cin >> N, N; ) {
+    int x[2*N], y[2*N], r[2*N], m[2*N];
+    for(int i = 0; i < N; ++i) {
+      cin >> x[i] >> y[i] >> r[i] >> m[i];
+      x[N+i] = x[i];
+      y[N+i] = y[i];
+      r[N+i] = r[i] + m[i];
+      // dcircle(x[i], y[i], r[i]);
+    }
+    int ans = 0;
+    int num = 0;
+    for(int i = 0; i < 2*N; ++i) {
+      for(int j = i + 1; j < 2*N; ++j) {
+        if(sig(abs(P(x[i], y[i]) - P(x[j], y[j])), max(r[i], r[j])) < 0) continue;
+        vector<L> tangent;
+        for(L l : tCCout(C(P(x[i], y[i]), r[i]), C(P(x[j], y[j]), r[j]))) {
+          tangent.push_back(l);
+        }
+        for(L l : tCCin(C(P(x[i], y[i]), r[i] + m[i]), C(P(x[j], y[j]), r[j] + m[j]))) {
+          tangent.push_back(l);
+        }
+        for(L l : tangent) {
+          // cerr << "L = { { x = " << l.a.x << ", y = " << l.a.y << " }, { " << l.b.x << ", y = " << l.b.y << " } }" << endl;
+          int tmp = 0;
+          for(int k = 0; k < N; ++k) {
+            D d = dLP(l, P(x[k], y[k]));
+            if(sig(d,r[k]) >= 0 && sig(d, m[k]+r[k]) <= 0) {
+              tmp++;
+            }
+          }
+
+          if(tmp == 6) {
+            // dline(l.a.x, l.a.y, l.b.x, l.b.y);
+          }
+          num++;
+          ans = max(ans, tmp);
+        }
+      }
+    }
+#if 1
+    if(N == 1) {
+      cout << 1 << endl;
+    }
+    else {
+      cout << ans << endl;
+    }
+#endif
+  }
+}

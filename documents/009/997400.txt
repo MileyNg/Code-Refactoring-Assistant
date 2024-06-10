@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<cstring>
+#include<queue>
+#include<map>
+using namespace std;
+
+int main()
+{
+  int n,m,l,k,a,h;
+  for(;cin>>n>>m>>l>>k>>a>>h,n;)
+    {
+      map<int,bool> freeze;
+      freeze[a]=true;
+      freeze[h]=true;
+      for(int i=0;i<l;i++)
+	{
+	  int tmp;
+	  cin>>tmp;
+	  freeze[tmp]=true;
+	}
+      int edge[n+1][n+1];
+      memset(edge,-1,sizeof(edge));
+      for(int i=0;i<k;i++)
+	{
+	  int x,y,t;
+	  cin>>x>>y>>t;
+	  edge[x][y]=t;
+	  edge[y][x]=t;
+	}
+      int ans=-1;
+      // time,freeze,now
+      priority_queue<pair<int,pair<int,int> > > qu;
+      qu.push(make_pair(0,make_pair(m,h)));
+      while(!qu.empty())
+	{
+	  int time = - (qu.top().first);
+	  int fre = qu.top().second.first;
+	  int now = qu.top().second.second;
+	  qu.pop();
+	  //   cout<<"qu "<<time<<" "<<fre<<" "<<now<<endl;
+	  if(time > fre)
+	    continue;
+	  if(now==a)
+	    {
+	      ans=time+(time-m);
+	      break;
+	    }
+	  if(freeze[now])
+	    fre+=time;
+	  for(int i=0;i<=n;i++)
+	    {
+	      if(edge[now][i]!=-1)
+		{
+		  qu.push(make_pair(-(time+edge[now][i]),make_pair(fre,i)));
+		}
+	    }
+	}
+
+      if(ans==-1)
+	cout<<"Help!"<<endl;
+      else
+	cout<<ans<<endl;
+    }
+
+}

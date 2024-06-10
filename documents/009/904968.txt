@@ -1,0 +1,86 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <memory>
+#include <time.h>
+using namespace std;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) FOR(i,0,n)
+const double EPS = 1e-9;
+const double PI  = acos(-1.0);
+
+const ll M=1000000007;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+int main(){
+	int n,w;
+	cin>>n>>w;
+	vi f(n);
+	REP(i,n){
+		cin>>f[i];
+	}
+	sort(ALL(f));
+	vvl dp(n,vl(w+1));
+	if(f[n-1]<=w){
+		dp[n-1][f[n-1]]=1;
+	}
+	dp[n-1][0]=1;
+	for(int i=n-2;i>=0;i--){
+		REP(j,w+1){
+			if(j-f[i]>=0&&j-f[i]<=w){
+				dp[i][j]+=dp[i+1][j-f[i]];
+			}
+			dp[i][j]+=dp[i+1][j];
+			dp[i][j]%=M;
+		}
+	}
+	ll ans=0;
+	REP(i,n+1){
+		ll cnt=0;
+		int weight=0;
+		REP(j,i){
+			weight+=f[j];
+		}
+		if(i<n){
+			FOR(j,w-f[i]+1,w-(i==0?0:f[i-1])+1){
+				if(j-weight>=0&&j-weight<=w){
+					cnt+=dp[i][j-weight];
+					cnt%=M;
+				}
+			}
+		}else{
+			cnt=w-f[i-1]-weight>=0;
+		}
+		ans+=cnt;
+		ans%=M;
+	}
+	cout<<ans<<endl;
+}

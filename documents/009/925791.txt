@@ -1,0 +1,17 @@
+while (line = gets) do
+  a, l = line.split.map(&:to_i)
+  break if a == 0 && l == 0
+  results = [a]
+  (1..20).each do |i|
+    str = "%0#{l}d" % a
+    small = str.split(//).sort.join
+    big = small.reverse
+    a = big.to_i - small.to_i
+    index = results.index(a)
+    if index
+      puts [index, a, i - index].join ' '
+      break
+    end
+    results << a
+  end
+end

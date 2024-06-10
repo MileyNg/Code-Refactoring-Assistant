@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+#define MAX 100
+
+typedef struct {
+	int num;
+	int cor;
+	int rank;
+}team;
+
+int main(void) {
+	team teams[MAX];
+	int i=0, j=0;
+	int want[MAX];
+	
+	//input
+	while(1) {
+		scanf("%d,%d", &teams[i].num, &teams[i].cor);
+		if(teams[i].num==0 && teams[i].cor==0) break;
+		i++;
+	}
+
+	while( scanf("%d", &want[j++]) != EOF ){}
+	
+	//sort
+	int m,n;
+	
+	for(m=0; m<i; m++) {
+		for(n=m; n<i; n++) {
+			if(teams[m].cor < teams[n].cor) {
+				team temp = teams[m];
+				teams[m] = teams[n];
+				teams[n] = temp;
+			}
+		}
+	}
+	
+	teams[0].rank = 1;
+	int current = teams[0].cor;
+	int ranknow = 1;
+	
+	for(m=1; m<i; m++){
+		if(current == teams[m].cor) teams[m].rank=ranknow;
+		else {		
+			teams[m].rank = ++ranknow;
+			current = teams[m].cor;
+		}
+	}
+		
+	
+	for(m=0; m<j; m++){
+		for(n=1; n<=i; n++){
+			if(want[m] == teams[n-1].num) {
+				printf("%d\n", teams[n-1].rank);
+				break;
+			}
+		}
+	}
+	return 0;
+}

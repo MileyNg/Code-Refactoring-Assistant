@@ -1,0 +1,42 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+#define NMAX 10
+
+int main(){
+
+	int N;
+	string deck;
+	vector<int> tehuda;
+	int boti;
+
+	while(1){
+
+		cin>>N;
+		if(N==0) break;
+
+		for(int i=0;i<N;i++) tehuda.push_back(0);
+
+		cin>>deck;
+		boti=0;
+
+		for(int i=0;i<deck.size();i++){
+			if(deck[i]=='M') tehuda[i%N]++;
+			else if(deck[i]=='S') boti+=tehuda[i%N]+1,tehuda[i%N]=0;
+			else if(deck[i]=='L') tehuda[i%N]+=boti+1,boti=0;
+		}
+
+		sort(tehuda.begin(),tehuda.end());
+
+		for(int i=0;i<tehuda.size();i++) cout<<tehuda[i]<<" ";
+		cout<<boti<<endl;
+
+		tehuda.clear();
+
+	}
+
+}

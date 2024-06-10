@@ -1,0 +1,188 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct dice{
+    int top;
+    int bottom;
+    int front;
+    int back;
+    int left;
+    int right;
+};
+
+void rotate_front(dice* d){
+    int tmp = d->top;
+    d->top = d->back;
+    d->back = d->bottom;
+    d->bottom = d->front;
+    d->front = tmp;
+}
+
+void rotate_back(dice* d){
+    int tmp = d->top;
+    d->top = d->front;
+    d->front = d->bottom;
+    d->bottom = d->back;
+    d->back = tmp;
+}
+
+void rotate_right(dice* d){
+    int tmp = d->top;
+    d->top = d->left;
+    d->left = d->bottom;
+    d->bottom = d->right;
+    d->right = tmp;
+}
+
+void rotate_left(dice* d){
+    int tmp = d->top;
+    d->top = d->right;
+    d->right = d->bottom;
+    d->bottom = d->left;
+    d->left = tmp;
+}
+
+void print_dice(dice d){
+    cout << "top    =" << d.top    << endl;
+    cout << "bottom =" << d.bottom << endl;
+    cout << "front  =" << d.front  << endl;
+    cout << "back   =" << d.back   << endl;
+    cout << "right  =" << d.right  << endl;
+    cout << "left   =" << d.left   << endl;
+}
+
+void decide_all_aspects(dice* d, int t, int f){
+    d->top = t;
+    d->front = f;
+    d->bottom = 7 - t;
+    d->back = 7 - f;
+    if(t == 1){
+        if(f == 2) d->right = 3;
+        if(f == 3) d->right = 5;
+        if(f == 5) d->right = 4;
+        if(f == 4) d->right = 2;
+    }
+    if(t == 2){
+        if(f == 1) d->right = 4;
+        if(f == 4) d->right = 6;
+        if(f == 6) d->right = 3;
+        if(f == 3) d->right = 1;
+    }
+    if(t == 3){
+        if(f == 1) d->right = 2;
+        if(f == 2) d->right = 6;
+        if(f == 6) d->right = 5;
+        if(f == 5) d->right = 1;
+    }
+    if(t == 4){
+        if(f == 1) d->right = 5;
+        if(f == 5) d->right = 6;
+        if(f == 6) d->right = 2;
+        if(f == 2) d->right = 1;
+    }
+    if(t == 5){
+        if(f == 1) d->right = 3;
+        if(f == 3) d->right = 6;
+        if(f == 6) d->right = 4;
+        if(f == 4) d->right = 1;
+    }
+    if(t == 6){
+        if(f == 2) d->right = 4;
+        if(f == 4) d->right = 5;
+        if(f == 5) d->right = 3;
+        if(f == 3) d->right = 2;
+    }
+    d->left = 7 - d->right;
+}
+
+void move(dice* d, int map_height[100][100], int dice_map[100][100], int sx, int sy){
+    bool flag = true;
+    map_height[sy][sx] ++;
+    while (flag) {
+        flag = false;
+        for (int i = 6; i >= 4; i--){
+            if ((d->front == i) && (map_height[sy+1][sx]+1 < map_height[sy][sx])){
+                rotate_front(d);
+                map_height[sy][sx]--;
+                sy++;
+                map_height[sy][sx]++;
+                flag = true;
+                break;
+            }
+            if ((d->back == i) && (map_height[sy-1][sx]+1 < map_height[sy][sx])){
+                rotate_back(d);
+                map_height[sy][sx]--;
+                sy--;
+                map_height[sy][sx]++;
+                flag = true;
+                break;
+            }
+            if ((d->right == i) && (map_height[sy][sx+1]+1 < map_height[sy][sx])){
+                rotate_right(d);
+                map_height[sy][sx]--;
+                sx++;
+                map_height[sy][sx]++;
+                flag = true;
+                break;
+            }
+            if ((d->left == i) && (map_height[sy][sx-1]+1 < map_height[sy][sx])){
+                rotate_left(d);
+                map_height[sy][sx]--;
+                sx--;
+                map_height[sy][sx]++;
+                flag = true;
+                break;
+            }
+        }
+    }
+    dice_map[sy][sx] = d->top;
+}
+
+void count_num(dice* d, int dice_map[100][100], int ans[6]){
+    for (int i = 0; i < 100; i++){
+        for (int j = 0; j < 100; j++){
+            if (dice_map[i][j] == 0)
+                continue;
+            ans[dice_map[i][j] - 1] ++;
+        }
+    }
+}
+
+int main()
+{
+    int n, t, f;
+    dice d;
+    int ans[6];
+    int dice_map[100][100];
+    int map_height[100][100];
+    while (true) {
+        cin >> n;
+        if (n == 0) break;
+        for (int i = 0; i < 6; i++){
+            ans[i] = 0;
+        }
+        for (int i = 0; i < 100; i++){
+            for (int j = 0; j < 100; j++){
+                dice_map[i][j] = 0;
+                map_height[i][j] = 0;
+            }
+        }
+        for (int i = 0; i < n; i++){
+            scanf("%d %d", &t, &f);
+            decide_all_aspects(&d, t, f);
+            move(&d, map_height, dice_map, 50, 50);
+        }
+        count_num(&d, dice_map, ans);
+        for (int i = 0; i < 5; i++) {
+            cout << ans[i] << " ";
+        }
+        cout << ans[5] << endl;
+        
+        
+    }
+
+
+    
+    return 0;
+}

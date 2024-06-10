@@ -1,0 +1,22 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <string>
+#include <cstdio>
+using namespace std;
+
+int main(){
+	string st;
+	map<string, int> cnt;
+	string len_max, freq_max;
+	int len = 0;
+	while( cin >> st ){
+		cnt[st]++;
+		if(len < st.size()){
+			len = st.size();
+			len_max = st;
+		}
+		freq_max = (cnt[freq_max] < cnt[st]) ? st : freq_max;
+	}
+	cout << freq_max << " " << len_max << endl;
+}

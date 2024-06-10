@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n;
+	int histgram[8] = {0};
+	cin >> n;
+	for(int i = 0; i < n; i++) {
+		double tmp;
+		cin >> tmp;
+		if(tmp < 165) histgram[0]++;
+		else if(tmp < 170) histgram[1]++;
+		else if(tmp < 175) histgram[2]++;
+		else if(tmp < 180) histgram[3]++;
+		else if(tmp < 185) histgram[4]++;
+		else histgram[5]++;
+	}
+	for(int i = 0; i < 6; i++) {
+		cout << i + 1 << ":";
+		for(int j = 0; j < histgram[i]; j++)
+			cout << "*";
+		cout << endl;
+	}
+}

@@ -1,0 +1,35 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+int main(void)
+{
+  int n;
+  cin>>n;
+  int num1[10];
+  for(int i=0;i<n;i++)
+    {
+      int count=0;
+      for(int j=0;j<10;j++)
+	{
+	  cin>>num1[j];
+	}
+      for(int k=0;k<10-1;k++)
+	{
+	  int num2[10];
+	  if(num1[k]>num1[k+1])
+	    {
+	      int l=0;
+	      num2[l]=num1[k];
+	      l++;
+	    }
+	  if(num1[k]>num1[k+1] && num2[k]>num2[k+1] && num2[k+1]!=0)count++;
+	}
+      if(count>0)cout<<"NO"<<endl;
+      else cout<<"YES"<<endl;
+      for(int m=0;m<10;m++)
+	{
+	  num1[m]=0;
+	}
+    }
+  return 0;
+}

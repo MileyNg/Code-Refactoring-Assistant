@@ -1,0 +1,105 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <set>
+#include <numeric>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <complex>
+#include <cassert>
+#include <iomanip>
+#include <tuple>
+using namespace std;
+typedef long long LL;
+typedef pair<int,int> P;
+
+string table[22];
+int w,h;
+int dist[11][20][20];
+int xs[11];
+int ys[11];
+int cost[11][1<<11];
+void exec()
+{
+	cin >> w >> h;
+	if(w==0&&h==0)exit(0);
+	int c=1;
+	for(int i=0;i<h;i++){
+		cin >> table[i];
+		for(int j=0;j<w;j++){
+			switch(table[i][j]){
+				case '*':
+					xs[c]=i;
+					ys[c]=j;
+					c++;
+					break;
+				case 'o':
+					xs[0]=i;
+					ys[0]=j;
+					break;
+			}
+		}
+	}
+	fill(dist[0][0],dist[0][0]+11*20*20,10000);
+	for(int p=0;p<c;p++){
+		auto ds=dist[p];
+		ds[xs[p]][ys[p]]=0;
+		queue<P> q;
+		q.push(P(xs[p],ys[p]));
+		while(q.size()){
+			int x=q.front().first;
+			int y=q.front().second;
+			q.pop();
+			int d=ds[x][y]+1;
+			int dx[]={0,-1,0,1};
+			int dy[]={-1,0,1,0};
+			for(int i=0;i<4;i++){
+				int xx=x+dx[i];
+				int yy=y+dy[i];
+				if(0<=xx&&xx<h&&0<=yy&&yy<w&&
+				  table[xx][yy]!='x'&&
+				  ds[xx][yy]>d){
+					ds[xx][yy]=d;
+					q.push(P(xx,yy));
+				}
+			}
+		}
+	}
+	fill(cost[0],cost[0]+11*(1<<11),10000);
+	cost[0][1]=0;
+	for(int i=1;i<(1<<c);i+=2){
+		for(int j=0;j<c;j++){
+			for(int k=0;k<c;k++){
+				int t=cost[k][i]+dist[k][xs[j]][ys[j]];
+				cost[j][i|(1<<j)]=min(cost[j][i|(1<<j)],t);
+			}
+		}
+	}
+	int ret=10000;
+	for(int i=0;i<c;i++){
+		ret=min(ret,cost[i][(1<<c)-1]);
+	}
+	if(ret==10000)
+	{
+		cout << -1 << endl;
+	}
+	else
+	{
+		cout << ret << endl;
+	}
+}
+int main() {
+	while(1)exec();
+}

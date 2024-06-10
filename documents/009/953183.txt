@@ -1,0 +1,12 @@
+n, m = gets.split.map(&:to_i)
+d = gets.split.map(&:to_i)
+dp = Array.new(n+1,n)
+dp[0] = 0
+for i in 0..n
+    m.times do |j|
+        if n >= d[j]
+            dp[i] = [dp[i],dp[i-d[j]]+1].min
+        end
+    end
+end
+puts dp[n]

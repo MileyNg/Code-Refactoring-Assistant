@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int main(void)
+{
+	int node[5];
+	int i, j, a = 0, b = 0, c = 0, d = 0, ch = 0;
+	
+	while (scanf("%d %d %d", &node[0], &node[1], &node[2]) != EOF){
+		
+		sort(node, node + 3);
+		
+		if (node[0] + node[1] <= node[2]){
+			ch = 1;
+		}
+		if (ch == 0){
+			a++;
+		
+			if (node[0] * node[0] + node[1] * node[1] == node[2] * node[2]){
+				b++;
+			}
+			else if (node[0] * node[0] + node[1] * node[1] > node[2] * node[2]){
+				c++;
+			}
+			else if (node[0] * node[0] + node[1] * node[1] < node[2] * node[2]){
+				d++;
+			}
+		}
+	}
+	
+	printf("%d %d %d %d\n", a, b, c, d);
+	
+	return (0);
+}

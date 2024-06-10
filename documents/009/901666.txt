@@ -1,0 +1,50 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int a,b,c,d,e,f;
+
+int u=17*60+30,v=19*60+30;
+
+int t[8][8]={
+  {0,0,0,0,0,0,0,0},
+  {0, 0, 300, 500, 600, 700,1350,1650},
+  {0, 6,   0, 350, 450, 600,1150,1500},
+  {0,13,   7,   0, 250, 400,1000,1350},
+  {0,18,  12,   5,   0, 250, 850,1300},
+  {0,23,  17,  10,   5,   0, 600,1150},
+  {0,43,  37,  30,  25,  20,   0, 500},
+  {0,58,  52,  45,  40,  35,  15,   0}
+};
+
+bool check(){
+  if(t[max(a,d)][min(a,d)]>40)return false;
+  
+  int x=b*60+c,y=e*60+f;
+
+  if((x<u||v<x)&&(y<u||v<y)){
+    return false;
+  }
+
+  return true;
+}
+int change(int x){
+  if(x%100==50){
+    x-=50;
+    return x/2+50;
+  }else{
+    return x/2;
+  }
+}
+
+int main(){
+  while(cin>>a&&a){
+    cin>>b>>c>>d>>e>>f;
+    if(check()){
+
+      cout<<change(t[min(a,d)][max(a,d)])<<endl;
+    }else{
+      cout<<t[min(a,d)][max(a,d)]<<endl;
+    }
+  }
+  return 0;
+}

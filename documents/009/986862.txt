@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <conio.h>
+#include <string.h>
+
+int main(void)
+{
+	char str[1024][64];
+	int i, j;
+	int ls;
+	int lsl;
+	int sl;
+	int mus;
+	int stri[1024];
+	
+	for (i = 0; i < 1024; i++){
+		stri[i] = 0;
+	}
+	i = 0;
+	ls = 0;
+	lsl = 0;
+	while (scanf("%s", str[i]) != EOF){
+		sl = strlen(str[i]);
+		if (sl > lsl){
+			ls = i;
+			lsl = sl;
+		}
+		for (j = 0; j <= i; j++){
+			if (strcmp(str[j], str[i]) == 0){
+				stri[j]++;
+				break;
+			}
+		}
+		i++;
+	}
+	mus = 0;
+	for (j = 1; j < i; j++){
+		if (stri[j] > stri[mus]){
+			mus = j;
+		}
+	}
+	
+	printf("%s %s\n", str[mus], str[ls]);
+	
+	return (0);
+}

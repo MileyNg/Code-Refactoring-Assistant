@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int W, N;
+int w[1000];
+bool dp[1000001];
+
+void rec( int mul){ // mul: 残りの重さ
+  if(dp[mul]++) return;
+  for(int i = 0; i < N; i++){
+    if(mul + w[i] >= W) continue;
+    rec(mul + w[i]);
+  }
+}
+bool isprime(int& x){
+  for(int i = 2 ; i * i <= x ; i++ ) if( x % i == 0) return true;
+  return x == 1;
+}
+int solve(int i){
+  while(true){
+    if(dp[i] && !isprime(i)) return i;
+    i--;
+  }
+}
+int main(){
+
+  while(cin >> N >> W, N){
+    fill_n( dp, W + 1, false);
+    for(int i = 0; i < N; i++){
+      cin >> w[i];
+    }
+    rec(0);
+    cout << solve(W) << endl;
+  }
+}

@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(n) cout<<"# "<<#n<<'='<<(n)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+const int INF=1e9;
+const int MOD=1e9+7;
+const double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& a){
+	os<<'[';
+	rep(i,a.size()) os<<(i?" ":"")<<a[i];
+	return os<<']';
+}
+
+typedef vector<vvi> vvvi;
+
+int main()
+{
+	for(int h,w,n;cin>>h>>w>>n && h|w|n;){
+		vi ls,rs;
+		{
+			string t; cin>>t;
+			rep(i,n)
+				(t[i]=='L'?ls:rs).push_back(i);
+		}
+		vs grid(h);
+		rep(i,h) cin>>grid[i];
+		
+		const int di[]={0,1,0,-1},dj[]={1,0,-1,0}; // east,south,west,north
+		queue<tuple<int,int,int,int>> q;
+		rep(i,h) rep(j,w) if(grid[i][j]=='S') q.emplace(i,j,3,0);
+		vvvi vis(4,vvi(h,vi(w)));
+		bool res=false;
+		while(q.size()){
+			int i,j,d,p; tie(i,j,d,p)=q.front(); q.pop();
+			if(i<0 || h<=i || j<0 || w<=j || grid[i][j]=='#' || vis[d][i][j]) continue;
+			vis[d][i][j]=1;
+			if(grid[i][j]=='G'){
+				res=true;
+				break;
+			}
+			q.emplace(i+di[d],j+dj[d],d,p);
+			int l=lower_bound(all(ls),p)-begin(ls);
+			int r=lower_bound(all(rs),p)-begin(rs);
+			if(l+1<=ls.size() && (r+3>rs.size() || ls[l+1]<rs[r+3])) q.emplace(i,j,(d+3)%4,l+1);
+			if(r+3<=rs.size() && (l+1>ls.size() || rs[r+3]<ls[l+1])) q.emplace(i,j,(d+3)%4,r+3);
+			if(r+1<=rs.size() && (l+3>ls.size() || rs[r+1]<ls[l+3])) q.emplace(i,j,(d+1)%4,r+1);
+			if(l+3<=ls.size() && (r+1>rs.size() || ls[l+3]<rs[r+1])) q.emplace(i,j,(d+1)%4,l+3);
+		}
+		cout<<(res?"YES":"NO")<<endl;
+	}
+}

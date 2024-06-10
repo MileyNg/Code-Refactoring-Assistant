@@ -1,0 +1,81 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+using namespace std;
+#define MAXN 100000
+int n;
+// edge[i].firstはどことつながっているか,secondはその重みを示す
+vector<vector<pair<int, int> > > edge;
+
+int main(void) {
+    cin >> n;
+    edge.reserve(n);
+    for (int i = 0; i < n-1; i++) {
+        int tmp, tmp1, tmp2;
+        cin >> tmp >> tmp1 >> tmp2;
+        edge[tmp].push_back(make_pair(tmp1, tmp2));
+        edge[tmp1].push_back(make_pair(tmp, tmp2));
+    }
+    // 適当な点(0)からスタート
+    long long start0[n];
+    for (int i = 0; i < n; i++) start0[i] = -1;
+    start0[0] = 0;
+    queue<int> q;
+    q.push(0);
+    int max = 0, max_index = 0;
+    while (!q.empty()) {
+        int now = q.front(); q.pop();
+        for (int i = 0; i < edge[now].size(); i++) {
+            int next = edge[now][i].first;
+            if (start0[next] == -1) {
+                start0[next] = start0[now] + edge[now][i].second;
+                q.push(next);
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (max < start0[i]) {
+            max = start0[i];
+            max_index = i;
+        }
+    }
+    
+    //printf("max: %d index: %d\n", max, max_index);
+
+    long long start_max[n];
+    for (int i = 0; i < n; i++) start_max[i] = -1;
+    start_max[max_index] = 0;
+    queue<int> qm;
+    qm.push(max_index);
+    int maxmax = 0, maxmax_index = 0;
+    while (!qm.empty()) {
+        int now = qm.front(); qm.pop();
+        for (int i = 0; i < edge[now].size(); i++) {
+            int next = edge[now][i].first;
+            if (start_max[next] == -1) {
+                start_max[next] = start_max[now] + edge[now][i].second;
+                qm.push(next);
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (maxmax < start_max[i]) {
+            maxmax = start_max[i];
+            maxmax_index = i;
+        }
+    }
+    cout << maxmax << endl;
+
+    return 0;
+}

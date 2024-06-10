@@ -1,0 +1,66 @@
+#include<stdio.h>
+#define N 1000
+
+int search(int s[],int h,int x);//探す関数
+int t;
+int y;
+int c;
+int w;
+
+int main (){
+	
+	int n,m;	//n:探される方の要素の数 m:探す方の要素の数
+	int p[N];	//p[]:探される方の配列
+	int q[N];	//q[]:探す方の配列
+	int i;
+
+	//入力
+	scanf("%d",&n);
+	for(i=0;i<n;i++){
+		scanf("%d",&p[i]);
+	}
+	scanf("%d",&m);
+
+	for(i=0;i<m;i++){
+		scanf("%d",&q[i]);
+	}
+
+	t=0;
+	for(i=0;i<m;i++){
+		y=q[i];
+		c=n;
+		w=0;
+		search(p,n,q[i]);
+		t=0;
+	}
+
+	return 0;
+}
+
+int search(int s[],int n,int x){
+	int i;
+	for(i=t;i<n;i++){
+		if(x==s[i]){
+			printf("yes\n");
+			return 1;
+		}
+	}
+	t++;
+	if(t==c){
+		x=y;
+		w++;
+		c--;
+		for(i=w-1;i>-1;i--){
+			x=x-s[i];
+		}
+		t=w;
+		if(w>=c){
+			printf("no\n");
+			return -1;
+		}
+		return search(s,n,x);
+	}
+
+	x=y;
+	return search(s,n,x-s[t-1]);
+}

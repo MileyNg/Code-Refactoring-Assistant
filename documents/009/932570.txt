@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<int,int> getScore() {
+  int id;
+  cin >> id;
+  int a = 0, b = 0, ext = 0, s = 0, t = 0, sum = 0;
+  for(int f = 1; f <= 10; ++f) {
+    cin >> s;
+    sum += s * (1 + a + b);
+    b = a; a = 0;
+    if(s == 10) {
+      if(f == 10) ext = 2;
+      else ++a;
+      continue;
+    }
+
+    cin >> t;
+    sum += t * (1 + a + b);
+    b = a; a = 0;
+    if(s+t == 10) {
+      if(f == 10) ext = 1;
+      else ++b;
+      continue;
+    }
+  }
+  while(ext--) {
+    cin >> s;
+    sum += s * (1 + a + b);
+    b = a; a = 0;
+    //if(s == 10) ++a;
+  }
+
+  return make_pair(-sum, id);
+}
+
+int main() {
+  int n;
+  while(cin >> n && n) {
+    vector<pair<int,int> > v;
+    for(int i = 0; i < n; ++i) {
+      v.push_back(getScore());
+    }
+    sort(v.begin(), v.end());
+    for(int i = 0; i < v.size(); ++i) {
+      cout << v[i].second << " " << -v[i].first << endl;
+    }
+  }
+  return 0;
+}

@@ -1,0 +1,45 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int MAXN = 1000;
+const int MAXW = 10000;
+
+int val[MAXN],weight[MAXN];
+int dp[MAXN][MAXW];
+// dp[i][w] .. i番目までを重さwで行った時の最大の価値
+// dp[i+1][w] =
+//   max(dp[i][w-weight[i+1]] + val[i+1] , dp[i][w])
+int main(){
+  int N,W,casenum = 1;
+  while(scanf("%d",&W) && W != 0){
+    //input
+    fill(*dp,*(dp+MAXN),0);
+    scanf("%d",&N);
+    for(int i = 0;i < N;i++){
+      scanf("%d,%d",val+i,weight+i);
+    }
+    ///
+    
+    ///solve
+    for(int i = 0; i < N;i++){
+      for(int w = 0;w < W+1;w++){
+        int use = (w - weight[i] >= 0
+                   ? dp[i][w - weight[i]] + val[i]
+                   : 0);
+        int unuse = dp[i][w];
+        dp[i+1][w] = max(use,unuse);
+      }
+    }
+    
+    //
+    printf("Case %d:\n",casenum);
+    for(int w = 0;w <= W;w++){
+      if(dp[N][w] == dp[N][W]){
+        printf("%d\n%d\n",dp[N][w],w);
+        break;
+      }
+    }
+    casenum++;
+  }
+}

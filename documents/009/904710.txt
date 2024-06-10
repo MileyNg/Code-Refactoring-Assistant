@@ -1,0 +1,22 @@
+#include<stdio.h>
+
+template <typename T>
+T gcd(T a,T b) {
+   if(b == 0) return a;
+  return gcd(b,a%b); 
+}
+template <typename T>
+T lcm(T a,T b) {
+    return a/gcd(a,b)*b;
+}
+
+
+int main() {
+    int a,b;
+    while(scanf("%d %d",&a,&b)!=EOF) {
+        printf("%d %d\n",gcd(a,b),lcm(a,b));
+    }
+
+    return 0;
+
+}

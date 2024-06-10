@@ -1,0 +1,57 @@
+#include<stdio.h>
+#define compile 0
+#define LENGTH_W 11
+#define LENGTH_T 1000
+main()
+{
+	char W[LENGTH_W];
+	char T[LENGTH_T];
+	int counter = 0, i = 0, j = 0, k = 0;
+	
+	scanf("%s", W);
+	
+	while(strcmp(T, "END_OF_TEXT") != 0)
+	{
+		gets(T);
+		
+		for(i = 0; i < LENGTH_T; i++)
+		{
+			#if compile == 1
+			puts(T);
+			#endif
+			
+			if(T[i] == W[0])
+			{
+				#if compile == 2
+				printf("T[%d] == W[0] are TRUE\n", i);
+				#endif
+				for(j = 0; j < LENGTH_W; j++)
+				{
+					if((W[j] == '\0') && ((T[i + j] == 0x0a) || (T[i + j] == 0x20)))
+					{
+						counter++;
+						#if compile == 3
+						printf("counter = %d\n", counter);
+						#endif
+					}
+					else if(T[i + j] != W[j])
+					{
+						#if compile == 2
+						printf("T[i+j] != W[j] is TRUE\n");
+						#endif
+						break;
+					}
+				}
+			}
+			
+			
+			#if compile == 1
+			//printf("i = %d\n", i);
+			#endif
+		}
+	}
+	
+	printf("%d\n", counter);
+	
+	return 0;
+}

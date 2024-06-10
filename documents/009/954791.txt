@@ -1,0 +1,61 @@
+
+//=====================================================
+// 
+// (setq backup-inhibited t)
+// (setq auto-save-default nil)
+// 
+// (column-number-mode t)
+// (setq-default tab-width 2 indent-tabs-mode nil)
+// 
+// (global-set-key "\C-h" 'delete-backward-char)
+// 
+// (setq indent-line-function 'indent-relative-maybe)
+// (global-set-key "\C-m" 'newline-and-indent)
+// 
+//=====================================================
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+int combi[1024][1024];
+
+void init() {
+  REP(i,1023){
+    REP(j,1023){
+      combi[i][j] = 0;
+    }
+  }
+  combi[0][0] = 1;
+  REP(i,1023){
+    REP(j,1023){
+      combi[i+1][j] += combi[i][j];
+      combi[i+1][j] %= 100000007;
+      combi[i][j+1] += combi[i][j];
+      combi[i][j+1] %= 100000007;
+    }
+  }
+}
+
+int main() {
+  init();
+  int r,c,a1,a2,b1,b2;
+  cin >> r >> c >> a1 >> a2 >> b1 >> b2;
+  b1 = (b1 + r - a1) % r;
+  b2 = (b2 + c - a2) % c;
+  b1 = min(b1, (r - b1) % r);
+  b2 = min(b2, (c - b2) % c);
+  int sum = combi[b1][b2];
+  if (b1 == r - b1 && r != 1) sum *= 2;
+  sum %= 100000007;
+  if (b2 == c - b2 && c != 1) sum *= 2;
+  sum %= 100000007;
+  cout << sum << endl;
+  return 0;
+}

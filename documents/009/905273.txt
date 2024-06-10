@@ -1,0 +1,180 @@
+g// compile in C++11. use -std=c++11.
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <valarray>
+#include <map>
+#include <set>
+#include <list>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <complex>
+#include <string>
+#include <sstream>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+
+// this require C++11
+#include <unordered_set>
+#include <unordered_map>
+#include <random>
+
+using namespace std;
+
+#define all(c) c.begin(),c.end()
+#define repeat(i,n) for(int i=0;i<static_cast<int>(n);i++)
+#define debug(x) #x << "=" << (x)
+#define dump(x) cerr << debug(x) << " (L:" << __LINE__ << ")"<< endl
+
+using ll = long long;
+
+template<typename T>
+ostream& operator<<(ostream& os,const vector<T>& vec){
+    os << "[";
+    for(const auto& v : vec){
+        os << v << ",";
+    }
+    os << "]";
+    return os;
+}
+
+template<typename T>
+T input(){
+    T t;cin >> t;
+    return t;
+}
+
+template<typename T>
+vector<T> input(const int N){
+    vector<T> v(N);
+    repeat(i,N) cin >> v[i];
+    return v;
+}
+
+struct UnionFind{
+    const int is_root = -1;
+    vector<int> data;
+    UnionFind(int n){
+        data = vector<int>(n,-1);
+    }
+    // 親を探す
+    int root(int x){
+        if(data[x] < 0){
+            return x;
+        }else{
+            return data[x] = root(data[x]);
+        }
+    }
+    // x,yの含まれる集合を併合
+    bool unite(int x,int y){
+        x = root(x);
+        y = root(y);
+        if(x != y){
+            // 大きいほうに追加する。
+            if(data[y] < data[x]) swap(x,y);
+            data[x] += data[y];
+            data[y] = x;
+            return true;
+        }else{
+            return false;
+        }
+    }
+    // 同じ集合にいるかどうか
+    bool same(int x,int y){
+        return root(x) == root(y);
+    }
+    int size(int x){
+        return -data[root(x)];
+    }
+};
+
+const vector<int> dx = {-1, 0, 1, 0};
+const vector<int> dy = {0 , 1, 0,-1};
+
+const char wall = '#';
+const char empt = '.';
+const char goal = 't';
+
+int serialize(const int y,const int x,const int width){
+    return y*width + x;
+}
+
+void unite_dfs(const vector<string>& field,
+               const int y,const int x,const int start,
+               UnionFind& uf,const bool entry){
+
+    const int cur = serialize(y,x,field.size());
+    if(not entry and uf.same(start,cur)){
+        return;
+    }
+    uf.unite(cur,start);
+    for(int i=0;i<4;i++){
+        int ny = y+dy[i];
+        int nx = x+dx[i];
+        if(field[ny][nx] == empt or field[ny][nx] == goal){
+            unite_dfs(field,ny,nx,start,uf,false);
+        }
+    }
+}
+
+
+int main(){
+    int AW,AH; cin >> AW >> AH;
+    int W = AW+2,H = AH+2;
+    vector<string> field(H,string(W,wall));
+    for(int h=1;h<H-1;h++){
+        string line;cin >> line;
+        field[h] = wall + line + wall;
+    }
+    UnionFind uf(W*H);
+
+
+    for(int y=1;y<H-1;y++){
+        for(int x=1;x<W-1;x++){
+            if(field[y][x] == empt or field[y][x] == goal){
+                unite_dfs(field,y,x,serialize(y,x,field.size()),uf,true);
+            }
+        }
+    }
+
+    int goal_id;
+    int start_id = serialize(1,1,field.size());
+    for(int y=0;y<H;y++){
+        for(int x=0;x<W;x++){
+            if(field[y][x] == goal){
+                goal_id = serialize(y,x,field.size());
+            }
+        }
+    }
+    if(uf.same(goal_id,start_id)){
+        cout << "0" << endl;
+        return 0;
+    }
+
+    int N;cin >> N;
+    repeat(t,N){
+        int x,y;cin >> x >> y;
+        x+=1;y+=1;
+        if(field[y][x] == empt) continue;
+        field[y][x] = empt;
+        for(int i=1;i<4;i++){
+            int ny = y + dy[i],nx = x + dx[i];
+            if(field[y][x] == wall) continue;
+            uf.unite(serialize(y,x,field.size()),serialize(ny,nx,field.size()));
+        }
+        if(uf.same(goal_id,start_id)){
+            cout << t+1 << endl;
+            return 0;
+        }
+    }
+    cout << -1 << endl;
+    return 0;
+}

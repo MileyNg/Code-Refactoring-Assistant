@@ -1,0 +1,1 @@
+print "".join([chr((ord(w)-42)%26+65) for w in raw_input()])

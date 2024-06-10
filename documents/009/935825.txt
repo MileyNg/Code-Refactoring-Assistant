@@ -1,0 +1,27 @@
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+
+using namespace std;
+
+int main()
+{
+	double a, b, c, d, e, f, x, y;
+
+	while(cin >> a){
+		cin >> b >> c >> d >> e >> f;
+
+		x = ((c*e)-(f*b)) / ((a*e)-(b*d));
+		y = ((a*f)-(d*c)) / ((a*e)-(b*d));
+
+		if(x == -0)
+			x = abs((int)x);
+		if(y == -0)
+			y *=abs((int)y);
+		cout << fixed << setprecision(3);
+		cout << x << ' ' << y << endl;
+		cout << setprecision(6); // 標準の6桁に戻す
+	}
+
+	return 0;
+}

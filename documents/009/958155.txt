@@ -1,0 +1,54 @@
+#include<stdio.h>
+void check_day(int day);
+main()
+{
+	int month[12] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30};
+	int i = 0, sum = 0;
+	int mon = 0, day = 0;
+	
+	while(1)
+	{
+		scanf("%d %d", &mon, &day);
+		if(mon == 0)
+		{
+			break;
+		}
+		for(i = 0; i < mon; i++)
+		{
+			sum += month[i];
+		}
+		day += sum;
+		check_day(day);
+		sum = 0;
+	}
+	
+	return 0;
+}
+void check_day(int day)
+{
+	//printf("%d\n", day);
+	switch(day % 7)
+	{
+	case 0:
+		printf("Wednesday\n");
+		break;
+	case 1:
+		printf("Thursday\n");
+		break;
+	case 2:
+		printf("Friday\n");
+		break;
+	case 3:
+		printf("Saturday\n");
+		break;
+	case 4:
+		printf("Sunday\n");
+		break;
+	case 5:
+		printf("Monday\n");
+		break;
+	case 6:
+		printf("Tuesday\n");
+		break;
+	}
+}

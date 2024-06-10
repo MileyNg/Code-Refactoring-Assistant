@@ -1,0 +1,105 @@
+#include <cassert>
+#include <cctype>
+#include <cstdlib>
+#include <iostream>
+#include <utility>
+#include <vector>
+using namespace std;
+
+constexpr long long mod = 1000000007;
+
+typedef pair<long long, long long> result; // true, false
+#define T first
+#define F second
+
+struct parse_t {
+	char c;
+	result value;
+	parse_t(char c_ = '#', const result &value_ = result()):c(c_), value(value_) {}
+};
+
+template<class T>
+T take_back(vector<T> &vec) {
+	const T res = vec.back();
+	vec.pop_back();
+	return res;
+}
+
+void push_value(vector<parse_t> &sta, const result &value) {
+	if(!sta.empty() && sta.back().c == '~') {
+		sta.pop_back();
+		push_value(sta, result(value.F, value.T));
+	}
+	else {
+		sta.emplace_back('v', value);
+	}
+}
+
+result calculate_binary_operator(char ope, const result &a, const result &b) {
+	switch(ope) {
+	case '|': return result((a.T * (b.T + b.F) + a.F * b.T) % mod, a.F * b.F % mod);
+	case '&': return result(a.T * b.T % mod, (a.F * (b.T + b.F) + a.T * b.F) % mod);
+	default : assert(false);
+	}
+}
+
+void evaluate_binary_operator(vector<parse_t> &sta) {
+	const result b = take_back(sta).value;
+	const char ope = take_back(sta).c;
+	const result a = take_back(sta).value;
+	push_value(sta, calculate_binary_operator(ope, a, b));
+}
+
+result parse(const string &expression) {
+	vector<parse_t> sta;
+	sta.reserve(10000);
+
+	int priority[256] = {};
+	priority['|'] = 2;
+	priority['&'] = 3;
+	priority['('] = 100;
+	priority[')'] = 1;
+
+	for(auto it = expression.cbegin(); it != expression.cend();) {
+		if(*it == 'x') {
+			++it; // x
+			while(isdigit(*it)) ++it;
+			push_value(sta, result(1, 1));
+		}
+		else if(*it == '~') {
+			sta.emplace_back('~');
+			++it;
+		}
+		else {
+			while(sta.size() >= 3 && sta[sta.size() - 2].c != '('
+				  && priority[sta[sta.size() - 2].c] >= priority[*it]) {
+				evaluate_binary_operator(sta);
+			}
+
+			if(*it == ')') {
+				const auto tmp = take_back(sta);
+				sta.pop_back(); // (
+				push_value(sta, tmp.value);
+			}
+			else {
+				sta.emplace_back(*it);
+			}
+
+			++it;
+		}
+	}
+
+	while(sta.size() >= 3) evaluate_binary_operator(sta);
+	return sta.back().value;
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	string expression;
+	cin >> expression;
+	cout << parse(expression).T << endl;
+
+	return EXIT_SUCCESS;
+}

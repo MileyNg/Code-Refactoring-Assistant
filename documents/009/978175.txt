@@ -1,0 +1,49 @@
+#include <iostream>
+using namespace std;
+
+bool check( long long int i, long long int k, long long int n ) {
+  return ( ( i + k ) * ( k - i + 1 ) / 2 >= n ) ? true : false;
+}
+
+int main() {
+
+  long long int n;
+
+  while( true ) {
+
+    cin >> n;
+
+    if ( n == 0 ) break;
+
+    long long int ans = 0;
+
+    for ( long long int i = 1; i <= n / 2; i++ ) {
+
+      long long int lo = i + 1;
+      long long int hi = n / 2;
+
+      while( lo < hi ) {
+
+	long long int k = ( lo + hi ) / 2;
+
+	if ( check( i, k, n ) ) {
+	  hi = k;
+	}else {
+	  lo = k + 1;
+	}
+
+      }
+
+      if ( ( i + lo ) * ( lo - i + 1 ) / 2 == n ) {
+	ans++;
+      }
+
+    }
+
+    cout << ans << endl;
+
+  }
+
+  return 0;
+
+}

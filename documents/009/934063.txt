@@ -1,0 +1,29 @@
+#include <stdio.h>
+#define MAX 200000
+#define NUM_MAX 1000000000
+
+int main(void){
+  int index, max = 0;
+  int i, j;
+  int R[MAX];
+
+  //何個の数値を入力するのかの指定
+  scanf("%d", &index);
+
+  //数値の入力
+  for(i = 0;i < index;i++){
+    scanf("%d",&R[i]);
+  }
+
+  for(j = index - 1;j >= 0;j--){
+    for(i = 0;i < j;i++){
+      if(max < R[j] - R[i]){
+        max = R[j] - R[i];
+      }
+    }
+  }
+
+  printf("%d\n",max);
+
+  return 0;
+}

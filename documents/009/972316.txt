@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+
+int main () {
+    int n, x[50], y[50], i, seq = 0;
+
+    while ((scanf("%d", &n)) != EOF && n) {
+        double area = .0;
+        int j;
+        for (i = 0; i < n; i++) {
+            scanf("%d%d", &x[i], &y[i]);
+        }
+
+        for (i = 0; i < n; i++) {
+            j = (i + n -1) % n;
+            area += (x[i] - x[j]) * (y[i] + y[j]);
+        }
+
+        printf("%d %.1f\n", ++seq, area * .5);
+    }
+
+    return 0;
+}

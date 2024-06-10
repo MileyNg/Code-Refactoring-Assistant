@@ -1,0 +1,106 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+	struct node *l;
+	struct node *r;
+	struct node *p;
+	int key;
+};
+
+typedef struct node * Node;
+
+void inorder(Node);
+void preorder(Node);
+void insert(int);
+char* find(int);
+
+Node root;
+
+int main(void){
+	int n,in;
+	char input[7];
+	int i;
+
+	scanf("%d",&n);
+
+	for(i=0;i<n;i++){
+		scanf("%s",input);
+
+		if(input[0]=='i'){
+			scanf("%d",&in);
+			insert(in);		
+		}
+		else if(input[0]=='f'){
+			scanf("%d",&in);
+			printf("%s\n",find(in));
+		}
+		else{
+			if(root!=NULL){
+				inorder(root);
+				printf("\n");
+				preorder(root);
+				printf("\n");
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+void insert(int in){
+	Node new,work,move;
+
+	new=(Node)malloc(sizeof(struct node));
+	new->key=in;
+	new->l=NULL;
+	new->r=NULL;
+
+	work=NULL;
+	move=root;
+	while(move!=NULL){
+		work=move;
+		if(move->key > in){
+			move=move->l;
+		}
+		else{
+			move=move->r;
+		}
+	}
+
+	new->p=work;
+	if(work==NULL) root=new;
+	else if(work->key > in) work->l=new;
+	else work->r=new;
+
+}
+
+
+void inorder(Node work){
+	if(work->l != NULL) inorder(work->l);
+	printf(" %d",work->key);
+	if(work->r != NULL) inorder(work->r);
+}
+
+
+void preorder(Node work){
+	printf(" %d",work->key);
+	if(work->l != NULL) preorder(work->l);
+	if(work->r != NULL) preorder(work->r);
+}
+
+
+char* find(int in){
+	Node work;
+
+	work=root;
+	while(work!=NULL){
+		if(work->key == in) return "yes";
+
+		else if(work->key > in) work=work->l;
+		else work=work->r;
+	}
+
+	return "no";
+}

@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int N,M,R,Q;
+  int t[1010], n[1010], m[1010], s[1010], ts,te,mq;
+  while(cin >> N >> M, N){
+    cin >> R;
+    for(int i=0;i<R;i++){
+      cin >> t[i] >> n[i] >> m[i] >> s[i];
+    }
+
+    cin >> Q;
+    for(int i=0;i<Q;i++){
+      cin >> ts >> te >> mq;
+
+      int ans = 0, cnt = 0, id = 0;
+      for(int sec=ts;sec<te;sec++){
+	while(id<R && t[id]<=sec){
+	  if(m[id]==mq){
+	    if(s[id]==0)cnt--;
+	    else cnt++;
+	  }
+	  id++;
+	}
+	if(cnt)ans++;
+      }
+      cout << ans << endl;
+    }
+  }
+}

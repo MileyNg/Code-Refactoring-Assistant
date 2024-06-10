@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+int cache[50];
+
+int fib(int n) {
+	if(cache[n] != 0) {
+		return cache[n];
+	}
+	
+	cache[n] = fib(n - 1) + fib(n - 2);
+	return fib(n - 1) + fib(n - 2);
+}
+
+int main(void) {
+	int n;
+	memset((char*)cache, 0x00, sizeof(cache));
+	cache[0] = cache[1] = 1;
+	
+	scanf("%d\n", &n);
+	printf("%d\n", fib(n));
+	return 0;
+}

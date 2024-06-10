@@ -1,0 +1,184 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <memory>
+#include <time.h>
+using namespace std;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) FOR(i,0,n)
+const double EPS = 1e-9;
+const double PI  = acos(-1.0);
+
+enum FACE { TOP, BOTTOM, FRONT, BACK, LEFT, RIGHT };
+
+template <class T> class die {
+public:
+  die() {
+  }
+  die(T top, T front, T left, T right, T back, T bottom) {
+    var[TOP] = top; var[FRONT] = front; var[LEFT] = left;
+    var[RIGHT] = right; var[BACK] = back; var[BOTTOM] = bottom;
+  }
+  T& operator[] (FACE f) { return var[f]; }
+  const T& operator[] (FACE f) const { return var[f]; }
+  void roll_x() { roll(TOP, BACK, BOTTOM, FRONT); }
+  void roll_y() { roll(TOP, LEFT, BOTTOM, RIGHT); }
+  void roll_z() { roll(FRONT, RIGHT, BACK, LEFT); }
+private:
+  void roll(FACE a, FACE b, FACE c, FACE d) {
+    T tmp = var[a];
+    var[a] = var[b]; var[b] = var[c];
+    var[c] = var[d]; var[d] = tmp;
+  }
+  T var[6];
+// optional
+public:
+  bool operator==(const die<T>& b) const {
+    const die<T> &a = *this;
+    return a[TOP] == b[TOP] && a[BOTTOM] == b[BOTTOM] &&
+           a[FRONT] == b[FRONT] && a[BACK] == b[BACK] &&
+           a[LEFT] == b[LEFT] && a[RIGHT] == b[RIGHT];
+  }
+  bool equivalent_to(const die& di) {
+    for (int k = 0; k < 6; (k & 1 ? roll_y() : roll_x()), ++k)
+      for (int i = 0; i < 4; roll_z(), ++i)
+        if (*this == di) return true;
+    return false;
+  }
+  vector<die> all_rolls() {
+    vector<die> ret;
+    for (int k = 0; k < 6; (k & 1 ? roll_y() : roll_x()), ++k)
+      for (int i = 0; i < 4; roll_z(), ++i)
+        ret.push_back(*this);
+    return ret;
+  }
+  ll hash()const{
+	  return var[TOP]
+		  +var[FRONT]*256
+		  +var[LEFT]*256*256
+		  +var[RIGHT]*256*256*256
+		  +var[BACK]*256*256*256*256
+		  +var[BOTTOM]*256*256*256*256*256;
+  }
+};
+
+struct node{
+	int y,x,route_cnt;
+	die<char> di;
+	node(int y,int x,int route_cnt,die<char> di):y(y),x(x),route_cnt(route_cnt),di(di){}
+};
+
+bool operator<(const node& left,const node& right){
+	if(left.y==right.y){
+		if(left.x==right.x){
+			if(left.route_cnt==right.route_cnt){
+				return left.di.hash()<right.di.hash();
+			}else{
+				return left.route_cnt<right.route_cnt;
+			}
+		}else{
+			return left.x<right.x;
+		}
+	}else{
+		return left.y<right.y;
+	}
+}
+
+int dy[]={-1,0,1,0};
+int dx[]={0,1,0,-1};
+
+int main(){
+	int w,d;
+	while(cin>>w>>d,w|d){
+		vs bed(d);
+		pii start;
+		REP(i,d){
+			cin>>bed[i];
+			REP(j,w){
+				if(bed[i][j]=='#'){
+					start=make_pair(i,j);
+				}
+			}
+		}
+		string route;
+		cin>>route;
+
+		queue<pair<node,int> > q;
+		q.push(make_pair(node(start.first,start.second,0,die<char>('r','m','y','b','g','c')),0));
+		set<node> visited;
+		int ans=INT_MAX;
+		while(q.size()){
+			node n=q.front().first;
+			int step=q.front().second;
+			q.pop();
+			REP(dir,4){
+				int y=n.y+dy[dir];
+				int x=n.x+dx[dir];
+				if(y<0||x<0||y>=d||x>=w)continue;
+				if(bed[y][x]=='k')continue;
+				die<char> di(n.di);
+				switch(dir){
+				case 0:
+					REP(i,3)di.roll_x();
+					break;
+				case 1:
+					di.roll_y();
+					break;
+				case 2:
+					di.roll_x();
+					break;
+				case 3:
+					REP(i,3)di.roll_y();
+					break;
+				}
+				int route_cnt=n.route_cnt;
+				if(bed[y][x]!='w'&&bed[y][x]!='#'){
+					if(bed[y][x]!=di[TOP]||bed[y][x]!=route[route_cnt])continue;
+					route_cnt++;
+				}
+				if(route_cnt==route.size()){
+					ans=step+1;
+					goto found;
+				}
+				node new_node(y,x,route_cnt,di);
+				if(EXIST(visited,new_node))continue;
+				visited.insert(new_node);
+				q.push(make_pair(new_node,step+1));
+			}
+		}
+found:
+		if(ans==INT_MAX){
+			cout<<"unreachable"<<endl;
+		}else{
+			cout<<ans<<endl;
+		}
+	}
+}

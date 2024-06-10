@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 100
+
+void push(int);
+int pop(void);
+
+int stack[N];
+int top = 0;
+
+main(){
+  int a, b;
+  char string[N];
+ 
+  while(scanf("%s", string) != EOF){
+    if(string[0] == '+'){
+      a = pop();
+      b = pop(); 
+      b += a;
+      push(b);
+    }
+    else if(string[0] == '*'){
+      a = pop();
+      b = pop();
+      b *= a;
+      push(b);
+    }
+    else if(string[0] == '-'){
+      a = pop();
+      b = pop();
+      b -= a;
+      push(b);    
+    }
+    else{
+      push(atoi(string));
+    }
+  }
+  printf("%d\n", b);
+  return 0;
+}
+
+void push(int x){
+  stack[++top] = x;
+}
+
+int pop(void){
+  if(top == 0){
+    printf("underflow\n");
+  }
+  else{
+    top--;
+    return stack[top+1];
+  }
+}

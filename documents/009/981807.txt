@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+int main(){
+	int n,m,ma,mi;
+	cin>>n;
+	rep(i,n){
+		ma=0;mi=0;		
+		cin>>m;
+		vector<int> a(m);
+		rep(j,m){
+			cin>> a[j];
+		}
+		rep(j,m-1){
+			if(ma<a[j]-a[j+1])ma=a[j]-a[j+1];
+			if(mi<a[j+1]-a[j])mi=a[j+1]-a[j];
+		}
+		cout << mi << " " << ma << endl;
+	}
+}

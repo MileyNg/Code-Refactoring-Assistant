@@ -1,0 +1,271 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <set>
+#include <numeric>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <complex>
+#include <cassert>
+#include <iomanip>
+#include <tuple>
+using namespace std;
+typedef long long LL;
+// point
+typedef double T;
+typedef pair<T,T> P;
+
+// difference
+P operator-(const P& lhs, const P& rhs)
+{
+	return P(lhs.first-rhs.first,lhs.second-rhs.second);
+}
+
+P operator+(const P& lhs, const P& rhs)
+{
+	return P(lhs.first+rhs.first, lhs.second+rhs.second);
+}
+
+// scalar product
+P operator*(T t, P p){
+	return P(t*p.first,t*p.second);
+}
+
+// outer product
+T Cross(const P& lhs, const P& rhs)
+{
+	return lhs.first*rhs.second-lhs.second*rhs.first;
+}
+
+// inner product 
+T Dot(const P& lhs, const P& rhs)
+{
+	return lhs.first*rhs.first+lhs.second*rhs.second;
+}
+
+// square of distance
+T Dist2(const P& lhs, const P& rhs){
+	return Dot(lhs-rhs,lhs-rhs);
+}
+
+// b is on segment a c
+bool onSegment(P a, P b, P c){
+	P v=c-a;
+	P w=b-a;
+	return Cross(v,w)==0 && 0<=Dot(v,w)&&Dot(v,w)<=Dot(v,v);
+}
+
+
+// intersection of segments
+bool Intersects(P s0, P e0, P s1, P e1)
+{
+	P a=s1-s0;
+	P v=e0-s0;
+	P w=s1-e1;
+	T det=Cross(v,w);
+	T t0=w.second*a.first-w.first*a.second;
+	T t1=-v.second*a.first+v.first*a.second;
+	if (det<0){
+		if (det <= t0 && det <= t1 && t0 <= 0 && t1 <= 0){
+			return true;
+		}
+	}
+	else if (det > 0)
+	{
+		if (0 <= t0 && 0 <= t1 && t0 <= det && t1 <= det){
+			return true;
+		}
+	}
+	return onSegment(s0,s1,e0) ||
+		onSegment(s0,e1,e0)||
+		onSegment(s1,s0,e1)||
+		onSegment(s1,e0,e1);
+}
+
+// intersection of line
+bool IntersectParam(P s0, P e0, P s1, P e1, T& t0, T& t1)
+{
+	P a=s1-s0;
+	P v=e0-s0;
+	P w=s1-e1;
+	T det=Cross(v,w);
+	if(det == 0){
+		return false;
+	}
+	t0=Cross(a,w)/det;
+	t1=Cross(v,a)/det;
+	return true;
+}
+
+P Interpolate(P s, P e, T t)
+{
+	return (1-t)*s+t*e;
+}
+
+// intersection of polygons
+bool Intersects(vector<P>& lhs, vector<P>& rhs)
+{
+	for(int i=1;i<lhs.size();i++){
+		for (int j=1;j<rhs.size();j++){
+			if (Intersects(lhs[i],lhs[i-1],rhs[j],rhs[j-1])){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool IsInside(vector<P>& ps, P p)
+{
+	int count=0;
+	for(int i=1;i<ps.size();i++){
+		P a=ps[i-1];
+		P b=ps[i];
+		if(min(a.first,b.first)<=p.first&&p.first<max(a.first,b.first))
+		{
+			T c=Cross(p-a,b-a);
+			if(c==0){
+				return true;
+			}
+			if(c<0){
+				count--;
+			}
+			else
+			{
+				count++;
+			}
+		}
+		else if (a.first==p.first&&b.first==p.first)
+		{
+			if(min(a.second,b.second)<=p.first&&p.first<=max(a.second,b.second))
+			{
+				return true;
+			}
+		}
+	}
+
+	return count!=0;
+}
+
+bool IntersectSegmentCircle(P s, P e, P c, T r)
+{
+	s=s-c;
+	e=e-c;
+	if(Dot(s,s)<r*r||Dot(e,e)<r*r){
+		return true;
+	}
+
+	P v=P(0,0)-s;
+	double cr=Cross(e-s,v);
+	double se=Dist2(e,s);
+	if(cr*cr<se*r*r){
+		if(0<=Dot(e-s,v)&&Dot(e-s,v)<=Dot(e-s,e-s))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+P s,e;
+P rot; 
+double ps[50][2][2];
+double h[50];
+int N;
+bool intersects(double r,int a)
+{
+	double offset;
+	if(r>h[a])
+	{
+		offset=sqrt(r*r-(r-h[a])*(r-h[a]));
+	}
+	else
+	{
+		offset=r;
+	}
+
+	vector<P> poly;
+	poly.push_back(P(ps[a][0][0],ps[a][0][1]));
+	poly.push_back(P(ps[a][1][0],ps[a][0][1]));
+	poly.push_back(P(ps[a][1][0],ps[a][1][1]));
+	poly.push_back(P(ps[a][0][0],ps[a][1][1]));
+	poly.push_back(P(ps[a][0][0],ps[a][0][1]));
+
+	vector<P> poly2;
+	poly2.push_back(s+offset*rot);
+	poly2.push_back(e+offset*rot);
+	poly2.push_back(e-offset*rot);
+	poly2.push_back(s-offset*rot);
+	poly2.push_back(s+offset*rot);
+
+	if(Intersects(poly,poly2))
+	{
+		return true;
+	}
+	P mid=0.5*(poly[0]+poly[2]);
+	P mid2=0.5*(poly2[0]+poly2[2]);
+	if(IsInside(poly,mid2)||IsInside(poly2,mid))
+	{
+		return true;
+	}
+
+	for(int i=1;i<=4;i++){
+		if(IntersectSegmentCircle(poly[i],poly[i-1],s,offset))
+		{
+			return true;
+		}
+		if(IntersectSegmentCircle(poly[i],poly[i-1],e,offset))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+void exec()
+{
+	cin >> N;
+	if(N==0)exit(0);
+	cin >> s.first >> s.second >> e.first >> e.second;
+	double len=sqrt(Dist2(s,e));
+	rot=P((s.second-e.second)/len,(e.first-s.first)/len);
+	for(int i=0;i<N;i++){
+		cin >> ps[i][0][0] >> ps[i][0][1] >> ps[i][1][0] >> ps[i][1][1] >> h[i];
+	}
+	double low=0;
+	double hi=1000;
+	while(low+0.001<hi)
+	{
+		double mid=(low+hi)/2;
+		bool ng=false;
+		for(int i=0;i<N;i++){
+			if(intersects(mid,i))
+			{
+				ng=true;
+				break;
+			}
+		}
+		if(ng){
+			hi=mid;
+		}
+		else
+		{
+			low=mid;
+		}
+	}
+	cout << (low+hi)/2 << endl;
+}
+int main(int argc, char** argv) {
+	while(1)exec();
+}

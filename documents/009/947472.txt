@@ -1,0 +1,59 @@
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+constexpr int MAX_N = 500000;
+int n;
+int l[MAX_N], r[MAX_N];
+
+int leafs[MAX_N + 1];
+int depth[MAX_N + 1];
+int memo[MAX_N][2];
+
+int dfs(int v, bool used) {
+	if(v == n) return 0;
+
+	int &res = memo[v][used];
+	if(res != -1) return res;
+
+	if(used) {
+		res = dfs(l[v], true) + dfs(r[v], true) + depth[v] + 2;
+	}
+	else {
+		res = min({dfs(l[v], false) + dfs(r[v], true)  + 2 - (leafs[r[v]] - 1) * depth[v],
+				   dfs(l[v], true)  + dfs(r[v], false) + 2 - (leafs[l[v]] - 1) * depth[v],
+				   dfs(l[v], false) + dfs(r[v], false) + 2 + depth[v]});
+	}
+
+	return res;
+}
+
+int init(int v, int d) {
+	depth[v] = d;
+	return leafs[v] = (v == n ? 1 : init(l[v], d + 1) + init(r[v], d + 1));
+}
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	cin >> n;
+
+	for(int i = 1; i < n; ++i) {
+		cin >> l[i] >> r[i];
+	}
+
+	init(1, 0);
+
+	memset(memo, -1, sizeof(memo));
+	for(int v = n - 1; v > 1; --v) {
+		dfs(v, false);
+		dfs(v, true);
+	}
+	cout << dfs(l[1], false) + dfs(r[1], false) + 2 << endl;
+
+	return EXIT_SUCCESS;
+}

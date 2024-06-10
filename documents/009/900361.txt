@@ -1,0 +1,69 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+#define N 21
+
+int main(int argc, char const *argv[])
+{
+	int f[N][N];
+	int n,xj,yj;
+	int m,d;
+	char c;
+
+	int xr,yr;
+	int cnt;
+
+	map <char,pair<int,int> > mp;
+	mp['N']=make_pair(0,1);
+	mp['E']=make_pair(1,0);
+	mp['S']=make_pair(0,-1);
+	mp['W']=make_pair(-1,0);
+
+	while(1){
+		cin>>n;
+		if (n==0) break;
+
+		for(int i1=0;i1<N;i1++){
+			for(int i2=0;i2<N;i2++){
+				f[i1][i2]=0;
+			}
+		}
+		xr=10;
+		yr=10;
+		cnt=0;
+
+		for(int i1=0;i1<n;i1++){
+			cin>>xj>>yj;
+			f[yj][xj]=1;
+		}
+		
+		if(f[yr][xr]==1){
+			cnt++;
+			f[yr][xr]=0;
+		}
+
+
+		cin>>m;
+		for(int i1=0;i1<m;i1++){
+			cin>>c>>d;
+			
+			for(int i2=0;i2<d;i2++){
+				xr=mp[c].first+xr;
+				yr=mp[c].second+yr;
+				if(f[yr][xr]==1) {
+					cnt++;
+					f[yr][xr]=0;
+				}
+				
+			}
+
+		}
+
+		if(cnt==n) cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;
+
+	}
+	return 0;
+}

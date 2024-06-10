@@ -1,0 +1,97 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+int n;
+int H,W,T;
+string str;
+bool used[26],flg;
+int A[26],B[26],C[26],D[26];
+char t[50][50];
+char tmp;
+void input();
+void init();
+bool check(char ch){
+  int z=ch-'A';
+  if(A[z]==-1){
+    int a=49,b=0,c=0,d=49;
+    for(int i=0;i<H;i++){
+      for(int j=0;j<W;j++){
+	if(t[i][j]==ch){
+	  a=min(a,i);
+	  b=max(b,j);
+	  c=max(c,i);
+	  d=min(d,j);
+	}
+      }
+    }
+    A[z]=a;  B[z]=b;  C[z]=c;  D[z]=d;
+  }
+  for(int i=A[z];i<=C[z];i++){
+    for(int j=D[z];j<=B[z];j++){
+      if(t[i][j]=='?')continue;
+      if(t[i][j]!=ch)return false;
+    }
+  }
+  return true;
+  
+}
+
+void draw(char ch){
+  int z=ch-'A';
+  for(int i=A[z];i<=C[z];i++){
+    for(int j=D[z];j<=B[z];j++){
+      t[i][j]='?';
+    }
+  }
+}
+int main(){
+  cin>>T;
+  while(T--){
+    init();
+    input();
+
+    while(1){
+      /*
+      for(int i=0;i<H;i++){
+	for(int j=0;j<W;j++){
+	  cout<<t[i][j];
+	}
+	cout<<endl;
+      }
+      */
+      flg=false;
+
+      for(int i=0;i<26;i++){
+	if(used[i]==false)continue;
+	if(check(i+'A')==true){
+	  flg=true;
+	  draw(i+'A');
+	  used[i]=false;
+	  break;
+	}
+      }
+      if(flg==false)break;
+    }
+    flg=false;
+    for(int i=0;i<26;i++)flg|=used[i];
+    cout<<(flg?"SUSPICIOUS":"SAFE")<<endl;
+  }
+  return 0;
+}
+void input(){
+  cin>>H>>W;
+  for(int i=0;i<H;i++){
+    cin>>str;
+    for(int j=0;j<W;j++){
+      t[i][j]=str[j];
+      used[t[i][j]-'A']=true;
+    }
+  }
+}
+void init(){
+  for(int i=0;i<26;i++){
+    A[i]=-1;
+    used[i]=false;
+  }
+}

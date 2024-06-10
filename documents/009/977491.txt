@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int n, c, m;
+  int a[25];
+  while (1) {
+    cin >> n;
+    if (!n) break;
+    for (int i=0; i<n; i++) {
+      cin >> a[i];
+    }
+    c = 0;
+    m = 32;
+    while (m) {
+      if (c & 1) {
+        m -= a[(c/2)%n];
+      } else {
+        m -= (m-1)%5;
+      }
+      if (m <= 0) {
+        m = 0;
+      }
+      cout << m << endl;
+      ++c;
+    }
+  }
+
+  return 0;
+}

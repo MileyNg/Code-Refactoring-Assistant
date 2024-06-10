@@ -1,0 +1,27 @@
+def sieve(n)
+  ps = Array.new(n + 1, true)
+  ps[0] = false
+  ps[1] = false
+
+  2.upto(n-1) do |i|
+    next unless ps[i]
+
+    k = 2
+    while k * i <= n
+      ps[k * i] = false
+      k += 1
+    end
+  end
+
+  ps
+end
+
+def solve(n, ps)
+  a = 0
+  2.upto(n) {|i| a += 1 if ps[i]}
+  a
+end
+
+ns = gets(nil).chomp.split("\n").map(&:to_i)
+ps = sieve(ns.max)
+ns.each {|n| puts solve(n, ps)}

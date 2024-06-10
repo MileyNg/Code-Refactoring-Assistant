@@ -1,0 +1,112 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+/*
+
+bool prime[300100];
+vint vv;
+vint v;
+
+int main(){
+	ll n;
+	vv.PB(6);
+	for(ll i=14;i<300100;i+=7){
+		vv.PB(i-1);
+		vv.PB(i-6);
+	}
+	
+	rep(i,300100) prime[i]=false;
+	
+	rep(i,300100){
+		if(i%7==1||i%7==6) prime[i]=true;
+	}
+	rep(i,6){
+		prime[i]=false;
+	}
+	for(ll i=2;i*i<300100;i++){
+		if(prime[i]){//&&(i%7==1||i%7==6)){
+			rep(j,vv.size()){
+				if(i*vv[j]>300010) break;
+				if(i>vv[j]) continue;
+				prime[i*vv[j]]=false;
+			}
+		}
+		else prime[i]=false;
+	}
+	
+	while(cin>>n,n!=1){
+		cout<<n<<":";
+		for(ll i=6;i<n+1;i++){
+			if(prime[i]&&n%i==0) cout<<" "<<i;
+		}
+		cout<<endl;
+	}
+	
+	return 0;
+}
+*/
+
+
+bool jud(int n){
+	for(int i=6;i*i<n+1;i+=(i%7==6?2:5)){
+		if(n%i==0){
+			return false;
+		}
+	}
+	return true;
+}
+
+vint foo(int n){
+	vint ret;
+	for(int i=6;i*i<n+1;i+=(i%7==6?2:5)){
+		if(n%i==0){
+			if(jud(i)) ret.PB(i);
+			if(i!=n/i&&jud(n/i)) ret.PB(n/i);
+		}
+	}
+	if(jud(n)) ret.PB(n);
+	return ret;
+}
+
+
+int main(){
+	int n;
+	while(cin>>n,n!=1){
+		vint t=foo(n);
+		sort(ALL(t));
+		cout<<n<<":";
+		rep(i,t.size()){
+			cout<<" "<<t[i];
+		}
+		cout<<endl;
+	}
+	return 0;
+}
+	

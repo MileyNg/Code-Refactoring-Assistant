@@ -1,0 +1,67 @@
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <map>
+#include <queue>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long Long;
+#define whole(xs) xs.begin(), xs.end()
+
+int N, C;
+vector<int> Ns, Cs;
+bool input() {
+    cin >> N >> C;
+    if (N == 0 && C == 0) return false;
+    Ns.clear(); Cs.clear();
+    for (int i = 0; i < N; i++) {
+        int n = 0;
+        for (int j = 0; j < 16; j++) {
+            int x; cin >> x;
+            n += (x << j);
+        }
+        Ns.push_back(n);
+    }
+    for (int i = 0; i < C; i++) {
+        int c = 0;
+        for (int j = 0; j < 16; j++) {
+            int x; cin >> x;
+            c += (x << j);
+        }
+        Cs.push_back(c);
+    }
+    return true;
+}
+
+#define MN 30
+#define MC 30
+int Cache[MN][1 << 16];
+int dfs(int index, int bit) {
+    if (index == N) return 0;
+    if (Cache[index][bit] >= 0) return Cache[index][bit];
+    bit |= Ns[index];
+    int Ret = 0;
+    for (int i = 0; i < C; i++) {
+        Ret = max(Ret, __builtin_popcount(bit & Cs[i]) + dfs(index + 1, bit - (bit & Cs[i])));
+    }
+    return Cache[index][bit] = Ret;
+}
+
+void solve() {
+    memset(Cache, -1, sizeof(Cache));
+    cout << dfs(0, 0) << endl;
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

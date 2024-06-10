@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <cctype>
+#include <cmath>
+#include <cassert>
+using namespace std;
+
+#define dump(a) (cerr << #a << " = " << (a) << endl)
+
+const string NO = "Impossible";
+int a,b,c;
+int d(){
+  return b*b-4*a*c;
+}
+bool valid(int p){
+  int kai2_p = (-1*b+(int)sqrt(d()))*p;
+  int kai2_m = (-1*b-(int)sqrt(d()))*p;
+  int bun = 2*a;
+  return kai2_p%bun == 0 && kai2_m%bun == 0;
+}
+bool cal(int p){
+  if(!(valid(p)))return false;
+  int q,r,s;
+  r = a/p;
+  q = -1*p*(-1*b+sqrt(d()))/2/a;
+  s = -1*r*(-1*b-sqrt(d()))/2/a;
+  if(p > r) {
+	cout << p << " " << q << " " << r << " " << s << endl;
+	return true;
+  }
+  if(p == r) {
+	cout << p << " " << max(q, s) << " " << r << " " << min(q, s) << endl;
+  }
+  return false;
+}
+int main(){
+  while(cin >> a >> b >> c && a!=0){
+	if((int)sqrt(d()) != sqrt(d())){
+	  cout << NO << endl;
+	  continue;
+	}
+	for(int i = 1;i <= 10000;i++){
+	  if(a % i == 0) {
+		if(cal(i))break;
+	  }
+	}
+  }
+  return 0;
+}

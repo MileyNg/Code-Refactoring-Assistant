@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+class Inning{
+private:
+  int out;
+  int runnner;
+  int point;
+  int inningN;
+public:
+  Inning();//コンストラクタ
+  void newInning();
+  int getInningN(){return inningN;}
+  int getPoint(){return point;}
+  void doOut(){
+    out ++;
+    if(out == 3){
+      newInning();
+    }
+  }
+  void doHit();
+  void doHomerun();
+};
+
+void Inning::doHit(){
+  if(runnner < 3){
+    runnner ++;
+  }
+  else{
+    point ++;
+  }
+}
+void Inning::newInning(){
+  cout << point << endl;
+  out = 0;
+  runnner = 0;
+  point = 0;
+  inningN ++;
+}
+
+void Inning::doHomerun(){
+  point += runnner + 1;
+  runnner = 0;
+}
+
+
+//コンストラクタ
+Inning::Inning(){
+  out = 0;
+  runnner = 0;
+  point = 0;
+  inningN = 0;
+}
+
+int main(){
+  int N;
+  char *str;
+  cin >> N;
+  Inning inning;
+
+  while(1){
+    if(inning.getInningN() == N){
+      break;
+    }
+    cin >> str;
+    if(!strcmp(str, "OUT")){
+      inning.doOut();
+    }
+    if(!strcmp(str, "HIT")){
+      inning.doHit();
+    }
+    if(!strcmp(str, "HOMERUN")){
+      inning.doHomerun();
+    }
+  }
+
+  return 0;
+}

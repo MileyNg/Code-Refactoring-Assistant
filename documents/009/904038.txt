@@ -1,0 +1,46 @@
+import sys
+
+def cheaperprice(item):
+    rawprice=rawprices[item]
+    if item in checkloop:
+        return rawprice
+    elif item not in menus:
+        checkloop.append(item)
+        return rawprice
+    else:
+        checkloop.append(item)
+        indegrients=menus[item]
+        combinedprice=0
+        for i in indegrients:
+            combinedprice+=cheaperprice(i)
+        return min(combinedprice,rawprice)
+
+def main():
+    n=0 #how many numbers of lists
+    flag=0
+    rawprices={}
+    menus={}
+    checkloop=[]
+    for line in sys.stdin:
+        line=line.strip()
+        if n==0:
+            if flag==0 and line=='0':
+                break
+            elif flag!=2:
+                n=int(line)
+            else:
+                print cheaperprice(line)
+                rawprices={}
+                menus={}
+                checkloop=[]
+            flag=(flag+1)%3
+        else:
+            line=line.split(' ')
+            if flag==1: #rawprices
+                rawprices[line[0]]=int(line[1])
+            elif flag==2:
+                menus[line[0]]=line[2:]
+            n-=1
+    return 0
+    
+main()

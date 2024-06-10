@@ -1,0 +1,24 @@
+for h in range(1, 10000):
+    w = int(raw_input())
+    if w == 0:
+        break
+    n = int(raw_input())
+    a = [map(int, raw_input().split(',')) for i in range(n)]
+    d = [[None] * 1010 for i in range(1010)]
+
+    def f(ix, w):
+        if ix == n:
+            return 0, 0
+        if d[ix][w] is not None:
+            return d[ix][w]
+        mx = f(ix + 1, w)
+        if w >= a[ix][1]:
+            e = [p + q for p, q in zip(f(ix + 1, w - a[ix][1]), a[ix])]
+            if mx[0] < e[0] or (mx[0] == e[0] and mx[1] > e[1]):
+                mx = e
+        d[ix][w] = mx
+        return mx
+    mx = f(0, w)
+    print 'Case {}:'.format(h)
+    print mx[0]
+    print mx[1]

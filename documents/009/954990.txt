@@ -1,0 +1,13 @@
+loop do
+  n, m = gets.chomp.split.map(&:to_i)
+  break if n == 0
+  vegitables = gets.chomp.split.map(&:to_i).sort.reverse
+
+  vegitables.each.with_index(1) do |v, i|
+    if i % m == 0
+      vegitables[i - 1] = 0
+    end
+  end
+
+  p vegitables.inject(:+)
+end

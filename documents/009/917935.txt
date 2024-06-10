@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    unsigned long long int a,b;
+    int *sum,remainder1 = 0,remainder2 = 0,count1 = 0,count2 = 0,test,count_test=0;
+
+    sum =(int *)calloc(100,sizeof(int));
+    while(count_test <= 100)
+    {
+        scanf("%llu",&a);
+        scanf("%llu",&b);
+
+        while(a!=0)
+        {
+            remainder1 = a%10;
+
+            if(remainder1 != 0)
+                count1++;
+            a = a/10;
+        }
+
+        while(b!=0)
+        {
+            remainder2 = b%10;
+
+            if(remainder2 != 0)
+                count2++;
+            b = b/10;
+        }
+    sum[count_test] = count1 + count2;
+    count_test++;
+    count1 = 0;
+    count2 = 0;
+    }
+    count_test = 0;
+
+    while(count_test <= 100)
+        {
+            printf("\n%d ",sum[count_test]);
+            count_test++;
+        }
+    return 0;
+}

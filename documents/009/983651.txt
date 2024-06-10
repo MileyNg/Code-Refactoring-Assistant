@@ -1,0 +1,163 @@
+#include <iostream>
+#include <cstdio>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+using namespace std;
+
+//common
+typedef long long i64,ll;
+
+#define BR "\n"
+#define ALL(c) (c).begin(),(c).end()
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,l,r) for(int i=(l);i<(int)(r);++i)
+#define EACH(it,o) for(auto it = (o).begin(); it != (o).end(); ++it)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+
+//debug
+#ifdef NDEBUG
+#define DUMP(x)
+#define DUMPLN(x)
+#define DEBUG(x)
+#define DEBUGLN(x)
+#define LINE()
+#define LINELN()
+#define CHECK(exp,act)
+#define STOP(e)
+#else
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define DUMPLN(x)  DUMP(x) <<endl
+#define DEBUG(x) DUMP(x) << LINE() << " " << __FILE__
+#define DEBUGLN(x) DEBUG(x)<<endl
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+#define LINELN()    LINE()<<endl
+#define CHECK(exp,act)  if(exp!=act){DUMPLN(exp);DEBUGLN(act);}
+#define STOP(e)  CHECK(e,true);if(!(e)) exit(1);
+#endif
+
+template<class T> inline string toString(const vector<T>& x) {
+	stringstream ss;
+	REP(i,x.size()){
+		if(i!=0)ss<<" ";
+		ss<< x[i];
+	}
+	return ss.str();
+}
+
+template<class T> inline string toString(const vector<vector<T> >& map) {
+	stringstream ss;
+	REP(i,map.size()){
+		if(i!=0)ss<<BR;
+		ss<< toString(map[i]);
+	}
+	return ss.str();
+}
+template<class K,class V>  string toString(map<K,V>& x) {
+	string res;stringstream ss;
+	for(auto& p:x)ss<< p.first<<":" << p.second<<" ";
+	return ss.str();
+}
+
+string BITtoString(int bit){
+    stringstream ss;
+    while(bit!=0){ss<<(bit%2);bit/=2;}
+    string res=ss.str();reverse(ALL(res));
+    return res;
+}
+
+template<typename T,typename V> inline T pmod(T v,V MOD){
+	return (v%MOD+MOD)%MOD;
+}
+
+
+class Task{
+public:
+	int y,x;
+	int c,M;
+	Task(int y,int x,int c,int M):y(y),x(x),c(c),M(M){}
+	bool operator < (const Task& r) const{
+		if(c!=r.c)return c<r.c;
+		return M<r.M;
+	}
+};
+
+
+	int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+
+double INF=1e16;
+class Main{
+public:
+	
+	int n;
+	vector<double> xs,ys,ls;
+	bool input(){
+		cin >>n;if(n==0)return false;
+		xs=vector<double>(n);ys=vector<double>(n);ls=vector<double>(n);
+		REP(i,n) cin >> xs[i] >> ys[i] >> ls[i];
+		return true;
+	}
+
+	double getM(double x){
+		double yl=-200,yr=200;
+		double Mv=-INF;
+		while(yr-yl>1e-9){
+			double yml=(2*yl+yr)/3,ymr=(yl+2*yr)/3;
+			//DUMP(yml);
+			double lv=INF,rv=INF;
+			REP(i,n){
+				double d=pow(ls[i],2)-(pow(xs[i]-x,2)+pow(ys[i]-yml,2));
+				lv=min(lv,d);
+			}
+			REP(i,n){
+				double d=pow(ls[i],2)-(pow(xs[i]-x,2)+pow(ys[i]-ymr,2));
+				rv=min(rv,d);
+			}
+			// DUMP(x);DUMP(yml);DUMP(ymr);DUMP(BR);
+			// DUMP(lv);DUMP(rv);DUMP(BR);
+			Mv=max(max(lv,rv),Mv);
+			if(lv<rv)yl=yml;
+			else yr=ymr;
+		}
+		return Mv;
+	}
+
+
+	void run(){
+		while(input()){
+			double xl=-200,xr=200;
+			double Mv=0;
+			while(xr-xl>1e-9){
+				double xml=(2*xl+xr)/3,xmr=(xl+2*xr)/3;
+				double lv=getM(xml),rv=getM(xmr);
+				// DUMP(xml);DUMP(xmr);DUMP(BR);
+				// DUMP(lv);DUMP(rv);DUMP(BR);
+				Mv=max(max(lv,rv),Mv);
+				if(lv<rv)xl=xml;
+				else xr=xmr;
+			}
+			cout <<sqrt(Mv)<<endl;
+		}
+	}
+};
+
+ int main(){
+ 	cout <<fixed<<setprecision(15);	
+	//ios::sync_with_stdio(false);
+ 	Main().run();
+ 	return 0;
+ }

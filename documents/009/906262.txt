@@ -1,0 +1,26 @@
+p = ['0'+raw_input()+'000' for i in range(8)]
+p.extend(['0'*12 for i in range(3)])
+
+for i in range(len(p)):
+	if '1' in p[i]:
+		index = p[i].index('1')
+		if p[i][index+1] == '1':
+			if p[i+1][index] == '1':
+				if p[i+1][index+1] == '1':
+					print "A"
+				else:
+					print "G"
+			else:
+				if p[i][index+2] == '1':
+					print "C"
+				else:
+					print "E"
+		else:
+			if p[i+2][index] == '1':
+				print "B"
+			else:
+				if p[i+1][index] == '1':
+					print "D"
+				else:
+					print "F"
+		break

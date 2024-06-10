@@ -1,0 +1,14 @@
+n = gets.chomp.to_i
+cards = Hash.new
+%w(S H C D).each { |f|
+  cards[f] = Array.new
+}
+(1..n).each {
+  card = gets.chomp.split(' ')
+  cards[card[0]] << card[1].to_i
+}
+%w(S H C D).each { |f|
+  (1..13).each { |i|
+    unless cards[f].include?(i) then puts "#{f} #{i}" end
+  }
+}

@@ -1,0 +1,34 @@
+#include <iostream>
+#include <stack>
+#include <map>
+#include <algorithm>
+#include <sstream>
+#include <queue>
+#include <string>
+#include <cstring>
+#include <cmath>
+using namespace std;
+#define F first
+#define S second
+const int INF=100000000;
+
+int dp[50][3001];
+const int mod=100000;
+
+int main(){
+	int n,m,s;
+	while(cin >> n >> m >> s){
+		if(n==0&&m==0&&s==0) break;
+		memset(dp,0,sizeof(dp));
+		dp[0][0]=1;
+		for(int i=1; i<=m; ++i){
+			for(int j=n*n; j>0; --j){
+				for(int k=i; k<=s; ++k){
+					dp[j][k]+=dp[j-1][k-i]%mod;
+				}
+			}
+		}
+		cout << dp[n*n][s]%mod << endl;
+	}
+	return 0;
+}

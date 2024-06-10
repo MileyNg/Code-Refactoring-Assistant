@@ -1,0 +1,70 @@
+#include "stdio.h"
+#include "math.h"
+
+#include <vector>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+
+#define VARIABLE(x) cerr << #x << "=" << x << endl
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define REP(i,m,n) for (int i=m;i<(int)(n);i++)
+
+const int INF = 10000000;
+using namespace std;
+typedef long long  ll;
+
+/** Problem0259 : All Numbers Lead to 6174 **/
+int main()
+{
+	string s;
+	int  min, max, num[4], n;
+	
+	while (cin>>s, s!="0000") {
+		n=1;
+		if (s=="6174") {
+			cout << 0 << endl;
+			continue;
+		} else if (s[0]==s[1] && s[0]==s[2] && s[0]==s[3]) {
+			cout << "NA" << endl;
+			continue;
+		}
+		while (1) {
+			min=0; max=0;
+			fill(num, num+4, 0);
+			rep(i, s.length()) {
+				num[i] = s[i]-'0';
+			}
+			sort(num, num+4);
+			rep(i, 4) {
+				min*=10;
+				min+=num[i];
+			}
+			reverse(num, num+4);
+			rep(i, 4) {
+				max*=10;
+				max+=num[i];
+			}
+			int nn = max-min;
+			if (nn == 6174) {
+				cout << n << endl;
+				break;
+			} else {
+				s="";
+				rep(i, 4) {
+					s+= nn%10;
+					nn/=10;
+				}
+			}
+			n++;
+		}
+	}
+	
+	return 0;
+}

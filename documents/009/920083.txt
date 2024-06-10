@@ -1,0 +1,92 @@
+#include<cstdio>
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<map>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+int cutcount = 0;
+class Cake{
+	public:
+	int h,w,birth;
+	Cake(int h,int w):h(h),w(w){
+		birth = cutcount;
+	}
+	
+	bool operator<(const Cake& c)const{
+		if(birth==c.birth){
+			return w*h<(c.w*c.h);
+		}
+		return birth<c.birth;
+	}
+};
+
+
+int main(){
+	A:;
+	int n,w,h;
+	cin>>n>>w>>h;
+	if(n==0 && w==0 && h==0)return 0;
+	
+	vector<Cake> cakes;
+	cakes.push_back(Cake(h,w));
+	
+	rep(i,n){
+		int a,b;
+		cin>>a>>b;
+		a--;
+		
+		int bw = cakes[a].w;
+		int bh = cakes[a].h;
+		
+		int pos=0;
+		while(1){
+			rep(j,4){
+				int v = bw;
+				if(pos==1 || pos==3)v = bh;
+				
+				if(b<v)goto B;
+				pos = (pos+1)%4;
+				b-=v;
+			}
+		}
+		B:;
+		
+		cakes.erase(cakes.begin()+a);
+		cutcount++;
+		
+		if(pos%2==0){
+			cakes.push_back(Cake(bh,b));
+			cakes.push_back(Cake(bh,bw-b));
+		}
+		if(pos%2==1){
+			cakes.push_back(Cake(b,bw));
+			cakes.push_back(Cake(bh-b,bw));
+		}
+		sort(cakes.begin(),cakes.end());
+		/*
+		printf("cakes ");
+		rep(i,cakes.size()){
+			if(i!=0)printf(" ");
+			printf("(%d,%d,%d)",cakes[i].w,cakes[i].h,cakes[i].w*cakes[i].h);
+		}puts("");*/
+	}
+	
+	
+	rep(i,cakes.size()){
+		cakes[i].birth=0;
+	}
+	sort(cakes.begin(),cakes.end());
+	
+	rep(i,cakes.size()){
+		if(i!=0)printf(" ");
+		printf("%d",cakes[i].w*cakes[i].h);
+	}puts("");
+	
+	goto A;
+}

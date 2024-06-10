@@ -1,0 +1,114 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Node{
+private:
+ unsigned long nodeId;
+ unsigned long timestampStart;
+ unsigned long timestampFinish;
+ vector<unsigned long> adjectNode;
+public:
+ Node()
+       : timestampStart(0),
+         timestampFinish(0){
+
+  cin >> nodeId;
+  unsigned long adjectNodeNum = 0;
+  cin >> adjectNodeNum;
+
+  adjectNode.assign(adjectNodeNum, 0);
+ 
+  for(unsigned long adjectNode_i = 0; adjectNode_i < adjectNodeNum; ++adjectNode_i){
+   cin >> adjectNode[adjectNode_i];
+  }
+
+ };
+
+ bool isStampStart(){
+  if(timestampStart == 0) return false;
+  return true;
+ };
+
+ void stampStart(const unsigned long time){
+  timestampStart = time;
+ };
+
+ void stampFinish(const unsigned long time){
+  timestampFinish = time;
+ };
+
+ unsigned long getAdjectNodeNum(){
+  return adjectNode.size();
+ };
+
+ unsigned long getAdjectNode(unsigned  long adjectNode_i){
+  return adjectNode[adjectNode_i]-1;
+
+ };
+
+ void display(){
+  cout << nodeId          << " ";
+  cout << timestampStart  << " ";
+  cout << timestampFinish << endl;
+ };
+
+protected:
+
+};
+
+class Graph{
+private:
+ vector<Node*> graph;
+
+ void DepthFirstSearch(Node* node, unsigned long &time){
+  ++time;
+  node->stampStart(time);
+  for(unsigned long adjectNode_i = 0, adjectNodeMax = node->getAdjectNodeNum(); adjectNode_i < adjectNodeMax; ++adjectNode_i){
+   unsigned long nextNode = node->getAdjectNode(adjectNode_i);
+   if(!graph[nextNode]->isStampStart()) DepthFirstSearch(graph[nextNode], time);
+
+  }
+  ++time;
+  node->stampFinish(time);
+
+ };
+public:
+ Graph(unsigned long nodeNum = 0)
+       : graph(vector<Node*>(nodeNum, 0)){
+
+   for(unsigned long node_i = 0; node_i < nodeNum; ++node_i){
+    graph[node_i] = new Node();
+   }
+
+  };
+
+ void DepthFirstSearch(){
+  unsigned long time = 0;
+  for(unsigned long node_i = 0, nodeMax = graph.size(); node_i < nodeMax; ++node_i){
+   if(!graph[node_i]->isStampStart()) DepthFirstSearch(graph[node_i], time);
+  }
+  
+ };
+
+ void display(){
+  for(unsigned long node_i = 0, numMax = graph.size(); node_i < numMax; ++node_i){
+   graph[node_i]->display();
+  }
+ };
+protected:
+
+};
+
+
+int main(){
+
+ unsigned long nodeNum = 0; cin >> nodeNum;
+
+ Graph graph(nodeNum);
+ graph.DepthFirstSearch();
+ graph.display();
+
+ return 0;
+};

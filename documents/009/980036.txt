@@ -1,0 +1,49 @@
+#include <iostream>
+using namespace std;
+
+bool d[10010][1270];
+
+int main() {
+
+  long long int n, m, r, q, input_t, input_n, input_m, input_s;
+
+  while( true ) {
+
+    cin >> n >> m;
+
+    if ( n == 0 ) break;
+
+    cin >> r;
+
+    for ( long long int i = 0; i < 10010; i++ ) {
+      for ( long long int j = 0; j < 1270; j++ ) {
+	d[i][j] = false;
+      }
+    }
+    long long int pc[1010] = {0};
+    for ( long long int i = 0; i < r; i++ ) {
+      cin >> input_t >> input_n >> input_m >> input_s;
+      if ( pc[input_n] == 0 ) {
+	pc[input_n] = input_t;
+      }else {
+	for ( long long int i = pc[input_n]; i < input_t; i++ ) {
+	  d[input_m][i] = true;
+	}
+	pc[input_n] = 0;
+      }
+    }
+    cin >> q;
+    for ( long long int i = 0; i < q; i++ ) {
+      cin >> input_t >> input_s >> input_m;
+      long long int ans = 0;
+      for ( long long int j = input_t; j < input_s; j++ ) {
+	if ( d[input_m][j] ) ans++;
+      }
+      cout << ans << endl;
+    }
+
+  }
+
+  return 0;
+
+}

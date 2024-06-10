@@ -1,0 +1,157 @@
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <string>
+
+using namespace std;
+
+typedef long long ll;
+
+const ll BASE = 10000;
+const int LogB = 4;
+const int MAX_DIGIT = 100;
+
+struct Bigint {
+	ll digit[MAX_DIGIT];
+	int size;
+	Bigint (int sz = 1, ll a = 0) : size(sz) {
+		memset(digit, 0, sizeof(digit));
+		digit[0] = a;
+	}
+};
+
+const Bigint ZERO(1,0), ONE(1, 1);
+
+bool operator < (Bigint x, Bigint y) {
+	if (x.size != y.size) return x.size < y.size;
+	for (int i=x.size-1; i>=0; i--) if (x.digit[i] != y.digit[i]) return x.digit[i] < y.digit[i];
+	return false;
+}
+
+bool operator > (Bigint x, Bigint y) { return y < x; }
+bool operator <= (Bigint x, Bigint y) { return !(y < x); }
+bool operator >= (Bigint x, Bigint y) { return !(x < y); }
+bool operator != (Bigint x, Bigint y) { return x < y || y < x; }
+bool operator == (Bigint x, Bigint y) { return !(x < y) && !(y < x); }
+
+Bigint normal(Bigint x) {
+	ll c = 0;
+	for (int i=0; i<x.size; i++) {
+		while (x.digit[i] < 0)
+			x.digit[i+1] -= 1, x.digit[i] += BASE;
+		ll a = x.digit[i] + c;
+		x.digit[i] = a % BASE;
+		c = a / BASE;
+	}
+	for (; c>0; c /= BASE) x.digit[x.size++] = c % BASE;
+	while (x.size > 1 && x.digit[x.size-1] == 0) x.size--;
+	return x;
+}
+
+Bigint convert(ll a) { return normal(Bigint(1, a)); }
+
+Bigint convert(const string& s) {
+	Bigint x;
+	int i = s.size() % LogB;
+	if (i > 0) i -= LogB;
+	for (; i<(int)s.size(); i += LogB) {
+		ll a = 0;
+		for (int j=0; j<LogB; j++) a = 10 * a + (i+j >= 0 ? s[i+j] - '0' : 0);
+		x.digit[x.size++] = a;
+	}
+	reverse(x.digit, x.digit+x.size);
+	return normal(x);
+}
+
+ostream &operator << (ostream& os, Bigint x) {
+	os << x.digit[x.size-1];
+	for (int i=x.size-2; i>=0; i--) os << setw(LogB) << setfill('0') << x.digit[i];
+	return os;
+}
+
+istream &operator >> (istream& is, Bigint &x) {
+	string s; is >> s;
+	x = convert(s);
+	return is;
+}
+
+Bigint operator + (Bigint x, Bigint y) {
+	if (x.size < y.size) x.size = y.size;
+	for (int i=0; i<y.size; i++) x.digit[i] += y.digit[i];
+	return normal(x);
+}
+
+Bigint operator - (Bigint x, Bigint y) {
+	assert(x >= y);
+	for (int i=0; i<y.size; i++) x.digit[i] -= y.digit[i];
+	return normal(x);
+}
+
+Bigint operator * (Bigint x, Bigint y) {
+	Bigint z(x.size + y.size);
+	for (int i=0; i< x.size; i++)
+		for (int j=0; j<y.size; j++)
+			z.digit[i+j] += x.digit[i] * y.digit[j];
+	return normal(z);
+}
+
+Bigint operator * (Bigint x, ll a) {
+	for (int i=0; i<x.size; i++)
+		x.digit[i] *= a;
+	return normal(x);
+}
+
+pair<Bigint, ll> divmod(Bigint x, ll a) {
+	ll c = 0, t;
+	for (int i=x.size-1; i>=0; i--) {
+		t = BASE*c + x.digit[i];
+		x.digit[i] = t / a;
+		c = t % a;
+	}
+	return pair<Bigint, ll>(normal(x), c);
+}
+
+Bigint operator / (Bigint x, ll a) { return divmod(x, a).first; }
+
+ll operator % (Bigint x, ll a) { return divmod(x, a).second; }
+
+pair<Bigint, Bigint> divmod(Bigint x, Bigint y) {
+	if (x.size < y.size) return pair<Bigint, Bigint>(ZERO, x);
+	int F =BASE / (y.digit[y.size-1] + 1);
+	x = x * F; y = y * F;
+	Bigint z(x.size - y.size + 1);
+	for (int k = z.size - 1, i = x.size-1; k >= 0; k--, i--) {
+		z.digit[k] = (i+1 < x.size ? x.digit[i+1] : 0) * BASE + x.digit[i];
+		z.digit[k] /= y.digit[y.size-1];
+		Bigint t(k + y.size);
+		for (int j=0; j < y.size; j++) t.digit[k+j] = z.digit[k] * y.digit[j];
+		t = normal(t);
+		while (x < t) {
+			z.digit[k] -= 1;
+			for (int j = 0;j<y.size; j++) t.digit[k+j] -= y.digit[j];
+			t = normal(t);
+		}
+		x = x-t;
+	}
+	return pair<Bigint, Bigint>(normal(z), x/F);
+}
+
+Bigint operator / (Bigint x, Bigint y) { return divmod(x, y).first; }
+
+Bigint operator % (Bigint x, Bigint y) { return divmod(x, y).second; }
+
+int main() {
+	int n;
+	cin >> n;
+	string s1, s2;
+	
+	for (int i=0; i<n; i++) {
+		cin >> s1 >> s2;
+		Bigint x = convert(s1), y = convert(s2);
+		Bigint z = x + y;
+		if (z.size > 80) cout << "overflow" << endl;
+		else cout << z << endl;
+	}
+	
+	return 0;
+}

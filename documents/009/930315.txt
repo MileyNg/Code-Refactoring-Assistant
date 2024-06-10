@@ -1,0 +1,36 @@
+#include <cctype>
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <stack>
+#include <string>
+using namespace std;
+
+stack<double>X;
+int s2i(string s){
+	stringstream ss(s);
+	int d;
+	ss>>d;
+	return d;
+}
+double f(string s){
+	double a,b,x;
+	b=X.top();X.pop();
+	a=X.top();X.pop();
+	if(s=="+")x=a+b;
+	else if(s=="-")x=a-b;
+	else if(s=="*")x=a*b;
+	else if(s=="/")x=a/b;
+	return x;
+}
+int main(){
+	string s;
+	while(getline(cin,s)){
+		stringstream ss(s);
+		while(ss>>s)
+			if(s=="+"||s=="-"||s=="*"||s=="/")X.push(f(s));
+			else X.push(s2i(s));
+		cout<<X.top()<<endl;
+		X.pop();
+	}
+}

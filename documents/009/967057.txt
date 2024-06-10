@@ -1,0 +1,97 @@
+//suhan lee,saitama university
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+#include <complex>
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define rep(i,a,b) for(int i=(a);i<(b);++i)
+#define repn(i,n) for(int i=0;i<n;i++)
+#define EACH(t,i,c) for(t::iterator i=(c).begin(); i!=(c).end(); ++i)
+#define pb push_back 
+#define pf push_front
+
+const int dx[] = {0,1,0,-1};
+const int dy[] = {-1,0,1,0};
+
+int w, h;
+int sx, sy, gx, gy;
+int ans = 100000;
+vvi field;
+
+void rec(int x, int y, int step) {
+  if (step == 10) return;
+  if (ans <= step) return;
+  // cout << x << ", " << y << endl;
+  repn(di, 4) {
+    int nx = x + dx[di];
+    int ny = y + dy[di];
+    if (ny < 0 || h <= ny || nx < 0 || w <= nx) continue;
+    if (field[ny][nx]) continue;
+    while (!field[ny][nx]) {
+      if (nx == gx && ny == gy) {
+	ans = min(ans, step +1);
+	return;
+      }
+      nx += dx[di];
+      ny += dy[di];
+      if (ny < 0 || h <= ny || nx < 0 || w <= nx) goto failed;
+    }
+
+    field[ny][nx] = 0;
+    rec(nx - dx[di], ny - dy[di], step + 1);
+    field[ny][nx] = 1;
+
+
+  failed: {}
+    
+  }
+}
+int solve() {
+  ans = 100000;
+  field = vvi(h, vi(w));
+  repn(y, h) repn(x,w) {
+    int a;
+    cin >> a;
+    if (a==2) sx = x, sy = y;
+    else if (a==3) gx = x, gy = y;
+    else if (a == 1) field[y][x] = 1;
+  }
+  rec(sx, sy, 0);
+  return ans > 10 ? -1 : ans;
+}
+
+int main(){
+
+  while (cin >> w >> h, w||h) cout << solve() << endl;
+  return 0;
+}

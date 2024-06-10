@@ -1,0 +1,63 @@
+/*
+  AOJ 2523
+  Title:Time Complexity
+  @kankichi573
+*/
+#include <stdio.h>
+#include <string.h>
+
+int n,T;
+char expr[50];
+
+int expt(int x,int n)
+{
+  int ret;
+
+  if(n==0)
+    ret=1;
+  else
+    ret=x*expt(x,n-1);
+
+  return(ret);
+}
+
+int eval_single(char expr[],int n)
+{
+  int ret;
+  if(expr[1]=='^')
+    {
+      ret=expt(n,expr[2]-'0');
+    }
+  else
+    ret=n;
+
+  return(ret);
+}
+int evaluate(char exp[],int n)
+{
+  int ret;
+  char *p;
+
+  ret=0;
+  p=strtok(exp,"+\0");
+    do
+    {
+      ret+=eval_single(p,n);      
+    }while(p=strtok(NULL,"+\0"));
+  return(ret);
+}
+
+main()
+{
+  int ret;
+
+  scanf("%d %d",&n,&T);
+  scanf("%s",expr);
+
+  ret=T*evaluate(expr,n);
+  if(ret>1000000000)
+    printf("TLE\n");
+  else
+    printf("%d\n",ret);
+  return(0);
+}

@@ -1,0 +1,33 @@
+var input = require('fs').readFileSync('/dev/stdin', 'utf8');
+var lines = input.split('\n');
+
+var n = lines.shift();
+
+var q = [];
+for (var i = 0; i < n; i++) {
+	var arr = lines[i].split(' ');
+
+	if (arr[0] === 'insert') {
+		tmp = q;
+		q = [arr[1] - 0];
+		Array.prototype.push.apply(q, tmp);
+	} else if (arr[0] === 'delete') {
+		for (var j = 0, l = q.length; j < l; j++ ) {
+			if (arr[j] === arr[1] - 0) {
+				q.splice(j, 1);
+				break;
+			}
+		}
+	} else if (arr[0] === 'deleteFirst') {
+		q.shift();
+	} else if (arr[0] === 'deleteLast') {
+		q.pop();
+	}
+}
+
+var str = '';
+str += q[0];
+for (var i = 1, l = q.length; i < l; i++) {
+	str += ' ' + q[i];
+}
+console.log(str);

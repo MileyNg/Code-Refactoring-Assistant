@@ -1,0 +1,49 @@
+#include<iostream>
+
+using namespace std;
+
+#define MMAX 100000
+#define YES 0
+#define NO 1
+
+struct S{
+	int p, q, pq;
+};
+int main(){
+
+	int m, a, b;
+	int hurui[MMAX + 1] = { YES };
+	int prime[MMAX + 1];
+	int cnt = 0;
+	S ans = { -1, -1, -1 };
+
+	hurui[0] = NO, hurui[1] = NO;
+	for (int i = 2; i < MMAX; i++){
+		if (hurui[i] == YES){
+			prime[cnt] = i;
+			cnt++;
+			for (int j = i * 2; j < MMAX; j += i){
+				hurui[j] = NO;
+			}
+		}
+	}
+
+	while (1){
+
+		cin >> m >> a >> b;
+		if (a == 0 && b == 0 && m == 0) break;
+
+		for (int i = 0; i < cnt; i++){
+			for (int j = 0; j < cnt; j++){
+				if (prime[i] * prime[j] <= m && (double)prime[i] / prime[j] >= (double)a / b && (double)prime[i] / prime[j] <= 1){
+					if (ans.pq < prime[i] * prime[j]){
+						ans.p = prime[i], ans.q = prime[j], ans.pq = prime[i] * prime[j];
+					}
+				}
+			}
+		}
+		cout << ans.p << " " << ans.q << endl;
+		ans.p = -1, ans.q = -1, ans.pq = -1;
+	}
+	return 0;
+}

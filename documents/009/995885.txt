@@ -1,0 +1,77 @@
+### constant
+
+MAX_INT = (1 << 31) - 1
+
+NEIGHBORS = [
+  [[-1, -1], [ 0, -1], [-1,  0], [ 1,  0], [-1,  1], [ 0,  1]],
+  [[ 0, -1], [ 1, -1], [-1,  0], [ 1,  0], [ 0,  1], [ 1,  1]]
+]
+
+### global variables
+
+### subroutines
+
+def gen_dists(x, y, m, n)
+  dists = n.times.map{m.times.map{MAX_INT}}
+  dists[y][x] = 0
+  queue = [[x, y]]
+
+  while ! queue.empty?
+    x0, y0 = queue.shift
+    d0 = dists[y0][x0] + 1
+
+    for nxy in NEIGHBORS[y0 & 1]
+      dx, dy = nxy
+      x1 = x0 + dx
+      y1 = y0 + dy
+      if x1 >= 0 && x1 < m && y1 >= 0 && y1 < m && dists[y1][x1] > d0
+        dists[y1][x1] = d0
+        queue << [x1, y1]
+      end
+    end
+  end
+
+  dists
+end
+
+### main
+
+while true
+  m, n = gets.strip.split(' ').map{|s| s.to_i}
+  break if m == 0 && n == 0
+
+  s = gets.strip.to_i
+
+  min_dists = n.times.map{m.times.map{MAX_INT}}
+
+  for i in (0...s)
+    x0, y0 = gets.strip.split(' ').map{|s| s.to_i - 1}
+    dists = gen_dists(x0, y0, m, n)
+
+    for y in (0...n)
+      for x in (0...m)
+        min_dists[y][x] = dists[y][x] if min_dists[y][x] > dists[y][x]
+      end
+    end
+  end
+  #p min_dists
+
+  t = gets.strip.to_i
+  max_count = 0
+
+  t.times.each do
+    x0, y0 = gets.strip.split(' ').map{|s| s.to_i - 1}
+    ndists = gen_dists(x0, y0, m, n)
+    count = 0
+
+    for y in (0...n)
+      for x in (0...m)
+        count += 1 if ndists[y][x] < min_dists[y][x]
+      end
+    end
+
+    max_count = count if max_count < count
+  end
+
+  puts max_count
+end

@@ -1,0 +1,33 @@
+#include<stdio.h>
+
+int main(){
+  int a, b;
+  int tmp;
+  int prime;
+  int gcd, lcm;
+
+  while(scanf("%d %d",&a, &b) != EOF){
+    /*GCDとLCMを求める処理*/
+    if(b > a){
+      tmp = a;
+      a = b;
+      b = tmp;
+    }
+    //a >= b
+    gcd = 1; lcm = 1;
+    prime = 2;
+    while(prime <= b){
+      if(a%prime == 0 && b%prime == 0){
+	a /= prime;
+	b /= prime;
+	gcd *= prime;
+      }
+      else{
+	prime ++;
+      }
+    }
+    lcm = gcd * a * b;
+    printf("%d %d\n",gcd ,lcm);
+  }
+  return 0;
+}  

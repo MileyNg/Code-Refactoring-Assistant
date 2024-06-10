@@ -1,0 +1,27 @@
+#include <iostream>
+#include <algorithm>
+
+#define range(i,a,b) for(int (i)=a;(i)<(b);(i)++)
+#define rep(i,n) range(i,0,n)
+
+using namespace std;
+
+int a[110];
+
+int main(void){
+	int n,r;
+	while(cin >> n >> r,n|r){
+		rep(i,n) a[i]=n-i;
+		//cout << a[0] << a[1] << endl;
+		rep(i,r){
+			int p,c;
+			cin >> p >> c;
+			int tmp[110];
+			rep(i,p-1) tmp[i]=a[i];
+			rep(i,c) a[i]=a[i+p-1];
+			rep(i,p-1) a[i+c]=tmp[i];
+		}
+		cout << a[0] << endl;
+	}
+	return 0;
+}

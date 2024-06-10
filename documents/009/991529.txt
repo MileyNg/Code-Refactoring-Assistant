@@ -1,0 +1,37 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+using namespace std ;
+
+int main(){
+	
+	int n , trash ;
+	string card ;
+	
+	while(1){
+		cin >> n ;
+		if( n==0  ) break ;
+		
+		cin >> card ;
+		int num[100] = {} ;
+		trash = 0 ;
+		
+		for( int i=0 ; i<100 ; i++ ){
+			if( card[i] == 'M' ) num[i%n]++ ;
+			else if( card[i] == 'L' ){
+				num[i%n] += trash + 1 ;
+				trash = 0 ;
+			}
+			else if( card[i] == 'S' ){
+				trash += num[i%n] + 1 ;
+				num[i%n] = 0 ;
+			}
+		}
+		
+		sort( num , num+n ) ;
+		for( int i=0 ; i<n ; i++ ) cout << num[i] << " " ;
+		cout << trash << endl ;
+	}
+	
+return 0; 
+}

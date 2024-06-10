@@ -1,0 +1,82 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <queue>
+using namespace std;
+#define MP(x,y) make_pair(x,y)
+#define FI first
+#define SE second
+
+const int MAXN = 110;
+const char cdir[10]="SENW";
+char ma[MAXN][MAXN];
+const int dir[4][2]={{1,0},{0,1},{-1,0},{0,-1}};
+int to[128];
+int step[MAXN][MAXN][4];
+struct _node
+{
+	bool ty;
+	int ex,ey,di,cycle;
+};
+_node bfs(int x,int y,int di,long long len)
+{
+	memset(step,-1,sizeof(step));
+	int cnt = 0;
+	while(step[x][y][di]==-1&&len>cnt)
+	{
+		step[x][y][di]=cnt;
+		int dx=x+dir[di][0],dy=y+dir[di][1];
+		if(ma[dx][dy]!='.')
+		{
+			di=(di+3)%4;
+			continue;
+		}
+		x=dx,y=dy;
+		++cnt;
+	}
+	_node no;
+	no.di=di;
+	no.ex=x;
+	no.ey=y;
+	no.ty=len>cnt;
+	no.cycle=cnt-step[x][y][di];
+	return no;
+}
+int main()
+{
+	//freopen("/home/caesar11/0425/a.in","r",stdin);
+	int w,h;
+	long long len;
+	to['S']=0;
+	to['E']=1;
+	to['N']=2;
+	to['W']=3;
+	while(scanf("%d%d%lld",&h,&w,&len)==3&&h)
+	{
+		memset(ma,'#',sizeof(ma));
+		for(int i=1;i<=h;++i)
+			scanf("%s",&ma[i][1]);
+		int sx,sy,di;
+		for(int i=1;i<=h;++i)
+			for(int j=1;j<=w;++j)
+				if(ma[i][j] != '#' && ma[i][j] != '.')
+				{
+					sx=i,sy=j;
+					di=to[(int)ma[i][j]];
+					ma[i][j]='.';
+					break;
+				}
+		_node re = bfs(sx,sy,di,len);
+		if(!re.ty)
+			printf("%d %d %c\n",re.ex,re.ey,cdir[re.di]);
+		else
+		{
+			len-=step[re.ex][re.ey][re.di];
+			len%=re.cycle;
+			re = bfs(re.ex,re.ey,re.di,len);
+			printf("%d %d %c\n",re.ex,re.ey,cdir[re.di]);
+		}
+	}
+	return 0;
+}

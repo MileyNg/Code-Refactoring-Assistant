@@ -1,0 +1,59 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+
+#define ll long long
+#define ull unsigned long long
+#define pii pair<int,int>
+#define vi vector<int>
+#define VS vector<string>
+#define all(x) x.begin(),x.end()
+#define mp make_pair
+#define pb push_back
+
+using namespace std;
+
+int main(){
+    int n, k;
+    while(cin >> n >> k, n+k){
+        vi c;
+        for(int i=0; i < n; i++){
+            int m;
+            cin >> m;
+            c.push_back(m);
+        }
+
+        int ck=0;
+        for(int i=0; i <= c.size()-k; i++){
+            int sum = 1;
+            for(int j=0; j < k; j++){
+                sum *= c[i+j];
+            }
+            if(ck < sum) ck = sum;
+        }
+        sort(all(c), greater<int>());
+        int sum = 1;
+        for(int i=0; i < k; i++){
+            sum *= c[i];
+        }
+        cout << ck << " "<< sum << endl;
+        if(ck < sum) cout << sum-ck << endl;
+        else cout << "NO GAME" << endl;
+    }
+}

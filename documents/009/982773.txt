@@ -1,0 +1,14 @@
+class F
+attr_reader:n,:d
+def initialize(n,d)@n,@d=n/(g=n.gcd d),d/g
+end
+def eql?(f)@n==f.n&&@d==f.d
+end
+def hash
+[@n,@d].hash
+end
+end
+gets.to_i.times{h=Hash.new{0}
+gets.to_i.times.map{gets}.map{|p|p.scan(/../).each_with_index{|s,i|h[F.new(i,p.size/2)]+=s.hex if"00"!=s}}
+d=h.keys.map(&:d).inject(1){|r,l|r.lcm(l)}
+puts d>1024?"Too complex.":d.times.map{|i|(f=h[F.new(i,d)])?format("%02X",f):"00"}*""}

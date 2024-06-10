@@ -1,0 +1,42 @@
+#include <stdio.h>
+int Partition(int *,int,int);
+int main()
+{
+  int A[100001];
+  int i,n,key;
+  scanf("%d",&n);
+  for(i=1;i<=n;i++)
+    {
+      scanf("%d",&A[i]);
+      //printf("%d ",A[i]);
+    }
+  key=Partition(A,1,n);
+  for(i=1;i<=n;i++)
+    {
+      if(i==key)printf("[%d] ",A[i]);
+      else if(i==n)printf("%d\n",A[i]);
+      else printf("%d ",A[i]);
+    }
+  return 0;
+}
+
+int Partition (int *A,int p,int r)
+{
+  int x,i,j,temp;
+  x=A[r];
+  i=p-1;
+  for(j=p;j<r;j++)
+    {
+      if(A[j]<=x)
+	{
+	  i++;
+	  temp=A[i];
+	  A[i]=A[j];
+	  A[j]=temp;
+	}
+    }
+  temp=A[i+1];
+  A[i+1]=A[r];
+  A[r]=temp;
+  return i+1;
+}

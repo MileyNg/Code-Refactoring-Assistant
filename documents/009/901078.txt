@@ -1,0 +1,103 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+const int MAX_LIMIT = 1000;		// 資金の最大値
+const int MAX_N = 100;		// シークレットアーティストの最大人数
+const int MAX_M = 100;		// スタンダードアーティストの最大人数
+//const int MAX_MN = 200;
+int LIMIT, N, M, X;	// LIMIT: アーティストを雇用するのに使用できる資金(4 ≦ LIMIT ≦ 1000）
+			// N:	シークレットアーティスト候補の数（2 ≦ N ≦ 100）
+			// M:	スタンダードアーティスト候補の数（2 ≦ M ≦ 100)
+			// X:	スタンダードアーティストから選出しなければならない最低人数 (2 ≦ X ≦ M )
+
+int sec_e[MAX_N+1], sec_s[MAX_N+1], e[MAX_M+1], s[MAX_M+1]; 	// シークレットアーティストの雇用資金、
+							// シークレットアーティストの満足度、
+							// スタンダードアーティストの雇用資金、
+							// スタンダードアーティストの満足度。 (1 ≦ se, ss, e, s ≦ 10 )
+
+int dp[MAX_M+1][MAX_M+1][MAX_LIMIT+1];
+
+int solve (void ){
+	memset (sec_e, 0, sizeof (sec_e ) );
+	memset (sec_s, 0, sizeof (sec_s ) );
+	memset (e, 0, sizeof (e ) );
+	memset (s, 0, sizeof (s ) );
+	memset (dp, 0, sizeof (dp ) );
+	string str;
+
+	rep (i, N ) cin >> str >> sec_e[i] >> sec_s[i];	// シークレットアーティスト名、雇用資金、満足度
+	rep (j, M ) cin >> str >> e[j] >> s[j];		// スタンダードアーティスト名、雇用資金、満足度
+	rep (i, M ){
+		for (int k = 0; k <= LIMIT; k++ ){
+			for (int j = 0; j <= i; j++ ){
+				if (k + e[i] <= LIMIT ){
+					dp[i+1][j+1][k+e[i]] = max (dp[i+1][j+1][k+e[i]], dp[i][j][k] + s[i] );
+				} // end if
+				dp[i+1][j][k] = max (dp[i+1][j][k], dp[i][j][k] );
+			} // end for
+		} // end for
+	} // end for
+
+	int res = 0;
+	for (int j = X; j <= M; j++ ){
+		for (int k = 0; k <= LIMIT; k++ ){
+			int remain = LIMIT - k;
+			// 一人雇う場合
+			int curr = 0;
+			rep (i, N ){
+				if (sec_e[i] <= remain )
+					curr = max (curr, sec_s[i] );
+			} // end rep
+			res = max (res, dp[M][j][k] + curr );
+			// 二人雇う場合
+			rep (i, N ){
+				for (int j = i+1; j < N; j++ ){
+					if (sec_e[i] + sec_e[j] <= remain )
+						curr = max (curr, sec_s[i] + sec_s[j] );
+				} // end for
+			} // end rep
+			res = max (res, dp[M][j][k] + curr );
+		} // end for
+	} //  end for
+
+	return res;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	while (cin >> LIMIT >> N >> M >> X, LIMIT ){
+		int res = solve ();
+		cout << res << endl;
+	} // end while
+	
+		
+	return 0;
+}

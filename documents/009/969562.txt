@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+typedef pair<int, int> P;
+typedef pair<int, P> PP;
+
+int main() {
+    int w, h;
+    int dx[] = {0, 1, 0, -1};
+    int dy[] = {1, 0, -1, 0};
+    int wall[100][100];
+    bool has_arrived[30][30];
+    while (true) {
+        queue<PP> q;
+        cin >> w >> h;
+        if (w == 0) {
+            return 0;
+        }
+        for (int i=0; i<2*h-1; i++) {
+            for (int j=0; j<w-1+i%2; j++) {
+                cin >> wall[j][i];
+            }
+        }
+        for (int y=0; y<h; y++) {
+            for (int x=0; x<w; x++) {
+                has_arrived[x][y] = false;
+            }
+        }
+        q.push(PP(1, P(0, 0)));
+        while (!q.empty()) {
+            int count = q.front().first;
+            int x = q.front().second.first;
+            int y = q.front().second.second;
+            if (x == w-1 && y == h-1) {
+                break;
+            }
+            q.pop();
+            for (int i=0; i<4; i++) {
+                int nx = x+dx[i];
+                int ny = y+dy[i];
+                if (nx < 0 || w <= nx || ny < 0 || h <= ny) {
+                    continue;
+                }
+                if (wall[(x+nx)/2][y+ny] == 1) {
+                    continue;
+                }
+                if (has_arrived[nx][ny]) {
+                    continue;
+                }
+                has_arrived[nx][ny] = true;
+                q.push(PP(count+1, P(nx, ny)));
+            }
+        }
+        if (q.empty()) {
+            cout << 0 << endl;
+        }
+        else {
+            cout << q.front().first << endl;
+        }
+    }
+}

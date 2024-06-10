@@ -1,0 +1,70 @@
+#include<cstdio>
+#include<complex>
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+
+using namespace std;
+
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+typedef complex<double> point;
+
+int main(){
+	
+	A:;
+	int n;
+	cin>>n;
+	if(n==0)return 0;
+	
+	point p[333];
+	
+	rep(i,n){
+		double a,b;
+		cin>>a>>b;
+		p[i] = point(a,b);
+	}
+	double eps = 1E-8;
+	int ans = 0;
+	rep(i,n){
+		reps(j,i+1,n){
+			point d = (p[j]-p[i])/point(2,0);
+			double dlen = abs(d);
+			if(dlen>1)continue;
+			
+			//cout<<p[j]<<" "<<p[i]<<" "<<d<<" "<<dlen<<endl;
+			
+			point center = p[i]+d;
+			point e1 = d/point(dlen,0)*point(0,1)*point(sqrt(1-dlen*dlen),0);
+			point e2 = d/point(dlen,0)*point(0,-1)*point(sqrt(1-dlen*dlen),0);
+			
+			point t1 = center+e1;
+			point t2 = center+e2;
+			
+			//cout<<t1<<" "<<t2<<endl;
+			
+			int count1 = 0;
+			int count2 = 0;
+			rep(k,n){
+				if(abs(t1-p[k])<1+eps)count1++;
+				if(abs(t2-p[k])<1+eps)count2++;
+			}
+			
+			ans = max(ans,count1);
+			ans = max(ans,count2);
+		}
+	}
+	
+	printf("%d\n",ans);
+	
+	goto A;
+}
+
+/*
+3
+0 1
+1 0
+1 1
+
+*/

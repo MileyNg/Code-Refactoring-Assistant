@@ -1,0 +1,104 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <set>
+using namespace std;
+typedef pair<int,int> P;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<EPS)
+int n;
+const int SIZE=1<<19;
+P seg[SIZE*2];
+struct segtree
+{
+	segtree()
+	{
+		for(int i=0;i<SIZE*2;i++)seg[i]=P(0,0);
+	}
+	void update(int k,int x)
+	{
+		k+=SIZE-1;
+		seg[k].fi=x;
+		seg[k].sec=k-(SIZE-1);
+		while(k>0)
+		{
+			k=(k-1)/2;
+			seg[k]=max(seg[k*2+1],seg[k*2+2]);
+		}
+	}
+	int get_max_value()
+	{
+		return seg[0].fi;
+	}
+	int get_max_id()
+	{
+		return seg[0].sec;
+	}
+};
+struct bug{int a,b;};
+bool comp(bug p,bug q)
+{
+	if(p.b!=q.b)return p.b > q.b;
+	else return p.a < q.a;
+}
+bug foo[300100];
+bool check(int x)
+{
+	if(x>n)return false;
+	ll sum=0ll;
+	ll limit=foo[x-1].b;
+	segtree seg;
+	for(int i=0;i<x;i++)sum+=foo[i].a;
+	for(int i=0;i<x;i++)seg.update(i,foo[i].a);
+	if(limit*x>=sum)return true;
+	for(int i=x;i<n;i++)
+	{
+		if(seg.get_max_value()<=foo[i].a)continue;
+		limit=foo[i].b;
+		int p=seg.get_max_id();
+		seg.update(p,0);
+		seg.update(i,foo[i].a);
+		sum-=foo[p].a;
+		sum+=foo[i].a;
+		if(limit*x>=sum)return true;
+	}
+	return false;
+}
+int main()
+{
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)scanf("%d %d",&foo[i].a,&foo[i].b);
+	sort(foo,foo+n,comp);
+	int l=0,r=n+1;
+	while(r-l>1)
+	{
+		int mid=(l+r)/2;
+		if(check(mid))l=mid;
+		else r=mid;
+	}
+	printf("%d\n",l);
+	return 0;
+}

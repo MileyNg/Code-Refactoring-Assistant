@@ -1,0 +1,21 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main() {
+    double s,m;
+    char a[8],c[8][8]={"black","blue","lime","aqua","red","fuchsia","yellow","white"},h[17]="0123456789abcdef";
+    int d[8][3]={{0,0,0},{0,0,255},{0,255,0},{0,255,255},{255,0,0},{255,0,255},{255,255,0},{255,255,255}},
+        w[6],i,j,e,r,g,b;
+    while(cin >> a) {
+		if (a[0]=='0') break;
+		for (i=0;i<6;i++)  for (j=0;j<16;j++) if (a[i+1]==h[j]) w[i]=j;
+		s=99999999; r=w[0]*16+w[1]; g=w[2]*16+w[3]; b=w[4]*16+w[5]; 
+		for (i=0;i<8;i++) {
+		 m=sqrt((r-d[i][0])*(r-d[i][0])+(g-d[i][1])*(g-d[i][1])+(b-d[i][2])*(b-d[i][2]));
+		 if (m<s) { s=m; e=i;};
+	 }
+	 cout << c[e] << endl;
+ }	
+ return 0;
+}

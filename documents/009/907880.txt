@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Arg {
+  int x, y, t;
+  bool operator < (const Arg &a) const {
+    if(y * a.x == a.y * x) return t < a.t;
+    else y * a.x < a.y * x;
+  }
+};
+
+int H, W;
+map<int,map<int,char> > G;
+
+int main() {
+  cin >> H >> W;
+  for(int i = 0; i < H; ++i) {
+    for(int j = 0; j < W; ++j) {
+      cin >> G[i][j];
+    }
+  }
+  vector<Arg> v;
+  for(int i = 0; i <= H; ++i) {
+    for(int j = 0; j <= W; ++j) {
+      bool a = G[i-1][j-1] == '#';
+      bool b = G[i-1][j]   == '#';
+      bool c = G[i][j-1]   == '#';
+      bool d = G[i][j]     == '#';
+      if( a && !b && !c && !d) v.push_back((Arg){j, H-i,  1});
+      if(!a &&  b &&  c &&  d) v.push_back((Arg){j, H-i,  1});
+      if(!a && !b && !c &&  d) v.push_back((Arg){j, H-i, -1});
+      if( a &&  b &&  c && !d) v.push_back((Arg){j, H-i, -1});
+    }
+  }
+  sort(v.begin(), v.end());
+  int now = 1, maxi = now;
+  for(int i = 0; i < v.size(); ++i) {
+    now += v[i].t;
+    maxi = max(maxi, now);
+  }
+  cout << maxi << endl;
+  return 0;
+}

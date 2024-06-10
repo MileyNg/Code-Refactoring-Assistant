@@ -1,0 +1,21 @@
+while (line = gets)
+  as = line.chop.split(" ").map { |s| s.to_i }
+  bs = gets.chop.split(" ").map { |s| s.to_i }
+
+  h = 0
+  b = 0
+
+  for i in (0..3)
+    for j in (0..3)
+      if as[i] == bs[j]
+        if i == j
+          h += 1
+        else
+          b += 1
+        end
+      end
+    end
+  end
+
+  puts [h, b].join(" ")
+end

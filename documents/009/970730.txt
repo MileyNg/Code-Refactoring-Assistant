@@ -1,0 +1,30 @@
+def get_k(ws, p)
+  k = 1
+  rest = p
+  diffs = []
+  ws.each do |w|
+    if rest < w
+      k += 1
+      diffs << w - rest
+      rest = p
+    end
+    rest -= w
+  end
+  [k, diffs.min]
+end
+
+n, k = gets.split.map(&:to_i)
+ws = []
+n.times do
+  ws << gets.to_i
+end
+
+p = ws.max
+
+loop do
+  gk, min = get_k(ws, p)
+  break if gk <= k
+  p += min
+end
+
+puts p

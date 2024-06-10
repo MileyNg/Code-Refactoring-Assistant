@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,b) (0<=(a)&&(a)<(b))
+using namespace std;
+
+int dx[] = {-2,-2,-2,2,2,2,-1,0,1,-1,0,1}, dy[] = {-1,0,1,-1,0,1,-2,-2,-2,2,2,2};
+
+int main(){
+  int px, py, n, s[10][2]; // s[][0]: y s[][1]: x
+  while(scanf("%d%d", &px, &py) && px+py){
+    scanf("%d", &n);
+    for(int i = 0; i < n; ++i) scanf("%d%d", &s[i][1], &s[i][0]);
+
+    queue<int> xq, yq;
+    xq.push(px); yq.push(py);
+    for(int i = 0; i < n; ++i){
+      if(xq.empty()) break;
+      int q_size = (int)xq.size();
+      for(int j = 0; j < q_size; ++j){
+	int x = xq.front(); xq.pop();
+	int y = yq.front(); yq.pop();
+	for(int k = 0; k < 12; ++k){
+	  int nx = x + dx[k], ny = y + dy[k];
+	  if(!(BW(nx,10)&&BW(ny,10) && abs(s[i][0]-ny) <= 1 && abs(s[i][1]-nx))) continue;
+	  xq.push(nx); yq.push(ny);
+	}
+      }
+    }
+    if(xq.empty()) puts("NA");
+    else puts("OK");
+  }
+  return 0;
+}

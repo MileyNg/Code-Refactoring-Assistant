@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+#define MAX 50
+
+int N, day;
+bool ok[MAX][31];
+bool G[MAX][MAX];
+bool visited[MAX];
+
+void init(){
+  day = 0;
+  memset(ok, false, sizeof(ok));
+  memset(G, false, sizeof(G));
+}
+
+void rec(int now){
+  for(int i = 0 ; i < N ; i++){
+    if(!visited[i] && G[now][i]){
+      visited[i] = true;
+      rec(i);
+    }
+  }
+}
+
+bool check(){
+  for(int i = 0 ; i < N ; i++){
+    memset(visited, false, sizeof(visited));
+    visited[i] = true;
+    rec(i);
+    if(count(visited, visited+N, true) == N){
+      return true;
+    }
+  }
+  return false;
+}
+
+int solve(){
+  int ans = -1;
+  for(int i = 0 ; i < day ; i++){
+    for(int j = 0 ; j < N-1 ; j++){
+      if(!ok[j][i]) continue;
+      for(int k = j+1 ; k < N ; k++){
+        if(ok[k][i]){
+          G[j][k] = G[k][j] = true;
+        }
+      }
+    }
+    if(check()){
+      ans = i+1;
+      break;
+    }
+  }
+  return ans;
+}
+
+int main(){
+  int K, in;
+  while(cin >> N && N){
+    init();
+    for(int i = 0 ; i < N ; i++){
+      cin >> K;
+      for(int j = 0 ; j < K ; j++){
+        cin >> in;
+        ok[i][in-1] = true;
+        day = max(day, in);
+      }
+    }
+    cout << solve() << endl;
+  }
+
+  return 0;
+}

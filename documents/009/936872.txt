@@ -1,0 +1,7 @@
+gcd = ->(a, b){ b == 0 ? a : gcd[b, a % b] }
+
+while line = gets
+  a, b = line.split(" ").map(&:to_i)
+  g = gcd[a, b]
+  puts "#{g} #{a / g * b}"
+end

@@ -1,0 +1,18 @@
+#include<stdio.h>
+#include<stdlib.h>
+int cmp(const void* a,const void* b)
+{
+	int* c=(int*)a;
+	int* d=(int*)b;
+	return *d-*c;
+}
+int main()
+{
+	int a[10];
+	int i;
+	for(i=0;i<10;i++)
+		scanf("%d",&a[i]);
+	qsort(a,10,sizeof(int),cmp);
+	printf("%d\n%d\n%d\n",a[0],a[1],a[2]);
+	return 0;
+}

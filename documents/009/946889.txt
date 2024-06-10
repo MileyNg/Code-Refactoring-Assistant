@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count __gcd reverse etc.
+#include <cstdlib>	// require abs exit atof atoi 
+#include <cstdio>		// require scanf printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>		// require fabs
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>		// require tolower, toupper
+#include <fstream>	// require freopen
+#include <ctime>		// require srand
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define ALL(A) A.begin(), A.end()
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> P;
+const int MAX_N = (int)1e4 + 4;
+int s[MAX_N], t[MAX_N];
+
+string omit_colon (string s ){
+	int n = s.length();
+	rep (i, n ){
+		if (s[i] == ':' ) s[i] = ' ';
+	} // end rep
+
+	return s;
+}
+
+int time2s (string s ){
+	int h, m, sec;
+	stringstream ss (s );
+	ss >> h >> m >> sec;
+
+	return (h*60*60 + m*60 + sec );
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	int N;
+	while (cin >> N, N ){
+		memset (s, 0, sizeof (s ) );
+		memset (t, 0, sizeof (t ) );
+		rep (i, N ){
+			string ss = "", tt = ""; cin >> ss >> tt;
+			ss = omit_colon (ss );
+			tt = omit_colon (tt );
+ 			s[i] = time2s (ss );
+			t[i] = time2s (tt );
+		} // end rep
+
+		queue<int> que;
+		que.push (t[0] );
+		int res = que.size();
+		for (int i = 1; i < N; i++ ){
+			while (!que.empty() && que.front() <= s[i]   ){
+				que.pop();
+			} // end while
+
+			if (que.empty() || que.front() > s[i] ){
+				que.push (t[i] );
+				res = max (res, (int)que.size() );
+			} // end if
+//			cerr << "que_size: " << (int)que.size() << endl;
+		} // end for
+		cout << res << endl;
+
+	} // end while
+		
+	return 0;
+}

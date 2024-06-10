@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 10;
+const double inf = 1e10;
+
+int n;
+string f[MAXN];
+int w[MAXN], s[MAXN];
+double minG;
+vector<int> t, ans, used;
+
+void rec(int k, int sumww, int sumw) {
+  if(k == -1) {
+    double G = (double)sumww/(double)sumw;
+    if(G < minG) {
+      ans = t;
+      minG = G;
+    }
+    return;
+  }
+  for(int i = 0; i < n; ++i) {
+    t[k] = i;
+    if(used[t[k]]) continue;
+    if(s[t[k]] >= sumw) {
+      used[t[k]] = true;
+      rec(k-1, sumww + (k+1)*w[t[k]], sumw + w[t[k]]);
+      used[t[k]] = false;
+    }
+  }
+}
+
+int main() {
+  for(; cin >> n, n;) {
+    for(int i = 0; i < n; ++i) {
+      cin >> f[i] >> w[i] >> s[i];
+    }
+    minG = inf;
+    t = used = vector<int>(n);
+    rec(n-1, 0, 0);
+    for(int i = 0; i < n; ++i) {
+      cout << f[ans[i]] << endl;
+    }
+  }
+  return 0;
+}

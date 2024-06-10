@@ -1,0 +1,27 @@
+#include<iostream>
+#include<set>
+#include<utility>
+
+using namespace std;
+
+int N;
+int x[50],y[50];
+
+int main(){
+  cin>>N;
+  for(int i=0;i<N;i++){
+    cin>>x[i]>>y[i];
+  }
+  set<pair<int,int> >s;
+  for(int i=0;i+N/2<N;i++){
+    s.insert(make_pair(x[i]+x[i+N/2],y[i]+y[i+N/2]));
+  }
+  if(N%2==1||s.size()>1){
+    cout<<"NA"<<endl;
+  }else{
+    auto p=*begin(s);
+    cout<<fixed<<p.first/2.<<' '<<p.second/2.<<endl;
+  }
+}
+
+  

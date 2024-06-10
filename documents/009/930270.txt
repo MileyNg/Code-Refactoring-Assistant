@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+using namespace std;
+int INF = pow(2,31) - 1;
+int n;
+void powset(int size){
+  n = 1;
+  while( n < size ) n *= 2;
+}
+
+struct RMQ{
+  vector< int > seg;
+  void update( int i, int x){
+    i += n - 1;
+    seg[i] = x;
+    while(i > 0){
+      i = ( i - 1 ) / 2;
+      seg[i] = min( seg[i * 2 + 1], seg[i * 2 + 2]);
+    }
+  }
+  int query( int a, int b, int k, int l, int r){
+    if( r <= a || b <= l ) return INF;
+    if( a <= l && r <= b ) return seg[k];
+    int vl = query( a, b, k * 2 + 1, l, (l + r) / 2);
+    int vr = query( a, b, k * 2 + 2, (l + r) / 2, r);
+    return min( vl, vr);
+  }
+  int query( int a, int b){
+    return query( a, b, 0, 0, n);
+  }
+  RMQ(){
+    seg.assign( n * 2 - 1, INF);
+  }
+};
+
+int main(){
+  int R, C, Q;
+  while(scanf("%d %d %d", &R, &C, &Q), R){
+    if(R < C){
+      powset(C);
+      vector< RMQ > rmq( R, RMQ());
+      for(int i = 0; i < R; i++){
+        for(int j = 0; j < C; j++){
+          int grid;
+          scanf("%d", &grid);
+          rmq[i].update(j,grid);
+        }
+      }
+      while(Q--){
+        int r1, c1, r2, c2;
+        scanf("%d %d %d %d", &r1, &c1, &r2, &c2);
+        int ret = INF;
+        for(int i = r1; i <= r2; i++){
+          ret = min( ret, rmq[i].query( c1, c2 + 1));
+        }
+        printf("%d\n", ret);
+      }
+    }else{
+      powset(R);
+      vector< RMQ > rmq( C, RMQ());
+      for(int i = 0; i < R; i++){
+        for(int j = 0; j < C; j++){
+          int grid;
+          scanf("%d",&grid);
+          rmq[j].update(i,grid);
+        }
+      }
+      while(Q--){
+        int r1, c1, r2, c2;
+        scanf("%d %d %d %d", &r1, &c1, &r2, &c2);
+        int ret = INF;
+        for(int i = c1; i <= c2; i++){
+          ret = min( ret, rmq[i].query( r1, r2 + 1));
+        }
+        printf("%d\n", ret);
+      }
+    }
+  }
+}

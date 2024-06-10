@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+class Node{
+    public:
+        int id;
+        int parent;
+        int depth;
+        string type;
+        vector<int> child;
+        Node():id(-1),parent(-1),depth(-1),type(""){};
+};
+
+vector<Node> root;
+
+void dfs(int id,int d){
+    if(root[id].depth<d)
+        root[id].depth=d;
+    for(int i=0;i<root[id].child.size();i++){
+        dfs(root[id].child[i],d+1);
+    }
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0); 
+
+    int n, num,tmp;
+    cin>>n;
+    for(int i=0;i<n;i++){
+        Node node;
+        cin>>node.id>>num;
+        for(int j=0;j<num;j++){
+            cin>>tmp;
+            node.child.push_back(tmp);
+        }
+        root.push_back(node);
+    }
+
+    sort(begin(root),end(root),
+            [](const Node &r, const Node &l){
+            return r.id < l.id;
+    });
+
+   for(int i=0; i<n; i++){
+        for(int j=0; j<root[i].child.size(); j++){
+            root[root[i].child[j]].parent=root[i].id;
+            /*親をセット*/
+        }
+   }
+   /*深さをセット*/
+   for(int i=0;i<n;i++){
+       dfs(i,0);
+   }
+   for(int i=0;i<n;i++){  
+        if(root[i].parent==-1){
+            root[i].type="root,";
+        }else{
+            if(root[i].child.size()!=0){
+                root[i].type="internal node";
+            }else{
+                root[i].type="leaf";
+            }
+        }
+    }
+
+    for(int i=0; i<n; i++){
+        cout<<"node "<<root[i].id<<": parent = "<<root[i].parent<<", depth = "<<root[i].depth<<", "<<root[i].type<<" [";
+        for(int j=0;j<root[i].child.size();j++){
+            cout<<root[i].child[j];
+            if(j!=root[i].child.size()-1){
+               cout<<", ";
+            }
+        }
+        cout<<"]"<<endl;
+    }
+
+    return 0; 
+}

@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define between(a,x,b) ((a)<=(x)&&(x)<=(b))
+using namespace std;
+
+char convert(char c, int f){
+  char ret = c;
+  while(f--){
+    ret--;
+    if(ret == 64) ret += 58;
+    if(ret == 96) ret -= 6;
+  }
+  return ret;
+}
+
+int main(){
+  int n, k, tmp;
+  while(scanf("%d", &n) && n){
+    queue<int>q;
+    char s[128];
+    rep(i, n){ scanf("%d", &k); q.push(k);}
+    scanf("%s", s);
+    rep(i, strlen(s)){
+      tmp = q.front();
+      s[i] = convert(s[i], tmp);
+      q.pop(); q.push(tmp);
+    }
+    puts(s);
+  }
+  return 0;
+}

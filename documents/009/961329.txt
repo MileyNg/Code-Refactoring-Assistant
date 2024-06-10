@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <tuple>
+
+using namespace std;
+
+typedef long long ll;
+#define rep(i, n) for(int i=0; i<(n); ++i)
+const int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+
+int H, W;
+ll L;
+vector<string> maze;
+vector<vector<vector<ll> > > vis;
+
+inline bool inrect(int x, int y){
+    return 0 <= x && x < H && 0 <= y && y < W;
+}
+
+tuple<int, int, char> solve(){
+    vis.assign(H, vector<vector<ll> >(W, vector<ll>(4, -1)));
+    int x = 0, y = 0, d = 0;
+    rep(i, H)rep(j, W)rep(k, 4)if(maze[i][j] == "NESW"[k]){
+        x = i; y = j; d = k;
+        break;
+    }
+    for(ll step=0; step<=L; ++step){
+        if(vis[x][y][d] != -1){
+            L = vis[x][y][d] + (L - step) % (step - vis[x][y][d]);
+            break;
+        }
+        vis[x][y][d] = step;
+        int nx = x + dx[d], ny = y + dy[d];
+        while(!inrect(nx, ny) || maze[nx][ny] == '#'){
+            (d += 1) %= 4;
+            nx = x + dx[d]; ny = y + dy[d];
+        }
+        x = nx; y = ny;
+    }
+    rep(i, H)rep(j, W)rep(k, 4)if(vis[i][j][k] == L){
+        x = i; y = j; d = k;
+        break;
+    }
+    return make_tuple(x+1, y+1, "NESW"[d]);
+}
+
+int main(){
+    while(cin >> H >> W >> L, H|W|L){
+        maze.assign(H, "");
+        rep(i, H)cin >> maze[i];
+        int x, y; char d;
+        tie(x, y, d) = solve();
+        cout << x << ' ' << y << ' ' << d << '\n';
+    }
+    return 0;
+}

@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define loop(i,a,b) for(int i=(a); i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+
+short dp[5010][5010] = {};
+
+int main(){
+    int n, m; cin >> n >> m;
+    rep(i, m){
+        int x, y, c; cin >> x >> y >> c;
+        x--, y--, c++;
+        dp[x][y] = c;
+    }
+
+    loop(i, 1, n)rep(j, i + 1){
+        int t = -100;
+        if (j - 1 >= 0) t = max(t, dp[i - 1][j - 1] - 1);
+        if (j < i + 1) t = max(t, dp[i - 1][j] - 1);
+        dp[i][j] = max<short>(dp[i][j], t);
+    }
+
+    int ans = 0;
+    rep(i, n){
+        rep(j, i + 1){
+            // cout << dp[i][j] << " ";
+            if (dp[i][j]) ans++;
+        }
+        // cout << endl;
+    }
+
+    cout << ans << endl;
+}

@@ -1,0 +1,25 @@
+loop do
+  s = gets.split //
+  break if s[0] == '.'
+  res = true
+  a = []
+  s.each do |c|
+    case c
+    when '[' then
+      a.push '['
+    when ']' then
+      if a.pop != '['
+        res = false
+        break
+      end
+    when '(' then
+      a.push '('
+    when ')' then
+      if a.pop != '('
+        res = false
+        break
+      end
+    end
+  end
+  puts res ? 'yes' : 'no'
+end

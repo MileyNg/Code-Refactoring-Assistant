@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstdio>
+#include <numeric>
+using namespace std;
+
+int main(void){
+  int n,m;
+
+  for(;;){
+    scanf("%d %d",&n,&m);
+    if(n==0 && m==0){return 0;}
+    int h[n],t[m];
+    
+    for(int i=0;i<n;i++)
+      scanf("%d",&h[i]);
+    for(int i=0;i<m;i++)
+      scanf("%d",&t[i]);
+  
+    int h_sum = accumulate(h,h+n,0);
+    int m_sum = accumulate(t,t+m,0);
+
+    int sa = h_sum - m_sum;
+
+    //sa = 5 h_dasu - t_dasu = 5
+
+    int ans1,ans2,sum=201;
+    for(int i=0;i<n;i++){
+      for(int j=0;j<m;j++){
+	if(2*h[i]-2*t[j]==sa && h[i]+t[j]<sum){
+	  ans1=h[i];ans2=t[j];
+	  sum=ans1+ans2;
+	}
+      }
+    }
+    
+    if(sum==201)
+      printf("-1\n");
+    else
+      printf("%d %d\n",ans1,ans2);
+  }
+  return -1;
+}

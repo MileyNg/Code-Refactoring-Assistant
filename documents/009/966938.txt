@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+
+const int MAX_TIME = 10;
+int W, H;
+int map[21][21];
+
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+
+int solver(int cx, int cy, int time) {
+	if (time > MAX_TIME) return MAX_TIME + 1;
+	
+	int ret = MAX_TIME + 1;
+	for (int d=0; d<4; d++) {
+		if (map[cy + dy[d]][cx + dx[d]] == 1) continue;
+		
+		bool stop = true;
+		int stopx = cx, stopy = cy;
+		
+		while (1) {
+			if (map[stopy + dy[d]][stopx + dx[d]] == 1) break;
+			
+			stopy += dy[d]; stopx += dx[d];
+			
+			if (stopy < 0 || stopy >= H || stopx < 0 || stopx >= W) {
+				stop = false;
+				break;
+			}
+			if (map[stopy][stopx] == 3) {
+				stop = false;
+				if (time < MAX_TIME) ret = min(ret, time + 1);
+				break;
+			}
+		}
+		
+		if (stop) {
+			map[stopy+dy[d]][stopx+dx[d]] = 0;
+			ret = min(ret, solver(stopx, stopy, time + 1));
+			map[stopy+dy[d]][stopx+dx[d]] = 1;
+		}
+	}
+	return ret;
+}
+
+int main() {
+	while (1) {
+		cin >> W >> H; if (W==0 && H==0) break;
+		
+		memset(map, 0, sizeof(map));
+		
+		int sx, sy;
+		for (int y = 0; y < H; y++) {
+			for (int x = 0; x < W; x++) {
+				cin >> map[y][x];
+				if (map[y][x] == 2) {
+					sx = x; sy = y;
+				}
+			}
+		}
+		
+		int ans = solver(sx, sy, 0);
+		if (ans == MAX_TIME + 1) cout << -1 << endl;
+		else cout << ans << endl;
+	}
+	
+	return 0;
+}

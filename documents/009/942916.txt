@@ -1,0 +1,156 @@
+#include<stdint.h>
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<functional>
+#include<map>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+const int INF = 100000000;
+//町,村の数
+int n;
+//道の数
+int m;
+//集配先の数
+int R;
+
+//集配順序
+int z[1003];
+
+typedef pair<int,int> P;
+typedef pair<pair<int,int>,pair<int,int> > PP;
+
+struct edge
+{
+	int to;
+	//陸なら1
+	int mode;
+	int cost;
+	edge(int to,int mode,int cost) {
+		this->to = to;
+		this->mode = mode;
+		this->cost = cost;
+	}
+
+};
+
+vector<edge> G[207];
+int dist[203][203][1003];
+
+int dijkstra() {
+	for (int i = 0; i < 203; i++)
+	{
+		for (int j = 0; j < 203; j++)
+		{
+			fill(dist[i][j],dist[i][j]+1003,INF);
+		}
+	}
+	priority_queue<PP,vector<PP>, greater<PP> > que;
+
+	dist[0][0][0]=0;
+
+	que.push(PP(P(0,0),P(0,0)));
+
+	while (!que.empty())
+	{
+		PP pp = que.top(); que.pop();
+
+		int cost = pp.first.first;
+		int v=pp.first.second;
+		int u=pp.second.first;
+		int index = pp.second.second;
+		
+
+		if(z[index] == v) {
+			dist[v][u][index+1]=dist[v][u][index];
+			index++;
+		}
+
+		if(index == R) {
+			//dist[v][u][index+1]=dist[v][u][index];
+			break;
+		}
+
+		if(dist[v][u][index] < cost) {
+			continue;
+		}
+
+
+		//printf("[debug] %d %d %d %d\n",cost,v,u,index);
+		for (int i = 0; i < G[v].size(); i++)
+		{
+			edge e = G[v][i];
+			//printf("        %d %d %d\n",e.to,e.mode,e.cost);
+
+			//船を使う
+			if(u==v && e.mode == 0) {
+				//printf("%d,%d\n",dist[e.to][e.to][index],dist[v][u][index]);
+				if(dist[e.to][e.to][index] > dist[v][u][index] + e.cost) {
+					dist[e.to][e.to][index] = dist[v][u][index] + e.cost;
+					que.push(PP(P(dist[e.to][e.to][index],e.to),P(e.to,index)));
+				}
+			}
+			if(e.mode == 1) {
+				if(dist[e.to][u][index] > dist[v][u][index] + e.cost) {
+					dist[e.to][u][index] = dist[v][u][index] + e.cost;
+					que.push(PP(P(dist[e.to][u][index],e.to),P(u,index)));
+				}
+			}
+
+		}
+	}
+
+	int ans=INF;
+
+	for (int i = 0; i < 203; i++)
+	{
+		ans=min(ans,dist[z[R-1]][i][R-1]);
+	} 
+
+	return ans;
+
+
+}
+
+
+void solve() {
+	for (int i = 0; i < m; i++)
+	{
+		int x,y,t;
+		char c;
+		//x-y はコスト t で c によって結ばれている
+		
+		cin>>x>>y>>t>>c;
+		x--;
+		y--;
+		
+		G[x].push_back(edge(y,c=='L',t));
+		G[y].push_back(edge(x,c=='L',t));
+	}
+
+	cin>>R;
+
+	for (int i = 0; i < R; i++)
+	{
+		cin>>z[i];
+		z[i]--;
+	}
+
+	cout<<dijkstra()<<endl;
+
+}
+
+int main() {
+
+	while (cin>>n>>m)
+	{
+		if(n+m==0) return 0;
+		solve();
+
+	}
+
+	return 0;
+}

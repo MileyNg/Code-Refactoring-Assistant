@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <math.h>
+
+int hantei(int);
+
+int main()
+{
+  int sei[10000], N, i, count = 0;
+  scanf("%d", &N);
+  for(i = 0; i < N; i++){
+    scanf("%d", &sei[i]);
+    count += hantei(sei[i]);
+  }
+  
+  printf("%d\n", count);
+  return 0;
+}
+
+int hantei(int x)
+{
+  int i = 3;
+  if(x == 2) return 1;
+  if(x < 2 || x % 2 == 0) return 0;
+
+  while(i <= sqrt(x)){
+    if(x % i == 0) return 0;
+    i += 2;
+  }
+  return 1;
+}
