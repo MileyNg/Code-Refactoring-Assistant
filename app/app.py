@@ -16,17 +16,18 @@ def serve_index():
 @app.route('/analyze', methods=['POST'])
 def analyze_code():
     code = request.json['code']
-    complexity = calculate_cyclomatic_complexity(code)
-    loc = calculate_lines_of_code(code)
-    maintainability_index = calculate_maintainability_index(code)
-    halstead_metrics = calculate_halstead_metrics(code)
-    result = {
-        'complexity': complexity,
-        'loc': loc,
-        'maintainability_index': maintainability_index,
-        'halstead_metrics': halstead_metrics
-    }
-    print("Analysis Results:", result)
+    # complexity = calculate_cyclomatic_complexity(code)
+    # loc = calculate_lines_of_code(code)
+    # maintainability_index = calculate_maintainability_index(code)
+    # halstead_metrics = calculate_halstead_metrics(code)
+    # result = {
+    #     'complexity': complexity,
+    #     'loc': loc,
+    #     'maintainability_index': maintainability_index,
+    #     'halstead_metrics': halstead_metrics
+    # }
+    # print("Analysis Results:", result)
+    result = analyze_refactored_code(code)
     return jsonify(result)
 
 @app.route('/refactor', methods=['POST'])
@@ -51,7 +52,7 @@ def refactor_again():
     #     prompt=combined_prompt,
     #     max_tokens=1024
     # ).choices[0].text
-    analyze(further_refactored_code)
+    analyze_refactored_code(further_refactored_code)
     return jsonify({'further_refactored_code': further_refactored_code})
 
 # @app.route('/refactor_again', methods=['POST'])
@@ -81,19 +82,19 @@ def calculate_maintainability_index(code):
 def calculate_halstead_metrics(code):
     return h_visit(code)
 
-def analyze(code):
+def analyze_refactored_code(code):
     complexity = calculate_cyclomatic_complexity(code)
     loc = calculate_lines_of_code(code)
     maintainability_index = calculate_maintainability_index(code)
     halstead_metrics = calculate_halstead_metrics(code)
-    analysis_results = {
-        'complexity': complexity,
+    result = {
+        'cyclomatic complexity': complexity,
         'loc': loc,
         'maintainability_index': maintainability_index,
         'halstead_metrics': halstead_metrics
     }
-    print_analysis_results(analysis_results)
-    return jsonify(analysis_results)
+    print_analysis_results(result)
+    return result
 
 def print_analysis_results(results):
     print("\nAnalysis Results:")
