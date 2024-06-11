@@ -1,4 +1,4 @@
-## How to run code
+# How to run code
 
 - add .env with Openai API key as OPENAI_API_KEY in /app folder
 - run app.py 
