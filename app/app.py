@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory
-import openai
+from openai import OpenAI
 from radon.complexity import cc_visit
 from radon.metrics import h_visit, mi_visit
 from radon.raw import analyze
@@ -9,7 +9,7 @@ from radon.raw import analyze
 app = Flask(__name__, static_folder="static")
 
 load_dotenv(dotenv_path=".env")
-openai.api_key = os.getenv("YOUR_OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route("/")
 def serve_index():
@@ -24,51 +24,48 @@ def analyze_code():
 @app.route("/refactor", methods=["POST"])
 def refactor_code():
     code = request.json["code"]
-    refactored_code = code
-    # refactored_code = openai.Completion.create(
-    #     engine="gpt-4",
-    #     prompt=f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Python programs should be in a code block. Do not explain anything in natural language.: {code}",
-    #     max_tokens=1024
-    # ).choices[0].text
-    return jsonify({"refactored_code": refactored_code})
-
-# @app.route("/refactor_again", methods=["POST"])
-# def refactor_again():
-#     original_code = request.json["original_code"]
-#     refactored_code = request.json["refactored_code"]
-#     combined_prompt = f"Refactor this code again but better considering the following previous refactor: \nOriginal Code: {original_code}\nRefactored Code: {refactored_code}"
-#     further_refactored_code = combined_prompt
-#     # further_refactored_code = openai.Completion.create(
-#     #     engine="gpt-4",
-#     #     prompt=combined_prompt,
-#     #     max_tokens=1024
-#     # ).choices[0].text
-#     analyze_refactored_code(further_refactored_code)
-#     return jsonify({"further_refactored_code": further_refactored_code})
+    print(code)
+    try:
+        response = client.chat.completions.create(
+            model = "gpt-4",
+            messages = [
+                {"role": "system", "content": "You are a code refactoring assistant, skilled in refactoring code without changing its functionality. You only give a refactored functioning python code without any explanation or anything else."},
+                {"role": "user", "content": f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Do not explain anything in natural language.: {code}"}
+            ]
+        )
+        refactored_code = response.choices[0].message
+        print(refactored_code)
+        return jsonify({"refactored_code": refactored_code.content})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/refactor_again", methods=["POST"])
 def refactor_again():
     original_code = request.json["original_code"]
     refactor_history = request.json["refactor_history"]
-    combined_prompt = f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Python programs should be in a code block. Do not explain anything in natural language.:\n {original_code}\n"
-    for i, refactor in enumerate(refactor_history):
-        j = i + 1
-        combined_prompt += f"Refactor again but even better {j}:\n {refactor}\n"
-    further_refactored_code = combined_prompt
-    # combined_prompt = "Can you refactor the code even better:\n"
-    # for i, code in enumerate(refactor_history):
-    #     combined_prompt += f"Refactor {i+1}: {code}\n"
-    # further_refactored_code = openai.Completion.create(
-    #     engine="gpt-4",
-    #     prompt=combined_prompt,
-    #     max_tokens=1024
-    # ).choices[0].text
-    # analyze_refactored_code(further_refactored_code)    
-    return jsonify({"further_refactored_code": further_refactored_code})
+    combined_prompt = [
+                {"role": "system", "content": "You are a code refactoring assistant, skilled in refactoring code without changing its functionality. You only give a refactored functioning python code without any explanation or anything else."},
+                {"role": "user", "content": f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Do not explain anything in natural language.: {original_code}"}
+            ]
+    for refactor in enumerate(refactor_history):
+        # combined_prompt += f"Refactor again but even better {j}:\n {refactor}\n"
+        combined_prompt.append(
+            {"role": "user", "content": f"Refactor again but even better:\n{refactor}"}
+        )
+    try:
+        response = client.chat.completions.create(
+            model = "gpt-4",
+            messages = combined_prompt,
+        )
+        further_refactored_code = response.choices[0].message
+        print(further_refactored_code)
+        analysis = analyze_refactored_code(further_refactored_code.content)
+        return jsonify({"further_refactored_code": further_refactored_code.content, "analysis": analysis})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 def calculate_cyclomatic_complexity(code):
     return sum(block.complexity for block in cc_visit(code))
-   # return ComplexityVisitor.from_code(code).functions
 
 def calculate_lines_of_code(code):
     return analyze(code).loc
