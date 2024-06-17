@@ -1,130 +1,97 @@
 import os
 from dotenv import load_dotenv
 import requests
-import pandas as pd
 import time
+import pandas as pd
+from validate_test_code import login_to_judge, get_submission_records, get_problem_id, submit_code, check_submission_status, read_test_codes_from_folder
 
+load_dotenv(dotenv_path="./app/.env")
 
-load_dotenv(dotenv_path="../app/.env")
-
-JUDGE_API_APP_URL = "https://judgeapi.u-aizu.ac.jp"
+judge_api = "https://judgeapi.u-aizu.ac.jp"
 APP_URL = os.getenv("APP_URL")
 USERNAME = os.getenv("AOJ_USERNAME")
 PASSWORD = os.getenv("AOJ_PASSWORD")
+test_code_folder = "./test_code/selected"
+result_csv_file = "./documents/analysis_results6.csv"
 
-def get_initial_metrics(code):
-    response = requests.post(f"{APP_URL}/analyze", json={"code": code})
+def analyze_code(code):
+    response = requests.post(f"{APP_URL}/analyze", json={"code": code}, timeout=30)
     return response.json()
 
 def refactor_code(code):
-    response = requests.post(f"{APP_URL}/refactor", json={"code": code})
+    response = requests.post(f"{APP_URL}/refactor", json={"code": code}, timeout=60)
     return response.json()["refactored_code"]
 
 def refactor_code_again(original_code, refactor_history):
-    response = requests.post(f"{APP_URL}/refactor_again", json={
-        "original_code": original_code,
-        "refactor_history": refactor_history
-    })
-    return response.json()["further_refactored_code"]
+    response = requests.post(f"{APP_URL}/refactor_again", json={"original_code": original_code, "refactor_history": refactor_history}, timeout=60)
+    return response.json()["further_refactored_code"], response.json()["analysis"]
 
-def login_to_judge():
-    response = requests.post(f"{JUDGE_API_APP_URL}/session", json={
-        "id": USERNAME,
-        "password": PASSWORD
-    })
-    return response.cookies
-
-def submit_code(problem_id, language, source_code, cookies):
-    response = requests.post(f"{JUDGE_API_APP_URL}/submissions", json={
-        "problemId": problem_id,
-        "language": language,
-        "sourceCode": source_code
-    }, cookies=cookies)
-    return response.json()["token"]
-
-def check_submission_status(cookies):
-    response = requests.get(f"{JUDGE_API_APP_URL}/submission_records/users/{USERNAME}", cookies=cookies)
-    records = response.json()
-    if not records:
-        return None
-    latest_submission = records[0]
-    return latest_submission["status"] == 4, latest_submission["token"]
-
-def run_experiment(code, problem_id, iterations):
+def evaluate_prototype():
     cookies = login_to_judge()
-    data = []
-    original_metrics = get_initial_metrics(code)
-    refactor_history = [refactor_code(code)]
+    if not cookies:
+        print("Validation aborted due to login failure.")
+        return
+    submission_records = get_submission_records()
+    test_codes = read_test_codes_from_folder(test_code_folder)
+    results = []
 
-    for i in range(1, iterations + 1):
-        metrics = get_initial_metrics(refactor_history[-1])
-        token = submit_code(problem_id, "Python3", refactor_history[-1], cookies)
-        time.sleep(5)  # Wait for the submission to be judged
-        is_accepted, submission_token = check_submission_status(cookies)
+    for filename, code in test_codes.items():
+        print(f"Evaluating {filename}...")
+        judge_id = os.path.splitext(filename)[0]
+        problem_id = get_problem_id(judge_id, submission_records)
+        if problem_id is None:
+            print(f"Problem ID for judge_id {judge_id} not found.")
+            continue
 
-        data.append({
-            "iteration": i,
-            "cyclic_complexity": metrics["cyclic_complexity"],
-            "loc": metrics["loc"],
-            "maintainability_index": metrics["maintainability_index"],
-            "halstead_volume": metrics["halstead_volume"],
-            "halstead_difficulty": metrics["halstead_difficulty"],
-            "halstead_effort": metrics["halstead_effort"],
-            "status": "ACCEPTED" if is_accepted else "REJECTED",
-            "token": submission_token
+        initial_analysis = analyze_code(code)
+        results.append({
+            "filename": filename,
+            "iteration": 0,
+            "cyclic_complexity": initial_analysis["cyclic_complexity"],
+            "loc": initial_analysis["loc"],
+            "maintainability_index": initial_analysis["maintainability_index"],
+            "halstead_volume": initial_analysis["halstead_volume"],
+            "halstead_difficulty": initial_analysis["halstead_difficulty"],
+            "halstead_effort": initial_analysis["halstead_effort"],
+            "validation_status": "ACCEPTED"
         })
+        refactor_history = []
+        current_code = code
 
-        if i < iterations:
-            if is_accepted:
-                refactor_history.append(refactor_code_again(code, refactor_history))
+        # refactoring repetition for 5 times
+        for i in range(5):
+            refactored_code = refactor_code(current_code)
+            refactor_history.append(refactored_code)
+            analysis = analyze_code(refactored_code)
+
+            # validate refactored code
+            token = submit_code(problem_id, refactored_code, cookies, judge_id)
+            if token:
+                time.sleep(3)  # wait for the submission to be judged
+                is_accepted = check_submission_status(token, cookies)
             else:
-                # If the refactored code is not accepted, stop further refactoring
+                is_accepted = False
+
+            results.append({
+                "filename": filename,
+                "iteration": i + 1,
+                "cyclic_complexity": analysis["cyclic_complexity"],
+                "loc": analysis["loc"],
+                "maintainability_index": analysis["maintainability_index"],
+                "halstead_volume": analysis["halstead_volume"],
+                "halstead_difficulty": analysis["halstead_difficulty"],
+                "halstead_effort": analysis["halstead_effort"],
+                "validation_status": "ACCEPTED" if is_accepted else "REJECTED"
+            })
+
+            if not is_accepted:
                 break
 
-        time.sleep(1)  # Optional: Sleep to avoid rapid consecutive requests
+            current_code = refactored_code
 
-    df = pd.DataFrame(data)
-    df.to_csv("refactor_results.csv", index=False)
-    return df
+    df = pd.DataFrame(results)
+    df.to_csv(result_csv_file, index=False)
+    print(f"Results saved to {result_csv_file}")
 
 if __name__ == "__main__":
-    initial_code = """
-def calculate_discount(price, discount_rate):
-    if price <= 0:
-        return 0
-    discount = price * discount_rate
-    final_price = price - discount
-    return final_price
-
-def calculate_fee(price, fee_rate):
-    if price <= 0:
-        return 0
-    fee = price * fee_rate
-    final_price = price + fee
-    return final_price
-
-def process_transaction(price, rate, is_discount=True):
-    if is_discount:
-        return calculate_discount(price, rate)
-    else:
-        return calculate_fee(price, rate)
-
-original_price = 100
-discount_rate = 0.1
-fee_rate = 0.05
-
-discounted_price = calculate_discount(original_price, discount_rate)
-print(f"Discounted price: {discounted_price}")
-
-fee_added_price = calculate_fee(original_price, fee_rate)
-print(f"Price after fee added: {fee_added_price}")
-
-processed_price = process_transaction(original_price, discount_rate, is_discount=True)
-print(f"Processed price with discount: {processed_price}")
-
-processed_price = process_transaction(original_price, fee_rate, is_discount=False)
-print(f"Processed price with fee: {processed_price}")
-"""
-    iterations = 5
-    problem_id = "ITP1_1_A"
-    df = run_experiment(initial_code, problem_id, iterations)
+    evaluate_prototype()

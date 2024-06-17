@@ -18,7 +18,6 @@ def login_to_judge():
         "id": USERNAME,
         "password": PASSWORD
     }, timeout=5)
-     
     if response.status_code == 200:
         print("Login successfull.")
         return response.cookies
@@ -32,7 +31,6 @@ def get_submission_records():
         "status", "cpu_time", "memory", "code_size", "submission_date", "judge_date"
     ]
     df_submissions = pd.read_csv(csv_file_path, names=header)
-
     return df_submissions
 
 def get_problem_id(judge_id, submission_records):
@@ -48,7 +46,6 @@ def submit_code(problem_id, source_code, cookies, judge_id):
         "language": "Python3",
         "sourceCode": f"""{source_code}"""
     }, cookies=cookies, timeout=10)
-
     if response.status_code == 200:
         return response.json()["token"]
     elif response.status_code == 404:
@@ -81,7 +78,6 @@ def validate_code_files():
         return []
     submission_records = get_submission_records()
     test_codes = read_test_codes_from_folder(test_code_folder)
-
     validation_results = []
         
     for filename, code in test_codes.items():
@@ -94,7 +90,7 @@ def validate_code_files():
             if token is None:
                 is_accepted = False
             else:
-                time.sleep(3)  # Wait for the submission to be judged
+                time.sleep(3)  # wait for the submission to be judged
                 is_accepted = check_submission_status(token, cookies)
                 if not is_accepted:
                     print(f"Error: Submission for judge_id {judge_id} was not accepted.")
@@ -104,8 +100,7 @@ def validate_code_files():
                 "judge_id": judge_id,
                 "problem_id": problem_id,
                 "status": "ACCEPTED" if is_accepted else "REJECTED",
-            })
-            
+            })     
     return validation_results
 
 if __name__ == "__main__":
