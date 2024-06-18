@@ -16,15 +16,16 @@ df_10 = pd.read_csv("../documents/analysis_results10.csv")
 
 # combined DataFrame
 combined_df = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9, df_10], keys=['Run1', 'Run2', 'Run3', 'Run4', 'Run5', 'Run6', 'Run7', 'Run8', 'Run9', 'Run10'], names=['Run', 'Index']).reset_index(level='Run')
+filenames = combined_df['filename'].unique()
 
 # list of metrics
 metrics = ['cyclic_complexity', 'loc', 'maintainability_index', 'halstead_volume', 'halstead_difficulty', 'halstead_effort']
 
-# Plotting improvements across iterations for each metric
-def plot_improvement(metric):
+# plotting improvements across iterations for given metric and filename
+def plot_improvement_by_filename(metric, filename):
     plt.figure(figsize=(12, 8))
-    sns.lineplot(data=df_1, x='iteration', y=metric, hue='iteration', marker='o', estimator=None)
-    plt.title(f"Improvements in {metric} Across Iterations")
+    sns.lineplot(data=combined_df[combined_df['filename'] == filename], x='iteration', y=metric, hue='Run', marker='o', estimator=None)
+    plt.title(f"{metric.title()} across iterations for {filename}")
     plt.xlabel("Iteration")
     plt.ylabel(metric)
     plt.legend(title='Run', bbox_to_anchor=(1.05, 1), loc='upper left')
@@ -36,7 +37,8 @@ def plot_improvement(metric):
     #plot_improvement(metric)
     #print(df_1["validation_status"])
 
-plot_improvement(['cyclic_complexity'])
+for metric in metrics:
+    plot_improvement_by_filename(metric, filenames[1])
 
 # # Compare metrics before and after refactoring
 # def compare_metrics(metric):

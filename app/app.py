@@ -33,7 +33,8 @@ def refactor_code():
     try:
         response = client.chat.completions.create(
             model = "gpt-4",
-            messages = chat_history
+            messages = chat_history,
+            temperature = 0.2
         )
         refactored_code = response.choices[0].message
         chat_history.append({"role": "assistant", "content": refactored_code.content})
@@ -47,7 +48,8 @@ def refactor_again():
     try:
         response = client.chat.completions.create(
             model = "gpt-4",
-            messages = chat_history
+            messages = chat_history,
+            temperature = 0.2
         )
         further_refactored_code = response.choices[0].message
         analysis = analyze_refactored_code(further_refactored_code.content)
