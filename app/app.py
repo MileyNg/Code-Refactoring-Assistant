@@ -11,6 +11,8 @@ app = Flask(__name__, static_folder="static")
 load_dotenv(dotenv_path=".env")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+chat_history = []
+
 @app.route("/")
 def serve_index():
     return send_from_directory(app.static_folder, "index.html")
@@ -24,42 +26,32 @@ def analyze_code():
 @app.route("/refactor", methods=["POST"])
 def refactor_code():
     code = request.json["code"]
-    print(code)
+    global chat_history
+    chat_history = []
+    chat_history.append({"role": "system", "content": "You are a code refactoring assistant, skilled in refactoring code without changing its functionality. You only give a refactored functioning python code without any explanation or anything else."})
+    chat_history.append({"role": "user", "content": f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Do not explain anything in natural language.: {code}"})
     try:
         response = client.chat.completions.create(
             model = "gpt-4",
-            messages = [
-                {"role": "system", "content": "You are a code refactoring assistant, skilled in refactoring code without changing its functionality. You only give a refactored functioning python code without any explanation or anything else."},
-                {"role": "user", "content": f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Do not explain anything in natural language.: {code}"}
-            ]
+            messages = chat_history
         )
         refactored_code = response.choices[0].message
-        print(refactored_code)
+        chat_history.append({"role": "assistant", "content": refactored_code.content})
         return jsonify({"refactored_code": refactored_code.content})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route("/refactor_again", methods=["POST"])
 def refactor_again():
-    original_code = request.json["original_code"]
-    refactor_history = request.json["refactor_history"]
-    combined_prompt = [
-                {"role": "system", "content": "You are a code refactoring assistant, skilled in refactoring code without changing its functionality. You only give a refactored functioning python code without any explanation or anything else."},
-                {"role": "user", "content": f"Refactor the given Python program to a more readable, efficient, and maintainable one. You can assume that the given program is semantically correct. Do not change the external behavior of the program, and keep the syntactic and semantic correctness. Do not explain anything in natural language.: {original_code}"}
-            ]
-    for refactor in enumerate(refactor_history):
-        # combined_prompt += f"Refactor again but even better {j}:\n {refactor}\n"
-        combined_prompt.append(
-            {"role": "user", "content": f"Refactor again but even better:\n{refactor}"}
-        )
+    chat_history.append({"role": "user", "content": f"Refactor again but even better."})
     try:
         response = client.chat.completions.create(
             model = "gpt-4",
-            messages = combined_prompt,
+            messages = chat_history
         )
         further_refactored_code = response.choices[0].message
-        print(further_refactored_code)
         analysis = analyze_refactored_code(further_refactored_code.content)
+        chat_history.append({"role": "assistant", "content": further_refactored_code.content})
         return jsonify({"further_refactored_code": further_refactored_code.content, "analysis": analysis})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

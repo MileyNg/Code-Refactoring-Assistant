@@ -25,3 +25,4 @@
     - /Python2: Python2 source code files
     - /Python3: Python3 source code files
     - /selected: a selection of manually random picked Python3 code files for testing 
+    - *test_code.py*: a bad Python3 code generated from ChatGPT for testing

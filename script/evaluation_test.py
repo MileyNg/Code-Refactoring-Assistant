@@ -12,7 +12,7 @@ APP_URL = os.getenv("APP_URL")
 USERNAME = os.getenv("AOJ_USERNAME")
 PASSWORD = os.getenv("AOJ_PASSWORD")
 test_code_folder = "./test_code/selected"
-result_csv_file = "./documents/analysis_results6.csv"
+result_csv_file = "./documents/analysis_results8.csv"
 
 def analyze_code(code):
     response = requests.post(f"{APP_URL}/analyze", json={"code": code}, timeout=30)

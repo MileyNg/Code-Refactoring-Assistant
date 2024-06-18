@@ -16,7 +16,7 @@
         </div>
         <div class="button-container">
             <button type="button" onclick="refactorCode()" title="refactor input code"><i class="fa fa-angle-double-right" style="color: rgb(94, 178, 94);"></i></button>
-            <button type="button" onclick="refactorAgain()" title="repeat refactoring"><i class="fa fa-undo" style='color:rgb(59, 146, 239); font-size:30px;'></i></button>
+            <button type="button" onclick="refactorAgain()" title="repeat refactoring"><i class="fa fa-undo" style="color:rgb(59, 146, 239); font-size:30px;"></i></button>
         </div>
         <div id="outputContainer">
             <div id="results"></div>
@@ -33,13 +33,13 @@
         let inputAnalysis = "";
 
         // allows tabs
-        document.getElementById('codeInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Tab') {
+        document.getElementById("codeInput").addEventListener("keydown", function(e) {
+            if (e.key === "Tab") {
                 e.preventDefault();
                 const start = this.selectionStart;
                 const end = this.selectionEnd;
-                range = '    '
-                this.setRangeText(range, start, end, 'end');
+                range = "    "
+                this.setRangeText(range, start, end, "end");
             }
         });
 
@@ -47,40 +47,40 @@
             clearTimeout(typingTimer);
             typingTimer = setTimeout(analyzeCode, debounceInterval);
             console.clear();
-            document.getElementById('results').innerHTML = "";
+            document.getElementById("results").innerHTML = "";
         }
 
         async function analyzeCode() {
-            const code = document.getElementById('codeInput').value;
+            const code = document.getElementById("codeInput").value;
             if (code.trim() === "") 
                 return;
             try {
-                const response = await fetch('/analyze', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch("/analyze", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code })
                 });
                 const result = await response.json();
                 console.log("Analysis Results:", result);
                 inputAnalysis = result;
             } catch (error) {
-                console.error('Failed to analyze code:', error);
+                console.error("Failed to analyze code:", error);
             }
         }
 
         async function refactorCode() {
-            const code = document.getElementById('codeInput').value;
+            const code = document.getElementById("codeInput").value;
             console.clear();
             console.log("Analysis Results:", inputAnalysis);
             try { 
-                response = await fetch('/refactor', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                response = await fetch("/refactor", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ code })
                 });
                 const result = await response.json();
-                document.getElementById('results').innerHTML = `
-                    <pre><code class="language-python">${Prism.highlight(result.refactored_code, Prism.languages.python, 'python')}</code></pre>
+                document.getElementById("results").innerHTML = `
+                    <pre><code class="language-python">${Prism.highlight(result.refactored_code, Prism.languages.python, "python")}</code></pre>
                 `;
                 refactorHistory = []
                 refactorHistory.push(result.refactored_code);
@@ -94,25 +94,27 @@
 
         async function refactorAgain() {
             if (refactorCount >= maxRefactorCount) {
-                alert('Maximum number of refactorings reached');
+                alert("Maximum number of refactorings reached");
+                return;
+            } else if (refactorCount == 0) {
+                alert("No refactoring started yet");
                 return;
             }
-            const originalCode = document.getElementById('codeInput').value;
+            const originalCode = document.getElementById("codeInput").value;
             try {
-                const response = await fetch('/refactor_again', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch("/refactor_again", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ original_code: originalCode, refactor_history: refactorHistory })
                 });
                 const result = await response.json();
-                document.getElementById('results').innerHTML += `
+                document.getElementById("results").innerHTML += `
                     <hr>
-                    <pre><code class="language-python">${Prism.highlight(result.further_refactored_code, Prism.languages.python, 'python')}</code></pre>
+                    <pre><code class="language-python">${Prism.highlight(result.further_refactored_code, Prism.languages.python, "python")}</code></pre>
                 `;
                 refactorHistory.push(result.further_refactored_code);
-                console.log("Analysis of Further Refactored Code:" + refactorCount , result.analysis)
+                console.log("Analysis of Further Refactored Code: " + (refactorCount + 1) , result.analysis)
                 refactorCount++;
-                //await analyzeRefactoredCode(result.further_refactored_code);
             } catch (error) {
                 console.error("Refactor code again failed:", error);
                 alert("Refactor code again failed.");
@@ -121,16 +123,16 @@
 
         async function analyzeRefactoredCode(code) {
             try {
-                const response = await fetch('/analyze', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch("/analyze", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code })
                 });
                 const result = await response.json();
-                console.log("Analysis of Refactored Code:", result);
+                console.log("Analysis of Refactored Code: " + refactorCount, result);
             } catch (error) {
-                console.error('Failed to analyze refactored code:', error);
-                alert('Failed to analyze refactored code.');            }
+                console.error("Failed to analyze refactored code:", error);
+                alert("Failed to analyze refactored code.");            }
 
         }
     </script>
