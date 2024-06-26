@@ -19,7 +19,7 @@
     - *analysis_\**: includes all the metrics data for each test code 
 - /script
     - *prepare_test_code.py*: filters all functioning Python3 code out of the raw source code files and saves them in /test_code folder
-    - *validate_test_code.py*: tests whether all the Python3 code in /test_code folder actually work -> manually: removing none funtioning code
+    - *validate_test_code.py*: tests whether all the Python3 code in /test_code folder actually work -> manually: removing none functioning code
     - *evaluation_test*: automation of refactoring of a selection of test codes (currently 9 files); saves all the mertrics for evaluation in /documents/*analysis_\*.csv*
     - *create_plot.ipynb*: jupyter notebook for creating plots
 - /test-code
