@@ -9,6 +9,7 @@
 - flask
 - openai
 - radon
+- load_dotenv
 
 
 ## Prepare test data and automated testing of these (for using the scripts addtional imports needed)
