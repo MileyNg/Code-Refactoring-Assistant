@@ -11,7 +11,7 @@
 - radon
 
 
-## Prepare test data and automated testing of these
+## Prepare test data and automated testing of these (for using the scripts addtional imports needed)
 
 - /documents
     - /009: raw source code files from Aizu Online Judge (http://developers.u-aizu.ac.jp/index)
@@ -21,7 +21,7 @@
     - *prepare_test_code.py*: filters all functioning Python3 code out of the raw source code files and saves them in /test_code folder
     - *validate_test_code.py*: tests whether all the Python3 code in /test_code folder actually work -> manually: removing none funtioning code
     - *evaluation_test*: automation of refactoring of a selection of test codes (currently 9 files); saves all the mertrics for evaluation in /documents/*analysis_\*.csv*
-    - *create_plot.ipynb*: notebook for plots
+    - *create_plot.ipynb*: jupyter notebook for creating plots
 - /test-code
     - /Python2: Python2 source code files
     - /Python3: Python3 source code files
